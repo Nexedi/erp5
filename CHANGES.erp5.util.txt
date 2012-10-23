@@ -6,6 +6,14 @@ Changes
 
  * erp5.util.testnode:
 
+  - Take test suite parameters from the master, to allow distribution
+    of the work by the master [Pere Cortes], [Sebastien Robin] 
+
+0.4.10 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
   - Allow to use a firefox built by testnode for
     functional tests [Gabriel Monnerat]
 
