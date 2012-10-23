@@ -126,7 +126,7 @@ class LocalRoleAssignorMixIn(object):
         changes_applied = True
 
       if local_roles_group_id_group_id:
-        if ob.__ac_local_roles_group_id_dict__ != local_roles_group_id_group_id:
+        if getattr(aq_base(ob), '__ac_local_roles_group_id_dict__', None) != local_roles_group_id_group_id:
           ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
           changes_applied = True
       elif getattr(aq_base(ob),
