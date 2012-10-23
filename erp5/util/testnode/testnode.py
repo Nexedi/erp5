@@ -295,11 +295,11 @@ branch = %(branch)s
     slapgrid = None
     previous_revision_dict = {}
     revision_dict = {}
-    now = time.time()
     test_result = None
     try:
       while True:
         try:
+          now = time.time()
           begin = time.time()
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
