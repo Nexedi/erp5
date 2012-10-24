@@ -125,6 +125,8 @@ class SlapOSControler(object):
       status_dict = self.spawn(config['slapgrid_software_binary'], '-v', '-c',
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
+      if status_dict['status_code'] == 0:
+        break
     return status_dict
 
   def runComputerPartition(self, config, environment,
@@ -150,4 +152,8 @@ class SlapOSControler(object):
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
       self.log('slapgrid_cp status_dict : %r' % (status_dict,))
+      # we can continue if status code is ok (0) or if we have just
+      # a promise failure (2)
+      if status_dict['status_code'] in (0, 2):
+        break
     return status_dict
