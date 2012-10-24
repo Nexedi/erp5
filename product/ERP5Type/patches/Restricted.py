@@ -110,6 +110,11 @@ def guarded_reversed(seq):
     return SafeIter(reversed(seq))
 safe_builtins['reversed'] = guarded_reversed
 
+if sys.version_info >= (2, 6):
+    def guarded_enumerate(seq, start=0):
+        return NullIter(enumerate(guarded_iter(seq), start=start))
+    safe_builtins['enumerate'] = guarded_enumerate
+
 def get_set_pop(s, name):
     def guarded_pop():
         v = s.pop()
