@@ -221,8 +221,8 @@ branch = %(branch)s
     log('Configured slapproxy log to %r' % slapproxy_log)
     log('testnode, retry_software_count : %r' % retry_software_count)
     slapos_controler = SlapOSControler.SlapOSControler(config,
-    log=log, slapproxy_log=slapproxy_log, process_manager=process_manager,
-    reset_software=(retry_software_count>0 and retry_software_count%10 == 0))
+      log=log, slapproxy_log=slapproxy_log, process_manager=process_manager,
+      reset_software=(retry_software_count>0 and retry_software_count%10 == 0))
     for method_name in ("runSoftwareRelease", "runComputerPartition",):
       slapos_method = getattr(slapos_controler, method_name)
       status_dict = slapos_method(config,
