@@ -72,15 +72,15 @@ class TestNode(object):
 
   def updateConfigForTestSuite(self, test_suite_data):
     config = self.config
-    config["project_title"] = test_suite_data["project-title"]
-    config["test_suite"] = test_suite_data["test-suite"]
-    config["test_suite_title"] = test_suite_data["test-suite-title"]
-    config["test_suite_reference"] = test_suite_data["test-suite-reference"]
+    config["project_title"] = test_suite_data["project_title"]
+    config["test_suite"] = test_suite_data["test_suite"]
+    config["test_suite_title"] = test_suite_data["test_suite_title"]
+    config["test_suite_reference"] = test_suite_data["test_suite_reference"]
     try:
       config["additional_bt5_repository_id"] = test_suite_data["additional-bt5-repository-id"]
     except KeyError:
       pass
-    config["vcs_repository_list"] = test_suite_data["vcs-repository-list"]
+    config["vcs_repository_list"] = test_suite_data["vcs_repository_list"]
     config['working_directory'] = os.path.join(config['slapos_directory'],
                                            config['test_suite_reference'])
     if not(os.path.exists(config['working_directory'])):
