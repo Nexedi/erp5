@@ -36,6 +36,7 @@ import time
 import shutil
 import pkg_resources
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
+from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
 
@@ -284,7 +285,7 @@ branch = %(branch)s
     process_manager.killPreviousRun()
     if test_result is not None:
       try:
-        test_result.removeWatch(log_file_name)
+        test_result.removeWatch(self.config['log_file'])
       except KeyError:
         log("KeyError, Watcher already deleted or not added correctly")
 
@@ -357,7 +358,7 @@ branch = %(branch)s
               time.sleep(20)
               self.runTestSuite(revision_dict,portal_url)
               test_result.removeWatch(log_file_name)
-        except SubprocessError, e:
+        except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
           if test_result is not None:
             test_result.removeWatch(log_file_name)
