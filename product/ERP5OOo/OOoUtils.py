@@ -498,7 +498,7 @@ class OOoParser(Implicit):
     """
       Get table dimension as dictionnary contain both height and width
     """
-    return { 'width' : max(len(x) for x in table)
+    return { 'width' : max(len(x) for x in table or [[]])
            , 'height': len(table)
            }
 
