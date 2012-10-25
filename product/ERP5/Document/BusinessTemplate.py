@@ -1474,7 +1474,7 @@ class PreferenceTemplateItem(PathTemplateItem):
       LOG("PreferenceTemplateItem, _resolvePath", WARNING,
           "Should contain only one element")
     # XXX hardcoded
-    return ['portal_preferences/%s' % id_list[0]]
+    return ['portal_preferences/%s' % id_list[-1]]
 
   def install(self, context, trashbin, **kw):
     """
