@@ -1343,7 +1343,7 @@ class PathTemplateItem(ObjectTemplateItem):
                                            object_id, save=1,
                                            keep_subobjects=1)
           container.manage_delObjects([object_id])
-        except (NotFound, KeyError):
+        except (NotFound, KeyError, BadRequest):
           # object is already backup and/or removed
           pass
     BaseTemplateItem.uninstall(self, context, **kw)
