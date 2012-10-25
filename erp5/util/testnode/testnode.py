@@ -91,7 +91,7 @@ class TestNode(object):
     return node_test_suite
 
   def delNodeTestSuite(self, reference):
-    if self.node_test_suite_dict.haskey(reference):
+    if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
 
   def updateConfigForTestSuite(self, test_suite_data):
