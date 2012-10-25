@@ -1,7 +1,15 @@
 Changes
 =======
 
-0.4.10 (2012-10-01)
+0.4.12 (2012-10-25)
+------------------
+
+ * erp5.util.testnode:
+
+  - Fixed several issues introduced by the management of test
+    suite by the master [Sebastien Robin] 
+
+0.4.11 (2012-10-22)
 ------------------
 
  * erp5.util.testnode:
