@@ -60,6 +60,16 @@ class CacheFactory(XMLObject):
                     , PropertySheet.CacheFactory
                     )
 
+  def getCacheUid(self):
+    """
+      Get a common Cache Factory / Cache Bag UID in this
+      case relative to portal_caches.
+      It's required to use relative url (i.e. mainly ID) due
+      to CachingMethod legacy.
+    """
+    relative_url = self.getRelativeUrl()
+    assert relative_url[:14] == 'portal_caches/'
+    return relative_url[14:]
 
   def getCachePluginList(self):
     """ get ordered list of installed cache plugins in ZODB """
@@ -71,7 +81,7 @@ class CacheFactory(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
   def getRamCacheFactory(self):
     """ Return RAM based cache factory """
-    cache_factory_name = self.getId()
+    cache_factory_name =  self.getCacheUid()
     cache_tool = self.portal_caches
     cache_factory = CachingMethod.factories.get(cache_factory_name)
     #XXX This conditional statement should be remove as soon as
