@@ -248,7 +248,12 @@ branch = %(branch)s
       status_dict = slapos_method(config,
                                   environment=config['environment'],
                                  )
-      if status_dict['status_code'] not in (0, 2):
+      acceptable_status_code_list = [0, 2]
+      # 1 must not be below, but we need it until slapos.core of
+      # softwares built by testnode are at least version 0.32.3
+      if method_name == "runComputerPartition":
+        acceptable_status_code_list.append(1)
+      if status_dict['status_code'] not in acceptable_status_code_list:
          node_test_suite.retry = True
          node_test_suite.retry_software_count += 1
          raise SubprocessError(status_dict)
