@@ -71,7 +71,7 @@ if redirect_to_document is None:\n
 if user_login is None:\n
   # get current authenticated user\n
   user_login = str(portal.portal_membership.getAuthenticatedMember())\n
-  \n
+\n
 document_kw = {\'user_login\': user_login,\n
                \'group\': group,\n
                \'publication_section\': publication_section,\n
@@ -87,12 +87,9 @@ if follow_up_list:\n
   document_kw[\'follow_up_list\'] = follow_up_list\n
 \n
 \n
-form = portal.REQUEST.form\n
-# Lookup for input values in request.form or kw to try to get values in two available modes: the\n
-# script coulbe be called from ERP5 Form or directly from Python.\n
 # FIXME: this list of properties should not be hardcoded.\n
 for key in (\'title\', \'short_title\', \'reference\', \'language\', \'version\', \'description\', ):\n
-  value = form.get(key, kw.get(key, None))\n
+  value = kw.get(key, None)\n
   if value not in MARKER:\n
     document_kw[key] = value\n
 \n
