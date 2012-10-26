@@ -50,16 +50,41 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># from Products.ERP5Type.Log import log\n
-# log("getMessageList", context.getMessageList(temp_object=1))\n
-message_list = context.getMessageList(temp_object=1)\n
-for message in message_list:\n
-  message.edit(cancel = \'[Cancel]\')\n
-  message.edit(restart = \'[Restart]\')\n
+            <value> <string encoding="cdata"><![CDATA[
+
+#from Products.ERP5Type.Log import log\n
+#log("getMessageList", context.getMessageTempObjectList())\n
+\n
+# searching\n
+# processing_node column is manage by methods called by getMessageTempObjectList\n
+if kw[\'processing_node\'] == \'\':\n
+  del kw[\'processing_node\']\n
+\n
+#key_list_to_search = [x for (x,y) in [(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\'retry\',\'processing\']] if y != \'\']\n
+\n
+message_list = context.getMessageTempObjectList(**kw)\n
+message_list_to_show = []\n
+while len(message_list) > 0:\n
+  message = message_list.pop(0)\n
   message.edit(str_object_path = \'/\'.join(str(i) for i in message.object_path))\n
   message.edit(uid_activity = str(message.uid) + \' (\'+ message.activity[3:] +\')\')\n
-return message_list\n
-</string> </value>
+#  # search filter\n
+#  try:\n
+#    for k in key_list_to_search:\n
+#      str(getattr(message,k,None)).index(kw[k])\n
+#  except ValueError:\n
+#    continue\n
+  message.edit(delete = \'[Delete]\')\n
+  message.edit(restart = \'[Restart]\')\n
+  message_list_to_show.append(message)\n
+\n
+## sort\n
+## XXX\n
+\n
+return message_list_to_show\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

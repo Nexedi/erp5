@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-return \'ActivityTool_manageCancel?uid=%s&activity=%s\' % (context.uid, context.activity)\n
+return \'ActivityTool_manageDelete?uid=%s&activity=%s\' % (context.uid, context.activity)\n
 
 
 ]]></string> </value>
@@ -63,7 +63,7 @@ return \'ActivityTool_manageCancel?uid=%s&activity=%s\' % (context.uid, context.
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ActivityTool_cancelMessage</string> </value>
+            <value> <string>ActivityTool_deleteMessage</string> </value>
         </item>
       </dictionary>
     </pickle>

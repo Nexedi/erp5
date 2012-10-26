@@ -50,10 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
-response =  request.response\n
-\n
-return context.manageRestart(uid,activity,REQUEST=request)\n
+            <value> <string>return context.manageRestart([uid],activity,REQUEST=container.REQUEST)\n
 </string> </value>
         </item>
         <item>

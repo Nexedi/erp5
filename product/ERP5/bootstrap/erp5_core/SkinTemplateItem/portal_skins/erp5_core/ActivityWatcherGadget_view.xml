@@ -36,23 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<html>\n
-  <head>\n
-    <title tal:content="template/title">The title</title>\n
-    <meta http-equiv="content-type" content="text/html;charset=utf-8">\n
-  </head>\n
-  <body>\n
-    \n
-    <h2><span tal:replace="here/title_or_id">content title or id</span>\n
-        <span tal:condition="template/title"\n
-              tal:replace="template/title">optional template title</span></h2>\n
-\n
-    This is Page Template <em tal:content="template/id">template id</em>.\n
-    <div id="activity_watcher"></div>\n
-    <script src="../erp5_jquery/jquery/core/jquery.js"></script>\n
-    <script src="activity_watcher.js"></script>\n
-  </body>\n
-</html>
+<div>\n
+  <div id="activity_watcher_gadget"></div>\n
+  <script src="../erp5_jquery/jquery/core/jquery.js"></script>\n
+  <script src="activity-watcher-gadget.js"></script>\n
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -66,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ActivityTool_watcher</string> </value>
+            <value> <string>ActivityWatcherGadget_view</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

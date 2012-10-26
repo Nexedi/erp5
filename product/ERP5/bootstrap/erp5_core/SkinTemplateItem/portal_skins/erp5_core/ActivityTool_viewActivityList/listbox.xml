@@ -378,8 +378,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>cancel</string>
-                          <string>Cancel</string>
+                          <string>delete</string>
+                          <string>Delete</string>
                         </tuple>
                         <tuple>
                           <string>restart</string>
@@ -479,8 +479,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>cancel</string>
-                          <string>Cancel</string>
+                          <string>delete</string>
+                          <string>Delete</string>
                         </tuple>
                         <tuple>
                           <string>restart</string>
@@ -597,12 +597,37 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>uid_activity</string>
+                          <string>UID</string>
+                        </tuple>
+                        <tuple>
+                          <string>str_object_path</string>
+                          <string>Object</string>
+                        </tuple>
+                        <tuple>
+                          <string>method_id</string>
+                          <string>Method ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>processing_node</string>
+                          <string>Processing Node</string>
+                        </tuple>
+                        <tuple>
+                          <string>retry</string>
+                          <string>Retry</string>
+                        </tuple>
+                        <tuple>
+                          <string>processing</string>
+                          <string>Processing</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -616,13 +641,43 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>uid_activity</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>uid_activity</string>
+                          <string>UID</string>
+                        </tuple>
+                        <tuple>
+                          <string>str_object_path</string>
+                          <string>Object</string>
+                        </tuple>
+                        <tuple>
+                          <string>method_id</string>
+                          <string>Method ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>processing_node</string>
+                          <string>Processing Node</string>
+                        </tuple>
+                        <tuple>
+                          <string>retry</string>
+                          <string>Retry</string>
+                        </tuple>
+                        <tuple>
+                          <string>processing</string>
+                          <string>Processing</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -675,7 +730,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'cancel\', \'ActivityTool_cancelMessage\'),(\'restart\', \'ActivityTool_restartMessage\')]</string> </value>
+            <value> <string>python: [(\'delete\', \'ActivityTool_deleteMessage\'),(\'restart\', \'ActivityTool_restartMessage\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
