@@ -73,7 +73,7 @@ customImporters={
     XMLExportImport.magic: importXML,
     }
 
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, INFO
 from warnings import warn
 from gzip import GzipFile
 from lxml.etree import parse
@@ -1399,6 +1399,40 @@ class PathTemplateItem(ObjectTemplateItem):
           obj.groups = groups
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
+
+  def install(self, context, *args, **kw):
+    super(PathTemplateItem, self).install(context, *args, **kw)
+
+    p = context.getPortalObject()
+    portal_type_role_list_len_dict = {}
+    for path in self._objects:
+      obj = p.unrestrictedTraverse(path)
+
+      try:
+        portal_type = obj.getPortalType()
+      except Exception, e:
+        LOG("BusinessTemplate", WARNING,
+            "Could not update Local Roles as Portal Type for '%s' is not "
+            "available (%s)" % (obj, e))
+
+        continue
+
+      if portal_type not in p.portal_types:
+        LOG("BusinessTemplate", WARNING,
+            "Could not update Local Roles as Portal Type '%s' could not "
+            "be found" % portal_type)
+
+        continue
+
+      if portal_type not in portal_type_role_list_len_dict:
+        portal_type_role_list_len_dict[portal_type] = \
+            len(p.portal_types[portal_type].getRoleInformationList())
+
+      if portal_type_role_list_len_dict[portal_type]:
+        p.portal_types[portal_type].updateLocalRolesOnDocument(obj)
+        LOG("BusinessTemplate", INFO,
+            "Updated Local Roles for '%s' (%s)" % (portal_type,
+                                                   obj.getRelativeUrl()))
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
