@@ -73,7 +73,7 @@ customImporters={
     XMLExportImport.magic: importXML,
     }
 
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, INFO
 from warnings import warn
 from gzip import GzipFile
 from lxml.etree import parse
@@ -1399,6 +1399,40 @@ class PathTemplateItem(ObjectTemplateItem):
           obj.groups = groups
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
+
+  def install(self, context, *args, **kw):
+    super(PathTemplateItem, self).install(context, *args, **kw)
+
+    p = context.getPortalObject()
+    portal_type_role_list_len_dict = {}
+    for path in self._objects:
+      obj = p.unrestrictedTraverse(path)
+
+      try:
+        portal_type = aq_base(obj).getPortalType()
+      except Exception, e:
+        LOG("BusinessTemplate", WARNING,
+            "Could not update Local Roles as Portal Type for '%s' is not "
+            "available (%s)" % (obj, e))
+
+        continue
+
+      if portal_type not in p.portal_types:
+        LOG("BusinessTemplate", WARNING,
+            "Could not update Local Roles as Portal Type '%s' could not "
+            "be found" % portal_type)
+
+        continue
+
+      if portal_type not in portal_type_role_list_len_dict:
+        portal_type_role_list_len_dict[portal_type] = \
+            len(p.portal_types[portal_type].getRoleInformationList())
+
+      if portal_type_role_list_len_dict[portal_type]:
+        p.portal_types[portal_type].updateLocalRolesOnDocument(obj)
+        LOG("BusinessTemplate", INFO,
+            "Updated Local Roles for '%s' (%s)" % (portal_type,
+                                                   obj.getRelativeUrl()))
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
@@ -4759,6 +4793,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     # We want to have:
     #  * path after module, because path can be module content
     #  * path after categories, because path can be categories content
+    #  * path after portal types roles so that roles in the current bt can be used
     #  * path before workflow chain, because path can be a portal type
     #         (until chains are set on portal types with categories)
     #  * skin after paths, because we can install a custom connection string as
@@ -4785,12 +4820,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_portal_type_base_category_item',
       '_category_item',
       '_module_item',
+      '_portal_type_roles_item',
       '_path_item',
       '_skin_item',
       '_registered_skin_selection_item',
       '_preference_item',
       '_action_item',
-      '_portal_type_roles_item',
       '_local_roles_item',
       '_portal_type_workflow_chain_item',
       '_catalog_method_item',
