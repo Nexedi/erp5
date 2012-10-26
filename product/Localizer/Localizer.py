@@ -180,7 +180,7 @@ class Localizer(LanguageManager, Folder):
                 method(accept_language)
             except:
                 LOG(self.meta_type, PROBLEM,
-                    'method "%s" raised an exception.' % id)
+                    'method "%s" raised an exception.' % id, error=True)
 
 
     # Changing the language, useful snippets
