@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Get a list of related documents; wiki relations use API methods, explicit relations\n
+(predecessor etc) get a list of related docs and return the newest (default)\n
+version of each of them.\n
+\'all\' returns a combined set of all related docs.\n
+\n
+"""\n
+# XXX results should be cached as volatile attributes\n
+# XXX-JPS should probably be moved to core API of document\n
+# with dynamic method selection\n
+# getWikiSuccessorValueList = get + upperCase(wiki_successor) + ValueList\n
+# Document_getSimilarityCloud = Document_get + upperCase(cloud) + ValueList\n
+# BG - not much use, they\'re too different\n
+\n
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase\n
+from Products.ERP5Type.Log import log\n
+\n
+def getRelatedLatest(category):\n
+  funcname = \'get%sValueList\' % convertToUpperCase(category)\n
+  func = getattr(context, funcname)\n
+  return [o.getLatestVersionValue() for o in func()]\n
+  \n
+relation_id = kw.get(\'relation_id\') # XXX-JPS Change \'what\' to more explicit name and include in API of script\n
+\n
+if relation_id == \'wiki_predecessor\':\n
+  return [i.getObject()\n
+          for i in context.getImplicitPredecessorValueList()]\n
+if relation_id == \'wiki_successor\':\n
+  return [i.getObject() \n
+          for i in context.getImplicitSuccessorValueList()]\n
+if relation_id.startswith(\'related\'):\n
+  return getRelatedLatest(relation_id[8:])\n
+if relation_id == \'cloud\':\n
+  return context.getSimilarCloudValueList()\n
+if relation_id == \'all\':\n
+  dic = {}\n
+  predecessor_value_list = [i.getObject()\n
+                            for i in context.getImplicitPredecessorValueList()]\n
+  successor_value_list = [i.getObject()\n
+                          for i in context.getImplicitSuccessorValueList()]\n
+  similar_value_list = getRelatedLatest(\'similar\')\n
+  for obj in (predecessor_value_list + successor_value_list +\n
+              similar_value_list):\n
+    dic[obj] = None\n
+  return dic.keys()\n
+\n
+log(\'Relation %s is not provided for in this script\' % relation)\n
+return [] # failover - undefined relation\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*a,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_getRelatedDocumentList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

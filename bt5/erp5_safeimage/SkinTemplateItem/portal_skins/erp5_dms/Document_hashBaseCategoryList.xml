@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Used by parellel list field\n
+  Document_library/my_dms_category_list\n
+  (see http://wiki.erp5.org/HowToConfigureParallelListField)\n
+  To produce a tree we use getCategoryChildLogicalPathItemList\n
+  and we cache\n
+"""\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def cached_DMSGetItemList(base_category):\n
+    basecatobject = context.portal_categories.resolveCategory(base_category)\n
+    return basecatobject.getCategoryChildLogicalPathItemList()\n
+\n
+cached_DMSGetItemList = CachingMethod(cached_DMSGetItemList, id=\'DMGetItemListCachedMethodWhatever\')\n
+\n
+if default_sub_field_property_dict is None:\n
+  default_sub_field_property_dict = {\n
+   \'field_type\': \'MultiListField\',\n
+   \'item_list\': [],\n
+   \'required\': 0,\n
+   \'value\': [],\n
+   \'is_right_display\': 0,\n
+   \'key\': \'default\',\n
+   \'title\': \'Categories\',\n
+   \'size\': 5\n
+  }\n
+\n
+sub_field_dict = {}\n
+maximum_list_size = 5\n
+\n
+default_sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+default_sub_field_property_dict[\'size\'] = 1\n
+\n
+for base_category in item_list:\n
+  if not sub_field_dict.has_key(base_category):\n
+    basecatobject = context.portal_categories.resolveCategory(base_category)\n
+    sub_field_property_dict = default_sub_field_property_dict.copy()\n
+    sub_field_property_dict[\'key\'] = base_category\n
+    sub_field_property_dict[\'title\'] = basecatobject.getTranslatedTitle()\n
+    # we cache this, so that we can apply expensive path processing techniques\n
+    sub_field_property_dict[\'item_list\'] = cached_DMSGetItemList(base_category)\n
+    sub_field_property_dict[\'value\'] = context.aq_parent.aq_parent.getProperty(base_category)\n
+\n
+    sub_field_dict[base_category] = sub_field_property_dict\n
+\n
+return sub_field_dict.values()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>item_list, value_list=(), default_sub_field_property_dict=None, is_right_display=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_hashBaseCategoryList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
