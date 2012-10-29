@@ -166,14 +166,6 @@ class ColumnMap(object):
     self.related_key_dict[real_related_column] = (group, column)
     self.registerColumn(column, group=group)
     self.related_group_dict[group] = related_column
-    # XXX: hardcoded translation table column names: they are not present in sql_catalog.getColumnMap(), and this table cannot be joined by uid, forbidding implicit join.
-    if column in ('translated_message', 'language', 'message_context', 'original_message'):
-      self.registerTable('translation', group=group)
-      self.resolveColumn(column, 'translation', group=group)
-    # Likewise, for measure table. Moreover, there is a related key named the same way as a column of that table (designed to do the join).
-    elif column in ('metric_type_uid', ):
-      self.registerTable('measure', group=group)
-      self.resolveColumn(column, 'measure', group=group)
     return group
 
   @profiler_decorator
