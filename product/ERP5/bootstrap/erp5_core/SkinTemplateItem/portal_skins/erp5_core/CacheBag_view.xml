@@ -95,8 +95,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_cache_duration</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>
