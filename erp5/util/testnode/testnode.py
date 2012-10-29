@@ -52,31 +52,35 @@ class DummyLogger(object):
 
 class SlapOSInstance(object):
 
-  def __init__(self, working_directory):
+  def __init__(self):
     self.retry_software_count = 0
     self.retry = False
-    self.working_directory = working_directory
-
-class NodeTestSuite(SlapOSInstance):
-
-  def __init__(self, reference, working_directory):
-    super(NodeTestSuite, self).__init__(working_directory)
-    self.reference = reference
-    self.working_directory = os.path.join(working_directory, reference)
 
   def edit(self, **kw):
     self.__dict__.update(**kw)
+
+class NodeTestSuite(SlapOSInstance):
+
+  def __init__(self, reference):
+    super(NodeTestSuite, self).__init__()
+    self.reference = reference
+
+  def edit(self, **kw):
+    if kw.has_key("working_directory"):
+      kw["working_directory"] = os.path.join(kw["working_directory"],
+                                              self.reference)
+    super(NodeTestSuite, self).edit(**kw)
 
 class TestNode(object):
 
   def __init__(self, log, config):
     self.log = log
-    self.config = config
+    self.config = config or {}
     self.process_manager = ProcessManager(log)
     self.node_test_suite_dict = {}
     # hack until slapos.cookbook is updated
-    if config['working_directory'].endswith("slapos/"):
-      config['working_directory'] = config[
+    if self.config.get('working_directory', '').endswith("slapos/"):
+      self.config['working_directory'] = self.config[
         'working_directory'][:-(len("slapos/"))]
 
   def checkOldTestSuite(self,test_suite_data):
@@ -96,8 +100,8 @@ class TestNode(object):
   def getNodeTestSuite(self, reference):
     node_test_suite = self.node_test_suite_dict.get(reference)
     if node_test_suite is None:
-      node_test_suite = self.node_test_suite_dict[reference] = NodeTestSuite(
-                             reference, working_directory)
+      node_test_suite = NodeTestSuite(reference)
+      self.node_test_suite_dict[reference] = node_test_suite
     return node_test_suite
 
   def delNodeTestSuite(self, reference):
@@ -106,21 +110,17 @@ class TestNode(object):
 
   def updateConfigForTestSuite(self, test_suite, node_test_suite):
     config = self.config
-    node_test_suite.edit(project_title=test_suite["project_title"],
-                         test_suite=test_suite["test_suite"],
-                         test_suite_title=test_suite["test_suite_title"])
-    config["vcs_repository_list"] = test_suite["vcs_repository_list"]
+    node_test_suite.edit(**test_suite),
     config['working_directory'] = os.path.join(config['slapos_directory'],
                                            node_test_suite.reference)
     SlapOSControler.createFolder(config['working_directory'])
     custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
     config['custom_profile_path'] = custom_profile_path
 
-  def constructProfile(self):
-    vcs_repository_list = self.config['vcs_repository_list']
+  def constructProfile(self, node_test_suite):
     config = self.config
     profile_content = ''
-    assert len(vcs_repository_list), "we must have at least one repository"
+    assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
     try:
       # BBB: Accept global profile_path, which is the same as setting it for the
       # first configured repository.
@@ -128,14 +128,14 @@ class TestNode(object):
     except KeyError:
       pass
     else:
-      vcs_repository_list[0][PROFILE_PATH_KEY] = profile_path
+      node_test_suite.vcs_repository_list[0][PROFILE_PATH_KEY] = profile_path
     profile_path_count = 0
-    for vcs_repository in vcs_repository_list:
+    for vcs_repository in node_test_suite.vcs_repository_list:
       url = vcs_repository['url']
       buildout_section_id = vcs_repository.get('buildout_section_id', None)
       repository_id = buildout_section_id or \
                                   url.split('/')[-1].split('.')[0]
-      repository_path = os.path.join(config['working_directory'],repository_id)
+      repository_path = os.path.join(node_test_suite.working_directory,repository_id)
       vcs_repository['repository_id'] = repository_id
       vcs_repository['repository_path'] = repository_path
       try:
@@ -166,14 +166,12 @@ branch = %(branch)s
     custom_profile.close()
     config['repository_path'] = repository_path
     sys.path.append(repository_path)
-    return vcs_repository_list
 
   def getAndUpdateFullRevisionList(self, node_test_suite):
     full_revision_list = []
     config = self.config
     log = self.log
-    vcs_repository_list = self.config['vcs_repository_list']
-    for vcs_repository in vcs_repository_list:
+    for vcs_repository in node_test_suite.vcs_repository_list:
       repository_path = vcs_repository['repository_path']
       repository_id = vcs_repository['repository_id']
       if not os.path.exists(repository_path):
@@ -202,14 +200,14 @@ branch = %(branch)s
      test_result.addWatch(log_file_name,log_file,max_history_bytes=10000)
      return log_file_name
 
-  def checkRevision(self, test_result, node_test_suite, vcs_repository_list):
+  def checkRevision(self, test_result, node_test_suite):
     config = self.config
     log = self.log
     if node_test_suite.revision != test_result.revision:
      log('Disagreement on tested revision, checking out: %r' % (
           (node_test_suite.revision,test_result.revision),))
      for i, repository_revision in enumerate(test_result.revision.split(',')):
-      vcs_repository = vcs_repository_list[i]
+      vcs_repository = node_test_suite.vcs_repository_list[i]
       repository_path = vcs_repository['repository_path']
       revision = repository_revision.rsplit('-', 1)[1]
       # other testnodes on other boxes are already ready to test another
@@ -325,7 +323,8 @@ branch = %(branch)s
     previous_revision_dict = {}
     revision_dict = {}
     test_result = None
-    test_node_slapos = SlapOSInstance(self.config['slapos_directory'])
+    test_node_slapos = SlapOSInstance()
+    test_node_slapos.edit(working_directory=self.config['slapos_directory'])
     try:
       while True:
         try:
@@ -344,14 +343,15 @@ branch = %(branch)s
           for test_suite in test_suite_data:
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
-               test_suite["test_suite_reference"],
-               self.config['working_directory'])
+               test_suite["test_suite_reference"])
+            node_test_suite.edit(
+               working_directory=self.config['working_directory'])
             self.updateConfigForTestSuite(test_suite, node_test_suite)
             run_software = True
             self.process_manager.supervisord_pid_file = os.path.join(\
                 slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
             # Write our own software.cfg to use the local repository
-            vcs_repository_list = self.constructProfile()
+            self.constructProfile(node_test_suite)
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             self.getAndUpdateFullRevisionList(node_test_suite)
@@ -364,7 +364,7 @@ branch = %(branch)s
             log("testnode, test_result : %r" % (test_result, ))
             if test_result is not None:
               log_file_name = self.addWatcher(test_result)
-              self.checkRevision(test_result,node_test_suite,vcs_repository_list)
+              self.checkRevision(test_result,node_test_suite)
               # Now prepare the installation of SlapOS and create instance
               status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start

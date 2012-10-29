@@ -36,8 +36,14 @@ class ERP5TestNode(TestCase):
   def tearDown(self):
     shutil.rmtree(self._tempdir, True)
 
+  def getTestNode(self):
+    return TestNode(None, None)
+
   def test_01_GetDelNodeTestSuite(self):
-    test_node = TestNode(None, None)
+    """
+    We should be able to get/delete NodeTestSuite objects inside test_node
+    """
+    test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
     node_test_suite.retry_software_count = 2
@@ -46,5 +52,14 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
 
-  def test_01_GetNodeTestSuite(self):
+  def test_02_NodeTestSuiteWorkingDirectory(self):
+    """
+    Make sure we extend the working path with the node_test_suite reference
+    """
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    node_test_suite.edit(working_directory="some_path")
+    self.assertEquals("some_path/foo", node_test_suite.working_directory)
+
+  def test_03_constructProfile(self):
     pass
