@@ -94,17 +94,17 @@ class TestNode(object):
     if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
 
-  def updateConfigForTestSuite(self, test_suite_data):
+  def updateConfigForTestSuite(self, test_suite):
     config = self.config
-    node_test_suite = self.getNodeTestSuite(test_suite_data["test_suite_reference"])
-    node_test_suite.edit(project_title=test_suite_data["project_title"],
-                         test_suite=test_suite_data["test_suite"],
-                         test_suite_title=test_suite_data["test_suite_title"])
+    node_test_suite = self.getNodeTestSuite(test_suite["test_suite_reference"])
+    node_test_suite.edit(project_title=test_suite["project_title"],
+                         test_suite=test_suite["test_suite"],
+                         test_suite_title=test_suite["test_suite_title"])
     try:
-      config["additional_bt5_repository_id"] = test_suite_data["additional-bt5-repository-id"]
+      config["additional_bt5_repository_id"] = test_suite["additional-bt5-repository-id"]
     except KeyError:
       pass
-    config["vcs_repository_list"] = test_suite_data["vcs_repository_list"]
+    config["vcs_repository_list"] = test_suite["vcs_repository_list"]
     config['working_directory'] = os.path.join(config['slapos_directory'],
                                            node_test_suite.reference)
     if not(os.path.exists(config['working_directory'])):
@@ -218,20 +218,22 @@ branch = %(branch)s
     log = self.log
     process_manager = self.process_manager
     if node_test_suite.revision != test_result.revision:
-     log('Disagreement on tested revision, checking out:')
+     log('Disagreement on tested revision, checking out: %r' % (
+          (node_test_suite.revision,test_result.revision),))
      for i, repository_revision in enumerate(test_result.revision.split(',')):
       vcs_repository = vcs_repository_list[i]
       repository_path = vcs_repository['repository_path']
-      node_test_suite.revision = repository_revision.rsplit('-', 1)[1]
+      revision = repository_revision.rsplit('-', 1)[1]
       # other testnodes on other boxes are already ready to test another
       # revision
       log('  %s at %s' % (repository_path, node_test_suite.revision))
       updater = Updater(repository_path, git_binary=config['git_binary'],
-                        revision=node_test_suite.revision, log=log,
+                        revision=revision, log=log,
                         process_manager=process_manager)
       updater.checkout()
+      node_test_suite.revision = test_result.revision
 
-  def prepareSlapOS(self,node_test_suite):
+  def prepareSlapOSForTestSuite(self,node_test_suite):
     config = self.config
     log = self.log
     process_manager = self.process_manager
@@ -248,12 +250,7 @@ branch = %(branch)s
       status_dict = slapos_method(config,
                                   environment=config['environment'],
                                  )
-      acceptable_status_code_list = [0, 2]
-      # 1 must not be below, but we need it until slapos.core of
-      # softwares built by testnode are at least version 0.32.3
-      if method_name == "runComputerPartition":
-        acceptable_status_code_list.append(1)
-      if status_dict['status_code'] not in acceptable_status_code_list:
+      if status_dict['status_code'] != 0:
          node_test_suite.retry = True
          node_test_suite.retry_software_count += 1
          raise SubprocessError(status_dict)
@@ -354,7 +351,7 @@ branch = %(branch)s
               log_file_name = self.addWatcher(test_result)
               self.checkRevision(test_result,node_test_suite,vcs_repository_list)
               # Now prepare the installation of SlapOS and create instance
-              status_dict = self.prepareSlapOS(node_test_suite)
+              status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
@@ -372,9 +369,11 @@ branch = %(branch)s
               stdout=status_dict.get('stdout'),
               stderr=status_dict.get('stderr'),
             )
-          log("SubprocessError, going to sleep %s" % DEFAULT_SLEEP_TIMEOUT)
-          time.sleep(DEFAULT_SLEEP_TIMEOUT)
           continue
+        except ValueError as e:
+          # This could at least happens if runTestSuite is not found
+          log("ValueError", exc_info=sys.exc_info())
+          node_test_suite.retry_software_count += 1
         except CancellationError, e:
           log("CancellationError", exc_info=sys.exc_info())
           process_manager.under_cancellation = False
@@ -384,6 +383,7 @@ branch = %(branch)s
             log("erp5testnode exception", exc_info=sys.exc_info())
             raise
         now = time.time()
+        self.cleanUp(test_result)
         if (now-begin) < 120:
           sleep_time = 120 - (now-begin)
           log("End of processing, going to sleep %s" % sleep_time)

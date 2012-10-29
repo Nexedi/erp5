@@ -72,7 +72,7 @@ class SlapOSControler(object):
     # Reset all previously generated software if needed
     if reset_software:
       software_root = config['software_root']
-      log('SlapOSControler : GOING TO RESET ALL SOFTWARE')
+      log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' % (software_root,))
       if os.path.exists(software_root):
         shutil.rmtree(software_root)
       os.mkdir(software_root)
@@ -147,13 +147,16 @@ class SlapOSControler(object):
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
     # may "expand"
+    sleep_time = 0
     for runs in range(0, MAX_PARTIONS):
       status_dict = self.spawn(config['slapgrid_partition_binary'], '-v', '-c',
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
       self.log('slapgrid_cp status_dict : %r' % (status_dict,))
-      # we can continue if status code is ok (0) or if we have just
-      # a promise failure (2)
-      if status_dict['status_code'] in (0, 2):
+      if status_dict['status_code'] in (0,):
         break
+    # some hack to handle promise issues (should be only one of the two
+    # codes, but depending on slapos versions, we have inconsistent status
+    if status_dict['status_code'] in (1,2):
+      status_dict['status_code'] = 0
     return status_dict
