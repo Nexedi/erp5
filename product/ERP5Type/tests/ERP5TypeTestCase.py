@@ -130,9 +130,10 @@ ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
 try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
   # ZopeTestCase REQUESTs (it's the same as iHotFix
-  from Products.Localizer import patches
+  from Products.Localizer import patches, utils
   # revert monkey patches from Localizer
   patches.get_request = get_request
+  utils.get_request = get_request
 except ImportError:
   pass
 
