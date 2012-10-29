@@ -71,7 +71,8 @@ setup(name=name,
             'erp5.util.benchmark.report:generateReport [benchmark-report]',
           'web_checker_utility = erp5.util.webchecker:web_checker_utility'
         ],
-      }
+      },
+      test_suite='erp5.tests'
     )
 
 # cleanup garbage

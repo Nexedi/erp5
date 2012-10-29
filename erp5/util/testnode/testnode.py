@@ -34,7 +34,6 @@ import SlapOSControler
 import json
 import time
 import shutil
-import pkg_resources
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -51,12 +50,19 @@ class DummyLogger(object):
       'critical', 'fatal'):
        setattr(self, name, func)
 
-class NodeTestSuite(object):
+class SlapOSInstance(object):
 
-  def __init__(self, reference=None):
-    self.reference = reference
+  def __init__(self, working_directory):
     self.retry_software_count = 0
     self.retry = False
+    self.working_directory = working_directory
+
+class NodeTestSuite(SlapOSInstance):
+
+  def __init__(self, reference, working_directory):
+    super(NodeTestSuite, self).__init__(working_directory)
+    self.reference = reference
+    self.working_directory = os.path.join(working_directory, reference)
 
   def edit(self, **kw):
     self.__dict__.update(**kw)
@@ -68,6 +74,10 @@ class TestNode(object):
     self.config = config
     self.process_manager = ProcessManager(log)
     self.node_test_suite_dict = {}
+    # hack until slapos.cookbook is updated
+    if config['working_directory'].endswith("slapos/"):
+      config['working_directory'] = config[
+        'working_directory'][:-(len("slapos/"))]
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -87,44 +97,24 @@ class TestNode(object):
     node_test_suite = self.node_test_suite_dict.get(reference)
     if node_test_suite is None:
       node_test_suite = self.node_test_suite_dict[reference] = NodeTestSuite(
-                             reference=reference)
+                             reference, working_directory)
     return node_test_suite
 
   def delNodeTestSuite(self, reference):
     if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
 
-  def updateConfigForTestSuite(self, test_suite):
+  def updateConfigForTestSuite(self, test_suite, node_test_suite):
     config = self.config
-    node_test_suite = self.getNodeTestSuite(test_suite["test_suite_reference"])
     node_test_suite.edit(project_title=test_suite["project_title"],
                          test_suite=test_suite["test_suite"],
                          test_suite_title=test_suite["test_suite_title"])
-    try:
-      config["additional_bt5_repository_id"] = test_suite["additional-bt5-repository-id"]
-    except KeyError:
-      pass
     config["vcs_repository_list"] = test_suite["vcs_repository_list"]
     config['working_directory'] = os.path.join(config['slapos_directory'],
                                            node_test_suite.reference)
-    if not(os.path.exists(config['working_directory'])):
-      os.mkdir(config['working_directory'])
-    config['instance_root'] = os.path.join(config['working_directory'],
-                                           'inst')
-    if not(os.path.exists(config['instance_root'])):
-      os.mkdir(config['instance_root'])
-    config['software_root'] = os.path.join(config['working_directory'],
-                                           'soft')
-    if not(os.path.exists(config['software_root'])):
-      os.mkdir(config['software_root'])
-    config['proxy_database'] = os.path.join(config['working_directory'],
-                                                'proxy.db')
+    SlapOSControler.createFolder(config['working_directory'])
     custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
     config['custom_profile_path'] = custom_profile_path
-    config['slapos_config'] = os.path.join(config['working_directory'],
-                                           'slapos.cfg')
-    open(config['slapos_config'], 'w').write(pkg_resources.resource_string(
-    'erp5.util.testnode', 'template/slapos.cfg.in') % config)
 
   def constructProfile(self):
     vcs_repository_list = self.config['vcs_repository_list']
@@ -182,7 +172,6 @@ branch = %(branch)s
     full_revision_list = []
     config = self.config
     log = self.log
-    process_manager = self.process_manager
     vcs_repository_list = self.config['vcs_repository_list']
     for vcs_repository in vcs_repository_list:
       repository_path = vcs_repository['repository_path']
@@ -196,7 +185,7 @@ branch = %(branch)s
         log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
       # Make sure we have local repository
       updater = Updater(repository_path, git_binary=config['git_binary'],
-         log=log, process_manager=process_manager)
+         log=log, process_manager=self.process_manager)
       updater.checkout()
       revision = "-".join(updater.getRevision())
       full_revision_list.append('%s=%s' % (repository_id, revision))
@@ -216,7 +205,6 @@ branch = %(branch)s
   def checkRevision(self, test_result, node_test_suite, vcs_repository_list):
     config = self.config
     log = self.log
-    process_manager = self.process_manager
     if node_test_suite.revision != test_result.revision:
      log('Disagreement on tested revision, checking out: %r' % (
           (node_test_suite.revision,test_result.revision),))
@@ -229,34 +217,54 @@ branch = %(branch)s
       log('  %s at %s' % (repository_path, node_test_suite.revision))
       updater = Updater(repository_path, git_binary=config['git_binary'],
                         revision=revision, log=log,
-                        process_manager=process_manager)
+                        process_manager=self.process_manager)
       updater.checkout()
       node_test_suite.revision = test_result.revision
 
-  def prepareSlapOSForTestSuite(self,node_test_suite):
-    config = self.config
-    log = self.log
-    process_manager = self.process_manager
-    slapproxy_log = os.path.join(config['log_directory'],
+  def _prepareSlapOS(self, working_directory, slapos_instance,
+          create_partition=1, software_path_list=None, **kw):
+    """
+    Launch slapos to build software and partitions
+    """
+    slapproxy_log = os.path.join(self.config['log_directory'],
                                   'slapproxy.log')
-    log('Configured slapproxy log to %r' % slapproxy_log)
-    retry_software_count = node_test_suite.retry_software_count
-    log('testnode, retry_software_count : %r' % retry_software_count)
-    slapos_controler = SlapOSControler.SlapOSControler(config,
-      log=log, slapproxy_log=slapproxy_log, process_manager=process_manager,
-      reset_software=(retry_software_count>0 and retry_software_count%10 == 0))
-    for method_name in ("runSoftwareRelease", "runComputerPartition",):
+    self.log('Configured slapproxy log to %r' % slapproxy_log)
+    reset_software = slapos_instance.retry_software_count > 10
+    self.log('testnode, retry_software_count : %r' % \
+             slapos_instance.retry_software_count)
+    slapos_controler = SlapOSControler.SlapOSControler(
+      working_directory, self.config, log=self.log, slapproxy_log=slapproxy_log,
+      process_manager=self.process_manager, reset_software=reset_software,
+      software_path_list=software_path_list)
+    method_list= ["runSoftwareRelease"]
+    if create_partition:
+      method_list.append("runComputerPartition")
+    for method_name in method_list:
       slapos_method = getattr(slapos_controler, method_name)
-      status_dict = slapos_method(config,
-                                  environment=config['environment'],
+      status_dict = slapos_method(self.config,
+                                  environment=self.config['environment'],
                                  )
       if status_dict['status_code'] != 0:
-         node_test_suite.retry = True
-         node_test_suite.retry_software_count += 1
+         slapos_instance.retry = True
+         slapos_instance.retry_software_count += 1
          raise SubprocessError(status_dict)
       else:
-         node_test_suite.retry_software_count = 0
+         slapos_instance.retry_software_count = 0
     return status_dict
+
+  def prepareSlapOSForTestNode(self, test_node_slapos):
+    """
+    We will build slapos software needed by the testnode itself,
+    like the building of selenium-runner by default
+    """
+    return self._prepareSlapOS(self.config['slapos_directory'],
+              test_node_slapos, create_partition=0,
+              software_path_list=self.config.get("software_list"))
+
+  def prepareSlapOSForTestSuite(self, node_test_suite):
+    return self._prepareSlapOS(node_test_suite.working_directory,
+              node_test_suite,
+              software_path_list=[self.config.get("custom_profile_path")])
 
   def _dealShebang(self,run_test_suite_path):
     line = open(run_test_suite_path, 'r').readline()
@@ -265,10 +273,11 @@ branch = %(branch)s
       invocation_list = line[2:].split()
     return invocation_list
 
-  def runTestSuite(self, node_test_suite, portal_url):
+  def runTestSuite(self, node_test_suite, portal_url, slapos_controler):
     config = self.config
 
-    run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" %config['instance_root'])
+    run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
+        slapos_controler.instance_root)
     if not len(run_test_suite_path_list):
       raise ValueError('No runTestSuite provided in installed partitions.')
     run_test_suite_path = run_test_suite_path_list[0]
@@ -281,10 +290,12 @@ branch = %(branch)s
                            '--test_suite_title', node_test_suite.test_suite_title,
                            '--node_quantity', config['node_quantity'],
                            '--master_url', portal_url])
-    firefox_bin_list = glob.glob("%s/*/parts/firefox/firefox-slapos" % config["software_root"])
+    firefox_bin_list = glob.glob("%s/*/parts/firefox/firefox-slapos" % \
+        config["slapos_directory"])
     if len(firefox_bin_list):
       invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
-    xvfb_bin_list = glob.glob("%s/*/parts/xserver/bin/Xvfb" % config["software_root"])
+    xvfb_bin_list = glob.glob("%s/*/parts/xserver/bin/Xvfb" % \
+        config["slapos_directory"])
     if len(xvfb_bin_list):
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
     bt5_path_list = config.get("bt5_path")
@@ -298,10 +309,9 @@ branch = %(branch)s
                           log_prefix='runTestSuite', get_output=False)
 
   def cleanUp(self,test_result):
-    process_manager = self.process_manager
     log = self.log
     log('Testnode.run, finally close')
-    process_manager.killPreviousRun()
+    self.process_manager.killPreviousRun()
     if test_result is not None:
       try:
         test_result.removeWatch(self.config['log_file'])
@@ -311,15 +321,17 @@ branch = %(branch)s
   def run(self):
     log = self.log
     config = self.config
-    process_manager = self.process_manager
     slapgrid = None
     previous_revision_dict = {}
     revision_dict = {}
     test_result = None
+    test_node_slapos = SlapOSInstance(self.config['slapos_directory'])
     try:
       while True:
         try:
+          remote_test_result_needs_cleanup = False
           begin = time.time()
+          self.prepareSlapOSForTestNode(test_node_slapos)
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
@@ -330,15 +342,18 @@ branch = %(branch)s
           #Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:
-            self.updateConfigForTestSuite(test_suite)
-            node_test_suite = self.getNodeTestSuite(test_suite["test_suite_reference"])
+            remote_test_result_needs_cleanup = False
+            node_test_suite = self.getNodeTestSuite(
+               test_suite["test_suite_reference"],
+               self.config['working_directory'])
+            self.updateConfigForTestSuite(test_suite, node_test_suite)
             run_software = True
-            self.process_manager.supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
-            'supervisord.pid')
+            self.process_manager.supervisord_pid_file = os.path.join(\
+                slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
             # Write our own software.cfg to use the local repository
             vcs_repository_list = self.constructProfile()
             # kill processes from previous loop if any
-            process_manager.killPreviousRun()
+            self.process_manager.killPreviousRun()
             self.getAndUpdateFullRevisionList(node_test_suite)
             # Make sure we have local repository
             test_result = portal.createTestResult(node_test_suite.revision, [],
@@ -356,7 +371,7 @@ branch = %(branch)s
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               time.sleep(20)
-              self.runTestSuite(node_test_suite,portal_url)
+              self.runTestSuite(node_test_suite,portal_url, slapos_controler)
               test_result.removeWatch(log_file_name)
         except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
@@ -376,7 +391,7 @@ branch = %(branch)s
           node_test_suite.retry_software_count += 1
         except CancellationError, e:
           log("CancellationError", exc_info=sys.exc_info())
-          process_manager.under_cancellation = False
+          self.process_manager.under_cancellation = False
           node_test_suite.retry = True
           continue
         except:
