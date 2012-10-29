@@ -178,7 +178,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <string>DiscussionThread_getDiscussionPostList</string> </value>
         </item>
       </dictionary>
     </pickle>

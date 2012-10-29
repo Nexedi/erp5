@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script allows to create a new Discussion Post in context.\n
 """\n
 from DateTime import DateTime\n
@@ -76,21 +78,29 @@ discussion_post = discussion_thread.newContent(\n
                     language = portal.Localizer.get_selected_language(),\n
                     text_format = \'text/html\')\n
 \n
-# depending on security model Post can be submited for review\n
-portal_status_message = context.Base_translateString("New post created in background.")\n
+# depending on security model Post can be submitted for review\n
+portal_status_message = context.Base_translateString("New post created.")\n
 \n
 # a parent thread is actually just a logical container so it\'s modified\n
 # whenever a new post is done\n
 discussion_thread.edit(modification_date = DateTime())\n
 \n
+# pass current post\'s relative url in request so next view\n
+# is able to show it without waiting for indexation\n
+post_relative_url = discussion_post.getRelativeUrl()\n
+\n
 if not is_temp_object:\n
   return discussion_thread.Base_redirect(form_id,\n
-           keep_items = dict(portal_status_message=portal_status_message))\n
+           keep_items = dict(portal_status_message=portal_status_message,\n
+                             post_relative_url = post_relative_url))\n
 else:\n
   # redirect using again reference\n
-  redirect_url = \'%s?portal_status_message=%s\' %(context.REQUEST[\'URL1\'],portal_status_message)\n
+  redirect_url = \'%s?portal_status_message=%s&post_relative_url=%s\' \\\n
+    %(context.REQUEST[\'URL1\'],portal_status_message,post_relative_url)\n
   context.REQUEST.RESPONSE.redirect(redirect_url)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
