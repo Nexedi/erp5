@@ -109,14 +109,14 @@ class ColumnMap(object):
     )
 
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
-    assert ' as ' not in raw_column.lower()
+    assert ' as ' not in raw_column.lower(), raw_column
     # Sanitize input: extract column from raw column (might contain COUNT, ...).
     # XXX This is not enough to parse something like:
     # GROUP_CONCAT(DISTINCT foo ORDER BY bar)
     if '(' in raw_column:
       function, column = raw_column.split('(')
       column = column.strip()
-      assert column[-1] == ')'
+      assert column[-1] == ')', column
       column = column[:-1].strip()
     else:
       function = None
@@ -156,8 +156,9 @@ class ColumnMap(object):
     order = self.related_key_order_dict.get(real_related_column, 0) + 1
     related_column = '%s_%s' % (related_column, order)
     group = 'related_%s' % (related_column, )
-    assert group not in self.registry
-    assert group not in self.related_group_dict
+    assert group not in self.registry, (group, self.registry)
+    assert group not in self.related_group_dict, (group,
+      self.related_group_dict)
     self.related_key_order_dict[real_related_column] = order
     self.related_key_dict[real_related_column] = (group, column)
     self.registerColumn(column, group=group)
@@ -185,9 +186,10 @@ class ColumnMap(object):
     self.resolveTable(self.catalog_table_name, self.catalog_table_name)
 
   def registerRelatedKeyColumn(self, related_column, position, group):
-    assert group in self.related_group_dict
+    assert group in self.related_group_dict, (group, self.related_group_dict)
     group = self.getRelatedKeyGroup(position, group)
-    assert group not in self.related_group_dict
+    assert group not in self.related_group_dict, (group,
+      self.related_group_dict)
     self.related_group_dict[group] = related_column
     return group
 
@@ -494,11 +496,13 @@ class ColumnMap(object):
       return None
 
   def resolveColumn(self, column, table_name, group=DEFAULT_GROUP_ID):
-    assert group in self.registry
-    assert column in self.registry[group]
+    assert group in self.registry, (group, self.registry)
+    assert column in self.registry[group], (column, group,
+      self.registry[group])
     column_map_key = (group, column)
     column_map = self.column_map
-    assert (group, table_name) in self.table_alias_dict
+    assert (group, table_name) in self.table_alias_dict, (group, table_name,
+      self.table_alias_dict)
     previous_value = column_map.get(column_map_key)
     if previous_value is None:
       column_map[column_map_key] = table_name
@@ -510,10 +514,13 @@ class ColumnMap(object):
 
   def resolveTable(self, table_name, alias, group=DEFAULT_GROUP_ID):
     table_alias_key = (group, table_name)
-    assert table_alias_key in self.table_alias_dict
-    assert self.table_alias_dict[table_alias_key] in (None, alias)
+    assert table_alias_key in self.table_alias_dict, (table_alias_key,
+      self.table_alias_dict)
+    assert self.table_alias_dict[table_alias_key] in (None, alias), (
+      table_alias_key, self.table_alias_dict[table_alias_key], alias)
     self.table_alias_dict[table_alias_key] = alias
-    assert self.table_map.get(alias) in (None, table_name)
+    assert self.table_map.get(alias) in (None, table_name), (alias,
+      self.table_map.get(alias), table_name)
     self.table_map[alias] = table_name
 
   def getTableAlias(self, table_name, group=DEFAULT_GROUP_ID):
