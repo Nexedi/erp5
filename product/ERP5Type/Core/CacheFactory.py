@@ -58,6 +58,7 @@ class CacheFactory(XMLObject):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
                     , PropertySheet.CacheFactory
+                    , PropertySheet.SortIndex
                     )
 
   def getCacheUid(self):
@@ -71,9 +72,34 @@ class CacheFactory(XMLObject):
     assert relative_url[:14] == 'portal_caches/'
     return relative_url[14:]
 
-  def getCachePluginList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'get')
+  def get(self, cache_id, default=None):
+    """
+      Get value or return default from all contained Cache Bag
+      or Cache Plugin.
+    """
+    cache_plugin_list = self.getCachePluginList(list(self.allowed_types) + ['ERP5 Cache Bag'])
+    for cache_plugin in cache_plugin_list:
+      value = cache_plugin.get(cache_id, default)
+      if value is not None:
+        return value
+    return default
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'set')
+  def set(self, cache_id, value):
+    """
+      Set value to all contained cache plugin or cache bag.
+    """
+    cache_plugin_list = self.getCachePluginList(list(self.allowed_types) + ['ERP5 Cache Bag'])
+    for cache_plugin in cache_plugin_list:
+      cache_plugin.set(cache_id, value)
+
+  def getCachePluginList(self, allowed_types=None):
     """ get ordered list of installed cache plugins in ZODB """
-    cache_plugins = self.objectValues(self.allowed_types)
+    if allowed_types is None:
+      # fall back to default ones
+      allowed_types = self.allowed_types
+    cache_plugins = self.objectValues(allowed_types)
     cache_plugins = map(None, cache_plugins)
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return cache_plugins
@@ -99,5 +125,5 @@ class CacheFactory(XMLObject):
 
   def clearCache(self):
     """ clear cache for this cache factory """
-    for cp in self.getRamCacheFactory().getCachePluginList():
+    for cp in self.getRamCacheFactoryPluginList():
       cp.clearCache()

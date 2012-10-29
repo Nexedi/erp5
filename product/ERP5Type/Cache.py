@@ -200,6 +200,14 @@ class CacheFactory:
         return cp
     return None
 
+  def getCachePluginByUid(self, uid):
+    """ get cache plugin by its Uid """
+    for cp in self.cache_plugins:
+      if uid == cp.uid:
+        return cp
+    return None
+
+
   def clearCache(self):
     """ clear cache for this cache factory """
     for cp in self.cache_plugins:
