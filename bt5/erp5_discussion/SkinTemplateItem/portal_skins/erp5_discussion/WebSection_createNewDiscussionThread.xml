@@ -119,7 +119,7 @@ discussion_post = discussion_thread.newContent(\n
                       language = language)\n
 \n
 # depending on security model Thread and Post can be directly published or shared\n
-portal_status_message = "New discussion created in backgroud."\n
+portal_status_message = "New discussion created in background."\n
 discussion_thread.publish()\n
 \n
 if send_notification_text not in (\'\', None):\n
