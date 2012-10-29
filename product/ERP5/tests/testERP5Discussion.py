@@ -93,9 +93,18 @@ class TestERP5Discussion(ERP5TypeTestCase):
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inside a discussion thread"""
 
-    thread = self.stepCreateThread();
-    post = self.stepCreatePost(thread);
+    thread = self.stepCreateThread()
+    post = self.stepCreatePost(thread)
+    # post is not indexed yet 
+    self.assertSameSet([], thread.DiscussionThread_getDiscussionPostList())
+
+    # not indexed but its relative url is passed through REQUEST
+    self.app.REQUEST.set('post_relative_url', post.getRelativeUrl())
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
     self.tic()
+   
+    # indexed already
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
 
   def test_MultipleForum(self):
     """
