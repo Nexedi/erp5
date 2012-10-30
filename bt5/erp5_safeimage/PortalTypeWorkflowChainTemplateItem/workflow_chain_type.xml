@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Image</type>
-  <workflow>document_conversion_interaction_workflow,, document_publication_workflow, document_security_interaction_workflow,, edit_workflow</workflow>
- </chain>
- <chain>
   <type>Image Tile</type>
   <workflow>validation_workflow</workflow>
  </chain>

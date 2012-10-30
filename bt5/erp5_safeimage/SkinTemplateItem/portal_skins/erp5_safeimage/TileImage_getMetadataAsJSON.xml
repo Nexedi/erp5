@@ -53,22 +53,17 @@
             <value> <string>import json\n
 \n
 context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
-\n
 tile_image = context\n
 xml_file = tile_image["ImageProperties.xml"]\n
-\n
 xml_split = xml_file.getData().split(" ")\n
 widthpre = xml_split[1].split("=")\n
 heightpre = xml_split[2].split("=")\n
-\n
 width = widthpre[1][1:-1]\n
 height = heightpre[1][1:-1] \n
-\n
 data = {}\n
 data["sizes"] = []\n
 sizes = data["sizes"]\n
 sizes.append({"width":width,"height":height})\n
-\n
 \n
 return json.dumps(data)\n
 </string> </value>

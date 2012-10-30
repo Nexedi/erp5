@@ -53,11 +53,9 @@
             <value> <string>import json\n
 \n
 context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
-\n
 data = {}\n
 data["image_list"] = []\n
 image_list = data["image_list"]\n
-\n
 for tile_image in context.portal_catalog(portal_type="Image Tile"):\n
   title = tile_image.getTitle() \n
   id =  tile_image.getId()\n

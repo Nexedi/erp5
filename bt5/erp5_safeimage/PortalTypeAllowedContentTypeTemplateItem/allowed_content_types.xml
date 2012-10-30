@@ -1,6 +1,5 @@
 <allowed_content_type_list>
  <portal_type id="Image Module">
-  <item>Image</item>
   <item>Image Tile</item>
   <item>Image Tile Transformed</item>
  </portal_type>

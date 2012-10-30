@@ -34,42 +34,32 @@ class TestSafeImage(ERP5TypeTestCase):
     portal = self.getPortalObject()
     self.image_module = self.portal.getDefaultModule(portal_type = 'Image Module')
     self.assertTrue(self.image_module is not None)
-    
-    if getattr(self.image_module,'testfruit',None) is not None: 
-      LOG('DELETE IMAGEEEEEEE',INFO,'DELETEEEEEEEEE  IMAGEEEE!!!!!')
-      self.image_module.manage_delObjects(ids=['testfruit'])
-   
+    if getattr(self.image_module,'testImage',None) is not None: 
+      self.image_module.manage_delObjects(ids=['testImage'])
     if getattr(self.image_module,'testTile',None) is not None: 
-      LOG('DELETE TEST TILE',INFO,'DELETEEEEEEEEE!!!!!')
       self.image_module.manage_delObjects(ids=['testTile'])
-   
     if getattr(self.image_module,'testTileTransformed',None) is not None: 
       self.image_module.manage_delObjects(ids=['testTileTransformed'])
-      LOG('DELETE TEST TILETRANSFORMED!!!!!!!',INFO,'DELETEEEEEEEEE TTTTTTT!!!!!')
     transaction.commit()
     self.tic()  
 
-
   def _createImage(self):
     portal = self.getPortalObject()
-    image_path = portal.portal_skins.erp5_safeimage.fruit
-    image_buffer = StringIO()
-    image_buffer.write(image_path.data.__str__())
-    image_buffer.seek(0)
-    image = self.image_module.newContent(portal_type='Image',title='testfruit',
-                                id='testfruit',file=image_buffer,filename='testfruit')   
+    _image = makeFileUpload('image_test.jpg')
+    image = self.image_module.newContent(portal_type='Image',title='testImage',
+                                id='testImage',file=_image,filename='testImage')   
     return image 
  
   def _createTileImage(self):
     portal = self.getPortalObject()
-    tile_image = makeFileUpload('fruit.jpg')
+    tile_image = makeFileUpload('image_test.jpg')
     tile = self.image_module.newContent(portal_type='Image Tile',title='testTile',
                              id='testTile',file=tile_image,filename='testTile')
     return tile 
   
   def _createTileImageTransformed(self):
     portal = self.getPortalObject()
-    tile_image_transformed = makeFileUpload('fruit.jpg')
+    tile_image_transformed = makeFileUpload('image_test.jpg')
     tile_transformed = self.image_module.newContent(portal_type='Image Tile Transformed',
                              title='testTileTransformed',id='testTileTransformed',
                              file=tile_image_transformed,filename='testTileTransformed')
@@ -83,19 +73,64 @@ class TestSafeImage(ERP5TypeTestCase):
     self.assertNotEqual(image,None) 
   
   def test_02_CreateTileImage(self):
-    tile = self._createTileImage()
-    transaction.commit()
-    self.tic()
-    self.assertNotEqual(tile,None)
-    tile_image_list = tile.objectValues() 
-    LOG('len TILE:',INFO,'%s' %(len(tile_image_list)))
-    self.assertEquals(len(tile_image_list),2)
+     """"
+     We are going to check that tile image has following structure
+     1/
+     1/Image Tile Group
+     1/Image Tile Group/0-0-0
+     1/Image Tile Group/1-0-0
+     1/ImageProperties.xml
+     """
+     tile = self._createTileImage()
+     transaction.commit()
+     self.tic()
+     self.assertNotEqual(tile,None)
+     image_property = getattr(tile, "ImageProperties.xml", None)
+     self.assertEquals(image_property.getData(),
+ """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+     self.assertNotEqual(image_property, None)
+     self.assertEquals("Embedded File", image_property.getPortalType())
+     image_group = getattr(tile, "TileGroup0", None)
+     self.assertNotEquals(image_group, None)
+     self.assertEquals("Image Tile Group",image_group.getPortalType())
+     splitted_image_list = image_group.objectValues(portal_type="Image")
+     self.assertEquals(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
+                       set([x.getId() for x in splitted_image_list]))
+     for x in splitted_image_list:
+        self.assertTrue(x.hasData())
+     self.assertEquals(123,image_group['0-0-0'].getHeight()) 
+     self.assertEquals(165,image_group['0-0-0'].getWidth()) 
 
   def test_03_CreateTileImageTransformed(self):
-    tile_transformed = self._createTileImageTransformed()
-    transaction.commit()
-    self.tic()
-    self.assertNotEqual(tile_transformed,None)   
-    tile_image_transformed_list = tile_transformed.objectValues()
-    LOG('len TRANSFOR:',INFO,'%s' %(len(tile_image_transformed_list)))
-    self.assertEquals(len(tile_image_transformed_list),3)    
+     """"
+     We are going to check that tile image has following structure
+     1/
+     1/Image Tile Group
+     1/Image Tile Group/0-0-0
+     1/Image Tile Group/1-0-0
+     1/ImageProperties.xml
+     1/TransformFile.txt
+     """
+     tile_transformed = self._createTileImageTransformed()
+     transaction.commit()
+     self.tic()
+     self.assertNotEqual(tile_transformed,None)
+     image_property = getattr(tile_transformed, "ImageProperties.xml", None)
+     self.assertEquals(image_property.getData(),
+ """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+     self.assertNotEqual(image_property, None)
+     self.assertEquals("Embedded File", image_property.getPortalType())
+     image_transform = getattr(tile_transformed, "TransformFile.txt", None)
+     self.assertTrue(image_transform.getData().split()[1],'2-0-0')
+     self.assertNotEqual(image_transform, None)
+     self.assertEquals("Embedded File", image_transform.getPortalType())
+     image_group = getattr(tile_transformed, "TileGroup0", None)
+     self.assertNotEquals(image_group, None)
+     self.assertEquals("Image Tile Group",image_group.getPortalType())
+     splitted_image_list = image_group.objectValues(portal_type="Image")
+     self.assertEquals(set(['0-0-0','1-0-0','1-1-0','2-0-0','2-0-1','2-1-0','2-1-1','2-2-0','2-2-1']),
+                       set([x.getId() for x in splitted_image_list]))
+     for x in splitted_image_list:
+        self.assertTrue(x.hasData())
+     self.assertEquals(123,image_group['0-0-0'].getHeight()) 
+     self.assertEquals(165,image_group['0-0-0'].getWidth())

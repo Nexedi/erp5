@@ -53,22 +53,16 @@
             <value> <string>import json\n
 \n
 context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
-\n
 file = context["TransformFile.txt"].getData().split()\n
 data = {}\n
 data["transforms"]=[]\n
 transforms=data["transforms"]\n
-\n
 #Reverse Text File to improve performance in the browser\n
 while(file):\n
  line = file[:6]\n
  transforms.append({"tilegroup":line[0],"tileid":line[1],"algorithm":line[2],"param1":line[3],"param2":line[4],"num":line[5]})\n
  del(file[:6])\n
  \n
-\n
-#print transforms\n
-\n
-#return printed\n
 return json.dumps(transforms)\n
 </string> </value>
         </item>
