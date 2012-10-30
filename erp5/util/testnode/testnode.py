@@ -58,6 +58,10 @@ class SlapOSInstance(object):
 
   def edit(self, **kw):
     self.__dict__.update(**kw)
+    self._checkData()
+
+  def _checkData(self):
+    pass
 
 class NodeTestSuite(SlapOSInstance):
 
@@ -66,13 +70,24 @@ class NodeTestSuite(SlapOSInstance):
     self.reference = reference
 
   def edit(self, **kw):
-    if kw.has_key("working_directory"):
-      kw["working_directory"] = os.path.join(kw["working_directory"],
-                                              self.reference)
-      SlapOSControler.createFolder(kw["working_directory"])
-      kw["custom_profile_path"] = os.path.join(kw['working_directory'],
-                                 'software.cfg')
     super(NodeTestSuite, self).edit(**kw)
+
+  def _checkData(self):
+    if getattr(self, "working_directory", None) is not None:
+      if not(self.working_directory.endswith(os.path.sep + self.reference)):
+        self.working_directory = os.path.join(self.working_directory,
+                                             self.reference)
+      SlapOSControler.createFolder(self.working_directory)
+      self.custom_profile_path = os.path.join(self.working_directory,
+                                 'software.cfg')
+    if getattr(self, "vcs_repository_list", None) is not None:
+      for vcs_repository in self.vcs_repository_list:
+        buildout_section_id = vcs_repository.get('buildout_section_id', None)
+        repository_id = buildout_section_id or \
+                        vcs_repository.get('url').split('/')[-1].split('.')[0]
+        repository_path = os.path.join(self.working_directory,repository_id)
+        vcs_repository['repository_id'] = repository_id
+        vcs_repository['repository_path'] = repository_path
 
 class TestNode(object):
 
@@ -88,12 +103,12 @@ class TestNode(object):
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
-    installed_reference_set = set(os.listdir(config['slapos_directory']))
+    installed_reference_set = set(os.listdir(config['working_directory']))
     wished_reference_set = set([x['test_suite_reference'] for x in test_suite_data])
     to_remove_reference_set = installed_reference_set.difference(
                                  wished_reference_set)
     for y in to_remove_reference_set:
-      fpath = os.path.join(config['slapos_directory'],y)
+      fpath = os.path.join(config['working_directory'],y)
       self.delNodeTestSuite(y)
       if os.path.isdir(fpath):
        shutil.rmtree(fpath)
@@ -115,23 +130,11 @@ class TestNode(object):
     config = self.config
     profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
-    try:
-      # BBB: Accept global profile_path, which is the same as setting it for the
-      # first configured repository.
-      profile_path = config.pop(PROFILE_PATH_KEY)
-    except KeyError:
-      pass
-    else:
-      node_test_suite.vcs_repository_list[0][PROFILE_PATH_KEY] = profile_path
     profile_path_count = 0
     for vcs_repository in node_test_suite.vcs_repository_list:
       url = vcs_repository['url']
       buildout_section_id = vcs_repository.get('buildout_section_id', None)
-      repository_id = buildout_section_id or \
-                                  url.split('/')[-1].split('.')[0]
-      repository_path = os.path.join(node_test_suite.working_directory,repository_id)
-      vcs_repository['repository_id'] = repository_id
-      vcs_repository['repository_path'] = repository_path
+      repository_path = vcs_repository['repository_path']
       try:
         profile_path = vcs_repository[PROFILE_PATH_KEY]
       except KeyError:
@@ -158,7 +161,6 @@ branch = %(branch)s
     custom_profile = open(node_test_suite.custom_profile_path, 'w')
     custom_profile.write(profile_content)
     custom_profile.close()
-    config['repository_path'] = repository_path
     sys.path.append(repository_path)
 
   def getAndUpdateFullRevisionList(self, node_test_suite):
@@ -251,7 +253,7 @@ branch = %(branch)s
     We will build slapos software needed by the testnode itself,
     like the building of selenium-runner by default
     """
-    return self._prepareSlapOS(self.config['slapos_directory'],
+    self._prepareSlapOS(self.config['slapos_directory'],
               test_node_slapos, create_partition=0,
               software_path_list=self.config.get("software_list"))
 
@@ -304,7 +306,7 @@ branch = %(branch)s
 
   def cleanUp(self,test_result):
     log = self.log
-    log('Testnode.run, finally close')
+    log('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
     if test_result is not None:
       try:
@@ -324,6 +326,7 @@ branch = %(branch)s
     try:
       while True:
         try:
+          self.cleanUp(None)
           remote_test_result_needs_cleanup = False
           begin = time.time()
           self.prepareSlapOSForTestNode(test_node_slapos)
@@ -367,6 +370,7 @@ branch = %(branch)s
               time.sleep(20)
               self.runTestSuite(node_test_suite,portal_url, slapos_controler)
               test_result.removeWatch(log_file_name)
+            self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
           if test_result is not None:
@@ -401,4 +405,5 @@ branch = %(branch)s
       # Nice way to kill *everything* generated by run process -- process
       # groups working only in POSIX compilant systems
       # Exceptions are swallowed during cleanup phas
+      log("GENERAL EXCEPTION, QUITING")
       self.cleanUp(test_result)
