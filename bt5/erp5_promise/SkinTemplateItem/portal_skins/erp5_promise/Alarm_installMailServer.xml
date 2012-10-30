@@ -61,7 +61,7 @@ if protocol == \'smtps\':\n
 else:\n
   force_tls = False\n
 \n
-auth_item = promise_url.split(\'@\', 1)\n
+auth_item = promise_url.rsplit(\'@\', 1)\n
 if len(auth_item) == 2:\n
   auth, promise_url = auth_item\n
   smtp_uid, smtp_pwd = auth.split(\':\')\n
