@@ -61,6 +61,11 @@ class CacheBag(CacheFactory):
         value = data_dict.getValue()
         if ram_cache_factory_plugin_list.index(cache_plugin)>0:
           # update first plugin as it's the one to be used
+          # XXX: JPS we can have different update policy here based on a project requirements.
+          # c0 c1 c2....cN where c0 is filled from cN
+          # c1.... cN-1 untouched then rotate i -> i+1
+          # this way you can create "groups of caches" per date and trash old stuff
+          # instead of using 2x more disk space, you can use 1/N more disk space
           cache_duration = self.getRamCacheFactory().cache_duration
           ram_cache_factory_plugin_list[0].set(cache_id, DEFAULT_CACHE_SCOPE, value, cache_duration)
         return value
