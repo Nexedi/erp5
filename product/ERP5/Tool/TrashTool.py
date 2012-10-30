@@ -37,6 +37,7 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 from Acquisition import aq_base
+from cStringIO import StringIO
 
 class TrashTool(BaseTool):
   """
@@ -144,10 +145,11 @@ class TrashTool(BaseTool):
         object_path = container_path + [object_id]
         obj = self.unrestrictedTraverse(object_path)
       if obj is not None:
-        for subobject_id in list(obj.objectIds()):
-          subobject = obj.unrestrictedTraverse(subobject_id)
-          subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
-          subobjects_dict[subobject_id] = subobject_copy
+        for subobject_id in obj.objectIds():
+          subobject = obj[subobject_id]
+          subobjects_dict[subobject_id] = subobject._p_jar.exportFile(
+            subobject._p_oid, StringIO())
+
           if save: # remove subobjecs from backup object
             obj._delObject(subobject_id)
             if subobject_id in obj.objectIds():
