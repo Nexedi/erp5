@@ -54,7 +54,7 @@
 \n
 portal = context.getPortalObject()\n
 mailhost = portal.MailHost\n
-promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\')\n
+promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\').rstrip(\'/\')\n
 \n
 if promise_url is None:\n
   return\n
@@ -69,7 +69,7 @@ if mailhost.smtp_uid:\n
 else:\n
   auth = \'\'\n
 \n
-url = "%s://%s%s:%s/" % (protocol, auth, mailhost.smtp_host, mailhost.smtp_port)\n
+url = "%s://%s%s:%s" % (protocol, auth, mailhost.smtp_host, mailhost.smtp_port)\n
 \n
 active_result = ActiveResult()\n
 \n
