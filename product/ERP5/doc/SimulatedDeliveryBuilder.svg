@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="simulation.svg">
+   sodipodi:docname="SimulatedDeliveryBuilder.svg">
   <title
      id="title3064">Interactions and activity dependencies in simulation</title>
   <defs
@@ -80,9 +80,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.74318519"
-     inkscape:cx="387.99291"
-     inkscape:cy="372.04724"
+     inkscape:zoom="0.8748889"
+     inkscape:cx="526.18109"
+     inkscape:cy="370.90424"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -95,10 +95,10 @@
      inkscape:snap-object-midpoints="false"
      inkscape:snap-bbox="false"
      inkscape:connector-spacing="10"
-     inkscape:window-width="1280"
-     inkscape:window-height="756"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
+     inkscape:window-width="1600"
+     inkscape:window-height="852"
+     inkscape:window-x="-3"
+     inkscape:window-y="-3"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -286,7 +286,7 @@
          sodipodi:role="line"
          x="53.14959"
          y="915.41022"
-         id="tspan5323-4">  after_tag = expand:&lt;delivey_path&gt;</tspan><tspan
+         id="tspan5323-4">  after_tag = expand:&lt;delivery_path&gt;</tspan><tspan
          sodipodi:role="line"
          x="53.14959"
          y="937.91022"
@@ -294,7 +294,7 @@
     <rect
        style="fill:none;stroke:#000000;stroke-width:1.77165353;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect5230-5-5-3"
-       width="407.48035"
+       width="425.19687"
        height="106.29918"
        x="35.433037"
        y="857.47711"
@@ -430,15 +430,15 @@
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.99921262;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-6)"
-       d="m 442.91338,875.19362 262.74802,0 c 1.5,0 3,-1.5 3,-3 l 0,-32.43307"
+       style="fill:none;stroke:#000000;stroke-width:0.99921256;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-6)"
+       d="m 460.62992,875.19362 245.03148,0 c 1.5,0 3,-1.5 3,-3 l 0,-32.43307"
        id="path3048"
        inkscape:connector-type="orthogonal"
        inkscape:connector-curvature="3"
        sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend-6)"
-       d="m 442.91339,928.34322 53.14961,0"
+       d="m 460.62992,928.34322 35.43308,0"
        id="path4198"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
