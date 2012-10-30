@@ -30,14 +30,31 @@ class ERP5TestNode(TestCase):
 
   def setUp(self):
     self._tempdir = tempfile.mkdtemp()
-    self.software_root = os.path.join(self._tempdir, 'software')
-    self.instance_root = os.path.join(self._tempdir, 'instance')
+    self.working_directory = os.path.join(self._tempdir, 'testnode')
+    self.slapos_directory = os.path.join(self._tempdir, 'slapos')
+    os.mkdir(self.working_directory)
+    os.mkdir(self.slapos_directory)
+    self.remote_repository1 = os.path.join(self._tempdir, 'rep1')
+    self.remote_repository2 = os.path.join(self._tempdir, 'rep2')
 
   def tearDown(self):
     shutil.rmtree(self._tempdir, True)
 
   def getTestNode(self):
     return TestNode(None, None)
+
+  def updateNodeTestSuiteData(self, node_test_suite):
+    node_test_suite.edit(working_directory=self.working_directory,
+        test_suite="Foo",
+        project_title="Foo",
+        test_suite_title="Foo-Test",
+        vcs_repository_list=[
+            {'url': self.remote_repository1,
+             'profile_path': 'software.cfg',
+             'branch': 'master'},
+            {'url': self.remote_repository2,
+             'buildout_section_id': 'foo',
+             'branch': 'master'}])
 
   def test_01_GetDelNodeTestSuite(self):
     """
@@ -58,8 +75,25 @@ class ERP5TestNode(TestCase):
     """
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    node_test_suite.edit(working_directory="some_path")
-    self.assertEquals("some_path/foo", node_test_suite.working_directory)
+    node_test_suite.edit(working_directory=self.working_directory)
+    self.assertEquals("%s/foo" % self.working_directory,
+                      node_test_suite.working_directory)
 
   def test_03_constructProfile(self):
-    pass
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    test_node.constructProfile(node_test_suite)
+    self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
+                      node_test_suite.custom_profile_path)
+    profile = open(node_test_suite.custom_profile_path, 'r')
+    expected_profile = """
+[buildout]
+extends = %s/testnode/foo/rep1/software.cfg
+
+[foo]
+repository = %s/testnode/foo/foo
+branch = master
+""" % (self._tempdir, self._tempdir)
+    self.assertEquals(expected_profile, profile.read())
+    profile.close()

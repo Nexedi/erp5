@@ -69,6 +69,9 @@ class NodeTestSuite(SlapOSInstance):
     if kw.has_key("working_directory"):
       kw["working_directory"] = os.path.join(kw["working_directory"],
                                               self.reference)
+      SlapOSControler.createFolder(kw["working_directory"])
+      kw["custom_profile_path"] = os.path.join(kw['working_directory'],
+                                 'software.cfg')
     super(NodeTestSuite, self).edit(**kw)
 
 class TestNode(object):
@@ -81,7 +84,7 @@ class TestNode(object):
     # hack until slapos.cookbook is updated
     if self.config.get('working_directory', '').endswith("slapos/"):
       self.config['working_directory'] = self.config[
-        'working_directory'][:-(len("slapos/"))]
+        'working_directory'][:-(len("slapos/"))] + "/testnode"
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -107,15 +110,6 @@ class TestNode(object):
   def delNodeTestSuite(self, reference):
     if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
-
-  def updateConfigForTestSuite(self, test_suite, node_test_suite):
-    config = self.config
-    node_test_suite.edit(**test_suite),
-    config['working_directory'] = os.path.join(config['slapos_directory'],
-                                           node_test_suite.reference)
-    SlapOSControler.createFolder(config['working_directory'])
-    custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
-    config['custom_profile_path'] = custom_profile_path
 
   def constructProfile(self, node_test_suite):
     config = self.config
@@ -161,7 +155,7 @@ branch = %(branch)s
    'branch' : vcs_repository.get('branch','master')}
     if not profile_path_count:
       raise ValueError(PROFILE_PATH_KEY + ' not defined')
-    custom_profile = open(config['custom_profile_path'], 'w')
+    custom_profile = open(node_test_suite.custom_profile_path, 'w')
     custom_profile.write(profile_content)
     custom_profile.close()
     config['repository_path'] = repository_path
@@ -234,6 +228,8 @@ branch = %(branch)s
       working_directory, self.config, log=self.log, slapproxy_log=slapproxy_log,
       process_manager=self.process_manager, reset_software=reset_software,
       software_path_list=software_path_list)
+    self.process_manager.supervisord_pid_file = os.path.join(\
+         slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
     if create_partition:
       method_list.append("runComputerPartition")
@@ -262,7 +258,7 @@ branch = %(branch)s
   def prepareSlapOSForTestSuite(self, node_test_suite):
     return self._prepareSlapOS(node_test_suite.working_directory,
               node_test_suite,
-              software_path_list=[self.config.get("custom_profile_path")])
+              software_path_list=[node_test_suite.custom_profile_path])
 
   def _dealShebang(self,run_test_suite_path):
     line = open(run_test_suite_path, 'r').readline()
@@ -346,10 +342,8 @@ branch = %(branch)s
                test_suite["test_suite_reference"])
             node_test_suite.edit(
                working_directory=self.config['working_directory'])
-            self.updateConfigForTestSuite(test_suite, node_test_suite)
+            node_test_suite.edit(**test_suite)
             run_software = True
-            self.process_manager.supervisord_pid_file = os.path.join(\
-                slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
             # Write our own software.cfg to use the local repository
             self.constructProfile(node_test_suite)
             # kill processes from previous loop if any
