@@ -4029,7 +4029,9 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       portal = context.getPortalObject()
       for object_path in object_list:
         obj = portal.unrestrictedTraverse(object_path)
-        obj.validate()
+        if obj.getPortalObjec().portal_workflow.isTransitionPossible(obj,
+            'validate'):
+          obj.validate()
 
       self.portal_components.reset(force=True, reset_portal_type=True)
     else:
