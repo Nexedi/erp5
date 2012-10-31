@@ -99,7 +99,7 @@ class TestNode(object):
     # hack until slapos.cookbook is updated
     if self.config.get('working_directory', '').endswith("slapos/"):
       self.config['working_directory'] = self.config[
-        'working_directory'][:-(len("slapos/"))] + "/testnode"
+        'working_directory'][:-(len("slapos/"))] + "testnode"
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -226,17 +226,17 @@ branch = %(branch)s
     reset_software = slapos_instance.retry_software_count > 10
     self.log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
-    slapos_controler = SlapOSControler.SlapOSControler(
+    self.slapos_controler = SlapOSControler.SlapOSControler(
       working_directory, self.config, log=self.log, slapproxy_log=slapproxy_log,
       process_manager=self.process_manager, reset_software=reset_software,
       software_path_list=software_path_list)
     self.process_manager.supervisord_pid_file = os.path.join(\
-         slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
+         self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
     if create_partition:
       method_list.append("runComputerPartition")
     for method_name in method_list:
-      slapos_method = getattr(slapos_controler, method_name)
+      slapos_method = getattr(self.slapos_controler, method_name)
       status_dict = slapos_method(self.config,
                                   environment=self.config['environment'],
                                  )
@@ -269,11 +269,11 @@ branch = %(branch)s
       invocation_list = line[2:].split()
     return invocation_list
 
-  def runTestSuite(self, node_test_suite, portal_url, slapos_controler):
+  def runTestSuite(self, node_test_suite, portal_url):
     config = self.config
 
     run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
-        slapos_controler.instance_root)
+        self.slapos_controler.instance_root)
     if not len(run_test_suite_path_list):
       raise ValueError('No runTestSuite provided in installed partitions.')
     run_test_suite_path = run_test_suite_path_list[0]
@@ -368,7 +368,7 @@ branch = %(branch)s
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               time.sleep(20)
-              self.runTestSuite(node_test_suite,portal_url, slapos_controler)
+              self.runTestSuite(node_test_suite,portal_url)
               test_result.removeWatch(log_file_name)
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError) as e:

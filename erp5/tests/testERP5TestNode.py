@@ -48,21 +48,28 @@ class ERP5TestNode(TestCase):
       for arg in args:
         print "TESTNODE LOG : %r" % (arg,)
     # XXX how to get property the git path ?
-    config = {"git_binary": "/srv/slapgrid/slappart80/srv/runner/software/ba1e09f3364989dc92da955b64e72f8d/parts/git/bin/git"}
+    config = {}
+    config["git_binary"] = "/srv/slapgrid/slappart80/srv/runner/software/ba1e09f3364989dc92da955b64e72f8d/parts/git/bin/git"
+    config["working_directory"] = self.working_directory
     return TestNode(log, config)
 
-  def updateNodeTestSuiteData(self, node_test_suite):
-    node_test_suite.edit(working_directory=self.working_directory,
-        test_suite="Foo",
-        project_title="Foo",
-        test_suite_title="Foo-Test",
-        vcs_repository_list=[
+  def getTestSuiteData(self):
+    return [{
+       "test_suite": "Foo",
+       "project_title": "Foo",
+       "test_suite_title": "Foo-Test",
+       "test_suite_reference": "foo",
+       "vcs_repository_list": [
             {'url': self.remote_repository0,
              'profile_path': 'software.cfg',
              'branch': 'master'},
             {'url': self.remote_repository1,
              'buildout_section_id': 'rep1',
-             'branch': 'master'}])
+             'branch': 'master'}]}]
+
+  def updateNodeTestSuiteData(self, node_test_suite):
+    node_test_suite.edit(working_directory=self.working_directory,
+                         **self.getTestSuiteData()[0])
 
   def getCaller(self, **kw):
     class Caller(object):
@@ -75,7 +82,7 @@ class ERP5TestNode(TestCase):
     return Caller(**kw)
 
   def generateTestRepositoryList(self):
-    last_commit_list = []
+    commit_dict = {}
     for i, repository_path in enumerate([self.remote_repository0,
                                         self.remote_repository1]):
       call = self.getCaller(cwd=repository_path)
@@ -87,18 +94,21 @@ class ERP5TestNode(TestCase):
       my_file.write("initial_content%i" % i)
       my_file.close()
       call("git commit -av -m next_commit".split() + ['--author="a b <a@b.c>"'])
-      output = call("git log --oneline".split())
+      output = call(['git', 'log', '--format=%H %s'])
       output_line_list = output.split("\n")
       self.assertEquals(3, len(output_line_list))
       # remove additional return line
       output_line_list = output_line_list[0:2]
-      expected_commit_list = ["next_commit", "first_commit"]
-      last_commit_list.append(output_line_list[0].split())
-      commit_list = [x.split()[1] for x in output_line_list]
-      self.assertEquals(expected_commit_list, commit_list)
-    # looks like [('d3d09e6', 'next_commit'), ('c4c15e0', 'next_commit')]
-    # for respectively rep0 and rep1
-    return last_commit_list
+      expected_commit_subject_list = ["next_commit", "first_commit"]
+      commit_subject_list = [x.split()[1] for x in output_line_list]
+      self.assertEquals(expected_commit_subject_list, commit_subject_list)
+      commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
+    # commit_dict looks like
+    # {'rep1': [['6669613db7239c0b7f6e1fdb82af6f583dcb3a94', 'next_commit'],
+    #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']],
+    #  'rep0': [['fb2a61882148d705fd10ecd87278b458a59920a9', 'next_commit'],
+    #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
+    return commit_dict
 
   def test_01_getDelNodeTestSuite(self):
     """
@@ -123,7 +133,23 @@ class ERP5TestNode(TestCase):
     self.assertEquals("%s/foo" % self.working_directory,
                       node_test_suite.working_directory)
 
-  def test_03_constructProfile(self):
+  def test_03_NodeTestSuiteCheckDataAfterEdit(self):
+    """
+    When a NodeTestSuite instance is edited, the method _checkData
+    analyse properties and add new ones
+    """
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    repository_path_list = []
+    for vcs_repository in node_test_suite.vcs_repository_list:
+      repository_path_list.append(vcs_repository['repository_path'])
+    expected_list = ["%s/rep0" % node_test_suite.working_directory,
+                     "%s/rep1" % node_test_suite.working_directory]
+    self.assertEquals(expected_list, repository_path_list)
+
+  def test_04_constructProfile(self):
     """
     Check if the software profile is correctly generated
     """
@@ -145,15 +171,79 @@ branch = master
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_04_getAndUpdateFullRevisionList(self):
+  def test_05_getAndUpdateFullRevisionList(self):
     """
-    Check if we clone correctly repositories and git right revisions
+    Check if we clone correctly repositories and get right revisions
     """
-    commit_list = self.generateTestRepositoryList()
+    commit_dict = self.generateTestRepositoryList()
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    result = test_node.getAndUpdateFullRevisionList(node_test_suite)
-    self.assertEquals(2, len(result))
-    self.assertTrue(result[0].startswith('rep0=2-%s' % commit_list[0][0]))
-    self.assertTrue(result[1].startswith('rep1=2-%s' % commit_list[1][0]))
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEquals(2, len(rev_list))
+    self.assertEquals(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
+    self.assertEquals(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
+    my_file = open(os.path.join(self.remote_repository1, 'first_file'), 'w')
+    my_file.write("next_content")
+    my_file.close()
+    call = self.getCaller(cwd=self.remote_repository1)
+    call("git commit -av -m new_commit".split() + ['--author="a b <a@b.c>"'])
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertTrue(rev_list[0].startswith('rep0=2-'))
+    self.assertTrue(rev_list[1].startswith('rep1=3-'))
+    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    for vcs_repository in node_test_suite.vcs_repository_list:
+      self.assertTrue(os.path.exists(vcs_repository['repository_path']))
+
+  def test_06_checkRevision(self):
+    """
+    Check if we are able to restore older commit hash if master decide so
+    """
+    commit_dict = self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    def getRepInfo(count=0, hash=0):
+      assert count or hash
+      info_list = []
+      for vcs_repository in node_test_suite.vcs_repository_list:
+        call = self.getCaller(cwd=vcs_repository['repository_path'])
+        if count:
+          info_list.append(
+            call("git rev-list --topo-order --count HEAD".split()).strip())
+        if hash:
+          info_list.append(
+            call("git log -n1 --format=%H".split()).strip())
+      return info_list
+    self.assertEquals(['2', '2'], getRepInfo(count=1))
+    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
+                      getRepInfo(hash=1))
+    class TestResult(object):
+      pass
+    test_result = TestResult()
+    # for test result to be one commit late for rep1 to force testnode to
+    # reset tree to older version
+    test_result.revision = 'rep0=2-%s,rep1=1-%s' % (commit_dict['rep0'][0][0],
+                                                    commit_dict['rep1'][1][0])
+    test_node.checkRevision(test_result, node_test_suite)
+    expected_count_list = ['2', '1']
+    self.assertEquals(['2', '1'], getRepInfo(count=1))
+    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
+                      getRepInfo(hash=1))
+
+  def test_07_checkOldTestSuite(self):
+    test_node = self.getTestNode()
+    test_suite_data = self.getTestSuiteData()
+    self.assertEquals([], os.listdir(self.working_directory))
+    test_node.checkOldTestSuite(test_suite_data)
+    self.assertEquals([], os.listdir(self.working_directory))
+    os.mkdir(os.path.join(self.working_directory, 'foo'))
+    self.assertEquals(['foo'], os.listdir(self.working_directory))
+    test_node.checkOldTestSuite(test_suite_data)
+    self.assertEquals(['foo'], os.listdir(self.working_directory))
+    os.mkdir(os.path.join(self.working_directory, 'bar'))
+    self.assertEquals(set(['bar','foo']),
+                      set(os.listdir(self.working_directory)))
+    test_node.checkOldTestSuite(test_suite_data)
+    self.assertEquals(['foo'], os.listdir(self.working_directory))
