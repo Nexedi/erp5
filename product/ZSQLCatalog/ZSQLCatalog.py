@@ -603,7 +603,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      catalog._allowed_manage_catalogClear(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
+      catalog.manage_catalogClear(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """

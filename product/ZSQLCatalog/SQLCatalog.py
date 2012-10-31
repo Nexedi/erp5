@@ -1316,7 +1316,7 @@ class Catalog(Folder,
                      'Total time: %s<br>'
                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
-  def _allowed_manage_catalogClear(self, REQUEST=None, RESPONSE=None,
+  def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     self.beforeCatalogClear()
@@ -1326,16 +1326,6 @@ class Catalog(Folder,
     if RESPONSE and URL1:
       RESPONSE.redirect('%s/manage_catalogAdvanced?' \
                         'manage_tabs_message=Catalog%%20Cleared' % URL1)
-
-  def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
-                          URL1=None, sql_catalog_id=None):
-    """ Disallows clearing default catalog """
-    default_catalog_id = self.default_sql_catalog_id
-    if self.getId() == default_catalog_id or sql_catalog_id == default_catalog_id:
-        raise NotImplementedError("Default Catalog deletion is forbidden")
-
-    return self._allowed_manage_catalogClear(REQUEST=REQUEST,
-        RESPONSE=RESPONSE, URL1=URL1, sql_catalog_id=sql_catalog_id)
 
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ clears reserved uids """
