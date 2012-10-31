@@ -286,11 +286,11 @@ branch = %(branch)s
                            '--test_suite_title', node_test_suite.test_suite_title,
                            '--node_quantity', config['node_quantity'],
                            '--master_url', portal_url])
-    firefox_bin_list = glob.glob("%s/*/parts/firefox/firefox-slapos" % \
+    firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
         config["slapos_directory"])
     if len(firefox_bin_list):
       invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
-    xvfb_bin_list = glob.glob("%s/*/parts/xserver/bin/Xvfb" % \
+    xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
         config["slapos_directory"])
     if len(xvfb_bin_list):
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
