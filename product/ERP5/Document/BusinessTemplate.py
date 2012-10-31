@@ -5182,8 +5182,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
           LOG('Business Template', 0, 'no SQL Catalog available')
           update_catalog = 0
         else:
-          LOG('Business Template', 0, 'Updating SQL Catalog')
-          catalog.manage_catalogClear()
+          try:
+            catalog.manage_catalogClear()
+          except NotImplementedError:
+            LOG('Business Template', 0, 'Doing nothing, as catalog clearing'
+                ' is disallowed')
+          else:
+            LOG('Business Template', 0, 'Clearing SQL Catalog')
 
       # get objects to remove
       # do remove after because we may need backup object from installation
