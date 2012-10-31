@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.13 (2012-10-31)
+------------------
+
+ * erp5.util.testnode:
+
+  - Add unit test for erp5testnode (with some hardcoded path that
+    needs to be fixed ASAP) [Sebastien Robin]
+  - Split long functions into several more simple ones for code
+    simplicity and readability [Sebastien Robin]
+
 0.4.12 (2012-10-25)
 ------------------
 
