@@ -253,7 +253,7 @@
         <span tal:condition="exchange_actions | report_actions"\n
               class="separator"><!--separator--></span>\n
         <button tal:condition="exchange_actions" class="import_export"\n
-              type="submit" name="Base_doExchange:method" title="Import Export"\n
+              type="submit" name="Base_doExchange:method" title="Import / Export"\n
               i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>\n
