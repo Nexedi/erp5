@@ -488,8 +488,9 @@ return 'a' * 1024 * 1024 * 25
       Check Cache Bag
     """
     portal_caches = self.portal.portal_caches
-
-    cache_bag = portal_caches.newContent(portal_type="Cache Bag",
+    cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                         cache_duration=3600)
+    cache_bag = cache_factory.newContent(portal_type="Cache Bag",
                                          cache_duration=3600)
 
     cache_plugin1 = cache_bag.newContent(portal_type="Ram Cache")
@@ -498,6 +499,7 @@ return 'a' * 1024 * 1024 * 25
     cache_plugin2 = cache_bag.newContent(portal_type="Ram Cache")
     cache_plugin2.setIntIndex(1)
     self.tic()
+    portal_caches.updateCache()
 
     # test proper init
     ram_cache_factory_plugin_list = cache_bag.getRamCacheFactoryPluginList()
@@ -535,6 +537,7 @@ return 'a' * 1024 * 1024 * 25
     ram_cache1 = cache_bag1.newContent(portal_type="Ram Cache")
     ram_cache2 = cache_bag1.newContent(portal_type="Ram Cache")
     self.tic()
+    portal_caches.updateCache()
 
     # test get / set API
     cache_factory.set('x', 'value_for_x')

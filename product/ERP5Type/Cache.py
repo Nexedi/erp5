@@ -200,12 +200,14 @@ class CacheFactory:
         return cp
     return None
 
-  def getCachePluginByUid(self, uid):
-    """ get cache plugin by its Uid """
+  def getCachePluginById(self, id, default=None):
+    """ get cache plugin by its id """
     for cp in self.cache_plugins:
-      if uid == cp.uid:
+      if id == cp.id:
         return cp
-    return None
+    if default is not None:
+      return default
+    raise KeyError("No such plugin exists %s" % id)
 
 
   def clearCache(self):

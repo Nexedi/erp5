@@ -42,7 +42,7 @@ class CacheProviderMixIn:
      """
        Get RAM based cache plugin for this ZODB cache plugin.
      """
-     return self.getParentValue().getRamCacheFactory().getCachePluginByUid(self.getCacheUid())
+     return self.getParentValue().getRamCacheFactory().getCachePluginById(self.getCacheId())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'get')
   def get(self, cache_id, default=None):
@@ -64,9 +64,9 @@ class CacheProviderMixIn:
     cache_plugin = self._getRamCachePlugin()
     cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE, value, cache_duration)
 
-  def getCacheUid(self):
+  def getCacheId(self):
     """
-      Get a common Cache Factory / Cache Bag UID in this
+      Get a common Cache Factory / Cache Bag ID in this
       case relative to portal_caches.
       It's required to use relative url (i.e. mainly ID) due
       to CachingMethod legacy.

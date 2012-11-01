@@ -69,9 +69,9 @@ class CacheTool(BaseTool):
 
     def getRamCachePlugin(cp):
       cp_meta_type = cp.meta_type
-      uid = cp.getCacheUid()
+      id = cp.getCacheId()
       if cp_meta_type == 'ERP5 Ram Cache':
-        return RamCache(uid)
+        return RamCache(id)
       if cp_meta_type == 'ERP5 Distributed Ram Cache':
         ## even thougn we have such plugin in ZODB that doens't mean
         ## we have corresponding memcache module installed
@@ -85,11 +85,11 @@ class CacheTool(BaseTool):
               'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
               'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
               'key_prefix': getattr(self, 'erp5_site_global_id', '')}
-            return DistributedRamCache(uid, init_dict)
+            return DistributedRamCache(id, init_dict)
 
     rd = {}
-    for cf in self.objectValues(['ERP5 Cache Factory', 'ERP5 Cache Bag']):
-      cache_scope = cf.getCacheUid()
+    for cf in self.objectValues('ERP5 Cache Factory'):
+      cache_scope = cf.getCacheId()
       rd[cache_scope] = {}
       rd[cache_scope]['cache_plugins'] = []
       rd[cache_scope]['cache_params'] = {}
@@ -104,7 +104,7 @@ class CacheTool(BaseTool):
       # support for cache bags which are like Cache Factory
       # i.e. provide Cache Plugins
       for cache_bag in cf.objectValues('ERP5 Cache Bag'):
-        cache_scope = cache_bag.getCacheUid()
+        cache_scope = cache_bag.getCacheId()
         rd[cache_scope] = {}
         rd[cache_scope]['cache_plugins'] = []
         rd[cache_scope]['cache_params'] = {}

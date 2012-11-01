@@ -61,9 +61,9 @@ class CacheFactory(XMLObject):
                     , PropertySheet.SortIndex
                     )
 
-  def getCacheUid(self):
+  def getCacheId(self):
     """
-      Get a common Cache Factory / Cache Bag UID in this
+      Get a common Cache Factory / Cache Bag ID in this
       case relative to portal_caches.
       It's required to use relative url (i.e. mainly ID) due
       to CachingMethod legacy.
@@ -94,12 +94,12 @@ class CacheFactory(XMLObject):
     for cache_plugin in cache_plugin_list:
       cache_plugin.set(cache_id, value)
 
-  def getCachePluginList(self, allowed_types=None):
+  def getCachePluginList(self, allowed_type_list=None):
     """ get ordered list of installed cache plugins in ZODB """
-    if allowed_types is None:
+    if allowed_type_list is None:
       # fall back to default ones
-      allowed_types = self.allowed_types
-    cache_plugins = self.objectValues(allowed_types)
+      allowed_type_list = self.allowed_types
+    cache_plugins = self.objectValues(allowed_type_list)
     cache_plugins = map(None, cache_plugins)
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return cache_plugins
@@ -107,7 +107,7 @@ class CacheFactory(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
   def getRamCacheFactory(self):
     """ Return RAM based cache factory """
-    cache_factory_name =  self.getCacheUid()
+    cache_factory_name =  self.getCacheId()
     cache_tool = self.portal_caches
     cache_factory = CachingMethod.factories.get(cache_factory_name)
     #XXX This conditional statement should be remove as soon as

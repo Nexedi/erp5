@@ -35,7 +35,7 @@ from Products.ERP5Type.Core.CacheFactory import CacheFactory
 
 class CacheBag(CacheFactory):
   """
-  CacheBag is a special type of CacheFactory that allows multi level caching
+  CacheBag is a special type of a CacheFactory that allows multi level caching
   in different backends describe by CachePlugin.
 
   CacheBag 1
@@ -59,7 +59,7 @@ class CacheBag(CacheFactory):
       data_dict = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE, default)
       if data_dict is not None:
         value = data_dict.getValue()
-        if ram_cache_factory_plugin_list.index(cache_plugin)>0:
+        if ram_cache_factory_plugin_list.index(cache_plugin) > 0:
           # update first plugin as it's the one to be used
           # XXX: JPS we can have different update policy here based on a project requirements.
           # c0 c1 c2....cN where c0 is filled from cN
