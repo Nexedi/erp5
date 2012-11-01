@@ -29,7 +29,6 @@
   <item>Ram Cache</item>
  </portal_type>
  <portal_type id="Cache Tool">
-  <item>Cache Bag</item>
   <item>Cache Factory</item>
  </portal_type>
  <portal_type id="Category">

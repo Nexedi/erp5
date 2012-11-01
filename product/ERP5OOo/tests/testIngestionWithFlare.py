@@ -49,11 +49,11 @@ class TestIngestionWithFlare(TestIngestion):
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
     memcached = _getPersistentMemcachedServerDict()
-    # create a Cache Bag for tests
-    cache_bag = self.portal.portal_caches.newContent(portal_type = 'Cache Bag')
-    cache_bag.cache_duration = 15768000
-    cache_plugin = cache_bag.newContent(portal_type='Distributed Ram Cache')
-    default_pref.setPreferredConversionCacheFactory(cache_bag.getId())
+    # create a Cache Factory for tests
+    cache_factory = self.portal.portal_caches.newContent(portal_type = 'Cache Factory')
+    cache_factory.cache_duration = 15768000
+    cache_plugin = cache_factory.newContent(portal_type='Distributed Ram Cache')
+    default_pref.setPreferredConversionCacheFactory(cache_factory.getId())
     persistent_memcached_plugin = self.portal.portal_memcached.persistent_memcached_plugin
     persistent_memcached_plugin.setUrlString('%s:%s' %(memcached['hostname'], memcached['port']))
     cache_plugin.setSpecialiseValue(persistent_memcached_plugin)
