@@ -719,7 +719,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     def _createRootAppliedRule(self):
       portal = self.getPortalObject()
       # Only create RAR if we are not in a "too early" or "too late" state.
-      if self.getSimulationState() not in portal.getPortalDraftOrderStateList():
+      state = self.getSimulationState()
+      if (state != 'deleted' and
+          state not in portal.getPortalDraftOrderStateList()):
         return super(Delivery, self)._createRootAppliedRule()
 
     security.declareProtected( Permissions.AccessContentsInformation,
