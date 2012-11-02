@@ -273,7 +273,8 @@ class FunctionalTestRunner:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
-
+    except:
+      print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),)
     finally:
       self.browser.quit()
       xvfb.quit()
