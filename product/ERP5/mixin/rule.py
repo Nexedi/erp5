@@ -498,7 +498,8 @@ class SimulableMixin(Base):
       kw, ignore = tv[key]
       kw.update(item_list)
     except KeyError:
-      ignore = set()
+      ignore_key = key + ('ignore',)
+      ignore = tv.pop(ignore_key, set())
       tv[key] = kw, ignore
       def before_commit():
         if kw:
@@ -511,7 +512,9 @@ class SimulableMixin(Base):
               after_tag='built:'+ path, # see SimulatedDeliveryBuilder
               priority=3,
               )._updateSimulation(**kw)
-        tv[key] = None # disallow further calls to 'updateSimulation' for self
+        del tv[key]
+        ignore.update(kw)
+        tv[ignore_key] = ignore
       transaction.get().addBeforeCommitHook(before_commit)
     for k, v in item_list:
       if not v:
