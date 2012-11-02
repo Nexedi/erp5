@@ -35,7 +35,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>ProjectLine_generateTasks</string> </value>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -43,16 +53,17 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
-                <string>right</string>
               </list>
             </value>
         </item>
@@ -63,49 +74,33 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_task_title</string>
-                        <string>listbox_task_description</string>
-                        <string>listbox_task_start_date</string>
-                        <string>listbox_task_stop_date</string>
-                        <string>listbox_task_requirement</string>
-                        <string>listbox_task_reference</string>
-                        <string>listbox_task_source</string>
-                        <string>listbox_task_line_resource</string>
-                        <string>listbox_task_line_quantity_unit</string>
-                        <string>listbox_task_line_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>left_information</string>
-                        <string>your_source</string>
-                        <string>your_resource</string>
-                        <string>your_task_line_quantity_unit</string>
+                        <string>my_preferred_task_resource_use_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>right_information</string>
-                        <string>your_source_section</string>
-                        <string>your_destination_decision</string>
-                        <string>your_destination_section</string>
-                        <string>your_destination</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -113,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProjectLine_viewTaskFastInputDialog</string> </value>
+            <value> <string>SystemPreference_viewProject</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,11 +116,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Requirement_generateRequirements</string> </value>
+            <value> <string>Preference_viewProject</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Add Tasks</string> </value>
+            <value> <string>Project</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -145,6 +140,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

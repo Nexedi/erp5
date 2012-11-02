@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_task_title</string> </value>
+            <value> <string>my_listbox_destination_decision_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>15</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Task Title</string> </value>
+                    <value> <string>Requester</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

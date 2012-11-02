@@ -71,10 +71,20 @@ for task in listbox:\n
     task_dict = {}\n
     task_dict[\'id\'] = task_id\n
     task_dict[\'title\'] = task[\'task_title\']\n
-    task_dict[\'comment\'] = task[\'task_comment\']\n
+    task_dict[\'reference\'] = task[\'task_reference\']\n
+    task_dict[\'description\'] = task[\'task_description\']\n
     task_dict[\'start_date\'] = task[\'task_start_date\']\n
     task_dict[\'stop_date\'] = task[\'task_stop_date\']\n
     task_dict[\'requirement\'] = task[\'task_requirement\']\n
+    task_dict[\'source\'] = task[\'task_source\'] or source\n
+    task_dict[\'source_section\'] = source_section\n
+    task_dict[\'resource\'] = task[\'task_line_resource\'] or resource\n
+    task_dict[\'quantity\'] = task[\'task_line_quantity\']\n
+    task_dict[\'quantity_unit\'] = task[\'task_line_quantity_unit\'] or task_line_quantity_unit\n
+    task_dict[\'source_section\'] = source_section\n
+    task_dict[\'destination_decision\'] = destination_decision\n
+    task_dict[\'destination_section\'] = destination_section\n
+    task_dict[\'destination\'] = destination\n
     task_items.append(task_dict)\n
 \n
 # sort the requirements list by id to have the same order of the user\n
@@ -87,10 +97,23 @@ for item in task_items:\n
    if item[\'title\'] != \'\':\n
       task = task_module.newContent( portal_type = document_type\n
                                      , title = item[\'title\']\n
-                                     , comment = item[\'comment\']\n
+                                     , reference = item[\'reference\']\n
+                                     , description = item[\'description\']\n
                                      , start_date = item[\'start_date\']\n
                                      , stop_date = item[\'stop_date\']\n
+                                     , source = item[\'source\']\n
+                                     , source_section = item[\'source_section\']\n
+                                     , resource = item[\'resource\']\n
+                                     , task_line_quantity = item[\'quantity\']\n
+                                     , task_line_quantity_unit = item[\'quantity_unit\']\n
+                                     , source_section = item[\'source_section\']\n
+                                     , destination_decision = item[\'destination_decision\']\n
+                                     , destination_section = item[\'destination_section\']\n
+                                     , destination = item[\'destination\']\n
                                      )\n
+      \n
+      if item[\'reference\'] == \'\':\n
+        task.setReference(\'T-\' + str(task.getId()))\n
       \n
       if item[\'requirement\'] is not None:\n
           if isinstance(item[\'requirement\'],str):\n
@@ -105,7 +128,7 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=[],**kw</string> </value>
+            <value> <string>source, source_section, destination_decision, destination_section, destination, task_line_quantity_unit, resource, listbox=[],**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
