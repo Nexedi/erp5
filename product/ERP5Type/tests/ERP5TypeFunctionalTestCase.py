@@ -28,6 +28,7 @@
 ##############################################################################
 
 import os
+import sys
 import time
 import signal
 import re
@@ -83,7 +84,8 @@ class Xvfb:
       if subprocess.call(('xdpyinfo', '-display', display),
                          stdout=null, stderr=subprocess.STDOUT):
         # Xvfb did not start properly so stop here
-        raise EnvironmentError("Can not start Xvfb, stop test execution")
+        raise EnvironmentError("Can not start Xvfb, stop test execution " \
+                               + "(display %r)" % (display,))
 
   def run(self):
     for display_try in self.display_list:
@@ -108,7 +110,8 @@ class Browser:
     self.port = port
 
   def quit(self):
-    self.process.kill()
+    if getattr(self, "process", None) is not None:
+      self.process.kill()
 
   def _run(self, url, display):
     """ This method should be implemented on a subclass """
@@ -261,8 +264,8 @@ class FunctionalTestRunner:
                        self.user, self.password)
 
   def test(self, debug=0):
-    xvfb = Xvfb(self.instance_home)
     try:
+      xvfb = Xvfb(self.instance_home)
       start = time.time()
       if not debug:
         print("\nSet 'erp5_debug_mode' environment variable to 1"
@@ -274,10 +277,12 @@ class FunctionalTestRunner:
         if (time.time() - start) > float(self.timeout):
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
     except:
-      print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),)
+      print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
+      raise
     finally:
-      self.browser.quit()
       xvfb.quit()
+      if getattr(self, "browser", None) is not None:
+        self.browser.quit()
 
   def processResult(self):
     file_content = self.getStatus().encode("utf-8", "replace")
