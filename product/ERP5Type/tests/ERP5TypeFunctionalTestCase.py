@@ -94,6 +94,8 @@ class Xvfb:
         self._runCommand(display_try)
         self.display = display_try
         break
+    else:
+      raise EnvironmentError("All displays locked : %r" % (self.display_list,))
 
     print 'Xvfb : %d' % self.process.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
