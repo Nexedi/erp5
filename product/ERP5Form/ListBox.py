@@ -2762,11 +2762,15 @@ class ListBoxValidator(Validator.Validator):
 
         result = {}
         error_result = {}
-        try:
-          listbox_uids = REQUEST['%s_uid' % field.id]
-        except KeyError:
-          raise KeyError('Field %s is not present in request object.'
-                         % field.id)
+        listbox_empty = REQUEST.get('%s_empty' % field.id, False)
+        if listbox_empty:
+          listbox_uids = []
+        else:
+          try:
+            listbox_uids = REQUEST['%s_uid' % field.id]
+          except KeyError:
+            raise KeyError('Field %s is not present in request object.'
+                           % field.id)
         select = field.get_value('select')
         if select:
           selected_uid_set = set(REQUEST.get('uids', ()))
