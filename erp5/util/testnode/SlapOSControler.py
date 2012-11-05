@@ -137,7 +137,8 @@ class SlapOSControler(object):
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
     for runs in range(0, MAX_SR_RETRIES):
-      status_dict = self.spawn(config['slapgrid_software_binary'], '-v', '-c',
+      status_dict = self.spawn(config['slapgrid_software_binary'],
+                 '-v', '-c', '--all',
                  self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
       if status_dict['status_code'] == 0:
