@@ -81,11 +81,18 @@ class Xvfb:
         stdout=null, stderr=null, close_fds=True)
       # try to check if X screen is available
       time.sleep(5)
+      return
+      # XXX xdpyinfo is not installed yet. Is this checking really needed ?
+      # If it is required, we have to make xdpyinfo available as part of
+      # selinum runner and make testnode using it (testnode use the software
+      # of selenium runner to launch firefox and Xvfb)
+      """
       if subprocess.call(('xdpyinfo', '-display', display),
                          stdout=null, stderr=subprocess.STDOUT):
         # Xvfb did not start properly so stop here
         raise EnvironmentError("Can not start Xvfb, stop test execution " \
                                + "(display %r)" % (display,))
+      """
 
   def run(self):
     for display_try in self.display_list:
