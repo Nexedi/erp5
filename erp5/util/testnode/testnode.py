@@ -370,6 +370,8 @@ branch = %(branch)s
               time.sleep(20)
               self.runTestSuite(node_test_suite,portal_url)
               test_result.removeWatch(log_file_name)
+              # break the loop to get latest priorities from master
+              break
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
