@@ -66,38 +66,56 @@ class CacheTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation, 'getCacheFactoryList')
   def getCacheFactoryList(self):
     """ Return available cache factories """
+
+    def getRamCachePlugin(cp):
+      cp_meta_type = cp.meta_type
+      id = cp.getCacheId()
+      if cp_meta_type == 'ERP5 Ram Cache':
+        return RamCache(id)
+      if cp_meta_type == 'ERP5 Distributed Ram Cache':
+        ## even thougn we have such plugin in ZODB that doens't mean
+        ## we have corresponding memcache module installed
+        if getattr(cp, 'getSpecialiseValue', None) is not None:
+          memcached_plugin = cp.getSpecialiseValue()
+          if memcached_plugin is not None:
+            server = memcached_plugin.getUrlString('')
+            init_dict = {
+              'server': server,
+              'expiration_time': cf.getCacheDuration(),
+              'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
+              'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
+              'key_prefix': getattr(self, 'erp5_site_global_id', '')}
+            return DistributedRamCache(id, init_dict)
+
     rd = {}
     for cf in self.objectValues('ERP5 Cache Factory'):
-      cache_scope = cf.getId()
+      cache_scope = cf.getCacheId()
       rd[cache_scope] = {}
       rd[cache_scope]['cache_plugins'] = []
       rd[cache_scope]['cache_params'] = {}
       for cp in cf.getCachePluginList():
-        cache_obj = None
-        cp_meta_type = cp.meta_type
-        if cp_meta_type == 'ERP5 Ram Cache':
-          cache_obj = RamCache()
-        elif cp_meta_type == 'ERP5 Distributed Ram Cache':
-          ## even thougn we have such plugin in ZODB that doens't mean
-          ## we have corresponding memcache module installed
-          cache_obj = None
-          if getattr(cp, 'getSpecialiseValue', None) is not None:
-            memcached_plugin = cp.getSpecialiseValue()
-            if memcached_plugin is not None:
-              server = memcached_plugin.getUrlString('')
-              init_dict = {
-                'server': server,
-                'expiration_time': cf.getCacheDuration(),
-                'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
-                'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
-                'key_prefix': getattr(self, 'erp5_site_global_id', '')
-                            }
-              cache_obj = DistributedRamCache(init_dict)
+        cache_obj = getRamCachePlugin(cp)
         if cache_obj is not None:
           ## set cache expire check interval
           cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
           rd[cache_scope]['cache_plugins'].append(cache_obj)
           rd[cache_scope]['cache_params']['cache_duration'] = cf.getCacheDuration()
+
+      # support for cache bags which are like Cache Factory
+      # i.e. provide Cache Plugins
+      for cache_bag in cf.objectValues('ERP5 Cache Bag'):
+        cache_scope = cache_bag.getCacheId()
+        rd[cache_scope] = {}
+        rd[cache_scope]['cache_plugins'] = []
+        rd[cache_scope]['cache_params'] = {}
+        for cp in cache_bag.getCachePluginList():
+          cache_obj = getRamCachePlugin(cp)
+          if cache_obj is not None:
+            ## set cache expire check interval
+            cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
+            rd[cache_scope]['cache_plugins'].append(cache_obj)
+            rd[cache_scope]['cache_params']['cache_duration'] = cf.getCacheDuration()
+
     return rd
 
   ##

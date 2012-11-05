@@ -36,7 +36,7 @@ class ICachePlugin(Interface):
   """CachePlugin Interface Specification
   """
 
-  def __init__(params={}):
+  def __init__(uid, params={}):
     """Initialise default values
     """
 

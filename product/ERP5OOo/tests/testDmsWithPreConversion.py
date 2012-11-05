@@ -68,7 +68,6 @@ class TestDocumentWithPreConversion(TestDocument):
     """
       Test pre converion only happens on proper documents.
     """
-    print "da"
     image = self.portal.image_module.newContent(portal_type='Image',
                                                reference='Embedded-XXX',
                                                version='001',

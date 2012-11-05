@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict, _getVolatileMemcachedServerDict
 from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 
 class TestingCache(DummyCache):
@@ -482,6 +482,83 @@ return 'a' * 1024 * 1024 * 25
       # Call conversion for ram_cache_factory
       calculation_time = self._callCache(my_cache, real_calculation=True)
       print "\n\tCalculation time (3rd call)", calculation_time
+
+  def test_06_CheckCacheBag(self):
+    """
+      Check Cache Bag
+    """
+    portal_caches = self.portal.portal_caches
+    cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                         cache_duration=3600)
+    cache_bag = cache_factory.newContent(portal_type="Cache Bag",
+                                         cache_duration=3600)
+
+    cache_plugin1 = cache_bag.newContent(portal_type="Ram Cache")
+    cache_plugin1.setIntIndex(0)
+
+    cache_plugin2 = cache_bag.newContent(portal_type="Ram Cache")
+    cache_plugin2.setIntIndex(1)
+    self.tic()
+    portal_caches.updateCache()
+
+    # test proper init
+    ram_cache_factory_plugin_list = cache_bag.getRamCacheFactoryPluginList()
+    self.assertEqual(2, len(ram_cache_factory_plugin_list))
+
+    # test get / set API
+    cache_bag.set('x', 'value_fox_x')
+    self.assertEqual('value_fox_x', cache_bag.get('x'))
+
+    # test that only first cache plugin is used to set
+    self.assertEqual('value_fox_x',
+                     ram_cache_factory_plugin_list[0].get('x',DEFAULT_CACHE_SCOPE).getValue())
+    self.assertRaises(KeyError, ram_cache_factory_plugin_list[1].get, 'x', DEFAULT_CACHE_SCOPE)
+
+    # check hot copy happens from second in order plugin to first
+    ram_cache_factory_plugin_list[1].set('y', DEFAULT_CACHE_SCOPE, 'value_for_y', cache_bag.cache_duration)
+    self.assertEqual('value_for_y', cache_bag.get('y'))
+    self.assertEqual('value_for_y', ram_cache_factory_plugin_list[0].get('y',DEFAULT_CACHE_SCOPE).getValue())
+
+  def test_07_CheckCacheFactory(self):
+    """
+      Check Cache Factory set and get API.
+    """
+    portal_caches = self.portal.portal_caches
+
+    cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                         cache_duration=3600)
+
+    cache_plugin1 = cache_factory.newContent(portal_type="Ram Cache")
+    cache_plugin1.setIntIndex(0)
+
+    cache_bag1 = cache_factory.newContent(portal_type="Cache Bag",
+                                         cache_duration=3600)
+    cache_bag1.setIntIndex(1)
+    ram_cache1 = cache_bag1.newContent(portal_type="Ram Cache")
+    ram_cache2 = cache_bag1.newContent(portal_type="Ram Cache")
+    self.tic()
+    portal_caches.updateCache()
+
+    # test get / set API
+    cache_factory.set('x', 'value_for_x')
+    self.assertEqual('value_for_x', cache_factory.get('x'))
+
+    # test that all cache plugin have this set
+    self.assertEqual('value_for_x', cache_plugin1.get('x'))
+    self.assertEqual('value_for_x', cache_bag1.get('x'))
+
+    # test set on individual cache plugin as this cache plugin has highest priority
+    # it will affect what root Cache Factory returns
+    cache_plugin1.set('x', 'new_value_for_x')
+    self.assertEqual('new_value_for_x', cache_plugin1.get('x'))
+    self.assertEqual('new_value_for_x', cache_factory.get('x'))
+    # others cache plugins will remain with old value until ...
+    self.assertEqual('value_for_x', cache_bag1.get('x'))
+    # .. root Cache Factory set will update all
+    cache_factory.set('x', 'new_value_for_x')
+    self.assertEqual(cache_factory.get('x'), cache_plugin1.get('x'))
+    self.assertEqual(cache_plugin1.get('x'), cache_bag1.get('x'))
+    self.assertEqual('new_value_for_x', cache_factory.get('x'))
 
   def test_99_CachePluginInterface(self):
     """Test Class against Interface

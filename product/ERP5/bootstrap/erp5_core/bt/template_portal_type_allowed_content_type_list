@@ -6,6 +6,9 @@ Base Domain | Domain
 Base Domain | Domain Generator
 Base Type | Action Information
 Base Type | Role Information
+Cache Bag | Distributed Ram Cache
+Cache Bag | Ram Cache
+Cache Factory | Cache Bag
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Tool | Cache Factory

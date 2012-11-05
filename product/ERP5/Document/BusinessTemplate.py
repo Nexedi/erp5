@@ -1128,7 +1128,8 @@ class ObjectTemplateItem(BaseTemplateItem):
               container._mapTransform(obj)
           elif obj.meta_type in ('ERP5 Ram Cache',
                                  'ERP5 Distributed Ram Cache',):
-            assert container.meta_type == 'ERP5 Cache Factory'
+            assert container.meta_type in ('ERP5 Cache Factory',
+                                           'ERP5 Cache Bag')
             container.getParentValue().updateCache()
           elif (container.meta_type == 'CMF Skins Tool') and \
               (old_obj is not None):

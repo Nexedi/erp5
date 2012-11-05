@@ -19,7 +19,12 @@
   <item>Action Information</item>
   <item>Role Information</item>
  </portal_type>
+ <portal_type id="Cache Bag">
+  <item>Distributed Ram Cache</item>
+  <item>Ram Cache</item>
+ </portal_type>
  <portal_type id="Cache Factory">
+  <item>Cache Bag</item>
   <item>Distributed Ram Cache</item>
   <item>Ram Cache</item>
  </portal_type>
