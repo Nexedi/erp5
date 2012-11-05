@@ -174,7 +174,7 @@ class TestResultLineProxy(RPCRetry):
         if kw:
             self._logger.info('Extra parameters provided: %r', kw)
             status_dict.update(kw)
-        self._retryRPC('stopUnitTest', (self._test_result_line_path,self.node_title,
+        self._retryRPC('stopUnitTest', (self._test_result_line_path,
             status_dict))
 
 class TestResultProxy(RPCRetry):
@@ -220,7 +220,7 @@ class TestResultProxy(RPCRetry):
         Return an TestResultLineProxy instance, or None if there is nothing to
         do.
         """
-        result = self._retryRPC('startUnitTest', (self._test_result_path,self.node_title,
+        result = self._retryRPC('startUnitTest', (self._test_result_path,
             exclude_list))
         if result:
             line_url, test_name = result
