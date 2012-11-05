@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.4.14 (2012-11-05)
+------------------
+
+ * erp5.util.testnode:
+
+  - force rebuilding software to avoid using old soft/code [Sebastien Robin]
+
+ * erp5.util.taskdistribution:
+
+  - handle another possible error with master [Sebastien Robin]
+
 0.4.13 (2012-10-31)
 ------------------
 
