@@ -660,6 +660,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         return ResponseWrapper(response, outstream, path)
 
+    def getConsistencyMessageList(self, obj):
+        return sorted([ str(message.getMessage())
+                        for message in obj.checkConsistency() ])
+
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def getPortalName(self):
