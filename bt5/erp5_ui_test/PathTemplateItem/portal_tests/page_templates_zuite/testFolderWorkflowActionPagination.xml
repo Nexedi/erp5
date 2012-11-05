@@ -45,7 +45,13 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Folder Workflow Action with pages (expected failure)</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Folder Workflow Action with pages (expected failure)\n
+\n
+This test check that in a listbox with multiple pages, one can set some values\n
+in listbox editable field on the first page, go to another page, and the values\n
+entered in the first page are not lost.\n
+This is currently an expected failure.\n
+</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -100,81 +106,81 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@class="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page workflow_action_listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>//input[@class="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page workflow_action_listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <!-- we have a listbox with 2 lines, one for 2 Draft Foos, the other for 1\n
 Validated Foo -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
   <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
   <td>label=Validate Action</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@class="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page workflow_action_listbox_set_page"]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>//input[@class="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page workflow_action_listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Validated</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
+  <td>click</td>\n
+  <td>field_your_enable_detail_list</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -183,8 +189,13 @@ Validated Foo -->\n
   <td></td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_comment</td>\n
+  <td>Comment !</td>\n
+</tr>\n
+\n
 <!-- Now we are on a listbox showing *all* documents we are about to process.\n
-Note that if a document cannot be processed, it\'s not shown in this list\n
 -->\n
 <tr>\n
   <td>assertText</td>\n

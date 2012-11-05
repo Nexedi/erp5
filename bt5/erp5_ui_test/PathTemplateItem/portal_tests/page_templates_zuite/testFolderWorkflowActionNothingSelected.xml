@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Folder Workflow Action, multiple actions in invert mode</title>\n
+<title>Test Folder Workflow Action With Nothing Selected</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Folder Workflow Action, multiple actions in invert mode</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Folder Workflow Action With Nothing Selected</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -84,27 +84,71 @@
   <td></td>\n
 </tr>\n
 \n
-<!--select everything, and then this test is the same that\n
-testFolderWorkflowActionInvertModeMultipleActions -->\n
-\n
+<!-- first case, the user select nothing -->\n
 <tr>\n
-  <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/input</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]/input</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[1]/input</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Change State</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>Folder_filter:method</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>You must select one action.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- second case, the user select two actions, this is not possible -->\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Change State</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
+  <td>label=Validate Action</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[5]/select</td>\n
+  <td>label=Invalidate Action</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>You must select one action.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- third case, no document in selection -->\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>listbox_title</td>\n
+  <td>THIS_TITLE_DOES_NOT_EXIST</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -114,128 +158,13 @@ testFolderWorkflowActionInvertModeMultipleActions -->\n
   <td>Change State</td>\n
 </tr>\n
 \n
-<!-- we have a listbox with 2 lines, one for 2 Draft Foos, the other for 1\n
-Validated Foo -->\n
+<!-- we have a listbox with 0 lines -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2 records</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
-  <td>2</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
-  <td>Foo</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
-  <td>Draft</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
-  <td>Foo Workflow</td>\n
-</tr>\n
-<tr>\n
-  <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
-  <td>label=Validate Action</td>\n
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
+  <td>0 records</td>\n
 </tr>\n
 \n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]/a</td>\n
-  <td>1</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a</td>\n
-  <td>Foo</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/a</td>\n
-  <td>Validated</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/a</td>\n
-  <td>Foo Workflow</td>\n
-</tr>\n
-<tr>\n
-  <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[5]/select</td>\n
-  <td>label=Invalidate Action</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Base_callDialogMethod:method</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<!-- Now we are on a listbox showing *all* documents we are about to process.\n
-Note that if a document cannot be processed, it\'s not shown in this list\n
--->\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3 records</td>\n
-</tr>\n
-<!-- This listbox is a proxy to the module listbox, so it has the same title\n
-and the same columns. -->\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//a[@class="listbox_title"]</td>\n
-  <td>exact:Foos</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
-  <td>Title 2</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
-  <td>Validate Action</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
-  <td>Title 3</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]</td>\n
-  <td>Validate Action</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[4]</td>\n
-  <td>Invalidate Action</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>assertValue</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
-</tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_callDialogMethod:method</td>\n
@@ -244,9 +173,10 @@ and the same columns. -->\n
 \n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>Workflow modification in progress.</td>\n
+  <td>You must select one action.</td>\n
   <td></td>\n
 </tr>\n
+\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
@@ -257,23 +187,9 @@ and the same columns. -->\n
   <td>Done.</td>\n
   <td></td>\n
 </tr>\n
-<!-- We\'ll check everything else (workflow history, comments, etc) in a python\n
-script. -->\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/foo_module/Zuite_testFolderWorkflowActionMultipleActionsCheckWorkflowHistory</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>result</td>\n
-  <td>OK</td>\n
-</tr>\n
-\n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
@@ -287,7 +203,7 @@ script. -->\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFolderWorkflowActionInvertModeMultipleActions</string> </value>
+            <value> <string>testFolderWorkflowActionNothingSelected</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

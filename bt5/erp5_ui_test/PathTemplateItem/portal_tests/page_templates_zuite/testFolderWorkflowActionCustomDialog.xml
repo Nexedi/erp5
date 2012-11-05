@@ -40,12 +40,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Folder Workflow Action, multiple actions</title>\n
+<title>Test Folder Workflow Action With a Custom Workflow Dialog</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Folder Workflow Action, multiple actions</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Folder Workflow Action With a Custom Workflow Dialog</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -93,65 +93,60 @@
 Validated Foo -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
   <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
-  <td>label=Validate Action</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
+  <td>label=Custom Dialog Action</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[1]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[3]/a</td>\n
   <td>Validated</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
-</tr>\n
-<tr>\n
-  <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[5]/select</td>\n
-  <td>label=Invalidate Action</td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
+  <td>click</td>\n
+  <td>field_your_enable_detail_list</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -160,16 +155,14 @@ Validated Foo -->\n
   <td></td>\n
 </tr>\n
 \n
-<!-- Now we are on a listbox showing *all* documents we are about to process.\n
-Note that if a document cannot be processed, it\'s not shown in this list\n
+<!-- Now we have the custom dialog, plus a listbox with the documents we are\n
+     modifying.\n
 -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3 records</td>\n
+  <td>2 records</td>\n
 </tr>\n
-<!-- This listbox is a proxy to the module listbox, so it has the same title\n
-and the same columns. -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//a[@class="listbox_title"]</td>\n
@@ -178,39 +171,37 @@ and the same columns. -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
-  <td>Title 1</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
-  <td>Invalidate Action</td>\n
-</tr>\n
-<tr>\n
-  <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]</td>\n
-  <td>Validate Action</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
+  <td>Custom Dialog Action</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Title 3</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[4]</td>\n
-  <td>Validate Action</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]</td>\n
+  <td>Custom Dialog Action</td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>type</td>\n
   <td>field_your_comment</td>\n
   <td>Comment !</td>\n
 </tr>\n
+\n
+<!-- this field only exist in our custom dialog for this workflow action. -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_custom_workflow_variable</td>\n
+  <td>Custom Workflow Variable</td>\n
+</tr>\n
+\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Base_callDialogMethod:method</td>\n
@@ -236,7 +227,7 @@ and the same columns. -->\n
 script. -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/Zuite_testFolderWorkflowActionMultipleActionsCheckWorkflowHistory</td>\n
+  <td>${base_url}/foo_module/Zuite_testFolderWorkflowActionCheckCustomDialogWorkflowHistory</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -247,8 +238,7 @@ script. -->\n
 \n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
@@ -262,7 +252,7 @@ script. -->\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFolderWorkflowActionMultipleActions</string> </value>
+            <value> <string>testFolderWorkflowActionCustomDialog</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

@@ -53,9 +53,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-Check the workflow history for many foo objects\n
+Check the workflow history of several foo objects\n
 """\n
-\n
 from Products.CMFCore.utils import getToolByName\n
 \n
 foo_module = context.getPortalObject().foo_module\n
@@ -71,16 +70,6 @@ def assertEquals(a, b, msg=\'\'):\n
     else:\n
       error_list.append(\'%r != %r\' % (a, b))\n
 \n
-\n
-foo_1 = foo_module[\'1\']\n
-assertEquals(foo_1.getSimulationState(), \'invalidated\', \n
-             \'Foo 1 state is %s\' % foo_1.getSimulationState())\n
-if not error_list:\n
-  assertEquals(\n
-   wtool.getInfoFor(foo_1, \'history\', wf_id=\'foo_workflow\')[-2][\'comment\'],\n
-   \'Comment !\')\n
-\n
-\n
 foo_2 = foo_module[\'2\']\n
 assertEquals(foo_2.getSimulationState(), \'validated\', \n
              \'Foo 2 state is %s\' % foo_2.getSimulationState())\n
@@ -88,6 +77,10 @@ if not error_list:\n
   assertEquals(\n
    wtool.getInfoFor(foo_2, \'history\', wf_id=\'foo_workflow\')[-2][\'comment\'],\n
    \'Comment !\')\n
+  assertEquals(\n
+   wtool.getInfoFor(foo_2, \'history\', wf_id=\'foo_workflow\')[-2][\'custom_workflow_variable\'],\n
+   \'Custom Workflow Variable\')\n
+\n
 \n
 foo_3 = foo_module[\'3\']\n
 assertEquals(foo_3.getSimulationState(), \'validated\', \n
@@ -96,6 +89,9 @@ if not error_list:\n
   assertEquals(\n
    wtool.getInfoFor(foo_3, \'history\', wf_id=\'foo_workflow\')[-2][\'comment\'],\n
   \'Comment !\')\n
+  assertEquals(\n
+   wtool.getInfoFor(foo_2, \'history\', wf_id=\'foo_workflow\')[-2][\'custom_workflow_variable\'],\n
+   \'Custom Workflow Variable\')\n
 \n
 if error_list:\n
   result = \'\'.join(error_list)\n
@@ -111,7 +107,7 @@ return \'<html><body><span id="result">%s</span></body></html>\' % result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_testFolderWorkflowActionMultipleActionsCheckWorkflowHistory</string> </value>
+            <value> <string>Zuite_testFolderWorkflowActionCheckCustomDialogWorkflowHistory</string> </value>
         </item>
       </dictionary>
     </pickle>
