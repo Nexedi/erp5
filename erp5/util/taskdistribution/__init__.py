@@ -39,6 +39,7 @@ Example use:
       # Run the test_line.name test
       test_line.stop()
 """
+import httplib
 import logging
 import select
 import socket
@@ -50,7 +51,7 @@ __all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'pa
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
 SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError,
-    xmlrpclib.Fault]
+    xmlrpclib.Fault, httplib.BadStatusLine]
 parser, _ = xmlrpclib.getparser()
 if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
     SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
