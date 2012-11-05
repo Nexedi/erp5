@@ -965,7 +965,8 @@ def registerDocumentClass(module_name, class_name):
 
   if old_value:
     if class_name == 'CategoryTool':
-      assert module_name == 'Products.CMFCategory.CategoryTool'
+      assert module_name == 'Products.CMFCategory.CategoryTool', (
+          old_value, new_value)
       LOG('Utils', WARNING,
           'Ignoring replacement of %s by %s' % (old_value, new_value))
       return
