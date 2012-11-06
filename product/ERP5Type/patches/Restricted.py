@@ -185,3 +185,22 @@ ModuleSecurityInfo('os.path').declarePublic(
 # Also allow some handy data properties.
   'sep', 'pardir', 'curdir', 'extsep',
 )
+
+# Alias modules - only applied to restricted python.
+MNAME_MAP = {
+  'zipfile': 'Products.ERP5Type.ZipFile',
+}
+for alias, real in MNAME_MAP.items():
+  assert '.' not in alias, alias # TODO: support this
+  allow_module(real)
+del alias, real
+orig_guarded_import = safe_builtins['__import__']
+def guarded_import(mname, globals=None, locals=None, fromlist=None,
+    level=-1):
+  if mname in MNAME_MAP:
+    mname = MNAME_MAP[mname]
+    if not fromlist:
+      # fromlist value is meaningless but required. See __import__ doc.
+      fromlist = ['__name__']
+  return orig_guarded_import(mname, globals, locals, fromlist, level)
+safe_builtins['__import__'] = guarded_import
