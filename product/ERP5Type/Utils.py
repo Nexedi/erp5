@@ -965,14 +965,15 @@ def registerDocumentClass(module_name, class_name):
 
   if old_value:
     if class_name == 'CategoryTool':
-      assert module_name == 'Products.CMFCategory.CategoryTool', (
-          old_value, new_value)
-      LOG('Utils', WARNING,
-          'Ignoring replacement of %s by %s' % (old_value, new_value))
-      return
-    raise Exception("Class %s and %s from different products have the "
-                    "same name" % (old_value, new_value))
-
+      if module_name == 'Products.CMFCategory.CategoryTool':
+        LOG('Utils', WARNING,
+            "Ignoring replacement of %s by %s" % (old_value, new_value))
+        return
+      assert module_name == 'Products.ERP5.Tool.CategoryTool', module_name
+      LOG('Utils', WARNING, "Replacing %s by %s" % (old_value, new_value))
+    else:
+      raise Exception("Class %s and %s from different products have the "
+                      "same name" % (old_value, new_value))
   document_class_registry[class_name] = new_value
 
 def initializeProduct( context,
