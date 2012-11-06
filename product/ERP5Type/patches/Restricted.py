@@ -197,6 +197,9 @@ del alias, real
 orig_guarded_import = safe_builtins['__import__']
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
     level=-1):
+  for fromname in fromlist or ():
+    if fromname[:1] == '_':
+      raise Unauthorized(fromname)
   if mname in MNAME_MAP:
     mname = MNAME_MAP[mname]
     if not fromlist:
