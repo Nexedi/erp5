@@ -1,5 +1,5 @@
 import re
-from sgmllib import SGMLParser, SGMLParseError
+from HTMLParser import HTMLParser, HTMLParseError
 from Products.CMFDefault.utils import IllegalHTML
 from Products.PortalTransforms.transforms import safe_html
 
@@ -56,8 +56,8 @@ def parse_declaration(self, i):
         j = k+3
     else:
         try:
-            j = SGMLParser.parse_declaration(self, i)
-        except SGMLParseError:
+            j = HTMLParser.parse_declaration(self, i)
+        except HTMLParseError:
             j = len(self.rawdata)
     return j  
 safe_html.StrippingParser.parse_declaration = parse_declaration
