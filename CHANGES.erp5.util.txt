@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.4.15 (2012-11-07)
+------------------
+
+ * erp5.util.testnode:
+
+  - fixed profile generation when software repos is not defined first
+    [Sebastien Robin]
+  - ask wich test has priority to master more often [Sebastien Robin]
+
 0.4.14 (2012-11-05)
 ------------------
 
