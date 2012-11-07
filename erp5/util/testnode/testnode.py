@@ -131,6 +131,7 @@ class TestNode(object):
     profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
     profile_path_count = 0
+    profile_content_list = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       url = vcs_repository['url']
       buildout_section_id = vcs_repository.get('buildout_section_id', None)
@@ -143,23 +144,25 @@ class TestNode(object):
         profile_path_count += 1
         if profile_path_count > 1:
           raise ValueError(PROFILE_PATH_KEY + ' defined more than once')
-        profile_content = """
+        profile_content_list.append("""
 [buildout]
 extends = %(software_config_path)s
-""" %  {'software_config_path': os.path.join(repository_path, profile_path)}
+""" %  {'software_config_path': os.path.join(repository_path, profile_path)})
 
       if not(buildout_section_id is None):
-        profile_content += """
+        profile_content_list.append("""
 [%(buildout_section_id)s]
 repository = %(repository_path)s
 branch = %(branch)s
 """ %  {'buildout_section_id': buildout_section_id,
    'repository_path' : repository_path,
-   'branch' : vcs_repository.get('branch','master')}
+   'branch' : vcs_repository.get('branch','master')})
     if not profile_path_count:
       raise ValueError(PROFILE_PATH_KEY + ' not defined')
     custom_profile = open(node_test_suite.custom_profile_path, 'w')
-    custom_profile.write(profile_content)
+    # sort to have buildout section first
+    profile_content_list.sort(key=lambda x: [x, ''][x.startswith('\n[buildout]')])
+    custom_profile.write(''.join(profile_content_list))
     custom_profile.close()
     sys.path.append(repository_path)
 

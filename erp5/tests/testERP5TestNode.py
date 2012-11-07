@@ -30,18 +30,20 @@ import tempfile
 class ERP5TestNode(TestCase):
 
   def setUp(self):
-    self._tempdir = tempfile.mkdtemp()
-    self.working_directory = os.path.join(self._tempdir, 'testnode')
-    self.slapos_directory = os.path.join(self._tempdir, 'slapos')
-    self.remote_repository0 = os.path.join(self._tempdir, 'rep0')
-    self.remote_repository1 = os.path.join(self._tempdir, 'rep1')
+    self._temp_dir = tempfile.mkdtemp()
+    self.working_directory = os.path.join(self._temp_dir, 'testnode')
+    self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
+    self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
+    self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
+    self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
+    os.mkdir(self.remote_repository2)
 
   def tearDown(self):
-    shutil.rmtree(self._tempdir, True)
+    shutil.rmtree(self._temp_dir, True)
 
   def getTestNode(self):
     def log(*args):
@@ -53,8 +55,8 @@ class ERP5TestNode(TestCase):
     config["working_directory"] = self.working_directory
     return TestNode(log, config)
 
-  def getTestSuiteData(self):
-    return [{
+  def getTestSuiteData(self, add_third_repository=False):
+    data = [{
        "test_suite": "Foo",
        "project_title": "Foo",
        "test_suite_title": "Foo-Test",
@@ -66,10 +68,20 @@ class ERP5TestNode(TestCase):
             {'url': self.remote_repository1,
              'buildout_section_id': 'rep1',
              'branch': 'master'}]}]
+    if add_third_repository:
+      # add a third repository
+      # insert in position zero since we already had bug when the profile_path
+      # was defined in non-zero position when generating the profile
+      data[0]['vcs_repository_list'].insert(0,
+            {'url': self.remote_repository2,
+             'buildout_section_id': 'rep2',
+             'branch': 'foo'})
+    return data
 
-  def updateNodeTestSuiteData(self, node_test_suite):
+  def updateNodeTestSuiteData(self, node_test_suite,
+                              add_third_repository=False):
     node_test_suite.edit(working_directory=self.working_directory,
-                         **self.getTestSuiteData()[0])
+       **self.getTestSuiteData(add_third_repository=add_third_repository)[0])
 
   def getCaller(self, **kw):
     class Caller(object):
@@ -81,10 +93,12 @@ class ERP5TestNode(TestCase):
         return subprocess.check_output(command, **self.__dict__)
     return Caller(**kw)
 
-  def generateTestRepositoryList(self):
+  def generateTestRepositoryList(self, add_third_repository=False):
     commit_dict = {}
-    for i, repository_path in enumerate([self.remote_repository0,
-                                        self.remote_repository1]):
+    repository_list = [self.remote_repository0, self.remote_repository1]
+    if add_third_repository:
+      repository_list.append(self.remote_repository2)
+    for i, repository_path in enumerate(repository_list):
       call = self.getCaller(cwd=repository_path)
       call("git init".split())
       call("touch first_file".split())
@@ -103,6 +117,8 @@ class ERP5TestNode(TestCase):
       commit_subject_list = [x.split()[1] for x in output_line_list]
       self.assertEquals(expected_commit_subject_list, commit_subject_list)
       commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
+      if repository_path == self.remote_repository2:
+        output = call('git checkout master -b foo'.split())
     # commit_dict looks like
     # {'rep1': [['6669613db7239c0b7f6e1fdb82af6f583dcb3a94', 'next_commit'],
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']],
@@ -155,19 +171,23 @@ class ERP5TestNode(TestCase):
     """
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    self.updateNodeTestSuiteData(node_test_suite)
+    self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
     test_node.constructProfile(node_test_suite)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
     profile = open(node_test_suite.custom_profile_path, 'r')
     expected_profile = """
 [buildout]
-extends = %s/testnode/foo/rep0/software.cfg
+extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
-repository = %s/testnode/foo/rep1
+repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
-""" % (self._tempdir, self._tempdir)
+
+[rep2]
+repository = %(temp_dir)s/testnode/foo/rep2
+branch = foo
+""" % {'temp_dir': self._temp_dir}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
@@ -234,7 +254,7 @@ branch = master
 
   def test_07_checkOldTestSuite(self):
     test_node = self.getTestNode()
-    test_suite_data = self.getTestSuiteData()
+    test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals([], os.listdir(self.working_directory))
