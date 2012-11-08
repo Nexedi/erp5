@@ -57,6 +57,9 @@ if getattr(mailhost, \'getMessageList\', None) is not None:\n
   return\n
 promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\')\n
 \n
+if promise_url is None:\n
+  return\n
+\n
 protocol, promise_url = promise_url.split(\'://\', 1)\n
 \n
 if protocol == \'smtps\':\n

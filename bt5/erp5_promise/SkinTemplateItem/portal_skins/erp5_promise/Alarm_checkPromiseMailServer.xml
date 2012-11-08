@@ -54,7 +54,6 @@
 \n
 portal = context.getPortalObject()\n
 mailhost = portal.MailHost\n
-promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\').rstrip(\'/\')\n
 if getattr(mailhost, \'getMessageList\', None) is not None:\n
   context.newActiveProcess().postResult(ActiveResult(\n
     severity=1,\n
@@ -63,10 +62,12 @@ if getattr(mailhost, \'getMessageList\', None) is not None:\n
   ))\n
   return\n
 \n
+promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\')\n
 \n
 if promise_url is None:\n
   return\n
 \n
+promise_url = promise_url.rstrip(\'/\')\n
 if mailhost.force_tls:\n
   protocol = \'smtps\'\n
 else:\n
