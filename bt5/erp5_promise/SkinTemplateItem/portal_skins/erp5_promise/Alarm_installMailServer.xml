@@ -52,6 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 mailhost = portal.MailHost\n
+if getattr(mailhost, \'getMessageList\', None) is not None:\n
+  # cannot fix wrong MailHost\n
+  return\n
 promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\')\n
 \n
 protocol, promise_url = promise_url.split(\'://\', 1)\n
