@@ -55,6 +55,14 @@
 portal = context.getPortalObject()\n
 mailhost = portal.MailHost\n
 promise_url = portal.getPromiseParameter(\'external_service\', \'smtp_url\').rstrip(\'/\')\n
+if getattr(mailhost, \'getMessageList\', None) is not None:\n
+  context.newActiveProcess().postResult(ActiveResult(\n
+    severity=1,\n
+    summary="%s/MailHost is not real MailHost" % portal.getPath(),\n
+    detail="Possibly comes from DummyMailHost. The object has to be fixed by recreating it."\n
+  ))\n
+  return\n
+\n
 \n
 if promise_url is None:\n
   return\n
