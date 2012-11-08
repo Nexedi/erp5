@@ -4000,16 +4000,12 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if not self._is_already_migrated(self._archive.keys()):
       document_id_list = self.getTemplateIdList()
-
-      try:
-        context.getPortalObject().unrestrictedTraverse(
-          'portal_components/' + document_id_list[0])
-      except (IndexError, KeyError):
+      if document_id_list[0] not in getattr(context.getPortalObject(),
+                                            'portal_components', ()):
         return FilesystemDocumentTemplateItem.build(self, context, **kw)
-      else:
-        self._archive.clear()
-        for name in document_id_list:
-          self._archive['portal_components/' + name] = None
+      self._archive.clear()
+      for name in document_id_list:
+        self._archive['portal_components/' + name] = None
 
     return ObjectTemplateItem.build(self, context, **kw)
 
