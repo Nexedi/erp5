@@ -38,7 +38,6 @@ from Products.CMFCore.utils import UniqueObject
 
 import OFS
 import transaction
-from cStringIO import StringIO
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
 from Acquisition import Implicit
@@ -1223,8 +1222,14 @@ def initialize( context ):
           return ''
         path = os.path.join(getConfiguration().instancehome, 'tests')
         verbosity = verbose and 2 or 1
+
+        from datetime import datetime
+        log_filename = 'live-test-%s.log' % datetime.now().strftime('%Y%m%d-%H%M%S')
+
         global global_stream
-        global_stream = StringIO()
+        global_stream = open(os.path.join(getConfiguration().instancehome,
+                                          'var', log_filename), 'w+')
+
         from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
         try:
           result = runLiveTest(test_list,
