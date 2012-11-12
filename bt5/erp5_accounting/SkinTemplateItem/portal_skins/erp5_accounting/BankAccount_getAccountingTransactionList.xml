@@ -68,7 +68,8 @@ params = {}\n
 if kw.get(\'no_from_date\', False): from_date = None\n
 \n
 if simulation_state: params[\'simulation_state\'] = simulation_state\n
-if section_category: params[\'section_category\'] = section_category\n
+params[\'section_uid\'] = context.Base_getSectionUidListForSectionCategory(section_category)\n
+\n
 \n
 if kw.has_key(\'node_uid\')   : params[\'node_uid\']    = kw[\'node_uid\']\n
 if kw.has_key(\'portal_type\'): params[\'portal_type\'] = kw[\'portal_type\']\n
@@ -83,7 +84,7 @@ if from_date is not None:\n
   get_inventory_kw.update({ \'omit_simulation\' : True\n
                           , \'payment_uid\'     : context.getUid()\n
                           , \'to_date\'         : from_date\n
-                          , \'where_expression\': " section.portal_type = \'Organisation\' "\n
+                       #   , \'where_expression\': " section.portal_type = \'Organisation\' "\n
                           , \'stat\'            : True\n
                           })\n
 \n
