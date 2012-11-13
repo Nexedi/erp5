@@ -65,6 +65,7 @@ def getAccountingPeriodStartDateForSectionCategory(section_category, date):\n
                                       section_category, strict_membership=False))\n
   period_start_date = None\n
   for uid in section_uid:\n
+    if uid == -1: continue # Base_getSectionUidListForSectionCategory returns [-1] if no section_uid exists \n
     section = portal.portal_catalog.getObject(uid)\n
     for ap in section.contentValues(portal_type=\'Accounting Period\',\n
                         checked_permission=\'Access contents information\'):\n
