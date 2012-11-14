@@ -230,10 +230,10 @@ branch = %(branch)s
     self.log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
     self.slapos_controler = SlapOSControler.SlapOSControler(
-      working_directory, self.config, log=self.log, slapproxy_log=slapproxy_log,
-      process_manager=self.process_manager, reset_software=reset_software,
-      software_path_list=software_path_list)
-    self.slapos_controler.initializeSlapOSControler()
+      working_directory, self.config)
+    self.slapos_controler.initializeSlapOSControler(log=self.log, slapproxy_log=slapproxy_log,
+       process_manager=self.process_manager, reset_software=reset_software,
+       software_path_list=software_path_list)
     self.process_manager.supervisord_pid_file = os.path.join(\
          self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
