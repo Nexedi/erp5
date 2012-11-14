@@ -233,6 +233,7 @@ branch = %(branch)s
       working_directory, self.config, log=self.log, slapproxy_log=slapproxy_log,
       process_manager=self.process_manager, reset_software=reset_software,
       software_path_list=software_path_list)
+    self.slapos_controler.initializeSlapOSControler()
     self.process_manager.supervisord_pid_file = os.path.join(\
          self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
@@ -274,7 +275,7 @@ branch = %(branch)s
 
   def runTestSuite(self, node_test_suite, portal_url):
     config = self.config
-
+    parameter_list = []
     run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
         self.slapos_controler.instance_root)
     if not len(run_test_suite_path_list):
@@ -292,10 +293,16 @@ branch = %(branch)s
     firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
         config["slapos_directory"])
     if len(firefox_bin_list):
-      invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
+      parameter_list.append('--firefox_bin')
     xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
         config["slapos_directory"])
     if len(xvfb_bin_list):
+      parameter_list.append('--xvfb_bin')
+    supported_paramater_set = self.process_manager.getSupportedParameterSet(
+                           run_test_suite_path, parameter_list)
+    if '--firefox_bin' in supported_paramater_set:
+      invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
+    if '--xvfb_bin' in supported_paramater_set:
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
     bt5_path_list = config.get("bt5_path")
     if bt5_path_list not in ('', None,):
