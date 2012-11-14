@@ -22,6 +22,8 @@ sys.path.extend([
     ])
 
 from erp5.util.testnode import TestNode
+from erp5.util.testnode.ProcessManager import ProcessManager
+from erp5.util.testnode.SlapOSControler import SlapOSControler
 import os
 import shutil
 import subprocess
@@ -33,11 +35,13 @@ class ERP5TestNode(TestCase):
     self._temp_dir = tempfile.mkdtemp()
     self.working_directory = os.path.join(self._temp_dir, 'testnode')
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
+    self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
     self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
+    os.mkdir(self.test_suite_directory)
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
@@ -52,7 +56,10 @@ class ERP5TestNode(TestCase):
     # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "/srv/slapgrid/slappart80/srv/runner/software/ba1e09f3364989dc92da955b64e72f8d/parts/git/bin/git"
-    config["working_directory"] = self.working_directory
+    config["slapos_directory"] = config["working_directory"] = self.working_directory
+    config["node_quantity"] = 3
+    config["test_suite_directory"] = self.test_suite_directory
+
     return TestNode(log, config)
 
   def getTestSuiteData(self, add_third_repository=False):
@@ -267,3 +274,67 @@ branch = foo
                       set(os.listdir(self.working_directory)))
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
+
+  def test_08_getSupportedParamaterSet(self):
+    original_spawn = ProcessManager.spawn
+    try:
+      def get_help(self, *args, **kw):
+        return {'stdout': """My Program
+                  --foo  foo
+                  --bar  bar"""}
+      ProcessManager.spawn = get_help
+      process_manager = ProcessManager(log=None)
+      parameter_list = ['--foo', '--baz']
+      expected_suported_parameter_set = set(['--foo'])
+      supported_parameter_set = process_manager.getSupportedParameterSet(
+                                 "dummy_program_path", parameter_list)
+      self.assertEquals(expected_suported_parameter_set, supported_parameter_set)
+    finally:
+      ProcessManager.spawn = original_spawn
+
+  def test_09_runTestSuite(self):
+    """
+    Check parameters passed to runTestSuite
+    Also make sure that --firefox_bin and --xvfb_bin are passed when needed
+    """
+    def _createPath(path_to_create, end_path):
+      os.makedirs(path_to_create)
+      return os.close(os.open(os.path.join(path_to_create,
+                               end_path),os.O_CREAT))
+    def get_parameters(self, *args, **kw):
+      call_parameter_list.append({'args': [x for x in args], 'kw':kw})
+    def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
+     if '--firefox_bin' and '--xvfb_bin' in parameter_list:
+       return set(['--firefox_bin','--xvfb_bin'])
+     else:
+       return []
+    test_node = self.getTestNode()
+    test_node.slapos_controler = SlapOSControler(self.working_directory,
+                                             test_node.config,test_node.log)
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    node_test_suite.revision = 'dummy'
+    run_test_suite_path = _createPath(
+        os.path.join(test_node.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+    def checkRunTestSuiteParameters(additional_parameter_list=None):
+      ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
+      ProcessManager.spawn = get_parameters
+      test_node.runTestSuite(node_test_suite,"http://foo.bar")
+      expected_parameter_list = ['%s/a/bin/runTestSuite'
+           %(test_node.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
+           'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
+           'http://foo.bar']
+      if additional_parameter_list:
+        expected_parameter_list.extend(additional_parameter_list)
+      self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
+    call_parameter_list = []
+    checkRunTestSuiteParameters()
+    _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
+    _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/xserver/bin'),'Xvfb')
+    call_parameter_list = []
+    checkRunTestSuiteParameters(additional_parameter_list=['--firefox_bin',
+      '%s/soft/a/parts/firefox/firefox-slapos'
+       %(test_node.config['slapos_directory']),
+      '--xvfb_bin',
+      '%s/soft/a/parts/xserver/bin/Xvfb'
+        %(test_node.config['slapos_directory'])])

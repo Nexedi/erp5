@@ -53,7 +53,9 @@ class SlapOSControler(object):
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
-    slapos_config_dict = config.copy()
+
+  def initializeSlapOSControler(self):
+    slapos_config_dict = self.config.copy()
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
                               proxy_database=self.proxy_database)
