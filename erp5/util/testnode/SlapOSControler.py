@@ -42,19 +42,20 @@ def createFolder(folder):
 
 class SlapOSControler(object):
 
-  def __init__(self, working_directory, config, log, slapproxy_log=None,
-      process_manager=None, reset_software=False, software_path_list=None):
-    self.software_path_list = software_path_list
-    log('SlapOSControler, initialize, reset_software: %r' % reset_software)
-    self.log = log
+  def __init__(self, working_directory, config):
     self.config = config
-    self.process_manager = process_manager
     self.software_root = os.path.join(working_directory, 'soft')
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
 
-  def initializeSlapOSControler(self):
+  def initializeSlapOSControler(self, log, slapproxy_log=None, process_manager=None,
+        reset_software=False, software_path_list=None):
+    self.log = log
+    self.process_manager = process_manager
+    self.software_path_list = software_path_list
+    log('SlapOSControler, initialize, reset_software: %r' % reset_software)
+    config = self.config
     slapos_config_dict = self.config.copy()
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
