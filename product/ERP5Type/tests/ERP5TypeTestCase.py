@@ -381,9 +381,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
       """
       cls = self.portal.MailHost.__class__
-      assert not issubclass(cls, DummyMailHostMixin)
-      cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
-      pmc_init_of(cls)
+      if not issubclass(cls, DummyMailHostMixin):
+        cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+        pmc_init_of(cls)
 
     def _restoreMailHost(self):
       """Restore original Mail Host
