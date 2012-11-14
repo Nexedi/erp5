@@ -128,6 +128,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         '''Returns the app object for a test.'''
         return self.getPortal().aq_parent
 
+    def afterSetUp(self):
+      '''Called after setUp() has completed. This is
+         far and away the most useful hook.
+      '''
+      pass
+
 from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
