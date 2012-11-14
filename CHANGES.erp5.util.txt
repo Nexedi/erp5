@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.4.16 (2012-11-14)
+------------------
+
+ * erp5.util.testnode:
+
+  - Improve handling of Xvfb and firefox [Sebastien Robin]
+  - check supported parameters of runTestSuite [Pere Cortes]
+  - add unit for runTestSuite [Pere Cortes]
+
 0.4.15 (2012-11-07)
 ------------------
 
