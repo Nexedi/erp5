@@ -21,13 +21,19 @@ sys.path.extend([
     '/srv/slapgrid/slappart80/srv/runner/software/ba1e09f3364989dc92da955b64e72f8d/eggs/Werkzeug-0.8.3-py2.7.egg',
     ])
 
-from erp5.util.testnode import TestNode
+from erp5.util.testnode.testnode import TestNode
+from erp5.util.testnode.testnode import SlapOSInstance
 from erp5.util.testnode.ProcessManager import ProcessManager
 from erp5.util.testnode.SlapOSControler import SlapOSControler
+from erp5.util.taskdistribution import TaskDistributor
+from erp5.util.taskdistribution import TaskDistributionTool
+from erp5.util.taskdistribution import TestResultProxy
 import os
 import shutil
 import subprocess
 import tempfile
+import json
+import time
 
 class ERP5TestNode(TestCase):
 
@@ -36,12 +42,18 @@ class ERP5TestNode(TestCase):
     self.working_directory = os.path.join(self._temp_dir, 'testnode')
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
     self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
+    self.environment = os.path.join(self._temp_dir,'environment')
+    self.log_directory = os.path.join(self._temp_dir,'var/log')
+    self.log_file = os.path.join(self.log_directory,'test.log')
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
     self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
     os.mkdir(self.test_suite_directory)
+    os.mkdir(self.environment)
+    os.makedirs(self.log_directory)
+    os.close(os.open(self.log_file,os.O_CREAT))
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
@@ -50,7 +62,7 @@ class ERP5TestNode(TestCase):
     shutil.rmtree(self._temp_dir, True)
 
   def getTestNode(self):
-    def log(*args):
+    def log(*args,**kw):
       for arg in args:
         print "TESTNODE LOG : %r" % (arg,)
     # XXX how to get property the git path ?
@@ -59,7 +71,11 @@ class ERP5TestNode(TestCase):
     config["slapos_directory"] = config["working_directory"] = self.working_directory
     config["node_quantity"] = 3
     config["test_suite_directory"] = self.test_suite_directory
-
+    config["environment"] = self.environment
+    config["log_directory"] = self.log_directory
+    config["log_file"] = self.log_file
+    config["test_suite_master_url"] = None
+    config["test_node_title"] = "Foo-Test-Node"
     return TestNode(log, config)
 
   def getTestSuiteData(self, add_third_repository=False):
@@ -338,3 +354,60 @@ branch = foo
       '--xvfb_bin',
       '%s/soft/a/parts/xserver/bin/Xvfb'
         %(test_node.config['slapos_directory'])])
+
+  def test_10_prepareSlapOS(self):
+    def patch_initializeSlapOSControler(self, *args, **kw):
+      pass
+    test_node = self.getTestNode()
+    test_node_slapos = SlapOSInstance()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    node_test_suite.edit(working_directory=self.working_directory)
+    status_dict = {"status_code" : 0}
+    def patch_run(self, *args,**kw):
+      return status_dict
+    SlapOSControler.initializeSlapOSControler = patch_initializeSlapOSControler
+    SlapOSControler.runSoftwareRelease = patch_run
+    SlapOSControler.runComputerPartition = patch_run
+    test_node.prepareSlapOSForTestNode(test_node_slapos)
+    self.assertEqual(status_dict,{'status_code':0})
+    test_node.prepareSlapOSForTestSuite(node_test_suite)
+    self.assertEqual(status_dict,{'status_code':0})
+
+  def test_11_run(self):
+    def patch_function(self, *args, **kw):
+        pass
+    def patch_killPrevious():
+        pass
+    test_self = self
+    test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
+    os.makedirs(test_result_path_root)
+    global counter
+    counter = 0
+    def patch_startTestSuite(self,test_node_title):
+      global counter
+      if counter == 2:
+       raise StopIteration
+      counter += 1
+      config_list = []
+      config_list.append(test_self.getTestSuiteData()[0])
+      config_list.append(test_self.getTestSuiteData(add_third_repository=True)[0])
+      return json.dumps(config_list)
+    def patch_createTestResult(self, revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      test_result_path = os.path.join(test_result_path_root, test_title)
+      result =  TestResultProxy(self._proxy, self._retry_time,
+                self._logger, test_result_path, node_title, revision)
+      return result
+    time.sleep = patch_function
+    self.generateTestRepositoryList()
+    TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributionTool.createTestResult = patch_createTestResult
+    test_node = self.getTestNode()
+    test_node._prepareSlapOS = patch_function
+    test_node.runTestSuite = patch_function
+    SlapOSControler.initializeSlapOSControler = patch_function
+    test_node.process_manager.killPreviousRun = patch_killPrevious
+    try:
+      test_node.run()
+    except Exception as e:
+      self.assertEqual(type(e),StopIteration)
