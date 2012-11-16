@@ -27,12 +27,17 @@
 #
 ##############################################################################
 
+import unittest
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from BTrees.Length import Length
+from BTrees.OOBTree import OOBTree
 from zLOG import LOG
 
-class TestIdTool(ERP5TypeTestCase):
+
+class TestIdToolUpgrade(ERP5TypeTestCase):
   """
   Automatic upgrade of id tool is really sensible to any change. Therefore,
   make sure that the upgrade is still working even if there changes.
@@ -45,6 +50,66 @@ class TestIdTool(ERP5TypeTestCase):
       Return the title of test
     """
     return "Test Id Tool Upgrade"
+
+  def afterSetUp(self):
+    self.login()
+    self.portal = self.getPortal()
+    self.id_tool = self.portal.portal_ids
+    self.id_tool.initializeGenerator(all=True)
+    self.createGenerators()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.id_tool.clearGenerator(all=True)
+
+  def createGenerators(self):
+    """
+      Initialize some generators for the tests
+    """
+    self.application_sql_generator = self.id_tool.newContent(\
+                            portal_type='Application Id Generator',
+                            reference='test_application_sql',
+                            version='001')
+    self.conceptual_sql_generator = self.id_tool.newContent(\
+                           portal_type='Conceptual Id Generator',
+                           reference='test_non_continuous_increasing',
+                           version='001')
+    self.sql_generator = self.id_tool.newContent(\
+                    portal_type='SQL Non Continuous Increasing Id Generator',
+                    reference='test_sql_non_continuous_increasing',
+                    version='001')
+    self.application_sql_generator.setSpecialiseValue(\
+                                   self.conceptual_sql_generator)
+    self.conceptual_sql_generator.setSpecialiseValue(self.sql_generator)
+
+    self.application_zodb_generator = self.id_tool.newContent(\
+                            portal_type='Application Id Generator',
+                            reference='test_application_zodb',
+                            version='001')
+    self.conceptual_zodb_generator = self.id_tool.newContent(\
+                           portal_type='Conceptual Id Generator',
+                           reference='test_continuous_increasing',
+                           version='001')
+    self.zodb_generator = self.id_tool.newContent(\
+                    portal_type='ZODB Continuous Increasing Id Generator',
+                    reference='test_zodb_continuous_increasing',
+                    version='001')
+    self.application_zodb_generator.setSpecialiseValue(\
+                                    self.conceptual_zodb_generator)
+    self.conceptual_zodb_generator.setSpecialiseValue(self.zodb_generator)
+
+  def getLastGenerator(self, id_generator):
+    """
+      Return Last Id Generator
+    """
+    document_generator = self.id_tool.searchFolder(reference=id_generator)[0]
+    application_generator = document_generator.getLatestVersionValue()
+    conceptual_generator = application_generator.getSpecialiseValue()\
+                           .getLatestVersionValue()
+    last_generator = conceptual_generator.getSpecialiseValue()\
+                     .getLatestVersionValue()
+    return last_generator
+
 
   def testUpgradeIdToolDicts(self):
     # With old erp5_core, we have no generators, no IdTool_* zsql methods,
@@ -123,3 +188,132 @@ class TestIdTool(ERP5TypeTestCase):
     generator = generator_list[0]
     self.assertEquals(generator.last_id_dict['foo'], 4)
     self.assertEquals(generator.last_id_dict["('bar', 'baz')"], 3)
+
+
+  def _setUpLastMaxIdDict(self, id_generator_reference):
+    def countup(id_generator, id_group, until):
+      for i in xrange(until + 1):
+        self.id_tool.generateNewId(id_generator=id_generator_reference,
+                                   id_group=id_group)
+
+    countup(id_generator_reference, 'A-01', 2)
+    countup(id_generator_reference, 'B-01', 1)
+    var_id = 'C-%04d'
+    for x in xrange(self.a_lot_of_key):
+      countup(id_generator_reference, var_id % x, 0)
+
+  def _getLastIdDictName(self, id_generator):
+    portal_type = id_generator.getPortalType()
+    if portal_type == 'SQL Non Continuous Increasing Id Generator':
+      return 'last_max_id_dict'
+    elif portal_type == 'ZODB Continuous Increasing Id Generator':
+      return 'last_id_dict'
+    else:
+      raise RuntimeError("not expected to test the generator :%s" % portal_type)
+
+  def _getLastIdDict(self, id_generator):
+    last_id_dict_name = self._getLastIdDictName(id_generator)
+    return getattr(id_generator, last_id_dict_name)
+
+  def _setLastIdDict(self, id_generator, value):
+    last_id_dict_name = self._getLastIdDictName(id_generator)
+    setattr(id_generator, last_id_dict_name, value)
+
+  def _getValueFromLastIdDict(self, last_id_dict, key):
+    value = last_id_dict[key]
+    if isinstance(value, int):
+      # in ZODB Id Generator it is stored in int
+      return value
+    elif isinstance(value, ScalarMaxConflictResolver):
+      return value.value
+    else:
+      raise RuntimeError('not expected to test the value: %s' % value)
+
+  def _assertIdGeneratorLastMaxIdDict(self, id_generator):
+    last_id_dict = self._getLastIdDict(id_generator)
+    self.assertEquals(2, self._getValueFromLastIdDict(last_id_dict, 'A-01'))
+    self.assertEquals(1, self._getValueFromLastIdDict(last_id_dict, 'B-01'))
+    for x in xrange(self.a_lot_of_key):
+      key = 'C-%04d' % x
+      self.assertEquals(0, self._getValueFromLastIdDict(last_id_dict, key))
+
+    # 1(A-01) + 1(B-01) + a_lot_of_key(C-*)
+    number_of_group_id = self.a_lot_of_key + 2
+    self.assertEqual(number_of_group_id,
+                     len(id_generator.exportGeneratorIdDict()))
+    self.assertEqual(number_of_group_id, len(last_id_dict))
+
+
+  def _checkDataStructureMigration(self, id_generator):
+    """ First, simulate previous data structure which is using
+    PersisntentMapping as the storage, then migrate to OOBTree.
+    Then, migrate the id generator again from OOBTree to OOBtree
+    just to be sure."""
+    id_generator_reference  = id_generator.getReference()
+
+    reference_portal_type_dict = {
+      'test_sql_non_continuous_increasing':'SQL Non Continuous ' \
+                                           'Increasing Id Generator',
+      'test_zodb_continuous_increasing':'ZODB Continuous ' \
+                                        'Increasing Id Generator'
+    }
+    try:
+      portal_type = reference_portal_type_dict[id_generator_reference]
+      self.assertEquals(id_generator.getPortalType(), portal_type)
+    except:
+      raise ValueError("reference is not valid: %s" % id_generator_reference)
+
+    self._setLastIdDict(id_generator, PersistentMapping()) # simulate previous
+    last_id_dict = self._getLastIdDict(id_generator)
+
+    # setUp the data for migration test
+    self._setUpLastMaxIdDict(id_generator_reference)
+
+    # test migration: PersistentMapping to OOBTree
+    self.assertTrue(isinstance(last_id_dict, PersistentMapping))
+    self._assertIdGeneratorLastMaxIdDict(id_generator)
+    id_generator.rebuildGeneratorIdDict() # migrate the dict
+    self._assertIdGeneratorLastMaxIdDict(id_generator)
+
+    # test migration: OOBTree to OOBTree. this changes nothing, just to be sure
+    last_id_dict = self._getLastIdDict(id_generator)
+    self.assertTrue(isinstance(last_id_dict, OOBTree))
+    self._assertIdGeneratorLastMaxIdDict(id_generator)
+    id_generator.rebuildGeneratorIdDict() # migrate the dict
+    self._assertIdGeneratorLastMaxIdDict(id_generator)
+
+    # test migration: SQL to OOBTree
+    if id_generator.getPortalType() == \
+      'SQL Non Continuous Increasing Id Generator':
+      self._setLastIdDict(id_generator, OOBTree()) # set empty one
+      last_id_dict = self._getLastIdDict(id_generator)
+      assert(len(last_id_dict), 0) # 0 because it is empty
+      self.assertTrue(isinstance(last_id_dict, OOBTree))
+      # migrate the dict totally from sql table in this case
+      id_generator.rebuildGeneratorIdDict()
+      self._assertIdGeneratorLastMaxIdDict(id_generator)
+
+
+  def testRebuildIdDictFromPersistentMappingToOOBTree(self):
+    """
+      Check migration is working
+    """
+    # this is the amount of keys that is creating in this test
+    self.a_lot_of_key = 1010
+    # check sql id generator migration
+    id_generator_reference = 'test_application_sql'
+    id_generator = self.getLastGenerator(id_generator_reference)
+    id_generator.setStoredInZodb(True)
+    id_generator.clearGenerator() # clear stored data
+    self._checkDataStructureMigration(id_generator)
+
+    # check zodb id generator migration
+    id_generator_reference = 'test_application_zodb'
+    id_generator = self.getLastGenerator(id_generator_reference)
+    id_generator.clearGenerator() # clear stored data
+    self._checkDataStructureMigration(id_generator)
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestIdToolUpgrade))
+  return suite

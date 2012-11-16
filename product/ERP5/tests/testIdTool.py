@@ -33,6 +33,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from _mysql_exceptions import ProgrammingError
+from BTrees.OOBTree import OOBTree
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -154,7 +155,7 @@ class TestIdTool(ERP5TypeTestCase):
     zodb_generator = self.getLastGenerator('test_application_zodb')
     zodb_portal_type = 'ZODB Continuous Increasing Id Generator'
     self.assertEquals(zodb_generator.getPortalType(), zodb_portal_type)
-    self.assertEqual(getattr(zodb_generator, 'last_id_dict', {}), {})
+    self.assertEqual(len(zodb_generator.last_id_dict), 0)
     # generate ids
     self.checkGenerateNewId('test_application_zodb')
     # check zodb dict
@@ -171,7 +172,11 @@ class TestIdTool(ERP5TypeTestCase):
     sql_generator = self.getLastGenerator('test_application_sql')
     sql_portal_type = 'SQL Non Continuous Increasing Id Generator'
     self.assertEquals(sql_generator.getPortalType(), sql_portal_type)
-    self.assertEquals(getattr(sql_generator, 'last_max_id_dict', {}), {})
+    # This assertEquals() make sure that last_max_id_dict property is empty.
+    # Note that keys(), values() and items() methods of OOBTree do not return
+    # a list of all the items. The methods return a lazy evaluated object.
+    # len() method on OOBTree can handle properly even in the situation.
+    self.assertEquals(len(sql_generator.last_max_id_dict), 0)
     # retrieve method to recovery the last id in the database
     last_id_method = getattr(self.portal, 'IdTool_zGetLastId', None)
     self.assertNotEquals(last_id_method, None)
@@ -189,7 +194,7 @@ class TestIdTool(ERP5TypeTestCase):
       self.assertEquals(sql_generator.last_max_id_dict['c02'].value, 0)
       self.assertEquals(sql_generator.last_max_id_dict['d02'].value, 21)
     else:
-      self.assertEquals(getattr(sql_generator, 'last_max_id_dict', {}), {})
+      self.assertEquals(len(sql_generator.last_max_id_dict), 0)
 
   def test_02b_generateNewIdWithSQLGeneratorWithoutStorageZODB(self):
     """
