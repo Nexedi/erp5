@@ -977,6 +977,14 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
       preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
 
+    def _updateMemcachedConfiguration(self):
+      """Update default memcached plugin configuration
+      """
+      portal_memcached = self.portal.portal_memcached
+      connection_dict = _getVolatileMemcachedServerDict()
+      url_string = '%(hostname)s:%(port)s' % connection_dict
+      portal_memcached.default_memcached_plugin.setUrlString(url_string)
+
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
       Test runner can set `erp5_tests_recreate_catalog` environnement variable,
@@ -1127,6 +1135,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                               light_install=light_install,
                                               quiet=quiet)
             self._updateConversionServerConfiguration()
+            self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
