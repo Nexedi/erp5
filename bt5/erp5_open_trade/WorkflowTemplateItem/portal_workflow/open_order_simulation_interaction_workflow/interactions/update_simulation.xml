@@ -60,6 +60,7 @@
                 <string>plan</string>
                 <string>order</string>
                 <string>validate</string>
+                <string>cancel</string>
               </list>
             </value>
         </item>
