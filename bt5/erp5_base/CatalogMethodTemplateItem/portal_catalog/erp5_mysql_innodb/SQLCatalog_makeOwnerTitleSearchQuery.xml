@@ -50,17 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import SimpleQuery\n
-\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
 portal = context.getPortalObject()\n
 \n
-reference_list = [x.reference for x in\n
-                  portal.portal_catalog(SimpleQuery(reference=None,\n
-                                                    comparison_operator="is not"),\n
-                                        select_list=[\'reference\'],\n
-                                        portal_type="Person", title=value)]\n
+reference_list = [x.reference for x in portal.portal_catalog(select_expression="catalog.reference", portal_type="Person", title=value, reference="%")]\n
 \n
-return SimpleQuery(owner=reference_list or -1)\n
+query = Query(**{\'catalog.owner\': reference_list or -1})\n
+\n
+return query\n
 </string> </value>
         </item>
         <item>
