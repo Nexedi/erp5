@@ -81,8 +81,13 @@ multimembership_criterion_base_category_list = context.getMultimembershipCriteri
 reference = context.Base_generateReferenceFromString(title)\n
 \n
 existing_document = context.getDocumentValue(reference)\n
-if existing_document is not None:\n
-  # if there are other document which reference duplicates just add some random part\n
+existing_web_section_list = portal.portal_catalog(id=reference, portal_type=[\'Web Site\', \'Web Section\'])\n
+existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())\n
+if existing_document is not None \\\n
+  or len(existing_web_section_list) \\\n
+  or len(existing_module_list):\n
+  # if there are other document or any tarversal objects (module, web section)\n
+  # which ID or reference duplicates just add some random part\n
   # so we can distinguish)\n
   reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
 \n
