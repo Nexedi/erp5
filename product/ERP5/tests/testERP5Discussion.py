@@ -186,6 +186,18 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
 
+    # test new thread reference do no overlap any other traversable object
+    web_section1.WebSection_createNewDiscussionThread(web_section1.getId(), 'test reference using web section')
+    web_section1.WebSection_createNewDiscussionThread('image_module', 'test1 body')
+    self.tic()
+    self.assertNotEqual(web_section1.getId(), 
+                        portal.portal_catalog.getResultValue(
+                          portal_type = 'Discussion Thread',
+                          title = web_section1.getId()).getReference())
+    self.assertNotEqual('image_module', 
+                        portal.portal_catalog.getResultValue(
+                          portal_type = 'Discussion Thread',
+                          title = 'image_module').getReference())
 
   def test_02_ReferenceGenerationFromString(self):
     s = "a test by ivan !@#$%^&*()[]\\é"
