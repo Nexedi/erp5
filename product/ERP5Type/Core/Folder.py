@@ -1061,6 +1061,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         return False
       return CMFBTreeFolder.hasObject(self, id)
 
+  # Work around for the performance regression introduced in Zope 2.12.23.
+  # Otherwise, we use superclass' __contains__ implementation, which uses
+  # objectIds, which is inefficient in HBTreeFolder2 to lookup a single key.
   __contains__ = hasObject
 
   # Override Zope default by folder id generation
