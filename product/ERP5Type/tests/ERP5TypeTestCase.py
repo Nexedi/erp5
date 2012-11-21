@@ -547,8 +547,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
-        msg='%r != %r' % (a, b)
-      self.assertEqual(set(a), set(b), msg)
+        try:
+          from pprint import pformat
+        except ImportError:
+          msg='%r != %r' % (sorted(a), sorted(b))
+        else:
+          msg='\n%s\n!=\n%s' % (pformat(sorted(a)), pformat(sorted(b)))
+      self.assertEquals(set(a), set(b), msg)
     assertSameSet = failIfDifferentSet
 
     def assertHasAttribute(self, obj, attribute, msg=None):
