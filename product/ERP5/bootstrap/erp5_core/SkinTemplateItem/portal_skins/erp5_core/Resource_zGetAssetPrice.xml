@@ -186,7 +186,7 @@ FROM\n
  stock, catalog\n
 WHERE\n
   <dtml-var where_expression>\n
-\n
+ORDER by date DESC\n
 \n
 \n
 </dtml-if>
