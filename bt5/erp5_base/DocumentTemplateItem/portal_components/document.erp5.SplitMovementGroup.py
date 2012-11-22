@@ -56,7 +56,7 @@ class SplitMovementGroup(MovementGroup):
     return {}
 
   def test(self, document, property_dict, **kw):
-    return True, property_dict
+    return False, property_dict
 
   def _separate(self, movement_list, **kw):
     return [[[movement], {}] for movement in movement_list]
