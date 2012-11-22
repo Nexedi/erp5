@@ -12,6 +12,7 @@
               <list>
                 <string>css_class</string>
                 <string>default</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -83,6 +84,10 @@
 <a href="WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png"></a>
 
 ]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
