@@ -240,8 +240,6 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
         from Products.CMFDefault.File import File
         h_depth_1 = HBTreeFolder2()
-        #from BTrees.OOBTree import OOBTree
-        #h_depth_1 = OOBTree()
         for i in xrange(%d):
             id = str(i)
             h_depth_1[id] = File(id)
@@ -250,57 +248,52 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
         from Products.CMFDefault.File import File
         h_depth_2 = HBTreeFolder2()
-        #from BTrees.OOBTree import OOBTree
-        #h_depth_2 = OOBTree()
-        for i in xrange(%d / 100):
-            for j in xrange(100):
-                id = "-".join(map(str,(i,j)))
+        for i in xrange(10):
+            for j in xrange(%d / 10):
+                id = "-".join(map(str, (i,j)))
                 h_depth_2[id] = File(id)
         """)
         init_3 = dedent("""
         from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
         from Products.CMFDefault.File import File
         h_depth_3 = HBTreeFolder2()
-        #from BTrees.OOBTree import OOBTree
-        #h_depth_3 = OOBTree()
-        for i in xrange(%d / (100 * 10)):
-            for j in xrange(100):
-                for k in xrange(10):
+        for i in xrange(10):
+            for j in xrange(10):
+                for k in xrange(%d / (10 * 10)):
                     id = "-".join(map(str, (i, j, k)))
                     h_depth_3[id] = File(id)
         """)
 
         N = 1000
-        # measure 100 times of each test
+        # measure 100 times of each test with timeit()
         t1 = timeit.Timer("h_depth_1['555']", init_1 % N).timeit(100)
         t2 = timeit.Timer("h_depth_2['5-55']", init_2 % N).timeit(100)
-        t3 = timeit.Timer("h_depth_3['0-55-5']", init_3 % N).timeit(100)
+        t3 = timeit.Timer("h_depth_3['5-5-5']", init_3 % N).timeit(100)
         ZopeTestCase._print("\nN = 1000\n")
         ZopeTestCase._print("L1=%s\tL2=%s\tL3=%s" % (t1, t2, t3))
 
-        N = 10000 # 10 times bigger than previous test
-        # measure 100 times of each test
+        N = 10000 # The N is 10 times larger than the previous measurement
         t2_1 = timeit.Timer("h_depth_1['5555']", init_1 % N).timeit(100)
-        t2_2 = timeit.Timer("h_depth_2['55-55']", init_2 % N).timeit(100)
-        t2_3 = timeit.Timer("h_depth_3['5-55-5']", init_3 % N).timeit(100)
+        t2_2 = timeit.Timer("h_depth_2['5-555']", init_2 % N).timeit(100)
+        t2_3 = timeit.Timer("h_depth_3['5-5-55']", init_3 % N).timeit(100)
         ZopeTestCase._print("\nN = 10000\n")
         ZopeTestCase._print("L1'=%s\tL2'=%s\tL3'=%s" % (t2_1, t2_2, t2_3))
 
-        N = 100000  # 10 times bigger than pevious test
+        N = 100000  # The N is 10 times larger than the pevious measurement
         t3_1 = timeit.Timer("h_depth_1['22222']", init_1 % N).timeit(100)
-        t3_2 = timeit.Timer("h_depth_2['222-22']", init_2 % N).timeit(100)
-        t3_3 = timeit.Timer("h_depth_3['22-22-2']", init_3 % N).timeit(100)
+        t3_2 = timeit.Timer("h_depth_2['2-2222']", init_2 % N).timeit(100)
+        t3_3 = timeit.Timer("h_depth_3['2-2-222']", init_3 % N).timeit(100)
         ZopeTestCase._print("\nN = 100000\n")
         ZopeTestCase._print("L1''=%s\tL2''=%s\tL3''=%s" % (t3_1, t3_2, t3_3))
 
         # These assert are should be True, but right now those are not passed
 
-        # assert that L2 is faster than L1, because the bottom node is smaller
+        # assert L2 is faster than L1, because the leaves are fewer than L1
         self.assertTrue(t1 > t2)
         self.assertTrue(t2_1 > t2_2)
         self.assertTrue(t3_1 > t3_2)
 
-        # assert that L3 is faster than L2, because the bottom node is smaller
+        # assert L3 is faster than L2, because the leaves are fewer than L1
         self.assertTrue(t2 > t3)
         self.assertTrue(t2_2 > t2_3)
         self.assertTrue(t3_2 > t3_3)
