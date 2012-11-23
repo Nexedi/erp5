@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ArgParser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.ArgParser\n
+ * The ArgParser control adds location bar query string parsing functionality \n
+ * to an OpenLayers Map.\n
+ * When added to a Map control, on a page load/refresh, the Map will \n
+ * automatically take the href string and parse it for lon, lat, zoom, and \n
+ * layers information. \n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.ArgParser = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /**\n
+     * Property: center\n
+     * {<OpenLayers.LonLat>}\n
+     */\n
+    center: null,\n
+    \n
+    /**\n
+     * Property: zoom\n
+     * {int}\n
+     */\n
+    zoom: null,\n
+\n
+    /**\n
+     * Property: layers\n
+     * {String} Each character represents the state of the corresponding layer \n
+     *     on the map.\n
+     */\n
+    layers: null,\n
+    \n
+    /** \n
+     * APIProperty: displayProjection\n
+     * {<OpenLayers.Projection>} Requires proj4js support. \n
+     *     Projection used when reading the coordinates from the URL. This will\n
+     *     reproject the map coordinates from the URL into the map\'s\n
+     *     projection.\n
+     *\n
+     *     If you are using this functionality, be aware that any permalink\n
+     *     which is added to the map will determine the coordinate type which\n
+     *     is read from the URL, which means you should not add permalinks with\n
+     *     different displayProjections to the same map. \n
+     */\n
+    displayProjection: null, \n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.ArgParser\n
+     *\n
+     * Parameters:\n
+     * options - {Object}\n
+     */\n
+\n
+    /**\n
+     * Method: getParameters\n
+     */    \n
+    getParameters: function(url) {\n
+        url = url || window.location.href;\n
+        var parameters = OpenLayers.Util.getParameters(url);\n
+\n
+        // If we have an anchor in the url use it to split the url\n
+        var index = url.indexOf(\'#\');\n
+        if (index > 0) {\n
+            // create an url to parse on the getParameters\n
+            url = \'?\' + url.substring(index + 1, url.length);\n
+\n
+            OpenLayers.Util.extend(parameters,\n
+                    OpenLayers.Util.getParameters(url));\n
+        }\n
+        return parameters;\n
+    },\n
+    \n
+    /**\n
+     * Method: setMap\n
+     * Set the map property for the control. \n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+\n
+        //make sure we dont already have an arg parser attached\n
+        for(var i=0, len=this.map.controls.length; i<len; i++) {\n
+            var control = this.map.controls[i];\n
+            if ( (control != this) &&\n
+                 (control.CLASS_NAME == "OpenLayers.Control.ArgParser") ) {\n
+                \n
+                // If a second argparser is added to the map, then we \n
+                // override the displayProjection to be the one added to the\n
+                // map. \n
+                if (control.displayProjection != this.displayProjection) {\n
+                    this.displayProjection = control.displayProjection;\n
+                }    \n
+                \n
+                break;\n
+            }\n
+        }\n
+        if (i == this.map.controls.length) {\n
+\n
+            var args = this.getParameters();\n
+            // Be careful to set layer first, to not trigger unnecessary layer loads\n
+            if (args.layers) {\n
+                this.layers = args.layers;\n
+    \n
+                // when we add a new layer, set its visibility \n
+                this.map.events.register(\'addlayer\', this, \n
+                                         this.configureLayers);\n
+                this.configureLayers();\n
+            }\n
+            if (args.lat && args.lon) {\n
+                this.center = new OpenLayers.LonLat(parseFloat(args.lon),\n
+                                                    parseFloat(args.lat));\n
+                if (args.zoom) {\n
+                    this.zoom = parseFloat(args.zoom);\n
+                }\n
+    \n
+                // when we add a new baselayer to see when we can set the center\n
+                this.map.events.register(\'changebaselayer\', this, \n
+                                         this.setCenter);\n
+                this.setCenter();\n
+            }\n
+        }\n
+    },\n
+   \n
+    /** \n
+     * Method: setCenter\n
+     * As soon as a baseLayer has been loaded, we center and zoom\n
+     *   ...and remove the handler.\n
+     */\n
+    setCenter: function() {\n
+        \n
+        if (this.map.baseLayer) {\n
+            //dont need to listen for this one anymore\n
+            this.map.events.unregister(\'changebaselayer\', this, \n
+                                       this.setCenter);\n
+            \n
+            if (this.displayProjection) {\n
+                this.center.transform(this.displayProjection, \n
+                                      this.map.getProjectionObject()); \n
+            }      \n
+\n
+            this.map.setCenter(this.center, this.zoom);\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: configureLayers\n
+     * As soon as all the layers are loaded, cycle through them and \n
+     *   hide or show them. \n
+     */\n
+    configureLayers: function() {\n
+\n
+        if (this.layers.length == this.map.layers.length) { \n
+            this.map.events.unregister(\'addlayer\', this, this.configureLayers);\n
+\n
+            for(var i=0, len=this.layers.length; i<len; i++) {\n
+                \n
+                var layer = this.map.layers[i];\n
+                var c = this.layers.charAt(i);\n
+                \n
+                if (c == "B") {\n
+                    this.map.setBaseLayer(layer);\n
+                } else if ( (c == "T") || (c == "F") ) {\n
+                    layer.setVisibility(c == "T");\n
+                }\n
+            }\n
+        }\n
+    },     \n
+\n
+    CLASS_NAME: "OpenLayers.Control.ArgParser"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5908</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

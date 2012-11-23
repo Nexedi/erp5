@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>vi.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Minh Nguyen\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["vi"]\n
+ * Dictionary for Tiếng Việt.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["vi"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Không xử lý được phản hồi ${statusText} cho yêu cầu",\n
+\n
+    \'Permalink\': "Liên kết thường trực",\n
+\n
+    \'Overlays\': "Lấp bản đồ",\n
+\n
+    \'Base Layer\': "Lớp nền",\n
+\n
+    \'noFID\': "Không thể cập nhật tính năng thiếu FID.",\n
+\n
+    \'browserNotSupported\': "Trình duyệt của bạn không hỗ trợ chức năng vẽ bằng vectơ. Hiện hỗ trợ các bộ kết xuất:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Chỉ nên sử dụng thuộc tính minZoomLevel với các lớp FixedZoomLevels-descendent. Việc lớp wfs này tìm cho minZoomLevel là di tích còn lại từ xưa. Tuy nhiên, nếu chúng tôi dời nó thì sẽ vỡ các chương trình OpenLayers mà dựa trên nó. Bởi vậy chúng tôi phản đối sử dụng nó\\x26nbsp;– bước tìm cho minZoomLevel sẽ được dời vào phiên bản 3.0. Xin sử dụng thiết lập độ phân tích tối thiểu / tối đa thay thế, theo hướng dẫn này: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "Giao dịch WFS: THÀNH CÔNG ${response}",\n
+\n
+    \'commitFailed\': "Giao dịch WFS: THẤT BẠI ${response}",\n
+\n
+    \'googleWarning\': "Không thể tải lớp Google đúng đắn.\\x3cbr\\x3e\\x3cbr\\x3eĐể tránh thông báo này lần sau, hãy chọn BaseLayer mới dùng điều khiển chọn lớp ở góc trên phải.\\x3cbr\\x3e\\x3cbr\\x3eChắc script thư viện Google Maps hoặc không được bao gồm hoặc không chứa khóa API hợp với website của bạn.\\x3cbr\\x3e\\x3cbr\\x3e\\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3eTrợ giúp về tính năng này\\x3c/a\\x3e cho người phát triển.",\n
+\n
+    \'getLayerWarning\': "Không thể tải lớp ${layerType} đúng đắn.\\x3cbr\\x3e\\x3cbr\\x3eĐể tránh thông báo này lần sau, hãy chọn BaseLayer mới dùng điều khiển chọn lớp ở góc trên phải.\\x3cbr\\x3e\\x3cbr\\x3eChắc script thư viện ${layerLib} không được bao gồm đúng kiểu.\\x3cbr\\x3e\\x3cbr\\x3e\\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3eTrợ giúp về tính năng này\\x3c/a\\x3e cho người phát triển.",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Tỷ lệ = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "T",\n
+\n
+    \'E\': "Đ",\n
+\n
+    \'N\': "B",\n
+\n
+    \'S\': "N",\n
+\n
+    \'reprojectDeprecated\': "Bạn đang áp dụng chế độ “reproject” vào lớp ${layerName}. Chế độ này đã bị phản đối: nó có mục đích hỗ trợ lấp dữ liệu trên các nền bản đồ thương mại; nên thực hiện hiệu ứng đó dùng tính năng Mercator Hình cầu. Có sẵn thêm chi tiết tại http://trac.openlayers.org/wiki/SphericalMercator .",\n
+\n
+    \'methodDeprecated\': "Phương thức này đã bị phản đối và sẽ bị dời vào phiên bản 3.0. Xin hãy sử dụng ${newMethod} thay thế."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3340</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

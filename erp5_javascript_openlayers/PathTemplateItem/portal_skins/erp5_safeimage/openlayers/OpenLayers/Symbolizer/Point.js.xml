@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Point.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Symbolizer.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Symbolizer.Point\n
+ * A symbolizer used to render point features.\n
+ */\n
+OpenLayers.Symbolizer.Point = OpenLayers.Class(OpenLayers.Symbolizer, {\n
+    \n
+    /**\n
+     * APIProperty: strokeColor\n
+     * {String} Color for line stroke.  This is a RGB hex value (e.g. "#ff0000"\n
+     *     for red).\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: strokeOpacity\n
+     * {Number} Stroke opacity (0-1).\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: strokeWidth\n
+     * {Number} Pixel stroke width.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: strokeLinecap\n
+     * {String} Stroke cap type ("butt", "round", or "square").\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * Property: strokeDashstyle\n
+     * {String} Stroke dash style according to the SLD spec. Note that the\n
+     *     OpenLayers values for strokeDashstyle ("dot", "dash", "dashdot",\n
+     *     "longdash", "longdashdot", or "solid") will not work in SLD, but\n
+     *     most SLD patterns will render correctly in OpenLayers.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+\n
+    /**\n
+     * APIProperty: fillColor\n
+     * {String} RGB hex fill color (e.g. "#ff0000" for red).\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: fillOpacity\n
+     * {Number} Fill opacity (0-1).\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+\n
+    /**\n
+     * APIProperty: pointRadius\n
+     * {Number} Pixel point radius.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+\n
+    /**\n
+     * APIProperty: externalGraphic\n
+     * {String} Url to an external graphic that will be used for rendering \n
+     *     points.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicWidth\n
+     * {Number} Pixel width for sizing an external graphic.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicHeight\n
+     * {Number} Pixel height for sizing an external graphic.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicOpacity\n
+     * {Number} Opacity (0-1) for an external graphic.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicXOffset\n
+     * {Number} Pixel offset along the positive x axis for displacing an \n
+     *     external graphic.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicYOffset\n
+     * {Number} Pixel offset along the positive y axis for displacing an \n
+     *     external graphic.\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+\n
+    /**\n
+     * APIProperty: rotation\n
+     * {Number} The rotation of a graphic in the clockwise direction about its \n
+     *     center point (or any point off center as specified by \n
+     *     <graphicXOffset> and <graphicYOffset>).\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: graphicName\n
+     * {String} Named graphic to use when rendering points.  Supported values \n
+     *     include "circle", "square", "star", "x", "cross", and "triangle".\n
+     * \n
+     * No default set here.  Use OpenLayers.Renderer.defaultRenderer for defaults.\n
+     */\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Symbolizer.Point\n
+     * Create a symbolizer for rendering points.\n
+     *\n
+     * Parameters:\n
+     * config - {Object} An object containing properties to be set on the \n
+     *     symbolizer.  Any documented symbolizer property can be set at \n
+     *     construction.\n
+     *\n
+     * Returns:\n
+     * A new point symbolizer.\n
+     */\n
+    initialize: function(config) {\n
+        OpenLayers.Symbolizer.prototype.initialize.apply(this, arguments);\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Symbolizer.Point"\n
+    \n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4815</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

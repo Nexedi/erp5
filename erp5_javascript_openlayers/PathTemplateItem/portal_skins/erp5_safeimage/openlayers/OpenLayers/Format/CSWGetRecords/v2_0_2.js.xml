@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684101.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v2_0_2.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Format/CSWGetRecords.js\n
+ * @requires OpenLayers/Format/Filter/v1_0_0.js\n
+ * @requires OpenLayers/Format/Filter/v1_1_0.js\n
+ * @requires OpenLayers/Format/OWSCommon/v1_0_0.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.CSWGetRecords.v2_0_2\n
+ *     A format for creating CSWGetRecords v2.0.2 transactions. \n
+ *     Create a new instance with the\n
+ *     <OpenLayers.Format.CSWGetRecords.v2_0_2> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.CSWGetRecords.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML, {\n
+    \n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        csw: "http://www.opengis.net/cat/csw/2.0.2",\n
+        dc: "http://purl.org/dc/elements/1.1/",\n
+        dct: "http://purl.org/dc/terms/",\n
+        gmd: "http://www.isotc211.org/2005/gmd",\n
+        geonet: "http://www.fao.org/geonetwork",\n
+        ogc: "http://www.opengis.net/ogc",\n
+        ows: "http://www.opengis.net/ows",\n
+        xlink: "http://www.w3.org/1999/xlink",\n
+        xsi: "http://www.w3.org/2001/XMLSchema-instance"\n
+    },\n
+    \n
+    /**\n
+     * Property: defaultPrefix\n
+     * {String} The default prefix (used by Format.XML).\n
+     */\n
+    defaultPrefix: "csw",\n
+    \n
+    /**\n
+     * Property: version\n
+     * {String} CSW version number.\n
+     */\n
+    version: "2.0.2",\n
+    \n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} http://www.opengis.net/cat/csw/2.0.2\n
+     *   http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd\n
+     */\n
+    schemaLocation: "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",\n
+\n
+    /**\n
+     * APIProperty: requestId\n
+     * {String} Value of the requestId attribute of the GetRecords element.\n
+     */\n
+    requestId: null,\n
+\n
+    /**\n
+     * APIProperty: resultType\n
+     * {String} Value of the resultType attribute of the GetRecords element,\n
+     *     specifies the result type in the GetRecords response, "hits" is\n
+     *     the default.\n
+     */\n
+    resultType: null,\n
+\n
+    /**\n
+     * APIProperty: outputFormat\n
+     * {String} Value of the outputFormat attribute of the GetRecords element,\n
+     *     specifies the format of the GetRecords response,\n
+     *     "application/xml" is the default.\n
+     */\n
+    outputFormat: null,\n
+\n
+    /**\n
+     * APIProperty: outputSchema\n
+     * {String} Value of the outputSchema attribute of the GetRecords element,\n
+     *     specifies the schema of the GetRecords response.\n
+     */\n
+    outputSchema: null,\n
+\n
+    /**\n
+     * APIProperty: startPosition\n
+     * {String} Value of the startPosition attribute of the GetRecords element,\n
+     *     specifies the start position (offset+1) for the GetRecords response,\n
+     *     1 is the default.\n
+     */\n
+    startPosition: null,\n
+\n
+    /**\n
+     * APIProperty: maxRecords\n
+     * {String} Value of the maxRecords attribute of the GetRecords element,\n
+     *     specifies the maximum number of records in the GetRecords response,\n
+     *     10 is the default.\n
+     */\n
+    maxRecords: null,\n
+\n
+    /**\n
+     * APIProperty: DistributedSearch\n
+     * {String} Value of the csw:DistributedSearch element, used when writing\n
+     *     a csw:GetRecords document.\n
+     */\n
+    DistributedSearch: null,\n
+\n
+    /**\n
+     * APIProperty: ResponseHandler\n
+     * {Array({String})} Values of the csw:ResponseHandler elements, used when\n
+     *     writting a csw:GetRecords document.\n
+     */\n
+    ResponseHandler: null,\n
+\n
+    /**\n
+     * APIProperty: Query\n
+     * {String} Value of the csw:Query element, used when writing a csw:GetRecords\n
+     *     document.\n
+     */\n
+    Query: null,\n
+\n
+    /**\n
+     * Property: regExes\n
+     * Compiled regular expressions for manipulating strings.\n
+     */\n
+    regExes: {\n
+        trimSpace: (/^\\s*|\\s*$/g),\n
+        removeSpace: (/\\s*/g),\n
+        splitSpace: (/\\s+/),\n
+        trimComma: (/\\s*,\\s*/g)\n
+    },\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.CSWGetRecords.v2_0_2\n
+     * A class for parsing and generating CSWGetRecords v2.0.2 transactions.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     *\n
+     * Valid options properties (documented as class properties):\n
+     * - requestId\n
+     * - resultType\n
+     * - outputFormat\n
+     * - outputSchema\n
+     * - startPosition\n
+     * - maxRecords\n
+     * - DistributedSearch\n
+     * - ResponseHandler\n
+     * - Query\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Parse the response from a GetRecords request.\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") { \n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        if(data && data.nodeType == 9) {\n
+            data = data.documentElement;\n
+        }\n
+        var obj = {};\n
+        this.readNode(data, obj);\n
+        return obj;\n
+    },\n
+    \n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "csw": {\n
+            "GetRecordsResponse": function(node, obj) {\n
+                obj.records = [];\n
+                this.readChildNodes(node, obj);\n
+                var version = this.getAttributeNS(node, "", \'version\');\n
+                if (version != "") {\n
+                    obj.version = version;\n
+                }\n
+            },\n
+            "RequestId": function(node, obj) {\n
+                obj.RequestId = this.getChildValue(node);\n
+            },\n
+            "SearchStatus": function(node, obj) {\n
+                obj.SearchStatus = {};\n
+                var timestamp = this.getAttributeNS(node, "", \'timestamp\');\n
+                if (timestamp != "") {\n
+                    obj.SearchStatus.timestamp = timestamp;\n
+                }\n
+            },\n
+            "SearchResults": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+                var attrs = node.attributes;\n
+                var SearchResults = {};\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    if ((attrs[i].name == "numberOfRecordsMatched") ||\n
+                        (attrs[i].name == "numberOfRecordsReturned") ||\n
+                        (attrs[i].name == "nextRecord")) {\n
+                        SearchResults[attrs[i].name] = parseInt(attrs[i].nodeValue);\n
+                    } else {\n
+                        SearchResults[attrs[i].name] = attrs[i].nodeValue;\n
+                    }\n
+                }\n
+                obj.SearchResults = SearchResults;\n
+            },\n
+            "SummaryRecord": function(node, obj) {\n
+                var record = {type: "SummaryRecord"};\n
+                this.readChildNodes(node, record);\n
+                obj.records.push(record);\n
+            },\n
+            "BriefRecord": function(node, obj) {\n
+                var record = {type: "BriefRecord"};\n
+                this.readChildNodes(node, record);\n
+                obj.records.push(record);\n
+            },\n
+            "DCMIRecord": function(node, obj) {\n
+                var record = {type: "DCMIRecord"};\n
+                this.readChildNodes(node, record);\n
+                obj.records.push(record);\n
+            },\n
+            "Record": function(node, obj) {\n
+                var record = {type: "Record"};\n
+                this.readChildNodes(node, record);\n
+                obj.records.push(record);\n
+            },\n
+            "*": function(node, obj) {\n
+                var name = node.localName || node.nodeName.split(":").pop();\n
+                obj[name] = this.getChildValue(node);\n
+            }\n
+        },\n
+        "geonet": {\n
+            "info": function(node, obj) {\n
+                var gninfo = {};\n
+                this.readChildNodes(node, gninfo);\n
+                obj.gninfo = gninfo;\n
+            }\n
+        },\n
+        "dc": {\n
+            // audience, contributor, coverage, creator, date, description, format,\n
+            // identifier, language, provenance, publisher, relation, rights,\n
+            // rightsHolder, source, subject, title, type, URI\n
+            "*": function(node, obj) {\n
+                var name = node.localName || node.nodeName.split(":").pop();\n
+                if (!(OpenLayers.Util.isArray(obj[name]))) {\n
+                    obj[name] = [];\n
+                }\n
+                var dc_element = {};\n
+                var attrs = node.attributes;\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    dc_element[attrs[i].name] = attrs[i].nodeValue;\n
+                }\n
+                dc_element.value = this.getChildValue(node);\n
+                if (dc_element.value != "") {\n
+                    obj[name].push(dc_element);\n
+                }\n
+            }\n
+        },\n
+        "dct": {\n
+            // abstract, modified, spatial\n
+            "*": function(node, obj) {\n
+                var name = node.localName || node.nodeName.split(":").pop();\n
+                if (!(OpenLayers.Util.isArray(obj[name]))) {\n
+                    obj[name] = [];\n
+                }\n
+                obj[name].push(this.getChildValue(node));\n
+            }\n
+        },\n
+        "ows": OpenLayers.Util.applyDefaults({\n
+            "BoundingBox": function(node, obj) {\n
+                if (obj.bounds) {\n
+                    obj.BoundingBox = [{crs: obj.projection, value: \n
+                        [\n
+                            obj.bounds.left, \n
+                            obj.bounds.bottom, \n
+                            obj.bounds.right, \n
+                            obj.bounds.top\n
+                    ]\n
+                    }];\n
+                    delete obj.projection;\n
+                    delete obj.bounds;\n
+                }\n
+                OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers["ows"]["BoundingBox"].apply(\n
+                    this, arguments);\n
+            }\n
+        }, OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers["ows"])\n
+    },\n
+    \n
+    /**\n
+     * Method: write\n
+     * Given an configuration js object, write a CSWGetRecords request. \n
+     *\n
+     * Parameters:\n
+     * options - {Object} A object mapping the request.\n
+     *\n
+     * Returns:\n
+     * {String} A serialized CSWGetRecords request.\n
+     */\n
+    write: function(options) {\n
+        var node = this.writeNode("csw:GetRecords", options);\n
+        node.setAttribute("xmlns:gmd", this.namespaces.gmd);\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [node]);\n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "csw": {\n
+            "GetRecords": function(options) {\n
+                if (!options) {\n
+                    options = {};\n
+                }\n
+                var node = this.createElementNSPlus("csw:GetRecords", {\n
+                    attributes: {\n
+                        service: "CSW",\n
+                        version: this.version,\n
+                        requestId: options.requestId || this.requestId,\n
+                        resultType: options.resultType || this.resultType,\n
+                        outputFormat: options.outputFormat || this.outputFormat,\n
+                        outputSchema: options.outputSchema || this.outputSchema,\n
+                        startPosition: options.startPosition || this.startPosition,\n
+                        maxRecords: options.maxRecords || this.maxRecords\n
+                    }\n
+                });\n
+                if (options.DistributedSearch || this.DistributedSearch) {\n
+                    this.writeNode(\n
+                        "csw:DistributedSearch",\n
+                        options.DistributedSearch || this.DistributedSearch,\n
+                        node\n
+                    );\n
+                }\n
+                var ResponseHandler = options.ResponseHandler || this.ResponseHandler;\n
+                if (OpenLayers.Util.isArray(ResponseHandler) && ResponseHandler.length > 0) {\n
+                    // ResponseHandler must be a non-empty array\n
+                    for(var i=0, len=ResponseHandler.length; i<len; i++) {\n
+                        this.writeNode(\n
+                            "csw:ResponseHandler",\n
+                            ResponseHandler[i],\n
+                            node\n
+                        );\n
+                    }\n
+                }\n
+                this.writeNode("Query", options.Query || this.Query, node);\n
+                return node;\n
+            },\n
+            "DistributedSearch": function(options) {\n
+                var node = this.createElementNSPlus("csw:DistributedSearch", {\n
+                    attributes: {\n
+                        hopCount: options.hopCount\n
+                    }\n
+                });\n
+                return node;\n
+            },\n
+            "ResponseHandler": function(options) {\n
+                var node = this.createElementNSPlus("csw:ResponseHandler", {\n
+                    value: options.value\n
+                });\n
+                return node;\n
+            },\n
+            "Query": function(options) {\n
+                if (!options) {\n
+                    options = {};\n
+                }\n
+                var node = this.createElementNSPlus("csw:Query", {\n
+                    attributes: {\n
+                        typeNames: options.typeNames || "csw:Record"\n
+                    }\n
+                });\n
+                var ElementName = options.ElementName;\n
+                if (OpenLayers.Util.isArray(ElementName) && ElementName.length > 0) {\n
+                    // ElementName must be a non-empty array\n
+                    for(var i=0, len=ElementName.length; i<len; i++) {\n
+                        this.writeNode(\n
+                            "csw:ElementName",\n
+                            ElementName[i],\n
+                            node\n
+                        );\n
+                    }\n
+                } else {\n
+                    this.writeNode(\n
+                        "csw:ElementSetName",\n
+                        options.ElementSetName || {value: \'summary\'},\n
+                        node\n
+                    );\n
+                }\n
+                if (options.Constraint) {\n
+                    this.writeNode(\n
+                        "csw:Constraint",\n
+                        options.Constraint,\n
+                        node\n
+                    );\n
+                }\n
+                if (options.SortBy) {\n
+                    this.writeNode(\n
+                        "ogc:SortBy",\n
+                        options.SortBy,\n
+                        node\n
+                    );\n
+                }\n
+                return node;\n
+            },\n
+            "ElementName": function(options) {\n
+                var node = this.createElementNSPlus("csw:ElementName", {\n
+                    value: options.value\n
+                });\n
+                return node;\n
+            },\n
+            "ElementSetName": function(options) {\n
+                var node = this.createElementNSPlus("csw:ElementSetName", {\n
+                    attributes: {\n
+                        typeNames: options.typeNames\n
+                    },\n
+                    value: options.value\n
+                });\n
+                return node;\n
+            },\n
+            "Constraint": function(options) {\n
+                var node = this.createElementNSPlus("csw:Constraint", {\n
+                    attributes: {\n
+                        version: options.version\n
+                    }\n
+                });\n
+                if (options.Filter) {\n
+                    var format = new OpenLayers.Format.Filter({\n
+                        version: options.version\n
+                    });\n
+                    node.appendChild(format.write(options.Filter));\n
+                } else if (options.CqlText) {\n
+                    var child = this.createElementNSPlus("CqlText", {\n
+                        value: options.CqlText.value\n
+                    });\n
+                    node.appendChild(child);\n
+                }\n
+                return node;\n
+            }\n
+        },\n
+        "ogc": OpenLayers.Format.Filter.v1_1_0.prototype.writers["ogc"]\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Format.CSWGetRecords.v2_0_2" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16614</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

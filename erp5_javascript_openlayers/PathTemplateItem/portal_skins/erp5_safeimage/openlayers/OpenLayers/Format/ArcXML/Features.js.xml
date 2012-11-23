@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Features.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/ArcXML.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.ArcXML.Features\n
+ * Read/Wite ArcXML features. Create a new instance with the \n
+ *     <OpenLayers.Format.ArcXML.Features> constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.ArcXML.Features = OpenLayers.Class(OpenLayers.Format.XML, {\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.ArcXML.Features\n
+     * Create a new parser/writer for ArcXML Features.  Create an instance of this class\n
+     * to get a set of features from an ArcXML response.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Read data from a string of ArcXML, and return a set of OpenLayers features. \n
+     * \n
+     * Parameters:\n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Array(<OpenLayers.Feature.Vector>)} A collection of features.\n
+     */\n
+    read: function(data) {\n
+        var axl = new OpenLayers.Format.ArcXML();\n
+        var parsed = axl.read(data);\n
+        \n
+        return parsed.features.feature;\n
+    }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1430</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

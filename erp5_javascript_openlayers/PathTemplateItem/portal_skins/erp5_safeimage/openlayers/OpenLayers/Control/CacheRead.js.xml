@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CacheRead.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.CacheRead\n
+ * A control for using image tiles cached with <OpenLayers.Control.CacheWrite>\n
+ * from the browser\'s local storage.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.CacheRead = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: fetchEvent\n
+     * {String} The layer event to listen to for replacing remote resource tile\n
+     *     URLs with cached data URIs. Supported values are "tileerror" (try\n
+     *     remote first, fall back to cached) and "tileloadstart" (try cache\n
+     *     first, fall back to remote). Default is "tileloadstart".\n
+     *\n
+     *     Note that "tileerror" will not work for CORS enabled images (see\n
+     *     https://developer.mozilla.org/en/CORS_Enabled_Image), i.e. layers\n
+     *     configured with a <OpenLayers.Tile.Image.crossOriginKeyword> in\n
+     *     <OpenLayers.Layer.Grid.tileOptions>.\n
+     */\n
+    fetchEvent: "tileloadstart",\n
+    \n
+    /**\n
+     * APIProperty: layers\n
+     * {Array(<OpenLayers.Layer.Grid>)}. Optional. If provided, only these\n
+     *     layers will receive tiles from the cache.\n
+     */\n
+    layers: null,\n
+    \n
+    /**\n
+     * APIProperty: autoActivate\n
+     * {Boolean} Activate the control when it is added to a map.  Default is\n
+     *     true.\n
+     */\n
+    autoActivate: true,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.CacheRead\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Object with API properties for this control\n
+     */\n
+    \n
+    /** \n
+     * Method: setMap\n
+     * Set the map property for the control. \n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+        var i, layers = this.layers || map.layers;\n
+        for (i=layers.length-1; i>=0; --i) {\n
+            this.addLayer({layer: layers[i]});\n
+        }\n
+        if (!this.layers) {\n
+            map.events.on({\n
+                addlayer: this.addLayer,\n
+                removeLayer: this.removeLayer,\n
+                scope: this\n
+            });\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: addLayer\n
+     * Adds a layer to the control. Once added, tiles requested for this layer\n
+     *     will be cached.\n
+     *\n
+     * Parameters:\n
+     * evt - {Object} Object with a layer property referencing an\n
+     *     <OpenLayers.Layer> instance\n
+     */\n
+    addLayer: function(evt) {\n
+        evt.layer.events.register(this.fetchEvent, this, this.fetch);        \n
+    },\n
+    \n
+    /**\n
+     * Method: removeLayer\n
+     * Removes a layer from the control. Once removed, tiles requested for this\n
+     *     layer will no longer be cached.\n
+     *\n
+     * Parameters:\n
+     * evt - {Object} Object with a layer property referencing an\n
+     *     <OpenLayers.Layer> instance\n
+     */\n
+    removeLayer: function(evt) {\n
+        evt.layer.events.unregister(this.fetchEvent, this, this.fetch);\n
+    },\n
+    \n
+    /**\n
+     * Method: fetch\n
+     * Listener to the <fetchEvent> event. Replaces a tile\'s url with a data\n
+     * URI from the cache.\n
+     *\n
+     * Parameters:\n
+     * evt - {Object} Event object with a tile property.\n
+     */\n
+    fetch: function(evt) {\n
+        if (this.active && window.localStorage &&\n
+                evt.tile instanceof OpenLayers.Tile.Image) {\n
+            var tile = evt.tile,\n
+                url = tile.url;\n
+            // deal with modified tile urls when both CacheWrite and CacheRead\n
+            // are active\n
+            if (!tile.layer.crossOriginKeyword && OpenLayers.ProxyHost &&\n
+                    url.indexOf(OpenLayers.ProxyHost) === 0) {\n
+                url = OpenLayers.Control.CacheWrite.urlMap[url];        \n
+            }\n
+            var dataURI = window.localStorage.getItem("olCache_" + url);\n
+            if (dataURI) {\n
+                tile.url = dataURI;\n
+                if (evt.type === "tileerror") {\n
+                    tile.setImgSrc(dataURI);\n
+                }\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: destroy\n
+     * The destroy method is used to perform any clean up before the control\n
+     * is dereferenced.  Typically this is where event listeners are removed\n
+     * to prevent memory leaks.\n
+     */\n
+    destroy: function() {\n
+        if (this.layers || this.map) {\n
+            var i, layers = this.layers || this.map.layers;\n
+            for (i=layers.length-1; i>=0; --i) {\n
+                this.removeLayer({layer: layers[i]});\n
+            }\n
+        }\n
+        if (this.map) {\n
+            this.map.events.un({\n
+                addlayer: this.addLayer,\n
+                removeLayer: this.removeLayer,\n
+                scope: this\n
+            });\n
+        }\n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Control.CacheRead"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5044</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

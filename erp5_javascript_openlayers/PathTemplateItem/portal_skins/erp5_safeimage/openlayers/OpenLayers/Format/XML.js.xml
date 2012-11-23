@@ -1,0 +1,921 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>XML.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.XML\n
+ * Read and write XML.  For cross-browser XML generation, use methods on an\n
+ *     instance of the XML format class instead of on <code>document<end>.\n
+ *     The DOM creation and traversing methods exposed here all mimic the\n
+ *     W3C XML DOM methods.  Create a new parser with the\n
+ *     <OpenLayers.Format.XML> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format>\n
+ */\n
+OpenLayers.Format.XML = OpenLayers.Class(OpenLayers.Format, {\n
+    \n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.  Properties\n
+     *     of this object should not be set individually.  Read-only.  All\n
+     *     XML subclasses should have their own namespaces object.  Use\n
+     *     <setNamespace> to add or set a namespace alias after construction.\n
+     */\n
+    namespaces: null,\n
+    \n
+    /**\n
+     * Property: namespaceAlias\n
+     * {Object} Mapping of namespace URI to namespace alias.  This object\n
+     *     is read-only.  Use <setNamespace> to add or set a namespace alias.\n
+     */\n
+    namespaceAlias: null,\n
+    \n
+    /**\n
+     * Property: defaultPrefix\n
+     * {String} The default namespace alias for creating element nodes.\n
+     */\n
+    defaultPrefix: null,\n
+    \n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {},\n
+    \n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the <readers> property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {},\n
+\n
+    /**\n
+     * Property: xmldom\n
+     * {XMLDom} If this browser uses ActiveX, this will be set to a XMLDOM\n
+     *     object.  It is not intended to be a browser sniffing property.\n
+     *     Instead, the xmldom property is used instead of <code>document<end>\n
+     *     where namespaced node creation methods are not supported. In all\n
+     *     other browsers, this remains null.\n
+     */\n
+    xmldom: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.XML\n
+     * Construct an XML parser.  The parser is used to read and write XML.\n
+     *     Reading XML from a string returns a DOM element.  Writing XML from\n
+     *     a DOM element returns a string.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on\n
+     *     the object.\n
+     */\n
+    initialize: function(options) {\n
+        if(window.ActiveXObject) {\n
+            this.xmldom = new ActiveXObject("Microsoft.XMLDOM");\n
+        }\n
+        OpenLayers.Format.prototype.initialize.apply(this, [options]);\n
+        // clone the namespace object and set all namespace aliases\n
+        this.namespaces = OpenLayers.Util.extend({}, this.namespaces);\n
+        this.namespaceAlias = {};\n
+        for(var alias in this.namespaces) {\n
+            this.namespaceAlias[this.namespaces[alias]] = alias;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     * Clean up.\n
+     */\n
+    destroy: function() {\n
+        this.xmldom = null;\n
+        OpenLayers.Format.prototype.destroy.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * Method: setNamespace\n
+     * Set a namespace alias and URI for the format.\n
+     *\n
+     * Parameters:\n
+     * alias - {String} The namespace alias (prefix).\n
+     * uri - {String} The namespace URI.\n
+     */\n
+    setNamespace: function(alias, uri) {\n
+        this.namespaces[alias] = uri;\n
+        this.namespaceAlias[uri] = alias;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Deserialize a XML string and return a DOM node.\n
+     *\n
+     * Parameters:\n
+     * text - {String} A XML string\n
+     \n
+     * Returns:\n
+     * {DOMElement} A DOM node\n
+     */\n
+    read: function(text) {\n
+        var index = text.indexOf(\'<\');\n
+        if(index > 0) {\n
+            text = text.substring(index);\n
+        }\n
+        var node = OpenLayers.Util.Try(\n
+            OpenLayers.Function.bind((\n
+                function() {\n
+                    var xmldom;\n
+                    /**\n
+                     * Since we want to be able to call this method on the prototype\n
+                     * itself, this.xmldom may not exist even if in IE.\n
+                     */\n
+                    if(window.ActiveXObject && !this.xmldom) {\n
+                        xmldom = new ActiveXObject("Microsoft.XMLDOM");\n
+                    } else {\n
+                        xmldom = this.xmldom;\n
+                        \n
+                    }\n
+                    xmldom.loadXML(text);\n
+                    return xmldom;\n
+                }\n
+            ), this),\n
+            function() {\n
+                return new DOMParser().parseFromString(text, \'text/xml\');\n
+            },\n
+            function() {\n
+                var req = new XMLHttpRequest();\n
+                req.open("GET", "data:" + "text/xml" +\n
+                         ";charset=utf-8," + encodeURIComponent(text), false);\n
+                if(req.overrideMimeType) {\n
+                    req.overrideMimeType("text/xml");\n
+                }\n
+                req.send(null);\n
+                return req.responseXML;\n
+            }\n
+        );\n
+\n
+        if(this.keepData) {\n
+            this.data = node;\n
+        }\n
+\n
+        return node;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: write\n
+     * Serialize a DOM node into a XML string.\n
+     * \n
+     * Parameters:\n
+     * node - {DOMElement} A DOM node.\n
+     *\n
+     * Returns:\n
+     * {String} The XML string representation of the input node.\n
+     */\n
+    write: function(node) {\n
+        var data;\n
+        if(this.xmldom) {\n
+            data = node.xml;\n
+        } else {\n
+            var serializer = new XMLSerializer();\n
+            if (node.nodeType == 1) {\n
+                // Add nodes to a document before serializing. Everything else\n
+                // is serialized as is. This may need more work. See #1218 .\n
+                var doc = document.implementation.createDocument("", "", null);\n
+                if (doc.importNode) {\n
+                    node = doc.importNode(node, true);\n
+                }\n
+                doc.appendChild(node);\n
+                data = serializer.serializeToString(doc);\n
+            } else {\n
+                data = serializer.serializeToString(node);\n
+            }\n
+        }\n
+        return data;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: createElementNS\n
+     * Create a new element with namespace.  This node can be appended to\n
+     *     another node with the standard node.appendChild method.  For\n
+     *     cross-browser support, this method must be used instead of\n
+     *     document.createElementNS.\n
+     *\n
+     * Parameters:\n
+     * uri - {String} Namespace URI for the element.\n
+     * name - {String} The qualified name of the element (prefix:localname).\n
+     * \n
+     * Returns:\n
+     * {Element} A DOM element with namespace.\n
+     */\n
+    createElementNS: function(uri, name) {\n
+        var element;\n
+        if(this.xmldom) {\n
+            if(typeof uri == "string") {\n
+                element = this.xmldom.createNode(1, name, uri);\n
+            } else {\n
+                element = this.xmldom.createNode(1, name, "");\n
+            }\n
+        } else {\n
+            element = document.createElementNS(uri, name);\n
+        }\n
+        return element;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: createTextNode\n
+     * Create a text node.  This node can be appended to another node with\n
+     *     the standard node.appendChild method.  For cross-browser support,\n
+     *     this method must be used instead of document.createTextNode.\n
+     * \n
+     * Parameters:\n
+     * text - {String} The text of the node.\n
+     * \n
+     * Returns: \n
+     * {DOMElement} A DOM text node.\n
+     */\n
+    createTextNode: function(text) {\n
+        var node;\n
+        if (typeof text !== "string") {\n
+            text = String(text);\n
+        }\n
+        if(this.xmldom) {\n
+            node = this.xmldom.createTextNode(text);\n
+        } else {\n
+            node = document.createTextNode(text);\n
+        }\n
+        return node;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getElementsByTagNameNS\n
+     * Get a list of elements on a node given the namespace URI and local name.\n
+     *     To return all nodes in a given namespace, use \'*\' for the name\n
+     *     argument.  To return all nodes of a given (local) name, regardless\n
+     *     of namespace, use \'*\' for the uri argument.\n
+     * \n
+     * Parameters:\n
+     * node - {Element} Node on which to search for other nodes.\n
+     * uri - {String} Namespace URI.\n
+     * name - {String} Local name of the tag (without the prefix).\n
+     * \n
+     * Returns:\n
+     * {NodeList} A node list or array of elements.\n
+     */\n
+    getElementsByTagNameNS: function(node, uri, name) {\n
+        var elements = [];\n
+        if(node.getElementsByTagNameNS) {\n
+            elements = node.getElementsByTagNameNS(uri, name);\n
+        } else {\n
+            // brute force method\n
+            var allNodes = node.getElementsByTagName("*");\n
+            var potentialNode, fullName;\n
+            for(var i=0, len=allNodes.length; i<len; ++i) {\n
+                potentialNode = allNodes[i];\n
+                fullName = (potentialNode.prefix) ?\n
+                           (potentialNode.prefix + ":" + name) : name;\n
+                if((name == "*") || (fullName == potentialNode.nodeName)) {\n
+                    if((uri == "*") || (uri == potentialNode.namespaceURI)) {\n
+                        elements.push(potentialNode);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return elements;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getAttributeNodeNS\n
+     * Get an attribute node given the namespace URI and local name.\n
+     * \n
+     * Parameters:\n
+     * node - {Element} Node on which to search for attribute nodes.\n
+     * uri - {String} Namespace URI.\n
+     * name - {String} Local name of the attribute (without the prefix).\n
+     * \n
+     * Returns:\n
+     * {DOMElement} An attribute node or null if none found.\n
+     */\n
+    getAttributeNodeNS: function(node, uri, name) {\n
+        var attributeNode = null;\n
+        if(node.getAttributeNodeNS) {\n
+            attributeNode = node.getAttributeNodeNS(uri, name);\n
+        } else {\n
+            var attributes = node.attributes;\n
+            var potentialNode, fullName;\n
+            for(var i=0, len=attributes.length; i<len; ++i) {\n
+                potentialNode = attributes[i];\n
+                if(potentialNode.namespaceURI == uri) {\n
+                    fullName = (potentialNode.prefix) ?\n
+                               (potentialNode.prefix + ":" + name) : name;\n
+                    if(fullName == potentialNode.nodeName) {\n
+                        attributeNode = potentialNode;\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return attributeNode;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getAttributeNS\n
+     * Get an attribute value given the namespace URI and local name.\n
+     * \n
+     * Parameters:\n
+     * node - {Element} Node on which to search for an attribute.\n
+     * uri - {String} Namespace URI.\n
+     * name - {String} Local name of the attribute (without the prefix).\n
+     * \n
+     * Returns:\n
+     * {String} An attribute value or and empty string if none found.\n
+     */\n
+    getAttributeNS: function(node, uri, name) {\n
+        var attributeValue = "";\n
+        if(node.getAttributeNS) {\n
+            attributeValue = node.getAttributeNS(uri, name) || "";\n
+        } else {\n
+            var attributeNode = this.getAttributeNodeNS(node, uri, name);\n
+            if(attributeNode) {\n
+                attributeValue = attributeNode.nodeValue;\n
+            }\n
+        }\n
+        return attributeValue;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getChildValue\n
+     * Get the textual value of the node if it exists, or return an\n
+     *     optional default string.  Returns an empty string if no first child\n
+     *     exists and no default value is supplied.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The element used to look for a first child value.\n
+     * def - {String} Optional string to return in the event that no\n
+     *     first child value exists.\n
+     *\n
+     * Returns:\n
+     * {String} The value of the first child of the given node.\n
+     */\n
+    getChildValue: function(node, def) {\n
+        var value = def || "";\n
+        if(node) {\n
+            for(var child=node.firstChild; child; child=child.nextSibling) {\n
+                switch(child.nodeType) {\n
+                    case 3: // text node\n
+                    case 4: // cdata section\n
+                        value += child.nodeValue;\n
+                }\n
+            }\n
+        }\n
+        return value;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: isSimpleContent\n
+     * Test if the given node has only simple content (i.e. no child element\n
+     *     nodes).\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} An element node.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The node has no child element nodes (nodes of type 1). \n
+     */\n
+    isSimpleContent: function(node) {\n
+        var simple = true;\n
+        for(var child=node.firstChild; child; child=child.nextSibling) {\n
+            if(child.nodeType === 1) {\n
+                simple = false;\n
+                break;\n
+            }\n
+        }\n
+        return simple;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: contentType\n
+     * Determine the content type for a given node.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement}\n
+     *\n
+     * Returns:\n
+     * {Integer} One of OpenLayers.Format.XML.CONTENT_TYPE.{EMPTY,SIMPLE,COMPLEX,MIXED}\n
+     *     if the node has no, simple, complex, or mixed content.\n
+     */\n
+    contentType: function(node) {\n
+        var simple = false,\n
+            complex = false;\n
+            \n
+        var type = OpenLayers.Format.XML.CONTENT_TYPE.EMPTY;\n
+\n
+        for(var child=node.firstChild; child; child=child.nextSibling) {\n
+            switch(child.nodeType) {\n
+                case 1: // element\n
+                    complex = true;\n
+                    break;\n
+                case 8: // comment\n
+                    break;\n
+                default:\n
+                    simple = true;\n
+            }\n
+            if(complex && simple) {\n
+                break;\n
+            }\n
+        }\n
+        \n
+        if(complex && simple) {\n
+            type = OpenLayers.Format.XML.CONTENT_TYPE.MIXED;\n
+        } else if(complex) {\n
+            return OpenLayers.Format.XML.CONTENT_TYPE.COMPLEX;\n
+        } else if(simple) {\n
+            return OpenLayers.Format.XML.CONTENT_TYPE.SIMPLE;\n
+        }\n
+        return type;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: hasAttributeNS\n
+     * Determine whether a node has a particular attribute matching the given\n
+     *     name and namespace.\n
+     * \n
+     * Parameters:\n
+     * node - {Element} Node on which to search for an attribute.\n
+     * uri - {String} Namespace URI.\n
+     * name - {String} Local name of the attribute (without the prefix).\n
+     * \n
+     * Returns:\n
+     * {Boolean} The node has an attribute matching the name and namespace.\n
+     */\n
+    hasAttributeNS: function(node, uri, name) {\n
+        var found = false;\n
+        if(node.hasAttributeNS) {\n
+            found = node.hasAttributeNS(uri, name);\n
+        } else {\n
+            found = !!this.getAttributeNodeNS(node, uri, name);\n
+        }\n
+        return found;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: setAttributeNS\n
+     * Adds a new attribute or changes the value of an attribute with the given\n
+     *     namespace and name.\n
+     *\n
+     * Parameters:\n
+     * node - {Element} Element node on which to set the attribute.\n
+     * uri - {String} Namespace URI for the attribute.\n
+     * name - {String} Qualified name (prefix:localname) for the attribute.\n
+     * value - {String} Attribute value.\n
+     */\n
+    setAttributeNS: function(node, uri, name, value) {\n
+        if(node.setAttributeNS) {\n
+            node.setAttributeNS(uri, name, value);\n
+        } else {\n
+            if(this.xmldom) {\n
+                if(uri) {\n
+                    var attribute = node.ownerDocument.createNode(\n
+                        2, name, uri\n
+                    );\n
+                    attribute.nodeValue = value;\n
+                    node.setAttributeNode(attribute);\n
+                } else {\n
+                    node.setAttribute(name, value);\n
+                }\n
+            } else {\n
+                throw "setAttributeNS not implemented";\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: createElementNSPlus\n
+     * Shorthand for creating namespaced elements with optional attributes and\n
+     *     child text nodes.\n
+     *\n
+     * Parameters:\n
+     * name - {String} The qualified node name.\n
+     * options - {Object} Optional object for node configuration.\n
+     *\n
+     * Valid options:\n
+     * uri - {String} Optional namespace uri for the element - supply a prefix\n
+     *     instead if the namespace uri is a property of the format\'s namespace\n
+     *     object.\n
+     * attributes - {Object} Optional attributes to be set using the\n
+     *     <setAttributes> method.\n
+     * value - {String} Optional text to be appended as a text node.\n
+     *\n
+     * Returns:\n
+     * {Element} An element node.\n
+     */\n
+    createElementNSPlus: function(name, options) {\n
+        options = options || {};\n
+        // order of prefix preference\n
+        // 1. in the uri option\n
+        // 2. in the prefix option\n
+        // 3. in the qualified name\n
+        // 4. from the defaultPrefix\n
+        var uri = options.uri || this.namespaces[options.prefix];\n
+        if(!uri) {\n
+            var loc = name.indexOf(":");\n
+            uri = this.namespaces[name.substring(0, loc)];\n
+        }\n
+        if(!uri) {\n
+            uri = this.namespaces[this.defaultPrefix];\n
+        }\n
+        var node = this.createElementNS(uri, name);\n
+        if(options.attributes) {\n
+            this.setAttributes(node, options.attributes);\n
+        }\n
+        var value = options.value;\n
+        if(value != null) {\n
+            node.appendChild(this.createTextNode(value));\n
+        }\n
+        return node;\n
+    },\n
+    \n
+    /**\n
+     * Method: setAttributes\n
+     * Set multiple attributes given key value pairs from an object.\n
+     *\n
+     * Parameters:\n
+     * node - {Element} An element node.\n
+     * obj - {Object || Array} An object whose properties represent attribute\n
+     *     names and values represent attribute values.  If an attribute name\n
+     *     is a qualified name ("prefix:local"), the prefix will be looked up\n
+     *     in the parsers {namespaces} object.  If the prefix is found,\n
+     *     setAttributeNS will be used instead of setAttribute.\n
+     */\n
+    setAttributes: function(node, obj) {\n
+        var value, uri;\n
+        for(var name in obj) {\n
+            if(obj[name] != null && obj[name].toString) {\n
+                value = obj[name].toString();\n
+                // check for qualified attribute name ("prefix:local")\n
+                uri = this.namespaces[name.substring(0, name.indexOf(":"))] || null;\n
+                this.setAttributeNS(node, uri, name, value);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: readNode\n
+     * Shorthand for applying one of the named readers given the node\n
+     *     namespace and local name.  Readers take two args (node, obj) and\n
+     *     generally extend or modify the second.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The node to be read (required).\n
+     * obj - {Object} The object to be modified (optional).\n
+     *\n
+     * Returns:\n
+     * {Object} The input object, modified (or a new one if none was provided).\n
+     */\n
+    readNode: function(node, obj) {\n
+        if(!obj) {\n
+            obj = {};\n
+        }\n
+        var group = this.readers[node.namespaceURI ? this.namespaceAlias[node.namespaceURI]: this.defaultPrefix];\n
+        if(group) {\n
+            var local = node.localName || node.nodeName.split(":").pop();\n
+            var reader = group[local] || group["*"];\n
+            if(reader) {\n
+                reader.apply(this, [node, obj]);\n
+            }\n
+        }\n
+        return obj;\n
+    },\n
+\n
+    /**\n
+     * Method: readChildNodes\n
+     * Shorthand for applying the named readers to all children of a node.\n
+     *     For each child of type 1 (element), <readSelf> is called.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The node to be read (required).\n
+     * obj - {Object} The object to be modified (optional).\n
+     *\n
+     * Returns:\n
+     * {Object} The input object, modified.\n
+     */\n
+    readChildNodes: function(node, obj) {\n
+        if(!obj) {\n
+            obj = {};\n
+        }\n
+        var children = node.childNodes;\n
+        var child;\n
+        for(var i=0, len=children.length; i<len; ++i) {\n
+            child = children[i];\n
+            if(child.nodeType == 1) {\n
+                this.readNode(child, obj);\n
+            }\n
+        }\n
+        return obj;\n
+    },\n
+\n
+    /**\n
+     * Method: writeNode\n
+     * Shorthand for applying one of the named writers and appending the\n
+     *     results to a node.  If a qualified name is not provided for the\n
+     *     second argument (and a local name is used instead), the namespace\n
+     *     of the parent node will be assumed.\n
+     *\n
+     * Parameters:\n
+     * name - {String} The name of a node to generate.  If a qualified name\n
+     *     (e.g. "pre:Name") is used, the namespace prefix is assumed to be\n
+     *     in the <writers> group.  If a local name is used (e.g. "Name") then\n
+     *     the namespace of the parent is assumed.  If a local name is used\n
+     *     and no parent is supplied, then the default namespace is assumed.\n
+     * obj - {Object} Structure containing data for the writer.\n
+     * parent - {DOMElement} Result will be appended to this node.  If no parent\n
+     *     is supplied, the node will not be appended to anything.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The child node.\n
+     */\n
+    writeNode: function(name, obj, parent) {\n
+        var prefix, local;\n
+        var split = name.indexOf(":");\n
+        if(split > 0) {\n
+            prefix = name.substring(0, split);\n
+            local = name.substring(split + 1);\n
+        } else {\n
+            if(parent) {\n
+                prefix = this.namespaceAlias[parent.namespaceURI];\n
+            } else {\n
+                prefix = this.defaultPrefix;\n
+            }\n
+            local = name;\n
+        }\n
+        var child = this.writers[prefix][local].apply(this, [obj]);\n
+        if(parent) {\n
+            parent.appendChild(child);\n
+        }\n
+        return child;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getChildEl\n
+     * Get the first child element.  Optionally only return the first child\n
+     *     if it matches the given name and namespace URI.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The parent node.\n
+     * name - {String} Optional node name (local) to search for.\n
+     * uri - {String} Optional namespace URI to search for.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The first child.  Returns null if no element is found, if\n
+     *     something significant besides an element is found, or if the element\n
+     *     found does not match the optional name and uri.\n
+     */\n
+    getChildEl: function(node, name, uri) {\n
+        return node && this.getThisOrNextEl(node.firstChild, name, uri);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getNextEl\n
+     * Get the next sibling element.  Optionally get the first sibling only\n
+     *     if it matches the given local name and namespace URI.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The node.\n
+     * name - {String} Optional local name of the sibling to search for.\n
+     * uri - {String} Optional namespace URI of the sibling to search for.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The next sibling element.  Returns null if no element is\n
+     *     found, something significant besides an element is found, or the\n
+     *     found element does not match the optional name and uri.\n
+     */\n
+    getNextEl: function(node, name, uri) {\n
+        return node && this.getThisOrNextEl(node.nextSibling, name, uri);\n
+    },\n
+    \n
+    /**\n
+     * Method: getThisOrNextEl\n
+     * Return this node or the next element node.  Optionally get the first\n
+     *     sibling with the given local name or namespace URI.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The node.\n
+     * name - {String} Optional local name of the sibling to search for.\n
+     * uri - {String} Optional namespace URI of the sibling to search for.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The next sibling element.  Returns null if no element is\n
+     *     found, something significant besides an element is found, or the\n
+     *     found element does not match the query.\n
+     */\n
+    getThisOrNextEl: function(node, name, uri) {\n
+        outer: for(var sibling=node; sibling; sibling=sibling.nextSibling) {\n
+            switch(sibling.nodeType) {\n
+                case 1: // Element\n
+                    if((!name || name === (sibling.localName || sibling.nodeName.split(":").pop())) &&\n
+                       (!uri || uri === sibling.namespaceURI)) {\n
+                        // matches\n
+                        break outer;\n
+                    }\n
+                    sibling = null;\n
+                    break outer;\n
+                case 3: // Text\n
+                    if(/^\\s*$/.test(sibling.nodeValue)) {\n
+                        break;\n
+                    }\n
+                case 4: // CDATA\n
+                case 6: // ENTITY_NODE\n
+                case 12: // NOTATION_NODE\n
+                case 10: // DOCUMENT_TYPE_NODE\n
+                case 11: // DOCUMENT_FRAGMENT_NODE\n
+                    sibling = null;\n
+                    break outer;\n
+            } // ignore comments and processing instructions\n
+        }\n
+        return sibling || null;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: lookupNamespaceURI\n
+     * Takes a prefix and returns the namespace URI associated with it on the given\n
+     *     node if found (and null if not). Supplying null for the prefix will\n
+     *     return the default namespace.\n
+     *\n
+     * For browsers that support it, this calls the native lookupNamesapceURI\n
+     *     function.  In other browsers, this is an implementation of\n
+     *     http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-lookupNamespaceURI.\n
+     *\n
+     * For browsers that don\'t support the attribute.ownerElement property, this\n
+     *     method cannot be called on attribute nodes.\n
+     *     \n
+     * Parameters:\n
+     * node - {DOMElement} The node from which to start looking.\n
+     * prefix - {String} The prefix to lookup or null to lookup the default namespace.\n
+     * \n
+     * Returns:\n
+     * {String} The namespace URI for the given prefix.  Returns null if the prefix\n
+     *     cannot be found or the node is the wrong type.\n
+     */\n
+    lookupNamespaceURI: function(node, prefix) {\n
+        var uri = null;\n
+        if(node) {\n
+            if(node.lookupNamespaceURI) {\n
+                uri = node.lookupNamespaceURI(prefix);\n
+            } else {\n
+                outer: switch(node.nodeType) {\n
+                    case 1: // ELEMENT_NODE\n
+                        if(node.namespaceURI !== null && node.prefix === prefix) {\n
+                            uri = node.namespaceURI;\n
+                            break outer;\n
+                        }\n
+                        var len = node.attributes.length;\n
+                        if(len) {\n
+                            var attr;\n
+                            for(var i=0; i<len; ++i) {\n
+                                attr = node.attributes[i];\n
+                                if(attr.prefix === "xmlns" && attr.name === "xmlns:" + prefix) {\n
+                                    uri = attr.value || null;\n
+                                    break outer;\n
+                                } else if(attr.name === "xmlns" && prefix === null) {\n
+                                    uri = attr.value || null;\n
+                                    break outer;\n
+                                }\n
+                            }\n
+                        }\n
+                        uri = this.lookupNamespaceURI(node.parentNode, prefix);\n
+                        break outer;\n
+                    case 2: // ATTRIBUTE_NODE\n
+                        uri = this.lookupNamespaceURI(node.ownerElement, prefix);\n
+                        break outer;\n
+                    case 9: // DOCUMENT_NODE\n
+                        uri = this.lookupNamespaceURI(node.documentElement, prefix);\n
+                        break outer;\n
+                    case 6: // ENTITY_NODE\n
+                    case 12: // NOTATION_NODE\n
+                    case 10: // DOCUMENT_TYPE_NODE\n
+                    case 11: // DOCUMENT_FRAGMENT_NODE\n
+                        break outer;\n
+                    default: \n
+                        // TEXT_NODE (3), CDATA_SECTION_NODE (4), ENTITY_REFERENCE_NODE (5),\n
+                        // PROCESSING_INSTRUCTION_NODE (7), COMMENT_NODE (8)\n
+                        uri =  this.lookupNamespaceURI(node.parentNode, prefix);\n
+                        break outer;\n
+                }\n
+            }\n
+        }\n
+        return uri;\n
+    },\n
+    \n
+    /**\n
+     * Method: getXMLDoc\n
+     * Get an XML document for nodes that are not supported in HTML (e.g.\n
+     * createCDATASection). On IE, this will either return an existing or\n
+     * create a new <xmldom> on the instance. On other browsers, this will\n
+     * either return an existing or create a new shared document (see\n
+     * <OpenLayers.Format.XML.document>).\n
+     *\n
+     * Returns:\n
+     * {XMLDocument}\n
+     */\n
+    getXMLDoc: function() {\n
+        if (!OpenLayers.Format.XML.document && !this.xmldom) {\n
+            if (document.implementation && document.implementation.createDocument) {\n
+                OpenLayers.Format.XML.document =\n
+                    document.implementation.createDocument("", "", null);\n
+            } else if (!this.xmldom && window.ActiveXObject) {\n
+                this.xmldom = new ActiveXObject("Microsoft.XMLDOM");\n
+            }\n
+        }\n
+        return OpenLayers.Format.XML.document || this.xmldom;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.XML" \n
+\n
+});     \n
+\n
+OpenLayers.Format.XML.CONTENT_TYPE = {EMPTY: 0, SIMPLE: 1, COMPLEX: 2, MIXED: 3};\n
+\n
+/**\n
+ * APIFunction: OpenLayers.Format.XML.lookupNamespaceURI\n
+ * Takes a prefix and returns the namespace URI associated with it on the given\n
+ *     node if found (and null if not). Supplying null for the prefix will\n
+ *     return the default namespace.\n
+ *\n
+ * For browsers that support it, this calls the native lookupNamesapceURI\n
+ *     function.  In other browsers, this is an implementation of\n
+ *     http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-lookupNamespaceURI.\n
+ *\n
+ * For browsers that don\'t support the attribute.ownerElement property, this\n
+ *     method cannot be called on attribute nodes.\n
+ *     \n
+ * Parameters:\n
+ * node - {DOMElement} The node from which to start looking.\n
+ * prefix - {String} The prefix to lookup or null to lookup the default namespace.\n
+ * \n
+ * Returns:\n
+ * {String} The namespace URI for the given prefix.  Returns null if the prefix\n
+ *     cannot be found or the node is the wrong type.\n
+ */\n
+OpenLayers.Format.XML.lookupNamespaceURI = OpenLayers.Function.bind(\n
+    OpenLayers.Format.XML.prototype.lookupNamespaceURI,\n
+    OpenLayers.Format.XML.prototype\n
+);\n
+\n
+/**\n
+ * Property: OpenLayers.Format.XML.document\n
+ * {XMLDocument} XML document to reuse for creating non-HTML compliant nodes,\n
+ * like document.createCDATASection.\n
+ */\n
+OpenLayers.Format.XML.document = null;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>31465</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

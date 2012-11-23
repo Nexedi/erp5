@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>XYZ.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/** \n
+ * Class: OpenLayers.Layer.XYZ\n
+ * The XYZ class is designed to make it easier for people who have tiles\n
+ * arranged by a standard XYZ grid. \n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+    \n
+    /**\n
+     * APIProperty: isBaseLayer\n
+     * Default is true, as this is designed to be a base tile source. \n
+     */\n
+    isBaseLayer: true,\n
+    \n
+    /**\n
+     * APIProperty: sphericalMecator\n
+     * Whether the tile extents should be set to the defaults for \n
+     *    spherical mercator. Useful for things like OpenStreetMap.\n
+     *    Default is false, except for the OSM subclass.\n
+     */\n
+    sphericalMercator: false,\n
+\n
+    /**\n
+     * APIProperty: zoomOffset\n
+     * {Number} If your cache has more zoom levels than you want to provide\n
+     *     access to with this layer, supply a zoomOffset.  This zoom offset\n
+     *     is added to the current map zoom level to determine the level\n
+     *     for a requested tile.  For example, if you supply a zoomOffset\n
+     *     of 3, when the map is at the zoom 0, tiles will be requested from\n
+     *     level 3 of your cache.  Default is 0 (assumes cache level and map\n
+     *     zoom are equivalent).  Using <zoomOffset> is an alternative to\n
+     *     setting <serverResolutions> if you only want to expose a subset\n
+     *     of the server resolutions.\n
+     */\n
+    zoomOffset: 0,\n
+    \n
+    /**\n
+     * APIProperty: serverResolutions\n
+     * {Array} A list of all resolutions available on the server.  Only set this\n
+     *     property if the map resolutions differ from the server. This\n
+     *     property serves two purposes. (a) <serverResolutions> can include\n
+     *     resolutions that the server supports and that you don\'t want to\n
+     *     provide with this layer; you can also look at <zoomOffset>, which is\n
+     *     an alternative to <serverResolutions> for that specific purpose.\n
+     *     (b) The map can work with resolutions that aren\'t supported by\n
+     *     the server, i.e. that aren\'t in <serverResolutions>. When the\n
+     *     map is displayed in such a resolution data for the closest\n
+     *     server-supported resolution is loaded and the layer div is\n
+     *     stretched as necessary.\n
+     */\n
+    serverResolutions: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.XYZ\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     * url - {String}\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, url, options) {\n
+        if (options && options.sphericalMercator || this.sphericalMercator) {\n
+            options = OpenLayers.Util.extend({\n
+                projection: "EPSG:900913",\n
+                numZoomLevels: 19\n
+            }, options);\n
+        }\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, [\n
+            name || this.name, url || this.url, {}, options\n
+        ]);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clone\n
+     * Create a clone of this layer\n
+     *\n
+     * Parameters:\n
+     * obj - {Object} Is this ever used?\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Layer.XYZ>} An exact clone of this OpenLayers.Layer.XYZ\n
+     */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.XYZ(this.name,\n
+                                            this.url,\n
+                                            this.getOptions());\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        return obj;\n
+    },    \n
+\n
+    /**\n
+     * Method: getURL\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     *\n
+     * Returns:\n
+     * {String} A string with the layer\'s url and parameters and also the\n
+     *          passed-in bounds and appropriate tile size specified as\n
+     *          parameters\n
+     */\n
+    getURL: function (bounds) {\n
+        var xyz = this.getXYZ(bounds);\n
+        var url = this.url;\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            var s = \'\' + xyz.x + xyz.y + xyz.z;\n
+            url = this.selectUrl(s, url);\n
+        }\n
+        \n
+        return OpenLayers.String.format(url, xyz);\n
+    },\n
+    \n
+    /**\n
+     * Method: getXYZ\n
+     * Calculates x, y and z for the given bounds.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     *\n
+     * Returns:\n
+     * {Object} - an object with x, y and z properties.\n
+     */\n
+    getXYZ: function(bounds) {\n
+        var res = this.getServerResolution();\n
+        var x = Math.round((bounds.left - this.maxExtent.left) /\n
+            (res * this.tileSize.w));\n
+        var y = Math.round((this.maxExtent.top - bounds.top) /\n
+            (res * this.tileSize.h));\n
+        var z = this.getServerZoom();\n
+\n
+        if (this.wrapDateLine) {\n
+            var limit = Math.pow(2, z);\n
+            x = ((x % limit) + limit) % limit;\n
+        }\n
+\n
+        return {\'x\': x, \'y\': y, \'z\': z};\n
+    },\n
+    \n
+    /* APIMethod: setMap\n
+     * When the layer is added to a map, then we can fetch our origin \n
+     *    (if we don\'t have one.) \n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Layer.Grid.prototype.setMap.apply(this, arguments);\n
+        if (!this.tileOrigin) { \n
+            this.tileOrigin = new OpenLayers.LonLat(this.maxExtent.left,\n
+                                                this.maxExtent.bottom);\n
+        }                                       \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.XYZ"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5776</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

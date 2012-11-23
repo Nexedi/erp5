@@ -1,0 +1,1412 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Grid.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/HTTPRequest.js\n
+ * @requires OpenLayers/Tile/Image.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.Grid\n
+ * Base class for layers that use a lattice of tiles.  Create a new grid\n
+ * layer with the <OpenLayers.Layer.Grid> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.HTTPRequest>\n
+ */\n
+OpenLayers.Layer.Grid = OpenLayers.Class(OpenLayers.Layer.HTTPRequest, {\n
+    \n
+    /**\n
+     * APIProperty: tileSize\n
+     * {<OpenLayers.Size>}\n
+     */\n
+    tileSize: null,\n
+\n
+    /**\n
+     * Property: tileOriginCorner\n
+     * {String} If the <tileOrigin> property is not provided, the tile origin \n
+     *     will be derived from the layer\'s <maxExtent>.  The corner of the \n
+     *     <maxExtent> used is determined by this property.  Acceptable values\n
+     *     are "tl" (top left), "tr" (top right), "bl" (bottom left), and "br"\n
+     *     (bottom right).  Default is "bl".\n
+     */\n
+    tileOriginCorner: "bl",\n
+    \n
+    /**\n
+     * APIProperty: tileOrigin\n
+     * {<OpenLayers.LonLat>} Optional origin for aligning the grid of tiles.\n
+     *     If provided, requests for tiles at all resolutions will be aligned\n
+     *     with this location (no tiles shall overlap this location).  If\n
+     *     not provided, the grid of tiles will be aligned with the layer\'s\n
+     *     <maxExtent>.  Default is ``null``.\n
+     */\n
+    tileOrigin: null,\n
+    \n
+    /** APIProperty: tileOptions\n
+     *  {Object} optional configuration options for <OpenLayers.Tile> instances\n
+     *  created by this Layer, if supported by the tile class.\n
+     */\n
+    tileOptions: null,\n
+\n
+    /**\n
+     * APIProperty: tileClass\n
+     * {<OpenLayers.Tile>} The tile class to use for this layer.\n
+     *     Defaults is OpenLayers.Tile.Image.\n
+     */\n
+    tileClass: OpenLayers.Tile.Image,\n
+    \n
+    /**\n
+     * Property: grid\n
+     * {Array(Array(<OpenLayers.Tile>))} This is an array of rows, each row is \n
+     *     an array of tiles.\n
+     */\n
+    grid: null,\n
+\n
+    /**\n
+     * APIProperty: singleTile\n
+     * {Boolean} Moves the layer into single-tile mode, meaning that one tile \n
+     *     will be loaded. The tile\'s size will be determined by the \'ratio\'\n
+     *     property. When the tile is dragged such that it does not cover the \n
+     *     entire viewport, it is reloaded.\n
+     */\n
+    singleTile: false,\n
+\n
+    /** APIProperty: ratio\n
+     *  {Float} Used only when in single-tile mode, this specifies the \n
+     *          ratio of the size of the single tile to the size of the map.\n
+     */\n
+    ratio: 1.5,\n
+\n
+    /**\n
+     * APIProperty: buffer\n
+     * {Integer} Used only when in gridded mode, this specifies the number of \n
+     *           extra rows and colums of tiles on each side which will\n
+     *           surround the minimum grid tiles to cover the map.\n
+     *           For very slow loading layers, a larger value may increase\n
+     *           performance somewhat when dragging, but will increase bandwidth\n
+     *           use significantly. \n
+     */\n
+    buffer: 0,\n
+\n
+    /**\n
+     * APIProperty: transitionEffect\n
+     * {String} The transition effect to use when the map is zoomed.\n
+     * Two posible values:\n
+     *\n
+     * null - No transition effect (the default).\n
+     * "resize" - Existing tiles are resized on zoom to provide a visual\n
+     * effect of the zoom having taken place immediately.  As the\n
+     * new tiles become available, they are drawn over top of the\n
+     * resized tiles.\n
+     *\n
+     * Using "resize" on non-opaque layers can cause undesired visual\n
+     * effects. This is therefore discouraged.\n
+     */\n
+    transitionEffect: null,\n
+\n
+    /**\n
+     * APIProperty: numLoadingTiles\n
+     * {Integer} How many tiles are still loading?\n
+     */\n
+    numLoadingTiles: 0,\n
+\n
+    /**\n
+     * APIProperty: tileLoadingDelay\n
+     * {Integer} Number of milliseconds before we shift and load\n
+     *     tiles when panning. Ignored if <OpenLayers.Animation.isNative> is\n
+     *     true. Default is 85.\n
+     */\n
+    tileLoadingDelay: 85,\n
+    \n
+    /**\n
+     * Property: serverResolutions\n
+     * {Array(Number}} This property is documented in subclasses as\n
+     *     an API property.\n
+     */\n
+    serverResolutions: null,\n
+\n
+    /**\n
+     * Property: moveTimerId\n
+     * {Number} The id of the <deferMoveGriddedTiles> timer.\n
+     */\n
+    moveTimerId: null,\n
+    \n
+    /**\n
+     * Property: deferMoveGriddedTiles\n
+     * {Function} A function that defers execution of <moveGriddedTiles> by\n
+     *     <tileLoadingDelay>. If <OpenLayers.Animation.isNative> is true, this\n
+     *     is null and unused.\n
+     */\n
+    deferMoveGriddedTiles: null,\n
+\n
+    /**\n
+     * Property: tileQueueId\n
+     * {Number} The id of the <drawTileFromQueue> animation.\n
+     */\n
+    tileQueueId: null,\n
+\n
+    /**\n
+     * Property: tileQueue\n
+     * {Array(<OpenLayers.Tile>)} Tiles queued for drawing.\n
+     */\n
+    tileQueue: null,\n
+    \n
+    /**\n
+     * Property: loading\n
+     * {Boolean} Indicates if tiles are being loaded.\n
+     */\n
+    loading: false,\n
+    \n
+    /**\n
+     * Property: backBuffer\n
+     * {DOMElement} The back buffer.\n
+     */\n
+    backBuffer: null,\n
+\n
+    /**\n
+     * Property: gridResolution\n
+     * {Number} The resolution of the current grid. Used for backbuffering.\n
+     *     This property is updated each the grid is initialized.\n
+     */\n
+    gridResolution: null,\n
+\n
+    /**\n
+     * Property: backBufferResolution\n
+     * {Number} The resolution of the current back buffer. This property is\n
+     *     updated each time a back buffer is created.\n
+     */\n
+    backBufferResolution: null,\n
+\n
+    /**\n
+     * Property: backBufferLonLat\n
+     * {Object} The top-left corner of the current back buffer. Includes lon\n
+     *     and lat properties. This object is updated each time a back buffer\n
+     *     is created.\n
+     */\n
+    backBufferLonLat: null,\n
+\n
+    /**\n
+     * Property: backBufferTimerId\n
+     * {Number} The id of the back buffer timer. This timer is used to\n
+     *     delay the removal of the back buffer, thereby preventing\n
+     *     flash effects caused by tile animation.\n
+     */\n
+    backBufferTimerId: null,\n
+\n
+    /**\n
+     * APIProperty: removeBackBufferDelay\n
+     * {Number} Delay for removing the backbuffer when all tiles have finished\n
+     *     loading. Can be set to 0 when no css opacity transitions for the\n
+     *     olTileImage class are used. Default is 0 for <singleTile> layers,\n
+     *     2500 for tiled layers. See <className> for more information on\n
+     *     tile animation.\n
+     */\n
+    removeBackBufferDelay: null,\n
+\n
+    /**\n
+     * APIProperty: className\n
+     * {String} Name of the class added to the layer div. If not set in the\n
+     *     options passed to the constructor then className defaults to\n
+     *     "olLayerGridSingleTile" for single tile layers (see <singleTile>),\n
+     *     and "olLayerGrid" for non single tile layers.\n
+     *\n
+     * Note:\n
+     *\n
+     * The displaying of tiles is not animated by default for single tile\n
+     *     layers - OpenLayers\' default theme (style.css) includes this:\n
+     * (code)\n
+     * .olLayerGrid .olTileImage {\n
+     *     -webkit-transition: opacity 0.2s linear;\n
+     *     -moz-transition: opacity 0.2s linear;\n
+     *     -o-transition: opacity 0.2s linear;\n
+     *     transition: opacity 0.2s linear;\n
+     *  }\n
+     * (end)\n
+     * To animate tile displaying for any grid layer the following\n
+     *     CSS rule can be used:\n
+     * (code)\n
+     * .olTileImage {\n
+     *     -webkit-transition: opacity 0.2s linear;\n
+     *     -moz-transition: opacity 0.2s linear;\n
+     *     -o-transition: opacity 0.2s linear;\n
+     *     transition: opacity 0.2s linear;\n
+     * }\n
+     * (end)\n
+     * In that case, to avoid flash effects, <removeBackBufferDelay>\n
+     *     should not be zero.\n
+     */\n
+    className: null,\n
+\n
+    /**\n
+     * Register a listener for a particular event with the following syntax:\n
+     * (code)\n
+     * layer.events.register(type, obj, listener);\n
+     * (end)\n
+     *\n
+     * Listeners will be called with a reference to an event object.  The\n
+     *     properties of this event depends on exactly what happened.\n
+     *\n
+     * All event objects have at least the following properties:\n
+     * object - {Object} A reference to layer.events.object.\n
+     * element - {DOMElement} A reference to layer.events.element.\n
+     *\n
+     * Supported event types:\n
+     * tileloadstart - Triggered when a tile starts loading. Listeners receive\n
+     *     an object as first argument, which has a tile property that\n
+     *     references the tile that starts loading.\n
+     * tileloaded - Triggered when each new tile is\n
+     *     loaded, as a means of progress update to listeners.\n
+     *     listeners can access \'numLoadingTiles\' if they wish to keep\n
+     *     track of the loading progress. Listeners are called with an object\n
+     *     with a tile property as first argument, making the loded tile\n
+     *     available to the listener.\n
+     * tileerror - Triggered before the tileloaded event (i.e. when the tile is\n
+     *     still hidden) if a tile failed to load. Listeners receive an object\n
+     *     as first argument, which has a tile property that references the\n
+     *     tile that could not be loaded.\n
+     */\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.Grid\n
+     * Create a new grid layer\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     * url - {String}\n
+     * params - {Object}\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, url, params, options) {\n
+        OpenLayers.Layer.HTTPRequest.prototype.initialize.apply(this, \n
+                                                                arguments);\n
+        this.grid = [];\n
+        this.tileQueue = [];\n
+\n
+        if (this.removeBackBufferDelay === null) {\n
+            this.removeBackBufferDelay = this.singleTile ? 0 : 2500;\n
+        }\n
+        \n
+        if (this.className === null) {\n
+            this.className = this.singleTile ? \'olLayerGridSingleTile\' :\n
+                                               \'olLayerGrid\';\n
+        }\n
+\n
+        if (!OpenLayers.Animation.isNative) {\n
+            this.deferMoveGriddedTiles = OpenLayers.Function.bind(function() {\n
+                this.moveGriddedTiles(true);\n
+                this.moveTimerId = null;\n
+            }, this);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: setMap\n
+     *\n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} The map.\n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Layer.HTTPRequest.prototype.setMap.call(this, map);\n
+        OpenLayers.Element.addClass(this.div, this.className);\n
+    },\n
+\n
+    /**\n
+     * Method: removeMap\n
+     * Called when the layer is removed from the map.\n
+     *\n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} The map.\n
+     */\n
+    removeMap: function(map) {\n
+        if (this.moveTimerId !== null) {\n
+            window.clearTimeout(this.moveTimerId);\n
+            this.moveTimerId = null;\n
+        }\n
+        this.clearTileQueue();\n
+        if(this.backBufferTimerId !== null) {\n
+            window.clearTimeout(this.backBufferTimerId);\n
+            this.backBufferTimerId = null;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     * Deconstruct the layer and clear the grid.\n
+     */\n
+    destroy: function() {\n
+        this.removeBackBuffer();\n
+        this.clearGrid();\n
+\n
+        this.grid = null;\n
+        this.tileSize = null;\n
+        OpenLayers.Layer.HTTPRequest.prototype.destroy.apply(this, arguments); \n
+    },\n
+\n
+    /**\n
+     * Method: clearGrid\n
+     * Go through and remove all tiles from the grid, calling\n
+     *    destroy() on each of them to kill circular references\n
+     */\n
+    clearGrid:function() {\n
+        this.clearTileQueue();\n
+        if (this.grid) {\n
+            for(var iRow=0, len=this.grid.length; iRow<len; iRow++) {\n
+                var row = this.grid[iRow];\n
+                for(var iCol=0, clen=row.length; iCol<clen; iCol++) {\n
+                    var tile = row[iCol];\n
+                    this.destroyTile(tile);\n
+                }\n
+            }\n
+            this.grid = [];\n
+            this.gridResolution = null;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clone\n
+     * Create a clone of this layer\n
+     *\n
+     * Parameters:\n
+     * obj - {Object} Is this ever used?\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Layer.Grid>} An exact clone of this OpenLayers.Layer.Grid\n
+     */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.Grid(this.name,\n
+                                            this.url,\n
+                                            this.params,\n
+                                            this.getOptions());\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.HTTPRequest.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+        if (this.tileSize != null) {\n
+            obj.tileSize = this.tileSize.clone();\n
+        }\n
+        \n
+        // we do not want to copy reference to grid, so we make a new array\n
+        obj.grid = [];\n
+        obj.gridResolution = null;\n
+        // same for backbuffer and tile queue\n
+        obj.backBuffer = null;\n
+        obj.backBufferTimerId = null;\n
+        obj.tileQueue = [];\n
+        obj.tileQueueId = null;\n
+        obj.loading = false;\n
+        obj.moveTimerId = null;\n
+\n
+        return obj;\n
+    },    \n
+\n
+    /**\n
+     * Method: moveTo\n
+     * This function is called whenever the map is moved. All the moving\n
+     * of actual \'tiles\' is done by the map, but moveTo\'s role is to accept\n
+     * a bounds and make sure the data that that bounds requires is pre-loaded.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     * zoomChanged - {Boolean}\n
+     * dragging - {Boolean}\n
+     */\n
+    moveTo:function(bounds, zoomChanged, dragging) {\n
+\n
+        OpenLayers.Layer.HTTPRequest.prototype.moveTo.apply(this, arguments);\n
+\n
+        bounds = bounds || this.map.getExtent();\n
+\n
+        if (bounds != null) {\n
+             \n
+            // if grid is empty or zoom has changed, we *must* re-tile\n
+            var forceReTile = !this.grid.length || zoomChanged;\n
+            \n
+            // total bounds of the tiles\n
+            var tilesBounds = this.getTilesBounds();            \n
+\n
+            // the new map resolution\n
+            var resolution = this.map.getResolution();\n
+\n
+            // the server-supported resolution for the new map resolution\n
+            var serverResolution = this.getServerResolution(resolution);\n
+\n
+            if (this.singleTile) {\n
+                \n
+                // We want to redraw whenever even the slightest part of the \n
+                //  current bounds is not contained by our tile.\n
+                //  (thus, we do not specify partial -- its default is false)\n
+\n
+                if ( forceReTile ||\n
+                     (!dragging && !tilesBounds.containsBounds(bounds))) {\n
+\n
+                    // In single tile mode with no transition effect, we insert\n
+                    // a non-scaled backbuffer when the layer is moved. But if\n
+                    // a zoom occurs right after a move, i.e. before the new\n
+                    // image is received, we need to remove the backbuffer, or\n
+                    // an ill-positioned image will be visible during the zoom\n
+                    // transition.\n
+\n
+                    if(zoomChanged && this.transitionEffect !== \'resize\') {\n
+                        this.removeBackBuffer();\n
+                    }\n
+\n
+                    if(!zoomChanged || this.transitionEffect === \'resize\') {\n
+                        this.applyBackBuffer(serverResolution);\n
+                    }\n
+\n
+                    this.initSingleTile(bounds);\n
+                }\n
+            } else {\n
+\n
+                // if the bounds have changed such that they are not even \n
+                // *partially* contained by our tiles (e.g. when user has \n
+                // programmatically panned to the other side of the earth on\n
+                // zoom level 18), then moveGriddedTiles could potentially have\n
+                // to run through thousands of cycles, so we want to reTile\n
+                // instead (thus, partial true).  \n
+                forceReTile = forceReTile ||\n
+                    !tilesBounds.intersectsBounds(bounds, {\n
+                        worldBounds: this.map.baseLayer.wrapDateLine &&\n
+                            this.map.getMaxExtent()\n
+                    });\n
+\n
+                if(resolution !== serverResolution) {\n
+                    bounds = this.map.calculateBounds(null, serverResolution);\n
+                    if(forceReTile) {\n
+                        // stretch the layer div\n
+                        var scale = serverResolution / resolution;\n
+                        this.transformDiv(scale);\n
+                    }\n
+                } else {\n
+                    // reset the layer width, height, left, top, to deal with\n
+                    // the case where the layer was previously transformed\n
+                    this.div.style.width = \'100%\';\n
+                    this.div.style.height = \'100%\';\n
+                    this.div.style.left = \'0%\';\n
+                    this.div.style.top = \'0%\';\n
+                }\n
+\n
+                if(forceReTile) {\n
+                    if(zoomChanged && this.transitionEffect === \'resize\') {\n
+                        this.applyBackBuffer(serverResolution);\n
+                    }\n
+                    this.initGriddedTiles(bounds);\n
+                } else {\n
+                    this.moveGriddedTiles();\n
+                }\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: getTileData\n
+     * Given a map location, retrieve a tile and the pixel offset within that\n
+     *     tile corresponding to the location.  If there is not an existing \n
+     *     tile in the grid that covers the given location, null will be \n
+     *     returned.\n
+     *\n
+     * Parameters:\n
+     * loc - {<OpenLayers.LonLat>} map location\n
+     *\n
+     * Returns:\n
+     * {Object} Object with the following properties: tile ({<OpenLayers.Tile>}),\n
+     *     i ({Number} x-pixel offset from top left), and j ({Integer} y-pixel\n
+     *     offset from top left).\n
+     */\n
+    getTileData: function(loc) {\n
+        var data = null,\n
+            x = loc.lon,\n
+            y = loc.lat,\n
+            numRows = this.grid.length;\n
+\n
+        if (this.map && numRows) {\n
+            var res = this.map.getResolution(),\n
+                tileWidth = this.tileSize.w,\n
+                tileHeight = this.tileSize.h,\n
+                bounds = this.grid[0][0].bounds,\n
+                left = bounds.left,\n
+                top = bounds.top;\n
+\n
+            if (x < left) {\n
+                // deal with multiple worlds\n
+                if (this.map.baseLayer.wrapDateLine) {\n
+                    var worldWidth = this.map.getMaxExtent().getWidth();\n
+                    var worldsAway = Math.ceil((left - x) / worldWidth);\n
+                    x += worldWidth * worldsAway;\n
+                }\n
+            }\n
+            // tile distance to location (fractional number of tiles);\n
+            var dtx = (x - left) / (res * tileWidth);\n
+            var dty = (top - y) / (res * tileHeight);\n
+            // index of tile in grid\n
+            var col = Math.floor(dtx);\n
+            var row = Math.floor(dty);\n
+            if (row >= 0 && row < numRows) {\n
+                var tile = this.grid[row][col];\n
+                if (tile) {\n
+                    data = {\n
+                        tile: tile,\n
+                        // pixel index within tile\n
+                        i: Math.floor((dtx - col) * tileWidth),\n
+                        j: Math.floor((dty - row) * tileHeight)\n
+                    };                    \n
+                }\n
+            }\n
+        }\n
+        return data;\n
+    },\n
+    \n
+    /**\n
+     * Method: queueTileDraw\n
+     * Adds a tile to the animation queue that will draw it.\n
+     *\n
+     * Parameters:\n
+     * evt - {Object} Listener argument of the tile\'s beforedraw event\n
+     */\n
+    queueTileDraw: function(evt) {\n
+        var tile = evt.object;\n
+        if (!~OpenLayers.Util.indexOf(this.tileQueue, tile)) {\n
+            // queue only if not in queue already\n
+            this.tileQueue.push(tile);\n
+        }\n
+        if (!this.tileQueueId) {\n
+            this.tileQueueId = OpenLayers.Animation.start(\n
+                OpenLayers.Function.bind(this.drawTileFromQueue, this),\n
+                null, this.div\n
+            );\n
+        }\n
+        return false;\n
+    },\n
+    \n
+    /**\n
+     * Method: drawTileFromQueue\n
+     * Draws the first tile from the tileQueue, and unqueues that tile\n
+     */\n
+    drawTileFromQueue: function() {\n
+        if (this.tileQueue.length === 0) {\n
+            this.clearTileQueue();\n
+        } else {\n
+            this.tileQueue.shift().draw(true);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: clearTileQueue\n
+     * Clears the animation queue\n
+     */\n
+    clearTileQueue: function() {\n
+        OpenLayers.Animation.stop(this.tileQueueId);\n
+        this.tileQueueId = null;\n
+        this.tileQueue = [];\n
+    },\n
+\n
+    /**\n
+     * Method: destroyTile\n
+     *\n
+     * Parameters:\n
+     * tile - {<OpenLayers.Tile>}\n
+     */\n
+    destroyTile: function(tile) {\n
+        this.removeTileMonitoringHooks(tile);\n
+        tile.destroy();\n
+    },\n
+\n
+    /**\n
+     * Method: getServerResolution\n
+     * Return the closest highest server-supported resolution. Throw an\n
+     * exception if none is found in the serverResolutions array.\n
+     *\n
+     * Parameters:\n
+     * resolution - {Number} The base resolution. If undefined the\n
+     *     map resolution is used.\n
+     *\n
+     * Returns:\n
+     * {Number} The closest highest server resolution value.\n
+     */\n
+    getServerResolution: function(resolution) {\n
+        resolution = resolution || this.map.getResolution();\n
+        if(this.serverResolutions &&\n
+           OpenLayers.Util.indexOf(this.serverResolutions, resolution) === -1) {\n
+            var i, serverResolution;\n
+            for(i=this.serverResolutions.length-1; i>= 0; i--) {\n
+                serverResolution = this.serverResolutions[i];\n
+                if(serverResolution > resolution) {\n
+                    resolution = serverResolution;\n
+                    break;\n
+                }\n
+            }\n
+            if(i === -1) {\n
+                throw \'no appropriate resolution in serverResolutions\';\n
+            }\n
+        }\n
+        return resolution;\n
+    },\n
+\n
+    /**\n
+     * Method: getServerZoom\n
+     * Return the zoom value corresponding to the best matching server\n
+     * resolution, taking into account <serverResolutions> and <zoomOffset>.\n
+     *\n
+     * Returns:\n
+     * {Number} The closest server supported zoom. This is not the map zoom\n
+     *     level, but an index of the server\'s resolutions array.\n
+     */\n
+    getServerZoom: function() {\n
+        var resolution = this.getServerResolution();\n
+        return this.serverResolutions ?\n
+            OpenLayers.Util.indexOf(this.serverResolutions, resolution) :\n
+            this.map.getZoomForResolution(resolution) + (this.zoomOffset || 0);\n
+    },\n
+\n
+    /**\n
+     * Method: transformDiv\n
+     * Transform the layer div.\n
+     *\n
+     * Parameters:\n
+     * scale - {Number} The value by which the layer div is to\n
+     *     be scaled.\n
+     */\n
+    transformDiv: function(scale) {\n
+\n
+        // scale the layer div\n
+\n
+        this.div.style.width = 100 * scale + \'%\';\n
+        this.div.style.height = 100 * scale + \'%\';\n
+\n
+        // and translate the layer div as necessary\n
+\n
+        var size = this.map.getSize();\n
+        var lcX = parseInt(this.map.layerContainerDiv.style.left, 10);\n
+        var lcY = parseInt(this.map.layerContainerDiv.style.top, 10);\n
+        var x = (lcX - (size.w / 2.0)) * (scale - 1);\n
+        var y = (lcY - (size.h / 2.0)) * (scale - 1);\n
+\n
+        this.div.style.left = x + \'%\';\n
+        this.div.style.top = y + \'%\';\n
+    },\n
+\n
+    /**\n
+     * Method: getResolutionScale\n
+     * Return the value by which the layer is currently scaled.\n
+     *\n
+     * Returns:\n
+     * {Number} The resolution scale.\n
+     */\n
+    getResolutionScale: function() {\n
+        return parseInt(this.div.style.width, 10) / 100;\n
+    },\n
+\n
+    /**\n
+     * Method: applyBackBuffer\n
+     * Create, insert, scale and position a back buffer for the layer.\n
+     *\n
+     * Parameters:\n
+     * resolution - {Number} The resolution to transition to.\n
+     */\n
+    applyBackBuffer: function(resolution) {\n
+        if(this.backBufferTimerId !== null) {\n
+            this.removeBackBuffer();\n
+        }\n
+        var backBuffer = this.backBuffer;\n
+        if(!backBuffer) {\n
+            backBuffer = this.createBackBuffer();\n
+            if(!backBuffer) {\n
+                return;\n
+            }\n
+            this.div.insertBefore(backBuffer, this.div.firstChild);\n
+            this.backBuffer = backBuffer;\n
+\n
+            // set some information in the instance for subsequent\n
+            // calls to applyBackBuffer where the same back buffer\n
+            // is reused\n
+            var topLeftTileBounds = this.grid[0][0].bounds;\n
+            this.backBufferLonLat = {\n
+                lon: topLeftTileBounds.left,\n
+                lat: topLeftTileBounds.top\n
+            };\n
+            this.backBufferResolution = this.gridResolution;\n
+        }\n
+\n
+        var style = backBuffer.style;\n
+\n
+        // scale the back buffer\n
+        var ratio = this.backBufferResolution / resolution;\n
+        style.width = 100 * ratio + \'%\';\n
+        style.height = 100 * ratio + \'%\';\n
+\n
+        // and position it (based on the grid\'s top-left corner)\n
+        var position = this.getViewPortPxFromLonLat(\n
+                this.backBufferLonLat, resolution);\n
+        var leftOffset = parseInt(this.map.layerContainerDiv.style.left, 10);\n
+        var topOffset = parseInt(this.map.layerContainerDiv.style.top, 10);\n
+        backBuffer.style.left = Math.round(position.x - leftOffset) + \'%\';\n
+        backBuffer.style.top = Math.round(position.y - topOffset) + \'%\';\n
+    },\n
+\n
+    /**\n
+     * Method: createBackBuffer\n
+     * Create a back buffer.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The DOM element for the back buffer, undefined if the\n
+     * grid isn\'t initialized yet.\n
+     */\n
+    createBackBuffer: function() {\n
+        var backBuffer;\n
+        if(this.grid.length > 0) {\n
+            backBuffer = document.createElement(\'div\');\n
+            backBuffer.id = this.div.id + \'_bb\';\n
+            backBuffer.className = \'olBackBuffer\';\n
+            backBuffer.style.position = \'absolute\';\n
+            backBuffer.style.width = \'100%\';\n
+            backBuffer.style.height = \'100%\';\n
+            for(var i=0, lenI=this.grid.length; i<lenI; i++) {\n
+                for(var j=0, lenJ=this.grid[i].length; j<lenJ; j++) {\n
+                    var tile = this.grid[i][j].createBackBuffer();\n
+                    if(!tile) {\n
+                        continue;\n
+                    }\n
+                    // to be able to correctly position the back buffer we\n
+                    // place the tiles grid at (0, 0) in the back buffer\n
+                    tile.style.top = (i * this.tileSize.h) + \'%\';\n
+                    tile.style.left = (j * this.tileSize.w) + \'%\';\n
+                    backBuffer.appendChild(tile);\n
+                }\n
+            }\n
+        }\n
+        return backBuffer;\n
+    },\n
+\n
+    /**\n
+     * Method: removeBackBuffer\n
+     * Remove back buffer from DOM.\n
+     */\n
+    removeBackBuffer: function() {\n
+        if(this.backBuffer) {\n
+            this.div.removeChild(this.backBuffer);\n
+            this.backBuffer = null;\n
+            this.backBufferResolution = null;\n
+            if(this.backBufferTimerId !== null) {\n
+                window.clearTimeout(this.backBufferTimerId);\n
+                this.backBufferTimerId = null;\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: moveByPx\n
+     * Move the layer based on pixel vector.\n
+     *\n
+     * Parameters:\n
+     * dx - {Number}\n
+     * dy - {Number}\n
+     */\n
+    moveByPx: function(dx, dy) {\n
+        if (!this.singleTile) {\n
+            this.moveGriddedTiles();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: setTileSize\n
+     * Check if we are in singleTile mode and if so, set the size as a ratio\n
+     *     of the map size (as specified by the layer\'s \'ratio\' property).\n
+     * \n
+     * Parameters:\n
+     * size - {<OpenLayers.Size>}\n
+     */\n
+    setTileSize: function(size) { \n
+        if (this.singleTile) {\n
+            size = this.map.getSize();\n
+            size.h = parseInt(size.h * this.ratio);\n
+            size.w = parseInt(size.w * this.ratio);\n
+        } \n
+        OpenLayers.Layer.HTTPRequest.prototype.setTileSize.apply(this, [size]);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getTilesBounds\n
+     * Return the bounds of the tile grid.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>} A Bounds object representing the bounds of all the\n
+     *     currently loaded tiles (including those partially or not at all seen \n
+     *     onscreen).\n
+     */\n
+    getTilesBounds: function() {    \n
+        var bounds = null; \n
+        \n
+        var length = this.grid.length;\n
+        if (length) {\n
+            var bottomLeftTileBounds = this.grid[length - 1][0].bounds,\n
+                width = this.grid[0].length * bottomLeftTileBounds.getWidth(),\n
+                height = this.grid.length * bottomLeftTileBounds.getHeight();\n
+            \n
+            bounds = new OpenLayers.Bounds(bottomLeftTileBounds.left, \n
+                                           bottomLeftTileBounds.bottom,\n
+                                           bottomLeftTileBounds.left + width, \n
+                                           bottomLeftTileBounds.bottom + height);\n
+        }   \n
+        return bounds;\n
+    },\n
+\n
+    /**\n
+     * Method: initSingleTile\n
+     * \n
+     * Parameters: \n
+     * bounds - {<OpenLayers.Bounds>}\n
+     */\n
+    initSingleTile: function(bounds) {\n
+        this.clearTileQueue();\n
+\n
+        //determine new tile bounds\n
+        var center = bounds.getCenterLonLat();\n
+        var tileWidth = bounds.getWidth() * this.ratio;\n
+        var tileHeight = bounds.getHeight() * this.ratio;\n
+                                       \n
+        var tileBounds = \n
+            new OpenLayers.Bounds(center.lon - (tileWidth/2),\n
+                                  center.lat - (tileHeight/2),\n
+                                  center.lon + (tileWidth/2),\n
+                                  center.lat + (tileHeight/2));\n
+  \n
+        var px = this.map.getLayerPxFromLonLat({\n
+            lon: tileBounds.left,\n
+            lat: tileBounds.top\n
+        });\n
+\n
+        if (!this.grid.length) {\n
+            this.grid[0] = [];\n
+        }\n
+\n
+        var tile = this.grid[0][0];\n
+        if (!tile) {\n
+            tile = this.addTile(tileBounds, px);\n
+            \n
+            this.addTileMonitoringHooks(tile);\n
+            tile.draw();\n
+            this.grid[0][0] = tile;\n
+        } else {\n
+            tile.moveTo(tileBounds, px);\n
+        }           \n
+        \n
+        //remove all but our single tile\n
+        this.removeExcessTiles(1,1);\n
+\n
+        // store the resolution of the grid\n
+        this.gridResolution = this.getServerResolution();\n
+    },\n
+\n
+    /** \n
+     * Method: calculateGridLayout\n
+     * Generate parameters for the grid layout.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bound>|Object} OpenLayers.Bounds or an\n
+     *     object with a \'left\' and \'top\' properties.\n
+     * origin - {<OpenLayers.LonLat>|Object} OpenLayers.LonLat or an\n
+     *     object with a \'lon\' and \'lat\' properties.\n
+     * resolution - {Number}\n
+     *\n
+     * Returns:\n
+     * {Object} containing properties tilelon, tilelat, tileoffsetlat,\n
+     * tileoffsetlat, tileoffsetx, tileoffsety\n
+     */\n
+    calculateGridLayout: function(bounds, origin, resolution) {\n
+        var tilelon = resolution * this.tileSize.w;\n
+        var tilelat = resolution * this.tileSize.h;\n
+        \n
+        var offsetlon = bounds.left - origin.lon;\n
+        var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;\n
+        var tilecolremain = offsetlon/tilelon - tilecol;\n
+        var tileoffsetx = -tilecolremain * this.tileSize.w;\n
+        var tileoffsetlon = origin.lon + tilecol * tilelon;\n
+        \n
+        var offsetlat = bounds.top - (origin.lat + tilelat);  \n
+        var tilerow = Math.ceil(offsetlat/tilelat) + this.buffer;\n
+        var tilerowremain = tilerow - offsetlat/tilelat;\n
+        var tileoffsety = -tilerowremain * this.tileSize.h;\n
+        var tileoffsetlat = origin.lat + tilerow * tilelat;\n
+        \n
+        return { \n
+          tilelon: tilelon, tilelat: tilelat,\n
+          tileoffsetlon: tileoffsetlon, tileoffsetlat: tileoffsetlat,\n
+          tileoffsetx: tileoffsetx, tileoffsety: tileoffsety\n
+        };\n
+\n
+    },\n
+    \n
+    /**\n
+     * Method: getTileOrigin\n
+     * Determine the origin for aligning the grid of tiles.  If a <tileOrigin>\n
+     *     property is supplied, that will be returned.  Otherwise, the origin\n
+     *     will be derived from the layer\'s <maxExtent> property.  In this case,\n
+     *     the tile origin will be the corner of the <maxExtent> given by the \n
+     *     <tileOriginCorner> property.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.LonLat>} The tile origin.\n
+     */\n
+    getTileOrigin: function() {\n
+        var origin = this.tileOrigin;\n
+        if (!origin) {\n
+            var extent = this.getMaxExtent();\n
+            var edges = ({\n
+                "tl": ["left", "top"],\n
+                "tr": ["right", "top"],\n
+                "bl": ["left", "bottom"],\n
+                "br": ["right", "bottom"]\n
+            })[this.tileOriginCorner];\n
+            origin = new OpenLayers.LonLat(extent[edges[0]], extent[edges[1]]);\n
+        }\n
+        return origin;\n
+    },\n
+\n
+    /**\n
+     * Method: initGriddedTiles\n
+     * \n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     */\n
+    initGriddedTiles:function(bounds) {\n
+        this.clearTileQueue();\n
+\n
+        // work out mininum number of rows and columns; this is the number of\n
+        // tiles required to cover the viewport plus at least one for panning\n
+\n
+        var viewSize = this.map.getSize();\n
+        var minRows = Math.ceil(viewSize.h/this.tileSize.h) + \n
+                      Math.max(1, 2 * this.buffer);\n
+        var minCols = Math.ceil(viewSize.w/this.tileSize.w) +\n
+                      Math.max(1, 2 * this.buffer);\n
+        \n
+        var origin = this.getTileOrigin();\n
+        var resolution = this.getServerResolution();\n
+        \n
+        var tileLayout = this.calculateGridLayout(bounds, origin, resolution);\n
+\n
+        var tileoffsetx = Math.round(tileLayout.tileoffsetx); // heaven help us\n
+        var tileoffsety = Math.round(tileLayout.tileoffsety);\n
+\n
+        var tileoffsetlon = tileLayout.tileoffsetlon;\n
+        var tileoffsetlat = tileLayout.tileoffsetlat;\n
+        \n
+        var tilelon = tileLayout.tilelon;\n
+        var tilelat = tileLayout.tilelat;\n
+\n
+        var startX = tileoffsetx; \n
+        var startLon = tileoffsetlon;\n
+\n
+        var rowidx = 0;\n
+        \n
+        var layerContainerDivLeft = parseInt(this.map.layerContainerDiv.style.left);\n
+        var layerContainerDivTop = parseInt(this.map.layerContainerDiv.style.top);\n
+\n
+        var tileData = [], center = this.map.getCenter();\n
+        do {\n
+            var row = this.grid[rowidx++];\n
+            if (!row) {\n
+                row = [];\n
+                this.grid.push(row);\n
+            }\n
+\n
+            tileoffsetlon = startLon;\n
+            tileoffsetx = startX;\n
+            var colidx = 0;\n
+ \n
+            do {\n
+                var tileBounds = \n
+                    new OpenLayers.Bounds(tileoffsetlon, \n
+                                          tileoffsetlat, \n
+                                          tileoffsetlon + tilelon,\n
+                                          tileoffsetlat + tilelat);\n
+\n
+                var x = tileoffsetx;\n
+                x -= layerContainerDivLeft;\n
+\n
+                var y = tileoffsety;\n
+                y -= layerContainerDivTop;\n
+\n
+                var px = new OpenLayers.Pixel(x, y);\n
+                var tile = row[colidx++];\n
+                if (!tile) {\n
+                    tile = this.addTile(tileBounds, px);\n
+                    this.addTileMonitoringHooks(tile);\n
+                    row.push(tile);\n
+                } else {\n
+                    tile.moveTo(tileBounds, px, false);\n
+                }\n
+                var tileCenter = tileBounds.getCenterLonLat();\n
+                tileData.push({\n
+                    tile: tile,\n
+                    distance: Math.pow(tileCenter.lon - center.lon, 2) +\n
+                        Math.pow(tileCenter.lat - center.lat, 2)\n
+                });\n
+     \n
+                tileoffsetlon += tilelon;       \n
+                tileoffsetx += this.tileSize.w;\n
+            } while ((tileoffsetlon <= bounds.right + tilelon * this.buffer)\n
+                     || colidx < minCols);\n
+             \n
+            tileoffsetlat -= tilelat;\n
+            tileoffsety += this.tileSize.h;\n
+        } while((tileoffsetlat >= bounds.bottom - tilelat * this.buffer)\n
+                || rowidx < minRows);\n
+        \n
+        //shave off exceess rows and colums\n
+        this.removeExcessTiles(rowidx, colidx);\n
+\n
+        // store the resolution of the grid\n
+        this.gridResolution = this.getServerResolution();\n
+\n
+        //now actually draw the tiles\n
+        tileData.sort(function(a, b) {\n
+            return a.distance - b.distance; \n
+        });\n
+        for (var i=0, ii=tileData.length; i<ii; ++i) {\n
+            tileData[i].tile.draw();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: getMaxExtent\n
+     * Get this layer\'s maximum extent. (Implemented as a getter for\n
+     *     potential specific implementations in sub-classes.)\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>}\n
+     */\n
+    getMaxExtent: function() {\n
+        return this.maxExtent;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: addTile\n
+     * Create a tile, initialize it, and add it to the layer div. \n
+     *\n
+     * Parameters\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     * position - {<OpenLayers.Pixel>}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Tile>} The added OpenLayers.Tile\n
+     */\n
+    addTile: function(bounds, position) {\n
+        var tile = new this.tileClass(\n
+            this, position, bounds, null, this.tileSize, this.tileOptions\n
+        );\n
+        tile.events.register("beforedraw", this, this.queueTileDraw);\n
+        return tile;\n
+    },\n
+    \n
+    /** \n
+     * Method: addTileMonitoringHooks\n
+     * This function takes a tile as input and adds the appropriate hooks to \n
+     *     the tile so that the layer can keep track of the loading tiles.\n
+     * \n
+     * Parameters: \n
+     * tile - {<OpenLayers.Tile>}\n
+     */\n
+    addTileMonitoringHooks: function(tile) {\n
+        \n
+        tile.onLoadStart = function() {\n
+            //if that was first tile then trigger a \'loadstart\' on the layer\n
+            if (this.loading === false) {\n
+                this.loading = true;\n
+                this.events.triggerEvent("loadstart");\n
+            }\n
+            this.events.triggerEvent("tileloadstart", {tile: tile});\n
+            this.numLoadingTiles++;\n
+        };\n
+      \n
+        tile.onLoadEnd = function() {\n
+            this.numLoadingTiles--;\n
+            this.events.triggerEvent("tileloaded", {tile: tile});\n
+            //if that was the last tile, then trigger a \'loadend\' on the layer\n
+            if (this.tileQueue.length === 0 && this.numLoadingTiles === 0) {\n
+                this.loading = false;\n
+                this.events.triggerEvent("loadend");\n
+                if(this.backBuffer) {\n
+                    // the removal of the back buffer is delayed to prevent flash\n
+                    // effects due to the animation of tile displaying\n
+                    this.backBufferTimerId = window.setTimeout(\n
+                        OpenLayers.Function.bind(this.removeBackBuffer, this),\n
+                        this.removeBackBufferDelay\n
+                    );\n
+                }\n
+            }\n
+        };\n
+        \n
+        tile.onLoadError = function() {\n
+            this.events.triggerEvent("tileerror", {tile: tile});\n
+        };\n
+        \n
+        tile.events.on({\n
+            "loadstart": tile.onLoadStart,\n
+            "loadend": tile.onLoadEnd,\n
+            "unload": tile.onLoadEnd,\n
+            "loaderror": tile.onLoadError,\n
+            scope: this\n
+        });\n
+    },\n
+\n
+    /** \n
+     * Method: removeTileMonitoringHooks\n
+     * This function takes a tile as input and removes the tile hooks \n
+     *     that were added in addTileMonitoringHooks()\n
+     * \n
+     * Parameters: \n
+     * tile - {<OpenLayers.Tile>}\n
+     */\n
+    removeTileMonitoringHooks: function(tile) {\n
+        tile.unload();\n
+        tile.events.un({\n
+            "loadstart": tile.onLoadStart,\n
+            "loadend": tile.onLoadEnd,\n
+            "unload": tile.onLoadEnd,\n
+            "loaderror": tile.onLoadError,\n
+            scope: this\n
+        });\n
+    },\n
+    \n
+    /**\n
+     * Method: moveGriddedTiles\n
+     *\n
+     * Parameter:\n
+     * deferred - {Boolean} true if this is a deferred call that should not\n
+     * be delayed.\n
+     */\n
+    moveGriddedTiles: function(deferred) {\n
+        if (!deferred && !OpenLayers.Animation.isNative) {\n
+            if (this.moveTimerId != null) {\n
+                window.clearTimeout(this.moveTimerId);\n
+            }\n
+            this.moveTimerId = window.setTimeout(\n
+                this.deferMoveGriddedTiles, this.tileLoadingDelay\n
+            );\n
+            return;\n
+        }\n
+        var buffer = this.buffer || 1;\n
+        var scale = this.getResolutionScale();\n
+        while(true) {\n
+            var tlViewPort = {\n
+                x: (this.grid[0][0].position.x * scale) +\n
+                    parseInt(this.div.style.left, 10) +\n
+                    parseInt(this.map.layerContainerDiv.style.left),\n
+                y: (this.grid[0][0].position.y * scale) +\n
+                    parseInt(this.div.style.top, 10) +\n
+                    parseInt(this.map.layerContainerDiv.style.top)\n
+            };\n
+            var tileSize = {\n
+                w: this.tileSize.w * scale,\n
+                h: this.tileSize.h * scale\n
+            };\n
+            if (tlViewPort.x > -tileSize.w * (buffer - 1)) {\n
+                this.shiftColumn(true);\n
+            } else if (tlViewPort.x < -tileSize.w * buffer) {\n
+                this.shiftColumn(false);\n
+            } else if (tlViewPort.y > -tileSize.h * (buffer - 1)) {\n
+                this.shiftRow(true);\n
+            } else if (tlViewPort.y < -tileSize.h * buffer) {\n
+                this.shiftRow(false);\n
+            } else {\n
+                break;\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: shiftRow\n
+     * Shifty grid work\n
+     *\n
+     * Parameters:\n
+     * prepend - {Boolean} if true, prepend to beginning.\n
+     *                          if false, then append to end\n
+     */\n
+    shiftRow:function(prepend) {\n
+        var modelRowIndex = (prepend) ? 0 : (this.grid.length - 1);\n
+        var grid = this.grid;\n
+        var modelRow = grid[modelRowIndex];\n
+\n
+        var resolution = this.getServerResolution();\n
+        var deltaY = (prepend) ? -this.tileSize.h : this.tileSize.h;\n
+        var deltaLat = resolution * -deltaY;\n
+\n
+        var row = (prepend) ? grid.pop() : grid.shift();\n
+\n
+        for (var i=0, len=modelRow.length; i<len; i++) {\n
+            var modelTile = modelRow[i];\n
+            var bounds = modelTile.bounds.clone();\n
+            var position = modelTile.position.clone();\n
+            bounds.bottom = bounds.bottom + deltaLat;\n
+            bounds.top = bounds.top + deltaLat;\n
+            position.y = position.y + deltaY;\n
+            row[i].moveTo(bounds, position);\n
+        }\n
+\n
+        if (prepend) {\n
+            grid.unshift(row);\n
+        } else {\n
+            grid.push(row);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: shiftColumn\n
+     * Shift grid work in the other dimension\n
+     *\n
+     * Parameters:\n
+     * prepend - {Boolean} if true, prepend to beginning.\n
+     *                          if false, then append to end\n
+     */\n
+    shiftColumn: function(prepend) {\n
+        var deltaX = (prepend) ? -this.tileSize.w : this.tileSize.w;\n
+        var resolution = this.getServerResolution();\n
+        var deltaLon = resolution * deltaX;\n
+\n
+        for (var i=0, len=this.grid.length; i<len; i++) {\n
+            var row = this.grid[i];\n
+            var modelTileIndex = (prepend) ? 0 : (row.length - 1);\n
+            var modelTile = row[modelTileIndex];\n
+            \n
+            var bounds = modelTile.bounds.clone();\n
+            var position = modelTile.position.clone();\n
+            bounds.left = bounds.left + deltaLon;\n
+            bounds.right = bounds.right + deltaLon;\n
+            position.x = position.x + deltaX;\n
+\n
+            var tile = prepend ? this.grid[i].pop() : this.grid[i].shift();\n
+            tile.moveTo(bounds, position);\n
+            if (prepend) {\n
+                row.unshift(tile);\n
+            } else {\n
+                row.push(tile);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: removeExcessTiles\n
+     * When the size of the map or the buffer changes, we may need to\n
+     *     remove some excess rows and columns.\n
+     * \n
+     * Parameters:\n
+     * rows - {Integer} Maximum number of rows we want our grid to have.\n
+     * columns - {Integer} Maximum number of columns we want our grid to have.\n
+     */\n
+    removeExcessTiles: function(rows, columns) {\n
+        var i, l;\n
+        \n
+        // remove extra rows\n
+        while (this.grid.length > rows) {\n
+            var row = this.grid.pop();\n
+            for (i=0, l=row.length; i<l; i++) {\n
+                var tile = row[i];\n
+                this.destroyTile(tile);\n
+            }\n
+        }\n
+        \n
+        // remove extra columns\n
+        for (i=0, l=this.grid.length; i<l; i++) {\n
+            while (this.grid[i].length > columns) {\n
+                var row = this.grid[i];\n
+                var tile = row.pop();\n
+                this.destroyTile(tile);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: onMapResize\n
+     * For singleTile layers, this will set a new tile size according to the\n
+     * dimensions of the map pane.\n
+     */\n
+    onMapResize: function() {\n
+        if (this.singleTile) {\n
+            this.clearGrid();\n
+            this.setTileSize();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getTileBounds\n
+     * Returns The tile bounds for a layer given a pixel location.\n
+     *\n
+     * Parameters:\n
+     * viewPortPx - {<OpenLayers.Pixel>} The location in the viewport.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>} Bounds of the tile at the given pixel location.\n
+     */\n
+    getTileBounds: function(viewPortPx) {\n
+        var maxExtent = this.maxExtent;\n
+        var resolution = this.getResolution();\n
+        var tileMapWidth = resolution * this.tileSize.w;\n
+        var tileMapHeight = resolution * this.tileSize.h;\n
+        var mapPoint = this.getLonLatFromViewPortPx(viewPortPx);\n
+        var tileLeft = maxExtent.left + (tileMapWidth *\n
+                                         Math.floor((mapPoint.lon -\n
+                                                     maxExtent.left) /\n
+                                                    tileMapWidth));\n
+        var tileBottom = maxExtent.bottom + (tileMapHeight *\n
+                                             Math.floor((mapPoint.lat -\n
+                                                         maxExtent.bottom) /\n
+                                                        tileMapHeight));\n
+        return new OpenLayers.Bounds(tileLeft, tileBottom,\n
+                                     tileLeft + tileMapWidth,\n
+                                     tileBottom + tileMapHeight);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.Grid"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>47032</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

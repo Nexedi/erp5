@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>PanZoom.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Events/buttonclick.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.PanZoom\n
+ * The PanZoom is a visible control, composed of a\n
+ * <OpenLayers.Control.PanPanel> and a <OpenLayers.Control.ZoomPanel>. By\n
+ * default it is drawn in the upper left corner of the map.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.PanZoom = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * APIProperty: slideFactor\n
+     * {Integer} Number of pixels by which we\'ll pan the map in any direction \n
+     *     on clicking the arrow buttons.  If you want to pan by some ratio\n
+     *     of the map dimensions, use <slideRatio> instead.\n
+     */\n
+    slideFactor: 50,\n
+\n
+    /** \n
+     * APIProperty: slideRatio\n
+     * {Number} The fraction of map width/height by which we\'ll pan the map            \n
+     *     on clicking the arrow buttons.  Default is null.  If set, will\n
+     *     override <slideFactor>. E.g. if slideRatio is .5, then the Pan Up\n
+     *     button will pan up half the map height. \n
+     */\n
+    slideRatio: null,\n
+\n
+    /** \n
+     * Property: buttons\n
+     * {Array(DOMElement)} Array of Button Divs \n
+     */\n
+    buttons: null,\n
+\n
+    /** \n
+     * Property: position\n
+     * {<OpenLayers.Pixel>} \n
+     */\n
+    position: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.PanZoom\n
+     * \n
+     * Parameters:\n
+     * options - {Object}\n
+     */\n
+    initialize: function(options) {\n
+        this.position = new OpenLayers.Pixel(OpenLayers.Control.PanZoom.X,\n
+                                             OpenLayers.Control.PanZoom.Y);\n
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     */\n
+    destroy: function() {\n
+        if (this.map) {\n
+            this.map.events.unregister("buttonclick", this, this.onButtonClick);\n
+        }\n
+        this.removeButtons();\n
+        this.buttons = null;\n
+        this.position = null;\n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+    },\n
+\n
+    /** \n
+     * Method: setMap\n
+     *\n
+     * Properties:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+        this.map.events.register("buttonclick", this, this.onButtonClick);\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     *\n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>} \n
+     * \n
+     * Returns:\n
+     * {DOMElement} A reference to the container div for the PanZoom control.\n
+     */\n
+    draw: function(px) {\n
+        // initialize our internal div\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+        px = this.position;\n
+\n
+        // place the controls\n
+        this.buttons = [];\n
+\n
+        var sz = {w: 18, h: 18};\n
+        var centered = new OpenLayers.Pixel(px.x+sz.w/2, px.y);\n
+\n
+        this._addButton("panup", "north-mini.png", centered, sz);\n
+        px.y = centered.y+sz.h;\n
+        this._addButton("panleft", "west-mini.png", px, sz);\n
+        this._addButton("panright", "east-mini.png", px.add(sz.w, 0), sz);\n
+        this._addButton("pandown", "south-mini.png", \n
+                        centered.add(0, sz.h*2), sz);\n
+        this._addButton("zoomin", "zoom-plus-mini.png", \n
+                        centered.add(0, sz.h*3+5), sz);\n
+        this._addButton("zoomworld", "zoom-world-mini.png", \n
+                        centered.add(0, sz.h*4+5), sz);\n
+        this._addButton("zoomout", "zoom-minus-mini.png", \n
+                        centered.add(0, sz.h*5+5), sz);\n
+        return this.div;\n
+    },\n
+    \n
+    /**\n
+     * Method: _addButton\n
+     * \n
+     * Parameters:\n
+     * id - {String} \n
+     * img - {String} \n
+     * xy - {<OpenLayers.Pixel>} \n
+     * sz - {<OpenLayers.Size>} \n
+     * \n
+     * Returns:\n
+     * {DOMElement} A Div (an alphaImageDiv, to be precise) that contains the\n
+     *     image of the button, and has all the proper event handlers set.\n
+     */\n
+    _addButton:function(id, img, xy, sz) {\n
+        var imgLocation = OpenLayers.Util.getImageLocation(img);\n
+        var btn = OpenLayers.Util.createAlphaImageDiv(\n
+                                    this.id + "_" + id, \n
+                                    xy, sz, imgLocation, "absolute");\n
+        btn.style.cursor = "pointer";\n
+        //we want to add the outer div\n
+        this.div.appendChild(btn);\n
+        btn.action = id;\n
+        btn.className = "olButton";\n
+    \n
+        //we want to remember/reference the outer div\n
+        this.buttons.push(btn);\n
+        return btn;\n
+    },\n
+    \n
+    /**\n
+     * Method: _removeButton\n
+     * \n
+     * Parameters:\n
+     * btn - {Object}\n
+     */\n
+    _removeButton: function(btn) {\n
+        this.div.removeChild(btn);\n
+        OpenLayers.Util.removeItem(this.buttons, btn);\n
+    },\n
+    \n
+    /**\n
+     * Method: removeButtons\n
+     */\n
+    removeButtons: function() {\n
+        for(var i=this.buttons.length-1; i>=0; --i) {\n
+            this._removeButton(this.buttons[i]);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: onButtonClick\n
+     *\n
+     * Parameters:\n
+     * evt - {Event}\n
+     */\n
+    onButtonClick: function(evt) {\n
+        var btn = evt.buttonElement;\n
+        switch (btn.action) {\n
+            case "panup": \n
+                this.map.pan(0, -this.getSlideFactor("h"));\n
+                break;\n
+            case "pandown": \n
+                this.map.pan(0, this.getSlideFactor("h"));\n
+                break;\n
+            case "panleft": \n
+                this.map.pan(-this.getSlideFactor("w"), 0);\n
+                break;\n
+            case "panright": \n
+                this.map.pan(this.getSlideFactor("w"), 0);\n
+                break;\n
+            case "zoomin": \n
+                this.map.zoomIn(); \n
+                break;\n
+            case "zoomout": \n
+                this.map.zoomOut(); \n
+                break;\n
+            case "zoomworld": \n
+                this.map.zoomToMaxExtent(); \n
+                break;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: getSlideFactor\n
+     *\n
+     * Parameters:\n
+     * dim - {String} "w" or "h" (for width or height).\n
+     *\n
+     * Returns:\n
+     * {Number} The slide factor for panning in the requested direction.\n
+     */\n
+    getSlideFactor: function(dim) {\n
+        return this.slideRatio ?\n
+            this.map.getSize()[dim] * this.slideRatio :\n
+            this.slideFactor;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.PanZoom"\n
+});\n
+\n
+/**\n
+ * Constant: X\n
+ * {Integer}\n
+ */\n
+OpenLayers.Control.PanZoom.X = 4;\n
+\n
+/**\n
+ * Constant: Y\n
+ * {Integer}\n
+ */\n
+OpenLayers.Control.PanZoom.Y = 4;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6681</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

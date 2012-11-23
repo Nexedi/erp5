@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ZoomBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Handler/Box.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.ZoomBox\n
+ * The ZoomBox control enables zooming directly to a given extent, by drawing \n
+ * a box on the map. The box is drawn by holding down shift, whilst dragging \n
+ * the mouse.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.ZoomBox = OpenLayers.Class(OpenLayers.Control, {\n
+    /**\n
+     * Property: type\n
+     * {OpenLayers.Control.TYPE}\n
+     */\n
+    type: OpenLayers.Control.TYPE_TOOL,\n
+\n
+    /**\n
+     * Property: out\n
+     * {Boolean} Should the control be used for zooming out?\n
+     */\n
+    out: false,\n
+\n
+    /**\n
+     * APIProperty: keyMask\n
+     * {Integer} Zoom only occurs if the keyMask matches the combination of \n
+     *     keys down. Use bitwise operators and one or more of the\n
+     *     <OpenLayers.Handler> constants to construct a keyMask. Leave null if \n
+     *     not used mask. Default is null.\n
+     */\n
+    keyMask: null,\n
+\n
+    /**\n
+     * APIProperty: alwaysZoom\n
+     * {Boolean} Always zoom in/out, when box drawed \n
+     */\n
+    alwaysZoom: false,\n
+\n
+    /**\n
+     * Method: draw\n
+     */    \n
+    draw: function() {\n
+        this.handler = new OpenLayers.Handler.Box( this,\n
+                            {done: this.zoomBox}, {keyMask: this.keyMask} );\n
+    },\n
+\n
+    /**\n
+     * Method: zoomBox\n
+     *\n
+     * Parameters:\n
+     * position - {<OpenLayers.Bounds>} or {<OpenLayers.Pixel>}\n
+     */\n
+    zoomBox: function (position) {\n
+        if (position instanceof OpenLayers.Bounds) {\n
+            var bounds;\n
+            if (!this.out) {\n
+                var minXY = this.map.getLonLatFromPixel({\n
+                    x: position.left,\n
+                    y: position.bottom\n
+                });\n
+                var maxXY = this.map.getLonLatFromPixel({\n
+                    x: position.right,\n
+                    y: position.top\n
+                });\n
+                bounds = new OpenLayers.Bounds(minXY.lon, minXY.lat,\n
+                                               maxXY.lon, maxXY.lat);\n
+            } else {\n
+                var pixWidth = Math.abs(position.right-position.left);\n
+                var pixHeight = Math.abs(position.top-position.bottom);\n
+                var zoomFactor = Math.min((this.map.size.h / pixHeight),\n
+                    (this.map.size.w / pixWidth));\n
+                var extent = this.map.getExtent();\n
+                var center = this.map.getLonLatFromPixel(\n
+                    position.getCenterPixel());\n
+                var xmin = center.lon - (extent.getWidth()/2)*zoomFactor;\n
+                var xmax = center.lon + (extent.getWidth()/2)*zoomFactor;\n
+                var ymin = center.lat - (extent.getHeight()/2)*zoomFactor;\n
+                var ymax = center.lat + (extent.getHeight()/2)*zoomFactor;\n
+                bounds = new OpenLayers.Bounds(xmin, ymin, xmax, ymax);\n
+            }\n
+            // always zoom in/out \n
+            var lastZoom = this.map.getZoom(); \n
+            this.map.zoomToExtent(bounds);\n
+            if (lastZoom == this.map.getZoom() && this.alwaysZoom == true){ \n
+                this.map.zoomTo(lastZoom + (this.out ? -1 : 1)); \n
+            }\n
+        } else { // it\'s a pixel\n
+            if (!this.out) {\n
+                this.map.setCenter(this.map.getLonLatFromPixel(position),\n
+                               this.map.getZoom() + 1);\n
+            } else {\n
+                this.map.setCenter(this.map.getLonLatFromPixel(position),\n
+                               this.map.getZoom() - 1);\n
+            }\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.ZoomBox"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3811</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

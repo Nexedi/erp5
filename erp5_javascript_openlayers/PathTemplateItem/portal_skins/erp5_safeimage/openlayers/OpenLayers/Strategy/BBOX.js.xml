@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>BBOX.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Strategy.js\n
+ * @requires OpenLayers/Filter/Spatial.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Strategy.BBOX\n
+ * A simple strategy that reads new features when the viewport invalidates\n
+ *     some bounds.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Strategy>\n
+ */\n
+OpenLayers.Strategy.BBOX = OpenLayers.Class(OpenLayers.Strategy, {\n
+    \n
+    /**\n
+     * Property: bounds\n
+     * {<OpenLayers.Bounds>} The current data bounds (in the same projection\n
+     *     as the layer - not always the same projection as the map).\n
+     */\n
+    bounds: null,\n
+    \n
+    /** \n
+     * Property: resolution \n
+     * {Float} The current data resolution. \n
+     */ \n
+    resolution: null, \n
+           \n
+    /**\n
+     * APIProperty: ratio\n
+     * {Float} The ratio of the data bounds to the viewport bounds (in each\n
+     *     dimension).  Default is 2.\n
+     */\n
+    ratio: 2,\n
+\n
+    /** \n
+     * Property: resFactor \n
+     * {Float} Optional factor used to determine when previously requested \n
+     *     features are invalid.  If set, the resFactor will be compared to the\n
+     *     resolution of the previous request to the current map resolution.\n
+     *     If resFactor > (old / new) and 1/resFactor < (old / new).  If you\n
+     *     set a resFactor of 1, data will be requested every time the\n
+     *     resolution changes.  If you set a resFactor of 3, data will be\n
+     *     requested if the old resolution is 3 times the new, or if the new is\n
+     *     3 times the old.  If the old bounds do not contain the new bounds\n
+     *     new data will always be requested (with or without considering\n
+     *     resFactor). \n
+     */ \n
+    resFactor: null, \n
+    \n
+    /**\n
+     * Property: response\n
+     * {<OpenLayers.Protocol.Response>} The protocol response object returned\n
+     *      by the layer protocol.\n
+     */\n
+    response: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Strategy.BBOX\n
+     * Create a new BBOX strategy.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    \n
+    /**\n
+     * Method: activate\n
+     * Set up strategy with regard to reading new batches of remote data.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Strategy.prototype.activate.call(this);\n
+        if(activated) {\n
+            this.layer.events.on({\n
+                "moveend": this.update,\n
+                "refresh": this.update,\n
+                "visibilitychanged": this.update,\n
+                scope: this\n
+            });\n
+            this.update();\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * Method: deactivate\n
+     * Tear down strategy with regard to reading new batches of remote data.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Strategy.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            this.layer.events.un({\n
+                "moveend": this.update,\n
+                "refresh": this.update,\n
+                "visibilitychanged": this.update,\n
+                scope: this\n
+            });\n
+        }\n
+        return deactivated;\n
+    },\n
+\n
+    /**\n
+     * Method: update\n
+     * Callback function called on "moveend" or "refresh" layer events.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will determine\n
+     *     the behaviour of this Strategy\n
+     *\n
+     * Valid options include:\n
+     * force - {Boolean} if true, new data must be unconditionally read.\n
+     * noAbort - {Boolean} if true, do not abort previous requests.\n
+     */\n
+    update: function(options) {\n
+        var mapBounds = this.getMapBounds();\n
+        if (mapBounds !== null && ((options && options.force) ||\n
+          (this.layer.visibility && this.layer.calculateInRange() && this.invalidBounds(mapBounds)))) {\n
+            this.calculateBounds(mapBounds);\n
+            this.resolution = this.layer.map.getResolution(); \n
+            this.triggerRead(options);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: getMapBounds\n
+     * Get the map bounds expressed in the same projection as this layer.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>} Map bounds in the projection of the layer.\n
+     */\n
+    getMapBounds: function() {\n
+        if (this.layer.map === null) {\n
+            return null;\n
+        }\n
+        var bounds = this.layer.map.getExtent();\n
+        if(bounds && !this.layer.projection.equals(\n
+                this.layer.map.getProjectionObject())) {\n
+            bounds = bounds.clone().transform(\n
+                this.layer.map.getProjectionObject(), this.layer.projection\n
+            );\n
+        }\n
+        return bounds;\n
+    },\n
+\n
+    /**\n
+     * Method: invalidBounds\n
+     * Determine whether the previously requested set of features is invalid. \n
+     *     This occurs when the new map bounds do not contain the previously \n
+     *     requested bounds.  In addition, if <resFactor> is set, it will be \n
+     *     considered.\n
+     *\n
+     * Parameters:\n
+     * mapBounds - {<OpenLayers.Bounds>} the current map extent, will be\n
+     *      retrieved from the map object if not provided\n
+     *\n
+     * Returns:\n
+     * {Boolean} \n
+     */\n
+    invalidBounds: function(mapBounds) {\n
+        if(!mapBounds) {\n
+            mapBounds = this.getMapBounds();\n
+        }\n
+        var invalid = !this.bounds || !this.bounds.containsBounds(mapBounds);\n
+        if(!invalid && this.resFactor) {\n
+            var ratio = this.resolution / this.layer.map.getResolution();\n
+            invalid = (ratio >= this.resFactor || ratio <= (1 / this.resFactor));\n
+        }\n
+        return invalid;\n
+    },\n
+ \n
+    /**\n
+     * Method: calculateBounds\n
+     *\n
+     * Parameters:\n
+     * mapBounds - {<OpenLayers.Bounds>} the current map extent, will be\n
+     *      retrieved from the map object if not provided\n
+     */\n
+    calculateBounds: function(mapBounds) {\n
+        if(!mapBounds) {\n
+            mapBounds = this.getMapBounds();\n
+        }\n
+        var center = mapBounds.getCenterLonLat();\n
+        var dataWidth = mapBounds.getWidth() * this.ratio;\n
+        var dataHeight = mapBounds.getHeight() * this.ratio;\n
+        this.bounds = new OpenLayers.Bounds(\n
+            center.lon - (dataWidth / 2),\n
+            center.lat - (dataHeight / 2),\n
+            center.lon + (dataWidth / 2),\n
+            center.lat + (dataHeight / 2)\n
+        );\n
+    },\n
+    \n
+    /**\n
+     * Method: triggerRead\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Additional options for the protocol\'s read method \n
+     *     (optional)\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Protocol.Response>} The protocol response object\n
+     *      returned by the layer protocol.\n
+     */\n
+    triggerRead: function(options) {\n
+        if (this.response && !(options && options.noAbort === true)) {\n
+            this.layer.protocol.abort(this.response);\n
+            this.layer.events.triggerEvent("loadend");\n
+        }\n
+        this.layer.events.triggerEvent("loadstart");\n
+        this.response = this.layer.protocol.read(\n
+            OpenLayers.Util.applyDefaults({\n
+                filter: this.createFilter(),\n
+                callback: this.merge,\n
+                scope: this\n
+        }, options));\n
+    },\n
+ \n
+    /**\n
+     * Method: createFilter\n
+     * Creates a spatial BBOX filter. If the layer that this strategy belongs\n
+     * to has a filter property, this filter will be combined with the BBOX \n
+     * filter.\n
+     * \n
+     * Returns\n
+     * {<OpenLayers.Filter>} The filter object.\n
+     */\n
+    createFilter: function() {\n
+        var filter = new OpenLayers.Filter.Spatial({\n
+            type: OpenLayers.Filter.Spatial.BBOX,\n
+            value: this.bounds,\n
+            projection: this.layer.projection\n
+        });\n
+        if (this.layer.filter) {\n
+            filter = new OpenLayers.Filter.Logical({\n
+                type: OpenLayers.Filter.Logical.AND,\n
+                filters: [this.layer.filter, filter]\n
+            });\n
+        }\n
+        return filter;\n
+    },\n
+   \n
+    /**\n
+     * Method: merge\n
+     * Given a list of features, determine which ones to add to the layer.\n
+     *     If the layer projection differs from the map projection, features\n
+     *     will be transformed from the layer projection to the map projection.\n
+     *\n
+     * Parameters:\n
+     * resp - {<OpenLayers.Protocol.Response>} The response object passed\n
+     *      by the protocol.\n
+     */\n
+    merge: function(resp) {\n
+        this.layer.destroyFeatures();\n
+        var features = resp.features;\n
+        if(features && features.length > 0) {\n
+            var remote = this.layer.projection;\n
+            var local = this.layer.map.getProjectionObject();\n
+            if(!local.equals(remote)) {\n
+                var geom;\n
+                for(var i=0, len=features.length; i<len; ++i) {\n
+                    geom = features[i].geometry;\n
+                    if(geom) {\n
+                        geom.transform(remote, local);\n
+                    }\n
+                }\n
+            }\n
+            this.layer.addFeatures(features);\n
+        }\n
+        this.response = null;\n
+        this.layer.events.triggerEvent("loadend");\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Strategy.BBOX" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9419</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

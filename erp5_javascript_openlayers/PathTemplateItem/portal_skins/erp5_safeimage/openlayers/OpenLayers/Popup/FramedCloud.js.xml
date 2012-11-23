@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FramedCloud.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Popup/Framed.js\n
+ * @requires OpenLayers/Util.js\n
+ * @requires OpenLayers/BaseTypes/Bounds.js\n
+ * @requires OpenLayers/BaseTypes/Pixel.js\n
+ * @requires OpenLayers/BaseTypes/Size.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Popup.FramedCloud\n
+ * \n
+ * Inherits from: \n
+ *  - <OpenLayers.Popup.Framed>\n
+ */\n
+OpenLayers.Popup.FramedCloud = \n
+  OpenLayers.Class(OpenLayers.Popup.Framed, {\n
+\n
+    /** \n
+     * Property: contentDisplayClass\n
+     * {String} The CSS class of the popup content div.\n
+     */\n
+    contentDisplayClass: "olFramedCloudPopupContent",\n
+\n
+    /**\n
+     * APIProperty: autoSize\n
+     * {Boolean} Framed Cloud is autosizing by default.\n
+     */\n
+    autoSize: true,\n
+\n
+    /**\n
+     * APIProperty: panMapIfOutOfView\n
+     * {Boolean} Framed Cloud does pan into view by default.\n
+     */\n
+    panMapIfOutOfView: true,\n
+\n
+    /**\n
+     * APIProperty: imageSize\n
+     * {<OpenLayers.Size>}\n
+     */\n
+    imageSize: new OpenLayers.Size(1276, 736),\n
+\n
+    /**\n
+     * APIProperty: isAlphaImage\n
+     * {Boolean} The FramedCloud does not use an alpha image (in honor of the \n
+     *     good ie6 folk out there)\n
+     */\n
+    isAlphaImage: false,\n
+\n
+    /** \n
+     * APIProperty: fixedRelativePosition\n
+     * {Boolean} The Framed Cloud popup works in just one fixed position.\n
+     */\n
+    fixedRelativePosition: false,\n
+\n
+    /**\n
+     * Property: positionBlocks\n
+     * {Object} Hash of differen position blocks, keyed by relativePosition\n
+     *     two-character code string (ie "tl", "tr", "bl", "br")\n
+     */\n
+    positionBlocks: {\n
+        "tl": {\n
+            \'offset\': new OpenLayers.Pixel(44, 0),\n
+            \'padding\': new OpenLayers.Bounds(8, 40, 8, 9),\n
+            \'blocks\': [\n
+                { // top-left\n
+                    size: new OpenLayers.Size(\'auto\', \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(0, 51, 22, 0),\n
+                    position: new OpenLayers.Pixel(0, 0)\n
+                },\n
+                { //top-right\n
+                    size: new OpenLayers.Size(22, \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(null, 50, 0, 0),\n
+                    position: new OpenLayers.Pixel(-1238, 0)\n
+                },\n
+                { //bottom-left\n
+                    size: new OpenLayers.Size(\'auto\', 19),\n
+                    anchor: new OpenLayers.Bounds(0, 32, 22, null),\n
+                    position: new OpenLayers.Pixel(0, -631)\n
+                },\n
+                { //bottom-right\n
+                    size: new OpenLayers.Size(22, 18),\n
+                    anchor: new OpenLayers.Bounds(null, 32, 0, null),\n
+                    position: new OpenLayers.Pixel(-1238, -632)\n
+                },\n
+                { // stem\n
+                    size: new OpenLayers.Size(81, 35),\n
+                    anchor: new OpenLayers.Bounds(null, 0, 0, null),\n
+                    position: new OpenLayers.Pixel(0, -688)\n
+                }\n
+            ]\n
+        },\n
+        "tr": {\n
+            \'offset\': new OpenLayers.Pixel(-45, 0),\n
+            \'padding\': new OpenLayers.Bounds(8, 40, 8, 9),\n
+            \'blocks\': [\n
+                { // top-left\n
+                    size: new OpenLayers.Size(\'auto\', \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(0, 51, 22, 0),\n
+                    position: new OpenLayers.Pixel(0, 0)\n
+                },\n
+                { //top-right\n
+                    size: new OpenLayers.Size(22, \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(null, 50, 0, 0),\n
+                    position: new OpenLayers.Pixel(-1238, 0)\n
+                },\n
+                { //bottom-left\n
+                    size: new OpenLayers.Size(\'auto\', 19),\n
+                    anchor: new OpenLayers.Bounds(0, 32, 22, null),\n
+                    position: new OpenLayers.Pixel(0, -631)\n
+                },\n
+                { //bottom-right\n
+                    size: new OpenLayers.Size(22, 19),\n
+                    anchor: new OpenLayers.Bounds(null, 32, 0, null),\n
+                    position: new OpenLayers.Pixel(-1238, -631)\n
+                },\n
+                { // stem\n
+                    size: new OpenLayers.Size(81, 35),\n
+                    anchor: new OpenLayers.Bounds(0, 0, null, null),\n
+                    position: new OpenLayers.Pixel(-215, -687)\n
+                }\n
+            ]\n
+        },\n
+        "bl": {\n
+            \'offset\': new OpenLayers.Pixel(45, 0),\n
+            \'padding\': new OpenLayers.Bounds(8, 9, 8, 40),\n
+            \'blocks\': [\n
+                { // top-left\n
+                    size: new OpenLayers.Size(\'auto\', \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(0, 21, 22, 32),\n
+                    position: new OpenLayers.Pixel(0, 0)\n
+                },\n
+                { //top-right\n
+                    size: new OpenLayers.Size(22, \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(null, 21, 0, 32),\n
+                    position: new OpenLayers.Pixel(-1238, 0)\n
+                },\n
+                { //bottom-left\n
+                    size: new OpenLayers.Size(\'auto\', 21),\n
+                    anchor: new OpenLayers.Bounds(0, 0, 22, null),\n
+                    position: new OpenLayers.Pixel(0, -629)\n
+                },\n
+                { //bottom-right\n
+                    size: new OpenLayers.Size(22, 21),\n
+                    anchor: new OpenLayers.Bounds(null, 0, 0, null),\n
+                    position: new OpenLayers.Pixel(-1238, -629)\n
+                },\n
+                { // stem\n
+                    size: new OpenLayers.Size(81, 33),\n
+                    anchor: new OpenLayers.Bounds(null, null, 0, 0),\n
+                    position: new OpenLayers.Pixel(-101, -674)\n
+                }\n
+            ]\n
+        },\n
+        "br": {\n
+            \'offset\': new OpenLayers.Pixel(-44, 0),\n
+            \'padding\': new OpenLayers.Bounds(8, 9, 8, 40),\n
+            \'blocks\': [\n
+                { // top-left\n
+                    size: new OpenLayers.Size(\'auto\', \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(0, 21, 22, 32),\n
+                    position: new OpenLayers.Pixel(0, 0)\n
+                },\n
+                { //top-right\n
+                    size: new OpenLayers.Size(22, \'auto\'),\n
+                    anchor: new OpenLayers.Bounds(null, 21, 0, 32),\n
+                    position: new OpenLayers.Pixel(-1238, 0)\n
+                },\n
+                { //bottom-left\n
+                    size: new OpenLayers.Size(\'auto\', 21),\n
+                    anchor: new OpenLayers.Bounds(0, 0, 22, null),\n
+                    position: new OpenLayers.Pixel(0, -629)\n
+                },\n
+                { //bottom-right\n
+                    size: new OpenLayers.Size(22, 21),\n
+                    anchor: new OpenLayers.Bounds(null, 0, 0, null),\n
+                    position: new OpenLayers.Pixel(-1238, -629)\n
+                },\n
+                { // stem\n
+                    size: new OpenLayers.Size(81, 33),\n
+                    anchor: new OpenLayers.Bounds(0, null, null, 0),\n
+                    position: new OpenLayers.Pixel(-311, -674)\n
+                }\n
+            ]\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIProperty: minSize\n
+     * {<OpenLayers.Size>}\n
+     */\n
+    minSize: new OpenLayers.Size(105, 10),\n
+\n
+    /**\n
+     * APIProperty: maxSize\n
+     * {<OpenLayers.Size>}\n
+     */\n
+    maxSize: new OpenLayers.Size(1200, 660),\n
+\n
+    /** \n
+     * Constructor: OpenLayers.Popup.FramedCloud\n
+     * \n
+     * Parameters:\n
+     * id - {String}\n
+     * lonlat - {<OpenLayers.LonLat>}\n
+     * contentSize - {<OpenLayers.Size>}\n
+     * contentHTML - {String}\n
+     * anchor - {Object} Object to which we\'ll anchor the popup. Must expose \n
+     *     a \'size\' (<OpenLayers.Size>) and \'offset\' (<OpenLayers.Pixel>) \n
+     *     (Note that this is generally an <OpenLayers.Icon>).\n
+     * closeBox - {Boolean}\n
+     * closeBoxCallback - {Function} Function to be called on closeBox click.\n
+     */\n
+    initialize:function(id, lonlat, contentSize, contentHTML, anchor, closeBox, \n
+                        closeBoxCallback) {\n
+\n
+        this.imageSrc = OpenLayers.Util.getImageLocation(\'cloud-popup-relative.png\');\n
+        OpenLayers.Popup.Framed.prototype.initialize.apply(this, arguments);\n
+        this.contentDiv.className = this.contentDisplayClass;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Popup.FramedCloud"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8380</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

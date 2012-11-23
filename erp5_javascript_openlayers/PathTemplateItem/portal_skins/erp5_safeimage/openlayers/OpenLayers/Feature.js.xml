@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Feature.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Util.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Feature\n
+ * Features are combinations of geography and attributes. The OpenLayers.Feature\n
+ *     class specifically combines a marker and a lonlat.\n
+ */\n
+OpenLayers.Feature = OpenLayers.Class({\n
+\n
+    /** \n
+     * Property: layer \n
+     * {<OpenLayers.Layer>} \n
+     */\n
+    layer: null,\n
+\n
+    /** \n
+     * Property: id \n
+     * {String} \n
+     */\n
+    id: null,\n
+    \n
+    /** \n
+     * Property: lonlat \n
+     * {<OpenLayers.LonLat>} \n
+     */\n
+    lonlat: null,\n
+\n
+    /** \n
+     * Property: data \n
+     * {Object} \n
+     */\n
+    data: null,\n
+\n
+    /** \n
+     * Property: marker \n
+     * {<OpenLayers.Marker>} \n
+     */\n
+    marker: null,\n
+\n
+    /**\n
+     * APIProperty: popupClass\n
+     * {<OpenLayers.Class>} The class which will be used to instantiate\n
+     *     a new Popup. Default is <OpenLayers.Popup.Anchored>.\n
+     */\n
+    popupClass: null,\n
+\n
+    /** \n
+     * Property: popup \n
+     * {<OpenLayers.Popup>} \n
+     */\n
+    popup: null,\n
+\n
+    /** \n
+     * Constructor: OpenLayers.Feature\n
+     * Constructor for features.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer>} \n
+     * lonlat - {<OpenLayers.LonLat>} \n
+     * data - {Object} \n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Feature>}\n
+     */\n
+    initialize: function(layer, lonlat, data) {\n
+        this.layer = layer;\n
+        this.lonlat = lonlat;\n
+        this.data = (data != null) ? data : {};\n
+        this.id = OpenLayers.Util.createUniqueID(this.CLASS_NAME + "_"); \n
+    },\n
+\n
+    /** \n
+     * Method: destroy\n
+     * nullify references to prevent circular references and memory leaks\n
+     */\n
+    destroy: function() {\n
+\n
+        //remove the popup from the map\n
+        if ((this.layer != null) && (this.layer.map != null)) {\n
+            if (this.popup != null) {\n
+                this.layer.map.removePopup(this.popup);\n
+            }\n
+        }\n
+        // remove the marker from the layer\n
+        if (this.layer != null && this.marker != null) {\n
+            this.layer.removeMarker(this.marker);\n
+        }\n
+\n
+        this.layer = null;\n
+        this.id = null;\n
+        this.lonlat = null;\n
+        this.data = null;\n
+        if (this.marker != null) {\n
+            this.destroyMarker(this.marker);\n
+            this.marker = null;\n
+        }\n
+        if (this.popup != null) {\n
+            this.destroyPopup(this.popup);\n
+            this.popup = null;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: onScreen\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the feature is currently visible on screen\n
+     *           (based on its \'lonlat\' property)\n
+     */\n
+    onScreen:function() {\n
+        \n
+        var onScreen = false;\n
+        if ((this.layer != null) && (this.layer.map != null)) {\n
+            var screenBounds = this.layer.map.getExtent();\n
+            onScreen = screenBounds.containsLonLat(this.lonlat);\n
+        }    \n
+        return onScreen;\n
+    },\n
+    \n
+\n
+    /**\n
+     * Method: createMarker\n
+     * Based on the data associated with the Feature, create and return a marker object.\n
+     *\n
+     * Returns: \n
+     * {<OpenLayers.Marker>} A Marker Object created from the \'lonlat\' and \'icon\' properties\n
+     *          set in this.data. If no \'lonlat\' is set, returns null. If no\n
+     *          \'icon\' is set, OpenLayers.Marker() will load the default image.\n
+     *          \n
+     *          Note - this.marker is set to return value\n
+     * \n
+     */\n
+    createMarker: function() {\n
+\n
+        if (this.lonlat != null) {\n
+            this.marker = new OpenLayers.Marker(this.lonlat, this.data.icon);\n
+        }\n
+        return this.marker;\n
+    },\n
+\n
+    /**\n
+     * Method: destroyMarker\n
+     * Destroys marker.\n
+     * If user overrides the createMarker() function, s/he should be able\n
+     *   to also specify an alternative function for destroying it\n
+     */\n
+    destroyMarker: function() {\n
+        this.marker.destroy();  \n
+    },\n
+\n
+    /**\n
+     * Method: createPopup\n
+     * Creates a popup object created from the \'lonlat\', \'popupSize\',\n
+     *     and \'popupContentHTML\' properties set in this.data. It uses\n
+     *     this.marker.icon as default anchor. \n
+     *  \n
+     *  If no \'lonlat\' is set, returns null. \n
+     *  If no this.marker has been created, no anchor is sent.\n
+     *\n
+     *  Note - the returned popup object is \'owned\' by the feature, so you\n
+     *      cannot use the popup\'s destroy method to discard the popup.\n
+     *      Instead, you must use the feature\'s destroyPopup\n
+     * \n
+     *  Note - this.popup is set to return value\n
+     * \n
+     * Parameters: \n
+     * closeBox - {Boolean} create popup with closebox or not\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Popup>} Returns the created popup, which is also set\n
+     *     as \'popup\' property of this feature. Will be of whatever type\n
+     *     specified by this feature\'s \'popupClass\' property, but must be\n
+     *     of type <OpenLayers.Popup>.\n
+     * \n
+     */\n
+    createPopup: function(closeBox) {\n
+\n
+        if (this.lonlat != null) {\n
+            if (!this.popup) {\n
+                var anchor = (this.marker) ? this.marker.icon : null;\n
+                var popupClass = this.popupClass ? \n
+                    this.popupClass : OpenLayers.Popup.Anchored;\n
+                this.popup = new popupClass(this.id + "_popup", \n
+                                            this.lonlat,\n
+                                            this.data.popupSize,\n
+                                            this.data.popupContentHTML,\n
+                                            anchor, \n
+                                            closeBox); \n
+            }    \n
+            if (this.data.overflow != null) {\n
+                this.popup.contentDiv.style.overflow = this.data.overflow;\n
+            }    \n
+            \n
+            this.popup.feature = this;\n
+        }        \n
+        return this.popup;\n
+    },\n
+\n
+    \n
+    /**\n
+     * Method: destroyPopup\n
+     * Destroys the popup created via createPopup.\n
+     *\n
+     * As with the marker, if user overrides the createPopup() function, s/he \n
+     *   should also be able to override the destruction\n
+     */\n
+    destroyPopup: function() {\n
+        if (this.popup) {\n
+            this.popup.feature = null;\n
+            this.popup.destroy();\n
+            this.popup = null;\n
+        }    \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Feature"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6505</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_3.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \r\n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\r\n
+ * full text of the license. */\r\n
+\r\n
+/**\r\n
+ * @requires OpenLayers/Format/WMSCapabilities/v1.js\r\n
+ */\r\n
+\r\n
+/**\r\n
+ * Class: OpenLayers.Format.WMSCapabilities/v1_3\r\n
+ * Abstract base class for WMS Capabilities version 1.3.X. \r\n
+ * SLD 1.1.0 adds in the extra operations DescribeLayer and GetLegendGraphic, \r\n
+ * see: http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd\r\n
+ * \r\n
+ * Inherits from:\r\n
+ *  - <OpenLayers.Format.WMSCapabilities.v1>\r\n
+ */\r\n
+OpenLayers.Format.WMSCapabilities.v1_3 = OpenLayers.Class(\r\n
+    OpenLayers.Format.WMSCapabilities.v1, {\r\n
+    \r\n
+    /**\r\n
+     * Property: readers\r\n
+     * Contains public functions, grouped by namespace prefix, that will\r\n
+     *     be applied when a namespaced node is found matching the function\r\n
+     *     name.  The function will be applied in the scope of this parser\r\n
+     *     with two arguments: the node being read and a context object passed\r\n
+     *     from the parent.\r\n
+     */\r\n
+    readers: {\r\n
+        "wms": OpenLayers.Util.applyDefaults({\r\n
+            "WMS_Capabilities": function(node, obj) {\r\n
+                this.readChildNodes(node, obj);\r\n
+            },\r\n
+            "LayerLimit": function(node, obj) {\r\n
+                obj.layerLimit = parseInt(this.getChildValue(node));\r\n
+            },\r\n
+            "MaxWidth": function(node, obj) {\r\n
+                obj.maxWidth = parseInt(this.getChildValue(node));\r\n
+            },\r\n
+            "MaxHeight": function(node, obj) {\r\n
+                obj.maxHeight = parseInt(this.getChildValue(node));\r\n
+            },\r\n
+            "BoundingBox": function(node, obj) {\r\n
+                var bbox = OpenLayers.Format.WMSCapabilities.v1.prototype.readers["wms"].BoundingBox.apply(this, [node, obj]);\r\n
+                bbox.srs  = node.getAttribute("CRS");\r\n
+                obj.bbox[bbox.srs] = bbox;\r\n
+            },\r\n
+            "CRS": function(node, obj) {\r\n
+                // CRS is the synonym of SRS\r\n
+                this.readers.wms.SRS.apply(this, [node, obj]); \r\n
+            },\r\n
+            "EX_GeographicBoundingBox": function(node, obj) {\r\n
+                // replacement of LatLonBoundingBox\r\n
+                obj.llbbox = [];\r\n
+                this.readChildNodes(node, obj.llbbox);\r\n
+                \r\n
+            },\r\n
+            "westBoundLongitude": function(node, obj) {\r\n
+                obj[0] = this.getChildValue(node);\r\n
+            },\r\n
+            "eastBoundLongitude": function(node, obj) {\r\n
+                obj[2] = this.getChildValue(node);\r\n
+            },\r\n
+            "southBoundLatitude": function(node, obj) {\r\n
+                obj[1] = this.getChildValue(node);\r\n
+            },\r\n
+            "northBoundLatitude": function(node, obj) {\r\n
+                obj[3] = this.getChildValue(node);\r\n
+            },\r\n
+            "MinScaleDenominator": function(node, obj) {\r\n
+                obj.maxScale = parseFloat(this.getChildValue(node)).toPrecision(16);\r\n
+            },\r\n
+            "MaxScaleDenominator": function(node, obj) {\r\n
+                obj.minScale = parseFloat(this.getChildValue(node)).toPrecision(16);\r\n
+            },\r\n
+            "Dimension": function(node, obj) {\r\n
+                // dimension has extra attributes: default, multipleValues, \r\n
+                // nearestValue, current which used to be part of Extent. It now\r\n
+                // also contains the values.\r\n
+                var name = node.getAttribute("name").toLowerCase();\r\n
+                var dim = {\r\n
+                    name: name,\r\n
+                    units: node.getAttribute("units"),\r\n
+                    unitsymbol: node.getAttribute("unitSymbol"),\r\n
+                    nearestVal: node.getAttribute("nearestValue") === "1",\r\n
+                    multipleVal: node.getAttribute("multipleValues") === "1",\r\n
+                    "default": node.getAttribute("default") || "",\r\n
+                    current: node.getAttribute("current") === "1",\r\n
+                    values: this.getChildValue(node).split(",")\r\n
+                    \r\n
+                };\r\n
+                // Theoretically there can be more dimensions with the same\r\n
+                // name, but with a different unit. Until we meet such a case,\r\n
+                // let\'s just keep the same structure as the WMS 1.1 \r\n
+                // GetCapabilities parser uses. We will store the last\r\n
+                // one encountered.\r\n
+                obj.dimensions[dim.name] = dim;\r\n
+            },\r\n
+            "Keyword": function(node, obj) {\r\n
+                // TODO: should we change the structure of keyword in v1.js?\r\n
+                // Make it an object with a value instead of a string?\r\n
+                var keyword = {value: this.getChildValue(node), \r\n
+                    vocabulary: node.getAttribute("vocabulary")};\r\n
+                if (obj.keywords) {\r\n
+                    obj.keywords.push(keyword);\r\n
+                }\r\n
+            }\r\n
+        }, OpenLayers.Format.WMSCapabilities.v1.prototype.readers["wms"]),\r\n
+        "sld": {\r\n
+            "UserDefinedSymbolization": function(node, obj) {\r\n
+                this.readers.wms.UserDefinedSymbolization.apply(this, [node, obj]);\r\n
+                // add the two extra attributes\r\n
+                obj.userSymbols.inlineFeature = parseInt(node.getAttribute("InlineFeature")) == 1;\r\n
+                obj.userSymbols.remoteWCS = parseInt(node.getAttribute("RemoteWCS")) == 1;\r\n
+            },\r\n
+            "DescribeLayer": function(node, obj) {\r\n
+                this.readers.wms.DescribeLayer.apply(this, [node, obj]);\r\n
+            },\r\n
+            "GetLegendGraphic": function(node, obj) {\r\n
+                this.readers.wms.GetLegendGraphic.apply(this, [node, obj]);\r\n
+            }\r\n
+        }\r\n
+    },\r\n
+    \r\n
+    CLASS_NAME: "OpenLayers.Format.WMSCapabilities.v1_3" \r\n
+\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5893</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

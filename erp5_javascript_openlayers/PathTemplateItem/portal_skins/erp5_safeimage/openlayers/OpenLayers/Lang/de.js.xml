@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>de.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Grille chompa\n
+ *  - Nikiwaibel\n
+ *  - Umherirrender\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["de"]\n
+ * Dictionary for Deutsch.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["de"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Unbehandelte Anfragerückmeldung ${statusText}",\n
+\n
+    \'Permalink\': "Permalink",\n
+\n
+    \'Overlays\': "Overlays",\n
+\n
+    \'Base Layer\': "Grundkarte",\n
+\n
+    \'noFID\': "Ein Feature, für das keine FID existiert, kann nicht aktualisiert werden.",\n
+\n
+    \'browserNotSupported\': "Ihr Browser unterstützt keine Vektordarstellung. Aktuell unterstützte Renderer:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Die \\x3ccode\\x3eminZoomLevel\\x3c/code\\x3e-Eigenschaft ist nur für die Verwendung mit \\x3ccode\\x3eFixedZoomLevels\\x3c/code\\x3e-untergeordneten Layers vorgesehen. Das dieser \\x3ctt\\x3ewfs\\x3c/tt\\x3e-Layer die \\x3ccode\\x3eminZoomLevel\\x3c/code\\x3e-Eigenschaft überprüft ist ein Relikt der Vergangenheit. Wir können diese Überprüfung nicht entfernen, ohne das OL basierende Applikationen nicht mehr funktionieren. Daher markieren wir es als veraltet - die \\x3ccode\\x3eminZoomLevel\\x3c/code\\x3e-Überprüfung wird in Version 3.0 entfernt werden. Bitte verwenden Sie stattdessen die Min-/Max-Lösung, wie sie unter http://trac.openlayers.org/wiki/SettingZoomLevels beschrieben ist.",\n
+\n
+    \'commitSuccess\': "WFS-Transaktion: Erfolgreich ${response}",\n
+\n
+    \'commitFailed\': "WFS-Transaktion: Fehlgeschlagen ${response}",\n
+\n
+    \'googleWarning\': "Der Google-Layer konnte nicht korrekt geladen werden.\\x3cbr\\x3e\\x3cbr\\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\\x3cbr\\x3e\\x3cbr\\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der Google-Maps-Bibliothek nicht eingebunden wurde oder keinen gültigen API-Schlüssel für Ihre URL enthält.\\x3cbr\\x3e\\x3cbr\\x3eEntwickler: Besuche \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3edas Wiki\\x3c/a\\x3e für Hilfe zum korrekten Einbinden des Google-Layers",\n
+\n
+    \'getLayerWarning\': "Der ${layerType}-Layer konnte nicht korrekt geladen werden.\\x3cbr\\x3e\\x3cbr\\x3eUm diese Meldung nicht mehr zu erhalten, wählen Sie einen anderen Hintergrundlayer aus dem LayerSwitcher in der rechten oberen Ecke.\\x3cbr\\x3e\\x3cbr\\x3eSehr wahrscheinlich tritt dieser Fehler auf, weil das Skript der \\\'${layerLib}\\\'-Bibliothek nicht eingebunden wurde.\\x3cbr\\x3e\\x3cbr\\x3eEntwickler: Besuche \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3edas Wiki\\x3c/a\\x3e für Hilfe zum korrekten Einbinden von Layern",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Maßstab = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "W",\n
+\n
+    \'E\': "O",\n
+\n
+    \'N\': "N",\n
+\n
+    \'S\': "S",\n
+\n
+    \'reprojectDeprecated\': "Sie verwenden die „Reproject“-Option des Layers ${layerName}. Diese Option ist veraltet: Sie wurde entwickelt um die Anzeige von Daten auf kommerziellen Basiskarten zu unterstützen, aber diese Funktion sollte jetzt durch Unterstützung der „Spherical Mercator“ erreicht werden. Weitere Informationen sind unter http://trac.openlayers.org/wiki/SphericalMercator verfügbar.",\n
+\n
+    \'methodDeprecated\': "Die Methode ist veraltet und wird in 3.0 entfernt. Bitte verwende stattdessen ${newMethod}."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3509</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

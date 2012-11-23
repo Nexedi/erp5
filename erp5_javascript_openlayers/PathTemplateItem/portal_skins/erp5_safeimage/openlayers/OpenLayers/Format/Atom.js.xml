@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Atom.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Format/GML/v3.js\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.Atom\n
+ * Read/write Atom feeds. Create a new instance with the\n
+ *     <OpenLayers.Format.AtomFeed> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.Atom = OpenLayers.Class(OpenLayers.Format.XML, {\n
+    \n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.  Properties\n
+     *     of this object should not be set individually.  Read-only.  All\n
+     *     XML subclasses should have their own namespaces object.  Use\n
+     *     <setNamespace> to add or set a namespace alias after construction.\n
+     */\n
+    namespaces: {\n
+        atom: "http://www.w3.org/2005/Atom",\n
+        georss: "http://www.georss.org/georss"\n
+    },\n
+    \n
+    /**\n
+     * APIProperty: feedTitle\n
+     * {String} Atom feed elements require a title.  Default is "untitled".\n
+     */\n
+    feedTitle: "untitled",\n
+\n
+    /**\n
+     * APIProperty: defaultEntryTitle\n
+     * {String} Atom entry elements require a title.  In cases where one is\n
+     *     not provided in the feature attributes, this will be used.  Default\n
+     *     is "untitled".\n
+     */\n
+    defaultEntryTitle: "untitled",\n
+\n
+    /**\n
+     * Property: gmlParse\n
+     * {Object} GML Format object for parsing features\n
+     * Non-API and only created if necessary\n
+     */\n
+    gmlParser: null,\n
+    \n
+    /**\n
+     * APIProperty: xy\n
+     * {Boolean} Order of the GML coordinate: true:(x,y) or false:(y,x)\n
+     * For GeoRSS the default is (y,x), therefore: false\n
+     */\n
+    xy: false,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.AtomEntry\n
+     * Create a new parser for Atom.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Return a list of features from an Atom feed or entry document.\n
+     \n
+     * Parameters:\n
+     * doc - {Element} or {String}\n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Feature.Vector>})\n
+     */\n
+    read: function(doc) {\n
+        if (typeof doc == "string") {\n
+            doc = OpenLayers.Format.XML.prototype.read.apply(this, [doc]);\n
+        }\n
+        return this.parseFeatures(doc);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: write\n
+     * Serialize or more feature nodes to Atom documents.\n
+     *\n
+     * Parameters:\n
+     * features - {<OpenLayers.Feature.Vector>} or Array({<OpenLayers.Feature.Vector>})\n
+     *\n
+     * Returns:\n
+     * {String} an Atom entry document if passed one feature node, or a feed\n
+     * document if passed an array of feature nodes.\n
+     */\n
+    write: function(features) {\n
+        var doc;\n
+        if (OpenLayers.Util.isArray(features)) {\n
+            doc = this.createElementNSPlus("atom:feed");\n
+            doc.appendChild(\n
+                this.createElementNSPlus("atom:title", {\n
+                    value: this.feedTitle\n
+                })\n
+            );\n
+            for (var i=0, ii=features.length; i<ii; i++) {\n
+                doc.appendChild(this.buildEntryNode(features[i]));\n
+            }\n
+        }\n
+        else {\n
+            doc = this.buildEntryNode(features);\n
+        }\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [doc]);\n
+    },\n
+    \n
+    /**\n
+     * Method: buildContentNode\n
+     *\n
+     * Parameters:\n
+     * content - {Object}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} an Atom content node.\n
+     *\n
+     * TODO: types other than text.\n
+     */\n
+    buildContentNode: function(content) {\n
+        var node = this.createElementNSPlus("atom:content", {\n
+            attributes: {\n
+                type: content.type || null\n
+            }\n
+        });\n
+        if (content.src) {\n
+            node.setAttribute("src", content.src);\n
+        } else {\n
+            if (content.type == "text" || content.type == null) {\n
+                node.appendChild(\n
+                    this.createTextNode(content.value)\n
+                );\n
+            } else if (content.type == "html") {\n
+                if (typeof content.value != "string") {\n
+                    throw "HTML content must be in form of an escaped string";\n
+                }\n
+                node.appendChild(\n
+                    this.createTextNode(content.value)\n
+                );\n
+            } else if (content.type == "xhtml") {\n
+                node.appendChild(content.value);\n
+            } else if (content.type == "xhtml" ||\n
+                           content.type.match(/(\\+|\\/)xml$/)) {\n
+                node.appendChild(content.value);\n
+            }\n
+            else { // MUST be a valid Base64 encoding\n
+                node.appendChild(\n
+                    this.createTextNode(content.value)\n
+                );\n
+            }\n
+        }\n
+        return node;\n
+    },\n
+    \n
+    /**\n
+     * Method: buildEntryNode\n
+     * Build an Atom entry node from a feature object.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} an Atom entry node.\n
+     *\n
+     * These entries are geared for publication using AtomPub.\n
+     *\n
+     * TODO: support extension elements\n
+     */\n
+    buildEntryNode: function(feature) {\n
+        var attrib = feature.attributes;\n
+        var atomAttrib = attrib.atom || {};\n
+        var entryNode = this.createElementNSPlus("atom:entry");\n
+        \n
+        // atom:author\n
+        if (atomAttrib.authors) {\n
+            var authors = OpenLayers.Util.isArray(atomAttrib.authors) ?\n
+                atomAttrib.authors : [atomAttrib.authors];\n
+            for (var i=0, ii=authors.length; i<ii; i++) {\n
+                entryNode.appendChild(\n
+                    this.buildPersonConstructNode(\n
+                        "author", authors[i]\n
+                    )\n
+                );\n
+            }\n
+        }\n
+        \n
+        // atom:category\n
+        if (atomAttrib.categories) {\n
+            var categories = OpenLayers.Util.isArray(atomAttrib.categories) ?\n
+                atomAttrib.categories : [atomAttrib.categories];\n
+            var category;\n
+            for (var i=0, ii=categories.length; i<ii; i++) {\n
+                category = categories[i];\n
+                entryNode.appendChild(\n
+                    this.createElementNSPlus("atom:category", {\n
+                        attributes: {\n
+                            term: category.term,\n
+                            scheme: category.scheme || null,\n
+                            label: category.label || null\n
+                        }\n
+                    })\n
+                );\n
+            }\n
+        }\n
+        \n
+        // atom:content\n
+        if (atomAttrib.content) {\n
+            entryNode.appendChild(this.buildContentNode(atomAttrib.content));\n
+        }\n
+        \n
+        // atom:contributor\n
+        if (atomAttrib.contributors) {\n
+            var contributors = OpenLayers.Util.isArray(atomAttrib.contributors) ?\n
+                atomAttrib.contributors : [atomAttrib.contributors];\n
+            for (var i=0, ii=contributors.length; i<ii; i++) {\n
+                entryNode.appendChild(\n
+                    this.buildPersonConstructNode(\n
+                        "contributor",\n
+                        contributors[i]\n
+                        )\n
+                    );\n
+            }\n
+        }\n
+        \n
+        // atom:id\n
+        if (feature.fid) {\n
+            entryNode.appendChild(\n
+                this.createElementNSPlus("atom:id", {\n
+                    value: feature.fid\n
+                })\n
+            );\n
+        }\n
+        \n
+        // atom:link\n
+        if (atomAttrib.links) {\n
+            var links = OpenLayers.Util.isArray(atomAttrib.links) ?\n
+                atomAttrib.links : [atomAttrib.links];\n
+            var link;\n
+            for (var i=0, ii=links.length; i<ii; i++) {\n
+                link = links[i];\n
+                entryNode.appendChild(\n
+                    this.createElementNSPlus("atom:link", {\n
+                        attributes: {\n
+                            href: link.href,\n
+                            rel: link.rel || null,\n
+                            type: link.type || null,\n
+                            hreflang: link.hreflang || null,\n
+                            title: link.title || null,\n
+                            length: link.length || null\n
+                        }\n
+                    })\n
+                );\n
+            }\n
+        }\n
+        \n
+        // atom:published\n
+        if (atomAttrib.published) {\n
+            entryNode.appendChild(\n
+                this.createElementNSPlus("atom:published", {\n
+                    value: atomAttrib.published\n
+                })\n
+            );\n
+        }\n
+        \n
+        // atom:rights\n
+        if (atomAttrib.rights) {\n
+            entryNode.appendChild(\n
+                this.createElementNSPlus("atom:rights", {\n
+                    value: atomAttrib.rights\n
+                })\n
+            );\n
+        }\n
+        \n
+        // atom:source not implemented\n
+        \n
+        // atom:summary\n
+        if (atomAttrib.summary || attrib.description) {\n
+            entryNode.appendChild(\n
+                this.createElementNSPlus("atom:summary", {\n
+                    value: atomAttrib.summary || attrib.description\n
+                })\n
+            );\n
+        }\n
+        \n
+        // atom:title\n
+        entryNode.appendChild(\n
+            this.createElementNSPlus("atom:title", {\n
+                value: atomAttrib.title || attrib.title || this.defaultEntryTitle\n
+            })\n
+        );\n
+        \n
+        // atom:updated\n
+        if (atomAttrib.updated) {\n
+            entryNode.appendChild(\n
+                this.createElementNSPlus("atom:updated", {\n
+                    value: atomAttrib.updated\n
+                })\n
+            );\n
+        }\n
+        \n
+        // georss:where\n
+        if (feature.geometry) {\n
+            var whereNode = this.createElementNSPlus("georss:where");\n
+            whereNode.appendChild(\n
+                this.buildGeometryNode(feature.geometry)\n
+            );\n
+            entryNode.appendChild(whereNode);\n
+        }\n
+        \n
+        return entryNode;\n
+    },\n
+    \n
+    /**\n
+     * Method: initGmlParser\n
+     * Creates a GML parser.\n
+     */\n
+    initGmlParser: function() {\n
+        this.gmlParser = new OpenLayers.Format.GML.v3({\n
+            xy: this.xy,\n
+            featureNS: "http://example.com#feature",\n
+            internalProjection: this.internalProjection,\n
+            externalProjection: this.externalProjection\n
+        });\n
+    },\n
+    \n
+    /**\n
+     * Method: buildGeometryNode\n
+     * builds a GeoRSS node with a given geometry\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A gml node.\n
+     */\n
+    buildGeometryNode: function(geometry) {\n
+        if (!this.gmlParser) {\n
+            this.initGmlParser();\n
+        }\n
+        var node = this.gmlParser.writeNode("feature:_geometry", geometry);\n
+        return node.firstChild;\n
+    },\n
+    \n
+    /**\n
+     * Method: buildPersonConstructNode\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     * value - {Object}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} an Atom person construct node.\n
+     *\n
+     * Example:\n
+     * >>> buildPersonConstructNode("author", {name: "John Smith"})\n
+     * {<author><name>John Smith</name></author>}\n
+     *\n
+     * TODO: how to specify extension elements? Add to the oNames array?\n
+     */\n
+    buildPersonConstructNode: function(name, value) {\n
+        var oNames = ["uri", "email"];\n
+        var personNode = this.createElementNSPlus("atom:" + name);\n
+        personNode.appendChild(\n
+            this.createElementNSPlus("atom:name", {\n
+                value: value.name\n
+            })\n
+        );\n
+        for (var i=0, ii=oNames.length; i<ii; i++) {\n
+            if (value[oNames[i]]) {\n
+                personNode.appendChild(\n
+                    this.createElementNSPlus("atom:" + oNames[i], {\n
+                        value: value[oNames[i]]\n
+                    })\n
+                );\n
+            }\n
+        }\n
+        return personNode;\n
+    },\n
+    \n
+    /**\n
+     * Method: getFirstChildValue\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement}\n
+     * nsuri - {String} Child node namespace uri ("*" for any).\n
+     * name - {String} Child node name.\n
+     * def - {String} Optional string default to return if no child found.\n
+     *\n
+     * Returns:\n
+     * {String} The value of the first child with the given tag name.  Returns\n
+     *     default value or empty string if none found.\n
+     */\n
+    getFirstChildValue: function(node, nsuri, name, def) {\n
+        var value;\n
+        var nodes = this.getElementsByTagNameNS(node, nsuri, name);\n
+        if (nodes && nodes.length > 0) {\n
+            value = this.getChildValue(nodes[0], def);\n
+        } else {\n
+            value = def;\n
+        }\n
+        return value;\n
+    },\n
+    \n
+    /**\n
+     * Method: parseFeature\n
+     * Parse feature from an Atom entry node..\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} An Atom entry or feed node.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Feature.Vector>}\n
+     */\n
+    parseFeature: function(node) {\n
+        var atomAttrib = {};\n
+        var value = null;\n
+        var nodes = null;\n
+        var attval = null;\n
+        var atomns = this.namespaces.atom;\n
+        \n
+        // atomAuthor*\n
+        this.parsePersonConstructs(node, "author", atomAttrib);\n
+        \n
+        // atomCategory*\n
+        nodes = this.getElementsByTagNameNS(node, atomns, "category");\n
+        if (nodes.length > 0) {\n
+            atomAttrib.categories = [];\n
+        }\n
+        for (var i=0, ii=nodes.length; i<ii; i++) {\n
+            value = {};\n
+            value.term = nodes[i].getAttribute("term");\n
+            attval = nodes[i].getAttribute("scheme");\n
+            if (attval) { value.scheme = attval; }\n
+            attval = nodes[i].getAttribute("label");\n
+            if (attval) { value.label = attval; }\n
+            atomAttrib.categories.push(value);\n
+        }\n
+        \n
+        // atomContent?\n
+        nodes = this.getElementsByTagNameNS(node, atomns, "content");\n
+        if (nodes.length > 0) {\n
+            value = {};\n
+            attval = nodes[0].getAttribute("type");\n
+            if (attval) {\n
+                value.type = attval;\n
+            }\n
+            attval = nodes[0].getAttribute("src");\n
+            if (attval) {\n
+                value.src = attval;\n
+            } else {\n
+                if (value.type == "text" || \n
+                    value.type == "html" || \n
+                    value.type == null ) {\n
+                    value.value = this.getFirstChildValue(\n
+                                        node,\n
+                                        atomns,\n
+                                        "content",\n
+                                        null\n
+                                        );\n
+                } else if (value.type == "xhtml" ||\n
+                           value.type.match(/(\\+|\\/)xml$/)) {\n
+                    value.value = this.getChildEl(nodes[0]);\n
+                } else { // MUST be base64 encoded\n
+                    value.value = this.getFirstChildValue(\n
+                                        node,\n
+                                        atomns,\n
+                                        "content",\n
+                                        null\n
+                                        );\n
+                }\n
+                atomAttrib.content = value;\n
+            }\n
+        }\n
+        \n
+        // atomContributor*\n
+        this.parsePersonConstructs(node, "contributor", atomAttrib);\n
+        \n
+        // atomId\n
+        atomAttrib.id = this.getFirstChildValue(node, atomns, "id", null);\n
+        \n
+        // atomLink*\n
+        nodes = this.getElementsByTagNameNS(node, atomns, "link");\n
+        if (nodes.length > 0) {\n
+            atomAttrib.links = new Array(nodes.length);\n
+        }\n
+        var oAtts = ["rel", "type", "hreflang", "title", "length"];\n
+        for (var i=0, ii=nodes.length; i<ii; i++) {\n
+            value = {};\n
+            value.href = nodes[i].getAttribute("href");\n
+            for (var j=0, jj=oAtts.length; j<jj; j++) {\n
+                attval = nodes[i].getAttribute(oAtts[j]);\n
+                if (attval) {\n
+                    value[oAtts[j]] = attval;\n
+                }\n
+            }\n
+            atomAttrib.links[i] = value;\n
+        }\n
+        \n
+        // atomPublished?\n
+        value = this.getFirstChildValue(node, atomns, "published", null);\n
+        if (value) {\n
+            atomAttrib.published = value;\n
+        }\n
+        \n
+        // atomRights?\n
+        value = this.getFirstChildValue(node, atomns, "rights", null);\n
+        if (value) {\n
+            atomAttrib.rights = value;\n
+        }\n
+        \n
+        // atomSource? -- not implemented\n
+        \n
+        // atomSummary?\n
+        value = this.getFirstChildValue(node, atomns, "summary", null);\n
+        if (value) {\n
+            atomAttrib.summary = value;\n
+        }\n
+        \n
+        // atomTitle\n
+        atomAttrib.title = this.getFirstChildValue(\n
+                                node, atomns, "title", null\n
+                                );\n
+        \n
+        // atomUpdated\n
+        atomAttrib.updated = this.getFirstChildValue(\n
+                                node, atomns, "updated", null\n
+                                );\n
+        \n
+        var featureAttrib = {\n
+            title: atomAttrib.title,\n
+            description: atomAttrib.summary,\n
+            atom: atomAttrib\n
+        };\n
+        var geometry = this.parseLocations(node)[0];\n
+        var feature = new OpenLayers.Feature.Vector(geometry, featureAttrib);\n
+        feature.fid = atomAttrib.id;\n
+        return feature;\n
+    },\n
+    \n
+    /**\n
+     * Method: parseFeatures\n
+     * Return features from an Atom entry or feed.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} An Atom entry or feed node.\n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Feature.Vector>})\n
+     */\n
+    parseFeatures: function(node) {\n
+        var features = [];\n
+        var entries = this.getElementsByTagNameNS(\n
+            node, this.namespaces.atom, "entry"\n
+        );\n
+        if (entries.length == 0) {\n
+            entries = [node];\n
+        }\n
+        for (var i=0, ii=entries.length; i<ii; i++) {\n
+            features.push(this.parseFeature(entries[i]));\n
+        }\n
+        return features;\n
+    },\n
+    \n
+    /**\n
+     * Method: parseLocations\n
+     * Parse the locations from an Atom entry or feed.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} An Atom entry or feed node.\n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Geometry>})\n
+     */\n
+    parseLocations: function(node) {\n
+        var georssns = this.namespaces.georss;\n
+\n
+        var locations = {components: []};\n
+        var where = this.getElementsByTagNameNS(node, georssns, "where");\n
+        if (where && where.length > 0) {\n
+            if (!this.gmlParser) {\n
+                this.initGmlParser();\n
+            }\n
+            for (var i=0, ii=where.length; i<ii; i++) {\n
+                this.gmlParser.readChildNodes(where[i], locations);\n
+            }\n
+        }\n
+        \n
+        var components = locations.components;\n
+        var point = this.getElementsByTagNameNS(node, georssns, "point");\n
+        if (point && point.length > 0) {\n
+            for (var i=0, ii=point.length; i<ii; i++) {\n
+                var xy = OpenLayers.String.trim(\n
+                            point[i].firstChild.nodeValue\n
+                            ).split(/\\s+/);\n
+                if (xy.length !=2) {\n
+                    xy = OpenLayers.String.trim(\n
+                                point[i].firstChild.nodeValue\n
+                                ).split(/\\s*,\\s*/);\n
+                }\n
+                components.push(new OpenLayers.Geometry.Point(xy[1], xy[0]));\n
+            }\n
+        }\n
+\n
+        var line = this.getElementsByTagNameNS(node, georssns, "line");\n
+        if (line && line.length > 0) {\n
+            var coords;\n
+            var p;\n
+            var points;\n
+            for (var i=0, ii=line.length; i<ii; i++) {\n
+                coords = OpenLayers.String.trim(\n
+                                line[i].firstChild.nodeValue\n
+                                ).split(/\\s+/);\n
+                points = [];\n
+                for (var j=0, jj=coords.length; j<jj; j+=2) {\n
+                    p = new OpenLayers.Geometry.Point(coords[j+1], coords[j]);\n
+                    points.push(p);\n
+                }\n
+                components.push(\n
+                    new OpenLayers.Geometry.LineString(points)\n
+                );\n
+            }\n
+        }        \n
+\n
+        var polygon = this.getElementsByTagNameNS(node, georssns, "polygon");\n
+        if (polygon && polygon.length > 0) {\n
+            var coords;\n
+            var p;\n
+            var points;\n
+            for (var i=0, ii=polygon.length; i<ii; i++) {\n
+                coords = OpenLayers.String.trim(\n
+                            polygon[i].firstChild.nodeValue\n
+                            ).split(/\\s+/);\n
+                points = [];\n
+                for (var j=0, jj=coords.length; j<jj; j+=2) {\n
+                    p = new OpenLayers.Geometry.Point(coords[j+1], coords[j]);\n
+                    points.push(p);\n
+                }\n
+                components.push(\n
+                    new OpenLayers.Geometry.Polygon(\n
+                        [new OpenLayers.Geometry.LinearRing(components)]\n
+                    )\n
+                );\n
+            }\n
+        }\n
+        \n
+        if (this.internalProjection && this.externalProjection) {\n
+            for (var i=0, ii=components.length; i<ii; i++) {\n
+                if (components[i]) {\n
+                    components[i].transform(\n
+                        this.externalProjection,\n
+                        this.internalProjection\n
+                    );\n
+                }\n
+            }\n
+        }\n
+        \n
+        return components;\n
+    },\n
+    \n
+    /**\n
+     * Method: parsePersonConstruct\n
+     * Parse Atom person constructs from an Atom entry node.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} An Atom entry or feed node.\n
+     * name - {String} Construcy name ("author" or "contributor")\n
+     * data = {Object} Object in which to put parsed persons.\n
+     *\n
+     * Returns:\n
+     * An {Object}.\n
+     */\n
+    parsePersonConstructs: function(node, name, data) {\n
+        var persons = [];\n
+        var atomns = this.namespaces.atom;\n
+        var nodes = this.getElementsByTagNameNS(node, atomns, name);\n
+        var oAtts = ["uri", "email"];\n
+        for (var i=0, ii=nodes.length; i<ii; i++) {\n
+            var value = {};\n
+            value.name = this.getFirstChildValue(\n
+                            nodes[i],\n
+                            atomns,\n
+                            "name",\n
+                            null\n
+                            );\n
+            for (var j=0, jj=oAtts.length; j<jj; j++) {\n
+                var attval = this.getFirstChildValue(\n
+                            nodes[i],\n
+                            atomns,\n
+                            oAtts[j],\n
+                            null);\n
+                if (attval) {\n
+                    value[oAtts[j]] = attval;\n
+                }\n
+            }\n
+            persons.push(value);\n
+        }\n
+        if (persons.length > 0) {\n
+            data[name + "s"] = persons;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.Atom"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>23184</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

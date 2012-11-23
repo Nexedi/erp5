@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cs-CZ.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Mormegil\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["cs-CZ"]\n
+ * Dictionary for Česky.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["cs-CZ"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Nezpracovaná návratová hodnota ${statusText}",\n
+\n
+    \'Permalink\': "Trvalý odkaz",\n
+\n
+    \'Overlays\': "Překryvné vrstvy",\n
+\n
+    \'Base Layer\': "Podkladové vrstvy",\n
+\n
+    \'noFID\': "Nelze aktualizovat prvek, pro který neexistuje FID.",\n
+\n
+    \'browserNotSupported\': "Váš prohlížeč nepodporuje vykreslování vektorů. Momentálně podporované nástroje jsou::\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Vlastnost minZoomLevel by se měla používat pouze s potomky FixedZoomLevels vrstvami. To znamená, že vrstva wfs kontroluje, zda-li minZoomLevel není zbytek z minulosti.Nelze to ovšem vyjmout bez možnosti, že bychom rozbili aplikace postavené na OL, které by na tom mohly záviset. Proto tuto vlastnost nedoporučujeme používat --  kontrola minZoomLevel bude odstraněna ve verzi 3.0. Použijte prosím raději nastavení min/max podle příkaldu popsaného na: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS Transaction: ÚSPĚCH ${response}",\n
+\n
+    \'commitFailed\': "WFS Transaction: CHYBA ${response}",\n
+\n
+    \'googleWarning\': "Nepodařilo se správně načíst vrstvu Google.\\x3cbr\\x3e\\x3cbr\\x3eAbyste se zbavili této zprávy, zvolte jinou základní vrstvu v přepínači vrstev.\\x3cbr\\x3e\\x3cbr\\x3eTo se většinou stává, pokud nebyl načten skript, nebo neobsahuje správný klíč pro API pro tuto stránku.\\x3cbr\\x3e\\x3cbr\\x3eVývojáři: Pro pomoc, aby tohle fungovalo , \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3eklikněte sem\\x3c/a\\x3e",\n
+\n
+    \'getLayerWarning\': "The ${layerType} Layer was unable to load correctly.\\x3cbr\\x3e\\x3cbr\\x3eTo get rid of this message, select a new BaseLayer in the layer switcher in the upper-right corner.\\x3cbr\\x3e\\x3cbr\\x3eMost likely, this is because the ${layerLib} library script was either not correctly included.\\x3cbr\\x3e\\x3cbr\\x3eDevelopers: For help getting this working correctly, \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3eclick here\\x3c/a\\x3e",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Měřítko = 1 : ${scaleDenom}",\n
+\n
+    \'reprojectDeprecated\': "Použil jste volbu \\\'reproject\\\' ve vrstvě ${layerName}. Tato volba není doporučená: byla zde proto, aby bylo možno zobrazovat data z okomerčních serverů, ale tato funkce je nyní zajištěna pomocí podpory Spherical Mercator. Více informací naleznete na http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    \'methodDeprecated\': "Tato metoda je zavržená a bude ve verzi 3.0 odstraněna. Prosím, použijte raději ${newMethod}."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2997</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_0_0_GeoServer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/SLD/v1_0_0.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.SLD/v1_0_0_GeoServer\n
+ * Read and write SLD version 1.0.0 with GeoServer-specific enhanced options.\n
+ * See http://svn.osgeo.org/geotools/trunk/modules/extension/xsd/xsd-sld/src/main/resources/org/geotools/sld/bindings/StyledLayerDescriptor.xsd\n
+ * for more information.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.SLD.v1_0_0>\n
+ */\n
+OpenLayers.Format.SLD.v1_0_0_GeoServer = OpenLayers.Class(\n
+    OpenLayers.Format.SLD.v1_0_0, {\n
+\n
+    /**\n
+     * Property: version\n
+     * {String} The specific parser version.\n
+     */\n
+    version: "1.0.0",\n
+\n
+    /**\n
+     * Property: profile\n
+     * {String} The specific profile\n
+     */\n
+    profile: "GeoServer",\n
+\n
+   /**\n
+     * Constructor: OpenLayers.Format.SLD.v1_0_0_GeoServer\n
+     * Create a new parser for GeoServer-enhanced SLD version 1.0.0.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: OpenLayers.Util.applyDefaults({\n
+        "sld": OpenLayers.Util.applyDefaults({\n
+            "Priority": function(node, obj) {\n
+                var value = this.readers.ogc._expression.call(this, node);\n
+                if (value) {\n
+                    obj.priority = value;\n
+                }\n
+            },\n
+            "VendorOption": function(node, obj) {\n
+                if (!obj.vendorOptions) {\n
+                    obj.vendorOptions = {};\n
+                }\n
+                obj.vendorOptions[node.getAttribute("name")] = this.getChildValue(node);\n
+            }\n
+        }, OpenLayers.Format.SLD.v1_0_0.prototype.readers["sld"])\n
+    }, OpenLayers.Format.SLD.v1_0_0.prototype.readers),\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: OpenLayers.Util.applyDefaults({\n
+        "sld": OpenLayers.Util.applyDefaults({\n
+            "Priority": function(priority) {\n
+                return this.writers.sld._OGCExpression.call(\n
+                    this, "sld:Priority", priority\n
+                );\n
+            },\n
+            "VendorOption": function(option) {\n
+                return this.createElementNSPlus("sld:VendorOption", {\n
+                    attributes: {name: option.name},\n
+                    value: option.value\n
+                });\n
+            },\n
+            "TextSymbolizer": function(symbolizer) {\n
+                var writers = OpenLayers.Format.SLD.v1_0_0.prototype.writers;\n
+                var node = writers["sld"]["TextSymbolizer"].apply(this, arguments);\n
+                if (symbolizer.graphic !== false && (symbolizer.externalGraphic || symbolizer.graphicName)) {\n
+                    this.writeNode("Graphic", symbolizer, node);\n
+                }\n
+                if ("priority" in symbolizer) {\n
+                    this.writeNode("Priority", symbolizer.priority, node);\n
+                }\n
+                return this.addVendorOptions(node, symbolizer);\n
+            },\n
+            "PointSymbolizer": function(symbolizer) {\n
+                var writers = OpenLayers.Format.SLD.v1_0_0.prototype.writers;\n
+                var node = writers["sld"]["PointSymbolizer"].apply(this, arguments);\n
+                return this.addVendorOptions(node, symbolizer);\n
+            },\n
+            "LineSymbolizer": function(symbolizer) {\n
+                var writers = OpenLayers.Format.SLD.v1_0_0.prototype.writers;\n
+                var node = writers["sld"]["LineSymbolizer"].apply(this, arguments);\n
+                return this.addVendorOptions(node, symbolizer);\n
+            },\n
+            "PolygonSymbolizer": function(symbolizer) {\n
+                var writers = OpenLayers.Format.SLD.v1_0_0.prototype.writers;\n
+                var node = writers["sld"]["PolygonSymbolizer"].apply(this, arguments);\n
+                return this.addVendorOptions(node, symbolizer);\n
+            }\n
+        }, OpenLayers.Format.SLD.v1_0_0.prototype.writers["sld"])\n
+    }, OpenLayers.Format.SLD.v1_0_0.prototype.writers),\n
+\n
+    /**\n
+     * Method: addVendorOptions\n
+     * Add in the VendorOption tags and return the node again.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} A DOM node.\n
+     * symbolizer - {Object}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A DOM node.\n
+     */\n
+    addVendorOptions: function(node, symbolizer) {\n
+        var options = symbolizer.vendorOptions;\n
+        if (options) {\n
+            for (var key in symbolizer.vendorOptions) {\n
+                this.writeNode("VendorOption", {\n
+                    name: key, \n
+                    value: symbolizer.vendorOptions[key]\n
+                }, node);\n
+            }\n
+        }\n
+        return node;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.SLD.v1_0_0_GeoServer"\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5438</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

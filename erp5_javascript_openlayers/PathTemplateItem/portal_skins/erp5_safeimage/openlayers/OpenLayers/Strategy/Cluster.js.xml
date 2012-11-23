@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Cluster.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Strategy.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Strategy.Cluster\n
+ * Strategy for vector feature clustering.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Strategy>\n
+ */\n
+OpenLayers.Strategy.Cluster = OpenLayers.Class(OpenLayers.Strategy, {\n
+    \n
+    /**\n
+     * APIProperty: distance\n
+     * {Integer} Pixel distance between features that should be considered a\n
+     *     single cluster.  Default is 20 pixels.\n
+     */\n
+    distance: 20,\n
+    \n
+    /**\n
+     * APIProperty: threshold\n
+     * {Integer} Optional threshold below which original features will be\n
+     *     added to the layer instead of clusters.  For example, a threshold\n
+     *     of 3 would mean that any time there are 2 or fewer features in\n
+     *     a cluster, those features will be added directly to the layer instead\n
+     *     of a cluster representing those features.  Default is null (which is\n
+     *     equivalent to 1 - meaning that clusters may contain just one feature).\n
+     */\n
+    threshold: null,\n
+    \n
+    /**\n
+     * Property: features\n
+     * {Array(<OpenLayers.Feature.Vector>)} Cached features.\n
+     */\n
+    features: null,\n
+    \n
+    /**\n
+     * Property: clusters\n
+     * {Array(<OpenLayers.Feature.Vector>)} Calculated clusters.\n
+     */\n
+    clusters: null,\n
+    \n
+    /**\n
+     * Property: clustering\n
+     * {Boolean} The strategy is currently clustering features.\n
+     */\n
+    clustering: false,\n
+    \n
+    /**\n
+     * Property: resolution\n
+     * {Float} The resolution (map units per pixel) of the current cluster set.\n
+     */\n
+    resolution: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Strategy.Cluster\n
+     * Create a new clustering strategy.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the strategy.  Register any listeners, do appropriate setup.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Strategy.prototype.activate.call(this);\n
+        if(activated) {\n
+            this.layer.events.on({\n
+                "beforefeaturesadded": this.cacheFeatures,\n
+                "moveend": this.cluster,\n
+                scope: this\n
+            });\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the strategy.  Unregister any listeners, do appropriate\n
+     *     tear-down.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Strategy.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            this.clearCache();\n
+            this.layer.events.un({\n
+                "beforefeaturesadded": this.cacheFeatures,\n
+                "moveend": this.cluster,\n
+                scope: this\n
+            });\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: cacheFeatures\n
+     * Cache features before they are added to the layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The event that this was listening for.  This will come\n
+     *     with a batch of features to be clustered.\n
+     *     \n
+     * Returns:\n
+     * {Boolean} False to stop features from being added to the layer.\n
+     */\n
+    cacheFeatures: function(event) {\n
+        var propagate = true;\n
+        if(!this.clustering) {\n
+            this.clearCache();\n
+            this.features = event.features;\n
+            this.cluster();\n
+            propagate = false;\n
+        }\n
+        return propagate;\n
+    },\n
+    \n
+    /**\n
+     * Method: clearCache\n
+     * Clear out the cached features.\n
+     */\n
+    clearCache: function() {\n
+        this.features = null;\n
+    },\n
+    \n
+    /**\n
+     * Method: cluster\n
+     * Cluster features based on some threshold distance.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The event received when cluster is called as a\n
+     *     result of a moveend event.\n
+     */\n
+    cluster: function(event) {\n
+        if((!event || event.zoomChanged) && this.features) {\n
+            var resolution = this.layer.map.getResolution();\n
+            if(resolution != this.resolution || !this.clustersExist()) {\n
+                this.resolution = resolution;\n
+                var clusters = [];\n
+                var feature, clustered, cluster;\n
+                for(var i=0; i<this.features.length; ++i) {\n
+                    feature = this.features[i];\n
+                    if(feature.geometry) {\n
+                        clustered = false;\n
+                        for(var j=clusters.length-1; j>=0; --j) {\n
+                            cluster = clusters[j];\n
+                            if(this.shouldCluster(cluster, feature)) {\n
+                                this.addToCluster(cluster, feature);\n
+                                clustered = true;\n
+                                break;\n
+                            }\n
+                        }\n
+                        if(!clustered) {\n
+                            clusters.push(this.createCluster(this.features[i]));\n
+                        }\n
+                    }\n
+                }\n
+                this.layer.removeAllFeatures();\n
+                if(clusters.length > 0) {\n
+                    if(this.threshold > 1) {\n
+                        var clone = clusters.slice();\n
+                        clusters = [];\n
+                        var candidate;\n
+                        for(var i=0, len=clone.length; i<len; ++i) {\n
+                            candidate = clone[i];\n
+                            if(candidate.attributes.count < this.threshold) {\n
+                                Array.prototype.push.apply(clusters, candidate.cluster);\n
+                            } else {\n
+                                clusters.push(candidate);\n
+                            }\n
+                        }\n
+                    }\n
+                    this.clustering = true;\n
+                    // A legitimate feature addition could occur during this\n
+                    // addFeatures call.  For clustering to behave well, features\n
+                    // should be removed from a layer before requesting a new batch.\n
+                    this.layer.addFeatures(clusters);\n
+                    this.clustering = false;\n
+                }\n
+                this.clusters = clusters;\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: clustersExist\n
+     * Determine whether calculated clusters are already on the layer.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The calculated clusters are already on the layer.\n
+     */\n
+    clustersExist: function() {\n
+        var exist = false;\n
+        if(this.clusters && this.clusters.length > 0 &&\n
+           this.clusters.length == this.layer.features.length) {\n
+            exist = true;\n
+            for(var i=0; i<this.clusters.length; ++i) {\n
+                if(this.clusters[i] != this.layer.features[i]) {\n
+                    exist = false;\n
+                    break;\n
+                }\n
+            }\n
+        }\n
+        return exist;\n
+    },\n
+    \n
+    /**\n
+     * Method: shouldCluster\n
+     * Determine whether to include a feature in a given cluster.\n
+     *\n
+     * Parameters:\n
+     * cluster - {<OpenLayers.Feature.Vector>} A cluster.\n
+     * feature - {<OpenLayers.Feature.Vector>} A feature.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The feature should be included in the cluster.\n
+     */\n
+    shouldCluster: function(cluster, feature) {\n
+        var cc = cluster.geometry.getBounds().getCenterLonLat();\n
+        var fc = feature.geometry.getBounds().getCenterLonLat();\n
+        var distance = (\n
+            Math.sqrt(\n
+                Math.pow((cc.lon - fc.lon), 2) + Math.pow((cc.lat - fc.lat), 2)\n
+            ) / this.resolution\n
+        );\n
+        return (distance <= this.distance);\n
+    },\n
+    \n
+    /**\n
+     * Method: addToCluster\n
+     * Add a feature to a cluster.\n
+     *\n
+     * Parameters:\n
+     * cluster - {<OpenLayers.Feature.Vector>} A cluster.\n
+     * feature - {<OpenLayers.Feature.Vector>} A feature.\n
+     */\n
+    addToCluster: function(cluster, feature) {\n
+        cluster.cluster.push(feature);\n
+        cluster.attributes.count += 1;\n
+    },\n
+    \n
+    /**\n
+     * Method: createCluster\n
+     * Given a feature, create a cluster.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Feature.Vector>} A cluster.\n
+     */\n
+    createCluster: function(feature) {\n
+        var center = feature.geometry.getBounds().getCenterLonLat();\n
+        var cluster = new OpenLayers.Feature.Vector(\n
+            new OpenLayers.Geometry.Point(center.lon, center.lat),\n
+            {count: 1}\n
+        );\n
+        cluster.cluster = [feature];\n
+        return cluster;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Strategy.Cluster" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8958</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

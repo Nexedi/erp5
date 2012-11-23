@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Style2.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Rule.js\n
+ * @requires OpenLayers/Symbolizer/Point.js\n
+ * @requires OpenLayers/Symbolizer/Line.js\n
+ * @requires OpenLayers/Symbolizer/Polygon.js\n
+ * @requires OpenLayers/Symbolizer/Text.js\n
+ * @requires OpenLayers/Symbolizer/Raster.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Style2\n
+ * This class represents a collection of rules for rendering features.\n
+ */\n
+OpenLayers.Style2 = OpenLayers.Class({\n
+\n
+    /**\n
+     * Property: id\n
+     * {String} A unique id for this session.\n
+     */\n
+    id: null,\n
+    \n
+    /**\n
+     * APIProperty: name\n
+     * {String} Style identifier.\n
+     */\n
+    name: null,\n
+    \n
+    /**\n
+     * APIProperty: title\n
+     * {String} Title of this style.\n
+     */\n
+    title: null,\n
+    \n
+    /**\n
+     * APIProperty: description\n
+     * {String} Description of this style.\n
+     */\n
+    description: null,\n
+\n
+    /**\n
+     * APIProperty: layerName\n
+     * {<String>} Name of the layer that this style belongs to, usually\n
+     *     according to the NamedLayer attribute of an SLD document.\n
+     */\n
+    layerName: null,\n
+    \n
+    /**\n
+     * APIProperty: isDefault\n
+     * {Boolean}\n
+     */\n
+    isDefault: false,\n
+     \n
+    /** \n
+     * APIProperty: rules \n
+     * {Array(<OpenLayers.Rule>)} Collection of rendering rules.\n
+     */\n
+    rules: null,\n
+    \n
+    /** \n
+     * Constructor: OpenLayers.Style2\n
+     * Creates a style representing a collection of rendering rules.\n
+     *\n
+     * Parameters:\n
+     * config - {Object} An object containing properties to be set on the \n
+     *     style.  Any documented properties may be set at construction.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Style2>} A new style object.\n
+     */\n
+    initialize: function(config) {\n
+        OpenLayers.Util.extend(this, config);\n
+        this.id = OpenLayers.Util.createUniqueID(this.CLASS_NAME + "_");\n
+    },\n
+\n
+    /** \n
+     * APIMethod: destroy\n
+     * nullify references to prevent circular references and memory leaks\n
+     */\n
+    destroy: function() {\n
+        for (var i=0, len=this.rules.length; i<len; i++) {\n
+            this.rules[i].destroy();\n
+        }\n
+        delete this.rules;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clone\n
+     * Clones this style.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Style2>} Clone of this style.\n
+     */\n
+    clone: function() {\n
+        var config = OpenLayers.Util.extend({}, this);\n
+        // clone rules\n
+        if (this.rules) {\n
+            config.rules = [];\n
+            for (var i=0, len=this.rules.length; i<len; ++i) {\n
+                config.rules.push(this.rules[i].clone());\n
+            }\n
+        }\n
+        return new OpenLayers.Style2(config);\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Style2"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2912</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

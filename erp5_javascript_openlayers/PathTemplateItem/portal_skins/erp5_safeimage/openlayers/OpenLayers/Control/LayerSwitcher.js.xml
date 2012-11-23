@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LayerSwitcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/** \n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Lang.js\n
+ * @requires OpenLayers/Console.js\n
+ * @requires OpenLayers/Events/buttonclick.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.LayerSwitcher\n
+ * The LayerSwitcher control displays a table of contents for the map. This \n
+ * allows the user interface to switch between BaseLasyers and to show or hide\n
+ * Overlays. By default the switcher is shown minimized on the right edge of \n
+ * the map, the user may expand it by clicking on the handle.\n
+ *\n
+ * To create the LayerSwitcher outside of the map, pass the Id of a html div \n
+ * as the first argument to the constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.LayerSwitcher = \n
+  OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /**\n
+     * APIProperty: roundedCorner\n
+     * {Boolean} If true the Rico library is used for rounding the corners\n
+     *     of the layer switcher div, defaults to false. *Deprecated*. Use\n
+     *     CSS3\'s border-radius instead. If this option is set to true the\n
+     *     Rico/Corner.js script must be loaded in the page, and therefore\n
+     *     listed in the build profile.\n
+     *\n
+     */\n
+    roundedCorner: false,\n
+\n
+    /**  \n
+     * APIProperty: roundedCornerColor\n
+     * {String} The color of the rounded corners, only applies if roundedCorner\n
+     *     is true, defaults to "darkblue".\n
+     */\n
+    roundedCornerColor: "darkblue",\n
+    \n
+    /**  \n
+     * Property: layerStates \n
+     * {Array(Object)} Basically a copy of the "state" of the map\'s layers \n
+     *     the last time the control was drawn. We have this in order to avoid\n
+     *     unnecessarily redrawing the control.\n
+     */\n
+    layerStates: null,\n
+    \n
+\n
+  // DOM Elements\n
+  \n
+    /**\n
+     * Property: layersDiv\n
+     * {DOMElement} \n
+     */\n
+    layersDiv: null,\n
+    \n
+    /** \n
+     * Property: baseLayersDiv\n
+     * {DOMElement}\n
+     */\n
+    baseLayersDiv: null,\n
+\n
+    /** \n
+     * Property: baseLayers\n
+     * {Array(Object)}\n
+     */\n
+    baseLayers: null,\n
+    \n
+    \n
+    /** \n
+     * Property: dataLbl\n
+     * {DOMElement} \n
+     */\n
+    dataLbl: null,\n
+    \n
+    /** \n
+     * Property: dataLayersDiv\n
+     * {DOMElement} \n
+     */\n
+    dataLayersDiv: null,\n
+\n
+    /** \n
+     * Property: dataLayers\n
+     * {Array(Object)} \n
+     */\n
+    dataLayers: null,\n
+\n
+\n
+    /** \n
+     * Property: minimizeDiv\n
+     * {DOMElement} \n
+     */\n
+    minimizeDiv: null,\n
+\n
+    /** \n
+     * Property: maximizeDiv\n
+     * {DOMElement} \n
+     */\n
+    maximizeDiv: null,\n
+    \n
+    /**\n
+     * APIProperty: ascending\n
+     * {Boolean} \n
+     */\n
+    ascending: true,\n
+ \n
+    /**\n
+     * Constructor: OpenLayers.Control.LayerSwitcher\n
+     * \n
+     * Parameters:\n
+     * options - {Object}\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);\n
+        this.layerStates = [];\n
+        \n
+        if(this.roundedCorner) {\n
+            OpenLayers.Console.warn(\'roundedCorner option is deprecated\');\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy \n
+     */    \n
+    destroy: function() {\n
+        \n
+        //clear out layers info and unregister their events \n
+        this.clearLayersArray("base");\n
+        this.clearLayersArray("data");\n
+        \n
+        this.map.events.un({\n
+            buttonclick: this.onButtonClick,\n
+            addlayer: this.redraw,\n
+            changelayer: this.redraw,\n
+            removelayer: this.redraw,\n
+            changebaselayer: this.redraw,\n
+            scope: this\n
+        });\n
+        this.events.unregister("buttonclick", this, this.onButtonClick);\n
+        \n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+    },\n
+\n
+    /** \n
+     * Method: setMap\n
+     *\n
+     * Properties:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+\n
+        this.map.events.on({\n
+            addlayer: this.redraw,\n
+            changelayer: this.redraw,\n
+            removelayer: this.redraw,\n
+            changebaselayer: this.redraw,\n
+            scope: this\n
+        });\n
+        if (this.outsideViewport) {\n
+            this.events.attachToElement(this.div);\n
+            this.events.register("buttonclick", this, this.onButtonClick);\n
+        } else {\n
+            this.map.events.register("buttonclick", this, this.onButtonClick);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A reference to the DIV DOMElement containing the \n
+     *     switcher tabs.\n
+     */  \n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this);\n
+\n
+        // create layout divs\n
+        this.loadContents();\n
+\n
+        // set mode to minimize\n
+        if(!this.outsideViewport) {\n
+            this.minimizeControl();\n
+        }\n
+\n
+        // populate div with current info\n
+        this.redraw();    \n
+\n
+        return this.div;\n
+    },\n
+\n
+    /**\n
+     * Method: onButtonClick\n
+     *\n
+     * Parameters:\n
+     * evt - {Event}\n
+     */\n
+    onButtonClick: function(evt) {\n
+        var button = evt.buttonElement;\n
+        if (button === this.minimizeDiv) {\n
+            this.minimizeControl();\n
+        } else if (button === this.maximizeDiv) {\n
+            this.maximizeControl();\n
+        } else if (button._layerSwitcher === this.id) {\n
+            if (button["for"]) {\n
+                button = document.getElementById(button["for"]);\n
+            }\n
+            if (!button.disabled) {\n
+                if (button.type == "radio") {\n
+                    button.checked = true;\n
+                    this.map.setBaseLayer(this.map.getLayer(button._layer));\n
+                } else {\n
+                    button.checked = !button.checked;\n
+                    this.updateMap();\n
+                }\n
+            }\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: clearLayersArray\n
+     * User specifies either "base" or "data". we then clear all the\n
+     *     corresponding listeners, the div, and reinitialize a new array.\n
+     * \n
+     * Parameters:\n
+     * layersType - {String}  \n
+     */\n
+    clearLayersArray: function(layersType) {\n
+        this[layersType + "LayersDiv"].innerHTML = "";\n
+        this[layersType + "Layers"] = [];\n
+    },\n
+\n
+\n
+    /**\n
+     * Method: checkRedraw\n
+     * Checks if the layer state has changed since the last redraw() call.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The layer state changed since the last redraw() call. \n
+     */\n
+    checkRedraw: function() {\n
+        var redraw = false;\n
+        if ( !this.layerStates.length ||\n
+             (this.map.layers.length != this.layerStates.length) ) {\n
+            redraw = true;\n
+        } else {\n
+            for (var i=0, len=this.layerStates.length; i<len; i++) {\n
+                var layerState = this.layerStates[i];\n
+                var layer = this.map.layers[i];\n
+                if ( (layerState.name != layer.name) || \n
+                     (layerState.inRange != layer.inRange) || \n
+                     (layerState.id != layer.id) || \n
+                     (layerState.visibility != layer.visibility) ) {\n
+                    redraw = true;\n
+                    break;\n
+                }    \n
+            }\n
+        }    \n
+        return redraw;\n
+    },\n
+    \n
+    /** \n
+     * Method: redraw\n
+     * Goes through and takes the current state of the Map and rebuilds the\n
+     *     control to display that state. Groups base layers into a \n
+     *     radio-button group and lists each data layer with a checkbox.\n
+     *\n
+     * Returns: \n
+     * {DOMElement} A reference to the DIV DOMElement containing the control\n
+     */  \n
+    redraw: function() {\n
+        //if the state hasn\'t changed since last redraw, no need \n
+        // to do anything. Just return the existing div.\n
+        if (!this.checkRedraw()) { \n
+            return this.div; \n
+        } \n
+\n
+        //clear out previous layers \n
+        this.clearLayersArray("base");\n
+        this.clearLayersArray("data");\n
+        \n
+        var containsOverlays = false;\n
+        var containsBaseLayers = false;\n
+        \n
+        // Save state -- for checking layer if the map state changed.\n
+        // We save this before redrawing, because in the process of redrawing\n
+        // we will trigger more visibility changes, and we want to not redraw\n
+        // and enter an infinite loop.\n
+        var len = this.map.layers.length;\n
+        this.layerStates = new Array(len);\n
+        for (var i=0; i <len; i++) {\n
+            var layer = this.map.layers[i];\n
+            this.layerStates[i] = {\n
+                \'name\': layer.name, \n
+                \'visibility\': layer.visibility,\n
+                \'inRange\': layer.inRange,\n
+                \'id\': layer.id\n
+            };\n
+        }    \n
+\n
+        var layers = this.map.layers.slice();\n
+        if (!this.ascending) { layers.reverse(); }\n
+        for(var i=0, len=layers.length; i<len; i++) {\n
+            var layer = layers[i];\n
+            var baseLayer = layer.isBaseLayer;\n
+\n
+            if (layer.displayInLayerSwitcher) {\n
+\n
+                if (baseLayer) {\n
+                    containsBaseLayers = true;\n
+                } else {\n
+                    containsOverlays = true;\n
+                }    \n
+\n
+                // only check a baselayer if it is *the* baselayer, check data\n
+                //  layers if they are visible\n
+                var checked = (baseLayer) ? (layer == this.map.baseLayer)\n
+                                          : layer.getVisibility();\n
+    \n
+                // create input element\n
+                var inputElem = document.createElement("input");\n
+                inputElem.id = this.id + "_input_" + layer.name;\n
+                inputElem.name = (baseLayer) ? this.id + "_baseLayers" : layer.name;\n
+                inputElem.type = (baseLayer) ? "radio" : "checkbox";\n
+                inputElem.value = layer.name;\n
+                inputElem.checked = checked;\n
+                inputElem.defaultChecked = checked;\n
+                inputElem.className = "olButton";\n
+                inputElem._layer = layer.id;\n
+                inputElem._layerSwitcher = this.id;\n
+\n
+                if (!baseLayer && !layer.inRange) {\n
+                    inputElem.disabled = true;\n
+                }\n
+                \n
+                // create span\n
+                var labelSpan = document.createElement("label");\n
+                labelSpan["for"] = inputElem.id;\n
+                OpenLayers.Element.addClass(labelSpan, "labelSpan olButton");\n
+                labelSpan._layer = layer.id;\n
+                labelSpan._layerSwitcher = this.id;\n
+                if (!baseLayer && !layer.inRange) {\n
+                    labelSpan.style.color = "gray";\n
+                }\n
+                labelSpan.innerHTML = layer.name;\n
+                labelSpan.style.verticalAlign = (baseLayer) ? "bottom" \n
+                                                            : "baseline";\n
+                // create line break\n
+                var br = document.createElement("br");\n
+    \n
+                \n
+                var groupArray = (baseLayer) ? this.baseLayers\n
+                                             : this.dataLayers;\n
+                groupArray.push({\n
+                    \'layer\': layer,\n
+                    \'inputElem\': inputElem,\n
+                    \'labelSpan\': labelSpan\n
+                });\n
+                                                     \n
+    \n
+                var groupDiv = (baseLayer) ? this.baseLayersDiv\n
+                                           : this.dataLayersDiv;\n
+                groupDiv.appendChild(inputElem);\n
+                groupDiv.appendChild(labelSpan);\n
+                groupDiv.appendChild(br);\n
+            }\n
+        }\n
+\n
+        // if no overlays, dont display the overlay label\n
+        this.dataLbl.style.display = (containsOverlays) ? "" : "none";        \n
+        \n
+        // if no baselayers, dont display the baselayer label\n
+        this.baseLbl.style.display = (containsBaseLayers) ? "" : "none";        \n
+\n
+        return this.div;\n
+    },\n
+\n
+    /** \n
+     * Method: updateMap\n
+     * Cycles through the loaded data and base layer input arrays and makes\n
+     *     the necessary calls to the Map object such that that the map\'s \n
+     *     visual state corresponds to what the user has selected in \n
+     *     the control.\n
+     */\n
+    updateMap: function() {\n
+\n
+        // set the newly selected base layer        \n
+        for(var i=0, len=this.baseLayers.length; i<len; i++) {\n
+            var layerEntry = this.baseLayers[i];\n
+            if (layerEntry.inputElem.checked) {\n
+                this.map.setBaseLayer(layerEntry.layer, false);\n
+            }\n
+        }\n
+\n
+        // set the correct visibilities for the overlays\n
+        for(var i=0, len=this.dataLayers.length; i<len; i++) {\n
+            var layerEntry = this.dataLayers[i];   \n
+            layerEntry.layer.setVisibility(layerEntry.inputElem.checked);\n
+        }\n
+\n
+    },\n
+\n
+    /** \n
+     * Method: maximizeControl\n
+     * Set up the labels and divs for the control\n
+     * \n
+     * Parameters:\n
+     * e - {Event} \n
+     */\n
+    maximizeControl: function(e) {\n
+\n
+        // set the div\'s width and height to empty values, so\n
+        // the div dimensions can be controlled by CSS\n
+        this.div.style.width = "";\n
+        this.div.style.height = "";\n
+\n
+        this.showControls(false);\n
+\n
+        if (e != null) {\n
+            OpenLayers.Event.stop(e);                                            \n
+        }\n
+    },\n
+    \n
+    /** \n
+     * Method: minimizeControl\n
+     * Hide all the contents of the control, shrink the size, \n
+     *     add the maximize icon\n
+     *\n
+     * Parameters:\n
+     * e - {Event} \n
+     */\n
+    minimizeControl: function(e) {\n
+\n
+        // to minimize the control we set its div\'s width\n
+        // and height to 0px, we cannot just set "display"\n
+        // to "none" because it would hide the maximize\n
+        // div\n
+        this.div.style.width = "0px";\n
+        this.div.style.height = "0px";\n
+\n
+        this.showControls(true);\n
+\n
+        if (e != null) {\n
+            OpenLayers.Event.stop(e);                                            \n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: showControls\n
+     * Hide/Show all LayerSwitcher controls depending on whether we are\n
+     *     minimized or not\n
+     * \n
+     * Parameters:\n
+     * minimize - {Boolean}\n
+     */\n
+    showControls: function(minimize) {\n
+\n
+        this.maximizeDiv.style.display = minimize ? "" : "none";\n
+        this.minimizeDiv.style.display = minimize ? "none" : "";\n
+\n
+        this.layersDiv.style.display = minimize ? "none" : "";\n
+    },\n
+    \n
+    /** \n
+     * Method: loadContents\n
+     * Set up the labels and divs for the control\n
+     */\n
+    loadContents: function() {\n
+\n
+        // layers list div        \n
+        this.layersDiv = document.createElement("div");\n
+        this.layersDiv.id = this.id + "_layersDiv";\n
+        OpenLayers.Element.addClass(this.layersDiv, "layersDiv");\n
+\n
+        this.baseLbl = document.createElement("div");\n
+        this.baseLbl.innerHTML = OpenLayers.i18n("Base Layer");\n
+        OpenLayers.Element.addClass(this.baseLbl, "baseLbl");\n
+        \n
+        this.baseLayersDiv = document.createElement("div");\n
+        OpenLayers.Element.addClass(this.baseLayersDiv, "baseLayersDiv");\n
+\n
+        this.dataLbl = document.createElement("div");\n
+        this.dataLbl.innerHTML = OpenLayers.i18n("Overlays");\n
+        OpenLayers.Element.addClass(this.dataLbl, "dataLbl");\n
+        \n
+        this.dataLayersDiv = document.createElement("div");\n
+        OpenLayers.Element.addClass(this.dataLayersDiv, "dataLayersDiv");\n
+\n
+        if (this.ascending) {\n
+            this.layersDiv.appendChild(this.baseLbl);\n
+            this.layersDiv.appendChild(this.baseLayersDiv);\n
+            this.layersDiv.appendChild(this.dataLbl);\n
+            this.layersDiv.appendChild(this.dataLayersDiv);\n
+        } else {\n
+            this.layersDiv.appendChild(this.dataLbl);\n
+            this.layersDiv.appendChild(this.dataLayersDiv);\n
+            this.layersDiv.appendChild(this.baseLbl);\n
+            this.layersDiv.appendChild(this.baseLayersDiv);\n
+        }    \n
+ \n
+        this.div.appendChild(this.layersDiv);\n
+\n
+        if(this.roundedCorner) {\n
+            OpenLayers.Rico.Corner.round(this.div, {\n
+                corners: "tl bl",\n
+                bgColor: "transparent",\n
+                color: this.roundedCornerColor,\n
+                blend: false\n
+            });\n
+            OpenLayers.Rico.Corner.changeOpacity(this.layersDiv, 0.75);\n
+        }\n
+\n
+        // maximize button div\n
+        var img = OpenLayers.Util.getImageLocation(\'layer-switcher-maximize.png\');\n
+        this.maximizeDiv = OpenLayers.Util.createAlphaImageDiv(\n
+                                    "OpenLayers_Control_MaximizeDiv", \n
+                                    null, \n
+                                    null, \n
+                                    img, \n
+                                    "absolute");\n
+        OpenLayers.Element.addClass(this.maximizeDiv, "maximizeDiv olButton");\n
+        this.maximizeDiv.style.display = "none";\n
+        \n
+        this.div.appendChild(this.maximizeDiv);\n
+\n
+        // minimize button div\n
+        var img = OpenLayers.Util.getImageLocation(\'layer-switcher-minimize.png\');\n
+        this.minimizeDiv = OpenLayers.Util.createAlphaImageDiv(\n
+                                    "OpenLayers_Control_MinimizeDiv", \n
+                                    null, \n
+                                    null, \n
+                                    img, \n
+                                    "absolute");\n
+        OpenLayers.Element.addClass(this.minimizeDiv, "minimizeDiv olButton");\n
+        this.minimizeDiv.style.display = "none";\n
+\n
+        this.div.appendChild(this.minimizeDiv);\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Control.LayerSwitcher"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17640</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

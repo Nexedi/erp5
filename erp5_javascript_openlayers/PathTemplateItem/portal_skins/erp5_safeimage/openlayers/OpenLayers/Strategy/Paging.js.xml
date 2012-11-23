@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Paging.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Strategy.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Strategy.Paging\n
+ * Strategy for vector feature paging\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Strategy>\n
+ */\n
+OpenLayers.Strategy.Paging = OpenLayers.Class(OpenLayers.Strategy, {\n
+    \n
+    /**\n
+     * Property: features\n
+     * {Array(<OpenLayers.Feature.Vector>)} Cached features.\n
+     */\n
+    features: null,\n
+    \n
+    /**\n
+     * Property: length\n
+     * {Integer} Number of features per page.  Default is 10.\n
+     */\n
+    length: 10,\n
+    \n
+    /**\n
+     * Property: num\n
+     * {Integer} The currently displayed page number.\n
+     */\n
+    num: null,\n
+    \n
+    /**\n
+     * Property: paging\n
+     * {Boolean} The strategy is currently changing pages.\n
+     */\n
+    paging: false,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Strategy.Paging\n
+     * Create a new paging strategy.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the strategy.  Register any listeners, do appropriate setup.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Strategy.prototype.activate.call(this);\n
+        if(activated) {\n
+            this.layer.events.on({\n
+                "beforefeaturesadded": this.cacheFeatures,\n
+                scope: this\n
+            });\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the strategy.  Unregister any listeners, do appropriate\n
+     *     tear-down.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Strategy.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            this.clearCache();\n
+            this.layer.events.un({\n
+                "beforefeaturesadded": this.cacheFeatures,\n
+                scope: this\n
+            });\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: cacheFeatures\n
+     * Cache features before they are added to the layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The event that this was listening for.  This will come\n
+     *     with a batch of features to be paged.\n
+     */\n
+    cacheFeatures: function(event) {\n
+        if(!this.paging) {\n
+            this.clearCache();\n
+            this.features = event.features;\n
+            this.pageNext(event);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: clearCache\n
+     * Clear out the cached features.  This destroys features, assuming\n
+     *     nothing else has a reference.\n
+     */\n
+    clearCache: function() {\n
+        if(this.features) {\n
+            for(var i=0; i<this.features.length; ++i) {\n
+                this.features[i].destroy();\n
+            }\n
+        }\n
+        this.features = null;\n
+        this.num = null;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: pageCount\n
+     * Get the total count of pages given the current cache of features.\n
+     *\n
+     * Returns:\n
+     * {Integer} The page count.\n
+     */\n
+    pageCount: function() {\n
+        var numFeatures = this.features ? this.features.length : 0;\n
+        return Math.ceil(numFeatures / this.length);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: pageNum\n
+     * Get the zero based page number.\n
+     *\n
+     * Returns:\n
+     * {Integer} The current page number being displayed.\n
+     */\n
+    pageNum: function() {\n
+        return this.num;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: pageLength\n
+     * Gets or sets page length.\n
+     *\n
+     * Parameters:\n
+     * newLength - {Integer} Optional length to be set.\n
+     *\n
+     * Returns:\n
+     * {Integer} The length of a page (number of features per page).\n
+     */\n
+    pageLength: function(newLength) {\n
+        if(newLength && newLength > 0) {\n
+            this.length = newLength;\n
+        }\n
+        return this.length;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: pageNext\n
+     * Display the next page of features.\n
+     *\n
+     * Returns:\n
+     * {Boolean} A new page was displayed.\n
+     */\n
+    pageNext: function(event) {\n
+        var changed = false;\n
+        if(this.features) {\n
+            if(this.num === null) {\n
+                this.num = -1;\n
+            }\n
+            var start = (this.num + 1) * this.length;\n
+            changed = this.page(start, event);\n
+        }\n
+        return changed;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: pagePrevious\n
+     * Display the previous page of features.\n
+     *\n
+     * Returns:\n
+     * {Boolean} A new page was displayed.\n
+     */\n
+    pagePrevious: function() {\n
+        var changed = false;\n
+        if(this.features) {\n
+            if(this.num === null) {\n
+                this.num = this.pageCount();\n
+            }\n
+            var start = (this.num - 1) * this.length;\n
+            changed = this.page(start);\n
+        }\n
+        return changed;\n
+    },\n
+    \n
+    /**\n
+     * Method: page\n
+     * Display the page starting at the given index from the cache.\n
+     *\n
+     * Returns:\n
+     * {Boolean} A new page was displayed.\n
+     */\n
+    page: function(start, event) {\n
+        var changed = false;\n
+        if(this.features) {\n
+            if(start >= 0 && start < this.features.length) {\n
+                var num = Math.floor(start / this.length);\n
+                if(num != this.num) {\n
+                    this.paging = true;\n
+                    var features = this.features.slice(start, start + this.length);\n
+                    this.layer.removeFeatures(this.layer.features);\n
+                    this.num = num;\n
+                    // modify the event if any\n
+                    if(event && event.features) {\n
+                        // this.was called by an event listener\n
+                        event.features = features;\n
+                    } else {\n
+                        // this was called directly on the strategy\n
+                        this.layer.addFeatures(features);\n
+                    }\n
+                    this.paging = false;\n
+                    changed = true;\n
+                }\n
+            }\n
+        }\n
+        return changed;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Strategy.Paging" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6316</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Protocol.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Protocol\n
+ * Abstract vector layer protocol class.  Not to be instantiated directly.  Use\n
+ *     one of the protocol subclasses instead.\n
+ */\n
+OpenLayers.Protocol = OpenLayers.Class({\n
+    \n
+    /**\n
+     * Property: format\n
+     * {<OpenLayers.Format>} The format used by this protocol.\n
+     */\n
+    format: null,\n
+    \n
+    /**\n
+     * Property: options\n
+     * {Object} Any options sent to the constructor.\n
+     */\n
+    options: null,\n
+\n
+    /**\n
+     * Property: autoDestroy\n
+     * {Boolean} The creator of the protocol can set autoDestroy to false\n
+     *      to fully control when the protocol is destroyed. Defaults to\n
+     *      true.\n
+     */\n
+    autoDestroy: true,\n
+   \n
+    /**\n
+     * Property: defaultFilter\n
+     * {<OpenLayers.Filter>} Optional default filter to read requests\n
+     */\n
+    defaultFilter: null,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Protocol\n
+     * Abstract class for vector protocols.  Create instances of a subclass.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    initialize: function(options) {\n
+        options = options || {};\n
+        OpenLayers.Util.extend(this, options);\n
+        this.options = options;\n
+    },\n
+\n
+    /**\n
+     * Method: mergeWithDefaultFilter\n
+     * Merge filter passed to the read method with the default one\n
+     *\n
+     * Parameters:\n
+     * filter - {<OpenLayers.Filter>}\n
+     */\n
+    mergeWithDefaultFilter: function(filter) {\n
+        var merged;\n
+        if (filter && this.defaultFilter) {\n
+            merged = new OpenLayers.Filter.Logical({\n
+                type: OpenLayers.Filter.Logical.AND,\n
+                filters: [this.defaultFilter, filter]\n
+            });\n
+        } else {\n
+            merged = filter || this.defaultFilter || undefined;\n
+        }\n
+        return merged;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     * Clean up the protocol.\n
+     */\n
+    destroy: function() {\n
+        this.options = null;\n
+        this.format = null;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Construct a request for reading new features.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object for configuring the request.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Protocol.Response>} An <OpenLayers.Protocol.Response>\n
+     * object, the same object will be passed to the callback function passed\n
+     * if one exists in the options object.\n
+     */\n
+    read: function(options) {\n
+        options = options || {};\n
+        options.filter = this.mergeWithDefaultFilter(options.filter);\n
+    },\n
+    \n
+    \n
+    /**\n
+     * APIMethod: create\n
+     * Construct a request for writing newly created features.\n
+     *\n
+     * Parameters:\n
+     * features - {Array({<OpenLayers.Feature.Vector>})} or\n
+     *            {<OpenLayers.Feature.Vector>}\n
+     * options - {Object} Optional object for configuring the request.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Protocol.Response>} An <OpenLayers.Protocol.Response>\n
+     * object, the same object will be passed to the callback function passed\n
+     * if one exists in the options object.\n
+     */\n
+    create: function() {\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: update\n
+     * Construct a request updating modified features.\n
+     *\n
+     * Parameters:\n
+     * features - {Array({<OpenLayers.Feature.Vector>})} or\n
+     *            {<OpenLayers.Feature.Vector>}\n
+     * options - {Object} Optional object for configuring the request.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Protocol.Response>} An <OpenLayers.Protocol.Response>\n
+     * object, the same object will be passed to the callback function passed\n
+     * if one exists in the options object.\n
+     */\n
+    update: function() {\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: delete\n
+     * Construct a request deleting a removed feature.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     * options - {Object} Optional object for configuring the request.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Protocol.Response>} An <OpenLayers.Protocol.Response>\n
+     * object, the same object will be passed to the callback function passed\n
+     * if one exists in the options object.\n
+     */\n
+    "delete": function() {\n
+    },\n
+\n
+    /**\n
+     * APIMethod: commit\n
+     * Go over the features and for each take action\n
+     * based on the feature state. Possible actions are create,\n
+     * update and delete.\n
+     *\n
+     * Parameters:\n
+     * features - {Array({<OpenLayers.Feature.Vector>})}\n
+     * options - {Object} Object whose possible keys are "create", "update",\n
+     *      "delete", "callback" and "scope", the values referenced by the\n
+     *      first three are objects as passed to the "create", "update", and\n
+     *      "delete" methods, the value referenced by the "callback" key is\n
+     *      a function which is called when the commit operation is complete\n
+     *      using the scope referenced by the "scope" key.\n
+     *\n
+     * Returns:\n
+     * {Array({<OpenLayers.Protocol.Response>})} An array of\n
+     * <OpenLayers.Protocol.Response> objects.\n
+     */\n
+    commit: function() {\n
+    },\n
+\n
+    /**\n
+     * Method: abort\n
+     * Abort an ongoing request.\n
+     *\n
+     * Parameters:\n
+     * response - {<OpenLayers.Protocol.Response>}\n
+     */\n
+    abort: function(response) {\n
+    },\n
+   \n
+    /**\n
+     * Method: createCallback\n
+     * Returns a function that applies the given public method with resp and\n
+     *     options arguments.\n
+     *\n
+     * Parameters:\n
+     * method - {Function} The method to be applied by the callback.\n
+     * response - {<OpenLayers.Protocol.Response>} The protocol response object.\n
+     * options - {Object} Options sent to the protocol method\n
+     */\n
+    createCallback: function(method, response, options) {\n
+        return OpenLayers.Function.bind(function() {\n
+            method.apply(this, [response, options]);\n
+        }, this);\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Protocol" \n
+});\n
+\n
+/**\n
+ * Class: OpenLayers.Protocol.Response\n
+ * Protocols return Response objects to their users.\n
+ */\n
+OpenLayers.Protocol.Response = OpenLayers.Class({\n
+    /**\n
+     * Property: code\n
+     * {Number} - OpenLayers.Protocol.Response.SUCCESS or\n
+     *            OpenLayers.Protocol.Response.FAILURE\n
+     */\n
+    code: null,\n
+\n
+    /**\n
+     * Property: requestType\n
+     * {String} The type of request this response corresponds to. Either\n
+     *      "create", "read", "update" or "delete".\n
+     */\n
+    requestType: null,\n
+\n
+    /**\n
+     * Property: last\n
+     * {Boolean} - true if this is the last response expected in a commit,\n
+     * false otherwise, defaults to true.\n
+     */\n
+    last: true,\n
+\n
+    /**\n
+     * Property: features\n
+     * {Array({<OpenLayers.Feature.Vector>})} or {<OpenLayers.Feature.Vector>}\n
+     * The features returned in the response by the server. Depending on the \n
+     * protocol\'s read payload, either features or data will be populated.\n
+     */\n
+    features: null,\n
+\n
+    /**\n
+     * Property: data\n
+     * {Object}\n
+     * The data returned in the response by the server. Depending on the \n
+     * protocol\'s read payload, either features or data will be populated.\n
+     */\n
+    data: null,\n
+\n
+    /**\n
+     * Property: reqFeatures\n
+     * {Array({<OpenLayers.Feature.Vector>})} or {<OpenLayers.Feature.Vector>}\n
+     * The features provided by the user and placed in the request by the\n
+     *      protocol.\n
+     */\n
+    reqFeatures: null,\n
+\n
+    /**\n
+     * Property: priv\n
+     */\n
+    priv: null,\n
+\n
+    /**\n
+     * Property: error\n
+     * {Object} The error object in case a service exception was encountered.\n
+     */\n
+    error: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Protocol.Response\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Util.extend(this, options);\n
+    },\n
+\n
+    /**\n
+     * Method: success\n
+     *\n
+     * Returns:\n
+     * {Boolean} - true on success, false otherwise\n
+     */\n
+    success: function() {\n
+        return this.code > 0;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Protocol.Response"\n
+});\n
+\n
+OpenLayers.Protocol.Response.SUCCESS = 1;\n
+OpenLayers.Protocol.Response.FAILURE = 0;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8408</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ZoomIn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.ZoomIn\n
+ * The ZoomIn control is a button to increase the zoom level of a map.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.ZoomIn = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /**\n
+     * Property: type\n
+     * {String} The type of <OpenLayers.Control> -- When added to a \n
+     *     <Control.Panel>, \'type\' is used by the panel to determine how to \n
+     *     handle our events.\n
+     */\n
+    type: OpenLayers.Control.TYPE_BUTTON,\n
+    \n
+    /**\n
+     * Method: trigger\n
+     */\n
+    trigger: function(){\n
+        this.map.zoomIn();\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.ZoomIn"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>937</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

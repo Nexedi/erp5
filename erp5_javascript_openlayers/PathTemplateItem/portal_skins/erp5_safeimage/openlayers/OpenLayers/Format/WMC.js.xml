@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WMC.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Format/Context.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WMC\n
+ * Read and write Web Map Context documents.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.Context>\n
+ */\n
+OpenLayers.Format.WMC = OpenLayers.Class(OpenLayers.Format.Context, {\n
+    \n
+    /**\n
+     * APIProperty: defaultVersion\n
+     * {String} Version number to assume if none found.  Default is "1.1.0".\n
+     */\n
+    defaultVersion: "1.1.0",\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.WMC\n
+     * Create a new parser for Web Map Context documents.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    \n
+    /**\n
+     * Method: layerToContext\n
+     * Create a layer context object given a wms layer object.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.WMS>} The layer.\n
+     *\n
+     * Returns:\n
+     * {Object} A layer context object.\n
+     */\n
+    layerToContext: function(layer) {\n
+        var parser = this.getParser();\n
+        var layerContext = {\n
+            queryable: layer.queryable,\n
+            visibility: layer.visibility,\n
+            name: layer.params["LAYERS"],\n
+            title: layer.name,\n
+            "abstract": layer.metadata["abstract"],\n
+            dataURL: layer.metadata.dataURL,\n
+            metadataURL: layer.metadataURL,\n
+            server: {\n
+            version: layer.params["VERSION"],\n
+                url: layer.url\n
+            },\n
+            maxExtent: layer.maxExtent,\n
+            transparent: layer.params["TRANSPARENT"],\n
+            numZoomLevels: layer.numZoomLevels,\n
+            units: layer.units,\n
+            isBaseLayer: layer.isBaseLayer,\n
+            opacity: layer.opacity == 1 ? undefined : layer.opacity,\n
+            displayInLayerSwitcher: layer.displayInLayerSwitcher,\n
+            singleTile: layer.singleTile,\n
+            tileSize: (layer.singleTile || !layer.tileSize) ? \n
+                undefined : {width: layer.tileSize.w, height: layer.tileSize.h},\n
+            minScale : (layer.options.resolutions ||\n
+                        layer.options.scales || \n
+                        layer.options.maxResolution || \n
+                        layer.options.minScale) ? \n
+                        layer.minScale : undefined,\n
+            maxScale : (layer.options.resolutions ||\n
+                        layer.options.scales || \n
+                        layer.options.minResolution || \n
+                        layer.options.maxScale) ? \n
+                        layer.maxScale : undefined,\n
+            formats: [],\n
+            styles: [],\n
+            srs: layer.srs,\n
+            dimensions: layer.dimensions\n
+        };\n
+\n
+\n
+        if (layer.metadata.servertitle) {\n
+            layerContext.server.title = layer.metadata.servertitle;\n
+        }\n
+\n
+        if (layer.metadata.formats && layer.metadata.formats.length > 0) {\n
+            for (var i=0, len=layer.metadata.formats.length; i<len; i++) {\n
+                var format = layer.metadata.formats[i];\n
+                layerContext.formats.push({\n
+                    value: format.value,\n
+                    current: (format.value == layer.params["FORMAT"])\n
+                });\n
+            }\n
+        } else {\n
+            layerContext.formats.push({\n
+                value: layer.params["FORMAT"],\n
+                current: true\n
+            });\n
+        }\n
+\n
+        if (layer.metadata.styles && layer.metadata.styles.length > 0) {\n
+            for (var i=0, len=layer.metadata.styles.length; i<len; i++) {\n
+                var style = layer.metadata.styles[i];\n
+                if ((style.href == layer.params["SLD"]) ||\n
+                    (style.body == layer.params["SLD_BODY"]) ||\n
+                    (style.name == layer.params["STYLES"])) {\n
+                    style.current = true;\n
+                } else {\n
+                    style.current = false;\n
+                }\n
+                layerContext.styles.push(style);\n
+            }\n
+        } else {\n
+            layerContext.styles.push({\n
+                href: layer.params["SLD"],\n
+                body: layer.params["SLD_BODY"],\n
+                name: layer.params["STYLES"] || parser.defaultStyleName,\n
+                title: parser.defaultStyleTitle,\n
+                current: true\n
+            });\n
+        }\n
+\n
+        return layerContext;\n
+    },\n
+    \n
+    /**\n
+     * Method: toContext\n
+     * Create a context object free from layer given a map or a\n
+     * context object.\n
+     *\n
+     * Parameters:\n
+     * obj - {<OpenLayers.Map> | Object} The map or context.\n
+     *\n
+     * Returns:\n
+     * {Object} A context object.\n
+     */\n
+    toContext: function(obj) {\n
+        var context = {};\n
+        var layers = obj.layers;\n
+        if (obj.CLASS_NAME == "OpenLayers.Map") {\n
+            var metadata = obj.metadata || {};\n
+            context.size = obj.getSize();\n
+            context.bounds = obj.getExtent();\n
+            context.projection = obj.projection;\n
+            context.title = obj.title;\n
+            context.keywords = metadata.keywords;\n
+            context["abstract"] = metadata["abstract"];\n
+            context.logo = metadata.logo;\n
+            context.descriptionURL = metadata.descriptionURL;\n
+            context.contactInformation = metadata.contactInformation;\n
+            context.maxExtent = obj.maxExtent;\n
+        } else {\n
+            // copy all obj properties except the "layers" property\n
+            OpenLayers.Util.applyDefaults(context, obj);\n
+            if (context.layers != undefined) {\n
+                delete(context.layers);\n
+            }\n
+        }\n
+\n
+        if (context.layersContext == undefined) {\n
+            context.layersContext = [];\n
+        }\n
+\n
+        // let\'s convert layers into layersContext object (if any)\n
+        if (layers != undefined && OpenLayers.Util.isArray(layers)) {\n
+            for (var i=0, len=layers.length; i<len; i++) {\n
+                var layer = layers[i];\n
+                if (layer instanceof OpenLayers.Layer.WMS) {\n
+                    context.layersContext.push(this.layerToContext(layer));\n
+                }\n
+            }\n
+        }\n
+        return context;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WMC" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6353</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

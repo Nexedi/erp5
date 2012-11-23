@@ -1,0 +1,1109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Popup.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+\n
+/**\n
+ * Class: OpenLayers.Popup\n
+ * A popup is a small div that can opened and closed on the map.\n
+ * Typically opened in response to clicking on a marker.  \n
+ * See <OpenLayers.Marker>.  Popup\'s don\'t require their own\n
+ * layer and are added the the map using the <OpenLayers.Map.addPopup>\n
+ * method.\n
+ *\n
+ * Example:\n
+ * (code)\n
+ * popup = new OpenLayers.Popup("chicken", \n
+ *                    new OpenLayers.LonLat(5,40),\n
+ *                    new OpenLayers.Size(200,200),\n
+ *                    "example popup",\n
+ *                    true);\n
+ *       \n
+ * map.addPopup(popup);\n
+ * (end)\n
+ */\n
+OpenLayers.Popup = OpenLayers.Class({\n
+\n
+    /** \n
+     * Property: events  \n
+     * {<OpenLayers.Events>} custom event manager \n
+     */\n
+    events: null,\n
+    \n
+    /** Property: id\n
+     * {String} the unique identifier assigned to this popup.\n
+     */\n
+    id: "",\n
+\n
+    /** \n
+     * Property: lonlat \n
+     * {<OpenLayers.LonLat>} the position of this popup on the map\n
+     */\n
+    lonlat: null,\n
+\n
+    /** \n
+     * Property: div \n
+     * {DOMElement} the div that contains this popup.\n
+     */\n
+    div: null,\n
+\n
+    /** \n
+     * Property: contentSize \n
+     * {<OpenLayers.Size>} the width and height of the content.\n
+     */\n
+    contentSize: null,    \n
+\n
+    /** \n
+     * Property: size \n
+     * {<OpenLayers.Size>} the width and height of the popup.\n
+     */\n
+    size: null,    \n
+\n
+    /** \n
+     * Property: contentHTML \n
+     * {String} An HTML string for this popup to display.\n
+     */\n
+    contentHTML: null,\n
+    \n
+    /** \n
+     * Property: backgroundColor \n
+     * {String} the background color used by the popup.\n
+     */\n
+    backgroundColor: "",\n
+    \n
+    /** \n
+     * Property: opacity \n
+     * {float} the opacity of this popup (between 0.0 and 1.0)\n
+     */\n
+    opacity: "",\n
+\n
+    /** \n
+     * Property: border \n
+     * {String} the border size of the popup.  (eg 2px)\n
+     */\n
+    border: "",\n
+    \n
+    /** \n
+     * Property: contentDiv \n
+     * {DOMElement} a reference to the element that holds the content of\n
+     *              the div.\n
+     */\n
+    contentDiv: null,\n
+    \n
+    /** \n
+     * Property: groupDiv \n
+     * {DOMElement} First and only child of \'div\'. The group Div contains the\n
+     *     \'contentDiv\' and the \'closeDiv\'.\n
+     */\n
+    groupDiv: null,\n
+\n
+    /** \n
+     * Property: closeDiv\n
+     * {DOMElement} the optional closer image\n
+     */\n
+    closeDiv: null,\n
+\n
+    /** \n
+     * APIProperty: autoSize\n
+     * {Boolean} Resize the popup to auto-fit the contents.\n
+     *     Default is false.\n
+     */\n
+    autoSize: false,\n
+\n
+    /**\n
+     * APIProperty: minSize\n
+     * {<OpenLayers.Size>} Minimum size allowed for the popup\'s contents.\n
+     */\n
+    minSize: null,\n
+\n
+    /**\n
+     * APIProperty: maxSize\n
+     * {<OpenLayers.Size>} Maximum size allowed for the popup\'s contents.\n
+     */\n
+    maxSize: null,\n
+\n
+    /** \n
+     * Property: displayClass\n
+     * {String} The CSS class of the popup.\n
+     */\n
+    displayClass: "olPopup",\n
+\n
+    /** \n
+     * Property: contentDisplayClass\n
+     * {String} The CSS class of the popup content div.\n
+     */\n
+    contentDisplayClass: "olPopupContent",\n
+\n
+    /** \n
+     * Property: padding \n
+     * {int or <OpenLayers.Bounds>} An extra opportunity to specify internal \n
+     *     padding of the content div inside the popup. This was originally\n
+     *     confused with the css padding as specified in style.css\'s \n
+     *     \'olPopupContent\' class. We would like to get rid of this altogether,\n
+     *     except that it does come in handy for the framed and anchoredbubble\n
+     *     popups, who need to maintain yet another barrier between their \n
+     *     content and the outer border of the popup itself. \n
+     * \n
+     *     Note that in order to not break API, we must continue to support \n
+     *     this property being set as an integer. Really, though, we\'d like to \n
+     *     have this specified as a Bounds object so that user can specify\n
+     *     distinct left, top, right, bottom paddings. With the 3.0 release\n
+     *     we can make this only a bounds.\n
+     */\n
+    padding: 0,\n
+\n
+    /** \n
+     * Property: disableFirefoxOverflowHack\n
+     * {Boolean} The hack for overflow in Firefox causes all elements \n
+     *     to be re-drawn, which causes Flash elements to be \n
+     *     re-initialized, which is troublesome.\n
+     *     With this property the hack can be disabled.\n
+     */\n
+    disableFirefoxOverflowHack: false,\n
+\n
+    /**\n
+     * Method: fixPadding\n
+     * To be removed in 3.0, this function merely helps us to deal with the \n
+     *     case where the user may have set an integer value for padding, \n
+     *     instead of an <OpenLayers.Bounds> object.\n
+     */\n
+    fixPadding: function() {\n
+        if (typeof this.padding == "number") {\n
+            this.padding = new OpenLayers.Bounds(\n
+                this.padding, this.padding, this.padding, this.padding\n
+            );\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIProperty: panMapIfOutOfView\n
+     * {Boolean} When drawn, pan map such that the entire popup is visible in\n
+     *     the current viewport (if necessary).\n
+     *     Default is false.\n
+     */\n
+    panMapIfOutOfView: false,\n
+    \n
+    /**\n
+     * APIProperty: keepInMap \n
+     * {Boolean} If panMapIfOutOfView is false, and this property is true, \n
+     *     contrain the popup such that it always fits in the available map\n
+     *     space. By default, this is not set on the base class. If you are\n
+     *     creating popups that are near map edges and not allowing pannning,\n
+     *     and especially if you have a popup which has a\n
+     *     fixedRelativePosition, setting this to false may be a smart thing to\n
+     *     do. Subclasses may want to override this setting.\n
+     *   \n
+     *     Default is false.\n
+     */\n
+    keepInMap: false,\n
+\n
+    /**\n
+     * APIProperty: closeOnMove\n
+     * {Boolean} When map pans, close the popup.\n
+     *     Default is false.\n
+     */\n
+    closeOnMove: false,\n
+    \n
+    /** \n
+     * Property: map \n
+     * {<OpenLayers.Map>} this gets set in Map.js when the popup is added to the map\n
+     */\n
+    map: null,\n
+\n
+    /** \n
+    * Constructor: OpenLayers.Popup\n
+    * Create a popup.\n
+    * \n
+    * Parameters: \n
+    * id - {String} a unqiue identifier for this popup.  If null is passed\n
+    *               an identifier will be automatically generated. \n
+    * lonlat - {<OpenLayers.LonLat>}  The position on the map the popup will\n
+    *                                 be shown.\n
+    * contentSize - {<OpenLayers.Size>} The size of the content.\n
+    * contentHTML - {String}          An HTML string to display inside the   \n
+    *                                 popup.\n
+    * closeBox - {Boolean}            Whether to display a close box inside\n
+    *                                 the popup.\n
+    * closeBoxCallback - {Function}   Function to be called on closeBox click.\n
+    */\n
+    initialize:function(id, lonlat, contentSize, contentHTML, closeBox, closeBoxCallback) {\n
+        if (id == null) {\n
+            id = OpenLayers.Util.createUniqueID(this.CLASS_NAME + "_");\n
+        }\n
+\n
+        this.id = id;\n
+        this.lonlat = lonlat;\n
+\n
+        this.contentSize = (contentSize != null) ? contentSize \n
+                                  : new OpenLayers.Size(\n
+                                                   OpenLayers.Popup.WIDTH,\n
+                                                   OpenLayers.Popup.HEIGHT);\n
+        if (contentHTML != null) { \n
+             this.contentHTML = contentHTML;\n
+        }\n
+        this.backgroundColor = OpenLayers.Popup.COLOR;\n
+        this.opacity = OpenLayers.Popup.OPACITY;\n
+        this.border = OpenLayers.Popup.BORDER;\n
+\n
+        this.div = OpenLayers.Util.createDiv(this.id, null, null, \n
+                                             null, null, null, "hidden");\n
+        this.div.className = this.displayClass;\n
+        \n
+        var groupDivId = this.id + "_GroupDiv";\n
+        this.groupDiv = OpenLayers.Util.createDiv(groupDivId, null, null, \n
+                                                    null, "relative", null,\n
+                                                    "hidden");\n
+\n
+        var id = this.div.id + "_contentDiv";\n
+        this.contentDiv = OpenLayers.Util.createDiv(id, null, this.contentSize.clone(), \n
+                                                    null, "relative");\n
+        this.contentDiv.className = this.contentDisplayClass;\n
+        this.groupDiv.appendChild(this.contentDiv);\n
+        this.div.appendChild(this.groupDiv);\n
+\n
+        if (closeBox) {\n
+            this.addCloseBox(closeBoxCallback);\n
+        } \n
+\n
+        this.registerEvents();\n
+    },\n
+\n
+    /** \n
+     * Method: destroy\n
+     * nullify references to prevent circular references and memory leaks\n
+     */\n
+    destroy: function() {\n
+\n
+        this.id = null;\n
+        this.lonlat = null;\n
+        this.size = null;\n
+        this.contentHTML = null;\n
+        \n
+        this.backgroundColor = null;\n
+        this.opacity = null;\n
+        this.border = null;\n
+        \n
+        if (this.closeOnMove && this.map) {\n
+            this.map.events.unregister("movestart", this, this.hide);\n
+        }\n
+\n
+        this.events.destroy();\n
+        this.events = null;\n
+        \n
+        if (this.closeDiv) {\n
+            OpenLayers.Event.stopObservingElement(this.closeDiv); \n
+            this.groupDiv.removeChild(this.closeDiv);\n
+        }\n
+        this.closeDiv = null;\n
+        \n
+        this.div.removeChild(this.groupDiv);\n
+        this.groupDiv = null;\n
+\n
+        if (this.map != null) {\n
+            this.map.removePopup(this);\n
+        }\n
+        this.map = null;\n
+        this.div = null;\n
+        \n
+        this.autoSize = null;\n
+        this.minSize = null;\n
+        this.maxSize = null;\n
+        this.padding = null;\n
+        this.panMapIfOutOfView = null;\n
+    },\n
+\n
+    /** \n
+    * Method: draw\n
+    * Constructs the elements that make up the popup.\n
+    *\n
+    * Parameters:\n
+    * px - {<OpenLayers.Pixel>} the position the popup in pixels.\n
+    * \n
+    * Returns:\n
+    * {DOMElement} Reference to a div that contains the drawn popup\n
+    */\n
+    draw: function(px) {\n
+        if (px == null) {\n
+            if ((this.lonlat != null) && (this.map != null)) {\n
+                px = this.map.getLayerPxFromLonLat(this.lonlat);\n
+            }\n
+        }\n
+\n
+        // this assumes that this.map already exists, which is okay because \n
+        // this.draw is only called once the popup has been added to the map.\n
+        if (this.closeOnMove) {\n
+            this.map.events.register("movestart", this, this.hide);\n
+        }\n
+        \n
+        //listen to movestart, moveend to disable overflow (FF bug)\n
+        if (!this.disableFirefoxOverflowHack && OpenLayers.BROWSER_NAME == \'firefox\') {\n
+            this.map.events.register("movestart", this, function() {\n
+                var style = document.defaultView.getComputedStyle(\n
+                    this.contentDiv, null\n
+                );\n
+                var currentOverflow = style.getPropertyValue("overflow");\n
+                if (currentOverflow != "hidden") {\n
+                    this.contentDiv._oldOverflow = currentOverflow;\n
+                    this.contentDiv.style.overflow = "hidden";\n
+                }\n
+            });\n
+            this.map.events.register("moveend", this, function() {\n
+                var oldOverflow = this.contentDiv._oldOverflow;\n
+                if (oldOverflow) {\n
+                    this.contentDiv.style.overflow = oldOverflow;\n
+                    this.contentDiv._oldOverflow = null;\n
+                }\n
+            });\n
+        }\n
+\n
+        this.moveTo(px);\n
+        if (!this.autoSize && !this.size) {\n
+            this.setSize(this.contentSize);\n
+        }\n
+        this.setBackgroundColor();\n
+        this.setOpacity();\n
+        this.setBorder();\n
+        this.setContentHTML();\n
+        \n
+        if (this.panMapIfOutOfView) {\n
+            this.panIntoView();\n
+        }    \n
+\n
+        return this.div;\n
+    },\n
+\n
+    /** \n
+     * Method: updatePosition\n
+     * if the popup has a lonlat and its map members set, \n
+     * then have it move itself to its proper position\n
+     */\n
+    updatePosition: function() {\n
+        if ((this.lonlat) && (this.map)) {\n
+            var px = this.map.getLayerPxFromLonLat(this.lonlat);\n
+            if (px) {\n
+                this.moveTo(px);           \n
+            }    \n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: moveTo\n
+     * \n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>} the top and left position of the popup div. \n
+     */\n
+    moveTo: function(px) {\n
+        if ((px != null) && (this.div != null)) {\n
+            this.div.style.left = px.x + "px";\n
+            this.div.style.top = px.y + "px";\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: visible\n
+     *\n
+     * Returns:      \n
+     * {Boolean} Boolean indicating whether or not the popup is visible\n
+     */\n
+    visible: function() {\n
+        return OpenLayers.Element.visible(this.div);\n
+    },\n
+\n
+    /**\n
+     * Method: toggle\n
+     * Toggles visibility of the popup.\n
+     */\n
+    toggle: function() {\n
+        if (this.visible()) {\n
+            this.hide();\n
+        } else {\n
+            this.show();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: show\n
+     * Makes the popup visible.\n
+     */\n
+    show: function() {\n
+        this.div.style.display = \'\';\n
+\n
+        if (this.panMapIfOutOfView) {\n
+            this.panIntoView();\n
+        }    \n
+    },\n
+\n
+    /**\n
+     * Method: hide\n
+     * Makes the popup invisible.\n
+     */\n
+    hide: function() {\n
+        this.div.style.display = \'none\';\n
+    },\n
+\n
+    /**\n
+     * Method: setSize\n
+     * Used to adjust the size of the popup. \n
+     *\n
+     * Parameters:\n
+     * contentSize - {<OpenLayers.Size>} the new size for the popup\'s \n
+     *     contents div (in pixels).\n
+     */\n
+    setSize:function(contentSize) { \n
+        this.size = contentSize.clone(); \n
+        \n
+        // if our contentDiv has a css \'padding\' set on it by a stylesheet, we \n
+        //  must add that to the desired "size". \n
+        var contentDivPadding = this.getContentDivPadding();\n
+        var wPadding = contentDivPadding.left + contentDivPadding.right;\n
+        var hPadding = contentDivPadding.top + contentDivPadding.bottom;\n
+\n
+        // take into account the popup\'s \'padding\' property\n
+        this.fixPadding();\n
+        wPadding += this.padding.left + this.padding.right;\n
+        hPadding += this.padding.top + this.padding.bottom;\n
+\n
+        // make extra space for the close div\n
+        if (this.closeDiv) {\n
+            var closeDivWidth = parseInt(this.closeDiv.style.width);\n
+            wPadding += closeDivWidth + contentDivPadding.right;\n
+        }\n
+\n
+        //increase size of the main popup div to take into account the \n
+        // users\'s desired padding and close div.        \n
+        this.size.w += wPadding;\n
+        this.size.h += hPadding;\n
+\n
+        //now if our browser is IE, we need to actually make the contents \n
+        // div itself bigger to take its own padding into effect. this makes \n
+        // me want to shoot someone, but so it goes.\n
+        if (OpenLayers.BROWSER_NAME == "msie") {\n
+            this.contentSize.w += \n
+                contentDivPadding.left + contentDivPadding.right;\n
+            this.contentSize.h += \n
+                contentDivPadding.bottom + contentDivPadding.top;\n
+        }\n
+\n
+        if (this.div != null) {\n
+            this.div.style.width = this.size.w + "px";\n
+            this.div.style.height = this.size.h + "px";\n
+        }\n
+        if (this.contentDiv != null){\n
+            this.contentDiv.style.width = contentSize.w + "px";\n
+            this.contentDiv.style.height = contentSize.h + "px";\n
+        }\n
+    },  \n
+\n
+    /**\n
+     * APIMethod: updateSize\n
+     * Auto size the popup so that it precisely fits its contents (as \n
+     *     determined by this.contentDiv.innerHTML). Popup size will, of\n
+     *     course, be limited by the available space on the current map\n
+     */\n
+    updateSize: function() {\n
+        \n
+        // determine actual render dimensions of the contents by putting its\n
+        // contents into a fake contentDiv (for the CSS) and then measuring it\n
+        var preparedHTML = "<div class=\'" + this.contentDisplayClass+ "\'>" + \n
+            this.contentDiv.innerHTML + \n
+            "</div>";\n
+ \n
+        var containerElement = (this.map) ? this.map.div : document.body;\n
+        var realSize = OpenLayers.Util.getRenderedDimensions(\n
+            preparedHTML, null, {\n
+                displayClass: this.displayClass,\n
+                containerElement: containerElement\n
+            }\n
+        );\n
+\n
+        // is the "real" size of the div is safe to display in our map?\n
+        var safeSize = this.getSafeContentSize(realSize);\n
+\n
+        var newSize = null;\n
+        if (safeSize.equals(realSize)) {\n
+            //real size of content is small enough to fit on the map, \n
+            // so we use real size.\n
+            newSize = realSize;\n
+\n
+        } else {\n
+\n
+            // make a new \'size\' object with the clipped dimensions \n
+            // set or null if not clipped.\n
+            var fixedSize = {\n
+                w: (safeSize.w < realSize.w) ? safeSize.w : null,\n
+                h: (safeSize.h < realSize.h) ? safeSize.h : null\n
+            };\n
+        \n
+            if (fixedSize.w && fixedSize.h) {\n
+                //content is too big in both directions, so we will use \n
+                // max popup size (safeSize), knowing well that it will \n
+                // overflow both ways.                \n
+                newSize = safeSize;\n
+            } else {\n
+                //content is clipped in only one direction, so we need to \n
+                // run getRenderedDimensions() again with a fixed dimension\n
+                var clippedSize = OpenLayers.Util.getRenderedDimensions(\n
+                    preparedHTML, fixedSize, {\n
+                        displayClass: this.contentDisplayClass,\n
+                        containerElement: containerElement\n
+                    }\n
+                );\n
+                \n
+                //if the clipped size is still the same as the safeSize, \n
+                // that means that our content must be fixed in the \n
+                // offending direction. If overflow is \'auto\', this means \n
+                // we are going to have a scrollbar for sure, so we must \n
+                // adjust for that.\n
+                //\n
+                var currentOverflow = OpenLayers.Element.getStyle(\n
+                    this.contentDiv, "overflow"\n
+                );\n
+                if ( (currentOverflow != "hidden") && \n
+                     (clippedSize.equals(safeSize)) ) {\n
+                    var scrollBar = OpenLayers.Util.getScrollbarWidth();\n
+                    if (fixedSize.w) {\n
+                        clippedSize.h += scrollBar;\n
+                    } else {\n
+                        clippedSize.w += scrollBar;\n
+                    }\n
+                }\n
+                \n
+                newSize = this.getSafeContentSize(clippedSize);\n
+            }\n
+        }                        \n
+        this.setSize(newSize);     \n
+    },    \n
+\n
+    /**\n
+     * Method: setBackgroundColor\n
+     * Sets the background color of the popup.\n
+     *\n
+     * Parameters:\n
+     * color - {String} the background color.  eg "#FFBBBB"\n
+     */\n
+    setBackgroundColor:function(color) { \n
+        if (color != undefined) {\n
+            this.backgroundColor = color; \n
+        }\n
+        \n
+        if (this.div != null) {\n
+            this.div.style.backgroundColor = this.backgroundColor;\n
+        }\n
+    },  \n
+    \n
+    /**\n
+     * Method: setOpacity\n
+     * Sets the opacity of the popup.\n
+     * \n
+     * Parameters:\n
+     * opacity - {float} A value between 0.0 (transparent) and 1.0 (solid).   \n
+     */\n
+    setOpacity:function(opacity) { \n
+        if (opacity != undefined) {\n
+            this.opacity = opacity; \n
+        }\n
+        \n
+        if (this.div != null) {\n
+            // for Mozilla and Safari\n
+            this.div.style.opacity = this.opacity;\n
+\n
+            // for IE\n
+            this.div.style.filter = \'alpha(opacity=\' + this.opacity*100 + \')\';\n
+        }\n
+    },  \n
+    \n
+    /**\n
+     * Method: setBorder\n
+     * Sets the border style of the popup.\n
+     *\n
+     * Parameters:\n
+     * border - {String} The border style value. eg 2px \n
+     */\n
+    setBorder:function(border) { \n
+        if (border != undefined) {\n
+            this.border = border;\n
+        }\n
+        \n
+        if (this.div != null) {\n
+            this.div.style.border = this.border;\n
+        }\n
+    },      \n
+    \n
+    /**\n
+     * Method: setContentHTML\n
+     * Allows the user to set the HTML content of the popup.\n
+     *\n
+     * Parameters:\n
+     * contentHTML - {String} HTML for the div.\n
+     */\n
+    setContentHTML:function(contentHTML) {\n
+\n
+        if (contentHTML != null) {\n
+            this.contentHTML = contentHTML;\n
+        }\n
+       \n
+        if ((this.contentDiv != null) && \n
+            (this.contentHTML != null) &&\n
+            (this.contentHTML != this.contentDiv.innerHTML)) {\n
+       \n
+            this.contentDiv.innerHTML = this.contentHTML;\n
+       \n
+            if (this.autoSize) {\n
+                \n
+                //if popup has images, listen for when they finish\n
+                // loading and resize accordingly\n
+                this.registerImageListeners();\n
+\n
+                //auto size the popup to its current contents\n
+                this.updateSize();\n
+            }\n
+        }    \n
+\n
+    },\n
+    \n
+    /**\n
+     * Method: registerImageListeners\n
+     * Called when an image contained by the popup loaded. this function\n
+     *     updates the popup size, then unregisters the image load listener.\n
+     */   \n
+    registerImageListeners: function() { \n
+\n
+        // As the images load, this function will call updateSize() to \n
+        // resize the popup to fit the content div (which presumably is now\n
+        // bigger than when the image was not loaded).\n
+        // \n
+        // If the \'panMapIfOutOfView\' property is set, we will pan the newly\n
+        // resized popup back into view.\n
+        // \n
+        // Note that this function, when called, will have \'popup\' and \n
+        // \'img\' properties in the context.\n
+        //\n
+        var onImgLoad = function() {\n
+            if (this.popup.id === null) { // this.popup has been destroyed!\n
+                return;\n
+            }\n
+            this.popup.updateSize();\n
+     \n
+            if ( this.popup.visible() && this.popup.panMapIfOutOfView ) {\n
+                this.popup.panIntoView();\n
+            }\n
+\n
+            OpenLayers.Event.stopObserving(\n
+                this.img, "load", this.img._onImageLoad\n
+            );\n
+    \n
+        };\n
+\n
+        //cycle through the images and if their size is 0x0, that means that \n
+        // they haven\'t been loaded yet, so we attach the listener, which \n
+        // will fire when the images finish loading and will resize the \n
+        // popup accordingly to its new size.\n
+        var images = this.contentDiv.getElementsByTagName("img");\n
+        for (var i = 0, len = images.length; i < len; i++) {\n
+            var img = images[i];\n
+            if (img.width == 0 || img.height == 0) {\n
+\n
+                var context = {\n
+                    \'popup\': this,\n
+                    \'img\': img\n
+                };\n
+\n
+                //expando this function to the image itself before registering\n
+                // it. This way we can easily and properly unregister it.\n
+                img._onImgLoad = OpenLayers.Function.bind(onImgLoad, context);\n
+\n
+                OpenLayers.Event.observe(img, \'load\', img._onImgLoad);\n
+            }    \n
+        } \n
+    },\n
+\n
+    /**\n
+     * APIMethod: getSafeContentSize\n
+     * \n
+     * Parameters:\n
+     * size - {<OpenLayers.Size>} Desired size to make the popup.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Size>} A size to make the popup which is neither smaller\n
+     *     than the specified minimum size, nor bigger than the maximum \n
+     *     size (which is calculated relative to the size of the viewport).\n
+     */\n
+    getSafeContentSize: function(size) {\n
+\n
+        var safeContentSize = size.clone();\n
+\n
+        // if our contentDiv has a css \'padding\' set on it by a stylesheet, we \n
+        //  must add that to the desired "size". \n
+        var contentDivPadding = this.getContentDivPadding();\n
+        var wPadding = contentDivPadding.left + contentDivPadding.right;\n
+        var hPadding = contentDivPadding.top + contentDivPadding.bottom;\n
+\n
+        // take into account the popup\'s \'padding\' property\n
+        this.fixPadding();\n
+        wPadding += this.padding.left + this.padding.right;\n
+        hPadding += this.padding.top + this.padding.bottom;\n
+\n
+        if (this.closeDiv) {\n
+            var closeDivWidth = parseInt(this.closeDiv.style.width);\n
+            wPadding += closeDivWidth + contentDivPadding.right;\n
+        }\n
+\n
+        // prevent the popup from being smaller than a specified minimal size\n
+        if (this.minSize) {\n
+            safeContentSize.w = Math.max(safeContentSize.w, \n
+                (this.minSize.w - wPadding));\n
+            safeContentSize.h = Math.max(safeContentSize.h, \n
+                (this.minSize.h - hPadding));\n
+        }\n
+\n
+        // prevent the popup from being bigger than a specified maximum size\n
+        if (this.maxSize) {\n
+            safeContentSize.w = Math.min(safeContentSize.w, \n
+                (this.maxSize.w - wPadding));\n
+            safeContentSize.h = Math.min(safeContentSize.h, \n
+                (this.maxSize.h - hPadding));\n
+        }\n
+        \n
+        //make sure the desired size to set doesn\'t result in a popup that \n
+        // is bigger than the map\'s viewport.\n
+        //\n
+        if (this.map && this.map.size) {\n
+            \n
+            var extraX = 0, extraY = 0;\n
+            if (this.keepInMap && !this.panMapIfOutOfView) {\n
+                var px = this.map.getPixelFromLonLat(this.lonlat);\n
+                switch (this.relativePosition) {\n
+                    case "tr":\n
+                        extraX = px.x;\n
+                        extraY = this.map.size.h - px.y;\n
+                        break;\n
+                    case "tl":\n
+                        extraX = this.map.size.w - px.x;\n
+                        extraY = this.map.size.h - px.y;\n
+                        break;\n
+                    case "bl":\n
+                        extraX = this.map.size.w - px.x;\n
+                        extraY = px.y;\n
+                        break;\n
+                    case "br":\n
+                        extraX = px.x;\n
+                        extraY = px.y;\n
+                        break;\n
+                    default:    \n
+                        extraX = px.x;\n
+                        extraY = this.map.size.h - px.y;\n
+                        break;\n
+                }\n
+            }    \n
+          \n
+            var maxY = this.map.size.h - \n
+                this.map.paddingForPopups.top - \n
+                this.map.paddingForPopups.bottom - \n
+                hPadding - extraY;\n
+            \n
+            var maxX = this.map.size.w - \n
+                this.map.paddingForPopups.left - \n
+                this.map.paddingForPopups.right - \n
+                wPadding - extraX;\n
+            \n
+            safeContentSize.w = Math.min(safeContentSize.w, maxX);\n
+            safeContentSize.h = Math.min(safeContentSize.h, maxY);\n
+        }\n
+        \n
+        return safeContentSize;\n
+    },\n
+    \n
+    /**\n
+     * Method: getContentDivPadding\n
+     * Glorious, oh glorious hack in order to determine the css \'padding\' of \n
+     *     the contentDiv. IE/Opera return null here unless we actually add the \n
+     *     popup\'s main \'div\' element (which contains contentDiv) to the DOM. \n
+     *     So we make it invisible and then add it to the document temporarily. \n
+     *\n
+     *     Once we\'ve taken the padding readings we need, we then remove it \n
+     *     from the DOM (it will actually get added to the DOM in \n
+     *     Map.js\'s addPopup)\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>}\n
+     */\n
+    getContentDivPadding: function() {\n
+\n
+        //use cached value if we have it\n
+        var contentDivPadding = this._contentDivPadding;\n
+        if (!contentDivPadding) {\n
+\n
+            if (this.div.parentNode == null) {\n
+                //make the div invisible and add it to the page        \n
+                this.div.style.display = "none";\n
+                document.body.appendChild(this.div);\n
+            }\n
+                    \n
+            //read the padding settings from css, put them in an OL.Bounds        \n
+            contentDivPadding = new OpenLayers.Bounds(\n
+                OpenLayers.Element.getStyle(this.contentDiv, "padding-left"),\n
+                OpenLayers.Element.getStyle(this.contentDiv, "padding-bottom"),\n
+                OpenLayers.Element.getStyle(this.contentDiv, "padding-right"),\n
+                OpenLayers.Element.getStyle(this.contentDiv, "padding-top")\n
+            );\n
+    \n
+            //cache the value\n
+            this._contentDivPadding = contentDivPadding;\n
+\n
+            if (this.div.parentNode == document.body) {\n
+                //remove the div from the page and make it visible again\n
+                document.body.removeChild(this.div);\n
+                this.div.style.display = "";\n
+            }\n
+        }\n
+        return contentDivPadding;\n
+    },\n
+\n
+    /**\n
+     * Method: addCloseBox\n
+     * \n
+     * Parameters:\n
+     * callback - {Function} The callback to be called when the close button\n
+     *     is clicked.\n
+     */\n
+    addCloseBox: function(callback) {\n
+\n
+        this.closeDiv = OpenLayers.Util.createDiv(\n
+            this.id + "_close", null, {w: 17, h: 17}\n
+        );\n
+        this.closeDiv.className = "olPopupCloseBox"; \n
+        \n
+        // use the content div\'s css padding to determine if we should\n
+        //  padd the close div\n
+        var contentDivPadding = this.getContentDivPadding();\n
+         \n
+        this.closeDiv.style.right = contentDivPadding.right + "px";\n
+        this.closeDiv.style.top = contentDivPadding.top + "px";\n
+        this.groupDiv.appendChild(this.closeDiv);\n
+\n
+        var closePopup = callback || function(e) {\n
+            this.hide();\n
+            OpenLayers.Event.stop(e);\n
+        };\n
+        OpenLayers.Event.observe(this.closeDiv, "touchend", \n
+                OpenLayers.Function.bindAsEventListener(closePopup, this));\n
+        OpenLayers.Event.observe(this.closeDiv, "click", \n
+                OpenLayers.Function.bindAsEventListener(closePopup, this));\n
+    },\n
+\n
+    /**\n
+     * Method: panIntoView\n
+     * Pans the map such that the popup is totaly viewable (if necessary)\n
+     */\n
+    panIntoView: function() {\n
+        \n
+        var mapSize = this.map.getSize();\n
+    \n
+        //start with the top left corner of the popup, in px, \n
+        // relative to the viewport\n
+        var origTL = this.map.getViewPortPxFromLayerPx( new OpenLayers.Pixel(\n
+            parseInt(this.div.style.left),\n
+            parseInt(this.div.style.top)\n
+        ));\n
+        var newTL = origTL.clone();\n
+    \n
+        //new left (compare to margins, using this.size to calculate right)\n
+        if (origTL.x < this.map.paddingForPopups.left) {\n
+            newTL.x = this.map.paddingForPopups.left;\n
+        } else \n
+        if ( (origTL.x + this.size.w) > (mapSize.w - this.map.paddingForPopups.right)) {\n
+            newTL.x = mapSize.w - this.map.paddingForPopups.right - this.size.w;\n
+        }\n
+        \n
+        //new top (compare to margins, using this.size to calculate bottom)\n
+        if (origTL.y < this.map.paddingForPopups.top) {\n
+            newTL.y = this.map.paddingForPopups.top;\n
+        } else \n
+        if ( (origTL.y + this.size.h) > (mapSize.h - this.map.paddingForPopups.bottom)) {\n
+            newTL.y = mapSize.h - this.map.paddingForPopups.bottom - this.size.h;\n
+        }\n
+        \n
+        var dx = origTL.x - newTL.x;\n
+        var dy = origTL.y - newTL.y;\n
+        \n
+        this.map.pan(dx, dy);\n
+    },\n
+\n
+    /** \n
+     * Method: registerEvents\n
+     * Registers events on the popup.\n
+     *\n
+     * Do this in a separate function so that subclasses can \n
+     *   choose to override it if they wish to deal differently\n
+     *   with mouse events\n
+     * \n
+     *   Note in the following handler functions that some special\n
+     *    care is needed to deal correctly with mousing and popups. \n
+     *   \n
+     *   Because the user might select the zoom-rectangle option and\n
+     *    then drag it over a popup, we need a safe way to allow the\n
+     *    mousemove and mouseup events to pass through the popup when\n
+     *    they are initiated from outside. The same procedure is needed for\n
+     *    touchmove and touchend events.\n
+     * \n
+     *   Otherwise, we want to essentially kill the event propagation\n
+     *    for all other events, though we have to do so carefully, \n
+     *    without disabling basic html functionality, like clicking on \n
+     *    hyperlinks or drag-selecting text.\n
+     */\n
+     registerEvents:function() {\n
+        this.events = new OpenLayers.Events(this, this.div, null, true);\n
+\n
+        function onTouchstart(evt) {\n
+            OpenLayers.Event.stop(evt, true);\n
+        }\n
+        this.events.on({\n
+            "mousedown": this.onmousedown,\n
+            "mousemove": this.onmousemove,\n
+            "mouseup": this.onmouseup,\n
+            "click": this.onclick,\n
+            "mouseout": this.onmouseout,\n
+            "dblclick": this.ondblclick,\n
+            "touchstart": onTouchstart,\n
+            scope: this\n
+        });\n
+        \n
+     },\n
+\n
+    /** \n
+     * Method: onmousedown \n
+     * When mouse goes down within the popup, make a note of\n
+     *   it locally, and then do not propagate the mousedown \n
+     *   (but do so safely so that user can select text inside)\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    onmousedown: function (evt) {\n
+        this.mousedown = true;\n
+        OpenLayers.Event.stop(evt, true);\n
+    },\n
+\n
+    /** \n
+     * Method: onmousemove\n
+     * If the drag was started within the popup, then \n
+     *   do not propagate the mousemove (but do so safely\n
+     *   so that user can select text inside)\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    onmousemove: function (evt) {\n
+        if (this.mousedown) {\n
+            OpenLayers.Event.stop(evt, true);\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: onmouseup\n
+     * When mouse comes up within the popup, after going down \n
+     *   in it, reset the flag, and then (once again) do not \n
+     *   propagate the event, but do so safely so that user can \n
+     *   select text inside\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    onmouseup: function (evt) {\n
+        if (this.mousedown) {\n
+            this.mousedown = false;\n
+            OpenLayers.Event.stop(evt, true);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: onclick\n
+     * Ignore clicks, but allowing default browser handling\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    onclick: function (evt) {\n
+        OpenLayers.Event.stop(evt, true);\n
+    },\n
+\n
+    /** \n
+     * Method: onmouseout\n
+     * When mouse goes out of the popup set the flag to false so that\n
+     *   if they let go and then drag back in, we won\'t be confused.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    onmouseout: function (evt) {\n
+        this.mousedown = false;\n
+    },\n
+    \n
+    /** \n
+     * Method: ondblclick\n
+     * Ignore double-clicks, but allowing default browser handling\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    ondblclick: function (evt) {\n
+        OpenLayers.Event.stop(evt, true);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Popup"\n
+});\n
+\n
+OpenLayers.Popup.WIDTH = 200;\n
+OpenLayers.Popup.HEIGHT = 200;\n
+OpenLayers.Popup.COLOR = "white";\n
+OpenLayers.Popup.OPACITY = 1;\n
+OpenLayers.Popup.BORDER = "0px";\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>35284</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

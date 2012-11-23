@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Renderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Renderer \n
+ * This is the base class for all renderers.\n
+ *\n
+ * This is based on a merger code written by Paul Spencer and Bertil Chapuis.\n
+ * It is largely composed of virtual functions that are to be implemented\n
+ * in technology-specific subclasses, but there is some generic code too.\n
+ * \n
+ * The functions that *are* implemented here merely deal with the maintenance\n
+ *  of the size and extent variables, as well as the cached \'resolution\' \n
+ *  value. \n
+ * \n
+ * A note to the user that all subclasses should use getResolution() instead\n
+ *  of directly accessing this.resolution in order to correctly use the \n
+ *  cacheing system.\n
+ *\n
+ */\n
+OpenLayers.Renderer = OpenLayers.Class({\n
+\n
+    /** \n
+     * Property: container\n
+     * {DOMElement} \n
+     */\n
+    container: null,\n
+    \n
+    /**\n
+     * Property: root\n
+     * {DOMElement}\n
+     */\n
+    root: null,\n
+\n
+    /** \n
+     * Property: extent\n
+     * {<OpenLayers.Bounds>}\n
+     */\n
+    extent: null,\n
+\n
+    /**\n
+     * Property: locked\n
+     * {Boolean} If the renderer is currently in a state where many things\n
+     *     are changing, the \'locked\' property is set to true. This means \n
+     *     that renderers can expect at least one more drawFeature event to be\n
+     *     called with the \'locked\' property set to \'true\': In some renderers,\n
+     *     this might make sense to use as a \'only update local information\'\n
+     *     flag. \n
+     */  \n
+    locked: false,\n
+    \n
+    /** \n
+     * Property: size\n
+     * {<OpenLayers.Size>} \n
+     */\n
+    size: null,\n
+    \n
+    /**\n
+     * Property: resolution\n
+     * {Float} cache of current map resolution\n
+     */\n
+    resolution: null,\n
+    \n
+    /**\n
+     * Property: map  \n
+     * {<OpenLayers.Map>} Reference to the map -- this is set in Vector\'s setMap()\n
+     */\n
+    map: null,\n
+    \n
+    /**\n
+     * Property: featureDx\n
+     * {Number} Feature offset in x direction. Will be calculated for and\n
+     * applied to the current feature while rendering (see\n
+     * <calculateFeatureDx>).\n
+     */\n
+    featureDx: 0,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Renderer \n
+     *\n
+     * Parameters:\n
+     * containerID - {<String>} \n
+     * options - {Object} options for this renderer. See sublcasses for\n
+     *     supported options.\n
+     */\n
+    initialize: function(containerID, options) {\n
+        this.container = OpenLayers.Util.getElement(containerID);\n
+        OpenLayers.Util.extend(this, options);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     */\n
+    destroy: function() {\n
+        this.container = null;\n
+        this.extent = null;\n
+        this.size =  null;\n
+        this.resolution = null;\n
+        this.map = null;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: supported\n
+     * This should be overridden by specific subclasses\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the browser supports the renderer class\n
+     */\n
+    supported: function() {\n
+        return false;\n
+    },    \n
+    \n
+    /**\n
+     * Method: setExtent\n
+     * Set the visible part of the layer.\n
+     *\n
+     * Resolution has probably changed, so we nullify the resolution \n
+     * cache (this.resolution) -- this way it will be re-computed when \n
+     * next it is needed.\n
+     * We nullify the resolution cache (this.resolution) if resolutionChanged\n
+     * is set to true - this way it will be re-computed on the next\n
+     * getResolution() request.\n
+     *\n
+     * Parameters:\n
+     * extent - {<OpenLayers.Bounds>}\n
+     * resolutionChanged - {Boolean}\n
+     *\n
+     * Returns:\n
+     * {Boolean} true to notify the layer that the new extent does not exceed\n
+     *     the coordinate range, and the features will not need to be redrawn.\n
+     *     False otherwise.\n
+     */\n
+    setExtent: function(extent, resolutionChanged) {\n
+        this.extent = extent.clone();\n
+        if (this.map.baseLayer && this.map.baseLayer.wrapDateLine) {\n
+            var ratio = extent.getWidth() / this.map.getExtent().getWidth(),\n
+                extent = extent.scale(1 / ratio);\n
+            this.extent = extent.wrapDateLine(this.map.getMaxExtent()).scale(ratio);\n
+        }\n
+        if (resolutionChanged) {\n
+            this.resolution = null;\n
+        }\n
+        return true;\n
+    },\n
+    \n
+    /**\n
+     * Method: setSize\n
+     * Sets the size of the drawing surface.\n
+     * \n
+     * Resolution has probably changed, so we nullify the resolution \n
+     * cache (this.resolution) -- this way it will be re-computed when \n
+     * next it is needed.\n
+     *\n
+     * Parameters:\n
+     * size - {<OpenLayers.Size>} \n
+     */\n
+    setSize: function(size) {\n
+        this.size = size.clone();\n
+        this.resolution = null;\n
+    },\n
+    \n
+    /** \n
+     * Method: getResolution\n
+     * Uses cached copy of resolution if available to minimize computing\n
+     * \n
+     * Returns:\n
+     * {Float} The current map\'s resolution\n
+     */\n
+    getResolution: function() {\n
+        this.resolution = this.resolution || this.map.getResolution();\n
+        return this.resolution;\n
+    },\n
+    \n
+    /**\n
+     * Method: drawFeature\n
+     * Draw the feature.  The optional style argument can be used\n
+     * to override the feature\'s own style.  This method should only\n
+     * be called from layer.drawFeature().\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} \n
+     * style - {<Object>}\n
+     * \n
+     * Returns:\n
+     * {Boolean} true if the feature has been drawn completely, false if not,\n
+     *     undefined if the feature had no geometry\n
+     */\n
+    drawFeature: function(feature, style) {\n
+        if(style == null) {\n
+            style = feature.style;\n
+        }\n
+        if (feature.geometry) {\n
+            var bounds = feature.geometry.getBounds();\n
+            if(bounds) {\n
+                var worldBounds;\n
+                if (this.map.baseLayer && this.map.baseLayer.wrapDateLine) {\n
+                    worldBounds = this.map.getMaxExtent();\n
+                }\n
+                if (!bounds.intersectsBounds(this.extent, {worldBounds: worldBounds})) {\n
+                    style = {display: "none"};\n
+                } else {\n
+                    this.calculateFeatureDx(bounds, worldBounds);\n
+                }\n
+                var rendered = this.drawGeometry(feature.geometry, style, feature.id);\n
+                if(style.display != "none" && style.label && rendered !== false) {\n
+\n
+                    var location = feature.geometry.getCentroid(); \n
+                    if(style.labelXOffset || style.labelYOffset) {\n
+                        var xOffset = isNaN(style.labelXOffset) ? 0 : style.labelXOffset;\n
+                        var yOffset = isNaN(style.labelYOffset) ? 0 : style.labelYOffset;\n
+                        var res = this.getResolution();\n
+                        location.move(xOffset*res, yOffset*res);\n
+                    }\n
+                    this.drawText(feature.id, style, location);\n
+                } else {\n
+                    this.removeText(feature.id);\n
+                }\n
+                return rendered;\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: calculateFeatureDx\n
+     * {Number} Calculates the feature offset in x direction. Looking at the\n
+     * center of the feature bounds and the renderer extent, we calculate how\n
+     * many world widths the two are away from each other. This distance is\n
+     * used to shift the feature as close as possible to the center of the\n
+     * current enderer extent, which ensures that the feature is visible in the\n
+     * current viewport.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} Bounds of the feature\n
+     * worldBounds - {<OpenLayers.Bounds>} Bounds of the world\n
+     */\n
+    calculateFeatureDx: function(bounds, worldBounds) {\n
+        this.featureDx = 0;\n
+        if (worldBounds) {\n
+            var worldWidth = worldBounds.getWidth(),\n
+                rendererCenterX = (this.extent.left + this.extent.right) / 2,\n
+                featureCenterX = (bounds.left + bounds.right) / 2,\n
+                worldsAway = Math.round((featureCenterX - rendererCenterX) / worldWidth);\n
+            this.featureDx = worldsAway * worldWidth;\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: drawGeometry\n
+     * \n
+     * Draw a geometry.  This should only be called from the renderer itself.\n
+     * Use layer.drawFeature() from outside the renderer.\n
+     * virtual function\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} \n
+     * style - {Object} \n
+     * featureId - {<String>} \n
+     */\n
+    drawGeometry: function(geometry, style, featureId) {},\n
+        \n
+    /**\n
+     * Method: drawText\n
+     * Function for drawing text labels.\n
+     * This method is only called by the renderer itself.\n
+     * \n
+     * Parameters: \n
+     * featureId - {String}\n
+     * style -\n
+     * location - {<OpenLayers.Geometry.Point>}\n
+     */\n
+    drawText: function(featureId, style, location) {},\n
+\n
+    /**\n
+     * Method: removeText\n
+     * Function for removing text labels.\n
+     * This method is only called by the renderer itself.\n
+     * \n
+     * Parameters: \n
+     * featureId - {String}\n
+     */\n
+    removeText: function(featureId) {},\n
+    \n
+    /**\n
+     * Method: clear\n
+     * Clear all vectors from the renderer.\n
+     * virtual function.\n
+     */    \n
+    clear: function() {},\n
+\n
+    /**\n
+     * Method: getFeatureIdFromEvent\n
+     * Returns a feature id from an event on the renderer.  \n
+     * How this happens is specific to the renderer.  This should be\n
+     * called from layer.getFeatureFromEvent().\n
+     * Virtual function.\n
+     * \n
+     * Parameters:\n
+     * evt - {<OpenLayers.Event>} \n
+     *\n
+     * Returns:\n
+     * {String} A feature id or undefined.\n
+     */\n
+    getFeatureIdFromEvent: function(evt) {},\n
+    \n
+    /**\n
+     * Method: eraseFeatures \n
+     * This is called by the layer to erase features\n
+     * \n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>)} \n
+     */\n
+    eraseFeatures: function(features) {\n
+        if(!(OpenLayers.Util.isArray(features))) {\n
+            features = [features];\n
+        }\n
+        for(var i=0, len=features.length; i<len; ++i) {\n
+            var feature = features[i];\n
+            this.eraseGeometry(feature.geometry, feature.id);\n
+            this.removeText(feature.id);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: eraseGeometry\n
+     * Remove a geometry from the renderer (by id).\n
+     * virtual function.\n
+     * \n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} \n
+     * featureId - {String}\n
+     */\n
+    eraseGeometry: function(geometry, featureId) {},\n
+    \n
+    /**\n
+     * Method: moveRoot\n
+     * moves this renderer\'s root to a (different) renderer.\n
+     * To be implemented by subclasses that require a common renderer root for\n
+     * feature selection.\n
+     * \n
+     * Parameters:\n
+     * renderer - {<OpenLayers.Renderer>} target renderer for the moved root\n
+     */\n
+    moveRoot: function(renderer) {},\n
+\n
+    /**\n
+     * Method: getRenderLayerId\n
+     * Gets the layer that this renderer\'s output appears on. If moveRoot was\n
+     * used, this will be different from the id of the layer containing the\n
+     * features rendered by this renderer.\n
+     * \n
+     * Returns:\n
+     * {String} the id of the output layer.\n
+     */\n
+    getRenderLayerId: function() {\n
+        return this.container.id;\n
+    },\n
+    \n
+    /**\n
+     * Method: applyDefaultSymbolizer\n
+     * \n
+     * Parameters:\n
+     * symbolizer - {Object}\n
+     * \n
+     * Returns:\n
+     * {Object}\n
+     */\n
+    applyDefaultSymbolizer: function(symbolizer) {\n
+        var result = OpenLayers.Util.extend({},\n
+            OpenLayers.Renderer.defaultSymbolizer);\n
+        if(symbolizer.stroke === false) {\n
+            delete result.strokeWidth;\n
+            delete result.strokeColor;\n
+        }\n
+        if(symbolizer.fill === false) {\n
+            delete result.fillColor;\n
+        }\n
+        OpenLayers.Util.extend(result, symbolizer);\n
+        return result;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Renderer"\n
+});\n
+\n
+/**\n
+ * Constant: OpenLayers.Renderer.defaultSymbolizer\n
+ * {Object} Properties from this symbolizer will be applied to symbolizers\n
+ *     with missing properties. This can also be used to set a global\n
+ *     symbolizer default in OpenLayers. To be SLD 1.x compliant, add the\n
+ *     following code before rendering any vector features:\n
+ * (code)\n
+ * OpenLayers.Renderer.defaultSymbolizer = {\n
+ *     fillColor: "#808080",\n
+ *     fillOpacity: 1,\n
+ *     strokeColor: "#000000",\n
+ *     strokeOpacity: 1,\n
+ *     strokeWidth: 1,\n
+ *     pointRadius: 3,\n
+ *     graphicName: "square"\n
+ * };\n
+ * (end)\n
+ */\n
+OpenLayers.Renderer.defaultSymbolizer = {\n
+    fillColor: "#000000",\n
+    strokeColor: "#000000",\n
+    strokeWidth: 2,\n
+    fillOpacity: 1,\n
+    strokeOpacity: 1,\n
+    pointRadius: 0,\n
+    labelAlign: \'cm\'\n
+};\n
+    \n
+\n
+\n
+/**\n
+ * Constant: OpenLayers.Renderer.symbol\n
+ * Coordinate arrays for well known (named) symbols.\n
+ */\n
+OpenLayers.Renderer.symbol = {\n
+    "star": [350,75, 379,161, 469,161, 397,215, 423,301, 350,250, 277,301,\n
+            303,215, 231,161, 321,161, 350,75],\n
+    "cross": [4,0, 6,0, 6,4, 10,4, 10,6, 6,6, 6,10, 4,10, 4,6, 0,6, 0,4, 4,4,\n
+            4,0],\n
+    "x": [0,0, 25,0, 50,35, 75,0, 100,0, 65,50, 100,100, 75,100, 50,65, 25,100, 0,100, 35,50, 0,0],\n
+    "square": [0,0, 0,1, 1,1, 1,0, 0,0],\n
+    "triangle": [0,10, 10,10, 5,0, 0,10]\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13322</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

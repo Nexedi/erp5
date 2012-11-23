@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>NavigationHistory.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Control/Button.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.NavigationHistory\n
+ * A navigation history control.  This is a meta-control, that creates two\n
+ *     dependent controls: <previous> and <next>.  Call the trigger method\n
+ *     on the <previous> and <next> controls to restore previous and next\n
+ *     history states.  The previous and next controls will become active\n
+ *     when there are available states to restore and will become deactive\n
+ *     when there are no states to restore.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.NavigationHistory = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /**\n
+     * Property: type\n
+     * {String} Note that this control is not intended to be added directly\n
+     *     to a control panel.  Instead, add the sub-controls previous and\n
+     *     next.  These sub-controls are button type controls that activate\n
+     *     and deactivate themselves.  If this parent control is added to\n
+     *     a panel, it will act as a toggle.\n
+     */\n
+    type: OpenLayers.Control.TYPE_TOGGLE,\n
+\n
+    /**\n
+     * APIProperty: previous\n
+     * {<OpenLayers.Control>} A button type control whose trigger method restores\n
+     *     the previous state managed by this control.\n
+     */\n
+    previous: null,\n
+    \n
+    /**\n
+     * APIProperty: previousOptions\n
+     * {Object} Set this property on the options argument of the constructor\n
+     *     to set optional properties on the <previous> control.\n
+     */\n
+    previousOptions: null,\n
+    \n
+    /**\n
+     * APIProperty: next\n
+     * {<OpenLayers.Control>} A button type control whose trigger method restores\n
+     *     the next state managed by this control.\n
+     */\n
+    next: null,\n
+\n
+    /**\n
+     * APIProperty: nextOptions\n
+     * {Object} Set this property on the options argument of the constructor\n
+     *     to set optional properties on the <next> control.\n
+     */\n
+    nextOptions: null,\n
+\n
+    /**\n
+     * APIProperty: limit\n
+     * {Integer} Optional limit on the number of history items to retain.  If\n
+     *     null, there is no limit.  Default is 50.\n
+     */\n
+    limit: 50,\n
+\n
+    /**\n
+     * APIProperty: autoActivate\n
+     * {Boolean} Activate the control when it is added to a map.  Default is\n
+     *     true.\n
+     */\n
+    autoActivate: true,\n
+\n
+    /**\n
+     * Property: clearOnDeactivate\n
+     * {Boolean} Clear the history when the control is deactivated.  Default\n
+     *     is false.\n
+     */\n
+    clearOnDeactivate: false,\n
+\n
+    /**\n
+     * Property: registry\n
+     * {Object} An object with keys corresponding to event types.  Values\n
+     *     are functions that return an object representing the current state.\n
+     */\n
+    registry: null,\n
+\n
+    /**\n
+     * Property: nextStack\n
+     * {Array} Array of items in the history.\n
+     */\n
+    nextStack: null,\n
+\n
+    /**\n
+     * Property: previousStack\n
+     * {Array} List of items in the history.  First item represents the current\n
+     *     state.\n
+     */\n
+    previousStack: null,\n
+    \n
+    /**\n
+     * Property: listeners\n
+     * {Object} An object containing properties corresponding to event types.\n
+     *     This object is used to configure the control and is modified on\n
+     *     construction.\n
+     */\n
+    listeners: null,\n
+    \n
+    /**\n
+     * Property: restoring\n
+     * {Boolean} Currently restoring a history state.  This is set to true\n
+     *     before calling restore and set to false after restore returns.\n
+     */\n
+    restoring: false,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Control.NavigationHistory \n
+     * \n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be used\n
+     *     to extend the control.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        \n
+        this.registry = OpenLayers.Util.extend({\n
+            "moveend": this.getState\n
+        }, this.registry);\n
+        \n
+        var previousOptions = {\n
+            trigger: OpenLayers.Function.bind(this.previousTrigger, this),\n
+            displayClass: this.displayClass + " " + this.displayClass + "Previous"\n
+        };\n
+        OpenLayers.Util.extend(previousOptions, this.previousOptions);\n
+        this.previous = new OpenLayers.Control.Button(previousOptions);\n
+        \n
+        var nextOptions = {\n
+            trigger: OpenLayers.Function.bind(this.nextTrigger, this),\n
+            displayClass: this.displayClass + " " + this.displayClass + "Next"\n
+        };\n
+        OpenLayers.Util.extend(nextOptions, this.nextOptions);\n
+        this.next = new OpenLayers.Control.Button(nextOptions);\n
+\n
+        this.clear();\n
+    },\n
+    \n
+    /**\n
+     * Method: onPreviousChange\n
+     * Called when the previous history stack changes.\n
+     *\n
+     * Parameters:\n
+     * state - {Object} An object representing the state to be restored\n
+     *     if previous is triggered again or null if no previous states remain.\n
+     * length - {Integer} The number of remaining previous states that can\n
+     *     be restored.\n
+     */\n
+    onPreviousChange: function(state, length) {\n
+        if(state && !this.previous.active) {\n
+            this.previous.activate();\n
+        } else if(!state && this.previous.active) {\n
+            this.previous.deactivate();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: onNextChange\n
+     * Called when the next history stack changes.\n
+     *\n
+     * Parameters:\n
+     * state - {Object} An object representing the state to be restored\n
+     *     if next is triggered again or null if no next states remain.\n
+     * length - {Integer} The number of remaining next states that can\n
+     *     be restored.\n
+     */\n
+    onNextChange: function(state, length) {\n
+        if(state && !this.next.active) {\n
+            this.next.activate();\n
+        } else if(!state && this.next.active) {\n
+            this.next.deactivate();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     * Destroy the control.\n
+     */\n
+    destroy: function() {\n
+        OpenLayers.Control.prototype.destroy.apply(this);\n
+        this.previous.destroy();\n
+        this.next.destroy();\n
+        this.deactivate();\n
+        for(var prop in this) {\n
+            this[prop] = null;\n
+        }\n
+    },\n
+    \n
+    /** \n
+     * Method: setMap\n
+     * Set the map property for the control and <previous> and <next> child\n
+     *     controls.\n
+     *\n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        this.map = map;\n
+        this.next.setMap(map);\n
+        this.previous.setMap(map);\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     * Called when the control is added to the map.\n
+     */\n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+        this.next.draw();\n
+        this.previous.draw();\n
+    },\n
+    \n
+    /**\n
+     * Method: previousTrigger\n
+     * Restore the previous state.  If no items are in the previous history\n
+     *     stack, this has no effect.\n
+     *\n
+     * Returns:\n
+     * {Object} Item representing state that was restored.  Undefined if no\n
+     *     items are in the previous history stack.\n
+     */\n
+    previousTrigger: function() {\n
+        var current = this.previousStack.shift();\n
+        var state = this.previousStack.shift();\n
+        if(state != undefined) {\n
+            this.nextStack.unshift(current);\n
+            this.previousStack.unshift(state);\n
+            this.restoring = true;\n
+            this.restore(state);\n
+            this.restoring = false;\n
+            this.onNextChange(this.nextStack[0], this.nextStack.length);\n
+            this.onPreviousChange(\n
+                this.previousStack[1], this.previousStack.length - 1\n
+            );\n
+        } else {\n
+            this.previousStack.unshift(current);\n
+        }\n
+        return state;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: nextTrigger\n
+     * Restore the next state.  If no items are in the next history\n
+     *     stack, this has no effect.  The next history stack is populated\n
+     *     as states are restored from the previous history stack.\n
+     *\n
+     * Returns:\n
+     * {Object} Item representing state that was restored.  Undefined if no\n
+     *     items are in the next history stack.\n
+     */\n
+    nextTrigger: function() {\n
+        var state = this.nextStack.shift();\n
+        if(state != undefined) {\n
+            this.previousStack.unshift(state);\n
+            this.restoring = true;\n
+            this.restore(state);\n
+            this.restoring = false;\n
+            this.onNextChange(this.nextStack[0], this.nextStack.length);\n
+            this.onPreviousChange(\n
+                this.previousStack[1], this.previousStack.length - 1\n
+            );\n
+        }\n
+        return state;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clear\n
+     * Clear history.\n
+     */\n
+    clear: function() {\n
+        this.previousStack = [];\n
+        this.previous.deactivate();\n
+        this.nextStack = [];\n
+        this.next.deactivate();\n
+    },\n
+\n
+    /**\n
+     * Method: getState\n
+     * Get the current state and return it.\n
+     *\n
+     * Returns:\n
+     * {Object} An object representing the current state.\n
+     */\n
+    getState: function() {\n
+        return {\n
+            center: this.map.getCenter(),\n
+            resolution: this.map.getResolution(),\n
+            projection: this.map.getProjectionObject(),\n
+            units: this.map.getProjectionObject().getUnits() || \n
+                this.map.units || this.map.baseLayer.units\n
+        };\n
+    },\n
+\n
+    /**\n
+     * Method: restore\n
+     * Update the state with the given object.\n
+     *\n
+     * Parameters:\n
+     * state - {Object} An object representing the state to restore.\n
+     */\n
+    restore: function(state) {\n
+        var center, zoom;\n
+        if (this.map.getProjectionObject() == state.projection) { \n
+            zoom = this.map.getZoomForResolution(state.resolution);\n
+            center = state.center;\n
+        } else {\n
+            center = state.center.clone();\n
+            center.transform(state.projection, this.map.getProjectionObject());\n
+            var sourceUnits = state.units;\n
+            var targetUnits = this.map.getProjectionObject().getUnits() || \n
+                this.map.units || this.map.baseLayer.units;\n
+            var resolutionFactor = sourceUnits && targetUnits ? \n
+                OpenLayers.INCHES_PER_UNIT[sourceUnits] / OpenLayers.INCHES_PER_UNIT[targetUnits] : 1;\n
+            zoom = this.map.getZoomForResolution(resolutionFactor*state.resolution); \n
+        }\n
+        this.map.setCenter(center, zoom);\n
+    },\n
+    \n
+    /**\n
+     * Method: setListeners\n
+     * Sets functions to be registered in the listeners object.\n
+     */\n
+    setListeners: function() {\n
+        this.listeners = {};\n
+        for(var type in this.registry) {\n
+            this.listeners[type] = OpenLayers.Function.bind(function() {\n
+                if(!this.restoring) {\n
+                    var state = this.registry[type].apply(this, arguments);\n
+                    this.previousStack.unshift(state);\n
+                    if(this.previousStack.length > 1) {\n
+                        this.onPreviousChange(\n
+                            this.previousStack[1], this.previousStack.length - 1\n
+                        );\n
+                    }\n
+                    if(this.previousStack.length > (this.limit + 1)) {\n
+                        this.previousStack.pop();\n
+                    }\n
+                    if(this.nextStack.length > 0) {\n
+                        this.nextStack = [];\n
+                        this.onNextChange(null, 0);\n
+                    }\n
+                }\n
+                return true;\n
+            }, this);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the control.  This registers any listeners.\n
+     *\n
+     * Returns:\n
+     * {Boolean} Control successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = false;\n
+        if(this.map) {\n
+            if(OpenLayers.Control.prototype.activate.apply(this)) {\n
+                if(this.listeners == null) {\n
+                    this.setListeners();\n
+                }\n
+                for(var type in this.listeners) {\n
+                    this.map.events.register(type, this, this.listeners[type]);\n
+                }\n
+                activated = true;\n
+                if(this.previousStack.length == 0) {\n
+                    this.initStack();\n
+                }\n
+            }\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * Method: initStack\n
+     * Called after the control is activated if the previous history stack is\n
+     *     empty.\n
+     */\n
+    initStack: function() {\n
+        if(this.map.getCenter()) {\n
+            this.listeners.moveend();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the control.  This unregisters any listeners.\n
+     *\n
+     * Returns:\n
+     * {Boolean} Control successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = false;\n
+        if(this.map) {\n
+            if(OpenLayers.Control.prototype.deactivate.apply(this)) {\n
+                for(var type in this.listeners) {\n
+                    this.map.events.unregister(\n
+                        type, this, this.listeners[type]\n
+                    );\n
+                }\n
+                if(this.clearOnDeactivate) {\n
+                    this.clear();\n
+                }\n
+                deactivated = true;\n
+            }\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Control.NavigationHistory"\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13519</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

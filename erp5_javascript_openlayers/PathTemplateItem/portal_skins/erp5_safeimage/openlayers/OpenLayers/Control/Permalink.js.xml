@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Permalink.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Control/ArgParser.js\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Permalink\n
+ * The Permalink control is hyperlink that will return the user to the \n
+ * current map view. By default it is drawn in the lower right corner of the\n
+ * map. The href is updated as the map is zoomed, panned and whilst layers\n
+ * are switched.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Permalink = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: argParserClass\n
+     * {Class} The ArgParser control class (not instance) to use with this\n
+     *     control.\n
+     */\n
+    argParserClass: OpenLayers.Control.ArgParser,\n
+\n
+    /** \n
+     * Property: element \n
+     * {DOMElement}\n
+     */\n
+    element: null,\n
+    \n
+    /** \n
+     * APIProperty: anchor\n
+     * {Boolean} This option changes 3 things:\n
+     *     the character \'#\' is used in place of the character \'?\',\n
+     *     the window.href is updated if no element is provided.\n
+     *     When this option is set to true it\'s not recommend to provide\n
+     *     a base without provide an element.\n
+     */\n
+    anchor: false,\n
+\n
+    /** \n
+     * APIProperty: base\n
+     * {String}\n
+     */\n
+    base: \'\',\n
+\n
+    /** \n
+     * APIProperty: displayProjection\n
+     * {<OpenLayers.Projection>} Requires proj4js support.  Projection used\n
+     *     when creating the coordinates in the link. This will reproject the\n
+     *     map coordinates into display coordinates. If you are using this\n
+     *     functionality, the permalink which is last added to the map will\n
+     *     determine the coordinate type which is read from the URL, which\n
+     *     means you should not add permalinks with different\n
+     *     displayProjections to the same map. \n
+     */\n
+    displayProjection: null, \n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.Permalink\n
+     *\n
+     * Parameters: \n
+     * element - {DOMElement} \n
+     * base - {String} \n
+     * options - {Object} options to the control.\n
+     *\n
+     * Or for anchor:\n
+     * options - {Object} options to the control.\n
+     */\n
+    initialize: function(element, base, options) {\n
+        if (element !== null && typeof element == \'object\' && !OpenLayers.Util.isElement(element)) {\n
+            options = element;\n
+            this.base = document.location.href;\n
+            OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+            if (this.element != null) {\n
+                this.element = OpenLayers.Util.getElement(this.element);\n
+            }\n
+        }\n
+        else {\n
+            OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+            this.element = OpenLayers.Util.getElement(element);\n
+            this.base = base || document.location.href;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     */\n
+    destroy: function()  {\n
+        if (this.element && this.element.parentNode == this.div) {\n
+            this.div.removeChild(this.element);\n
+            this.element = null;\n
+        }\n
+        if (this.map) {\n
+            this.map.events.unregister(\'moveend\', this, this.updateLink);\n
+        }\n
+\n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments); \n
+    },\n
+\n
+    /**\n
+     * Method: setMap\n
+     * Set the map property for the control. \n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>} \n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+\n
+        //make sure we have an arg parser attached\n
+        for(var i=0, len=this.map.controls.length; i<len; i++) {\n
+            var control = this.map.controls[i];\n
+            if (control.CLASS_NAME == this.argParserClass.CLASS_NAME) {\n
+                \n
+                // If a permalink is added to the map, and an ArgParser already\n
+                // exists, we override the displayProjection to be the one\n
+                // on the permalink. \n
+                if (control.displayProjection != this.displayProjection) {\n
+                    this.displayProjection = control.displayProjection;\n
+                }    \n
+                \n
+                break;\n
+            }\n
+        }\n
+        if (i == this.map.controls.length) {\n
+            this.map.addControl(new this.argParserClass(\n
+                { \'displayProjection\': this.displayProjection }));       \n
+        }\n
+\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     *\n
+     * Returns:\n
+     * {DOMElement}\n
+     */    \n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+          \n
+        if (!this.element && !this.anchor) {\n
+            this.element = document.createElement("a");\n
+            this.element.innerHTML = OpenLayers.i18n("Permalink");\n
+            this.element.href="";\n
+            this.div.appendChild(this.element);\n
+        }\n
+        this.map.events.on({\n
+            \'moveend\': this.updateLink,\n
+            \'changelayer\': this.updateLink,\n
+            \'changebaselayer\': this.updateLink,\n
+            scope: this\n
+        });\n
+        \n
+        // Make it so there is at least a link even though the map may not have\n
+        // moved yet.\n
+        this.updateLink();\n
+        \n
+        return this.div;\n
+    },\n
+   \n
+    /**\n
+     * Method: updateLink \n
+     */\n
+    updateLink: function() {\n
+        var separator = this.anchor ? \'#\' : \'?\';\n
+        var href = this.base;\n
+        if (href.indexOf(separator) != -1) {\n
+            href = href.substring( 0, href.indexOf(separator) );\n
+        }\n
+\n
+        href += separator + OpenLayers.Util.getParameterString(this.createParams());\n
+        if (this.anchor && !this.element) {\n
+            window.location.href = href;\n
+        }\n
+        else {\n
+            this.element.href = href;\n
+        }\n
+    }, \n
+    \n
+    /**\n
+     * APIMethod: createParams\n
+     * Creates the parameters that need to be encoded into the permalink url.\n
+     * \n
+     * Parameters:\n
+     * center - {<OpenLayers.LonLat>} center to encode in the permalink.\n
+     *     Defaults to the current map center.\n
+     * zoom - {Integer} zoom level to encode in the permalink. Defaults to the\n
+     *     current map zoom level.\n
+     * layers - {Array(<OpenLayers.Layer>)} layers to encode in the permalink.\n
+     *     Defaults to the current map layers.\n
+     * \n
+     * Returns:\n
+     * {Object} Hash of parameters that will be url-encoded into the\n
+     * permalink.\n
+     */\n
+    createParams: function(center, zoom, layers) {\n
+        center = center || this.map.getCenter();\n
+          \n
+        var params = OpenLayers.Util.getParameters(this.base);\n
+        \n
+        // If there\'s still no center, map is not initialized yet. \n
+        // Break out of this function, and simply return the params from the\n
+        // base link.\n
+        if (center) { \n
+\n
+            //zoom\n
+            params.zoom = zoom || this.map.getZoom(); \n
+\n
+            //lon,lat\n
+            var lat = center.lat;\n
+            var lon = center.lon;\n
+            \n
+            if (this.displayProjection) {\n
+                var mapPosition = OpenLayers.Projection.transform(\n
+                  { x: lon, y: lat }, \n
+                  this.map.getProjectionObject(), \n
+                  this.displayProjection );\n
+                lon = mapPosition.x;  \n
+                lat = mapPosition.y;  \n
+            }       \n
+            params.lat = Math.round(lat*100000)/100000;\n
+            params.lon = Math.round(lon*100000)/100000;\n
+    \n
+            //layers        \n
+            layers = layers || this.map.layers;  \n
+            params.layers = \'\';\n
+            for (var i=0, len=layers.length; i<len; i++) {\n
+                var layer = layers[i];\n
+    \n
+                if (layer.isBaseLayer) {\n
+                    params.layers += (layer == this.map.baseLayer) ? "B" : "0";\n
+                } else {\n
+                    params.layers += (layer.getVisibility()) ? "T" : "F";           \n
+                }\n
+            }\n
+        }\n
+\n
+        return params;\n
+    }, \n
+\n
+    CLASS_NAME: "OpenLayers.Control.Permalink"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8122</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

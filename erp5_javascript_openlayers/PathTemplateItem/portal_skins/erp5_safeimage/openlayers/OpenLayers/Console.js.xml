@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Console.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Console\n
+ * The OpenLayers.Console namespace is used for debugging and error logging.\n
+ * If the Firebug Lite (../Firebug/firebug.js) is included before this script,\n
+ * calls to OpenLayers.Console methods will get redirected to window.console.\n
+ * This makes use of the Firebug extension where available and allows for\n
+ * cross-browser debugging Firebug style.\n
+ *\n
+ * Note:\n
+ * Note that behavior will differ with the Firebug extention and Firebug Lite.\n
+ * Most notably, the Firebug Lite console does not currently allow for\n
+ * hyperlinks to code or for clicking on object to explore their properties.\n
+ * \n
+ */\n
+OpenLayers.Console = {\n
+    /**\n
+     * Create empty functions for all console methods.  The real value of these\n
+     * properties will be set if Firebug Lite (../Firebug/firebug.js script) is\n
+     * included.  We explicitly require the Firebug Lite script to trigger\n
+     * functionality of the OpenLayers.Console methods.\n
+     */\n
+    \n
+    /**\n
+     * APIFunction: log\n
+     * Log an object in the console.  The Firebug Lite console logs string\n
+     * representation of objects.  Given multiple arguments, they will\n
+     * be cast to strings and logged with a space delimiter.  If the first\n
+     * argument is a string with printf-like formatting, subsequent arguments\n
+     * will be used in string substitution.  Any additional arguments (beyond\n
+     * the number substituted in a format string) will be appended in a space-\n
+     * delimited line.\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    log: function() {},\n
+\n
+    /**\n
+     * APIFunction: debug\n
+     * Writes a message to the console, including a hyperlink to the line\n
+     * where it was called.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    debug: function() {},\n
+\n
+    /**\n
+     * APIFunction: info\n
+     * Writes a message to the console with the visual "info" icon and color\n
+     * coding and a hyperlink to the line where it was called.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    info: function() {},\n
+\n
+    /**\n
+     * APIFunction: warn\n
+     * Writes a message to the console with the visual "warning" icon and\n
+     * color coding and a hyperlink to the line where it was called.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    warn: function() {},\n
+\n
+    /**\n
+     * APIFunction: error\n
+     * Writes a message to the console with the visual "error" icon and color\n
+     * coding and a hyperlink to the line where it was called.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    error: function() {},\n
+    \n
+    /**\n
+     * APIFunction: userError\n
+     * A single interface for showing error messages to the user. The default\n
+     * behavior is a Javascript alert, though this can be overridden by\n
+     * reassigning OpenLayers.Console.userError to a different function.\n
+     *\n
+     * Expects a single error message\n
+     * \n
+     * Parameters:\n
+     * error - {Object}\n
+     */\n
+    userError: function(error) {\n
+        alert(error);\n
+    },\n
+\n
+    /**\n
+     * APIFunction: assert\n
+     * Tests that an expression is true. If not, it will write a message to\n
+     * the console and throw an exception.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    assert: function() {},\n
+\n
+    /**\n
+     * APIFunction: dir\n
+     * Prints an interactive listing of all properties of the object. This\n
+     * looks identical to the view that you would see in the DOM tab.\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    dir: function() {},\n
+\n
+    /**\n
+     * APIFunction: dirxml\n
+     * Prints the XML source tree of an HTML or XML element. This looks\n
+     * identical to the view that you would see in the HTML tab. You can click\n
+     * on any node to inspect it in the HTML tab.\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    dirxml: function() {},\n
+\n
+    /**\n
+     * APIFunction: trace\n
+     * Prints an interactive stack trace of JavaScript execution at the point\n
+     * where it is called.  The stack trace details the functions on the stack,\n
+     * as well as the values that were passed as arguments to each function.\n
+     * You can click each function to take you to its source in the Script tab,\n
+     * and click each argument value to inspect it in the DOM or HTML tabs.\n
+     * \n
+     */\n
+    trace: function() {},\n
+\n
+    /**\n
+     * APIFunction: group\n
+     * Writes a message to the console and opens a nested block to indent all\n
+     * future messages sent to the console. Call OpenLayers.Console.groupEnd()\n
+     * to close the block.\n
+     *\n
+     * May be called with multiple arguments as with OpenLayers.Console.log().\n
+     * \n
+     * Parameters:\n
+     * object - {Object}\n
+     */\n
+    group: function() {},\n
+\n
+    /**\n
+     * APIFunction: groupEnd\n
+     * Closes the most recently opened block created by a call to\n
+     * OpenLayers.Console.group\n
+     */\n
+    groupEnd: function() {},\n
+    \n
+    /**\n
+     * APIFunction: time\n
+     * Creates a new timer under the given name. Call\n
+     * OpenLayers.Console.timeEnd(name)\n
+     * with the same name to stop the timer and print the time elapsed.\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     */\n
+    time: function() {},\n
+\n
+    /**\n
+     * APIFunction: timeEnd\n
+     * Stops a timer created by a call to OpenLayers.Console.time(name) and\n
+     * writes the time elapsed.\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     */\n
+    timeEnd: function() {},\n
+\n
+    /**\n
+     * APIFunction: profile\n
+     * Turns on the JavaScript profiler. The optional argument title would\n
+     * contain the text to be printed in the header of the profile report.\n
+     *\n
+     * This function is not currently implemented in Firebug Lite.\n
+     * \n
+     * Parameters:\n
+     * title - {String} Optional title for the profiler\n
+     */\n
+    profile: function() {},\n
+\n
+    /**\n
+     * APIFunction: profileEnd\n
+     * Turns off the JavaScript profiler and prints its report.\n
+     * \n
+     * This function is not currently implemented in Firebug Lite.\n
+     */\n
+    profileEnd: function() {},\n
+\n
+    /**\n
+     * APIFunction: count\n
+     * Writes the number of times that the line of code where count was called\n
+     * was executed. The optional argument title will print a message in\n
+     * addition to the number of the count.\n
+     *\n
+     * This function is not currently implemented in Firebug Lite.\n
+     *\n
+     * Parameters:\n
+     * title - {String} Optional title to be printed with count\n
+     */\n
+    count: function() {},\n
+\n
+    CLASS_NAME: "OpenLayers.Console"\n
+};\n
+\n
+/**\n
+ * Execute an anonymous function to extend the OpenLayers.Console namespace\n
+ * if the firebug.js script is included.  This closure is used so that the\n
+ * "scripts" and "i" variables don\'t pollute the global namespace.\n
+ */\n
+(function() {\n
+    /**\n
+     * If Firebug Lite is included (before this script), re-route all\n
+     * OpenLayers.Console calls to the console object.\n
+     */\n
+    var scripts = document.getElementsByTagName("script");\n
+    for(var i=0, len=scripts.length; i<len; ++i) {\n
+        if(scripts[i].src.indexOf("firebug.js") != -1) {\n
+            if(console) {\n
+                OpenLayers.Util.extend(OpenLayers.Console, console);\n
+                break;\n
+            }\n
+        }\n
+    }\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7885</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

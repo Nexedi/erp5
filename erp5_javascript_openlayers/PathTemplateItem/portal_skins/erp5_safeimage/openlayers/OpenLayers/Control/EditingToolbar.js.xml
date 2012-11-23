@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditingToolbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control/Panel.js\n
+ * @requires OpenLayers/Control/Navigation.js\n
+ * @requires OpenLayers/Control/DrawFeature.js\n
+ * @requires OpenLayers/Handler/Point.js\n
+ * @requires OpenLayers/Handler/Path.js\n
+ * @requires OpenLayers/Handler/Polygon.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.EditingToolbar \n
+ * The EditingToolbar is a panel of 4 controls to draw polygons, lines, \n
+ * points, or to navigate the map by panning. By default it appears in the \n
+ * upper right corner of the map.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Control.Panel>\n
+ */\n
+OpenLayers.Control.EditingToolbar = OpenLayers.Class(\n
+  OpenLayers.Control.Panel, {\n
+\n
+    /**\n
+     * APIProperty: citeCompliant\n
+     * {Boolean} If set to true, coordinates of features drawn in a map extent\n
+     * crossing the date line won\'t exceed the world bounds. Default is false.\n
+     */\n
+    citeCompliant: false,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.EditingToolbar\n
+     * Create an editing toolbar for a given layer. \n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>} \n
+     * options - {Object} \n
+     */\n
+    initialize: function(layer, options) {\n
+        OpenLayers.Control.Panel.prototype.initialize.apply(this, [options]);\n
+        \n
+        this.addControls(\n
+          [ new OpenLayers.Control.Navigation() ]\n
+        );  \n
+        var controls = [\n
+            new OpenLayers.Control.DrawFeature(layer, OpenLayers.Handler.Point, {\n
+                displayClass: \'olControlDrawFeaturePoint\',\n
+                handlerOptions: {citeCompliant: this.citeCompliant}\n
+            }),\n
+            new OpenLayers.Control.DrawFeature(layer, OpenLayers.Handler.Path, {\n
+                displayClass: \'olControlDrawFeaturePath\',\n
+                handlerOptions: {citeCompliant: this.citeCompliant}\n
+            }),\n
+            new OpenLayers.Control.DrawFeature(layer, OpenLayers.Handler.Polygon, {\n
+                displayClass: \'olControlDrawFeaturePolygon\',\n
+                handlerOptions: {citeCompliant: this.citeCompliant}\n
+            })\n
+        ];\n
+        this.addControls(controls);\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     * calls the default draw, and then activates mouse defaults.\n
+     *\n
+     * Returns:\n
+     * {DOMElement}\n
+     */\n
+    draw: function() {\n
+        var div = OpenLayers.Control.Panel.prototype.draw.apply(this, arguments);\n
+        if (this.defaultControl === null) {\n
+            this.defaultControl = this.controls[0];\n
+        }\n
+        return div;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.EditingToolbar"\n
+});    \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2771</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

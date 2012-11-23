@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WMSGetFeatureInfo.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WMSGetFeatureInfo\n
+ * Class to read GetFeatureInfo responses from Web Mapping Services\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Format.XML, {\n
+\n
+    /**\n
+     * APIProperty: layerIdentifier\n
+     * {String} All xml nodes containing this search criteria will populate an\n
+     *     internal array of layer nodes.\n
+     */ \n
+    layerIdentifier: \'_layer\',\n
+\n
+    /**\n
+     * APIProperty: featureIdentifier\n
+     * {String} All xml nodes containing this search criteria will populate an \n
+     *     internal array of feature nodes for each layer node found.\n
+     */\n
+    featureIdentifier: \'_feature\',\n
+\n
+    /**\n
+     * Property: regExes\n
+     * Compiled regular expressions for manipulating strings.\n
+     */\n
+    regExes: {\n
+        trimSpace: (/^\\s*|\\s*$/g),\n
+        removeSpace: (/\\s*/g),\n
+        splitSpace: (/\\s+/),\n
+        trimComma: (/\\s*,\\s*/g)\n
+    },\n
+\n
+    /**\n
+     * Property: gmlFormat\n
+     * {<OpenLayers.Format.GML>} internal GML format for parsing geometries\n
+     *     in msGMLOutput\n
+     */\n
+    gmlFormat: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.WMSGetFeatureInfo\n
+     * Create a new parser for WMS GetFeatureInfo responses\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read WMS GetFeatureInfo data from a string, and return an array of features\n
+     *\n
+     * Parameters:\n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Array(<OpenLayers.Feature.Vector>)} An array of features.\n
+     */\n
+    read: function(data) {\n
+        var result;\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        var root = data.documentElement;\n
+        if(root) {\n
+            var scope = this;\n
+            var read = this["read_" + root.nodeName];\n
+            if(read) {\n
+                result = read.call(this, root);\n
+            } else {\n
+                // fall-back to GML since this is a common output format for WMS\n
+                // GetFeatureInfo responses\n
+                result = new OpenLayers.Format.GML((this.options ? this.options : {})).read(data);\n
+            }\n
+        } else {\n
+            result = data;\n
+        }\n
+        return result;\n
+    },\n
+    \n
+    \n
+    /**\n
+     * Method: read_msGMLOutput\n
+     * Parse msGMLOutput nodes.\n
+     *\n
+     * Parameters:\n
+     * data - {DOMElement}\n
+     *\n
+     * Returns:\n
+     * {Array}\n
+     */\n
+    read_msGMLOutput: function(data) {\n
+        var response = [];\n
+        var layerNodes = this.getSiblingNodesByTagCriteria(data,\n
+            this.layerIdentifier);\n
+        if (layerNodes) {\n
+            for (var i=0, len=layerNodes.length; i<len; ++i) {\n
+                var node = layerNodes[i];\n
+                var layerName = node.nodeName;\n
+                if (node.prefix) {\n
+                    layerName = layerName.split(\':\')[1];\n
+                }\n
+                var layerName = layerName.replace(this.layerIdentifier, \'\');\n
+                var featureNodes = this.getSiblingNodesByTagCriteria(node, \n
+                    this.featureIdentifier);\n
+                if (featureNodes) {\n
+                    for (var j = 0; j < featureNodes.length; j++) {\n
+                        var featureNode = featureNodes[j];\n
+                        var geomInfo = this.parseGeometry(featureNode);\n
+                        var attributes = this.parseAttributes(featureNode);\n
+                        var feature = new OpenLayers.Feature.Vector(geomInfo.geometry, \n
+                            attributes, null);\n
+                        feature.bounds = geomInfo.bounds;\n
+                        feature.type = layerName;\n
+                        response.push(feature);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return response;\n
+    },\n
+    \n
+    /**\n
+     * Method: read_FeatureInfoResponse\n
+     * Parse FeatureInfoResponse nodes.\n
+     *\n
+     * Parameters:\n
+     * data - {DOMElement}\n
+     *\n
+     * Returns:\n
+     * {Array}\n
+     */\n
+    read_FeatureInfoResponse: function(data) {\n
+        var response = [];\n
+        var featureNodes = this.getElementsByTagNameNS(data, \'*\',\n
+            \'FIELDS\');\n
+\n
+        for(var i=0, len=featureNodes.length;i<len;i++) {\n
+            var featureNode = featureNodes[i];\n
+            var geom = null;\n
+\n
+            // attributes can be actual attributes on the FIELDS tag, \n
+            // or FIELD children\n
+            var attributes = {};\n
+            var j;\n
+            var jlen = featureNode.attributes.length;\n
+            if (jlen > 0) {\n
+                for(j=0; j<jlen; j++) {\n
+                    var attribute = featureNode.attributes[j];\n
+                    attributes[attribute.nodeName] = attribute.nodeValue;\n
+                }\n
+            } else {\n
+                var nodes = featureNode.childNodes;\n
+                for (j=0, jlen=nodes.length; j<jlen; ++j) {\n
+                    var node = nodes[j];\n
+                    if (node.nodeType != 3) {\n
+                        attributes[node.getAttribute("name")] = \n
+                            node.getAttribute("value");\n
+                    }\n
+                }\n
+            }\n
+\n
+            response.push(\n
+                new OpenLayers.Feature.Vector(geom, attributes, null)\n
+            );\n
+        }\n
+        return response;\n
+    },\n
+\n
+    /**\n
+     * Method: getSiblingNodesByTagCriteria\n
+     * Recursively searches passed xml node and all it\'s descendant levels for \n
+     *     nodes whose tagName contains the passed search string. This returns an \n
+     *     array of all sibling nodes which match the criteria from the highest \n
+     *     hierarchial level from which a match is found.\n
+     * \n
+     * Parameters:\n
+     * node - {DOMElement} An xml node\n
+     * criteria - {String} Search string which will match some part of a tagName \n
+     *                                       \n
+     * Returns:\n
+     * Array({DOMElement}) An array of sibling xml nodes\n
+     */                \n
+    getSiblingNodesByTagCriteria: function(node, criteria){\n
+        var nodes = [];\n
+        var children, tagName, n, matchNodes, child;\n
+        if (node && node.hasChildNodes()) {\n
+            children = node.childNodes;\n
+            n = children.length;\n
+\n
+            for(var k=0; k<n; k++){\n
+                child = children[k];\n
+                while (child && child.nodeType != 1) {\n
+                    child = child.nextSibling;\n
+                    k++;\n
+                }\n
+                tagName = (child ? child.nodeName : \'\');\n
+                if (tagName.length > 0 && tagName.indexOf(criteria) > -1) {\n
+                    nodes.push(child);\n
+                } else {\n
+                    matchNodes = this.getSiblingNodesByTagCriteria(\n
+                        child, criteria);\n
+\n
+                    if(matchNodes.length > 0){\n
+                        (nodes.length == 0) ? \n
+                            nodes = matchNodes : nodes.push(matchNodes);\n
+                    }\n
+                }\n
+            }\n
+\n
+        }\n
+        return nodes;\n
+    },\n
+\n
+    /**\n
+     * Method: parseAttributes\n
+     *\n
+     * Parameters:\n
+     * node - {<DOMElement>}\n
+     *\n
+     * Returns:\n
+     * {Object} An attributes object.\n
+     * \n
+     * Notes:\n
+     * Assumes that attributes are direct child xml nodes of the passed node\n
+     * and contain only a single text node. \n
+     */    \n
+    parseAttributes: function(node){\n
+        var attributes = {};\n
+        if (node.nodeType == 1) {\n
+            var children = node.childNodes;\n
+            var n = children.length;\n
+            for (var i = 0; i < n; ++i) {\n
+                var child = children[i];\n
+                if (child.nodeType == 1) {\n
+                    var grandchildren = child.childNodes;\n
+                    var name = (child.prefix) ?\n
+                        child.nodeName.split(":")[1] : child.nodeName;\n
+                    if (grandchildren.length == 0) {\n
+                        attributes[name] = null;\n
+                    } else if (grandchildren.length == 1) {\n
+                        var grandchild = grandchildren[0];\n
+                        if (grandchild.nodeType == 3 ||\n
+                            grandchild.nodeType == 4) {\n
+                            var value = grandchild.nodeValue.replace(\n
+                                this.regExes.trimSpace, "");\n
+                            attributes[name] = value;\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return attributes;\n
+    },\n
+\n
+    /**\n
+     * Method: parseGeometry\n
+     * Parse the geometry and the feature bounds out of the node using \n
+     *     Format.GML\n
+     *\n
+     * Parameters:\n
+     * node - {<DOMElement>}\n
+     *\n
+     * Returns:\n
+     * {Object} An object containing the geometry and the feature bounds\n
+    */\n
+    parseGeometry: function(node) {\n
+        // we need to use the old Format.GML parser since we do not know the \n
+        // geometry name\n
+        if (!this.gmlFormat) {\n
+            this.gmlFormat = new OpenLayers.Format.GML();\n
+        }\n
+        var feature = this.gmlFormat.parseFeature(node);\n
+        var geometry, bounds = null;\n
+        if (feature) {\n
+            geometry = feature.geometry && feature.geometry.clone();\n
+            bounds = feature.bounds && feature.bounds.clone();\n
+            feature.destroy();\n
+        }\n
+        return {geometry: geometry, bounds: bounds};\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WMSGetFeatureInfo"\n
+    \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9782</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

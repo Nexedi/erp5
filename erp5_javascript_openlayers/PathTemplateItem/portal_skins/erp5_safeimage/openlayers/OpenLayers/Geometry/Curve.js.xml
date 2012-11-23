@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Curve.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Geometry/MultiPoint.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Geometry.Curve\n
+ * A Curve is a MultiPoint, whose points are assumed to be connected. To \n
+ * this end, we provide a "getLength()" function, which iterates through \n
+ * the points, summing the distances between them. \n
+ * \n
+ * Inherits: \n
+ *  - <OpenLayers.Geometry.MultiPoint>\n
+ */\n
+OpenLayers.Geometry.Curve = OpenLayers.Class(OpenLayers.Geometry.MultiPoint, {\n
+\n
+    /**\n
+     * Property: componentTypes\n
+     * {Array(String)} An array of class names representing the types of \n
+     *                 components that the collection can include.  A null \n
+     *                 value means the component types are not restricted.\n
+     */\n
+    componentTypes: ["OpenLayers.Geometry.Point"],\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Geometry.Curve\n
+     * \n
+     * Parameters:\n
+     * point - {Array(<OpenLayers.Geometry.Point>)}\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: getLength\n
+     * \n
+     * Returns:\n
+     * {Float} The length of the curve\n
+     */\n
+    getLength: function() {\n
+        var length = 0.0;\n
+        if ( this.components && (this.components.length > 1)) {\n
+            for(var i=1, len=this.components.length; i<len; i++) {\n
+                length += this.components[i-1].distanceTo(this.components[i]);\n
+            }\n
+        }\n
+        return length;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getGeodesicLength\n
+     * Calculate the approximate length of the geometry were it projected onto\n
+     *     the earth.\n
+     *\n
+     * projection - {<OpenLayers.Projection>} The spatial reference system\n
+     *     for the geometry coordinates.  If not provided, Geographic/WGS84 is\n
+     *     assumed.\n
+     * \n
+     * Returns:\n
+     * {Float} The appoximate geodesic length of the geometry in meters.\n
+     */\n
+    getGeodesicLength: function(projection) {\n
+        var geom = this;  // so we can work with a clone if needed\n
+        if(projection) {\n
+            var gg = new OpenLayers.Projection("EPSG:4326");\n
+            if(!gg.equals(projection)) {\n
+                geom = this.clone().transform(projection, gg);\n
+            }\n
+        }\n
+        var length = 0.0;\n
+        if(geom.components && (geom.components.length > 1)) {\n
+            var p1, p2;\n
+            for(var i=1, len=geom.components.length; i<len; i++) {\n
+                p1 = geom.components[i-1];\n
+                p2 = geom.components[i];\n
+                // this returns km and requires lon/lat properties\n
+                length += OpenLayers.Util.distVincenty(\n
+                    {lon: p1.x, lat: p1.y}, {lon: p2.x, lat: p2.y}\n
+                );\n
+            }\n
+        }\n
+        // convert to m\n
+        return length * 1000;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Geometry.Curve"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2952</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

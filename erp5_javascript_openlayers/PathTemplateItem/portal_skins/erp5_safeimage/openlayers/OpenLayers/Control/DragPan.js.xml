@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DragPan.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Handler/Drag.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.DragPan\n
+ * The DragPan control pans the map with a drag of the mouse.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.DragPan = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * Property: type\n
+     * {OpenLayers.Control.TYPES}\n
+     */\n
+    type: OpenLayers.Control.TYPE_TOOL,\n
+    \n
+    /**\n
+     * Property: panned\n
+     * {Boolean} The map moved.\n
+     */\n
+    panned: false,\n
+    \n
+    /**\n
+     * Property: interval\n
+     * {Integer} The number of milliseconds that should ellapse before\n
+     *     panning the map again. Defaults to 1 millisecond. In most cases\n
+     *     you won\'t want to change this value. For slow machines/devices\n
+     *     larger values can be tried out.\n
+     */\n
+    interval: 1,\n
+    \n
+    /**\n
+     * APIProperty: documentDrag\n
+     * {Boolean} If set to true, mouse dragging will continue even if the\n
+     *     mouse cursor leaves the map viewport. Default is false.\n
+     */\n
+    documentDrag: false,\n
+\n
+    /**\n
+     * Property: kinetic\n
+     * {<OpenLayers.Kinetic>} The OpenLayers.Kinetic object.\n
+     */\n
+    kinetic: null,\n
+\n
+    /**\n
+     * APIProperty: enableKinetic\n
+     * {Boolean} Set this option to enable "kinetic dragging". Can be\n
+     *     set to true or to an object. If set to an object this\n
+     *     object will be passed to the {<OpenLayers.Kinetic>}\n
+     *     constructor. Defaults to false.\n
+     *     If you set this property, you should ensure that \n
+     *     OpenLayers/Kinetic.js is included in your build config\n
+     */\n
+    enableKinetic: false,\n
+\n
+    /**\n
+     * APIProperty: kineticInterval\n
+     * {Integer} Interval in milliseconds between 2 steps in the "kinetic\n
+     *     scrolling". Applies only if enableKinetic is set. Defaults\n
+     *     to 10 milliseconds.\n
+     */\n
+    kineticInterval: 10,\n
+\n
+\n
+    /**\n
+     * Method: draw\n
+     * Creates a Drag handler, using <panMap> and\n
+     * <panMapDone> as callbacks.\n
+     */    \n
+    draw: function() {\n
+        if(this.enableKinetic) {\n
+            var config = {interval: this.kineticInterval};\n
+            if(typeof this.enableKinetic === "object") {\n
+                config = OpenLayers.Util.extend(config, this.enableKinetic);\n
+            }\n
+            this.kinetic = new OpenLayers.Kinetic(config);\n
+        }\n
+        this.handler = new OpenLayers.Handler.Drag(this, {\n
+                "move": this.panMap,\n
+                "done": this.panMapDone,\n
+                "down": this.panMapStart\n
+            }, {\n
+                interval: this.interval,\n
+                documentDrag: this.documentDrag\n
+            }\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: panMapStart\n
+     */\n
+    panMapStart: function() {\n
+        if(this.kinetic) {\n
+            this.kinetic.begin();\n
+        }\n
+    },\n
+\n
+    /**\n
+    * Method: panMap\n
+    *\n
+    * Parameters:\n
+    * xy - {<OpenLayers.Pixel>} Pixel of the mouse position\n
+    */\n
+    panMap: function(xy) {\n
+        if(this.kinetic) {\n
+            this.kinetic.update(xy);\n
+        }\n
+        this.panned = true;\n
+        this.map.pan(\n
+            this.handler.last.x - xy.x,\n
+            this.handler.last.y - xy.y,\n
+            {dragging: true, animate: false}\n
+        );\n
+    },\n
+    \n
+    /**\n
+     * Method: panMapDone\n
+     * Finish the panning operation.  Only call setCenter (through <panMap>)\n
+     *     if the map has actually been moved.\n
+     *\n
+     * Parameters:\n
+     * xy - {<OpenLayers.Pixel>} Pixel of the mouse position\n
+     */\n
+    panMapDone: function(xy) {\n
+        if(this.panned) {\n
+            var res = null;\n
+            if (this.kinetic) {\n
+                res = this.kinetic.end(xy);\n
+            }\n
+            this.map.pan(\n
+                this.handler.last.x - xy.x,\n
+                this.handler.last.y - xy.y,\n
+                {dragging: !!res, animate: false}\n
+            );\n
+            if (res) {\n
+                var self = this;\n
+                this.kinetic.move(res, function(x, y, end) {\n
+                    self.map.pan(x, y, {dragging: !end, animate: false});\n
+                });\n
+            }\n
+            this.panned = false;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.DragPan"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4416</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

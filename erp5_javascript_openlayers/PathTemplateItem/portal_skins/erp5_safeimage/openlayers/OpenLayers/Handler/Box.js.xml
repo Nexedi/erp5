@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Box.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Handler.js\n
+ * @requires OpenLayers/Handler/Drag.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler.Box\n
+ * Handler for dragging a rectangle across the map.  Box is displayed \n
+ * on mouse down, moves on mouse move, and is finished on mouse up.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler> \n
+ */\n
+OpenLayers.Handler.Box = OpenLayers.Class(OpenLayers.Handler, {\n
+\n
+    /** \n
+     * Property: dragHandler \n
+     * {<OpenLayers.Handler.Drag>} \n
+     */\n
+    dragHandler: null,\n
+\n
+    /**\n
+     * APIProperty: boxDivClassName\n
+     * {String} The CSS class to use for drawing the box. Default is\n
+     *     olHandlerBoxZoomBox\n
+     */\n
+    boxDivClassName: \'olHandlerBoxZoomBox\',\n
+    \n
+    /**\n
+     * Property: boxOffsets\n
+     * {Object} Caches box offsets from css. This is used by the getBoxOffsets\n
+     * method.\n
+     */\n
+    boxOffsets: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler.Box\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} \n
+     * callbacks - {Object} An object with a properties whose values are\n
+     *     functions.  Various callbacks described below.\n
+     * options - {Object} \n
+     *\n
+     * Named callbacks:\n
+     * start - Called when the box drag operation starts.\n
+     * done - Called when the box drag operation is finished.\n
+     *     The callback should expect to receive a single argument, the box \n
+     *     bounds or a pixel. If the box dragging didn\'t span more than a 5 \n
+     *     pixel distance, a pixel will be returned instead of a bounds object.\n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        OpenLayers.Handler.prototype.initialize.apply(this, arguments);\n
+        this.dragHandler = new OpenLayers.Handler.Drag(\n
+            this, \n
+            {\n
+                down: this.startBox, \n
+                move: this.moveBox, \n
+                out: this.removeBox,\n
+                up: this.endBox\n
+            }, \n
+            {keyMask: this.keyMask}\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: destroy\n
+     */\n
+    destroy: function() {\n
+        OpenLayers.Handler.prototype.destroy.apply(this, arguments);\n
+        if (this.dragHandler) {\n
+            this.dragHandler.destroy();\n
+            this.dragHandler = null;\n
+        }            \n
+    },\n
+\n
+    /**\n
+     * Method: setMap\n
+     */\n
+    setMap: function (map) {\n
+        OpenLayers.Handler.prototype.setMap.apply(this, arguments);\n
+        if (this.dragHandler) {\n
+            this.dragHandler.setMap(map);\n
+        }\n
+    },\n
+\n
+    /**\n
+    * Method: startBox\n
+    *\n
+    * Parameters:\n
+    * xy - {<OpenLayers.Pixel>}\n
+    */\n
+    startBox: function (xy) {\n
+        this.callback("start", []);\n
+        this.zoomBox = OpenLayers.Util.createDiv(\'zoomBox\', {\n
+            x: -9999, y: -9999\n
+        });\n
+        this.zoomBox.className = this.boxDivClassName;                                         \n
+        this.zoomBox.style.zIndex = this.map.Z_INDEX_BASE["Popup"] - 1;\n
+        \n
+        this.map.viewPortDiv.appendChild(this.zoomBox);\n
+        \n
+        OpenLayers.Element.addClass(\n
+            this.map.viewPortDiv, "olDrawBox"\n
+        );\n
+    },\n
+\n
+    /**\n
+    * Method: moveBox\n
+    */\n
+    moveBox: function (xy) {\n
+        var startX = this.dragHandler.start.x;\n
+        var startY = this.dragHandler.start.y;\n
+        var deltaX = Math.abs(startX - xy.x);\n
+        var deltaY = Math.abs(startY - xy.y);\n
+\n
+        var offset = this.getBoxOffsets();\n
+        this.zoomBox.style.width = (deltaX + offset.width + 1) + "px";\n
+        this.zoomBox.style.height = (deltaY + offset.height + 1) + "px";\n
+        this.zoomBox.style.left = (xy.x < startX ?\n
+            startX - deltaX - offset.left : startX - offset.left) + "px";\n
+        this.zoomBox.style.top = (xy.y < startY ?\n
+            startY - deltaY - offset.top : startY - offset.top) + "px";\n
+    },\n
+\n
+    /**\n
+    * Method: endBox\n
+    */\n
+    endBox: function(end) {\n
+        var result;\n
+        if (Math.abs(this.dragHandler.start.x - end.x) > 5 ||    \n
+            Math.abs(this.dragHandler.start.y - end.y) > 5) {   \n
+            var start = this.dragHandler.start;\n
+            var top = Math.min(start.y, end.y);\n
+            var bottom = Math.max(start.y, end.y);\n
+            var left = Math.min(start.x, end.x);\n
+            var right = Math.max(start.x, end.x);\n
+            result = new OpenLayers.Bounds(left, bottom, right, top);\n
+        } else {\n
+            result = this.dragHandler.start.clone(); // i.e. OL.Pixel\n
+        } \n
+        this.removeBox();\n
+\n
+        this.callback("done", [result]);\n
+    },\n
+\n
+    /**\n
+     * Method: removeBox\n
+     * Remove the zoombox from the screen and nullify our reference to it.\n
+     */\n
+    removeBox: function() {\n
+        this.map.viewPortDiv.removeChild(this.zoomBox);\n
+        this.zoomBox = null;\n
+        this.boxOffsets = null;\n
+        OpenLayers.Element.removeClass(\n
+            this.map.viewPortDiv, "olDrawBox"\n
+        );\n
+\n
+    },\n
+\n
+    /**\n
+     * Method: activate\n
+     */\n
+    activate: function () {\n
+        if (OpenLayers.Handler.prototype.activate.apply(this, arguments)) {\n
+            this.dragHandler.activate();\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: deactivate\n
+     */\n
+    deactivate: function () {\n
+        if (OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {\n
+            if (this.dragHandler.deactivate()) {\n
+                if (this.zoomBox) {\n
+                    this.removeBox();\n
+                }\n
+            }\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: getBoxOffsets\n
+     * Determines border offsets for a box, according to the box model.\n
+     * \n
+     * Returns:\n
+     * {Object} an object with the following offsets:\n
+     *     - left\n
+     *     - right\n
+     *     - top\n
+     *     - bottom\n
+     *     - width\n
+     *     - height\n
+     */\n
+    getBoxOffsets: function() {\n
+        if (!this.boxOffsets) {\n
+            // Determine the box model. If the testDiv\'s clientWidth is 3, then\n
+            // the borders are outside and we are dealing with the w3c box\n
+            // model. Otherwise, the browser uses the traditional box model and\n
+            // the borders are inside the box bounds, leaving us with a\n
+            // clientWidth of 1.\n
+            var testDiv = document.createElement("div");\n
+            //testDiv.style.visibility = "hidden";\n
+            testDiv.style.position = "absolute";\n
+            testDiv.style.border = "1px solid black";\n
+            testDiv.style.width = "3px";\n
+            document.body.appendChild(testDiv);\n
+            var w3cBoxModel = testDiv.clientWidth == 3;\n
+            document.body.removeChild(testDiv);\n
+            \n
+            var left = parseInt(OpenLayers.Element.getStyle(this.zoomBox,\n
+                "border-left-width"));\n
+            var right = parseInt(OpenLayers.Element.getStyle(\n
+                this.zoomBox, "border-right-width"));\n
+            var top = parseInt(OpenLayers.Element.getStyle(this.zoomBox,\n
+                "border-top-width"));\n
+            var bottom = parseInt(OpenLayers.Element.getStyle(\n
+                this.zoomBox, "border-bottom-width"));\n
+            this.boxOffsets = {\n
+                left: left,\n
+                right: right,\n
+                top: top,\n
+                bottom: bottom,\n
+                width: w3cBoxModel === false ? left + right : 0,\n
+                height: w3cBoxModel === false ? top + bottom : 0\n
+            };\n
+        }\n
+        return this.boxOffsets;\n
+    },\n
+  \n
+    CLASS_NAME: "OpenLayers.Handler.Box"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7721</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

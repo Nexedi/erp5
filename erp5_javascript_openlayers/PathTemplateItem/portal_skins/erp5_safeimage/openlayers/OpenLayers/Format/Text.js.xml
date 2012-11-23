@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Text.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.Text\n
+ * Read Text format. Create a new instance with the <OpenLayers.Format.Text>\n
+ *     constructor. This reads text which is formatted like CSV text, using\n
+ *     tabs as the seperator by default. It provides parsing of data originally\n
+ *     used in the MapViewerService, described on the wiki. This Format is used\n
+ *     by the <OpenLayers.Layer.Text> class.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format>\n
+ */\n
+OpenLayers.Format.Text = OpenLayers.Class(OpenLayers.Format, {\n
+    \n
+    /**\n
+     * APIProperty: defaultStyle\n
+     * defaultStyle allows one to control the default styling of the features.\n
+     *    It should be a symbolizer hash. By default, this is set to match the\n
+     *    Layer.Text behavior, which is to use the default OpenLayers Icon.\n
+     */\n
+    defaultStyle: null,\n
+     \n
+    /**\n
+     * APIProperty: extractStyles\n
+     * set to true to extract styles from the TSV files, using information\n
+     * from the image or icon, iconSize and iconOffset fields. This will result\n
+     * in features with a symbolizer (style) property set, using the\n
+     * default symbolizer specified in <defaultStyle>. Set to false if you\n
+     * wish to use a styleMap or OpenLayers.Style options to style your\n
+     * layer instead.\n
+     */\n
+    extractStyles: true,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.Text\n
+     * Create a new parser for TSV Text.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        options = options || {};\n
+\n
+        if(options.extractStyles !== false) {\n
+            options.defaultStyle = {\n
+                \'externalGraphic\': OpenLayers.Util.getImageLocation("marker.png"),\n
+                \'graphicWidth\': 21,\n
+                \'graphicHeight\': 25,\n
+                \'graphicXOffset\': -10.5,\n
+                \'graphicYOffset\': -12.5\n
+            };\n
+        }\n
+        \n
+        OpenLayers.Format.prototype.initialize.apply(this, [options]);\n
+    }, \n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Return a list of features from a Tab Seperated Values text string.\n
+     * \n
+     * Parameters:\n
+     * text - {String} \n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Feature.Vector>})\n
+     */\n
+    read: function(text) {\n
+        var lines = text.split(\'\\n\');\n
+        var columns;\n
+        var features = [];\n
+        // length - 1 to allow for trailing new line\n
+        for (var lcv = 0; lcv < (lines.length - 1); lcv++) {\n
+            var currLine = lines[lcv].replace(/^\\s*/,\'\').replace(/\\s*$/,\'\');\n
+        \n
+            if (currLine.charAt(0) != \'#\') { /* not a comment */\n
+            \n
+                if (!columns) {\n
+                    //First line is columns\n
+                    columns = currLine.split(\'\\t\');\n
+                } else {\n
+                    var vals = currLine.split(\'\\t\');\n
+                    var geometry = new OpenLayers.Geometry.Point(0,0);\n
+                    var attributes = {};\n
+                    var style = this.defaultStyle ? \n
+                        OpenLayers.Util.applyDefaults({}, this.defaultStyle) :\n
+                        null;  \n
+                    var icon, iconSize, iconOffset, overflow;\n
+                    var set = false;\n
+                    for (var valIndex = 0; valIndex < vals.length; valIndex++) {\n
+                        if (vals[valIndex]) {\n
+                            if (columns[valIndex] == \'point\') {\n
+                                var coords = vals[valIndex].split(\',\');\n
+                                geometry.y = parseFloat(coords[0]);\n
+                                geometry.x = parseFloat(coords[1]);\n
+                                set = true;\n
+                            } else if (columns[valIndex] == \'lat\') {\n
+                                geometry.y = parseFloat(vals[valIndex]);\n
+                                set = true;\n
+                            } else if (columns[valIndex] == \'lon\') {\n
+                                geometry.x = parseFloat(vals[valIndex]);\n
+                                set = true;\n
+                            } else if (columns[valIndex] == \'title\')\n
+                                attributes[\'title\'] = vals[valIndex];\n
+                            else if (columns[valIndex] == \'image\' ||\n
+                                     columns[valIndex] == \'icon\' && style) {\n
+                                style[\'externalGraphic\'] = vals[valIndex];\n
+                            } else if (columns[valIndex] == \'iconSize\' && style) {\n
+                                var size = vals[valIndex].split(\',\');\n
+                                style[\'graphicWidth\'] = parseFloat(size[0]);\n
+                                style[\'graphicHeight\'] = parseFloat(size[1]);\n
+                            } else if (columns[valIndex] == \'iconOffset\' && style) {\n
+                                var offset = vals[valIndex].split(\',\');\n
+                                style[\'graphicXOffset\'] = parseFloat(offset[0]);\n
+                                style[\'graphicYOffset\'] = parseFloat(offset[1]);\n
+                            } else if (columns[valIndex] == \'description\') {\n
+                                attributes[\'description\'] = vals[valIndex];\n
+                            } else if (columns[valIndex] == \'overflow\') {\n
+                                attributes[\'overflow\'] = vals[valIndex];\n
+                            } else {\n
+                                // For StyleMap filtering, allow additional\n
+                                // columns to be stored as attributes.\n
+                                attributes[columns[valIndex]] = vals[valIndex];\n
+                            }    \n
+                        }\n
+                    }\n
+                    if (set) {\n
+                      if (this.internalProjection && this.externalProjection) {\n
+                          geometry.transform(this.externalProjection, \n
+                                             this.internalProjection); \n
+                      }\n
+                      var feature = new OpenLayers.Feature.Vector(geometry, attributes, style);\n
+                      features.push(feature);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return features;\n
+    },   \n
+\n
+    CLASS_NAME: "OpenLayers.Format.Text" \n
+});    \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6597</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

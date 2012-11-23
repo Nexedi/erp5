@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684101.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_0_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WFSCapabilities/v1.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WFSCapabilities/v1_0_0\n
+ * Read WFS Capabilities version 1.0.0.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.WFSCapabilities.v1>\n
+ */\n
+OpenLayers.Format.WFSCapabilities.v1_0_0 = OpenLayers.Class(\n
+    OpenLayers.Format.WFSCapabilities.v1, {\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WFSCapabilities.v1_0_0\n
+     * Create a new parser for WFS capabilities version 1.0.0.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "wfs": OpenLayers.Util.applyDefaults({\n
+            "Service": function(node, capabilities) {\n
+                capabilities.service = {};\n
+                this.readChildNodes(node, capabilities.service);\n
+            },\n
+            "Fees": function(node, service) {\n
+                var fees = this.getChildValue(node);\n
+                if (fees && fees.toLowerCase() != "none") {\n
+                    service.fees = fees;\n
+                }\n
+            },\n
+            "AccessConstraints": function(node, service) {\n
+                var constraints = this.getChildValue(node);\n
+                if (constraints && constraints.toLowerCase() != "none") {\n
+                    service.accessConstraints = constraints;\n
+                }\n
+            },\n
+            "OnlineResource": function(node, service) {\n
+                var onlineResource = this.getChildValue(node);\n
+                if (onlineResource && onlineResource.toLowerCase() != "none") {\n
+                    service.onlineResource = onlineResource;\n
+                }\n
+            },\n
+            "Keywords": function(node, service) {\n
+                var keywords = this.getChildValue(node);\n
+                if (keywords && keywords.toLowerCase() != "none") {\n
+                    service.keywords = keywords.split(\', \');\n
+                }\n
+            },\n
+            "Capability": function(node, capabilities) {\n
+                capabilities.capability = {};\n
+                this.readChildNodes(node, capabilities.capability);\n
+            },\n
+            "Request": function(node, obj) {\n
+                obj.request = {};\n
+                this.readChildNodes(node, obj.request);\n
+            },\n
+            "GetFeature": function(node, request) {\n
+                request.getfeature = {\n
+                    href: {}, // DCPType\n
+                    formats: [] // ResultFormat\n
+                };\n
+                this.readChildNodes(node, request.getfeature);\n
+            },\n
+            "ResultFormat": function(node, obj) {\n
+                var children = node.childNodes;\n
+                var childNode;\n
+                for(var i=0; i<children.length; i++) {\n
+                    childNode = children[i];\n
+                    if(childNode.nodeType == 1) {\n
+                        obj.formats.push(childNode.nodeName);\n
+                    }\n
+                }\n
+            },\n
+            "DCPType": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "HTTP": function(node, obj) {\n
+                this.readChildNodes(node, obj.href);\n
+            },\n
+            "Get": function(node, obj) {\n
+                obj.get = node.getAttribute("onlineResource");\n
+            },\n
+            "Post": function(node, obj) {\n
+                obj.post = node.getAttribute("onlineResource");\n
+            },\n
+            "SRS": function(node, obj) {\n
+                var srs = this.getChildValue(node);\n
+                if (srs) {\n
+                    obj.srs = srs;\n
+                }\n
+            }\n
+        }, OpenLayers.Format.WFSCapabilities.v1.prototype.readers["wfs"])\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.WFSCapabilities.v1_0_0" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4360</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1072 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ArcXML.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Geometry/Polygon.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ * @requires OpenLayers/Geometry/MultiPolygon.js\n
+ * @requires OpenLayers/Geometry/LinearRing.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.ArcXML\n
+ * Read/Wite ArcXML. Create a new instance with the <OpenLayers.Format.ArcXML>\n
+ *     constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.ArcXML = OpenLayers.Class(OpenLayers.Format.XML, {\n
+\n
+    /**\n
+     * Property: fontStyleKeys\n
+     * {Array} List of keys used in font styling.\n
+     */\n
+    fontStyleKeys: [\n
+        \'antialiasing\', \'blockout\', \'font\', \'fontcolor\',\'fontsize\', \'fontstyle\',\n
+        \'glowing\', \'interval\', \'outline\', \'printmode\', \'shadow\', \'transparency\'\n
+    ],\n
+\n
+    /**\n
+     * Property: request\n
+     * A get_image request destined for an ArcIMS server.\n
+     */\n
+    request: null,\n
+    \n
+    /**\n
+     * Property: response\n
+     * A parsed response from an ArcIMS server.\n
+     */\n
+    response: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.ArcXML\n
+     * Create a new parser/writer for ArcXML.  Create an instance of this class\n
+     *    to begin authoring a request to an ArcIMS service.  This is used\n
+     *    primarily by the ArcIMS layer, but could be used to do other wild\n
+     *    stuff, like geocoding.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        this.request = new OpenLayers.Format.ArcXML.Request();\n
+        this.response = new OpenLayers.Format.ArcXML.Response();\n
+\n
+        if (options) {\n
+            if (options.requesttype == "feature") {\n
+                this.request.get_image = null;\n
+            \n
+                var qry = this.request.get_feature.query;\n
+                this.addCoordSys(qry.featurecoordsys, options.featureCoordSys);\n
+                this.addCoordSys(qry.filtercoordsys, options.filterCoordSys);\n
+            \n
+                if (options.polygon) {\n
+                    qry.isspatial = true;\n
+                    qry.spatialfilter.polygon = options.polygon;\n
+                } else if (options.envelope) {\n
+                    qry.isspatial = true;\n
+                    qry.spatialfilter.envelope = {minx:0, miny:0, maxx:0, maxy:0};\n
+                    this.parseEnvelope(qry.spatialfilter.envelope, options.envelope);\n
+                }\n
+            } else if (options.requesttype == "image") {\n
+                this.request.get_feature = null;\n
+            \n
+                var props = this.request.get_image.properties;\n
+                this.parseEnvelope(props.envelope, options.envelope);\n
+            \n
+                this.addLayers(props.layerlist, options.layers);\n
+                this.addImageSize(props.imagesize, options.tileSize);\n
+                this.addCoordSys(props.featurecoordsys, options.featureCoordSys);\n
+                this.addCoordSys(props.filtercoordsys, options.filterCoordSys);\n
+            } else {\n
+                // if an arcxml object is being created with no request type, it is\n
+                // probably going to consume a response, so do not throw an error if\n
+                // the requesttype is not defined\n
+                this.request = null;\n
+            }\n
+        }\n
+        \n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);\n
+    },\n
+    \n
+    /**\n
+     * Method: parseEnvelope\n
+     * Parse an array of coordinates into an ArcXML envelope structure.\n
+     *\n
+     * Parameters:\n
+     * env - {Object} An envelope object that will contain the parsed coordinates.\n
+     * arr - {Array(double)} An array of coordinates in the order: [ minx, miny, maxx, maxy ]\n
+     */\n
+    parseEnvelope: function(env, arr) {\n
+        if (arr && arr.length == 4) {          \n
+            env.minx = arr[0];\n
+            env.miny = arr[1];\n
+            env.maxx = arr[2];\n
+            env.maxy = arr[3];\n
+        }\n
+    },\n
+    \n
+    /** \n
+     * Method: addLayers\n
+     * Add a collection of layers to another collection of layers. Each layer in the list is tuple of\n
+     * { id, visible }.  These layer collections represent the \n
+     * /ARCXML/REQUEST/get_image/PROPERTIES/LAYERLIST/LAYERDEF items in ArcXML\n
+     *\n
+     * TODO: Add support for dynamic layer rendering.\n
+     *\n
+     * Parameters:\n
+     * ll - {Array({id,visible})} A list of layer definitions.\n
+     * lyrs - {Array({id,visible})} A list of layer definitions.\n
+     */\n
+    addLayers: function(ll, lyrs) {\n
+        for(var lind = 0, len=lyrs.length; lind < len; lind++) {\n
+            ll.push(lyrs[lind]);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: addImageSize\n
+     * Set the size of the requested image.\n
+     *\n
+     * Parameters:\n
+     * imsize - {Object} An ArcXML imagesize object.\n
+     * olsize - {<OpenLayers.Size>} The image size to set.\n
+     */\n
+    addImageSize: function(imsize, olsize) {\n
+        if (olsize !== null) {\n
+            imsize.width = olsize.w;\n
+            imsize.height = olsize.h;\n
+            imsize.printwidth = olsize.w;\n
+            imsize.printheight = olsize.h;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: addCoordSys\n
+     * Add the coordinate system information to an object. The object may be \n
+     *\n
+     * Parameters:\n
+     * featOrFilt - {Object} A featurecoordsys or filtercoordsys ArcXML structure.\n
+     * fsys - {String} or {<OpenLayers.Projection>} or {filtercoordsys} or \n
+     * {featurecoordsys} A projection representation. If it\'s a {String}, \n
+     * the value is assumed to be the SRID.  If it\'s a {OpenLayers.Projection} \n
+     * AND Proj4js is available, the projection number and name are extracted \n
+     * from there.  If it\'s a filter or feature ArcXML structure, it is copied.\n
+     */\n
+    addCoordSys: function(featOrFilt, fsys) {\n
+        if (typeof fsys == "string") {\n
+            featOrFilt.id = parseInt(fsys);\n
+            featOrFilt.string = fsys;\n
+        }\n
+        // is this a proj4js instance?\n
+        else if (typeof fsys == "object" && fsys.proj !== null){\n
+            featOrFilt.id = fsys.proj.srsProjNumber;\n
+            featOrFilt.string = fsys.proj.srsCode;\n
+        } else {\n
+            featOrFilt = fsys;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: iserror\n
+     * Check to see if the response from the server was an error.\n
+     *\n
+     * Parameters:\n
+     * data - {String} or {DOMElement} data to read/parse. If nothing is supplied,\n
+     * the current response is examined.\n
+     *\n
+     * Returns:\n
+     * {Boolean} true if the response was an error.\n
+     */\n
+    iserror: function(data) {\n
+        var ret = null; \n
+        \n
+        if (!data) {\n
+            ret = (this.response.error !== \'\');\n
+        } else {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+            var errorNodes = data.documentElement.getElementsByTagName("ERROR");\n
+            ret = (errorNodes !== null && errorNodes.length > 0);\n
+        }\n
+\n
+        return ret;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read data from a string, and return an response. \n
+     * \n
+     * Parameters:\n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Format.ArcXML.Response>} An ArcXML response. Note that this response\n
+     *     data may change in the future. \n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        \n
+        var arcNode = null;\n
+        if (data && data.documentElement) {\n
+            if(data.documentElement.nodeName == "ARCXML") {\n
+                arcNode = data.documentElement;\n
+            } else {\n
+                arcNode = data.documentElement.getElementsByTagName("ARCXML")[0];\n
+            }\n
+        }\n
+          \n
+        // in Safari, arcNode will be there but will have a child named \n
+        // parsererror\n
+        if (!arcNode || arcNode.firstChild.nodeName === \'parsererror\') {\n
+            var error, source;\n
+            try {\n
+                error = data.firstChild.nodeValue;\n
+                source = data.firstChild.childNodes[1].firstChild.nodeValue;\n
+            } catch (err) {\n
+                // pass\n
+            }\n
+            throw {\n
+                message: "Error parsing the ArcXML request", \n
+                error: error,\n
+                source: source\n
+            };\n
+        }\n
+        \n
+        var response = this.parseResponse(arcNode);\n
+        return response;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: write\n
+     * Generate an ArcXml document string for sending to an ArcIMS server. \n
+     * \n
+     * Returns:\n
+     * {String} A string representing the ArcXML document request.\n
+     */\n
+    write: function(request) {       \n
+        if (!request) {\n
+            request = this.request;\n
+        }    \n
+        var root = this.createElementNS("", "ARCXML");\n
+        root.setAttribute("version","1.1");\n
+\n
+        var reqElem = this.createElementNS("", "REQUEST");\n
+        \n
+        if (request.get_image != null) {\n
+            var getElem = this.createElementNS("", "GET_IMAGE");\n
+            reqElem.appendChild(getElem);\n
+\n
+            var propElem = this.createElementNS("", "PROPERTIES");\n
+            getElem.appendChild(propElem);\n
+\n
+            var props = request.get_image.properties;\n
+            if (props.featurecoordsys != null) {\n
+                var feat = this.createElementNS("", "FEATURECOORDSYS");\n
+                propElem.appendChild(feat);\n
+                \n
+                if (props.featurecoordsys.id === 0) {\n
+                    feat.setAttribute("string", props.featurecoordsys[\'string\']);\n
+                }\n
+                else {\n
+                    feat.setAttribute("id", props.featurecoordsys.id);\n
+                }\n
+            }\n
+          \n
+            if (props.filtercoordsys != null) {\n
+                var filt = this.createElementNS("", "FILTERCOORDSYS");\n
+                propElem.appendChild(filt);\n
+\n
+                if (props.filtercoordsys.id === 0) {\n
+                    filt.setAttribute("string", props.filtercoordsys.string);\n
+                }\n
+                else {\n
+                    filt.setAttribute("id", props.filtercoordsys.id);\n
+                }\n
+            }\n
+          \n
+            if (props.envelope != null) {\n
+                var env = this.createElementNS("", "ENVELOPE");\n
+                propElem.appendChild(env);\n
+\n
+                env.setAttribute("minx", props.envelope.minx);\n
+                env.setAttribute("miny", props.envelope.miny);\n
+                env.setAttribute("maxx", props.envelope.maxx);\n
+                env.setAttribute("maxy", props.envelope.maxy);\n
+            }        \n
+          \n
+            var imagesz = this.createElementNS("", "IMAGESIZE");\n
+            propElem.appendChild(imagesz);\n
+          \n
+            imagesz.setAttribute("height", props.imagesize.height);\n
+            imagesz.setAttribute("width", props.imagesize.width);\n
+          \n
+            if (props.imagesize.height != props.imagesize.printheight ||\n
+                 props.imagesize.width != props.imagesize.printwidth) {\n
+                imagesz.setAttribute("printheight", props.imagesize.printheight);\n
+                imagesz.setArrtibute("printwidth", props.imagesize.printwidth);\n
+            }\n
+          \n
+            if (props.background != null) {\n
+                var backgrnd = this.createElementNS("", "BACKGROUND");\n
+                propElem.appendChild(backgrnd);\n
+            \n
+                backgrnd.setAttribute("color", \n
+                    props.background.color.r + "," + \n
+                    props.background.color.g + "," + \n
+                    props.background.color.b);\n
+              \n
+                if (props.background.transcolor !== null) {\n
+                    backgrnd.setAttribute("transcolor", \n
+                        props.background.transcolor.r + "," + \n
+                        props.background.transcolor.g + "," + \n
+                        props.background.transcolor.b);\n
+                }\n
+            }\n
+          \n
+            if (props.layerlist != null && props.layerlist.length > 0) {\n
+                var layerlst = this.createElementNS("", "LAYERLIST");\n
+                propElem.appendChild(layerlst);\n
+            \n
+                for (var ld = 0; ld < props.layerlist.length; ld++) {\n
+                    var ldef = this.createElementNS("", "LAYERDEF");\n
+                    layerlst.appendChild(ldef);\n
+              \n
+                    ldef.setAttribute("id", props.layerlist[ld].id);\n
+                    ldef.setAttribute("visible", props.layerlist[ld].visible);\n
+              \n
+                    if (typeof props.layerlist[ld].query == "object") {\n
+                        var query = props.layerlist[ld].query;\n
+\n
+                        if (query.where.length < 0) {\n
+                            continue;\n
+                        }\n
+                  \n
+                        var queryElem = null;\n
+                        if (typeof query.spatialfilter == "boolean" && query.spatialfilter) {\n
+                            // handle spatial filter madness\n
+                            queryElem = this.createElementNS("", "SPATIALQUERY");\n
+                        }\n
+                        else {\n
+                            queryElem = this.createElementNS("", "QUERY");\n
+                        }\n
+                \n
+                        queryElem.setAttribute("where", query.where);\n
+                \n
+                        if (typeof query.accuracy == "number" && query.accuracy > 0) {\n
+                            queryElem.setAttribute("accuracy", query.accuracy);\n
+                        }\n
+                        if (typeof query.featurelimit == "number" && query.featurelimit < 2000) {\n
+                            queryElem.setAttribute("featurelimit", query.featurelimit);\n
+                        }\n
+                        if (typeof query.subfields == "string" && query.subfields != "#ALL#") {\n
+                            queryElem.setAttribute("subfields", query.subfields);\n
+                        }\n
+                        if (typeof query.joinexpression == "string" && query.joinexpression.length > 0) {\n
+                            queryElem.setAttribute("joinexpression", query.joinexpression);\n
+                        }\n
+                        if (typeof query.jointables == "string" && query.jointables.length > 0) {\n
+                            queryElem.setAttribute("jointables", query.jointables);\n
+                        }\n
+\n
+                        ldef.appendChild(queryElem);\n
+                    }\n
+              \n
+                    if (typeof props.layerlist[ld].renderer == "object") {\n
+                        this.addRenderer(ldef, props.layerlist[ld].renderer);                  \n
+                    }\n
+                }\n
+            }\n
+        } else if (request.get_feature != null) {\n
+            var getElem = this.createElementNS("", "GET_FEATURES");\n
+            getElem.setAttribute("outputmode", "newxml");\n
+            getElem.setAttribute("checkesc", "true");\n
+          \n
+            if (request.get_feature.geometry) {\n
+                getElem.setAttribute("geometry", request.get_feature.geometry);\n
+            }\n
+            else {\n
+                getElem.setAttribute("geometry", "false");\n
+            }\n
+          \n
+            if (request.get_feature.compact) {\n
+                getElem.setAttribute("compact", request.get_feature.compact);\n
+            }\n
+          \n
+            if (request.get_feature.featurelimit == "number") {\n
+                getElem.setAttribute("featurelimit", request.get_feature.featurelimit);\n
+            }\n
+          \n
+            getElem.setAttribute("globalenvelope", "true");\n
+            reqElem.appendChild(getElem);\n
+          \n
+            if (request.get_feature.layer != null && request.get_feature.layer.length > 0) {\n
+                var lyrElem = this.createElementNS("", "LAYER");\n
+                lyrElem.setAttribute("id", request.get_feature.layer);\n
+                getElem.appendChild(lyrElem);\n
+            }\n
+          \n
+            var fquery = request.get_feature.query;\n
+            if (fquery != null) {\n
+                var qElem = null;\n
+                if (fquery.isspatial) {\n
+                    qElem = this.createElementNS("", "SPATIALQUERY");\n
+                } else {\n
+                    qElem = this.createElementNS("", "QUERY");\n
+                }\n
+                getElem.appendChild(qElem);\n
+                \n
+                if (typeof fquery.accuracy == "number") {\n
+                    qElem.setAttribute("accuracy", fquery.accuracy);\n
+                }\n
+                //qElem.setAttribute("featurelimit", "5");\n
+            \n
+                if (fquery.featurecoordsys != null) {\n
+                    var fcsElem1 = this.createElementNS("", "FEATURECOORDSYS");\n
+              \n
+                    if (fquery.featurecoordsys.id == 0) {\n
+                        fcsElem1.setAttribute("string", fquery.featurecoordsys.string);\n
+                    } else {\n
+                        fcsElem1.setAttribute("id", fquery.featurecoordsys.id);\n
+                    }\n
+                    qElem.appendChild(fcsElem1);\n
+                }\n
+            \n
+                if (fquery.filtercoordsys != null) {\n
+                    var fcsElem2 = this.createElementNS("", "FILTERCOORDSYS");\n
+              \n
+                    if (fquery.filtercoordsys.id === 0) {\n
+                        fcsElem2.setAttribute("string", fquery.filtercoordsys.string);\n
+                    } else {\n
+                        fcsElem2.setAttribute("id", fquery.filtercoordsys.id);\n
+                    }\n
+                    qElem.appendChild(fcsElem2);\n
+                }\n
+            \n
+                if (fquery.buffer > 0) {   \n
+                    var bufElem = this.createElementNS("", "BUFFER");\n
+                    bufElem.setAttribute("distance", fquery.buffer);\n
+                    qElem.appendChild(bufElem);\n
+                }\n
+            \n
+                if (fquery.isspatial) {\n
+                    var spfElem = this.createElementNS("", "SPATIALFILTER");\n
+                    spfElem.setAttribute("relation", fquery.spatialfilter.relation);\n
+                    qElem.appendChild(spfElem);\n
+              \n
+                    if (fquery.spatialfilter.envelope) {\n
+                        var envElem = this.createElementNS("", "ENVELOPE"); \n
+                        envElem.setAttribute("minx", fquery.spatialfilter.envelope.minx);\n
+                        envElem.setAttribute("miny", fquery.spatialfilter.envelope.miny);\n
+                        envElem.setAttribute("maxx", fquery.spatialfilter.envelope.maxx);\n
+                        envElem.setAttribute("maxy", fquery.spatialfilter.envelope.maxy);\n
+                        spfElem.appendChild(envElem);\n
+                    } else if(typeof fquery.spatialfilter.polygon == "object") {\n
+                        spfElem.appendChild(this.writePolygonGeometry(fquery.spatialfilter.polygon));                \n
+                    }\n
+                }\n
+            \n
+                if (fquery.where != null && fquery.where.length > 0) {\n
+                    qElem.setAttribute("where", fquery.where);\n
+                }\n
+            }\n
+        }\n
+\n
+        root.appendChild(reqElem);\n
+\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [root]);\n
+    },\n
+    \n
+    \n
+    addGroupRenderer: function(ldef, toprenderer) {\n
+        var topRelem = this.createElementNS("", "GROUPRENDERER");\n
+        ldef.appendChild(topRelem);\n
+      \n
+        for (var rind = 0; rind < toprenderer.length; rind++) {\n
+            var renderer = toprenderer[rind];\n
+            this.addRenderer(topRelem, renderer);\n
+        }\n
+    },\n
+    \n
+    \n
+    addRenderer: function(topRelem, renderer) {\n
+        if (OpenLayers.Util.isArray(renderer)) {\n
+            this.addGroupRenderer(topRelem, renderer);\n
+        } else {\n
+            var renderElem = this.createElementNS("", renderer.type.toUpperCase() + "RENDERER");\n
+            topRelem.appendChild(renderElem);\n
+          \n
+            if (renderElem.tagName == "VALUEMAPRENDERER") {\n
+                this.addValueMapRenderer(renderElem, renderer);\n
+            } else if (renderElem.tagName == "VALUEMAPLABELRENDERER") {\n
+                this.addValueMapLabelRenderer(renderElem, renderer);\n
+            } else if (renderElem.tagName == "SIMPLELABELRENDERER") {\n
+                this.addSimpleLabelRenderer(renderElem, renderer);\n
+            } else if (renderElem.tagName == "SCALEDEPENDENTRENDERER") {\n
+                this.addScaleDependentRenderer(renderElem, renderer);\n
+            }\n
+        }             \n
+    },\n
+    \n
+    \n
+    addScaleDependentRenderer: function(renderElem, renderer) {\n
+        if (typeof renderer.lower == "string" || typeof renderer.lower == "number") {\n
+            renderElem.setAttribute("lower", renderer.lower);\n
+        }\n
+        if (typeof renderer.upper == "string" || typeof renderer.upper == "number") {\n
+            renderElem.setAttribute("upper", renderer.upper);\n
+        }\n
+        \n
+        this.addRenderer(renderElem, renderer.renderer);\n
+    },\n
+    \n
+    \n
+    addValueMapLabelRenderer: function(renderElem, renderer) {\n
+        renderElem.setAttribute("lookupfield", renderer.lookupfield);\n
+        renderElem.setAttribute("labelfield", renderer.labelfield);\n
+      \n
+        if (typeof renderer.exacts == "object") {\n
+            for (var ext=0, extlen=renderer.exacts.length; ext<extlen; ext++) {\n
+                var exact = renderer.exacts[ext];\n
+          \n
+                var eelem = this.createElementNS("", "EXACT");\n
+          \n
+                if (typeof exact.value == "string") {\n
+                    eelem.setAttribute("value", exact.value);\n
+                }\n
+                if (typeof exact.label == "string") {\n
+                    eelem.setAttribute("label", exact.label);\n
+                }\n
+                if (typeof exact.method == "string") {\n
+                    eelem.setAttribute("method", exact.method);\n
+                }\n
+\n
+                renderElem.appendChild(eelem);\n
+            \n
+                if (typeof exact.symbol == "object") {\n
+                    var selem = null;\n
+                \n
+                    if (exact.symbol.type == "text") {\n
+                        selem = this.createElementNS("", "TEXTSYMBOL");\n
+                    }\n
+                \n
+                    if (selem != null) {\n
+                        var keys = this.fontStyleKeys;\n
+                        for (var i = 0, len = keys.length; i < len; i++) {\n
+                            var key = keys[i];\n
+                            if (exact.symbol[key]) {\n
+                                selem.setAttribute(key, exact.symbol[key]);\n
+                            }\n
+                        }    \n
+                        eelem.appendChild(selem);\n
+                    }\n
+                }\n
+            } // for each exact\n
+        }      \n
+    },\n
+    \n
+    addValueMapRenderer: function(renderElem, renderer) {\n
+        renderElem.setAttribute("lookupfield", renderer.lookupfield);\n
+        \n
+        if (typeof renderer.ranges == "object") {\n
+            for(var rng=0, rnglen=renderer.ranges.length; rng<rnglen; rng++) {\n
+                var range = renderer.ranges[rng];\n
+                \n
+                var relem = this.createElementNS("", "RANGE");\n
+                relem.setAttribute("lower", range.lower);\n
+                relem.setAttribute("upper", range.upper);\n
+                \n
+                renderElem.appendChild(relem);\n
+                \n
+                if (typeof range.symbol == "object") {\n
+                    var selem = null;\n
+              \n
+                    if (range.symbol.type == "simplepolygon") {\n
+                        selem = this.createElementNS("", "SIMPLEPOLYGONSYMBOL");\n
+                    }\n
+              \n
+                    if (selem != null) {\n
+                        if (typeof range.symbol.boundarycolor == "string") {\n
+                            selem.setAttribute("boundarycolor", range.symbol.boundarycolor);\n
+                        }\n
+                        if (typeof range.symbol.fillcolor == "string") {\n
+                            selem.setAttribute("fillcolor", range.symbol.fillcolor);\n
+                        }\n
+                        if (typeof range.symbol.filltransparency == "number") {\n
+                            selem.setAttribute("filltransparency", range.symbol.filltransparency);\n
+                        }\n
+                        relem.appendChild(selem);\n
+                    }   \n
+                }\n
+            } // for each range\n
+        } else if (typeof renderer.exacts == "object") {\n
+            for (var ext=0, extlen=renderer.exacts.length; ext<extlen; ext++) {\n
+                var exact = renderer.exacts[ext];\n
+          \n
+                var eelem = this.createElementNS("", "EXACT");\n
+                if (typeof exact.value == "string") {\n
+                    eelem.setAttribute("value", exact.value);\n
+                }\n
+                if (typeof exact.label == "string") {\n
+                    eelem.setAttribute("label", exact.label);\n
+                }\n
+                if (typeof exact.method == "string") {\n
+                    eelem.setAttribute("method", exact.method);\n
+                }\n
+            \n
+                renderElem.appendChild(eelem);\n
+            \n
+                if (typeof exact.symbol == "object") {\n
+                    var selem = null;\n
+            \n
+                    if (exact.symbol.type == "simplemarker") {\n
+                        selem = this.createElementNS("", "SIMPLEMARKERSYMBOL");\n
+                    }\n
+            \n
+                    if (selem != null) {\n
+                        if (typeof exact.symbol.antialiasing == "string") {\n
+                            selem.setAttribute("antialiasing", exact.symbol.antialiasing);\n
+                        }\n
+                        if (typeof exact.symbol.color == "string") {\n
+                            selem.setAttribute("color", exact.symbol.color);\n
+                        }\n
+                        if (typeof exact.symbol.outline == "string") {\n
+                            selem.setAttribute("outline", exact.symbol.outline);\n
+                        }\n
+                        if (typeof exact.symbol.overlap == "string") {\n
+                            selem.setAttribute("overlap", exact.symbol.overlap);\n
+                        }\n
+                        if (typeof exact.symbol.shadow == "string") {\n
+                            selem.setAttribute("shadow", exact.symbol.shadow);\n
+                        }\n
+                        if (typeof exact.symbol.transparency == "number") {\n
+                            selem.setAttribute("transparency", exact.symbol.transparency);\n
+                        }\n
+                        //if (typeof exact.symbol.type == "string")\n
+                        //    selem.setAttribute("type", exact.symbol.type);\n
+                        if (typeof exact.symbol.usecentroid == "string") {\n
+                            selem.setAttribute("usecentroid", exact.symbol.usecentroid);\n
+                        }\n
+                        if (typeof exact.symbol.width == "number") {\n
+                            selem.setAttribute("width", exact.symbol.width);\n
+                        }\n
+                \n
+                        eelem.appendChild(selem);\n
+                    }\n
+                }\n
+            } // for each exact\n
+        }\n
+    },\n
+    \n
+    \n
+    addSimpleLabelRenderer: function(renderElem, renderer) {\n
+        renderElem.setAttribute("field", renderer.field);\n
+        var keys = [\'featureweight\', \'howmanylabels\', \'labelbufferratio\', \n
+                    \'labelpriorities\', \'labelweight\', \'linelabelposition\',\n
+                    \'rotationalangles\'];\n
+        for (var i=0, len=keys.length; i<len; i++) {\n
+            var key = keys[i];\n
+            if (renderer[key]) {\n
+                renderElem.setAttribute(key, renderer[key]);\n
+            }\n
+        }     \n
+           \n
+        if (renderer.symbol.type == "text") {\n
+            var symbol = renderer.symbol;\n
+            var selem = this.createElementNS("", "TEXTSYMBOL");\n
+            renderElem.appendChild(selem);\n
+          \n
+            var keys = this.fontStyleKeys;\n
+            for (var i=0, len=keys.length; i<len; i++) {\n
+                var key = keys[i];\n
+                if (symbol[key]) {\n
+                    selem.setAttribute(key, renderer[key]);\n
+                }\n
+            }    \n
+        }    \n
+    },\n
+    \n
+    writePolygonGeometry: function(polygon) {\n
+        if (!(polygon instanceof OpenLayers.Geometry.Polygon)) {\n
+            throw { \n
+                message:\'Cannot write polygon geometry to ArcXML with an \' +\n
+                    polygon.CLASS_NAME + \' object.\',\n
+                geometry: polygon\n
+            };\n
+        }\n
+        \n
+        var polyElem = this.createElementNS("", "POLYGON");\n
+      \n
+        for (var ln=0, lnlen=polygon.components.length; ln<lnlen; ln++) {\n
+            var ring = polygon.components[ln];\n
+            var ringElem = this.createElementNS("", "RING");\n
+        \n
+            for (var rn=0, rnlen=ring.components.length; rn<rnlen; rn++) {\n
+                var point = ring.components[rn];\n
+                var pointElem = this.createElementNS("", "POINT");\n
+            \n
+                pointElem.setAttribute("x", point.x);\n
+                pointElem.setAttribute("y", point.y);\n
+            \n
+                ringElem.appendChild(pointElem);\n
+            }\n
+        \n
+            polyElem.appendChild(ringElem);\n
+        }\n
+      \n
+        return polyElem;\n
+    },\n
+    \n
+    /**\n
+     * Method: parseResponse\n
+     * Take an ArcXML response, and parse in into this object\'s internal properties.\n
+     *\n
+     * Parameters:\n
+     * data - {String} or {DOMElement} The ArcXML response, as either a string or the\n
+     * top level DOMElement of the response.\n
+     */\n
+    parseResponse: function(data) {\n
+        if(typeof data == "string") { \n
+            var newData = new OpenLayers.Format.XML();\n
+            data = newData.read(data);\n
+        }\n
+        var response = new OpenLayers.Format.ArcXML.Response();\n
+        \n
+        var errorNode = data.getElementsByTagName("ERROR");\n
+        \n
+        if (errorNode != null && errorNode.length > 0) {\n
+            response.error = this.getChildValue(errorNode, "Unknown error.");\n
+        } else {\n
+            var responseNode = data.getElementsByTagName("RESPONSE");\n
+          \n
+            if (responseNode == null || responseNode.length == 0) {\n
+                response.error = "No RESPONSE tag found in ArcXML response.";\n
+                return response;\n
+            }\n
+          \n
+            var rtype = responseNode[0].firstChild.nodeName;\n
+            if (rtype == "#text") {\n
+                rtype = responseNode[0].firstChild.nextSibling.nodeName;\n
+            }\n
+          \n
+            if (rtype == "IMAGE") {\n
+                var envelopeNode = data.getElementsByTagName("ENVELOPE");\n
+                var outputNode = data.getElementsByTagName("OUTPUT");\n
+                \n
+                if (envelopeNode == null || envelopeNode.length == 0) {\n
+                    response.error = "No ENVELOPE tag found in ArcXML response.";\n
+                } else if (outputNode == null || outputNode.length == 0) {\n
+                    response.error = "No OUTPUT tag found in ArcXML response.";\n
+                } else {\n
+                    var envAttr = this.parseAttributes(envelopeNode[0]);            \n
+                    var outputAttr = this.parseAttributes(outputNode[0]);\n
+                  \n
+                    if (typeof outputAttr.type == "string") {\n
+                        response.image = { \n
+                            envelope: envAttr, \n
+                            output: { \n
+                                type: outputAttr.type, \n
+                                data: this.getChildValue(outputNode[0])\n
+                            }\n
+                        };\n
+                    } else {\n
+                        response.image = { envelope: envAttr, output: outputAttr };\n
+                    }\n
+                }\n
+            } else if (rtype == "FEATURES") {\n
+                var features = responseNode[0].getElementsByTagName("FEATURES");\n
+            \n
+                // get the feature count\n
+                var featureCount = features[0].getElementsByTagName("FEATURECOUNT");\n
+                response.features.featurecount = featureCount[0].getAttribute("count");\n
+            \n
+                if (response.features.featurecount > 0) {\n
+                    // get the feature envelope\n
+                    var envelope = features[0].getElementsByTagName("ENVELOPE");\n
+                    response.features.envelope = this.parseAttributes(envelope[0], typeof(0));\n
+\n
+                    // get the field values per feature\n
+                    var featureList = features[0].getElementsByTagName("FEATURE");\n
+                    for (var fn = 0; fn < featureList.length; fn++) {\n
+                        var feature = new OpenLayers.Feature.Vector();\n
+                        var fields = featureList[fn].getElementsByTagName("FIELD");\n
+\n
+                        for (var fdn = 0; fdn < fields.length; fdn++) {\n
+                            var fieldName = fields[fdn].getAttribute("name");\n
+                            var fieldValue = fields[fdn].getAttribute("value");\n
+                            feature.attributes[ fieldName ] = fieldValue;\n
+                        }\n
+\n
+                        var geom = featureList[fn].getElementsByTagName("POLYGON");\n
+\n
+                        if (geom.length > 0) {\n
+                            // if there is a polygon, create an openlayers polygon, and assign\n
+                            // it to the .geometry property of the feature\n
+                            var ring = geom[0].getElementsByTagName("RING");\n
+\n
+                            var polys = [];\n
+                            for (var rn = 0; rn < ring.length; rn++) {\n
+                                var linearRings = [];\n
+                                linearRings.push(this.parsePointGeometry(ring[rn]));\n
+\n
+                                var holes = ring[rn].getElementsByTagName("HOLE");\n
+                                for (var hn = 0; hn < holes.length; hn++) {\n
+                                    linearRings.push(this.parsePointGeometry(holes[hn]));\n
+                                }\n
+                                holes = null;\n
+                                polys.push(new OpenLayers.Geometry.Polygon(linearRings));\n
+                                linearRings = null;\n
+                            }\n
+                            ring = null;\n
+                          \n
+                            if (polys.length == 1) {\n
+                                feature.geometry = polys[0];\n
+                            } else\n
+                            {\n
+                                feature.geometry = new OpenLayers.Geometry.MultiPolygon(polys);\n
+                            }\n
+                        }\n
+\n
+                        response.features.feature.push(feature);\n
+                    }\n
+                }\n
+            } else {\n
+                response.error = "Unidentified response type.";\n
+            }\n
+        }\n
+        return response;\n
+    },\n
+    \n
+    \n
+    /**\n
+     * Method: parseAttributes\n
+     *\n
+     * Parameters:\n
+     * node - {<DOMElement>} An element to parse attributes from.\n
+     *\n
+     * Returns:\n
+     * {Object} An attributes object, with properties set to attribute values.\n
+     */\n
+    parseAttributes: function(node,type) {\n
+        var attributes = {};\n
+        for(var attr = 0; attr < node.attributes.length; attr++) {\n
+            if (type == "number") {\n
+                attributes[node.attributes[attr].nodeName] = parseFloat(node.attributes[attr].nodeValue);\n
+            } else {\n
+                attributes[node.attributes[attr].nodeName] = node.attributes[attr].nodeValue;\n
+            }\n
+        }\n
+        return attributes;\n
+    },\n
+    \n
+    \n
+    /**\n
+     * Method: parsePointGeometry\n
+     *\n
+     * Parameters:\n
+     * node - {<DOMElement>} An element to parse <COORDS> or <POINT> arcxml data from.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Geometry.LinearRing>} A linear ring represented by the node\'s points.\n
+     */\n
+    parsePointGeometry: function(node) {\n
+        var ringPoints = [];\n
+        var coords = node.getElementsByTagName("COORDS");\n
+\n
+        if (coords.length > 0) {\n
+            // if coords is present, it\'s the only coords item\n
+            var coordArr = this.getChildValue(coords[0]);\n
+            coordArr = coordArr.split(/;/);\n
+            for (var cn = 0; cn < coordArr.length; cn++) {\n
+                var coordItems = coordArr[cn].split(/ /);\n
+                ringPoints.push(new OpenLayers.Geometry.Point(coordItems[0], coordItems[1]));\n
+            }\n
+            coords = null;\n
+        } else {\n
+            var point = node.getElementsByTagName("POINT");\n
+            if (point.length > 0) {\n
+                for (var pn = 0; pn < point.length; pn++) {\n
+                    ringPoints.push(\n
+                        new OpenLayers.Geometry.Point(\n
+                            parseFloat(point[pn].getAttribute("x")),\n
+                            parseFloat(point[pn].getAttribute("y"))\n
+                        )\n
+                    );\n
+                }\n
+            }\n
+            point = null;\n
+        }\n
+\n
+        return new OpenLayers.Geometry.LinearRing(ringPoints);      \n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.ArcXML" \n
+});\n
+\n
+OpenLayers.Format.ArcXML.Request = OpenLayers.Class({\n
+    initialize: function(params) {\n
+        var defaults = {\n
+            get_image: {\n
+                properties: {\n
+                    background: null,\n
+                    /*{ \n
+                        color: { r:255, g:255, b:255 },\n
+                        transcolor: null\n
+                    },*/\n
+                    draw: true,\n
+                    envelope: {\n
+                        minx: 0, \n
+                        miny: 0, \n
+                        maxx: 0, \n
+                        maxy: 0\n
+                    },\n
+                    featurecoordsys: { \n
+                        id:0, \n
+                        string:"",\n
+                        datumtransformid:0,\n
+                        datumtransformstring:""\n
+                    },\n
+                    filtercoordsys:{\n
+                        id:0,\n
+                        string:"",\n
+                        datumtransformid:0,\n
+                        datumtransformstring:""\n
+                    },\n
+                    imagesize:{\n
+                        height:0,\n
+                        width:0,\n
+                        dpi:96,\n
+                        printheight:0,\n
+                        printwidth:0,\n
+                        scalesymbols:false\n
+                    },\n
+                    layerlist:[],\n
+                    /* no support for legends */\n
+                    output:{\n
+                        baseurl:"",\n
+                        legendbaseurl:"",\n
+                        legendname:"",\n
+                        legendpath:"",\n
+                        legendurl:"",\n
+                        name:"",\n
+                        path:"",\n
+                        type:"jpg",\n
+                        url:""\n
+                    }\n
+                }\n
+            },\n
+\n
+            get_feature: {\n
+                layer: "",\n
+                query: {\n
+                    isspatial: false,\n
+                    featurecoordsys: {\n
+                        id:0,\n
+                        string:"",\n
+                        datumtransformid:0,\n
+                        datumtransformstring:""\n
+                    },\n
+                    filtercoordsys: {\n
+                        id:0,\n
+                        string:"",\n
+                        datumtransformid:0,\n
+                        datumtransformstring:""\n
+                    },\n
+                    buffer:0,\n
+                    where:"",\n
+                    spatialfilter: {\n
+                        relation: "envelope_intersection",\n
+                        envelope: null\n
+                    }\n
+                }\n
+            },\n
+      \n
+            environment: {\n
+                separators: {\n
+                    cs:" ",\n
+                    ts:";"\n
+                }\n
+            },\n
+      \n
+            layer: [],\n
+            workspaces: []\n
+        };\n
+      \n
+        return OpenLayers.Util.extend(this, defaults);      \n
+    },\n
+  \n
+    CLASS_NAME: "OpenLayers.Format.ArcXML.Request"\n
+});\n
+\n
+OpenLayers.Format.ArcXML.Response = OpenLayers.Class({  \n
+    initialize: function(params) {\n
+        var defaults = {\n
+            image: {\n
+                envelope:null,\n
+                output:\'\'\n
+            },\n
+      \n
+            features: {\n
+                featurecount: 0,\n
+                envelope: null,\n
+                feature: []\n
+            },\n
+      \n
+            error:\'\'\n
+        };\n
+  \n
+        return OpenLayers.Util.extend(this, defaults);\n
+    },\n
+  \n
+    CLASS_NAME: "OpenLayers.Format.ArcXML.Response"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>40703</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>StyleMap.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Style.js\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ */\n
+ \n
+/**\n
+ * Class: OpenLayers.StyleMap\n
+ */\n
+OpenLayers.StyleMap = OpenLayers.Class({\n
+    \n
+    /**\n
+     * Property: styles\n
+     * {Object} Hash of {<OpenLayers.Style>}, keyed by names of well known\n
+     * rendering intents (e.g. "default", "temporary", "select", "delete").\n
+     */\n
+    styles: null,\n
+    \n
+    /**\n
+     * Property: extendDefault\n
+     * {Boolean} if true, every render intent will extend the symbolizers\n
+     * specified for the "default" intent at rendering time. Otherwise, every\n
+     * rendering intent will be treated as a completely independent style.\n
+     */\n
+    extendDefault: true,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.StyleMap\n
+     * \n
+     * Parameters:\n
+     * style   - {Object} Optional. Either a style hash, or a style object, or\n
+     *           a hash of style objects (style hashes) keyed by rendering\n
+     *           intent. If just one style hash or style object is passed,\n
+     *           this will be used for all known render intents (default,\n
+     *           select, temporary)\n
+     * options - {Object} optional hash of additional options for this\n
+     *           instance\n
+     */\n
+    initialize: function (style, options) {\n
+        this.styles = {\n
+            "default": new OpenLayers.Style(\n
+                OpenLayers.Feature.Vector.style["default"]),\n
+            "select": new OpenLayers.Style(\n
+                OpenLayers.Feature.Vector.style["select"]),\n
+            "temporary": new OpenLayers.Style(\n
+                OpenLayers.Feature.Vector.style["temporary"]),\n
+            "delete": new OpenLayers.Style(\n
+                OpenLayers.Feature.Vector.style["delete"])\n
+        };\n
+        \n
+        // take whatever the user passed as style parameter and convert it\n
+        // into parts of stylemap.\n
+        if(style instanceof OpenLayers.Style) {\n
+            // user passed a style object\n
+            this.styles["default"] = style;\n
+            this.styles["select"] = style;\n
+            this.styles["temporary"] = style;\n
+            this.styles["delete"] = style;\n
+        } else if(typeof style == "object") {\n
+            for(var key in style) {\n
+                if(style[key] instanceof OpenLayers.Style) {\n
+                    // user passed a hash of style objects\n
+                    this.styles[key] = style[key];\n
+                } else if(typeof style[key] == "object") {\n
+                    // user passsed a hash of style hashes\n
+                    this.styles[key] = new OpenLayers.Style(style[key]);\n
+                } else {\n
+                    // user passed a style hash (i.e. symbolizer)\n
+                    this.styles["default"] = new OpenLayers.Style(style);\n
+                    this.styles["select"] = new OpenLayers.Style(style);\n
+                    this.styles["temporary"] = new OpenLayers.Style(style);\n
+                    this.styles["delete"] = new OpenLayers.Style(style);\n
+                    break;\n
+                }\n
+            }\n
+        }\n
+        OpenLayers.Util.extend(this, options);\n
+    },\n
+\n
+    /**\n
+     * Method: destroy\n
+     */\n
+    destroy: function() {\n
+        for(var key in this.styles) {\n
+            this.styles[key].destroy();\n
+        }\n
+        this.styles = null;\n
+    },\n
+    \n
+    /**\n
+     * Method: createSymbolizer\n
+     * Creates the symbolizer for a feature for a render intent.\n
+     * \n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature>} The feature to evaluate the rules\n
+     *           of the intended style against.\n
+     * intent  - {String} The intent determines the symbolizer that will be\n
+     *           used to draw the feature. Well known intents are "default"\n
+     *           (for just drawing the features), "select" (for selected\n
+     *           features) and "temporary" (for drawing features).\n
+     * \n
+     * Returns:\n
+     * {Object} symbolizer hash\n
+     */\n
+    createSymbolizer: function(feature, intent) {\n
+        if(!feature) {\n
+            feature = new OpenLayers.Feature.Vector();\n
+        }\n
+        if(!this.styles[intent]) {\n
+            intent = "default";\n
+        }\n
+        feature.renderIntent = intent;\n
+        var defaultSymbolizer = {};\n
+        if(this.extendDefault && intent != "default") {\n
+            defaultSymbolizer = this.styles["default"].createSymbolizer(feature);\n
+        }\n
+        return OpenLayers.Util.extend(defaultSymbolizer,\n
+            this.styles[intent].createSymbolizer(feature));\n
+    },\n
+    \n
+    /**\n
+     * Method: addUniqueValueRules\n
+     * Convenience method to create comparison rules for unique values of a\n
+     * property. The rules will be added to the style object for a specified\n
+     * rendering intent. This method is a shortcut for creating something like\n
+     * the "unique value legends" familiar from well known desktop GIS systems\n
+     * \n
+     * Parameters:\n
+     * renderIntent - {String} rendering intent to add the rules to\n
+     * property     - {String} values of feature attributes to create the\n
+     *                rules for\n
+     * symbolizers  - {Object} Hash of symbolizers, keyed by the desired\n
+     *                property values \n
+     * context      - {Object} An optional object with properties that\n
+     *                symbolizers\' property values should be evaluated\n
+     *                against. If no context is specified, feature.attributes\n
+     *                will be used\n
+     */\n
+    addUniqueValueRules: function(renderIntent, property, symbolizers, context) {\n
+        var rules = [];\n
+        for (var value in symbolizers) {\n
+            rules.push(new OpenLayers.Rule({\n
+                symbolizer: symbolizers[value],\n
+                context: context,\n
+                filter: new OpenLayers.Filter.Comparison({\n
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,\n
+                    property: property,\n
+                    value: value\n
+                })\n
+            }));\n
+        }\n
+        this.styles[renderIntent].addRules(rules);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.StyleMap"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6263</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

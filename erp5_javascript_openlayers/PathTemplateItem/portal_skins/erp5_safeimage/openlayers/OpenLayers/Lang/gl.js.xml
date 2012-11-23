@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Toliño\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["gl"]\n
+ * Dictionary for Galego.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["gl"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Solicitude non xerada; a resposta foi: ${statusText}",\n
+\n
+    \'Permalink\': "Ligazón permanente",\n
+\n
+    \'Overlays\': "Capas superpostas",\n
+\n
+    \'Base Layer\': "Capa base",\n
+\n
+    \'noFID\': "Non se pode actualizar a funcionalidade para a que non hai FID.",\n
+\n
+    \'browserNotSupported\': "O seu navegador non soporta a renderización de vectores. Os renderizadores soportados actualmente son:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "A propiedade minZoomLevel é só para uso conxuntamente coas capas FixedZoomLevels-descendent. O feito de que esa capa wfs verifique o minZoomLevel é unha reliquia do pasado. Non podemos, con todo, eliminala sen a posibilidade de non romper as aplicacións baseadas en OL que poidan depender dela. Por iso a estamos deixando obsoleta (a comprobación minZoomLevel de embaixo será eliminada na versión 3.0). Por favor, no canto diso use o axuste de resolución mín/máx tal e como está descrito aquí: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "Transacción WFS: ÉXITO ${response}",\n
+\n
+    \'commitFailed\': "Transacción WFS: FALLIDA ${response}",\n
+\n
+    \'googleWarning\': "A capa do Google non puido cargarse correctamente.\\x3cbr\\x3e\\x3cbr\\x3ePara evitar esta mensaxe, escolla unha nova capa base no seleccionador de capas na marxe superior dereita.\\x3cbr\\x3e\\x3cbr\\x3eProbablemente, isto acontece porque a escritura da libraría do Google Maps ou ben non foi incluída ou ben non contén a clave API correcta para o seu sitio.\\x3cbr\\x3e\\x3cbr\\x3eDesenvolvedores: para axudar a facer funcionar isto correctamente, \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3epremede aquí\\x3c/a\\x3e",\n
+\n
+    \'getLayerWarning\': "A capa ${layerType} foi incapaz de cargarse correctamente.\\x3cbr\\x3e\\x3cbr\\x3ePara evitar esta mensaxe, escolla unha nova capa base no seleccionador de capas na marxe superior dereita.\\x3cbr\\x3e\\x3cbr\\x3eProbablemente, isto acontece porque a escritura da libraría ${layerLib} non foi ben incluída.\\x3cbr\\x3e\\x3cbr\\x3eDesenvolvedores: para axudar a facer funcionar isto correctamente, \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3epremede aquí\\x3c/a\\x3e",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Escala = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "O",\n
+\n
+    \'E\': "L",\n
+\n
+    \'N\': "N",\n
+\n
+    \'S\': "S",\n
+\n
+    \'reprojectDeprecated\': "Está usando a opción \\"reproject\\" na capa ${layerName}. Esta opción está obsoleta: o seu uso foi deseñado para a visualización de datos sobre mapas base comerciais, pero esta funcionalidade debera agora ser obtida utilizando a proxección Spherical Mercator. Hai dispoñible máis información en http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    \'methodDeprecated\': "Este método está obsoleto e será eliminado na versión 3.0. Por favor, no canto deste use ${newMethod}."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3262</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

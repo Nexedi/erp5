@@ -1,0 +1,473 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>RegularPolygon.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Handler/Drag.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler.RegularPolygon\n
+ * Handler to draw a regular polygon on the map.  Polygon is displayed on mouse\n
+ *     down, moves or is modified on mouse move, and is finished on mouse up.\n
+ *     The handler triggers callbacks for \'done\' and \'cancel\'.  Create a new\n
+ *     instance with the <OpenLayers.Handler.RegularPolygon> constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler.Drag>\n
+ */\n
+OpenLayers.Handler.RegularPolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {\n
+    \n
+    /**\n
+     * APIProperty: sides\n
+     * {Integer} Number of sides for the regular polygon.  Needs to be greater\n
+     *     than 2.  Defaults to 4.\n
+     */\n
+    sides: 4,\n
+\n
+    /**\n
+     * APIProperty: radius\n
+     * {Float} Optional radius in map units of the regular polygon.  If this is\n
+     *     set to some non-zero value, a polygon with a fixed radius will be\n
+     *     drawn and dragged with mose movements.  If this property is not\n
+     *     set, dragging changes the radius of the polygon.  Set to null by\n
+     *     default.\n
+     */\n
+    radius: null,\n
+    \n
+    /**\n
+     * APIProperty: snapAngle\n
+     * {Float} If set to a non-zero value, the handler will snap the polygon\n
+     *     rotation to multiples of the snapAngle.  Value is an angle measured\n
+     *     in degrees counterclockwise from the positive x-axis.  \n
+     */\n
+    snapAngle: null,\n
+    \n
+    /**\n
+     * APIProperty: snapToggle\n
+     * {String} If set, snapToggle is checked on mouse events and will set\n
+     *     the snap mode to the opposite of what it currently is.  To disallow\n
+     *     toggling between snap and non-snap mode, set freehandToggle to\n
+     *     null.  Acceptable toggle values are \'shiftKey\', \'ctrlKey\', and\n
+     *     \'altKey\'. Snap mode is only possible if this.snapAngle is set to a\n
+     *     non-zero value.\n
+     */\n
+    snapToggle: \'shiftKey\',\n
+    \n
+    /**\n
+     * Property: layerOptions\n
+     * {Object} Any optional properties to be set on the sketch layer.\n
+     */\n
+    layerOptions: null,\n
+\n
+    /**\n
+     * APIProperty: persist\n
+     * {Boolean} Leave the feature rendered until clear is called.  Default\n
+     *     is false.  If set to true, the feature remains rendered until\n
+     *     clear is called, typically by deactivating the handler or starting\n
+     *     another drawing.\n
+     */\n
+    persist: false,\n
+\n
+    /**\n
+     * APIProperty: irregular\n
+     * {Boolean} Draw an irregular polygon instead of a regular polygon.\n
+     *     Default is false.  If true, the initial mouse down will represent\n
+     *     one corner of the polygon bounds and with each mouse movement, the\n
+     *     polygon will be stretched so the opposite corner of its bounds\n
+     *     follows the mouse position.  This property takes precedence over\n
+     *     the radius property.  If set to true, the radius property will\n
+     *     be ignored.\n
+     */\n
+    irregular: false,\n
+\n
+    /**\n
+     * APIProperty: citeCompliant\n
+     * {Boolean} If set to true, coordinates of features drawn in a map extent\n
+     * crossing the date line won\'t exceed the world bounds. Default is false.\n
+     */\n
+    citeCompliant: false,\n
+\n
+    /**\n
+     * Property: angle\n
+     * {Float} The angle from the origin (mouse down) to the current mouse\n
+     *     position, in radians.  This is measured counterclockwise from the\n
+     *     positive x-axis.\n
+     */\n
+    angle: null,\n
+\n
+    /**\n
+     * Property: fixedRadius\n
+     * {Boolean} The polygon has a fixed radius.  True if a radius is set before\n
+     *     drawing begins.  False otherwise.\n
+     */\n
+    fixedRadius: false,\n
+\n
+    /**\n
+     * Property: feature\n
+     * {<OpenLayers.Feature.Vector>} The currently drawn polygon feature\n
+     */\n
+    feature: null,\n
+\n
+    /**\n
+     * Property: layer\n
+     * {<OpenLayers.Layer.Vector>} The temporary drawing layer\n
+     */\n
+    layer: null,\n
+\n
+    /**\n
+     * Property: origin\n
+     * {<OpenLayers.Geometry.Point>} Location of the first mouse down\n
+     */\n
+    origin: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler.RegularPolygon\n
+     * Create a new regular polygon handler.\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} The control that owns this handler\n
+     * callbacks - {Object} An object with a properties whose values are\n
+     *     functions.  Various callbacks described below.\n
+     * options - {Object} An object with properties to be set on the handler.\n
+     *     If the options.sides property is not specified, the number of sides\n
+     *     will default to 4.\n
+     *\n
+     * Named callbacks:\n
+     * create - Called when a sketch is first created.  Callback called with\n
+     *     the creation point geometry and sketch feature.\n
+     * done - Called when the sketch drawing is finished.  The callback will\n
+     *     recieve a single argument, the sketch geometry.\n
+     * cancel - Called when the handler is deactivated while drawing.  The\n
+     *     cancel callback will receive a geometry.\n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        if(!(options && options.layerOptions && options.layerOptions.styleMap)) {\n
+            this.style = OpenLayers.Util.extend(OpenLayers.Feature.Vector.style[\'default\'], {});\n
+        }\n
+\n
+        OpenLayers.Handler.Drag.prototype.initialize.apply(this,\n
+                                                [control, callbacks, options]);\n
+        this.options = (options) ? options : {};\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: setOptions\n
+     * \n
+     * Parameters:\n
+     * newOptions - {Object} \n
+     */\n
+    setOptions: function (newOptions) {\n
+        OpenLayers.Util.extend(this.options, newOptions);\n
+        OpenLayers.Util.extend(this, newOptions);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Turn on the handler.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The handler was successfully activated\n
+     */\n
+    activate: function() {\n
+        var activated = false;\n
+        if(OpenLayers.Handler.Drag.prototype.activate.apply(this, arguments)) {\n
+            // create temporary vector layer for rendering geometry sketch\n
+            var options = OpenLayers.Util.extend({\n
+                displayInLayerSwitcher: false,\n
+                // indicate that the temp vector layer will never be out of range\n
+                // without this, resolution properties must be specified at the\n
+                // map-level for this temporary layer to init its resolutions\n
+                // correctly\n
+                calculateInRange: OpenLayers.Function.True,\n
+                wrapDateLine: this.citeCompliant\n
+            }, this.layerOptions);\n
+            this.layer = new OpenLayers.Layer.Vector(this.CLASS_NAME, options);\n
+            this.map.addLayer(this.layer);\n
+            activated = true;\n
+        }\n
+        return activated;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: deactivate\n
+     * Turn off the handler.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The handler was successfully deactivated\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = false;\n
+        if(OpenLayers.Handler.Drag.prototype.deactivate.apply(this, arguments)) {\n
+            // call the cancel callback if mid-drawing\n
+            if(this.dragging) {\n
+                this.cancel();\n
+            }\n
+            // If a layer\'s map property is set to null, it means that that\n
+            // layer isn\'t added to the map. Since we ourself added the layer\n
+            // to the map in activate(), we can assume that if this.layer.map\n
+            // is null it means that the layer has been destroyed (as a result\n
+            // of map.destroy() for example.\n
+            if (this.layer.map != null) {\n
+                this.layer.destroy(false);\n
+                if (this.feature) {\n
+                    this.feature.destroy();\n
+                }\n
+            }\n
+            this.layer = null;\n
+            this.feature = null;\n
+            deactivated = true;\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: down\n
+     * Start drawing a new feature\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The drag start event\n
+     */\n
+    down: function(evt) {\n
+        this.fixedRadius = !!(this.radius);\n
+        var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); \n
+        this.origin = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);\n
+        // create the new polygon\n
+        if(!this.fixedRadius || this.irregular) {\n
+            // smallest radius should not be less one pixel in map units\n
+            // VML doesn\'t behave well with smaller\n
+            this.radius = this.map.getResolution();\n
+        }\n
+        if(this.persist) {\n
+            this.clear();\n
+        }\n
+        this.feature = new OpenLayers.Feature.Vector();\n
+        this.createGeometry();\n
+        this.callback("create", [this.origin, this.feature]);\n
+        this.layer.addFeatures([this.feature], {silent: true});\n
+        this.layer.drawFeature(this.feature, this.style);\n
+    },\n
+    \n
+    /**\n
+     * Method: move\n
+     * Respond to drag move events\n
+     *\n
+     * Parameters:\n
+     * evt - {Evt} The move event\n
+     */\n
+    move: function(evt) {\n
+        var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); \n
+        var point = new OpenLayers.Geometry.Point(maploc.lon, maploc.lat);\n
+        if(this.irregular) {\n
+            var ry = Math.sqrt(2) * Math.abs(point.y - this.origin.y) / 2;\n
+            this.radius = Math.max(this.map.getResolution() / 2, ry);\n
+        } else if(this.fixedRadius) {\n
+            this.origin = point;\n
+        } else {\n
+            this.calculateAngle(point, evt);\n
+            this.radius = Math.max(this.map.getResolution() / 2,\n
+                                   point.distanceTo(this.origin));\n
+        }\n
+        this.modifyGeometry();\n
+        if(this.irregular) {\n
+            var dx = point.x - this.origin.x;\n
+            var dy = point.y - this.origin.y;\n
+            var ratio;\n
+            if(dy == 0) {\n
+                ratio = dx / (this.radius * Math.sqrt(2));\n
+            } else {\n
+                ratio = dx / dy;\n
+            }\n
+            this.feature.geometry.resize(1, this.origin, ratio);\n
+            this.feature.geometry.move(dx / 2, dy / 2);\n
+        }\n
+        this.layer.drawFeature(this.feature, this.style);\n
+    },\n
+\n
+    /**\n
+     * Method: up\n
+     * Finish drawing the feature\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The mouse up event\n
+     */\n
+    up: function(evt) {\n
+        this.finalize();\n
+        // the mouseup method of superclass doesn\'t call the\n
+        // "done" callback if there\'s been no move between\n
+        // down and up\n
+        if (this.start == this.last) {\n
+            this.callback("done", [evt.xy]);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: out\n
+     * Finish drawing the feature.\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The mouse out event\n
+     */\n
+    out: function(evt) {\n
+        this.finalize();\n
+    },\n
+\n
+    /**\n
+     * Method: createGeometry\n
+     * Create the new polygon geometry.  This is called at the start of the\n
+     *     drag and at any point during the drag if the number of sides\n
+     *     changes.\n
+     */\n
+    createGeometry: function() {\n
+        this.angle = Math.PI * ((1/this.sides) - (1/2));\n
+        if(this.snapAngle) {\n
+            this.angle += this.snapAngle * (Math.PI / 180);\n
+        }\n
+        this.feature.geometry = OpenLayers.Geometry.Polygon.createRegularPolygon(\n
+            this.origin, this.radius, this.sides, this.snapAngle\n
+        );\n
+    },\n
+    \n
+    /**\n
+     * Method: modifyGeometry\n
+     * Modify the polygon geometry in place.\n
+     */\n
+    modifyGeometry: function() {\n
+        var angle, point;\n
+        var ring = this.feature.geometry.components[0];\n
+        // if the number of sides ever changes, create a new geometry\n
+        if(ring.components.length != (this.sides + 1)) {\n
+            this.createGeometry();\n
+            ring = this.feature.geometry.components[0];\n
+        }\n
+        for(var i=0; i<this.sides; ++i) {\n
+            point = ring.components[i];\n
+            angle = this.angle + (i * 2 * Math.PI / this.sides);\n
+            point.x = this.origin.x + (this.radius * Math.cos(angle));\n
+            point.y = this.origin.y + (this.radius * Math.sin(angle));\n
+            point.clearBounds();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: calculateAngle\n
+     * Calculate the angle based on settings.\n
+     *\n
+     * Parameters:\n
+     * point - {<OpenLayers.Geometry.Point>}\n
+     * evt - {Event}\n
+     */\n
+    calculateAngle: function(point, evt) {\n
+        var alpha = Math.atan2(point.y - this.origin.y,\n
+                               point.x - this.origin.x);\n
+        if(this.snapAngle && (this.snapToggle && !evt[this.snapToggle])) {\n
+            var snapAngleRad = (Math.PI / 180) * this.snapAngle;\n
+            this.angle = Math.round(alpha / snapAngleRad) * snapAngleRad;\n
+        } else {\n
+            this.angle = alpha;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: cancel\n
+     * Finish the geometry and call the "cancel" callback.\n
+     */\n
+    cancel: function() {\n
+        // the polygon geometry gets cloned in the callback method\n
+        this.callback("cancel", null);\n
+        this.finalize();\n
+    },\n
+\n
+    /**\n
+     * Method: finalize\n
+     * Finish the geometry and call the "done" callback.\n
+     */\n
+    finalize: function() {\n
+        this.origin = null;\n
+        this.radius = this.options.radius;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clear\n
+     * Clear any rendered features on the temporary layer.  This is called\n
+     *     when the handler is deactivated, canceled, or done (unless persist\n
+     *     is true).\n
+     */\n
+    clear: function() {\n
+        if (this.layer) {\n
+            this.layer.renderer.clear();\n
+            this.layer.destroyFeatures();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: callback\n
+     * Trigger the control\'s named callback with the given arguments\n
+     *\n
+     * Parameters:\n
+     * name - {String} The key for the callback that is one of the properties\n
+     *     of the handler\'s callbacks object.\n
+     * args - {Array} An array of arguments with which to call the callback\n
+     *     (defined by the control).\n
+     */\n
+    callback: function (name, args) {\n
+        // override the callback method to always send the polygon geometry\n
+        if (this.callbacks[name]) {\n
+            this.callbacks[name].apply(this.control,\n
+                                       [this.feature.geometry.clone()]);\n
+        }\n
+        // since sketch features are added to the temporary layer\n
+        // they must be cleared here if done or cancel\n
+        if(!this.persist && (name == "done" || name == "cancel")) {\n
+            this.clear();\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Handler.RegularPolygon"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14706</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

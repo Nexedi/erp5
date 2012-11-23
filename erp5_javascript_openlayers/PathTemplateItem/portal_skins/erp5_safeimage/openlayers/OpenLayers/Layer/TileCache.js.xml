@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TileCache.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.TileCache\n
+ * A read only TileCache layer.  Used to requests tiles cached by TileCache in\n
+ *     a web accessible cache.  This means that you have to pre-populate your\n
+ *     cache before this layer can be used.  It is meant only to read tiles\n
+ *     created by TileCache, and not to make calls to TileCache for tile\n
+ *     creation.  Create a new instance with the\n
+ *     <OpenLayers.Layer.TileCache> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.TileCache = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+\n
+    /** \n
+     * APIProperty: isBaseLayer\n
+     * {Boolean} Treat this layer as a base layer.  Default is true.\n
+     */\n
+    isBaseLayer: true,\n
+    \n
+    /** \n
+     * APIProperty: format\n
+     * {String} Mime type of the images returned.  Default is image/png.\n
+     */\n
+    format: \'image/png\',\n
+\n
+    /**\n
+     * APIProperty: serverResolutions\n
+     * {Array} A list of all resolutions available on the server.  Only set this\n
+     *     property if the map resolutions differ from the server. This\n
+     *     property serves two purposes. (a) <serverResolutions> can include\n
+     *     resolutions that the server supports and that you don\'t want to\n
+     *     provide with this layer. (b) The map can work with resolutions\n
+     *     that aren\'t supported by the server, i.e. that aren\'t in\n
+     *     <serverResolutions>. When the map is displayed in such a resolution\n
+     *     data for the closest server-supported resolution is loaded and the\n
+     *     layer div is stretched as necessary.\n
+     */\n
+    serverResolutions: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.TileCache\n
+     * Create a new read only TileCache layer.\n
+     *\n
+     * Parameters:\n
+     * name - {String} Name of the layer displayed in the interface\n
+     * url - {String} Location of the web accessible cache (not the location of\n
+     *     your tilecache script!)\n
+     * layername - {String} Layer name as defined in the TileCache \n
+     *     configuration\n
+     * options - {Object} Optional object with properties to be set on the\n
+     *     layer.  Note that you should speficy your resolutions to match\n
+     *     your TileCache configuration.  This can be done by setting\n
+     *     the resolutions array directly (here or on the map), by setting\n
+     *     maxResolution and numZoomLevels, or by using scale based properties.\n
+     */\n
+    initialize: function(name, url, layername, options) {\n
+        this.layername = layername;\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this,\n
+                                                         [name, url, {}, options]);\n
+        this.extension = this.format.split(\'/\')[1].toLowerCase();\n
+        this.extension = (this.extension == \'jpg\') ? \'jpeg\' : this.extension;\n
+    },    \n
+\n
+    /**\n
+     * APIMethod: clone\n
+     * obj - {Object} \n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Layer.TileCache>} An exact clone of this \n
+     *     <OpenLayers.Layer.TileCache>\n
+     */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.TileCache(this.name,\n
+                                                 this.url,\n
+                                                 this.layername,\n
+                                                 this.getOptions());\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+\n
+        return obj;\n
+    },    \n
+    \n
+    /**\n
+     * Method: getURL\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} \n
+     * \n
+     * Returns:\n
+     * {String} A string with the layer\'s url and parameters and also the \n
+     *     passed-in bounds and appropriate tile size specified as parameters.\n
+     */\n
+    getURL: function(bounds) {\n
+        var res = this.getServerResolution();\n
+        var bbox = this.maxExtent;\n
+        var size = this.tileSize;\n
+        var tileX = Math.round((bounds.left - bbox.left) / (res * size.w));\n
+        var tileY = Math.round((bounds.bottom - bbox.bottom) / (res * size.h));\n
+        var tileZ = this.serverResolutions != null ?\n
+            OpenLayers.Util.indexOf(this.serverResolutions, res) :\n
+            this.map.getZoom();\n
+        /**\n
+         * Zero-pad a positive integer.\n
+         * number - {Int} \n
+         * length - {Int} \n
+         *\n
+         * Returns:\n
+         * {String} A zero-padded string\n
+         */\n
+        function zeroPad(number, length) {\n
+            number = String(number);\n
+            var zeros = [];\n
+            for(var i=0; i<length; ++i) {\n
+                zeros.push(\'0\');\n
+            }\n
+            return zeros.join(\'\').substring(0, length - number.length) + number;\n
+        }\n
+        var components = [\n
+            this.layername,\n
+            zeroPad(tileZ, 2),\n
+            zeroPad(parseInt(tileX / 1000000), 3),\n
+            zeroPad((parseInt(tileX / 1000) % 1000), 3),\n
+            zeroPad((parseInt(tileX) % 1000), 3),\n
+            zeroPad(parseInt(tileY / 1000000), 3),\n
+            zeroPad((parseInt(tileY / 1000) % 1000), 3),\n
+            zeroPad((parseInt(tileY) % 1000), 3) + \'.\' + this.extension\n
+        ];\n
+        var path = components.join(\'/\'); \n
+        var url = this.url;\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            url = this.selectUrl(path, url);\n
+        }\n
+        url = (url.charAt(url.length - 1) == \'/\') ? url : url + \'/\';\n
+        return url + path;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Layer.TileCache"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5786</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

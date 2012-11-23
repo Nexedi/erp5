@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>OSM.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ * @requires OpenLayers/Geometry/LineString.js\n
+ * @requires OpenLayers/Geometry/Polygon.js\n
+ * @requires OpenLayers/Projection.js\n
+ */\n
+\n
+/**  \n
+ * Class: OpenLayers.Format.OSM\n
+ * OSM parser. Create a new instance with the \n
+ *     <OpenLayers.Format.OSM> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.OSM = OpenLayers.Class(OpenLayers.Format.XML, {\n
+    \n
+    /**\n
+     * APIProperty: checkTags\n
+     * {Boolean} Should tags be checked to determine whether something\n
+     * should be treated as a seperate node. Will slow down parsing.\n
+     * Default is false.\n
+     */\n
+    checkTags: false,\n
+\n
+    /**\n
+     * Property: interestingTagsExclude\n
+     * {Array} List of tags to exclude from \'interesting\' checks on nodes.\n
+     * Must be set when creating the format. Will only be used if checkTags\n
+     * is set.\n
+     */\n
+    interestingTagsExclude: null, \n
+    \n
+    /**\n
+     * APIProperty: areaTags\n
+     * {Array} List of tags indicating that something is an area.  \n
+     * Must be set when creating the format. Will only be used if \n
+     * checkTags is true.\n
+     */\n
+    areaTags: null, \n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.OSM\n
+     * Create a new parser for OSM.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        var layer_defaults = {\n
+          \'interestingTagsExclude\': [\'source\', \'source_ref\', \n
+              \'source:ref\', \'history\', \'attribution\', \'created_by\'],\n
+          \'areaTags\': [\'area\', \'building\', \'leisure\', \'tourism\', \'ruins\',\n
+              \'historic\', \'landuse\', \'military\', \'natural\', \'sport\'] \n
+        };\n
+          \n
+        layer_defaults = OpenLayers.Util.extend(layer_defaults, options);\n
+        \n
+        var interesting = {};\n
+        for (var i = 0; i < layer_defaults.interestingTagsExclude.length; i++) {\n
+            interesting[layer_defaults.interestingTagsExclude[i]] = true;\n
+        }\n
+        layer_defaults.interestingTagsExclude = interesting;\n
+        \n
+        var area = {};\n
+        for (var i = 0; i < layer_defaults.areaTags.length; i++) {\n
+            area[layer_defaults.areaTags[i]] = true;\n
+        }\n
+        layer_defaults.areaTags = area;\n
+\n
+        // OSM coordinates are always in longlat WGS84\n
+        this.externalProjection = new OpenLayers.Projection("EPSG:4326");\n
+        \n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [layer_defaults]);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Return a list of features from a OSM doc\n
+     \n
+     * Parameters:\n
+     * doc - {Element} \n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Feature.Vector>})\n
+     */\n
+    read: function(doc) {\n
+        if (typeof doc == "string") { \n
+            doc = OpenLayers.Format.XML.prototype.read.apply(this, [doc]);\n
+        }\n
+\n
+        var nodes = this.getNodes(doc);\n
+        var ways = this.getWays(doc);\n
+        \n
+        // Geoms will contain at least ways.length entries.\n
+        var feat_list = new Array(ways.length);\n
+        \n
+        for (var i = 0; i < ways.length; i++) {\n
+            // We know the minimal of this one ahead of time. (Could be -1\n
+            // due to areas/polygons)\n
+            var point_list = new Array(ways[i].nodes.length);\n
+            \n
+            var poly = this.isWayArea(ways[i]) ? 1 : 0; \n
+            for (var j = 0; j < ways[i].nodes.length; j++) {\n
+               var node = nodes[ways[i].nodes[j]];\n
+               \n
+               var point = new OpenLayers.Geometry.Point(node.lon, node.lat);\n
+               \n
+               // Since OSM is topological, we stash the node ID internally. \n
+               point.osm_id = parseInt(ways[i].nodes[j]);\n
+               point_list[j] = point;\n
+               \n
+               // We don\'t display nodes if they\'re used inside other \n
+               // elements.\n
+               node.used = true; \n
+            }\n
+            var geometry = null;\n
+            if (poly) { \n
+                geometry = new OpenLayers.Geometry.Polygon(\n
+                    new OpenLayers.Geometry.LinearRing(point_list));\n
+            } else {    \n
+                geometry = new OpenLayers.Geometry.LineString(point_list);\n
+            }\n
+            if (this.internalProjection && this.externalProjection) {\n
+                geometry.transform(this.externalProjection, \n
+                    this.internalProjection);\n
+            }        \n
+            var feat = new OpenLayers.Feature.Vector(geometry,\n
+                ways[i].tags);\n
+            feat.osm_id = parseInt(ways[i].id);\n
+            feat.fid = "way." + feat.osm_id;\n
+            feat_list[i] = feat;\n
+        } \n
+        for (var node_id in nodes) {\n
+            var node = nodes[node_id];\n
+            if (!node.used || this.checkTags) {\n
+                var tags = null;\n
+                \n
+                if (this.checkTags) {\n
+                    var result = this.getTags(node.node, true);\n
+                    if (node.used && !result[1]) {\n
+                        continue;\n
+                    }\n
+                    tags = result[0];\n
+                } else { \n
+                    tags = this.getTags(node.node);\n
+                }    \n
+                \n
+                var feat = new OpenLayers.Feature.Vector(\n
+                    new OpenLayers.Geometry.Point(node[\'lon\'], node[\'lat\']),\n
+                    tags);\n
+                if (this.internalProjection && this.externalProjection) {\n
+                    feat.geometry.transform(this.externalProjection, \n
+                        this.internalProjection);\n
+                }        \n
+                feat.osm_id = parseInt(node_id); \n
+                feat.fid = "node." + feat.osm_id;\n
+                feat_list.push(feat);\n
+            }   \n
+            // Memory cleanup\n
+            node.node = null;\n
+        }        \n
+        return feat_list;\n
+    },\n
+\n
+    /**\n
+     * Method: getNodes\n
+     * Return the node items from a doc.  \n
+     *\n
+     * Parameters:\n
+     * doc - {DOMElement} node to parse tags from\n
+     */\n
+    getNodes: function(doc) {\n
+        var node_list = doc.getElementsByTagName("node");\n
+        var nodes = {};\n
+        for (var i = 0; i < node_list.length; i++) {\n
+            var node = node_list[i];\n
+            var id = node.getAttribute("id");\n
+            nodes[id] = {\n
+                \'lat\': node.getAttribute("lat"),\n
+                \'lon\': node.getAttribute("lon"),\n
+                \'node\': node\n
+            };\n
+        }\n
+        return nodes;\n
+    },\n
+\n
+    /**\n
+     * Method: getWays\n
+     * Return the way items from a doc.  \n
+     *\n
+     * Parameters:\n
+     * doc - {DOMElement} node to parse tags from\n
+     */\n
+    getWays: function(doc) {\n
+        var way_list = doc.getElementsByTagName("way");\n
+        var return_ways = [];\n
+        for (var i = 0; i < way_list.length; i++) {\n
+            var way = way_list[i];\n
+            var way_object = {\n
+              id: way.getAttribute("id")\n
+            };\n
+            \n
+            way_object.tags = this.getTags(way);\n
+            \n
+            var node_list = way.getElementsByTagName("nd");\n
+            \n
+            way_object.nodes = new Array(node_list.length);\n
+            \n
+            for (var j = 0; j < node_list.length; j++) {\n
+                way_object.nodes[j] = node_list[j].getAttribute("ref");\n
+            }  \n
+            return_ways.push(way_object);\n
+        }\n
+        return return_ways; \n
+        \n
+    },  \n
+    \n
+    /**\n
+     * Method: getTags\n
+     * Return the tags list attached to a specific DOM element.\n
+     *\n
+     * Parameters:\n
+     * dom_node - {DOMElement} node to parse tags from\n
+     * interesting_tags - {Boolean} whether the return from this function should\n
+     *    return a boolean indicating that it has \'interesting tags\' -- \n
+     *    tags like attribution and source are ignored. (To change the list\n
+     *    of tags, see interestingTagsExclude)\n
+     * \n
+     * Returns:\n
+     * tags - {Object} hash of tags\n
+     * interesting - {Boolean} if interesting_tags is passed, returns\n
+     *     whether there are any interesting tags on this element.\n
+     */\n
+    getTags: function(dom_node, interesting_tags) {\n
+        var tag_list = dom_node.getElementsByTagName("tag");\n
+        var tags = {};\n
+        var interesting = false;\n
+        for (var j = 0; j < tag_list.length; j++) {\n
+            var key = tag_list[j].getAttribute("k");\n
+            tags[key] = tag_list[j].getAttribute("v");\n
+            if (interesting_tags) {\n
+                if (!this.interestingTagsExclude[key]) {\n
+                    interesting = true;\n
+                }\n
+            }    \n
+        }  \n
+        return interesting_tags ? [tags, interesting] : tags;     \n
+    },\n
+\n
+    /** \n
+     * Method: isWayArea\n
+     * Given a way object from getWays, check whether the tags and geometry\n
+     * indicate something is an area.\n
+     *\n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+    isWayArea: function(way) { \n
+        var poly_shaped = false;\n
+        var poly_tags = false;\n
+        \n
+        if (way.nodes[0] == way.nodes[way.nodes.length - 1]) {\n
+            poly_shaped = true;\n
+        }\n
+        if (this.checkTags) {\n
+            for(var key in way.tags) {\n
+                if (this.areaTags[key]) {\n
+                    poly_tags = true;\n
+                    break;\n
+                }\n
+            }\n
+        }    \n
+        return poly_shaped && (this.checkTags ? poly_tags : true);            \n
+    }, \n
+\n
+    /**\n
+     * APIMethod: write \n
+     * Takes a list of features, returns a serialized OSM format file for use\n
+     * in tools like JOSM.\n
+     *\n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>)}\n
+     */\n
+    write: function(features) { \n
+        if (!(OpenLayers.Util.isArray(features))) {\n
+            features = [features];\n
+        }\n
+        \n
+        this.osm_id = 1;\n
+        this.created_nodes = {};\n
+        var root_node = this.createElementNS(null, "osm");\n
+        root_node.setAttribute("version", "0.5");\n
+        root_node.setAttribute("generator", "OpenLayers "+ OpenLayers.VERSION_NUMBER);\n
+\n
+        // Loop backwards, because the deserializer puts nodes last, and \n
+        // we want them first if possible\n
+        for(var i = features.length - 1; i >= 0; i--) {\n
+            var nodes = this.createFeatureNodes(features[i]);\n
+            for (var j = 0; j < nodes.length; j++) {\n
+                root_node.appendChild(nodes[j]);\n
+            }    \n
+        }\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [root_node]);\n
+    },\n
+\n
+    /**\n
+     * Method: createFeatureNodes\n
+     * Takes a feature, returns a list of nodes from size 0->n.\n
+     * Will include all pieces of the serialization that are required which\n
+     * have not already been created. Calls out to createXML based on geometry\n
+     * type.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */\n
+    createFeatureNodes: function(feature) {\n
+        var nodes = [];\n
+        var className = feature.geometry.CLASS_NAME;\n
+        var type = className.substring(className.lastIndexOf(".") + 1);\n
+        type = type.toLowerCase();\n
+        var builder = this.createXML[type];\n
+        if (builder) {\n
+            nodes = builder.apply(this, [feature]);\n
+        }\n
+        return nodes;\n
+    },\n
+    \n
+    /**\n
+     * Method: createXML\n
+     * Takes a feature, returns a list of nodes from size 0->n.\n
+     * Will include all pieces of the serialization that are required which\n
+     * have not already been created.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */\n
+    createXML: {\n
+        \'point\': function(point) {\n
+            var id = null;\n
+            var geometry = point.geometry ? point.geometry : point;\n
+            \n
+            if (this.internalProjection && this.externalProjection) {\n
+                geometry = geometry.clone();\n
+                geometry.transform(this.internalProjection, \n
+                                   this.externalProjection);\n
+            }                       \n
+            \n
+            var already_exists = false; // We don\'t return anything if the node\n
+                                        // has already been created\n
+            if (point.osm_id) {\n
+                id = point.osm_id;\n
+                if (this.created_nodes[id]) {\n
+                    already_exists = true;\n
+                }    \n
+            } else {\n
+               id = -this.osm_id;\n
+               this.osm_id++; \n
+            }\n
+            if (already_exists) {\n
+                node = this.created_nodes[id];\n
+            } else {    \n
+                var node = this.createElementNS(null, "node");\n
+            }\n
+            this.created_nodes[id] = node;\n
+            node.setAttribute("id", id);\n
+            node.setAttribute("lon", geometry.x); \n
+            node.setAttribute("lat", geometry.y);\n
+            if (point.attributes) {\n
+                this.serializeTags(point, node);\n
+            }\n
+            this.setState(point, node);\n
+            return already_exists ? [] : [node];\n
+        }, \n
+        linestring: function(feature) {\n
+            var id;\n
+            var nodes = [];\n
+            var geometry = feature.geometry;\n
+            if (feature.osm_id) {\n
+                id = feature.osm_id;\n
+            } else {\n
+                id = -this.osm_id;\n
+                this.osm_id++; \n
+            }\n
+            var way = this.createElementNS(null, "way");\n
+            way.setAttribute("id", id);\n
+            for (var i = 0; i < geometry.components.length; i++) {\n
+                var node = this.createXML[\'point\'].apply(this, [geometry.components[i]]);\n
+                if (node.length) {\n
+                    node = node[0];\n
+                    var node_ref = node.getAttribute("id");\n
+                    nodes.push(node);\n
+                } else {\n
+                    node_ref = geometry.components[i].osm_id;\n
+                    node = this.created_nodes[node_ref];\n
+                }\n
+                this.setState(feature, node);\n
+                var nd_dom = this.createElementNS(null, "nd");\n
+                nd_dom.setAttribute("ref", node_ref);\n
+                way.appendChild(nd_dom);\n
+            }\n
+            this.serializeTags(feature, way);\n
+            nodes.push(way);\n
+            \n
+            return nodes;\n
+        },\n
+        polygon: function(feature) {\n
+            var attrs = OpenLayers.Util.extend({\'area\':\'yes\'}, feature.attributes);\n
+            var feat = new OpenLayers.Feature.Vector(feature.geometry.components[0], attrs); \n
+            feat.osm_id = feature.osm_id;\n
+            return this.createXML[\'linestring\'].apply(this, [feat]);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: serializeTags\n
+     * Given a feature, serialize the attributes onto the given node.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     * node - {DOMNode}\n
+     */\n
+    serializeTags: function(feature, node) {\n
+        for (var key in feature.attributes) {\n
+            var tag = this.createElementNS(null, "tag");\n
+            tag.setAttribute("k", key);\n
+            tag.setAttribute("v", feature.attributes[key]);\n
+            node.appendChild(tag);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: setState \n
+     * OpenStreetMap has a convention that \'state\' is stored for modification or deletion.\n
+     * This allows the file to be uploaded via JOSM or the bulk uploader tool.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     * node - {DOMNode}\n
+     */\n
+    setState: function(feature, node) {\n
+        if (feature.state) {\n
+            var state = null;\n
+            switch(feature.state) {\n
+                case OpenLayers.State.UPDATE:\n
+                    state = "modify";\n
+                case OpenLayers.State.DELETE:\n
+                    state = "delete";\n
+            }\n
+            if (state) {\n
+                node.setAttribute("action", state);\n
+            }\n
+        }    \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.OSM" \n
+});     \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16106</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

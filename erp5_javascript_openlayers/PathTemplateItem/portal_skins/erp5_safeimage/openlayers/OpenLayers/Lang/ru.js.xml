@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Ferrer\n
+ *  - Komzpa\n
+ *  - Lockal\n
+ *  - Александр Сигачёв\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["ru"]\n
+ * Dictionary for Русский.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["ru"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Необработанный запрос вернул ${statusText}",\n
+\n
+    \'Permalink\': "Постоянная ссылка",\n
+\n
+    \'Overlays\': "Слои",\n
+\n
+    \'Base Layer\': "Основной слой",\n
+\n
+    \'noFID\': "Невозможно обновить объект, для которого нет FID.",\n
+\n
+    \'browserNotSupported\': "Ваш браузер не поддерживает векторную графику. На данный момент поддерживаются:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Свойство minZoomLevel предназначено только для использования со слоями, являющимися потомками FixedZoomLevels. То, что этот WFS-слой проверяется на minZoomLevel — реликт прошлого. Однако мы не можем удалить эту функцию, так как, возможно, от неё зависят некоторые основанные на OpenLayers приложения. Функция объявлена устаревшей — проверка minZoomLevel будет удалена в 3.0. Пожалуйста, используйте вместо неё настройку мин/макс разрешения, описанную здесь: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "Транзакция WFS: УСПЕШНО ${response}",\n
+\n
+    \'commitFailed\': "Транзакция WFS: ОШИБКА ${response}",\n
+\n
+    \'googleWarning\': "Слой Google не удалось нормально загрузить.\\x3cbr\\x3e\\x3cbr\\x3eЧтобы избавиться от этого сообщения, выбите другой основной слой в переключателе в правом верхнем углу.\\x3cbr\\x3e\\x3cbr\\x3eСкорее всего, причина в том, что библиотека Google Maps не была включена или не содержит корректного API-ключа для вашего сайта.\\x3cbr\\x3e\\x3cbr\\x3eРазработчикам: чтобы узнать, как сделать, чтобы всё заработало, \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3eщёлкните тут\\x3c/a\\x3e",\n
+\n
+    \'getLayerWarning\': "Слой ${layerType} не удалось нормально загрузить. \\x3cbr\\x3e\\x3cbr\\x3eЧтобы избавиться от этого сообщения, выбите другой основной слой в переключателе в правом верхнем углу.\\x3cbr\\x3e\\x3cbr\\x3eСкорее всего, причина в том, что библиотека ${layerLib} не была включена или была включена некорректно.\\x3cbr\\x3e\\x3cbr\\x3eРазработчикам: чтобы узнать, как сделать, чтобы всё заработало, \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3eщёлкните тут\\x3c/a\\x3e",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Масштаб = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "З",\n
+\n
+    \'E\': "В",\n
+\n
+    \'N\': "С",\n
+\n
+    \'S\': "Ю",\n
+\n
+    \'reprojectDeprecated\': "Вы используете опцию \\\'reproject\\\' для слоя ${layerName}. Эта опция является устаревшей: ее использование предполагалось для поддержки показа данных поверх коммерческих базовых карт, но теперь этот функционал несёт встроенная поддержка сферической проекции Меркатора. Больше сведений доступно на http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    \'methodDeprecated\': "Этот метод считается устаревшим и будет удалён в версии 3.0. Пожалуйста, пользуйтесь ${newMethod}."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4515</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

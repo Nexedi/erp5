@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hsb.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Michawiki\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["hsb"]\n
+ * Dictionary for Hornjoserbsce.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["hsb"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Wotmołwa njewobdźěłaneho naprašowanja ${statusText}",\n
+\n
+    \'Permalink\': "Trajny wotkaz",\n
+\n
+    \'Overlays\': "Naworštowanja",\n
+\n
+    \'Base Layer\': "Zakładna runina",\n
+\n
+    \'noFID\': "Funkcija, za kotruž FID njeje, njeda so aktualizować.",\n
+\n
+    \'browserNotSupported\': "Twój wobhladowak wektorowe rysowanje njepodpěruje. Tuchwilu podpěrowane rysowaki su:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Kajkosć minZoomLevel je jenož za wužiwanje z worštami myslena, kotrež wot FixedZoomLevels pochadźeja. Zo tuta woršta wfs za minZoomLevel přepruwuje, je relikt zańdźenosće. Njemóžemy wšak ju wotstronić, bjeztoho zo aplikacije, kotrež na OpenLayers bazěruja a snano tutu kajkosć wužiwaja, hižo njefunguja. Tohodla smy ju jako zestarjenu woznamjenili -- přepruwowanje za minZoomLevel budu so we wersiji 3.0 wotstronjeć. Prošu wužij město toho nastajenje min/max, kaž je tu wopisane: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS-Transakcija: WUSPĚŠNA ${response}",\n
+\n
+    \'commitFailed\': "WFS-Transakcija: NJEPORADŹENA ${response}",\n
+\n
+    \'googleWarning\': "Woršta Google njemóžeše so korektnje začitać.\\x3cbr\\x3e\\x3cbr\\x3eZo by tutu zdźělenku wotbył, wubjer nowy BaseLayer z wuběra worštow horjeka naprawo.\\x3cbr\\x3e\\x3cbr\\x3eNajskerje so to stawa, dokelž skript biblioteki Google Maps pak njebu zapřijaty pak njewobsahuje korektny kluč API za twoje sydło.\\x3cbr\\x3e\\x3cbr\\x3eWuwiwarjo: Za pomoc ke korektnemu fungowanju worštow\\n\\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3etu kliknyć\\x3c/a\\x3e",\n
+\n
+    \'getLayerWarning\': "Woršta ${layerType} njemóžeše so korektnje začitać.\\x3cbr\\x3e\\x3cbr\\x3eZo by tutu zdźělenku wotbył, wubjer nowy BaseLayer z wuběra worštow horjeka naprawo.\\x3cbr\\x3e\\x3cbr\\x3eNajskerje so to stawa, dokelž skript biblioteki ${layerLib} njebu korektnje zapřijaty.\\x3cbr\\x3e\\x3cbr\\x3eWuwiwarjo: Za pomoc ke korektnemu fungowanju worštow\\n\\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3etu kliknyć\\x3c/a\\x3e",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Měritko = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "Z",\n
+\n
+    \'E\': "W",\n
+\n
+    \'N\': "S",\n
+\n
+    \'S\': "J",\n
+\n
+    \'reprojectDeprecated\': "Wužiwaš opciju \\"reproject\\" wořšty ${layerName}. Tuta opcija je zestarjena: jeje wužiwanje bě myslene, zo by zwobraznjenje datow nad komercielnymi bazowymi kartami podpěrało, ale funkcionalnosć měła so nětko z pomocu Sperical Mercator docpěć. Dalše informacije steja na http://trac.openlayers.org/wiki/SphericalMercator k dispoziciji.",\n
+\n
+    \'methodDeprecated\': "Tuta metoda je so njeschwaliła a budźe so w 3.0 wotstronjeć. Prošu wužij ${newMethod} město toho."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3161</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

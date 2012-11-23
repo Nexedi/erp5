@@ -1,0 +1,690 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LineString.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Geometry/Curve.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Geometry.LineString\n
+ * A LineString is a Curve which, once two points have been added to it, can \n
+ * never be less than two points long.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Geometry.Curve>\n
+ */\n
+OpenLayers.Geometry.LineString = OpenLayers.Class(OpenLayers.Geometry.Curve, {\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Geometry.LineString\n
+     * Create a new LineString geometry\n
+     *\n
+     * Parameters:\n
+     * points - {Array(<OpenLayers.Geometry.Point>)} An array of points used to\n
+     *          generate the linestring\n
+     *\n
+     */\n
+\n
+    /**\n
+     * APIMethod: removeComponent\n
+     * Only allows removal of a point if there are three or more points in \n
+     * the linestring. (otherwise the result would be just a single point)\n
+     *\n
+     * Parameters: \n
+     * point - {<OpenLayers.Geometry.Point>} The point to be removed\n
+     *\n
+     * Returns: \n
+     * {Boolean} The component was removed.\n
+     */\n
+    removeComponent: function(point) {\n
+        var removed = this.components && (this.components.length > 2);\n
+        if (removed) {\n
+            OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this, \n
+                                                                  arguments);\n
+        }\n
+        return removed;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: intersects\n
+     * Test for instersection between two geometries.  This is a cheapo\n
+     *     implementation of the Bently-Ottmann algorigithm.  It doesn\'t\n
+     *     really keep track of a sweep line data structure.  It is closer\n
+     *     to the brute force method, except that segments are sorted and\n
+     *     potential intersections are only calculated when bounding boxes\n
+     *     intersect.\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>}\n
+     *\n
+     * Returns:\n
+     * {Boolean} The input geometry intersects this geometry.\n
+     */\n
+    intersects: function(geometry) {\n
+        var intersect = false;\n
+        var type = geometry.CLASS_NAME;\n
+        if(type == "OpenLayers.Geometry.LineString" ||\n
+           type == "OpenLayers.Geometry.LinearRing" ||\n
+           type == "OpenLayers.Geometry.Point") {\n
+            var segs1 = this.getSortedSegments();\n
+            var segs2;\n
+            if(type == "OpenLayers.Geometry.Point") {\n
+                segs2 = [{\n
+                    x1: geometry.x, y1: geometry.y,\n
+                    x2: geometry.x, y2: geometry.y\n
+                }];\n
+            } else {\n
+                segs2 = geometry.getSortedSegments();\n
+            }\n
+            var seg1, seg1x1, seg1x2, seg1y1, seg1y2,\n
+                seg2, seg2y1, seg2y2;\n
+            // sweep right\n
+            outer: for(var i=0, len=segs1.length; i<len; ++i) {\n
+                seg1 = segs1[i];\n
+                seg1x1 = seg1.x1;\n
+                seg1x2 = seg1.x2;\n
+                seg1y1 = seg1.y1;\n
+                seg1y2 = seg1.y2;\n
+                inner: for(var j=0, jlen=segs2.length; j<jlen; ++j) {\n
+                    seg2 = segs2[j];\n
+                    if(seg2.x1 > seg1x2) {\n
+                        // seg1 still left of seg2\n
+                        break;\n
+                    }\n
+                    if(seg2.x2 < seg1x1) {\n
+                        // seg2 still left of seg1\n
+                        continue;\n
+                    }\n
+                    seg2y1 = seg2.y1;\n
+                    seg2y2 = seg2.y2;\n
+                    if(Math.min(seg2y1, seg2y2) > Math.max(seg1y1, seg1y2)) {\n
+                        // seg2 above seg1\n
+                        continue;\n
+                    }\n
+                    if(Math.max(seg2y1, seg2y2) < Math.min(seg1y1, seg1y2)) {\n
+                        // seg2 below seg1\n
+                        continue;\n
+                    }\n
+                    if(OpenLayers.Geometry.segmentsIntersect(seg1, seg2)) {\n
+                        intersect = true;\n
+                        break outer;\n
+                    }\n
+                }\n
+            }\n
+        } else {\n
+            intersect = geometry.intersects(this);\n
+        }\n
+        return intersect;\n
+    },\n
+    \n
+    /**\n
+     * Method: getSortedSegments\n
+     *\n
+     * Returns:\n
+     * {Array} An array of segment objects.  Segment objects have properties\n
+     *     x1, y1, x2, and y2.  The start point is represented by x1 and y1.\n
+     *     The end point is represented by x2 and y2.  Start and end are\n
+     *     ordered so that x1 < x2.\n
+     */\n
+    getSortedSegments: function() {\n
+        var numSeg = this.components.length - 1;\n
+        var segments = new Array(numSeg), point1, point2;\n
+        for(var i=0; i<numSeg; ++i) {\n
+            point1 = this.components[i];\n
+            point2 = this.components[i + 1];\n
+            if(point1.x < point2.x) {\n
+                segments[i] = {\n
+                    x1: point1.x,\n
+                    y1: point1.y,\n
+                    x2: point2.x,\n
+                    y2: point2.y\n
+                };\n
+            } else {\n
+                segments[i] = {\n
+                    x1: point2.x,\n
+                    y1: point2.y,\n
+                    x2: point1.x,\n
+                    y2: point1.y\n
+                };\n
+            }\n
+        }\n
+        // more efficient to define this somewhere static\n
+        function byX1(seg1, seg2) {\n
+            return seg1.x1 - seg2.x1;\n
+        }\n
+        return segments.sort(byX1);\n
+    },\n
+    \n
+    /**\n
+     * Method: splitWithSegment\n
+     * Split this geometry with the given segment.\n
+     *\n
+     * Parameters:\n
+     * seg - {Object} An object with x1, y1, x2, and y2 properties referencing\n
+     *     segment endpoint coordinates.\n
+     * options - {Object} Properties of this object will be used to determine\n
+     *     how the split is conducted.\n
+     *\n
+     * Valid options:\n
+     * edge - {Boolean} Allow splitting when only edges intersect.  Default is\n
+     *     true.  If false, a vertex on the source segment must be within the\n
+     *     tolerance distance of the intersection to be considered a split.\n
+     * tolerance - {Number} If a non-null value is provided, intersections\n
+     *     within the tolerance distance of one of the source segment\'s\n
+     *     endpoints will be assumed to occur at the endpoint.\n
+     *\n
+     * Returns:\n
+     * {Object} An object with *lines* and *points* properties.  If the given\n
+     *     segment intersects this linestring, the lines array will reference\n
+     *     geometries that result from the split.  The points array will contain\n
+     *     all intersection points.  Intersection points are sorted along the\n
+     *     segment (in order from x1,y1 to x2,y2).\n
+     */\n
+    splitWithSegment: function(seg, options) {\n
+        var edge = !(options && options.edge === false);\n
+        var tolerance = options && options.tolerance;\n
+        var lines = [];\n
+        var verts = this.getVertices();\n
+        var points = [];\n
+        var intersections = [];\n
+        var split = false;\n
+        var vert1, vert2, point;\n
+        var node, vertex, target;\n
+        var interOptions = {point: true, tolerance: tolerance};\n
+        var result = null;\n
+        for(var i=0, stop=verts.length-2; i<=stop; ++i) {\n
+            vert1 = verts[i];\n
+            points.push(vert1.clone());\n
+            vert2 = verts[i+1];\n
+            target = {x1: vert1.x, y1: vert1.y, x2: vert2.x, y2: vert2.y};\n
+            point = OpenLayers.Geometry.segmentsIntersect(\n
+                seg, target, interOptions\n
+            );\n
+            if(point instanceof OpenLayers.Geometry.Point) {\n
+                if((point.x === seg.x1 && point.y === seg.y1) ||\n
+                   (point.x === seg.x2 && point.y === seg.y2) ||\n
+                   point.equals(vert1) || point.equals(vert2)) {\n
+                    vertex = true;\n
+                } else {\n
+                    vertex = false;\n
+                }\n
+                if(vertex || edge) {\n
+                    // push intersections different than the previous\n
+                    if(!point.equals(intersections[intersections.length-1])) {\n
+                        intersections.push(point.clone());\n
+                    }\n
+                    if(i === 0) {\n
+                        if(point.equals(vert1)) {\n
+                            continue;\n
+                        }\n
+                    }\n
+                    if(point.equals(vert2)) {\n
+                        continue;\n
+                    }\n
+                    split = true;\n
+                    if(!point.equals(vert1)) {\n
+                        points.push(point);\n
+                    }\n
+                    lines.push(new OpenLayers.Geometry.LineString(points));\n
+                    points = [point.clone()];\n
+                }\n
+            }\n
+        }\n
+        if(split) {\n
+            points.push(vert2.clone());\n
+            lines.push(new OpenLayers.Geometry.LineString(points));\n
+        }\n
+        if(intersections.length > 0) {\n
+            // sort intersections along segment\n
+            var xDir = seg.x1 < seg.x2 ? 1 : -1;\n
+            var yDir = seg.y1 < seg.y2 ? 1 : -1;\n
+            result = {\n
+                lines: lines,\n
+                points: intersections.sort(function(p1, p2) {\n
+                    return (xDir * p1.x - xDir * p2.x) || (yDir * p1.y - yDir * p2.y);\n
+                })\n
+            };\n
+        }\n
+        return result;\n
+    },\n
+\n
+    /**\n
+     * Method: split\n
+     * Use this geometry (the source) to attempt to split a target geometry.\n
+     * \n
+     * Parameters:\n
+     * target - {<OpenLayers.Geometry>} The target geometry.\n
+     * options - {Object} Properties of this object will be used to determine\n
+     *     how the split is conducted.\n
+     *\n
+     * Valid options:\n
+     * mutual - {Boolean} Split the source geometry in addition to the target\n
+     *     geometry.  Default is false.\n
+     * edge - {Boolean} Allow splitting when only edges intersect.  Default is\n
+     *     true.  If false, a vertex on the source must be within the tolerance\n
+     *     distance of the intersection to be considered a split.\n
+     * tolerance - {Number} If a non-null value is provided, intersections\n
+     *     within the tolerance distance of an existing vertex on the source\n
+     *     will be assumed to occur at the vertex.\n
+     * \n
+     * Returns:\n
+     * {Array} A list of geometries (of this same type as the target) that\n
+     *     result from splitting the target with the source geometry.  The\n
+     *     source and target geometry will remain unmodified.  If no split\n
+     *     results, null will be returned.  If mutual is true and a split\n
+     *     results, return will be an array of two arrays - the first will be\n
+     *     all geometries that result from splitting the source geometry and\n
+     *     the second will be all geometries that result from splitting the\n
+     *     target geometry.\n
+     */\n
+    split: function(target, options) {\n
+        var results = null;\n
+        var mutual = options && options.mutual;\n
+        var sourceSplit, targetSplit, sourceParts, targetParts;\n
+        if(target instanceof OpenLayers.Geometry.LineString) {\n
+            var verts = this.getVertices();\n
+            var vert1, vert2, seg, splits, lines, point;\n
+            var points = [];\n
+            sourceParts = [];\n
+            for(var i=0, stop=verts.length-2; i<=stop; ++i) {\n
+                vert1 = verts[i];\n
+                vert2 = verts[i+1];\n
+                seg = {\n
+                    x1: vert1.x, y1: vert1.y,\n
+                    x2: vert2.x, y2: vert2.y\n
+                };\n
+                targetParts = targetParts || [target];\n
+                if(mutual) {\n
+                    points.push(vert1.clone());\n
+                }\n
+                for(var j=0; j<targetParts.length; ++j) {\n
+                    splits = targetParts[j].splitWithSegment(seg, options);\n
+                    if(splits) {\n
+                        // splice in new features\n
+                        lines = splits.lines;\n
+                        if(lines.length > 0) {\n
+                            lines.unshift(j, 1);\n
+                            Array.prototype.splice.apply(targetParts, lines);\n
+                            j += lines.length - 2;\n
+                        }\n
+                        if(mutual) {\n
+                            for(var k=0, len=splits.points.length; k<len; ++k) {\n
+                                point = splits.points[k];\n
+                                if(!point.equals(vert1)) {\n
+                                    points.push(point);\n
+                                    sourceParts.push(new OpenLayers.Geometry.LineString(points));\n
+                                    if(point.equals(vert2)) {\n
+                                        points = [];\n
+                                    } else {\n
+                                        points = [point.clone()];\n
+                                    }\n
+                                }\n
+                            }\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+            if(mutual && sourceParts.length > 0 && points.length > 0) {\n
+                points.push(vert2.clone());\n
+                sourceParts.push(new OpenLayers.Geometry.LineString(points));\n
+            }\n
+        } else {\n
+            results = target.splitWith(this, options);\n
+        }\n
+        if(targetParts && targetParts.length > 1) {\n
+            targetSplit = true;\n
+        } else {\n
+            targetParts = [];\n
+        }\n
+        if(sourceParts && sourceParts.length > 1) {\n
+            sourceSplit = true;\n
+        } else {\n
+            sourceParts = [];\n
+        }\n
+        if(targetSplit || sourceSplit) {\n
+            if(mutual) {\n
+                results = [sourceParts, targetParts];\n
+            } else {\n
+                results = targetParts;\n
+            }\n
+        }\n
+        return results;\n
+    },\n
+\n
+    /**\n
+     * Method: splitWith\n
+     * Split this geometry (the target) with the given geometry (the source).\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} A geometry used to split this\n
+     *     geometry (the source).\n
+     * options - {Object} Properties of this object will be used to determine\n
+     *     how the split is conducted.\n
+     *\n
+     * Valid options:\n
+     * mutual - {Boolean} Split the source geometry in addition to the target\n
+     *     geometry.  Default is false.\n
+     * edge - {Boolean} Allow splitting when only edges intersect.  Default is\n
+     *     true.  If false, a vertex on the source must be within the tolerance\n
+     *     distance of the intersection to be considered a split.\n
+     * tolerance - {Number} If a non-null value is provided, intersections\n
+     *     within the tolerance distance of an existing vertex on the source\n
+     *     will be assumed to occur at the vertex.\n
+     * \n
+     * Returns:\n
+     * {Array} A list of geometries (of this same type as the target) that\n
+     *     result from splitting the target with the source geometry.  The\n
+     *     source and target geometry will remain unmodified.  If no split\n
+     *     results, null will be returned.  If mutual is true and a split\n
+     *     results, return will be an array of two arrays - the first will be\n
+     *     all geometries that result from splitting the source geometry and\n
+     *     the second will be all geometries that result from splitting the\n
+     *     target geometry.\n
+     */\n
+    splitWith: function(geometry, options) {\n
+        return geometry.split(this, options);\n
+\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getVertices\n
+     * Return a list of all points in this geometry.\n
+     *\n
+     * Parameters:\n
+     * nodes - {Boolean} For lines, only return vertices that are\n
+     *     endpoints.  If false, for lines, only vertices that are not\n
+     *     endpoints will be returned.  If not provided, all vertices will\n
+     *     be returned.\n
+     *\n
+     * Returns:\n
+     * {Array} A list of all vertices in the geometry.\n
+     */\n
+    getVertices: function(nodes) {\n
+        var vertices;\n
+        if(nodes === true) {\n
+            vertices = [\n
+                this.components[0],\n
+                this.components[this.components.length-1]\n
+            ];\n
+        } else if (nodes === false) {\n
+            vertices = this.components.slice(1, this.components.length-1);\n
+        } else {\n
+            vertices = this.components.slice();\n
+        }\n
+        return vertices;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: distanceTo\n
+     * Calculate the closest distance between two geometries (on the x-y plane).\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} The target geometry.\n
+     * options - {Object} Optional properties for configuring the distance\n
+     *     calculation.\n
+     *\n
+     * Valid options:\n
+     * details - {Boolean} Return details from the distance calculation.\n
+     *     Default is false.\n
+     * edge - {Boolean} Calculate the distance from this geometry to the\n
+     *     nearest edge of the target geometry.  Default is true.  If true,\n
+     *     calling distanceTo from a geometry that is wholly contained within\n
+     *     the target will result in a non-zero distance.  If false, whenever\n
+     *     geometries intersect, calling distanceTo will return 0.  If false,\n
+     *     details cannot be returned.\n
+     *\n
+     * Returns:\n
+     * {Number | Object} The distance between this geometry and the target.\n
+     *     If details is true, the return will be an object with distance,\n
+     *     x0, y0, x1, and x2 properties.  The x0 and y0 properties represent\n
+     *     the coordinates of the closest point on this geometry. The x1 and y1\n
+     *     properties represent the coordinates of the closest point on the\n
+     *     target geometry.\n
+     */\n
+    distanceTo: function(geometry, options) {\n
+        var edge = !(options && options.edge === false);\n
+        var details = edge && options && options.details;\n
+        var result, best = {};\n
+        var min = Number.POSITIVE_INFINITY;\n
+        if(geometry instanceof OpenLayers.Geometry.Point) {\n
+            var segs = this.getSortedSegments();\n
+            var x = geometry.x;\n
+            var y = geometry.y;\n
+            var seg;\n
+            for(var i=0, len=segs.length; i<len; ++i) {\n
+                seg = segs[i];\n
+                result = OpenLayers.Geometry.distanceToSegment(geometry, seg);\n
+                if(result.distance < min) {\n
+                    min = result.distance;\n
+                    best = result;\n
+                    if(min === 0) {\n
+                        break;\n
+                    }\n
+                } else {\n
+                    // if distance increases and we cross y0 to the right of x0, no need to keep looking.\n
+                    if(seg.x2 > x && ((y > seg.y1 && y < seg.y2) || (y < seg.y1 && y > seg.y2))) {\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+            if(details) {\n
+                best = {\n
+                    distance: best.distance,\n
+                    x0: best.x, y0: best.y,\n
+                    x1: x, y1: y\n
+                };\n
+            } else {\n
+                best = best.distance;\n
+            }\n
+        } else if(geometry instanceof OpenLayers.Geometry.LineString) { \n
+            var segs0 = this.getSortedSegments();\n
+            var segs1 = geometry.getSortedSegments();\n
+            var seg0, seg1, intersection, x0, y0;\n
+            var len1 = segs1.length;\n
+            var interOptions = {point: true};\n
+            outer: for(var i=0, len=segs0.length; i<len; ++i) {\n
+                seg0 = segs0[i];\n
+                x0 = seg0.x1;\n
+                y0 = seg0.y1;\n
+                for(var j=0; j<len1; ++j) {\n
+                    seg1 = segs1[j];\n
+                    intersection = OpenLayers.Geometry.segmentsIntersect(seg0, seg1, interOptions);\n
+                    if(intersection) {\n
+                        min = 0;\n
+                        best = {\n
+                            distance: 0,\n
+                            x0: intersection.x, y0: intersection.y,\n
+                            x1: intersection.x, y1: intersection.y\n
+                        };\n
+                        break outer;\n
+                    } else {\n
+                        result = OpenLayers.Geometry.distanceToSegment({x: x0, y: y0}, seg1);\n
+                        if(result.distance < min) {\n
+                            min = result.distance;\n
+                            best = {\n
+                                distance: min,\n
+                                x0: x0, y0: y0,\n
+                                x1: result.x, y1: result.y\n
+                            };\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+            if(!details) {\n
+                best = best.distance;\n
+            }\n
+            if(min !== 0) {\n
+                // check the final vertex in this line\'s sorted segments\n
+                if(seg0) {\n
+                    result = geometry.distanceTo(\n
+                        new OpenLayers.Geometry.Point(seg0.x2, seg0.y2),\n
+                        options\n
+                    );\n
+                    var dist = details ? result.distance : result;\n
+                    if(dist < min) {\n
+                        if(details) {\n
+                            best = {\n
+                                distance: min,\n
+                                x0: result.x1, y0: result.y1,\n
+                                x1: result.x0, y1: result.y0\n
+                            };\n
+                        } else {\n
+                            best = dist;\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+        } else {\n
+            best = geometry.distanceTo(this, options);\n
+            // swap since target comes from this line\n
+            if(details) {\n
+                best = {\n
+                    distance: best.distance,\n
+                    x0: best.x1, y0: best.y1,\n
+                    x1: best.x0, y1: best.y0\n
+                };\n
+            }\n
+        }\n
+        return best;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: simplify\n
+     * This function will return a simplified LineString.\n
+     * Simplification is based on the Douglas-Peucker algorithm.\n
+     *\n
+     *\n
+     * Parameters:\n
+     * tolerance - {number} threshhold for simplification in map units\n
+     *\n
+     * Returns:\n
+     * {OpenLayers.Geometry.LineString} the simplified LineString\n
+     */\n
+    simplify: function(tolerance){\n
+        if (this && this !== null) {\n
+            var points = this.getVertices();\n
+            if (points.length < 3) {\n
+                return this;\n
+            }\n
+    \n
+            var compareNumbers = function(a, b){\n
+                return (a-b);\n
+            };\n
+    \n
+            /**\n
+             * Private function doing the Douglas-Peucker reduction\n
+             */\n
+            var douglasPeuckerReduction = function(points, firstPoint, lastPoint, tolerance){\n
+                var maxDistance = 0;\n
+                var indexFarthest = 0;\n
+    \n
+                for (var index = firstPoint, distance; index < lastPoint; index++) {\n
+                    distance = perpendicularDistance(points[firstPoint], points[lastPoint], points[index]);\n
+                    if (distance > maxDistance) {\n
+                        maxDistance = distance;\n
+                        indexFarthest = index;\n
+                    }\n
+                }\n
+    \n
+                if (maxDistance > tolerance && indexFarthest != firstPoint) {\n
+                    //Add the largest point that exceeds the tolerance\n
+                    pointIndexsToKeep.push(indexFarthest);\n
+                    douglasPeuckerReduction(points, firstPoint, indexFarthest, tolerance);\n
+                    douglasPeuckerReduction(points, indexFarthest, lastPoint, tolerance);\n
+                }\n
+            };\n
+    \n
+            /**\n
+             * Private function calculating the perpendicular distance\n
+             * TODO: check whether OpenLayers.Geometry.LineString::distanceTo() is faster or slower\n
+             */\n
+            var perpendicularDistance = function(point1, point2, point){\n
+                //Area = |(1/2)(x1y2 + x2y3 + x3y1 - x2y1 - x3y2 - x1y3)|   *Area of triangle\n
+                //Base = v((x1-x2)²+(x1-x2)²)                               *Base of Triangle*\n
+                //Area = .5*Base*H                                          *Solve for height\n
+                //Height = Area/.5/Base\n
+    \n
+                var area = Math.abs(0.5 * (point1.x * point2.y + point2.x * point.y + point.x * point1.y - point2.x * point1.y - point.x * point2.y - point1.x * point.y));\n
+                var bottom = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));\n
+                var height = area / bottom * 2;\n
+    \n
+                return height;\n
+            };\n
+    \n
+            var firstPoint = 0;\n
+            var lastPoint = points.length - 1;\n
+            var pointIndexsToKeep = [];\n
+    \n
+            //Add the first and last index to the keepers\n
+            pointIndexsToKeep.push(firstPoint);\n
+            pointIndexsToKeep.push(lastPoint);\n
+    \n
+            //The first and the last point cannot be the same\n
+            while (points[firstPoint].equals(points[lastPoint])) {\n
+                lastPoint--;\n
+                //Addition: the first point not equal to first point in the LineString is kept as well\n
+                pointIndexsToKeep.push(lastPoint);\n
+            }\n
+    \n
+            douglasPeuckerReduction(points, firstPoint, lastPoint, tolerance);\n
+            var returnPoints = [];\n
+            pointIndexsToKeep.sort(compareNumbers);\n
+            for (var index = 0; index < pointIndexsToKeep.length; index++) {\n
+                returnPoints.push(points[pointIndexsToKeep[index]]);\n
+            }\n
+            return new OpenLayers.Geometry.LineString(returnPoints);\n
+    \n
+        }\n
+        else {\n
+            return this;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Geometry.LineString"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>25718</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

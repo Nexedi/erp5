@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684101.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_1_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/Filter/v1.js\n
+ * @requires OpenLayers/Format/GML/v3.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.Filter.v1_1_0\n
+ * Write ogc:Filter version 1.1.0.\n
+ *\n
+ * Differences from the v1.0.0 parser:\n
+ *  - uses GML v3 instead of GML v2\n
+ *  - reads matchCase attribute on ogc:PropertyIsEqual and\n
+ *        ogc:PropertyIsNotEqual elements.\n
+ *  - writes matchCase attribute from comparison filters of type EQUAL_TO,\n
+ *        NOT_EQUAL_TO and LIKE.\n
+ * \n
+ * Inherits from: \n
+ *  - <OpenLayers.Format.GML.v3>\n
+ *  - <OpenLayers.Format.Filter.v1>\n
+ */\n
+OpenLayers.Format.Filter.v1_1_0 = OpenLayers.Class(\n
+    OpenLayers.Format.GML.v3, OpenLayers.Format.Filter.v1, {\n
+    \n
+    /**\n
+     * Constant: VERSION\n
+     * {String} 1.1.0\n
+     */\n
+    VERSION: "1.1.0",\n
+    \n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} http://www.opengis.net/ogc/filter/1.1.0/filter.xsd\n
+     */\n
+    schemaLocation: "http://www.opengis.net/ogc/filter/1.1.0/filter.xsd",\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.Filter.v1_1_0\n
+     * Instances of this class are not created directly.  Use the\n
+     *     <OpenLayers.Format.Filter> constructor instead.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.GML.v3.prototype.initialize.apply(\n
+            this, [options]\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "ogc": OpenLayers.Util.applyDefaults({\n
+            "PropertyIsEqualTo": function(node, obj) {\n
+                var matchCase = node.getAttribute("matchCase");\n
+                var filter = new OpenLayers.Filter.Comparison({\n
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,\n
+                    matchCase: !(matchCase === "false" || matchCase === "0")\n
+                });\n
+                this.readChildNodes(node, filter);\n
+                obj.filters.push(filter);\n
+            },\n
+            "PropertyIsNotEqualTo": function(node, obj) {\n
+                var matchCase = node.getAttribute("matchCase");\n
+                var filter = new OpenLayers.Filter.Comparison({\n
+                    type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,\n
+                    matchCase: !(matchCase === "false" || matchCase === "0")\n
+                });\n
+                this.readChildNodes(node, filter);\n
+                obj.filters.push(filter);\n
+            },\n
+            "PropertyIsLike": function(node, obj) {\n
+                var filter = new OpenLayers.Filter.Comparison({\n
+                    type: OpenLayers.Filter.Comparison.LIKE\n
+                });\n
+                this.readChildNodes(node, filter);\n
+                var wildCard = node.getAttribute("wildCard");\n
+                var singleChar = node.getAttribute("singleChar");\n
+                var esc = node.getAttribute("escapeChar");\n
+                filter.value2regex(wildCard, singleChar, esc);\n
+                obj.filters.push(filter);\n
+            }\n
+        }, OpenLayers.Format.Filter.v1.prototype.readers["ogc"]),\n
+        "gml": OpenLayers.Format.GML.v3.prototype.readers["gml"],\n
+        "feature": OpenLayers.Format.GML.v3.prototype.readers["feature"]        \n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "ogc": OpenLayers.Util.applyDefaults({\n
+            "PropertyIsEqualTo": function(filter) {\n
+                var node = this.createElementNSPlus("ogc:PropertyIsEqualTo", {\n
+                    attributes: {matchCase: filter.matchCase}\n
+                });\n
+                // no ogc:expression handling for PropertyName for now\n
+                this.writeNode("PropertyName", filter, node);\n
+                // handle Literals or Functions for now\n
+                this.writeOgcExpression(filter.value, node);\n
+                return node;\n
+            },\n
+            "PropertyIsNotEqualTo": function(filter) {\n
+                var node = this.createElementNSPlus("ogc:PropertyIsNotEqualTo", {\n
+                    attributes: {matchCase: filter.matchCase}\n
+                });\n
+                // no ogc:expression handling for PropertyName for now\n
+                this.writeNode("PropertyName", filter, node);\n
+                // handle Literals or Functions for now\n
+                this.writeOgcExpression(filter.value, node);\n
+                return node;\n
+            },\n
+            "PropertyIsLike": function(filter) {\n
+                var node = this.createElementNSPlus("ogc:PropertyIsLike", {\n
+                    attributes: {\n
+                        matchCase: filter.matchCase,\n
+                        wildCard: "*", singleChar: ".", escapeChar: "!"\n
+                    }\n
+                });\n
+                // no ogc:expression handling for now\n
+                this.writeNode("PropertyName", filter, node);\n
+                // convert regex string to ogc string\n
+                this.writeNode("Literal", filter.regex2value(), node);\n
+                return node;\n
+            },\n
+            "BBOX": function(filter) {\n
+                var node = this.createElementNSPlus("ogc:BBOX");\n
+                // PropertyName is optional in 1.1.0\n
+                filter.property && this.writeNode("PropertyName", filter, node);\n
+                var box = this.writeNode("gml:Envelope", filter.value);\n
+                if(filter.projection) {\n
+                    box.setAttribute("srsName", filter.projection);\n
+                }\n
+                node.appendChild(box); \n
+                return node;\n
+            },\n
+            "SortBy": function(sortProperties) {\n
+                var node = this.createElementNSPlus("ogc:SortBy");\n
+                for (var i=0,l=sortProperties.length;i<l;i++) {\n
+                    this.writeNode(\n
+                        "ogc:SortProperty",\n
+                        sortProperties[i],\n
+                        node\n
+                    );\n
+                }\n
+                return node;\n
+            }, \n
+            "SortProperty": function(sortProperty) {\n
+                var node = this.createElementNSPlus("ogc:SortProperty");\n
+                this.writeNode(\n
+                    "ogc:PropertyName",\n
+                    sortProperty,\n
+                    node\n
+                );\n
+                this.writeNode(\n
+                    "ogc:SortOrder",\n
+                    (sortProperty.order == \'DESC\') ? \'DESC\' : \'ASC\',\n
+                    node\n
+                );\n
+                return node;\n
+            },\n
+            "SortOrder": function(value) {\n
+                var node = this.createElementNSPlus("ogc:SortOrder", {\n
+                    value: value\n
+                });\n
+                return node;\n
+            }\n
+        }, OpenLayers.Format.Filter.v1.prototype.writers["ogc"]),\n
+        "gml": OpenLayers.Format.GML.v3.prototype.writers["gml"],\n
+        "feature": OpenLayers.Format.GML.v3.prototype.writers["feature"]\n
+    },\n
+\n
+    /**\n
+     * Method: writeSpatial\n
+     *\n
+     * Read a {<OpenLayers.Filter.Spatial>} filter and converts it into XML.\n
+     *\n
+     * Parameters:\n
+     * filter - {<OpenLayers.Filter.Spatial>} The filter.\n
+     * name - {String} Name of the generated XML element.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The created XML element.\n
+     */\n
+    writeSpatial: function(filter, name) {\n
+        var node = this.createElementNSPlus("ogc:"+name);\n
+        this.writeNode("PropertyName", filter, node);\n
+        if(filter.value instanceof OpenLayers.Filter.Function) {\n
+            this.writeNode("Function", filter.value, node);\n
+        } else {\n
+        var child;\n
+        if(filter.value instanceof OpenLayers.Geometry) {\n
+            child = this.writeNode("feature:_geometry", filter.value).firstChild;\n
+        } else {\n
+            child = this.writeNode("gml:Envelope", filter.value);\n
+        }\n
+        if(filter.projection) {\n
+            child.setAttribute("srsName", filter.projection);\n
+        }\n
+        node.appendChild(child);\n
+        }\n
+        return node;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.Filter.v1_1_0" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8704</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

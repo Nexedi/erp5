@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Button.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Button \n
+ * The Button control is a very simple push-button, for use with \n
+ * <OpenLayers.Control.Panel>.\n
+ * When clicked, the function trigger() is executed.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ *\n
+ * Use:\n
+ * (code)\n
+ * var button = new OpenLayers.Control.Button({\n
+ *     displayClass: "MyButton", trigger: myFunction\n
+ * });\n
+ * panel.addControls([button]);\n
+ * (end)\n
+ * \n
+ * Will create a button with CSS class MyButtonItemInactive, that\n
+ *     will call the function MyFunction() when clicked.\n
+ */\n
+OpenLayers.Control.Button = OpenLayers.Class(OpenLayers.Control, {\n
+    /**\n
+     * Property: type\n
+     * {Integer} OpenLayers.Control.TYPE_BUTTON.\n
+     */\n
+    type: OpenLayers.Control.TYPE_BUTTON,\n
+    \n
+    /**\n
+     * Method: trigger\n
+     * Called by a control panel when the button is clicked.\n
+     */\n
+    trigger: function() {},\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Button"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1217</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

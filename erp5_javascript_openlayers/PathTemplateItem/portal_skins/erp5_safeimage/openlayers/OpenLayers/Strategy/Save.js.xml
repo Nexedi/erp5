@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Save.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Strategy.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Strategy.Save\n
+ * A strategy that commits newly created or modified features.  By default\n
+ *     the strategy waits for a call to <save> before persisting changes.  By\n
+ *     configuring the strategy with the <auto> option, changes can be saved\n
+ *     automatically.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Strategy>\n
+ */\n
+OpenLayers.Strategy.Save = OpenLayers.Class(OpenLayers.Strategy, {\n
+    \n
+    /**\n
+     * APIProperty: events\n
+     * {<OpenLayers.Events>} An events object that handles all \n
+     *     events on the strategy object.\n
+     *\n
+     * Register a listener for a particular event with the following syntax:\n
+     * (code)\n
+     * strategy.events.register(type, obj, listener);\n
+     * (end)\n
+     *\n
+     * Supported event types:\n
+     * start - Triggered before saving\n
+     * success - Triggered after a successful transaction\n
+     * fail - Triggered after a failed transaction\n
+     * \n
+     */\n
+ \n
+    /** \n
+     * Property: events\n
+     * {<OpenLayers.Events>} Events instance for triggering this protocol\n
+     *    events.\n
+     */\n
+    events: null,\n
+    \n
+    /**\n
+     * APIProperty: auto\n
+     * {Boolean | Number} Auto-save.  Default is false.  If true, features will be\n
+     *     saved immediately after being added to the layer and with each\n
+     *     modification or deletion.  If auto is a number, features will be\n
+     *     saved on an interval provided by the value (in seconds).\n
+     */\n
+    auto: false,\n
+    \n
+    /**\n
+     * Property: timer\n
+     * {Number} The id of the timer.\n
+     */\n
+    timer: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Strategy.Save\n
+     * Create a new Save strategy.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Strategy.prototype.initialize.apply(this, [options]);\n
+        this.events = new OpenLayers.Events(this);\n
+    },\n
+   \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the strategy.  Register any listeners, do appropriate setup.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Strategy.prototype.activate.call(this);\n
+        if(activated) {\n
+            if(this.auto) {\n
+                if(typeof this.auto === "number") {\n
+                    this.timer = window.setInterval(\n
+                        OpenLayers.Function.bind(this.save, this),\n
+                        this.auto * 1000\n
+                    );\n
+                } else {\n
+                    this.layer.events.on({\n
+                        "featureadded": this.triggerSave,\n
+                        "afterfeaturemodified": this.triggerSave,\n
+                        scope: this\n
+                    });\n
+                }\n
+            }\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the strategy.  Unregister any listeners, do appropriate\n
+     *     tear-down.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Strategy.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            if(this.auto) {\n
+                if(typeof this.auto === "number") {\n
+                    window.clearInterval(this.timer);\n
+                } else {\n
+                    this.layer.events.un({\n
+                        "featureadded": this.triggerSave,\n
+                        "afterfeaturemodified": this.triggerSave,\n
+                        scope: this\n
+                    });\n
+                }\n
+            }\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: triggerSave\n
+     * Registered as a listener.  Calls save if a feature has insert, update,\n
+     *     or delete state.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The event this function is listening for.\n
+     */\n
+    triggerSave: function(event) {\n
+        var feature = event.feature;\n
+        if(feature.state === OpenLayers.State.INSERT ||\n
+           feature.state === OpenLayers.State.UPDATE ||\n
+           feature.state === OpenLayers.State.DELETE) {\n
+            this.save([event.feature]);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: save\n
+     * Tell the layer protocol to commit unsaved features.  If the layer\n
+     *     projection differs from the map projection, features will be\n
+     *     transformed into the layer projection before being committed.\n
+     *\n
+     * Parameters:\n
+     * features - {Array} Features to be saved.  If null, then default is all\n
+     *     features in the layer.  Features are assumed to be in the map\n
+     *     projection.\n
+     */\n
+    save: function(features) {\n
+        if(!features) {\n
+            features = this.layer.features;\n
+        }\n
+        this.events.triggerEvent("start", {features:features});\n
+        var remote = this.layer.projection;\n
+        var local = this.layer.map.getProjectionObject();\n
+        if(!local.equals(remote)) {\n
+            var len = features.length;\n
+            var clones = new Array(len);\n
+            var orig, clone;\n
+            for(var i=0; i<len; ++i) {\n
+                orig = features[i];\n
+                clone = orig.clone();\n
+                clone.fid = orig.fid;\n
+                clone.state = orig.state;\n
+                if(orig.url) {\n
+                    clone.url = orig.url;\n
+                }\n
+                clone._original = orig;\n
+                clone.geometry.transform(local, remote);\n
+                clones[i] = clone;\n
+            }\n
+            features = clones;\n
+        }\n
+        this.layer.protocol.commit(features, {\n
+            callback: this.onCommit,\n
+            scope: this\n
+        });\n
+    },\n
+    \n
+    /**\n
+     * Method: onCommit\n
+     * Called after protocol commit.\n
+     *\n
+     * Parameters:\n
+     * response - {<OpenLayers.Protocol.Response>} A response object.\n
+     */\n
+    onCommit: function(response) {\n
+        var evt = {"response": response};\n
+        if(response.success()) {\n
+            var features = response.reqFeatures;\n
+            // deal with inserts, updates, and deletes\n
+            var state, feature;\n
+            var destroys = [];\n
+            var insertIds = response.insertIds || [];\n
+            var j = 0;\n
+            for(var i=0, len=features.length; i<len; ++i) {\n
+                feature = features[i];\n
+                // if projection was different, we may be dealing with clones\n
+                feature = feature._original || feature;\n
+                state = feature.state;\n
+                if(state) {\n
+                    if(state == OpenLayers.State.DELETE) {\n
+                        destroys.push(feature);\n
+                    } else if(state == OpenLayers.State.INSERT) {\n
+                        feature.fid = insertIds[j];\n
+                        ++j;\n
+                    }\n
+                    feature.state = null;\n
+                }\n
+            }\n
+\n
+            if(destroys.length > 0) {\n
+                this.layer.destroyFeatures(destroys);\n
+            }\n
+\n
+            this.events.triggerEvent("success", evt);\n
+\n
+        } else {\n
+            this.events.triggerEvent("fail", evt);\n
+        }\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Strategy.Save" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7481</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

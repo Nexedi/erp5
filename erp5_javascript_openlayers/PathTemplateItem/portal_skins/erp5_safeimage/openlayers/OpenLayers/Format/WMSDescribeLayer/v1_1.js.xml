@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684101.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_1.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WMSDescribeLayer.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WMSDescribeLayer.v1_1\n
+ * Read SLD WMS DescribeLayer response for WMS 1.1.X\n
+ * WMS 1.1.X is tightly coupled to SLD 1.0.0\n
+ *\n
+ * Example DescribeLayer request: \n
+ * http://demo.opengeo.org/geoserver/wms?request=DescribeLayer&version=1.1.1&layers=topp:states\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.WMSDescribeLayer>\n
+ */\n
+OpenLayers.Format.WMSDescribeLayer.v1_1 = OpenLayers.Class(\n
+    OpenLayers.Format.WMSDescribeLayer, {\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WMSDescribeLayer\n
+     * Create a new parser for WMS DescribeLayer responses.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.WMSDescribeLayer.prototype.initialize.apply(this, \n
+            [options]);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read DescribeLayer data from a string, and return the response. \n
+     * The OGC defines 2 formats which are allowed for output,\n
+     * so we need to parse these 2 types for version 1.1.X\n
+     * \n
+     * Parameters: \n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Array} Array of {<LayerDescription>} objects which have:\n
+     * - {String} owsType: WFS/WCS\n
+     * - {String} owsURL: the online resource\n
+     * - {String} typeName: the name of the typename on the service\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        var root = data.documentElement;\n
+        var children = root.childNodes; \n
+        var describelayer = [];\n
+        var childNode, nodeName;\n
+        for(var i=0; i<children.length; ++i) { \n
+            childNode = children[i];\n
+            nodeName = childNode.nodeName; \n
+            if (nodeName == \'LayerDescription\') {\n
+                var layerName = childNode.getAttribute(\'name\');\n
+                var owsType = \'\';\n
+                var owsURL = \'\';\n
+                var typeName = \'\';\n
+                // check for owsType and owsURL attributes\n
+                if (childNode.getAttribute(\'owsType\')) {\n
+                  owsType = childNode.getAttribute(\'owsType\');\n
+                  owsURL = childNode.getAttribute(\'owsURL\');\n
+                } else {\n
+                    // look for wfs or wcs attribute\n
+                    if (childNode.getAttribute(\'wfs\') != \'\') {\n
+                        owsType = \'WFS\';\n
+                        owsURL = childNode.getAttribute(\'wfs\');\n
+                    } else if (childNode.getAttribute(\'wcs\') != \'\') {\n
+                        owsType = \'WCS\';\n
+                        owsURL = childNode.getAttribute(\'wcs\');\n
+                    }\n
+                }\n
+                // look for Query child\n
+                var query = childNode.getElementsByTagName(\'Query\');\n
+                if(query.length > 0) {\n
+                    typeName = query[0].getAttribute(\'typeName\');\n
+                    if (!typeName) {\n
+                        // because of Ionic bug\n
+                        typeName = query[0].getAttribute(\'typename\');\n
+                    }\n
+                }\n
+                describelayer.push({layerName: layerName, owsType: owsType, \n
+                    owsURL: owsURL, typeName: typeName}); \n
+            }\n
+        }\n
+        return describelayer;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.WMSDescribeLayer.v1_1" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3757</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

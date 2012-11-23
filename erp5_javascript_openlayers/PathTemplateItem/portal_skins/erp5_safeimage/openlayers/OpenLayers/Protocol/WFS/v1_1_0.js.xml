@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_1_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Protocol/WFS/v1.js\n
+ * @requires OpenLayers/Format/WFST/v1_1_0.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Protocol.WFS.v1_1_0\n
+ * A WFS v1.1.0 protocol for vector layers.  Create a new instance with the\n
+ *     <OpenLayers.Protocol.WFS.v1_1_0> constructor.\n
+ *\n
+ * Differences from the v1.0.0 protocol:\n
+ *  - uses Filter Encoding 1.1.0 instead of 1.0.0\n
+ *  - uses GML 3 instead of 2 if no format is provided\n
+ *  \n
+ * Inherits from:\n
+ *  - <OpenLayers.Protocol.WFS.v1>\n
+ */\n
+OpenLayers.Protocol.WFS.v1_1_0 = OpenLayers.Class(OpenLayers.Protocol.WFS.v1, {\n
+    \n
+    /**\n
+     * Property: version\n
+     * {String} WFS version number.\n
+     */\n
+    version: "1.1.0",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Protocol.WFS.v1_1_0\n
+     * A class for giving layers WFS v1.1.0 protocol.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     *\n
+     * Valid options properties:\n
+     * featureType - {String} Local (without prefix) feature typeName (required).\n
+     * featureNS - {String} Feature namespace (optional).\n
+     * featurePrefix - {String} Feature namespace alias (optional - only used\n
+     *     if featureNS is provided).  Default is \'feature\'.\n
+     * geometryName - {String} Name of geometry attribute.  Default is \'the_geom\'.\n
+     * outputFormat - {String} Optional output format to use for WFS GetFeature\n
+     *     requests. This can be any format advertized by the WFS\'s\n
+     *     GetCapabilities response. If set, an appropriate readFormat also\n
+     *     has to be provided, unless outputFormat is GML3, GML2 or JSON.\n
+     * readFormat - {<OpenLayers.Format>} An appropriate format parser if\n
+     *     outputFormat is none of GML3, GML2 or JSON.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Protocol.WFS.v1.prototype.initialize.apply(this, arguments);\n
+        if (this.outputFormat && !this.readFormat) {\n
+            if (this.outputFormat.toLowerCase() == "gml2") {\n
+                this.readFormat = new OpenLayers.Format.GML.v2({\n
+                    featureType: this.featureType,\n
+                    featureNS: this.featureNS,\n
+                    geometryName: this.geometryName\n
+                });\n
+            } else if (this.outputFormat.toLowerCase() == "json") {\n
+                this.readFormat = new OpenLayers.Format.GeoJSON();\n
+            }\n
+        }\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Protocol.WFS.v1_1_0"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2689</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>AnchoredBubble.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Popup/Anchored.js\n
+ * @requires OpenLayers/Console.js\n
+ * @requires Rico/Corner.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Popup.AnchoredBubble\n
+ * This class is *deprecated*. Use {<OpenLayers.Popup.Anchored>} and\n
+ * round corners using CSS3\'s border-radius property.\n
+ * \n
+ * Inherits from: \n
+ *  - <OpenLayers.Popup.Anchored>\n
+ */\n
+OpenLayers.Popup.AnchoredBubble = \n
+  OpenLayers.Class(OpenLayers.Popup.Anchored, {\n
+\n
+    /**\n
+     * Property: rounded\n
+     * {Boolean} Has the popup been rounded yet?\n
+     */\n
+    rounded: false, \n
+    \n
+    /** \n
+     * Constructor: OpenLayers.Popup.AnchoredBubble\n
+     * \n
+     * Parameters:\n
+     * id - {String}\n
+     * lonlat - {<OpenLayers.LonLat>}\n
+     * contentSize - {<OpenLayers.Size>}\n
+     * contentHTML - {String}\n
+     * anchor - {Object} Object to which we\'ll anchor the popup. Must expose \n
+     *     a \'size\' (<OpenLayers.Size>) and \'offset\' (<OpenLayers.Pixel>) \n
+     *     (Note that this is generally an <OpenLayers.Icon>).\n
+     * closeBox - {Boolean}\n
+     * closeBoxCallback - {Function} Function to be called on closeBox click.\n
+     */\n
+    initialize:function(id, lonlat, contentSize, contentHTML, anchor, closeBox,\n
+                        closeBoxCallback) {\n
+\n
+        OpenLayers.Console.warn(\'AnchoredBubble is deprecated\');\n
+        \n
+        this.padding = new OpenLayers.Bounds(\n
+            0, OpenLayers.Popup.AnchoredBubble.CORNER_SIZE,\n
+            0, OpenLayers.Popup.AnchoredBubble.CORNER_SIZE\n
+        );\n
+        OpenLayers.Popup.Anchored.prototype.initialize.apply(this, arguments);\n
+    },\n
+\n
+    /** \n
+     * Method: draw\n
+     * \n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>}\n
+     * \n
+     * Returns:\n
+     * {DOMElement} Reference to a div that contains the drawn popup.\n
+     */\n
+    draw: function(px) {\n
+        \n
+        OpenLayers.Popup.Anchored.prototype.draw.apply(this, arguments);\n
+\n
+        this.setContentHTML();\n
+        \n
+        //set the popup color and opacity           \n
+        this.setBackgroundColor(); \n
+        this.setOpacity();\n
+\n
+        return this.div;\n
+    },\n
+\n
+    /**\n
+     * Method: updateRelativePosition\n
+     * The popup has been moved to a new relative location, in which case\n
+     *     we will want to re-do the rico corners.\n
+     */\n
+    updateRelativePosition: function() {\n
+        this.setRicoCorners();\n
+    },\n
+\n
+    /**\n
+     * APIMethod: setSize\n
+     * \n
+     * Parameters:\n
+     * contentSize - {<OpenLayers.Size>} the new size for the popup\'s \n
+     *     contents div (in pixels).\n
+     */\n
+    setSize:function(contentSize) { \n
+        OpenLayers.Popup.Anchored.prototype.setSize.apply(this, arguments);\n
+\n
+        this.setRicoCorners();\n
+    },  \n
+\n
+    /**\n
+     * APIMethod: setBackgroundColor\n
+     * \n
+     * Parameters:\n
+     * color - {String}\n
+     */\n
+    setBackgroundColor:function(color) { \n
+        if (color != undefined) {\n
+            this.backgroundColor = color; \n
+        }\n
+        \n
+        if (this.div != null) {\n
+            if (this.contentDiv != null) {\n
+                this.div.style.background = "transparent";\n
+                OpenLayers.Rico.Corner.changeColor(this.groupDiv, \n
+                                                   this.backgroundColor);\n
+            }\n
+        }\n
+    },  \n
+    \n
+    /**\n
+     * APIMethod: setOpacity\n
+     * \n
+     * Parameters: \n
+     * opacity - {float}\n
+     */\n
+    setOpacity:function(opacity) { \n
+        OpenLayers.Popup.Anchored.prototype.setOpacity.call(this, opacity);\n
+        \n
+        if (this.div != null) {\n
+            if (this.groupDiv != null) {\n
+                OpenLayers.Rico.Corner.changeOpacity(this.groupDiv, \n
+                                                     this.opacity);\n
+            }\n
+        }\n
+    },  \n
+ \n
+    /** \n
+     * Method: setBorder\n
+     * Always sets border to 0. Bubble Popups can not have a border.\n
+     * \n
+     * Parameters:\n
+     * border - {Integer}\n
+     */\n
+    setBorder:function(border) { \n
+        this.border = 0;\n
+    },      \n
+ \n
+    /** \n
+     * Method: setRicoCorners\n
+     * Update RICO corners according to the popup\'s current relative postion.\n
+     */\n
+    setRicoCorners:function() {\n
+    \n
+        var corners = this.getCornersToRound(this.relativePosition);\n
+        var options = {corners: corners,\n
+                         color: this.backgroundColor,\n
+                       bgColor: "transparent",\n
+                         blend: false};\n
+\n
+        if (!this.rounded) {\n
+            OpenLayers.Rico.Corner.round(this.div, options);\n
+            this.rounded = true;\n
+        } else {\n
+            OpenLayers.Rico.Corner.reRound(this.groupDiv, options);\n
+            //set the popup color and opacity\n
+            this.setBackgroundColor(); \n
+            this.setOpacity();\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: getCornersToRound\n
+     *  \n
+     * Returns:\n
+     * {String} The proper corners string ("tr tl bl br") for rico to round.\n
+     */\n
+    getCornersToRound:function() {\n
+\n
+        var corners = [\'tl\', \'tr\', \'bl\', \'br\'];\n
+\n
+        //we want to round all the corners _except_ the opposite one. \n
+        var corner = OpenLayers.Bounds.oppositeQuadrant(this.relativePosition);\n
+        OpenLayers.Util.removeItem(corners, corner);\n
+\n
+        return corners.join(" ");\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Popup.AnchoredBubble"\n
+});\n
+\n
+/**\n
+ * Constant: CORNER_SIZE\n
+ * {Integer} 5. Border space for the RICO corners.\n
+ */\n
+OpenLayers.Popup.AnchoredBubble.CORNER_SIZE = 5;\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5576</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

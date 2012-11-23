@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SphericalMercator.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Layer.js\n
+ * @requires OpenLayers/Projection.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.SphericalMercator\n
+ * A mixin for layers that wraps up the pieces neccesary to have a coordinate\n
+ *     conversion for working with commercial APIs which use a spherical\n
+ *     mercator projection.  Using this layer as a base layer, additional\n
+ *     layers can be used as overlays if they are in the same projection.\n
+ *\n
+ * A layer is given properties of this object by setting the sphericalMercator\n
+ *     property to true.\n
+ *\n
+ * More projection information:\n
+ *  - http://spatialreference.org/ref/user/google-projection/\n
+ *\n
+ * Proj4 Text:\n
+ *     +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0\n
+ *     +k=1.0 +units=m +nadgrids=@null +no_defs\n
+ *\n
+ * WKT:\n
+ *     900913=PROJCS["WGS84 / Simple Mercator", GEOGCS["WGS 84",\n
+ *     DATUM["WGS_1984", SPHEROID["WGS_1984", 6378137.0, 298.257223563]], \n
+ *     PRIMEM["Greenwich", 0.0], UNIT["degree", 0.017453292519943295], \n
+ *     AXIS["Longitude", EAST], AXIS["Latitude", NORTH]],\n
+ *     PROJECTION["Mercator_1SP_Google"], \n
+ *     PARAMETER["latitude_of_origin", 0.0], PARAMETER["central_meridian", 0.0], \n
+ *     PARAMETER["scale_factor", 1.0], PARAMETER["false_easting", 0.0], \n
+ *     PARAMETER["false_northing", 0.0], UNIT["m", 1.0], AXIS["x", EAST],\n
+ *     AXIS["y", NORTH], AUTHORITY["EPSG","900913"]]\n
+ */\n
+OpenLayers.Layer.SphericalMercator = {\n
+\n
+    /**\n
+     * Method: getExtent\n
+     * Get the map\'s extent.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>} The map extent.\n
+     */\n
+    getExtent: function() {\n
+        var extent = null;\n
+        if (this.sphericalMercator) {\n
+            extent = this.map.calculateBounds();\n
+        } else {\n
+            extent = OpenLayers.Layer.FixedZoomLevels.prototype.getExtent.apply(this);\n
+        }\n
+        return extent;\n
+    },\n
+\n
+    /**\n
+     * Method: getLonLatFromViewPortPx\n
+     * Get a map location from a pixel location\n
+     * \n
+     * Parameters:\n
+     * viewPortPx - {<OpenLayers.Pixel>}\n
+     *\n
+     * Returns:\n
+     *  {<OpenLayers.LonLat>} An OpenLayers.LonLat which is the passed-in view\n
+     *  port OpenLayers.Pixel, translated into lon/lat by map lib\n
+     *  If the map lib is not loaded or not centered, returns null\n
+     */\n
+    getLonLatFromViewPortPx: function (viewPortPx) {\n
+        return OpenLayers.Layer.prototype.getLonLatFromViewPortPx.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * Method: getViewPortPxFromLonLat\n
+     * Get a pixel location from a map location\n
+     *\n
+     * Parameters:\n
+     * lonlat - {<OpenLayers.LonLat>}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} An OpenLayers.Pixel which is the passed-in\n
+     * OpenLayers.LonLat, translated into view port pixels by map lib\n
+     * If map lib is not loaded or not centered, returns null\n
+     */\n
+    getViewPortPxFromLonLat: function (lonlat) {\n
+        return OpenLayers.Layer.prototype.getViewPortPxFromLonLat.apply(this, arguments);\n
+    },\n
+\n
+    /** \n
+     * Method: initMercatorParameters \n
+     * Set up the mercator parameters on the layer: resolutions,\n
+     *     projection, units.\n
+     */\n
+    initMercatorParameters: function() {\n
+        // set up properties for Mercator - assume EPSG:900913\n
+        this.RESOLUTIONS = [];\n
+        var maxResolution = 156543.03390625;\n
+        for(var zoom=0; zoom<=this.MAX_ZOOM_LEVEL; ++zoom) {\n
+            this.RESOLUTIONS[zoom] = maxResolution / Math.pow(2, zoom);\n
+        }\n
+        this.units = "m";\n
+        this.projection = this.projection || "EPSG:900913";\n
+    },\n
+\n
+    /**\n
+     * APIMethod: forwardMercator\n
+     * Given a lon,lat in EPSG:4326, return a point in Spherical Mercator.\n
+     *\n
+     * Parameters:\n
+     * lon - {float} \n
+     * lat - {float}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.LonLat>} The coordinates transformed to Mercator.\n
+     */\n
+    forwardMercator: (function() {\n
+        var gg = new OpenLayers.Projection("EPSG:4326");\n
+        var sm = new OpenLayers.Projection("EPSG:900913");\n
+        return function(lon, lat) {\n
+            var point = OpenLayers.Projection.transform({x: lon, y: lat}, gg, sm);\n
+            return new OpenLayers.LonLat(point.x, point.y);\n
+        };\n
+    })(),\n
+\n
+    /**\n
+     * APIMethod: inverseMercator\n
+     * Given a x,y in Spherical Mercator, return a point in EPSG:4326.\n
+     *\n
+     * Parameters:\n
+     * x - {float} A map x in Spherical Mercator.\n
+     * y - {float} A map y in Spherical Mercator.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.LonLat>} The coordinates transformed to EPSG:4326.\n
+     */\n
+    inverseMercator: (function() {\n
+        var gg = new OpenLayers.Projection("EPSG:4326");\n
+        var sm = new OpenLayers.Projection("EPSG:900913");\n
+        return function(x, y) {\n
+            var point = OpenLayers.Projection.transform({x: x, y: y}, sm, gg);\n
+            return new OpenLayers.LonLat(point.x, point.y);\n
+        };\n
+    })()\n
+\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5103</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

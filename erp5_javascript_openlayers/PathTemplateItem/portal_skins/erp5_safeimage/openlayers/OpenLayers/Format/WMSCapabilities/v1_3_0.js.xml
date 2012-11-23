@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_3_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \r\n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\r\n
+ * full text of the license. */\r\n
+\r\n
+/**\r\n
+ * @requires OpenLayers/Format/WMSCapabilities/v1_3.js\r\n
+ */\r\n
+\r\n
+/**\r\n
+ * Class: OpenLayers.Format.WMSCapabilities/v1_3_0\r\n
+ * Read WMS Capabilities version 1.3.0. \r\n
+ * SLD 1.1.0 adds in the extra operations DescribeLayer and GetLegendGraphic, \r\n
+ * see: http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd\r\n
+ * \r\n
+ * Inherits from:\r\n
+ *  - <OpenLayers.Format.WMSCapabilities.v1_3>\r\n
+ */\r\n
+OpenLayers.Format.WMSCapabilities.v1_3_0 = OpenLayers.Class(\r\n
+    OpenLayers.Format.WMSCapabilities.v1_3, {\r\n
+    \r\n
+    /**\r\n
+     * Property: version\r\n
+     * {String} The specific parser version.\r\n
+     */\r\n
+    version: "1.3.0",\r\n
+    \r\n
+    CLASS_NAME: "OpenLayers.Format.WMSCapabilities.v1_3_0" \r\n
+\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>951</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

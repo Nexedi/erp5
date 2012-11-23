@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>da-DK.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["da-DK"]\n
+ * Dictionary for Danish.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang[\'da-DK\'] = {\n
+\n
+    \'unhandledRequest\': "En ikke håndteret forespørgsel returnerede ${statusText}",\n
+\n
+    \'Permalink\': "Permalink",\n
+\n
+    \'Overlays\': "Kortlag",\n
+\n
+    \'Base Layer\': "Baggrundslag",\n
+\n
+    \'noFID\': "Kan ikke opdateret en feature (et objekt) der ikke har et FID.",\n
+\n
+    \'browserNotSupported\':\n
+        "Din browser understøtter ikke vektor visning. Følgende vektor visninger understøttes:\\n${renderers}",\n
+\n
+    // console message\n
+    \'minZoomLevelError\':\n
+        "Egenskaben minZoomLevel er kun beregnet til brug " +\n
+        "med FixedZoomLevels. At dette WFS lag kontrollerer " +\n
+        "minZoomLevel egenskaben, er et levn fra en tidligere " +\n
+        "version. Vi kan desværre ikke fjerne dette uden at risikere " +\n
+        "at ødelægge eksisterende OL baserede programmer der " +\n
+        " benytter denne funktionalitet. " +\n
+        "Egenskaben bør derfor ikke anvendes, og minZoomLevel " +\n
+        "kontrollen herunder vil blive fjernet i version 3.0. " +\n
+        "Benyt istedet min/max opløsnings indstillingerne, som " +\n
+        "er beskrevet her: " +\n
+        "http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS transaktion: LYKKEDES ${response}",\n
+\n
+    \'commitFailed\': "WFS transaktion: MISLYKKEDES ${response}",\n
+\n
+    \'googleWarning\':\n
+        "Google laget kunne ikke indlæses.<br><br>" +\n
+        "For at fjerne denne besked, vælg et nyt bagrundskort i " +\n
+        "lagskifteren i øverste højre hjørne.<br><br>" +\n
+        "Fejlen skyldes formentlig at Google Maps bibliotekts " +\n
+        "scriptet ikke er inkluderet, eller ikke indeholder den " +\n
+        "korrkte API nøgle for dit site.<br><br>" +\n
+        "Udviklere: For hjælp til at få dette til at fungere, " +\n
+        "<a href=\'http://trac.openlayers.org/wiki/Google\' " +\n
+        "target=\'_blank\'>klik her</a>",\n
+\n
+    \'getLayerWarning\':\n
+        "${layerType}-laget kunne ikke indlæses.<br><br>" +\n
+        "For at fjerne denne besked, vælg et nyt bagrundskort i " +\n
+        "lagskifteren i øverste højre hjørne.<br><br>" +\n
+        "Fejlen skyldes formentlig at ${layerLib} bibliotekts " +\n
+        "scriptet ikke er inkluderet.<br><br>" +\n
+        "Udviklere: For hjælp til at få dette til at fungere, " +\n
+        "<a href=\'http://trac.openlayers.org/wiki/${layerLib}\' " +\n
+        "target=\'_blank\'>klik her</a>",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Målforhold = 1 : ${scaleDenom}",\n
+\n
+    // console message\n
+    \'reprojectDeprecated\':\n
+        "Du anvender indstillingen \'reproject\' på laget ${layerName}." + \n
+        "Denne indstilling bør ikke længere anvendes. Den var beregnet " +\n
+        "til at vise data ovenpå kommercielle grundkort, men den funktionalitet " +\n
+        "bør nu opnås ved at anvende Spherical Mercator understøttelsen. " +\n
+        "Mere information er tilgængelig her: " +\n
+        "http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    // console message\n
+    \'methodDeprecated\':\n
+        "Denne funktion bør ikke længere anvendes, og vil blive fjernet i version 3.0. " +\n
+        "Anvend venligst funktionen ${newMethod} istedet."\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3397</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

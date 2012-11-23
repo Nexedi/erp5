@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>HTTPRequest.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.HTTPRequest\n
+ * \n
+ * Inherits from: \n
+ *  - <OpenLayers.Layer>\n
+ */\n
+OpenLayers.Layer.HTTPRequest = OpenLayers.Class(OpenLayers.Layer, {\n
+\n
+    /** \n
+     * Constant: URL_HASH_FACTOR\n
+     * {Float} Used to hash URL param strings for multi-WMS server selection.\n
+     *         Set to the Golden Ratio per Knuth\'s recommendation.\n
+     */\n
+    URL_HASH_FACTOR: (Math.sqrt(5) - 1) / 2,\n
+\n
+    /** \n
+     * Property: url\n
+     * {Array(String) or String} This is either an array of url strings or \n
+     *                           a single url string. \n
+     */\n
+    url: null,\n
+\n
+    /** \n
+     * Property: params\n
+     * {Object} Hashtable of key/value parameters\n
+     */\n
+    params: null,\n
+    \n
+    /** \n
+     * APIProperty: reproject\n
+     * *Deprecated*. See http://docs.openlayers.org/library/spherical_mercator.html\n
+     * for information on the replacement for this functionality. \n
+     * {Boolean} Whether layer should reproject itself based on base layer \n
+     *           locations. This allows reprojection onto commercial layers. \n
+     *           Default is false: Most layers can\'t reproject, but layers \n
+     *           which can create non-square geographic pixels can, like WMS.\n
+     *           \n
+     */\n
+    reproject: false,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.HTTPRequest\n
+     * \n
+     * Parameters:\n
+     * name - {String}\n
+     * url - {Array(String) or String}\n
+     * params - {Object}\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, url, params, options) {\n
+        OpenLayers.Layer.prototype.initialize.apply(this, [name, options]);\n
+        this.url = url;\n
+        if (!this.params) {\n
+            this.params = OpenLayers.Util.extend({}, params);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     */\n
+    destroy: function() {\n
+        this.url = null;\n
+        this.params = null;\n
+        OpenLayers.Layer.prototype.destroy.apply(this, arguments); \n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clone\n
+     * \n
+     * Parameters:\n
+     * obj - {Object}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Layer.HTTPRequest>} An exact clone of this \n
+     *                                  <OpenLayers.Layer.HTTPRequest>\n
+     */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.HTTPRequest(this.name,\n
+                                                   this.url,\n
+                                                   this.params,\n
+                                                   this.getOptions());\n
+        }\n
+        \n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+        \n
+        return obj;\n
+    },\n
+\n
+    /** \n
+     * APIMethod: setUrl\n
+     * \n
+     * Parameters:\n
+     * newUrl - {String}\n
+     */\n
+    setUrl: function(newUrl) {\n
+        this.url = newUrl;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: mergeNewParams\n
+     * \n
+     * Parameters:\n
+     * newParams - {Object}\n
+     *\n
+     * Returns:\n
+     * redrawn: {Boolean} whether the layer was actually redrawn.\n
+     */\n
+    mergeNewParams:function(newParams) {\n
+        this.params = OpenLayers.Util.extend(this.params, newParams);\n
+        var ret = this.redraw();\n
+        if(this.map != null) {\n
+            this.map.events.triggerEvent("changelayer", {\n
+                layer: this,\n
+                property: "params"\n
+            });\n
+        }\n
+        return ret;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: redraw\n
+     * Redraws the layer.  Returns true if the layer was redrawn, false if not.\n
+     *\n
+     * Parameters:\n
+     * force - {Boolean} Force redraw by adding random parameter.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The layer was redrawn.\n
+     */\n
+    redraw: function(force) { \n
+        if (force) {\n
+            return this.mergeNewParams({"_olSalt": Math.random()});\n
+        } else {\n
+            return OpenLayers.Layer.prototype.redraw.apply(this, []);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: selectUrl\n
+     * selectUrl() implements the standard floating-point multiplicative\n
+     *     hash function described by Knuth, and hashes the contents of the \n
+     *     given param string into a float between 0 and 1. This float is then\n
+     *     scaled to the size of the provided urls array, and used to select\n
+     *     a URL.\n
+     *\n
+     * Parameters:\n
+     * paramString - {String}\n
+     * urls - {Array(String)}\n
+     * \n
+     * Returns:\n
+     * {String} An entry from the urls array, deterministically selected based\n
+     *          on the paramString.\n
+     */\n
+    selectUrl: function(paramString, urls) {\n
+        var product = 1;\n
+        for (var i=0, len=paramString.length; i<len; i++) { \n
+            product *= paramString.charCodeAt(i) * this.URL_HASH_FACTOR; \n
+            product -= Math.floor(product); \n
+        }\n
+        return urls[Math.floor(product * urls.length)];\n
+    },\n
+\n
+    /** \n
+     * Method: getFullRequestString\n
+     * Combine url with layer\'s params and these newParams. \n
+     *   \n
+     *    does checking on the serverPath variable, allowing for cases when it \n
+     *     is supplied with trailing ? or &, as well as cases where not. \n
+     *\n
+     *    return in formatted string like this:\n
+     *        "server?key1=value1&key2=value2&key3=value3"\n
+     * \n
+     * WARNING: The altUrl parameter is deprecated and will be removed in 3.0.\n
+     *\n
+     * Parameters:\n
+     * newParams - {Object}\n
+     * altUrl - {String} Use this as the url instead of the layer\'s url\n
+     *   \n
+     * Returns: \n
+     * {String}\n
+     */\n
+    getFullRequestString:function(newParams, altUrl) {\n
+\n
+        // if not altUrl passed in, use layer\'s url\n
+        var url = altUrl || this.url;\n
+        \n
+        // create a new params hashtable with all the layer params and the \n
+        // new params together. then convert to string\n
+        var allParams = OpenLayers.Util.extend({}, this.params);\n
+        allParams = OpenLayers.Util.extend(allParams, newParams);\n
+        var paramsString = OpenLayers.Util.getParameterString(allParams);\n
+        \n
+        // if url is not a string, it should be an array of strings, \n
+        // in which case we will deterministically select one of them in \n
+        // order to evenly distribute requests to different urls.\n
+        //\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            url = this.selectUrl(paramsString, url);\n
+        }   \n
+ \n
+        // ignore parameters that are already in the url search string\n
+        var urlParams = \n
+            OpenLayers.Util.upperCaseObject(OpenLayers.Util.getParameters(url));\n
+        for(var key in allParams) {\n
+            if(key.toUpperCase() in urlParams) {\n
+                delete allParams[key];\n
+            }\n
+        }\n
+        paramsString = OpenLayers.Util.getParameterString(allParams);\n
+        \n
+        return OpenLayers.Util.urlAppend(url, paramsString);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.HTTPRequest"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

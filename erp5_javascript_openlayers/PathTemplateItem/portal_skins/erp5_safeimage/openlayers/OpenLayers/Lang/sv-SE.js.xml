@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sv-SE.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Sannab\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["sv"]\n
+ * Dictionary for Svenska.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["sv"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Ej hanterad fråga retur ${statusText}",\n
+\n
+    \'Permalink\': "Permalänk",\n
+\n
+    \'Overlays\': "Kartlager",\n
+\n
+    \'Base Layer\': "Bakgrundskarta",\n
+\n
+    \'noFID\': "Kan ej uppdatera feature (objekt) för vilket FID saknas.",\n
+\n
+    \'browserNotSupported\': "Din webbläsare stöder inte vektorvisning. För närvarande stöds följande visning:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Egenskapen minZoomLevel är endast avsedd att användas med lager med FixedZoomLevels. Att detta WFS-lager kontrollerar minZoomLevel är en relik från äldre versioner. Vi kan dock inte ta bort det utan att riskera att OL-baserade tillämpningar som använder detta slutar fungera. Därför är det satt som deprecated, minZoomLevel kommer att tas bort i version 3.0. Använd i stället inställning av min/max resolution som beskrivs här: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS-transaktion: LYCKADES ${response}",\n
+\n
+    \'commitFailed\': "WFS-transaktion: MISSLYCKADES ${response}",\n
+\n
+    \'googleWarning\': "Google-lagret kunde inte laddas korrekt.\\x3cbr\\x3e\\x3cbr\\x3eFör att slippa detta meddelande, välj en annan bakgrundskarta i lagerväljaren i övre högra hörnet.\\x3cbr\\x3e\\x3cbr\\x3eSannolikt beror felet på att Google Maps-biblioteket inte är inkluderat på webbsidan eller på att sidan inte anger korrekt API-nyckel för webbplatsen.\\x3cbr\\x3e\\x3cbr\\x3eUtvecklare: hjälp för att åtgärda detta, \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3eklicka här\\x3c/a\\x3e.",\n
+\n
+    \'getLayerWarning\': "${layerType}-lagret kunde inte laddas korrekt.\\x3cbr\\x3e\\x3cbr\\x3eFör att slippa detta meddelande, välj en annan bakgrundskarta i lagerväljaren i övre högra hörnet.\\x3cbr\\x3e\\x3cbr\\x3eSannolikt beror felet på att ${layerLib}-biblioteket inte är inkluderat på webbsidan.\\x3cbr\\x3e\\x3cbr\\x3eUtvecklare: hjälp för att åtgärda detta, \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3eklicka här\\x3c/a\\x3e.",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "\\x3cstrong\\x3eSkala\\x3c/strong\\x3e 1 : ${scaleDenom}",\n
+\n
+    \'reprojectDeprecated\': "Du använder inställningen \\\'reproject\\\' på lagret ${layerName}. Denna inställning markerad som deprecated: den var avsedd att användas för att stödja visning av kartdata på kommersiella bakgrundskartor, men nu bör man i stället använda Spherical Mercator-stöd för den funktionaliteten. Mer information finns på http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    \'methodDeprecated\': "Denna metod är markerad som deprecated och kommer att tas bort i 3.0. Använd ${newMethod} i stället."\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3056</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

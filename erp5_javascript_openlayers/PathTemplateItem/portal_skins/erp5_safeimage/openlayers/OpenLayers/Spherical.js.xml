@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Spherical.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for\n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/SingleFile.js\n
+ */\n
+\n
+/**\n
+ * Namespace: Spherical\n
+ * The OpenLayers.Spherical namespace includes utility functions for\n
+ * calculations on the basis of a spherical earth (ignoring ellipsoidal\n
+ * effects), which is accurate enough for most purposes.\n
+ *\n
+ * Relevant links:\n
+ * * http://www.movable-type.co.uk/scripts/latlong.html\n
+ * * http://code.google.com/apis/maps/documentation/javascript/reference.html#spherical\n
+ */\n
+\n
+OpenLayers.Spherical = OpenLayers.Spherical || {};\n
+\n
+OpenLayers.Spherical.DEFAULT_RADIUS = 6378137;\n
+\n
+/**\n
+ * APIFunction: computeDistanceBetween\n
+ * Computes the distance between two LonLats.\n
+ *\n
+ * Parameters:\n
+ * from   - {<OpenLayers.LonLat>} or {Object} Starting point. A LonLat or\n
+ *          a JavaScript literal with lon lat properties.\n
+ * to     - {<OpenLayers.LonLat>} or {Object} Ending point. A LonLat or a\n
+ *          JavaScript literal with lon lat properties.\n
+ * radius - {Float} The radius. Optional. Defaults to 6378137 meters.\n
+ *\n
+ * Returns:\n
+ * {Float} The distance in meters.\n
+ */\n
+OpenLayers.Spherical.computeDistanceBetween = function(from, to, radius) {\n
+  var R = radius || OpenLayers.Spherical.DEFAULT_RADIUS;\n
+  var sinHalfDeltaLon = Math.sin(Math.PI * (to.lon - from.lon) / 360);\n
+  var sinHalfDeltaLat = Math.sin(Math.PI * (to.lat - from.lat) / 360);\n
+  var a = sinHalfDeltaLat * sinHalfDeltaLat +\n
+      sinHalfDeltaLon * sinHalfDeltaLon * Math.cos(Math.PI * from.lat / 180) * Math.cos(Math.PI * to.lat / 180); \n
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); \n
+};\n
+\n
+\n
+/**\n
+ * APIFunction: computeHeading\n
+ * Computes the heading from one LonLat to another LonLat.\n
+ *\n
+ * Parameters:\n
+ * from   - {<OpenLayers.LonLat>} or {Object} Starting point. A LonLat or\n
+ *          a JavaScript literal with lon lat properties.\n
+ * to     - {<OpenLayers.LonLat>} or {Object} Ending point. A LonLat or a\n
+ *          JavaScript literal with lon lat properties.\n
+ *\n
+ * Returns:\n
+ * {Float} The heading in degrees.\n
+ */\n
+OpenLayers.Spherical.computeHeading = function(from, to) {\n
+    var y = Math.sin(Math.PI * (from.lon - to.lon) / 180) * Math.cos(Math.PI * to.lat / 180);\n
+    var x = Math.cos(Math.PI * from.lat / 180) * Math.sin(Math.PI * to.lat / 180) -\n
+        Math.sin(Math.PI * from.lat / 180) * Math.cos(Math.PI * to.lat / 180) * Math.cos(Math.PI * (from.lon - to.lon) / 180);\n
+    return 180 * Math.atan2(y, x) / Math.PI;\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2631</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

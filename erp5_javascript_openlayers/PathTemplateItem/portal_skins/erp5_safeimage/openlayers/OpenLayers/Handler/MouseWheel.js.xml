@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MouseWheel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Handler.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler.MouseWheel\n
+ * Handler for wheel up/down events.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler>\n
+ */\n
+OpenLayers.Handler.MouseWheel = OpenLayers.Class(OpenLayers.Handler, {\n
+    /** \n
+     * Property: wheelListener \n
+     * {function} \n
+     */\n
+    wheelListener: null,\n
+\n
+    /** \n
+     * Property: mousePosition\n
+     * {<OpenLayers.Pixel>} mousePosition is necessary because\n
+     * evt.clientX/Y is buggy in Moz on wheel events, so we cache and use the\n
+     * value from the last mousemove.\n
+     */\n
+    mousePosition: null,\n
+\n
+    /**\n
+     * Property: interval\n
+     * {Integer} In order to increase server performance, an interval (in \n
+     *     milliseconds) can be set to reduce the number of up/down events \n
+     *     called. If set, a new up/down event will not be set until the \n
+     *     interval has passed. \n
+     *     Defaults to 0, meaning no interval. \n
+     */\n
+    interval: 0,\n
+    \n
+    /**\n
+     * Property: delta\n
+     * {Integer} When interval is set, delta collects the mousewheel z-deltas\n
+     *     of the events that occur within the interval.\n
+     *      See also the cumulative option\n
+     */\n
+    delta: 0,\n
+    \n
+    /**\n
+     * Property: cumulative\n
+     * {Boolean} When interval is set: true to collect all the mousewheel \n
+     *     z-deltas, false to only record the delta direction (positive or\n
+     *     negative)\n
+     */\n
+    cumulative: true,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler.MouseWheel\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} \n
+     * callbacks - {Object} An object containing a single function to be\n
+     *                          called when the drag operation is finished.\n
+     *                          The callback should expect to recieve a single\n
+     *                          argument, the point geometry.\n
+     * options - {Object} \n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        OpenLayers.Handler.prototype.initialize.apply(this, arguments);\n
+        this.wheelListener = OpenLayers.Function.bindAsEventListener(\n
+            this.onWheelEvent, this\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: destroy\n
+     */    \n
+    destroy: function() {\n
+        OpenLayers.Handler.prototype.destroy.apply(this, arguments);\n
+        this.wheelListener = null;\n
+    },\n
+\n
+    /**\n
+     *  Mouse ScrollWheel code thanks to http://adomas.org/javascript-mouse-wheel/\n
+     */\n
+\n
+    /** \n
+     * Method: onWheelEvent\n
+     * Catch the wheel event and handle it xbrowserly\n
+     * \n
+     * Parameters:\n
+     * e - {Event} \n
+     */\n
+    onWheelEvent: function(e){\n
+        \n
+        // make sure we have a map and check keyboard modifiers\n
+        if (!this.map || !this.checkModifiers(e)) {\n
+            return;\n
+        }\n
+        \n
+        // Ride up the element\'s DOM hierarchy to determine if it or any of \n
+        //  its ancestors was: \n
+        //   * specifically marked as scrollable\n
+        //   * one of our layer divs\n
+        //   * the map div\n
+        //\n
+        var overScrollableDiv = false;\n
+        var overLayerDiv = false;\n
+        var overMapDiv = false;\n
+        \n
+        var elem = OpenLayers.Event.element(e);\n
+        while((elem != null) && !overMapDiv && !overScrollableDiv) {\n
+\n
+            if (!overScrollableDiv) {\n
+                try {\n
+                    if (elem.currentStyle) {\n
+                        overflow = elem.currentStyle["overflow"];\n
+                    } else {\n
+                        var style = \n
+                            document.defaultView.getComputedStyle(elem, null);\n
+                        var overflow = style.getPropertyValue("overflow");\n
+                    }\n
+                    overScrollableDiv = ( overflow && \n
+                        (overflow == "auto") || (overflow == "scroll") );\n
+                } catch(err) {\n
+                    //sometimes when scrolling in a popup, this causes \n
+                    // obscure browser error\n
+                }\n
+            }\n
+\n
+            if (!overLayerDiv) {\n
+                for(var i=0, len=this.map.layers.length; i<len; i++) {\n
+                    // Are we in the layer div? Note that we have two cases\n
+                    // here: one is to catch EventPane layers, which have a \n
+                    // pane above the layer (layer.pane)\n
+                    if (elem == this.map.layers[i].div \n
+                        || elem == this.map.layers[i].pane) { \n
+                        overLayerDiv = true;\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+            overMapDiv = (elem == this.map.div);\n
+\n
+            elem = elem.parentNode;\n
+        }\n
+        \n
+        // Logic below is the following:\n
+        //\n
+        // If we are over a scrollable div or not over the map div:\n
+        //  * do nothing (let the browser handle scrolling)\n
+        //\n
+        //    otherwise \n
+        // \n
+        //    If we are over the layer div: \n
+        //     * zoom/in out\n
+        //     then\n
+        //     * kill event (so as not to also scroll the page after zooming)\n
+        //\n
+        //       otherwise\n
+        //\n
+        //       Kill the event (dont scroll the page if we wheel over the \n
+        //        layerswitcher or the pan/zoom control)\n
+        //\n
+        if (!overScrollableDiv && overMapDiv) {\n
+            if (overLayerDiv) {\n
+                var delta = 0;\n
+                if (!e) {\n
+                    e = window.event;\n
+                }\n
+                if (e.wheelDelta) {\n
+                    delta = e.wheelDelta/120; \n
+                    if (window.opera && window.opera.version() < 9.2) {\n
+                        delta = -delta;\n
+                    }\n
+                } else if (e.detail) {\n
+                    delta = -e.detail / 3;\n
+                }\n
+                this.delta = this.delta + delta;\n
+\n
+                if(this.interval) {\n
+                    window.clearTimeout(this._timeoutId);\n
+                    this._timeoutId = window.setTimeout(\n
+                        OpenLayers.Function.bind(function(){\n
+                            this.wheelZoom(e);\n
+                        }, this),\n
+                        this.interval\n
+                    );\n
+                } else {\n
+                    this.wheelZoom(e);\n
+                }\n
+            }\n
+            OpenLayers.Event.stop(e);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: wheelZoom\n
+     * Given the wheel event, we carry out the appropriate zooming in or out,\n
+     *     based on the \'wheelDelta\' or \'detail\' property of the event.\n
+     * \n
+     * Parameters:\n
+     * e - {Event}\n
+     */\n
+    wheelZoom: function(e) {\n
+        var delta = this.delta;\n
+        this.delta = 0;\n
+        \n
+        if (delta) {\n
+            // add the mouse position to the event because mozilla has \n
+            // a bug with clientX and clientY (see \n
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=352179)\n
+            // getLonLatFromViewPortPx(e) returns wrong values\n
+            if (this.mousePosition) {\n
+                e.xy = this.mousePosition;\n
+            } \n
+            if (!e.xy) {\n
+                // If the mouse hasn\'t moved over the map yet, then\n
+                // we don\'t have a mouse position (in FF), so we just\n
+                // act as if the mouse was at the center of the map.\n
+                // Note that we can tell we are in the map -- and \n
+                // this.map is ensured to be true above.\n
+                e.xy = this.map.getPixelFromLonLat(\n
+                    this.map.getCenter()\n
+                );\n
+            }\n
+            if (delta < 0) {\n
+                this.callback("down", [e, this.cumulative ? delta : -1]);\n
+            } else {\n
+                this.callback("up", [e, this.cumulative ? delta : 1]);\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: mousemove\n
+     * Update the stored mousePosition on every move.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    mousemove: function (evt) {\n
+        this.mousePosition = evt.xy;\n
+    },\n
+\n
+    /**\n
+     * Method: activate \n
+     */\n
+    activate: function (evt) {\n
+        if (OpenLayers.Handler.prototype.activate.apply(this, arguments)) {\n
+            //register mousewheel events specifically on the window and document\n
+            var wheelListener = this.wheelListener;\n
+            OpenLayers.Event.observe(window, "DOMMouseScroll", wheelListener);\n
+            OpenLayers.Event.observe(window, "mousewheel", wheelListener);\n
+            OpenLayers.Event.observe(document, "mousewheel", wheelListener);\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: deactivate \n
+     */\n
+    deactivate: function (evt) {\n
+        if (OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {\n
+            // unregister mousewheel events specifically on the window and document\n
+            var wheelListener = this.wheelListener;\n
+            OpenLayers.Event.stopObserving(window, "DOMMouseScroll", wheelListener);\n
+            OpenLayers.Event.stopObserving(window, "mousewheel", wheelListener);\n
+            OpenLayers.Event.stopObserving(document, "mousewheel", wheelListener);\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Handler.MouseWheel"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9528</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

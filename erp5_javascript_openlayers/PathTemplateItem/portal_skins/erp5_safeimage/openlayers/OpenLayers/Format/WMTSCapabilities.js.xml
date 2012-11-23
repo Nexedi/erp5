@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WMTSCapabilities.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML/VersionedOGC.js\n
+ */\n
+ \n
+/**\n
+ * Class: OpenLayers.Format.WMTSCapabilities\n
+ * Read WMTS Capabilities.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML.VersionedOGC>\n
+ */\n
+OpenLayers.Format.WMTSCapabilities = OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC, {\n
+    \n
+    /**\n
+     * APIProperty: defaultVersion\n
+     * {String} Version number to assume if none found.  Default is "1.0.0".\n
+     */\n
+    defaultVersion: "1.0.0",\n
+    \n
+    /**\n
+     * APIProperty: yx\n
+     * {Object} Members in the yx object are used to determine if a CRS URN\n
+     *     corresponds to a CRS with y,x axis order.  Member names are CRS URNs\n
+     *     and values are boolean.  By default, the following CRS URN are \n
+     *     assumed to correspond to a CRS with y,x axis order:\n
+     *\n
+     * * urn:ogc:def:crs:EPSG::4326\n
+     */\n
+    yx: {\n
+        "urn:ogc:def:crs:EPSG::4326": true\n
+    },\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.WMTSCapabilities\n
+     * Create a new parser for WMTS capabilities.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read capabilities data from a string, and return information about\n
+     * the service (offering and observedProperty mostly).\n
+     * \n
+     * Parameters: \n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Object} Info about the WMTS Capabilities\n
+     */\n
+\n
+    /**\n
+     * APIMethod: createLayer\n
+     * Create a WMTS layer given a capabilities object.\n
+     *\n
+     * Parameters:\n
+     * capabilities - {Object} The object returned from a <read> call to this \n
+     *     format.\n
+     * config - {Object} Configuration properties for the layer.  Defaults for\n
+     *     the layer will apply if not provided.\n
+     *\n
+     * Required config properties:\n
+     * layer - {String} The layer identifier.\n
+     * matrixSet - {String} The matrix set identifier.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Layer.WMTS>} A properly configured WMTS layer.  Throws an\n
+     *     error if an incomplete config is provided.  Returns undefined if no\n
+     *     layer could be created with the provided config.\n
+     */ \n
+    createLayer: function(capabilities, config) {\n
+        var layer;\n
+\n
+        // confirm required properties are supplied in config\n
+        var required = {\n
+            layer: true,\n
+            matrixSet: true\n
+        };\n
+        for (var prop in required) {\n
+            if (!(prop in config)) {\n
+                throw new Error("Missing property \'" + prop + "\' in layer configuration.");\n
+            }\n
+        }\n
+\n
+        var contents = capabilities.contents;\n
+        var matrixSet = contents.tileMatrixSets[config.matrixSet];\n
+\n
+        // find the layer definition with the given identifier\n
+        var layers = contents.layers;\n
+        var layerDef;\n
+        for (var i=0, ii=contents.layers.length; i<ii; ++i) {\n
+            if (contents.layers[i].identifier === config.layer) {\n
+                layerDef = contents.layers[i];\n
+                break;\n
+            }\n
+        }\n
+        \n
+        if (layerDef && matrixSet) {\n
+            // get the default style for the layer\n
+            var style;\n
+            for (var i=0, ii=layerDef.styles.length; i<ii; ++i) {\n
+                style = layerDef.styles[i];\n
+                if (style.isDefault) {\n
+                    break;\n
+                }\n
+            }\n
+            \n
+            layer = new OpenLayers.Layer.WMTS(\n
+                OpenLayers.Util.applyDefaults(config, {\n
+                    url: config.requestEncoding === "REST" && layerDef.resourceUrl ?\n
+                        layerDef.resourceUrl.tile.template :\n
+                        capabilities.operationsMetadata.GetTile.dcp.http.get[0].url,\n
+                    name: layerDef.title,\n
+                    style: style.identifier,\n
+                    matrixIds: matrixSet.matrixIds,\n
+                    tileFullExtent: matrixSet.bounds\n
+                })\n
+            );\n
+        }\n
+        return layer;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.WMTSCapabilities" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4352</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

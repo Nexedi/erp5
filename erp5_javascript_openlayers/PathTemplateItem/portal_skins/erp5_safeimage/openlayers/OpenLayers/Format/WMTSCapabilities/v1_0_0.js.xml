@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_0_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WMTSCapabilities.js\n
+ * @requires OpenLayers/Format/OWSCommon/v1_1_0.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WMTSCapabilities.v1_0_0\n
+ * Read WMTS Capabilities version 1.0.0.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.WMTSCapabilities>\n
+ */\n
+OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(\n
+    OpenLayers.Format.OWSCommon.v1_1_0, {\n
+        \n
+    /**\n
+     * Property: version\n
+     * {String} The parser version ("1.0.0").\n
+     */\n
+    version: "1.0.0",\n
+\n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        ows: "http://www.opengis.net/ows/1.1",\n
+        wmts: "http://www.opengis.net/wmts/1.0",\n
+        xlink: "http://www.w3.org/1999/xlink"\n
+    },    \n
+    \n
+    /**\n
+     * Property: yx\n
+     * {Object} Members in the yx object are used to determine if a CRS URN\n
+     *     corresponds to a CRS with y,x axis order.  Member names are CRS URNs\n
+     *     and values are boolean.  Defaults come from the \n
+     *     <OpenLayers.Format.WMTSCapabilities> prototype.\n
+     */\n
+    yx: null,\n
+\n
+    /**\n
+     * Property: defaultPrefix\n
+     * {String} The default namespace alias for creating element nodes.\n
+     */\n
+    defaultPrefix: "wmts",\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.WMTSCapabilities.v1_0_0\n
+     * Create a new parser for WMTS capabilities version 1.0.0. \n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);\n
+        this.options = options;\n
+        var yx = OpenLayers.Util.extend(\n
+            {}, OpenLayers.Format.WMTSCapabilities.prototype.yx\n
+        );\n
+        this.yx = OpenLayers.Util.extend(yx, this.yx);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read capabilities data from a string, and return info about the WMTS.\n
+     * \n
+     * Parameters: \n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Object} Information about the SOS service.\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        if(data && data.nodeType == 9) {\n
+            data = data.documentElement;\n
+        }\n
+        var capabilities = {};\n
+        this.readNode(data, capabilities);\n
+        capabilities.version = this.version;\n
+        return capabilities;\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {        \n
+        "wmts": {\n
+            "Capabilities": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "Contents": function(node, obj) {\n
+                obj.contents = {};                \n
+                obj.contents.layers = [];\n
+                obj.contents.tileMatrixSets = {};                \n
+                this.readChildNodes(node, obj.contents);\n
+            },\n
+            "Layer": function(node, obj) {\n
+                var layer = {\n
+                    styles: [],\n
+                    formats: [],\n
+                    dimensions: [],\n
+                    tileMatrixSetLinks: []\n
+                };\n
+                layer.layers = [];\n
+                this.readChildNodes(node, layer);\n
+                obj.layers.push(layer);\n
+            },\n
+            "Style": function(node, obj) {\n
+                var style = {};\n
+                style.isDefault = (node.getAttribute("isDefault") === "true");\n
+                this.readChildNodes(node, style);\n
+                obj.styles.push(style);\n
+            },\n
+            "Format": function(node, obj) {\n
+                obj.formats.push(this.getChildValue(node)); \n
+            },\n
+            "TileMatrixSetLink": function(node, obj) {\n
+                var tileMatrixSetLink = {};\n
+                this.readChildNodes(node, tileMatrixSetLink);\n
+                obj.tileMatrixSetLinks.push(tileMatrixSetLink);\n
+            },\n
+            "TileMatrixSet": function(node, obj) {\n
+                // node could be child of wmts:Contents or wmts:TileMatrixSetLink\n
+                // duck type wmts:Contents by looking for layers\n
+                if (obj.layers) {\n
+                    // TileMatrixSet as object type in schema\n
+                    var tileMatrixSet = {\n
+                        matrixIds: []\n
+                    };\n
+                    this.readChildNodes(node, tileMatrixSet);\n
+                    obj.tileMatrixSets[tileMatrixSet.identifier] = tileMatrixSet;\n
+                } else {\n
+                    // TileMatrixSet as string type in schema\n
+                    obj.tileMatrixSet = this.getChildValue(node);\n
+                }\n
+            },\n
+            "TileMatrix": function(node, obj) {\n
+                var tileMatrix = {\n
+                    supportedCRS: obj.supportedCRS\n
+                };\n
+                this.readChildNodes(node, tileMatrix);\n
+                obj.matrixIds.push(tileMatrix);\n
+            },\n
+            "ScaleDenominator": function(node, obj) {\n
+                obj.scaleDenominator = parseFloat(this.getChildValue(node)); \n
+            },\n
+            "TopLeftCorner": function(node, obj) {                \n
+                var topLeftCorner = this.getChildValue(node);\n
+                var coords = topLeftCorner.split(" ");\n
+                // decide on axis order for the given CRS\n
+                var yx;\n
+                if (obj.supportedCRS) {\n
+                    // extract out version from URN\n
+                    var crs = obj.supportedCRS.replace(\n
+                        /urn:ogc:def:crs:(\\w+):.+:(\\w+)$/, \n
+                        "urn:ogc:def:crs:$1::$2"\n
+                    );\n
+                    yx = !!this.yx[crs];\n
+                }\n
+                if (yx) {\n
+                    obj.topLeftCorner = new OpenLayers.LonLat(\n
+                        coords[1], coords[0]\n
+                    );\n
+                } else {\n
+                    obj.topLeftCorner = new OpenLayers.LonLat(\n
+                        coords[0], coords[1]\n
+                    );\n
+                }\n
+            },\n
+            "TileWidth": function(node, obj) {\n
+                obj.tileWidth = parseInt(this.getChildValue(node)); \n
+            },\n
+            "TileHeight": function(node, obj) {\n
+                obj.tileHeight = parseInt(this.getChildValue(node)); \n
+            },\n
+            "MatrixWidth": function(node, obj) {\n
+                obj.matrixWidth = parseInt(this.getChildValue(node)); \n
+            },\n
+            "MatrixHeight": function(node, obj) {\n
+                obj.matrixHeight = parseInt(this.getChildValue(node)); \n
+            },\n
+            "ResourceURL": function(node, obj) {\n
+                obj.resourceUrl = obj.resourceUrl || {};\n
+                obj.resourceUrl[node.getAttribute("resourceType")] = {\n
+                    format: node.getAttribute("format"),\n
+                    template: node.getAttribute("template")\n
+                };\n
+            },\n
+            // not used for now, can be added in the future though\n
+            /*"Themes": function(node, obj) {\n
+                obj.themes = [];\n
+                this.readChildNodes(node, obj.themes);\n
+            },\n
+            "Theme": function(node, obj) {\n
+                var theme = {};                \n
+                this.readChildNodes(node, theme);\n
+                obj.push(theme);\n
+            },*/\n
+            "WSDL": function(node, obj) {\n
+                obj.wsdl = {};\n
+                obj.wsdl.href = node.getAttribute("xlink:href");\n
+                // TODO: other attributes of <WSDL> element                \n
+            },\n
+            "ServiceMetadataURL": function(node, obj) {\n
+                obj.serviceMetadataUrl = {};\n
+                obj.serviceMetadataUrl.href = node.getAttribute("xlink:href");\n
+                // TODO: other attributes of <ServiceMetadataURL> element                \n
+            },\n
+            "LegendURL": function(node, obj) {\n
+                obj.legend = {};\n
+                obj.legend.href = node.getAttribute("xlink:href");\n
+                obj.legend.format = node.getAttribute("format");\n
+            },\n
+            "Dimension": function(node, obj) {\n
+                var dimension = {values: []};\n
+                this.readChildNodes(node, dimension);\n
+                obj.dimensions.push(dimension);\n
+            },\n
+            "Default": function(node, obj) {\n
+                obj["default"] = this.getChildValue(node);\n
+            },\n
+            "Value": function(node, obj) {\n
+                obj.values.push(this.getChildValue(node));\n
+            }\n
+        },\n
+        "ows": OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers["ows"]\n
+    },    \n
+    \n
+    CLASS_NAME: "OpenLayers.Format.WMTSCapabilities.v1_0_0" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9301</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

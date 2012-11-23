@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CSW.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Protocol.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Protocol.CSW\n
+ * Used to create a versioned CSW protocol. Default version is 2.0.2.\n
+ */\n
+OpenLayers.Protocol.CSW = function(options) {\n
+    options = OpenLayers.Util.applyDefaults(\n
+        options, OpenLayers.Protocol.CSW.DEFAULTS\n
+    );\n
+    var cls = OpenLayers.Protocol.CSW["v"+options.version.replace(/\\./g, "_")];\n
+    if(!cls) {\n
+        throw "Unsupported CSW version: " + options.version;\n
+    }\n
+    return new cls(options);\n
+};\n
+\n
+/**\n
+ * Constant: OpenLayers.Protocol.CSW.DEFAULTS\n
+ */\n
+OpenLayers.Protocol.CSW.DEFAULTS = {\n
+    "version": "2.0.2"\n
+};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>871</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,495 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>XMLHttpRequest.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// XMLHttpRequest.js Copyright (C) 2010 Sergey Ilinsky (http://www.ilinsky.com)\n
+//\n
+// Licensed under the Apache License, Version 2.0 (the "License");\n
+// you may not use this file except in compliance with the License.\n
+// You may obtain a copy of the License at\n
+//\n
+//   http://www.apache.org/licenses/LICENSE-2.0\n
+//\n
+// Unless required by applicable law or agreed to in writing, software\n
+// distributed under the License is distributed on an "AS IS" BASIS,\n
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+// See the License for the specific language governing permissions and\n
+// limitations under the License.\n
+\n
+/**\n
+ * @requires OpenLayers/Request.js\n
+ */\n
+\n
+(function () {\n
+\n
+    // Save reference to earlier defined object implementation (if any)\n
+    var oXMLHttpRequest    = window.XMLHttpRequest;\n
+\n
+    // Define on browser type\n
+    var bGecko    = !!window.controllers,\n
+        bIE        = window.document.all && !window.opera,\n
+        bIE7    = bIE && window.navigator.userAgent.match(/MSIE 7.0/);\n
+\n
+    // Enables "XMLHttpRequest()" call next to "new XMLHttpReques()"\n
+    function fXMLHttpRequest() {\n
+        this._object    = oXMLHttpRequest && !bIE7 ? new oXMLHttpRequest : new window.ActiveXObject("Microsoft.XMLHTTP");\n
+        this._listeners    = [];\n
+    };\n
+\n
+    // Constructor\n
+    function cXMLHttpRequest() {\n
+        return new fXMLHttpRequest;\n
+    };\n
+    cXMLHttpRequest.prototype    = fXMLHttpRequest.prototype;\n
+\n
+    // BUGFIX: Firefox with Firebug installed would break pages if not executed\n
+    if (bGecko && oXMLHttpRequest.wrapped)\n
+        cXMLHttpRequest.wrapped    = oXMLHttpRequest.wrapped;\n
+\n
+    // Constants\n
+    cXMLHttpRequest.UNSENT                = 0;\n
+    cXMLHttpRequest.OPENED                = 1;\n
+    cXMLHttpRequest.HEADERS_RECEIVED    = 2;\n
+    cXMLHttpRequest.LOADING                = 3;\n
+    cXMLHttpRequest.DONE                = 4;\n
+\n
+    // Public Properties\n
+    cXMLHttpRequest.prototype.readyState    = cXMLHttpRequest.UNSENT;\n
+    cXMLHttpRequest.prototype.responseText    = \'\';\n
+    cXMLHttpRequest.prototype.responseXML    = null;\n
+    cXMLHttpRequest.prototype.status        = 0;\n
+    cXMLHttpRequest.prototype.statusText    = \'\';\n
+\n
+    // Priority proposal\n
+    cXMLHttpRequest.prototype.priority        = "NORMAL";\n
+\n
+    // Instance-level Events Handlers\n
+    cXMLHttpRequest.prototype.onreadystatechange    = null;\n
+\n
+    // Class-level Events Handlers\n
+    cXMLHttpRequest.onreadystatechange    = null;\n
+    cXMLHttpRequest.onopen                = null;\n
+    cXMLHttpRequest.onsend                = null;\n
+    cXMLHttpRequest.onabort                = null;\n
+\n
+    // Public Methods\n
+    cXMLHttpRequest.prototype.open    = function(sMethod, sUrl, bAsync, sUser, sPassword) {\n
+        // Delete headers, required when object is reused\n
+        delete this._headers;\n
+\n
+        // When bAsync parameter value is omitted, use true as default\n
+        if (arguments.length < 3)\n
+            bAsync    = true;\n
+\n
+        // Save async parameter for fixing Gecko bug with missing readystatechange in synchronous requests\n
+        this._async        = bAsync;\n
+\n
+        // Set the onreadystatechange handler\n
+        var oRequest    = this,\n
+            nState        = this.readyState,\n
+            fOnUnload;\n
+\n
+        // BUGFIX: IE - memory leak on page unload (inter-page leak)\n
+        if (bIE && bAsync) {\n
+            fOnUnload = function() {\n
+                if (nState != cXMLHttpRequest.DONE) {\n
+                    fCleanTransport(oRequest);\n
+                    // Safe to abort here since onreadystatechange handler removed\n
+                    oRequest.abort();\n
+                }\n
+            };\n
+            window.attachEvent("onunload", fOnUnload);\n
+        }\n
+\n
+        // Add method sniffer\n
+        if (cXMLHttpRequest.onopen)\n
+            cXMLHttpRequest.onopen.apply(this, arguments);\n
+\n
+        if (arguments.length > 4)\n
+            this._object.open(sMethod, sUrl, bAsync, sUser, sPassword);\n
+        else\n
+        if (arguments.length > 3)\n
+            this._object.open(sMethod, sUrl, bAsync, sUser);\n
+        else\n
+            this._object.open(sMethod, sUrl, bAsync);\n
+\n
+        this.readyState    = cXMLHttpRequest.OPENED;\n
+        fReadyStateChange(this);\n
+\n
+        this._object.onreadystatechange    = function() {\n
+            if (bGecko && !bAsync)\n
+                return;\n
+\n
+            // Synchronize state\n
+            oRequest.readyState        = oRequest._object.readyState;\n
+\n
+            //\n
+            fSynchronizeValues(oRequest);\n
+\n
+            // BUGFIX: Firefox fires unnecessary DONE when aborting\n
+            if (oRequest._aborted) {\n
+                // Reset readyState to UNSENT\n
+                oRequest.readyState    = cXMLHttpRequest.UNSENT;\n
+\n
+                // Return now\n
+                return;\n
+            }\n
+\n
+            if (oRequest.readyState == cXMLHttpRequest.DONE) {\n
+                // Free up queue\n
+                delete oRequest._data;\n
+/*                if (bAsync)\n
+                    fQueue_remove(oRequest);*/\n
+                //\n
+                fCleanTransport(oRequest);\n
+// Uncomment this block if you need a fix for IE cache\n
+/*\n
+                // BUGFIX: IE - cache issue\n
+                if (!oRequest._object.getResponseHeader("Date")) {\n
+                    // Save object to cache\n
+                    oRequest._cached    = oRequest._object;\n
+\n
+                    // Instantiate a new transport object\n
+                    cXMLHttpRequest.call(oRequest);\n
+\n
+                    // Re-send request\n
+                    if (sUser) {\n
+                         if (sPassword)\n
+                            oRequest._object.open(sMethod, sUrl, bAsync, sUser, sPassword);\n
+                        else\n
+                            oRequest._object.open(sMethod, sUrl, bAsync, sUser);\n
+                    }\n
+                    else\n
+                        oRequest._object.open(sMethod, sUrl, bAsync);\n
+                    oRequest._object.setRequestHeader("If-Modified-Since", oRequest._cached.getResponseHeader("Last-Modified") || new window.Date(0));\n
+                    // Copy headers set\n
+                    if (oRequest._headers)\n
+                        for (var sHeader in oRequest._headers)\n
+                            if (typeof oRequest._headers[sHeader] == "string")    // Some frameworks prototype objects with functions\n
+                                oRequest._object.setRequestHeader(sHeader, oRequest._headers[sHeader]);\n
+\n
+                    oRequest._object.onreadystatechange    = function() {\n
+                        // Synchronize state\n
+                        oRequest.readyState        = oRequest._object.readyState;\n
+\n
+                        if (oRequest._aborted) {\n
+                            //\n
+                            oRequest.readyState    = cXMLHttpRequest.UNSENT;\n
+\n
+                            // Return\n
+                            return;\n
+                        }\n
+\n
+                        if (oRequest.readyState == cXMLHttpRequest.DONE) {\n
+                            // Clean Object\n
+                            fCleanTransport(oRequest);\n
+\n
+                            // get cached request\n
+                            if (oRequest.status == 304)\n
+                                oRequest._object    = oRequest._cached;\n
+\n
+                            //\n
+                            delete oRequest._cached;\n
+\n
+                            //\n
+                            fSynchronizeValues(oRequest);\n
+\n
+                            //\n
+                            fReadyStateChange(oRequest);\n
+\n
+                            // BUGFIX: IE - memory leak in interrupted\n
+                            if (bIE && bAsync)\n
+                                window.detachEvent("onunload", fOnUnload);\n
+                        }\n
+                    };\n
+                    oRequest._object.send(null);\n
+\n
+                    // Return now - wait until re-sent request is finished\n
+                    return;\n
+                };\n
+*/\n
+                // BUGFIX: IE - memory leak in interrupted\n
+                if (bIE && bAsync)\n
+                    window.detachEvent("onunload", fOnUnload);\n
+            }\n
+\n
+            // BUGFIX: Some browsers (Internet Explorer, Gecko) fire OPEN readystate twice\n
+            if (nState != oRequest.readyState)\n
+                fReadyStateChange(oRequest);\n
+\n
+            nState    = oRequest.readyState;\n
+        }\n
+    };\n
+    function fXMLHttpRequest_send(oRequest) {\n
+        oRequest._object.send(oRequest._data);\n
+\n
+        // BUGFIX: Gecko - missing readystatechange calls in synchronous requests\n
+        if (bGecko && !oRequest._async) {\n
+            oRequest.readyState    = cXMLHttpRequest.OPENED;\n
+\n
+            // Synchronize state\n
+            fSynchronizeValues(oRequest);\n
+\n
+            // Simulate missing states\n
+            while (oRequest.readyState < cXMLHttpRequest.DONE) {\n
+                oRequest.readyState++;\n
+                fReadyStateChange(oRequest);\n
+                // Check if we are aborted\n
+                if (oRequest._aborted)\n
+                    return;\n
+            }\n
+        }\n
+    };\n
+    cXMLHttpRequest.prototype.send    = function(vData) {\n
+        // Add method sniffer\n
+        if (cXMLHttpRequest.onsend)\n
+            cXMLHttpRequest.onsend.apply(this, arguments);\n
+\n
+        if (!arguments.length)\n
+            vData    = null;\n
+\n
+        // BUGFIX: Safari - fails sending documents created/modified dynamically, so an explicit serialization required\n
+        // BUGFIX: IE - rewrites any custom mime-type to "text/xml" in case an XMLNode is sent\n
+        // BUGFIX: Gecko - fails sending Element (this is up to the implementation either to standard)\n
+        if (vData && vData.nodeType) {\n
+            vData    = window.XMLSerializer ? new window.XMLSerializer().serializeToString(vData) : vData.xml;\n
+            if (!this._headers["Content-Type"])\n
+                this._object.setRequestHeader("Content-Type", "application/xml");\n
+        }\n
+\n
+        this._data    = vData;\n
+/*\n
+        // Add to queue\n
+        if (this._async)\n
+            fQueue_add(this);\n
+        else*/\n
+            fXMLHttpRequest_send(this);\n
+    };\n
+    cXMLHttpRequest.prototype.abort    = function() {\n
+        // Add method sniffer\n
+        if (cXMLHttpRequest.onabort)\n
+            cXMLHttpRequest.onabort.apply(this, arguments);\n
+\n
+        // BUGFIX: Gecko - unnecessary DONE when aborting\n
+        if (this.readyState > cXMLHttpRequest.UNSENT)\n
+            this._aborted    = true;\n
+\n
+        this._object.abort();\n
+\n
+        // BUGFIX: IE - memory leak\n
+        fCleanTransport(this);\n
+\n
+        this.readyState    = cXMLHttpRequest.UNSENT;\n
+\n
+        delete this._data;\n
+/*        if (this._async)\n
+            fQueue_remove(this);*/\n
+    };\n
+    cXMLHttpRequest.prototype.getAllResponseHeaders    = function() {\n
+        return this._object.getAllResponseHeaders();\n
+    };\n
+    cXMLHttpRequest.prototype.getResponseHeader    = function(sName) {\n
+        return this._object.getResponseHeader(sName);\n
+    };\n
+    cXMLHttpRequest.prototype.setRequestHeader    = function(sName, sValue) {\n
+        // BUGFIX: IE - cache issue\n
+        if (!this._headers)\n
+            this._headers    = {};\n
+        this._headers[sName]    = sValue;\n
+\n
+        return this._object.setRequestHeader(sName, sValue);\n
+    };\n
+\n
+    // EventTarget interface implementation\n
+    cXMLHttpRequest.prototype.addEventListener    = function(sName, fHandler, bUseCapture) {\n
+        for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++)\n
+            if (oListener[0] == sName && oListener[1] == fHandler && oListener[2] == bUseCapture)\n
+                return;\n
+        // Add listener\n
+        this._listeners.push([sName, fHandler, bUseCapture]);\n
+    };\n
+\n
+    cXMLHttpRequest.prototype.removeEventListener    = function(sName, fHandler, bUseCapture) {\n
+        for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++)\n
+            if (oListener[0] == sName && oListener[1] == fHandler && oListener[2] == bUseCapture)\n
+                break;\n
+        // Remove listener\n
+        if (oListener)\n
+            this._listeners.splice(nIndex, 1);\n
+    };\n
+\n
+    cXMLHttpRequest.prototype.dispatchEvent    = function(oEvent) {\n
+        var oEventPseudo    = {\n
+            \'type\':            oEvent.type,\n
+            \'target\':        this,\n
+            \'currentTarget\':this,\n
+            \'eventPhase\':    2,\n
+            \'bubbles\':        oEvent.bubbles,\n
+            \'cancelable\':    oEvent.cancelable,\n
+            \'timeStamp\':    oEvent.timeStamp,\n
+            \'stopPropagation\':    function() {},    // There is no flow\n
+            \'preventDefault\':    function() {},    // There is no default action\n
+            \'initEvent\':        function() {}    // Original event object should be initialized\n
+        };\n
+\n
+        // Execute onreadystatechange\n
+        if (oEventPseudo.type == "readystatechange" && this.onreadystatechange)\n
+            (this.onreadystatechange.handleEvent || this.onreadystatechange).apply(this, [oEventPseudo]);\n
+\n
+        // Execute listeners\n
+        for (var nIndex = 0, oListener; oListener = this._listeners[nIndex]; nIndex++)\n
+            if (oListener[0] == oEventPseudo.type && !oListener[2])\n
+                (oListener[1].handleEvent || oListener[1]).apply(this, [oEventPseudo]);\n
+    };\n
+\n
+    //\n
+    cXMLHttpRequest.prototype.toString    = function() {\n
+        return \'[\' + "object" + \' \' + "XMLHttpRequest" + \']\';\n
+    };\n
+\n
+    cXMLHttpRequest.toString    = function() {\n
+        return \'[\' + "XMLHttpRequest" + \']\';\n
+    };\n
+\n
+    // Helper function\n
+    function fReadyStateChange(oRequest) {\n
+        // Sniffing code\n
+        if (cXMLHttpRequest.onreadystatechange)\n
+            cXMLHttpRequest.onreadystatechange.apply(oRequest);\n
+\n
+        // Fake event\n
+        oRequest.dispatchEvent({\n
+            \'type\':            "readystatechange",\n
+            \'bubbles\':        false,\n
+            \'cancelable\':    false,\n
+            \'timeStamp\':    new Date + 0\n
+        });\n
+    };\n
+\n
+    function fGetDocument(oRequest) {\n
+        var oDocument    = oRequest.responseXML,\n
+            sResponse    = oRequest.responseText;\n
+        // Try parsing responseText\n
+        if (bIE && sResponse && oDocument && !oDocument.documentElement && oRequest.getResponseHeader("Content-Type").match(/[^\\/]+\\/[^\\+]+\\+xml/)) {\n
+            oDocument    = new window.ActiveXObject("Microsoft.XMLDOM");\n
+            oDocument.async                = false;\n
+            oDocument.validateOnParse    = false;\n
+            oDocument.loadXML(sResponse);\n
+        }\n
+        // Check if there is no error in document\n
+        if (oDocument)\n
+            if ((bIE && oDocument.parseError != 0) || !oDocument.documentElement || (oDocument.documentElement && oDocument.documentElement.tagName == "parsererror"))\n
+                return null;\n
+        return oDocument;\n
+    };\n
+\n
+    function fSynchronizeValues(oRequest) {\n
+        try {    oRequest.responseText    = oRequest._object.responseText;    } catch (e) {}\n
+        try {    oRequest.responseXML    = fGetDocument(oRequest._object);    } catch (e) {}\n
+        try {    oRequest.status            = oRequest._object.status;            } catch (e) {}\n
+        try {    oRequest.statusText        = oRequest._object.statusText;        } catch (e) {}\n
+    };\n
+\n
+    function fCleanTransport(oRequest) {\n
+        // BUGFIX: IE - memory leak (on-page leak)\n
+        oRequest._object.onreadystatechange    = new window.Function;\n
+    };\n
+/*\n
+    // Queue manager\n
+    var oQueuePending    = {"CRITICAL":[],"HIGH":[],"NORMAL":[],"LOW":[],"LOWEST":[]},\n
+        aQueueRunning    = [];\n
+    function fQueue_add(oRequest) {\n
+        oQueuePending[oRequest.priority in oQueuePending ? oRequest.priority : "NORMAL"].push(oRequest);\n
+        //\n
+        setTimeout(fQueue_process);\n
+    };\n
+\n
+    function fQueue_remove(oRequest) {\n
+        for (var nIndex = 0, bFound    = false; nIndex < aQueueRunning.length; nIndex++)\n
+            if (bFound)\n
+                aQueueRunning[nIndex - 1]    = aQueueRunning[nIndex];\n
+            else\n
+            if (aQueueRunning[nIndex] == oRequest)\n
+                bFound    = true;\n
+        if (bFound)\n
+            aQueueRunning.length--;\n
+        //\n
+        setTimeout(fQueue_process);\n
+    };\n
+\n
+    function fQueue_process() {\n
+        if (aQueueRunning.length < 6) {\n
+            for (var sPriority in oQueuePending) {\n
+                if (oQueuePending[sPriority].length) {\n
+                    var oRequest    = oQueuePending[sPriority][0];\n
+                    oQueuePending[sPriority]    = oQueuePending[sPriority].slice(1);\n
+                    //\n
+                    aQueueRunning.push(oRequest);\n
+                    // Send request\n
+                    fXMLHttpRequest_send(oRequest);\n
+                    break;\n
+                }\n
+            }\n
+        }\n
+    };\n
+*/\n
+    // Internet Explorer 5.0 (missing apply)\n
+    if (!window.Function.prototype.apply) {\n
+        window.Function.prototype.apply    = function(oRequest, oArguments) {\n
+            if (!oArguments)\n
+                oArguments    = [];\n
+            oRequest.__func    = this;\n
+            oRequest.__func(oArguments[0], oArguments[1], oArguments[2], oArguments[3], oArguments[4]);\n
+            delete oRequest.__func;\n
+        };\n
+    };\n
+\n
+    // Register new object with window\n
+    /**\n
+     * Class: OpenLayers.Request.XMLHttpRequest\n
+     * Standard-compliant (W3C) cross-browser implementation of the\n
+     *     XMLHttpRequest object.  From\n
+     *     http://code.google.com/p/xmlhttprequest/.\n
+     */\n
+    OpenLayers.Request.XMLHttpRequest = cXMLHttpRequest;\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17370</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

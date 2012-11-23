@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MultiPoint.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Geometry/Collection.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Geometry.MultiPoint\n
+ * MultiPoint is a collection of Points.  Create a new instance with the\n
+ * <OpenLayers.Geometry.MultiPoint> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Geometry.Collection>\n
+ *  - <OpenLayers.Geometry>\n
+ */\n
+OpenLayers.Geometry.MultiPoint = OpenLayers.Class(\n
+  OpenLayers.Geometry.Collection, {\n
+\n
+    /**\n
+     * Property: componentTypes\n
+     * {Array(String)} An array of class names representing the types of\n
+     * components that the collection can include.  A null value means the\n
+     * component types are not restricted.\n
+     */\n
+    componentTypes: ["OpenLayers.Geometry.Point"],\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Geometry.MultiPoint\n
+     * Create a new MultiPoint Geometry\n
+     *\n
+     * Parameters:\n
+     * components - {Array(<OpenLayers.Geometry.Point>)} \n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Geometry.MultiPoint>}\n
+     */\n
+\n
+    /**\n
+     * APIMethod: addPoint\n
+     * Wrapper for <OpenLayers.Geometry.Collection.addComponent>\n
+     *\n
+     * Parameters:\n
+     * point - {<OpenLayers.Geometry.Point>} Point to be added\n
+     * index - {Integer} Optional index\n
+     */\n
+    addPoint: function(point, index) {\n
+        this.addComponent(point, index);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: removePoint\n
+     * Wrapper for <OpenLayers.Geometry.Collection.removeComponent>\n
+     *\n
+     * Parameters:\n
+     * point - {<OpenLayers.Geometry.Point>} Point to be removed\n
+     */\n
+    removePoint: function(point){\n
+        this.removeComponent(point);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Geometry.MultiPoint"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1913</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

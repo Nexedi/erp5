@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SingleFile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+var OpenLayers = {\n
+    /**\n
+     * Constant: VERSION_NUMBER\n
+     */\n
+    VERSION_NUMBER: "Release 2.12",\n
+\n
+    /**\n
+     * Constant: singleFile\n
+     * TODO: remove this in 3.0 when we stop supporting build profiles that\n
+     * include OpenLayers.js\n
+     */\n
+    singleFile: true,\n
+\n
+    /**\n
+     * Method: _getScriptLocation\n
+     * Return the path to this script. This is also implemented in\n
+     * OpenLayers.js\n
+     *\n
+     * Returns:\n
+     * {String} Path to this script\n
+     */\n
+    _getScriptLocation: (function() {\n
+        var r = new RegExp("(^|(.*?\\\\/))(OpenLayers[^\\\\/]*?\\\\.js)(\\\\?|$)"),\n
+            s = document.getElementsByTagName(\'script\'),\n
+            src, m, l = "";\n
+        for(var i=0, len=s.length; i<len; i++) {\n
+            src = s[i].getAttribute(\'src\');\n
+            if(src) {\n
+                m = src.match(r);\n
+                if(m) {\n
+                    l = m[1];\n
+                    break;\n
+                }\n
+            }\n
+        }\n
+        return (function() { return l; });\n
+    })(),\n
+    \n
+    /**\n
+     * Property: ImgPath\n
+     * {String} Set this to the path where control images are stored, a path  \n
+     * given here must end with a slash. If set to \'\' (which is the default) \n
+     * OpenLayers will use its script location + "img/".\n
+     * \n
+     * You will need to set this property when you have a singlefile build of \n
+     * OpenLayers that either is not named "OpenLayers.js" or if you move\n
+     * the file in a way such that the image directory cannot be derived from \n
+     * the script location.\n
+     * \n
+     * If your custom OpenLayers build is named "my-custom-ol.js" and the images\n
+     * of OpenLayers are in a folder "/resources/external/images/ol" a correct\n
+     * way of including OpenLayers in your HTML would be:\n
+     * \n
+     * (code)\n
+     *   <script src="/path/to/my-custom-ol.js" type="text/javascript"></script>\n
+     *   <script type="text/javascript">\n
+     *      // tell OpenLayers where the control images are\n
+     *      // remember the trailing slash\n
+     *      OpenLayers.ImgPath = "/resources/external/images/ol/";\n
+     *   </script>\n
+     * (end code)\n
+     * \n
+     * Please remember that when your OpenLayers script is not named \n
+     * "OpenLayers.js" you will have to make sure that the default theme is \n
+     * loaded into the page by including an appropriate <link>-tag, \n
+     * e.g.:\n
+     * \n
+     * (code)\n
+     *   <link rel="stylesheet" href="/path/to/default/style.css"  type="text/css">\n
+     * (end code)\n
+     */\n
+    ImgPath : \'\'\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2737</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

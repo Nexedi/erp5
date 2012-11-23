@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lt.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["lt"]\n
+ * Dictionary for Lithuanian.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang[\'lt\'] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Neapdorota užklausa gražino ${statusText}",\n
+\n
+    \'Permalink\': "Pastovi nuoroda",\n
+\n
+    \'Overlays\': "Papildomi sluoksniai",\n
+\n
+    \'Base Layer\': "Pagrindinis sluoksnis",\n
+\n
+    \'noFID\': "Negaliu atnaujinti objekto, kuris neturi FID.",\n
+\n
+    \'browserNotSupported\':\n
+\t"Jūsų naršyklė nemoka parodyti vektorių. Šiuo metu galima naudotis tokiais rodymo varikliais:\\n{renderers}",\n
+\n
+    \'commitSuccess\': "WFS Tranzakcija: PAVYKO ${response}",\n
+\n
+    \'commitFailed\': "WFS Tranzakcija: ŽLUGO ${response}",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Mastelis = 1 : ${scaleDenom}",\n
+    \n
+    //labels for the graticule control\n
+    \'W\': \'V\',\n
+    \'E\': \'R\',\n
+    \'N\': \'Š\',\n
+    \'S\': \'P\',\n
+    \'Graticule\': \'Tinklelis\',\n
+\n
+    // console message\n
+    \'methodDeprecated\':\n
+\t"Šis metodas yra pasenęs ir 3.0 versijoje bus pašalintas. " +\n
+\t"Prašome naudoti ${newMethod}.",\n
+\n
+    // **** end ****\n
+    \'end\': \'\'\n
+    \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1267</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

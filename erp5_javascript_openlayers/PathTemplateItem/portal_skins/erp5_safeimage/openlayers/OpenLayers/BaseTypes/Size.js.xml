@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Size.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Size\n
+ * Instances of this class represent a width/height pair\n
+ */\n
+OpenLayers.Size = OpenLayers.Class({\n
+\n
+    /**\n
+     * APIProperty: w\n
+     * {Number} width\n
+     */\n
+    w: 0.0,\n
+    \n
+    /**\n
+     * APIProperty: h\n
+     * {Number} height\n
+     */\n
+    h: 0.0,\n
+\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Size\n
+     * Create an instance of OpenLayers.Size\n
+     *\n
+     * Parameters:\n
+     * w - {Number} width\n
+     * h - {Number} height\n
+     */\n
+    initialize: function(w, h) {\n
+        this.w = parseFloat(w);\n
+        this.h = parseFloat(h);\n
+    },\n
+\n
+    /**\n
+     * Method: toString\n
+     * Return the string representation of a size object\n
+     *\n
+     * Returns:\n
+     * {String} The string representation of OpenLayers.Size object. \n
+     * (e.g. <i>"w=55,h=66"</i>)\n
+     */\n
+    toString:function() {\n
+        return ("w=" + this.w + ",h=" + this.h);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clone\n
+     * Create a clone of this size object\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Size>} A new OpenLayers.Size object with the same w and h\n
+     * values\n
+     */\n
+    clone:function() {\n
+        return new OpenLayers.Size(this.w, this.h);\n
+    },\n
+\n
+    /**\n
+     *\n
+     * APIMethod: equals\n
+     * Determine where this size is equal to another\n
+     *\n
+     * Parameters:\n
+     * sz - {<OpenLayers.Size>|Object} An OpenLayers.Size or an object with\n
+     *                                  a \'w\' and \'h\' properties.\n
+     *\n
+     * Returns: \n
+     * {Boolean} The passed in size has the same h and w properties as this one.\n
+     * Note that if sz passed in is null, returns false.\n
+     */\n
+    equals:function(sz) {\n
+        var equals = false;\n
+        if (sz != null) {\n
+            equals = ((this.w == sz.w && this.h == sz.h) ||\n
+                      (isNaN(this.w) && isNaN(this.h) && isNaN(sz.w) && isNaN(sz.h)));\n
+        }\n
+        return equals;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Size"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

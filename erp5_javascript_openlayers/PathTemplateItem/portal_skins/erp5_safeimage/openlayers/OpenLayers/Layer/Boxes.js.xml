@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Boxes.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer.js\n
+ * @requires OpenLayers/Layer/Markers.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.Boxes\n
+ * Draw divs as \'boxes\' on the layer. \n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Markers>\n
+ */\n
+OpenLayers.Layer.Boxes = OpenLayers.Class(OpenLayers.Layer.Markers, {\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.Boxes\n
+     *\n
+     * Parameters:\n
+     * name - {String} \n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    \n
+    /**\n
+     * Method: drawMarker \n
+     * Calculate the pixel location for the marker, create it, and\n
+     *    add it to the layer\'s div\n
+     *\n
+     * Parameters: \n
+     * marker - {<OpenLayers.Marker.Box>} \n
+     */\n
+    drawMarker: function(marker) {\n
+        var topleft = this.map.getLayerPxFromLonLat({\n
+            lon: marker.bounds.left,\n
+            lat: marker.bounds.top\n
+        });\n
+        var botright = this.map.getLayerPxFromLonLat({\n
+            lon: marker.bounds.right,\n
+            lat: marker.bounds.bottom\n
+        });\n
+        if (botright == null || topleft == null) {\n
+            marker.display(false);\n
+        } else {\n
+            var markerDiv = marker.draw(topleft, {\n
+                w: Math.max(1, botright.x - topleft.x),\n
+                h: Math.max(1, botright.y - topleft.y)\n
+            });\n
+            if (!marker.drawn) {\n
+                this.div.appendChild(markerDiv);\n
+                marker.drawn = true;\n
+            }\n
+        }\n
+    },\n
+\n
+\n
+    /**\n
+     * APIMethod: removeMarker \n
+     * \n
+     * Parameters:\n
+     * marker - {<OpenLayers.Marker.Box>} \n
+     */\n
+    removeMarker: function(marker) {\n
+        OpenLayers.Util.removeItem(this.markers, marker);\n
+        if ((marker.div != null) &&\n
+            (marker.div.parentNode == this.div) ) {\n
+            this.div.removeChild(marker.div);    \n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.Boxes"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2111</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

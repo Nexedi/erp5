@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sk.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Helix84\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["sk"]\n
+ * Dictionary for Slovenčina.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["sk"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "Neobslúžené požiadavky vracajú ${statusText}",\n
+\n
+    \'Permalink\': "Trvalý odkaz",\n
+\n
+    \'Overlays\': "Prekrytia",\n
+\n
+    \'Base Layer\': "Základná vrstva",\n
+\n
+    \'noFID\': "Nie je možné aktualizovať vlastnosť, pre ktorú neexistuje FID.",\n
+\n
+    \'browserNotSupported\': "Váš prehliadač nepodporuje vykresľovanie vektorov. Momentálne podporované vykresľovače sú:\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "Vlastnosť minZoomLevel je určený iba na použitie s vrstvami odvodenými od FixedZoomLevels. To, že táto wfs vrstva kontroluje minZoomLevel je pozostatok z minulosti. Nemôžeme ho však odstrániť, aby sme sa vyhli možnému porušeniu aplikácií založených na Open Layers, ktoré na tomto môže závisieť. Preto ho označujeme ako zavrhovaný - dolu uvedená kontrola minZoomLevel bude odstránená vo verzii 3.0. Použite prosím namiesto toho kontrolu min./max. rozlíšenia podľa tu uvedeného popisu: http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "Transakcia WFS: ÚSPEŠNÁ ${response}",\n
+\n
+    \'commitFailed\': "Transakcia WFS: ZLYHALA ${response}",\n
+\n
+    \'googleWarning\': "Vrstvu Google nebolo možné správne načítať.\\x3cbr\\x3e\\x3cbr\\x3eAby ste sa tejto správy zbavili vyberte novú BaseLayer v prepínači vrstiev v pravom hornom rohu.\\x3cbr\\x3e\\x3cbr\\x3eToto sa stalo pravdepodobne preto, že skript knižnice Google Maps buď nebol načítaný alebo neobsahuje správny kľúč API pre vašu lokalitu.\\x3cbr\\x3e\\x3cbr\\x3eVývojári: Tu môžete získať \\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3epomoc so sfunkčnením\\x3c/a\\x3e",\n
+\n
+    \'getLayerWarning\': "Vrstvu ${layerType} nebolo možné správne načítať.\\x3cbr\\x3e\\x3cbr\\x3eAby ste sa tejto správy zbavili vyberte novú BaseLayer v prepínači vrstiev v pravom hornom rohu.\\x3cbr\\x3e\\x3cbr\\x3eToto sa stalo pravdepodobne preto, že skript knižnice ${layerType} buď nebol načítaný alebo neobsahuje správny kľúč API pre vašu lokalitu.\\x3cbr\\x3e\\x3cbr\\x3eVývojári: Tu môžete získať \\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerType}\\\' target=\\\'_blank\\\'\\x3epomoc so sfunkčnením\\x3c/a\\x3e",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "Mierka = 1 : ${scaleDenom}",\n
+\n
+    \'reprojectDeprecated\': "Používate voľby „reproject“ vrstvy ${layerType}. Táto voľba je zzavrhovaná: jej použitie bolo navrhnuté na podporu zobrazovania údajov nad komerčnými základovými mapami, ale túto funkcionalitu je teraz možné dosiahnuť pomocou Spherical Mercator. Ďalšie informácie získate na stránke http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    \'methodDeprecated\': "Táto metóda je zavrhovaná a bude odstránená vo verzii 3.0. Použite prosím namiesto nej metódu ${newMethod}."\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3203</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

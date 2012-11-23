@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>RootContainer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Vector.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.Vector.RootContainer\n
+ * A special layer type to combine multiple vector layers inside a single\n
+ *     renderer root container. This class is not supposed to be instantiated\n
+ *     from user space, it is a helper class for controls that require event\n
+ *     processing for multiple vector layers.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Vector>\n
+ */\n
+OpenLayers.Layer.Vector.RootContainer = OpenLayers.Class(OpenLayers.Layer.Vector, {\n
+    \n
+    /**\n
+     * Property: displayInLayerSwitcher\n
+     * Set to false for this layer type\n
+     */\n
+    displayInLayerSwitcher: false,\n
+    \n
+    /**\n
+     * APIProperty: layers\n
+     * Layers that are attached to this container. Required config option.\n
+     */\n
+    layers: null,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Layer.Vector.RootContainer\n
+     * Create a new root container for multiple vector layer. This constructor\n
+     * is not supposed to be used from user space, it is only to be used by\n
+     * controls that need feature selection across multiple vector layers.\n
+     *\n
+     * Parameters:\n
+     * name - {String} A name for the layer\n
+     * options - {Object} Optional object with non-default properties to set on\n
+     *           the layer.\n
+     * \n
+     * Required options properties:\n
+     * layers - {Array(<OpenLayers.Layer.Vector>)} The layers managed by this\n
+     *     container\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Layer.Vector.RootContainer>} A new vector layer root\n
+     *     container\n
+     */\n
+    \n
+    /**\n
+     * Method: display\n
+     */\n
+    display: function() {},\n
+    \n
+    /**\n
+     * Method: getFeatureFromEvent\n
+     * walk through the layers to find the feature returned by the event\n
+     * \n
+     * Parameters:\n
+     * evt - {Object} event object with a feature property\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Feature.Vector>}\n
+     */\n
+    getFeatureFromEvent: function(evt) {\n
+        var layers = this.layers;\n
+        var feature;\n
+        for(var i=0; i<layers.length; i++) {\n
+            feature = layers[i].getFeatureFromEvent(evt);\n
+            if(feature) {\n
+                return feature;\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: setMap\n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Layer.Vector.prototype.setMap.apply(this, arguments);\n
+        this.collectRoots();\n
+        map.events.register("changelayer", this, this.handleChangeLayer);\n
+    },\n
+    \n
+    /**\n
+     * Method: removeMap\n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    removeMap: function(map) {\n
+        map.events.unregister("changelayer", this, this.handleChangeLayer);\n
+        this.resetRoots();\n
+        OpenLayers.Layer.Vector.prototype.removeMap.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * Method: collectRoots\n
+     * Collects the root nodes of all layers this control is configured with\n
+     * and moveswien the nodes to this control\'s layer\n
+     */\n
+    collectRoots: function() {\n
+        var layer;\n
+        // walk through all map layers, because we want to keep the order\n
+        for(var i=0; i<this.map.layers.length; ++i) {\n
+            layer = this.map.layers[i];\n
+            if(OpenLayers.Util.indexOf(this.layers, layer) != -1) {\n
+                layer.renderer.moveRoot(this.renderer);\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: resetRoots\n
+     * Resets the root nodes back into the layers they belong to.\n
+     */\n
+    resetRoots: function() {\n
+        var layer;\n
+        for(var i=0; i<this.layers.length; ++i) {\n
+            layer = this.layers[i];\n
+            if(this.renderer && layer.renderer.getRenderLayerId() == this.id) {\n
+                this.renderer.moveRoot(layer.renderer);\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: handleChangeLayer\n
+     * Event handler for the map\'s changelayer event. We need to rebuild\n
+     * this container\'s layer dom if order of one of its layers changes.\n
+     * This handler is added with the setMap method, and removed with the\n
+     * removeMap method.\n
+     * \n
+     * Parameters:\n
+     * evt - {Object}\n
+     */\n
+    handleChangeLayer: function(evt) {\n
+        var layer = evt.layer;\n
+        if(evt.property == "order" &&\n
+                        OpenLayers.Util.indexOf(this.layers, layer) != -1) {\n
+            this.resetRoots();\n
+            this.collectRoots();\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.Vector.RootContainer"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4709</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
