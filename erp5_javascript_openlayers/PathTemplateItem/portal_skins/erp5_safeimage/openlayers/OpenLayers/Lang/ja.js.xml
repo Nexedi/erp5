@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ja.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Translators (2009 onwards):\n
+ *  - Fryed-peach\n
+ *  - Mage Whopper\n
+ */\n
+\n
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["ja"]\n
+ * Dictionary for 日本語.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["ja"] = OpenLayers.Util.applyDefaults({\n
+\n
+    \'unhandledRequest\': "未処理の要求は ${statusText} を返します",\n
+\n
+    \'Permalink\': "パーマリンク",\n
+\n
+    \'Overlays\': "オーバーレイ",\n
+\n
+    \'Base Layer\': "基底レイヤー",\n
+\n
+    \'noFID\': "FID のない地物は更新できません。",\n
+\n
+    \'browserNotSupported\': "あなたのブラウザはベクターグラフィックスの描写に対応していません。現時点で対応しているソフトウェアは以下のものです。\\n${renderers}",\n
+\n
+    \'minZoomLevelError\': "minZoomLevel プロパティは FixedZoomLevels を継承するレイヤーでの使用のみを想定しています。この minZoomLevel に対する WFS レイヤーの検査は歴史的なものです。しかしながら、この検査を除去するとそれに依存する OpenLayers ベースのアプリケーションを破壊してしまう可能性があります。よって廃止が予定されており、この minZoomLevel 検査はバージョン3.0で除去されます。代わりに、http://trac.openlayers.org/wiki/SettingZoomLevels で解説されている、最小および最大解像度設定を使用してください。",\n
+\n
+    \'commitSuccess\': "WFS トランザクション: 成功 ${response}",\n
+\n
+    \'commitFailed\': "WFS トランザクション: 失敗 ${response}",\n
+\n
+    \'googleWarning\': "Google レイヤーが正しく読み込みを行えませんでした。\\x3cbr\\x3e\\x3cbr\\x3eこのメッセージを消すには、右上の隅にあるレイヤー切り替え部分で新しい基底レイヤーを選んでください。\\x3cbr\\x3e\\x3cbr\\x3eおそらく、これは Google マップ用ライブラリのスクリプトが組み込まれていないか、あなたのサイトに対応する正しい API キーが設定されていないためです。\\x3cbr\\x3e\\x3cbr\\x3e開発者の方へ: 正しい動作をさせるために\\x3ca href=\\\'http://trac.openlayers.org/wiki/Google\\\' target=\\\'_blank\\\'\\x3eこちらのウィキ\\x3c/a\\x3eを参照してください。",\n
+\n
+    \'getLayerWarning\': "${layerType} レイヤーが正しく読み込みを行えませんでした。\\x3cbr\\x3e\\x3cbr\\x3eこのメッセージを消すには、右上の隅にあるレイヤー切り替え部分で新しい基底レイヤーを選んでください。\\x3cbr\\x3e\\x3cbr\\x3eおそらく、これは ${layerLib} ライブラリのスクリプトが正しく組み込まれていないためです。\\x3cbr\\x3e\\x3cbr\\x3e開発者の方へ: 正しい動作をさせるために\\x3ca href=\\\'http://trac.openlayers.org/wiki/${layerLib}\\\' target=\\\'_blank\\\'\\x3eこちらのウィキ\\x3c/a\\x3eを参照してください。",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "縮尺 = 1 : ${scaleDenom}",\n
+\n
+    \'W\': "西",\n
+\n
+    \'E\': "東",\n
+\n
+    \'N\': "北",\n
+\n
+    \'S\': "南",\n
+\n
+    \'reprojectDeprecated\': "あなたは「${layerName}」レイヤーで reproject オプションを使っています。このオプションは商用の基底地図上に情報を表示する目的で設計されましたが、現在ではその機能は Spherical Mercator サポートを利用して実現されており、このオプションの使用は非推奨です。追加の情報は http://trac.openlayers.org/wiki/SphericalMercator で入手できます。",\n
+\n
+    \'methodDeprecated\': "このメソッドは廃止が予定されており、バージョン3.0で除去されます。代わりに ${newMethod} を使用してください。"\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3875</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

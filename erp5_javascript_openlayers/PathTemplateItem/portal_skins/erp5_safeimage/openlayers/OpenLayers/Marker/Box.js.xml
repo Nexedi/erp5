@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Box.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Marker.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Marker.Box\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Marker> \n
+ */\n
+OpenLayers.Marker.Box = OpenLayers.Class(OpenLayers.Marker, {\n
+\n
+    /** \n
+     * Property: bounds \n
+     * {<OpenLayers.Bounds>} \n
+     */\n
+    bounds: null,\n
+\n
+    /** \n
+     * Property: div \n
+     * {DOMElement} \n
+     */\n
+    div: null,\n
+    \n
+    /** \n
+     * Constructor: OpenLayers.Marker.Box\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} \n
+     * borderColor - {String} \n
+     * borderWidth - {int} \n
+     */\n
+    initialize: function(bounds, borderColor, borderWidth) {\n
+        this.bounds = bounds;\n
+        this.div    = OpenLayers.Util.createDiv();\n
+        this.div.style.overflow = \'hidden\';\n
+        this.events = new OpenLayers.Events(this, this.div);\n
+        this.setBorder(borderColor, borderWidth);\n
+    },\n
+\n
+    /**\n
+     * Method: destroy \n
+     */    \n
+    destroy: function() {\n
+\n
+        this.bounds = null;\n
+        this.div = null;\n
+\n
+        OpenLayers.Marker.prototype.destroy.apply(this, arguments);\n
+    },\n
+\n
+    /** \n
+     * Method: setBorder\n
+     * Allow the user to change the box\'s color and border width\n
+     * \n
+     * Parameters:\n
+     * color - {String} Default is "red"\n
+     * width - {int} Default is 2\n
+     */\n
+    setBorder: function (color, width) {\n
+        if (!color) {\n
+            color = "red";\n
+        }\n
+        if (!width) {\n
+            width = 2;\n
+        }\n
+        this.div.style.border = width + "px solid " + color;\n
+    },\n
+    \n
+    /** \n
+    * Method: draw\n
+    * \n
+    * Parameters:\n
+    * px - {<OpenLayers.Pixel>} \n
+    * sz - {<OpenLayers.Size>} \n
+    * \n
+    * Returns: \n
+    * {DOMElement} A new DOM Image with this marker\xb4s icon set at the \n
+    *         location passed-in\n
+    */\n
+    draw: function(px, sz) {\n
+        OpenLayers.Util.modifyDOMElement(this.div, null, px, sz);\n
+        return this.div;\n
+    }, \n
+\n
+    /**\n
+     * Method: onScreen\n
+     * \n
+     * Rreturn:\n
+     * {Boolean} Whether or not the marker is currently visible on screen.\n
+     */\n
+    onScreen:function() {\n
+        var onScreen = false;\n
+        if (this.map) {\n
+            var screenBounds = this.map.getExtent();\n
+            onScreen = screenBounds.containsBounds(this.bounds, true, true);\n
+        }    \n
+        return onScreen;\n
+    },\n
+    \n
+    /**\n
+     * Method: display\n
+     * Hide or show the icon\n
+     * \n
+     * Parameters:\n
+     * display - {Boolean} \n
+     */\n
+    display: function(display) {\n
+        this.div.style.display = (display) ? "" : "none";\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Marker.Box"\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2794</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

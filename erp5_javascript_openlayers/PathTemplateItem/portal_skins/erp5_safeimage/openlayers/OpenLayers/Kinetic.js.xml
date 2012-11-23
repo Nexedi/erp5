@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Kinetic.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Animation.js\n
+ */\n
+\n
+OpenLayers.Kinetic = OpenLayers.Class({\n
+\n
+    /**\n
+     * Property: threshold\n
+     * In most cases changing the threshold isn\'t needed.\n
+     * In px/ms, default to 0.\n
+     */\n
+    threshold: 0,\n
+\n
+    /**\n
+     * Property: deceleration\n
+     * {Float} the deseleration in px/ms², default to 0.0035.\n
+     */\n
+    deceleration: 0.0035,\n
+\n
+    /**\n
+     * Property: nbPoints\n
+     * {Integer} the number of points we use to calculate the kinetic\n
+     * initial values.\n
+     */\n
+    nbPoints: 100,\n
+\n
+    /**\n
+     * Property: delay\n
+     * {Float} time to consider to calculate the kinetic initial values.\n
+     * In ms, default to 200.\n
+     */\n
+    delay: 200,\n
+\n
+    /**\n
+     * Property: points\n
+     * List of points use to calculate the kinetic initial values.\n
+     */\n
+    points: undefined,\n
+\n
+    /**\n
+     * Property: timerId\n
+     * ID of the timer.\n
+     */\n
+    timerId: undefined,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Kinetic\n
+     *\n
+     * Parameters:\n
+     * options - {Object}\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Util.extend(this, options);\n
+    },\n
+\n
+    /**\n
+     * Method: begin\n
+     * Begins the dragging.\n
+     */\n
+    begin: function() {\n
+        OpenLayers.Animation.stop(this.timerId);\n
+        this.timerId = undefined;\n
+        this.points = [];\n
+    },\n
+\n
+    /**\n
+     * Method: update\n
+     * Updates during the dragging.\n
+     *\n
+     * Parameters:\n
+     * xy - {<OpenLayers.Pixel>} The new position.\n
+     */\n
+    update: function(xy) {\n
+        this.points.unshift({xy: xy, tick: new Date().getTime()});\n
+        if (this.points.length > this.nbPoints) {\n
+            this.points.pop();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: end\n
+     * Ends the dragging, start the kinetic.\n
+     *\n
+     * Parameters:\n
+     * xy - {<OpenLayers.Pixel>} The last position.\n
+     *\n
+     * Returns:\n
+     * {Object} An object with two properties: "speed", and "theta". The\n
+     *     "speed" and "theta" values are to be passed to the move \n
+     *     function when starting the animation.\n
+     */\n
+    end: function(xy) {\n
+        var last, now = new Date().getTime();\n
+        for (var i = 0, l = this.points.length, point; i < l; i++) {\n
+            point = this.points[i];\n
+            if (now - point.tick > this.delay) {\n
+                break;\n
+            }\n
+            last = point;\n
+        }\n
+        if (!last) {\n
+            return;\n
+        }\n
+        var time = new Date().getTime() - last.tick;\n
+        var dist = Math.sqrt(Math.pow(xy.x - last.xy.x, 2) +\n
+                             Math.pow(xy.y - last.xy.y, 2));\n
+        var speed = dist / time;\n
+        if (speed == 0 || speed < this.threshold) {\n
+            return;\n
+        }\n
+        var theta = Math.asin((xy.y - last.xy.y) / dist);\n
+        if (last.xy.x <= xy.x) {\n
+            theta = Math.PI - theta;\n
+        }\n
+        return {speed: speed, theta: theta};\n
+    },\n
+\n
+    /**\n
+     * Method: move\n
+     * Launch the kinetic move pan.\n
+     *\n
+     * Parameters:\n
+     * info - {Object} An object with two properties, "speed", and "theta".\n
+     *     These values are those returned from the "end" call.\n
+     * callback - {Function} Function called on every step of the animation,\n
+     *     receives x, y (values to pan), end (is the last point).\n
+     */\n
+    move: function(info, callback) {\n
+        var v0 = info.speed;\n
+        var fx = Math.cos(info.theta);\n
+        var fy = -Math.sin(info.theta);\n
+\n
+        var initialTime = new Date().getTime();\n
+\n
+        var lastX = 0;\n
+        var lastY = 0;\n
+\n
+        var timerCallback = function() {\n
+            if (this.timerId == null) {\n
+                return;\n
+            }\n
+\n
+            var t = new Date().getTime() - initialTime;\n
+\n
+            var p = (-this.deceleration * Math.pow(t, 2)) / 2.0 + v0 * t;\n
+            var x = p * fx;\n
+            var y = p * fy;\n
+\n
+            var args = {};\n
+            args.end = false;\n
+            var v = -this.deceleration * t + v0;\n
+\n
+            if (v <= 0) {\n
+                OpenLayers.Animation.stop(this.timerId);\n
+                this.timerId = null;\n
+                args.end = true;\n
+            }\n
+\n
+            args.x = x - lastX;\n
+            args.y = y - lastY;\n
+            lastX = x;\n
+            lastY = y;\n
+            callback(args.x, args.y, args.end);\n
+        };\n
+\n
+        this.timerId = OpenLayers.Animation.start(\n
+            OpenLayers.Function.bind(timerCallback, this)\n
+        );\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Kinetic"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4700</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

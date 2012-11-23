@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>en-CA.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * @requires OpenLayers/Lang/en.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["en-CA"]\n
+ * Dictionary for English-CA.  This dictionary inherits from the standard\n
+ *     English dictionary.  Override only those entries with language specific\n
+ *     to the CA region.\n
+ *     \n
+ * Keys for entries are used in calls to <OpenLayers.Lang.translate>.  Entry\n
+ *     bodies are normal strings or strings formatted for use with\n
+ *     <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang[\'en-CA\'] = OpenLayers.Util.applyDefaults({\n
+\n
+    // add any entries specific for this region here\n
+    // e.g.\n
+    // "someKey": "Some regionally specific value"\n
+    \n
+}, OpenLayers.Lang["en"]);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>670</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

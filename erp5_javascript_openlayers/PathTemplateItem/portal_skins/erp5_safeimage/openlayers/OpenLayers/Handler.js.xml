@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Handler.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Events.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler\n
+ * Base class to construct a higher-level handler for event sequences.  All\n
+ *     handlers have activate and deactivate methods.  In addition, they have\n
+ *     methods named like browser events.  When a handler is activated, any\n
+ *     additional methods named like a browser event is registered as a\n
+ *     listener for the corresponding event.  When a handler is deactivated,\n
+ *     those same methods are unregistered as event listeners.\n
+ *\n
+ * Handlers also typically have a callbacks object with keys named like\n
+ *     the abstracted events or event sequences that they are in charge of\n
+ *     handling.  The controls that wrap handlers define the methods that\n
+ *     correspond to these abstract events - so instead of listening for\n
+ *     individual browser events, they only listen for the abstract events\n
+ *     defined by the handler.\n
+ *     \n
+ * Handlers are created by controls, which ultimately have the responsibility\n
+ *     of making changes to the the state of the application.  Handlers\n
+ *     themselves may make temporary changes, but in general are expected to\n
+ *     return the application in the same state that they found it.\n
+ */\n
+OpenLayers.Handler = OpenLayers.Class({\n
+\n
+    /**\n
+     * Property: id\n
+     * {String}\n
+     */\n
+    id: null,\n
+        \n
+    /**\n
+     * APIProperty: control\n
+     * {<OpenLayers.Control>}. The control that initialized this handler.  The\n
+     *     control is assumed to have a valid map property - that map is used\n
+     *     in the handler\'s own setMap method.\n
+     */\n
+    control: null,\n
+\n
+    /**\n
+     * Property: map\n
+     * {<OpenLayers.Map>}\n
+     */\n
+    map: null,\n
+\n
+    /**\n
+     * APIProperty: keyMask\n
+     * {Integer} Use bitwise operators and one or more of the OpenLayers.Handler\n
+     *     constants to construct a keyMask.  The keyMask is used by\n
+     *     <checkModifiers>.  If the keyMask matches the combination of keys\n
+     *     down on an event, checkModifiers returns true.\n
+     *\n
+     * Example:\n
+     * (code)\n
+     *     // handler only responds if the Shift key is down\n
+     *     handler.keyMask = OpenLayers.Handler.MOD_SHIFT;\n
+     *\n
+     *     // handler only responds if Ctrl-Shift is down\n
+     *     handler.keyMask = OpenLayers.Handler.MOD_SHIFT |\n
+     *                       OpenLayers.Handler.MOD_CTRL;\n
+     * (end)\n
+     */\n
+    keyMask: null,\n
+\n
+    /**\n
+     * Property: active\n
+     * {Boolean}\n
+     */\n
+    active: false,\n
+    \n
+    /**\n
+     * Property: evt\n
+     * {Event} This property references the last event handled by the handler.\n
+     *     Note that this property is not part of the stable API.  Use of the\n
+     *     evt property should be restricted to controls in the library\n
+     *     or other applications that are willing to update with changes to\n
+     *     the OpenLayers code.\n
+     */\n
+    evt: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler\n
+     * Construct a handler.\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} The control that initialized this\n
+     *     handler.  The control is assumed to have a valid map property; that\n
+     *     map is used in the handler\'s own setMap method.  If a map property\n
+     *     is present in the options argument it will be used instead.\n
+     * callbacks - {Object} An object whose properties correspond to abstracted\n
+     *     events or sequences of browser events.  The values for these\n
+     *     properties are functions defined by the control that get called by\n
+     *     the handler.\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     the handler.\n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        OpenLayers.Util.extend(this, options);\n
+        this.control = control;\n
+        this.callbacks = callbacks;\n
+\n
+        var map = this.map || control.map;\n
+        if (map) {\n
+            this.setMap(map); \n
+        }\n
+        \n
+        this.id = OpenLayers.Util.createUniqueID(this.CLASS_NAME + "_");\n
+    },\n
+    \n
+    /**\n
+     * Method: setMap\n
+     */\n
+    setMap: function (map) {\n
+        this.map = map;\n
+    },\n
+\n
+    /**\n
+     * Method: checkModifiers\n
+     * Check the keyMask on the handler.  If no <keyMask> is set, this always\n
+     *     returns true.  If a <keyMask> is set and it matches the combination\n
+     *     of keys down on an event, this returns true.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The keyMask matches the keys down on an event.\n
+     */\n
+    checkModifiers: function (evt) {\n
+        if(this.keyMask == null) {\n
+            return true;\n
+        }\n
+        /* calculate the keyboard modifier mask for this event */\n
+        var keyModifiers =\n
+            (evt.shiftKey ? OpenLayers.Handler.MOD_SHIFT : 0) |\n
+            (evt.ctrlKey  ? OpenLayers.Handler.MOD_CTRL  : 0) |\n
+            (evt.altKey   ? OpenLayers.Handler.MOD_ALT   : 0);\n
+    \n
+        /* if it differs from the handler object\'s key mask,\n
+           bail out of the event handler */\n
+        return (keyModifiers == this.keyMask);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: activate\n
+     * Turn on the handler.  Returns false if the handler was already active.\n
+     * \n
+     * Returns: \n
+     * {Boolean} The handler was activated.\n
+     */\n
+    activate: function() {\n
+        if(this.active) {\n
+            return false;\n
+        }\n
+        // register for event handlers defined on this class.\n
+        var events = OpenLayers.Events.prototype.BROWSER_EVENTS;\n
+        for (var i=0, len=events.length; i<len; i++) {\n
+            if (this[events[i]]) {\n
+                this.register(events[i], this[events[i]]); \n
+            }\n
+        } \n
+        this.active = true;\n
+        return true;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Turn off the handler.  Returns false if the handler was already inactive.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The handler was deactivated.\n
+     */\n
+    deactivate: function() {\n
+        if(!this.active) {\n
+            return false;\n
+        }\n
+        // unregister event handlers defined on this class.\n
+        var events = OpenLayers.Events.prototype.BROWSER_EVENTS;\n
+        for (var i=0, len=events.length; i<len; i++) {\n
+            if (this[events[i]]) {\n
+                this.unregister(events[i], this[events[i]]); \n
+            }\n
+        } \n
+        this.active = false;\n
+        return true;\n
+    },\n
+\n
+    /**\n
+    * Method: callback\n
+    * Trigger the control\'s named callback with the given arguments\n
+    *\n
+    * Parameters:\n
+    * name - {String} The key for the callback that is one of the properties\n
+    *     of the handler\'s callbacks object.\n
+    * args - {Array(*)} An array of arguments (any type) with which to call \n
+    *     the callback (defined by the control).\n
+    */\n
+    callback: function (name, args) {\n
+        if (name && this.callbacks[name]) {\n
+            this.callbacks[name].apply(this.control, args);\n
+        }\n
+    },\n
+\n
+    /**\n
+    * Method: register\n
+    * register an event on the map\n
+    */\n
+    register: function (name, method) {\n
+        // TODO: deal with registerPriority in 3.0\n
+        this.map.events.registerPriority(name, this, method);\n
+        this.map.events.registerPriority(name, this, this.setEvent);\n
+    },\n
+\n
+    /**\n
+    * Method: unregister\n
+    * unregister an event from the map\n
+    */\n
+    unregister: function (name, method) {\n
+        this.map.events.unregister(name, this, method);   \n
+        this.map.events.unregister(name, this, this.setEvent);\n
+    },\n
+    \n
+    /**\n
+     * Method: setEvent\n
+     * With each registered browser event, the handler sets its own evt\n
+     *     property.  This property can be accessed by controls if needed\n
+     *     to get more information about the event that the handler is\n
+     *     processing.\n
+     *\n
+     * This allows modifier keys on the event to be checked (alt, shift,\n
+     *     and ctrl cannot be checked with the keyboard handler).  For a\n
+     *     control to determine which modifier keys are associated with the\n
+     *     event that a handler is currently processing, it should access\n
+     *     (code)handler.evt.altKey || handler.evt.shiftKey ||\n
+     *     handler.evt.ctrlKey(end).\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The browser event.\n
+     */\n
+    setEvent: function(evt) {\n
+        this.evt = evt;\n
+        return true;\n
+    },\n
+\n
+    /**\n
+     * Method: destroy\n
+     * Deconstruct the handler.\n
+     */\n
+    destroy: function () {\n
+        // unregister event listeners\n
+        this.deactivate();\n
+        // eliminate circular references\n
+        this.control = this.map = null;        \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Handler"\n
+});\n
+\n
+/**\n
+ * Constant: OpenLayers.Handler.MOD_NONE\n
+ * If set as the <keyMask>, <checkModifiers> returns false if any key is down.\n
+ */\n
+OpenLayers.Handler.MOD_NONE  = 0;\n
+\n
+/**\n
+ * Constant: OpenLayers.Handler.MOD_SHIFT\n
+ * If set as the <keyMask>, <checkModifiers> returns false if Shift is down.\n
+ */\n
+OpenLayers.Handler.MOD_SHIFT = 1;\n
+\n
+/**\n
+ * Constant: OpenLayers.Handler.MOD_CTRL\n
+ * If set as the <keyMask>, <checkModifiers> returns false if Ctrl is down.\n
+ */\n
+OpenLayers.Handler.MOD_CTRL  = 2;\n
+\n
+/**\n
+ * Constant: OpenLayers.Handler.MOD_ALT\n
+ * If set as the <keyMask>, <checkModifiers> returns false if Alt is down.\n
+ */\n
+OpenLayers.Handler.MOD_ALT   = 4;\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9461</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

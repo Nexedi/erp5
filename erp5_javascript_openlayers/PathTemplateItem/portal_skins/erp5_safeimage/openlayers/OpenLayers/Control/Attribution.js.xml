@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Attribution.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Attribution\n
+ * The attribution control adds attribution from layers to the map display. \n
+ * It uses \'attribution\' property of each layer.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Attribution = \n
+  OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: seperator\n
+     * {String} String used to seperate layers.\n
+     */\n
+    separator: ", ",\n
+    \n
+    /**\n
+     * APIProperty: template\n
+     * {String} Template for the attribution. This has to include the substring\n
+     *     "${layers}", which will be replaced by the layer specific\n
+     *     attributions, separated by <separator>. The default is "${layers}".\n
+     */\n
+    template: "${layers}",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Control.Attribution \n
+     * \n
+     * Parameters:\n
+     * options - {Object} Options for control.\n
+     */\n
+\n
+    /** \n
+     * Method: destroy\n
+     * Destroy control.\n
+     */\n
+    destroy: function() {\n
+        this.map.events.un({\n
+            "removelayer": this.updateAttribution,\n
+            "addlayer": this.updateAttribution,\n
+            "changelayer": this.updateAttribution,\n
+            "changebaselayer": this.updateAttribution,\n
+            scope: this\n
+        });\n
+        \n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+    },    \n
+    \n
+    /**\n
+     * Method: draw\n
+     * Initialize control.\n
+     * \n
+     * Returns: \n
+     * {DOMElement} A reference to the DIV DOMElement containing the control\n
+     */    \n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+        \n
+        this.map.events.on({\n
+            \'changebaselayer\': this.updateAttribution,\n
+            \'changelayer\': this.updateAttribution,\n
+            \'addlayer\': this.updateAttribution,\n
+            \'removelayer\': this.updateAttribution,\n
+            scope: this\n
+        });\n
+        this.updateAttribution();\n
+        \n
+        return this.div;    \n
+    },\n
+\n
+    /**\n
+     * Method: updateAttribution\n
+     * Update attribution string.\n
+     */\n
+    updateAttribution: function() {\n
+        var attributions = [];\n
+        if (this.map && this.map.layers) {\n
+            for(var i=0, len=this.map.layers.length; i<len; i++) {\n
+                var layer = this.map.layers[i];\n
+                if (layer.attribution && layer.getVisibility()) {\n
+                    // add attribution only if attribution text is unique\n
+                    if (OpenLayers.Util.indexOf(\n
+                                    attributions, layer.attribution) === -1) {\n
+                        attributions.push( layer.attribution );\n
+                    }\n
+                }\n
+            } \n
+            this.div.innerHTML = OpenLayers.String.format(this.template, {\n
+                layers: attributions.join(this.separator)\n
+            });\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Attribution"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3155</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

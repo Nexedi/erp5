@@ -1,0 +1,508 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v3.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/GML/Base.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.GML.v3\n
+ * Parses GML version 3.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.GML.Base>\n
+ */\n
+OpenLayers.Format.GML.v3 = OpenLayers.Class(OpenLayers.Format.GML.Base, {\n
+    \n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} Schema location for a particular minor version.  The writers\n
+     *     conform with the Simple Features Profile for GML.\n
+     */\n
+    schemaLocation: "http://www.opengis.net/gml http://schemas.opengis.net/gml/3.1.1/profiles/gmlsfProfile/1.0.0/gmlsf.xsd",\n
+\n
+    /**\n
+     * Property: curve\n
+     * {Boolean} Write gml:Curve instead of gml:LineString elements.  This also\n
+     *     affects the elements in multi-part geometries.  Default is false.\n
+     *     To write gml:Curve elements instead of gml:LineString, set curve\n
+     *     to true in the options to the contstructor (cannot be changed after\n
+     *     instantiation).\n
+     */\n
+    curve: false,\n
+    \n
+    /**\n
+     * Property: multiCurve\n
+     * {Boolean} Write gml:MultiCurve instead of gml:MultiLineString.  Since\n
+     *     the latter is deprecated in GML 3, the default is true.  To write\n
+     *     gml:MultiLineString instead of gml:MultiCurve, set multiCurve to\n
+     *     false in the options to the constructor (cannot be changed after\n
+     *     instantiation).\n
+     */\n
+    multiCurve: true,\n
+    \n
+    /**\n
+     * Property: surface\n
+     * {Boolean} Write gml:Surface instead of gml:Polygon elements.  This also\n
+     *     affects the elements in multi-part geometries.  Default is false.\n
+     *     To write gml:Surface elements instead of gml:Polygon, set surface\n
+     *     to true in the options to the contstructor (cannot be changed after\n
+     *     instantiation).\n
+     */\n
+    surface: false,\n
+\n
+    /**\n
+     * Property: multiSurface\n
+     * {Boolean} Write gml:multiSurface instead of gml:MultiPolygon.  Since\n
+     *     the latter is deprecated in GML 3, the default is true.  To write\n
+     *     gml:MultiPolygon instead of gml:multiSurface, set multiSurface to\n
+     *     false in the options to the constructor (cannot be changed after\n
+     *     instantiation).\n
+     */\n
+    multiSurface: true,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.GML.v3\n
+     * Create a parser for GML v3.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     *\n
+     * Valid options properties:\n
+     * featureType - {String} Local (without prefix) feature typeName (required).\n
+     * featureNS - {String} Feature namespace (required).\n
+     * geometryName - {String} Geometry element name.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.GML.Base.prototype.initialize.apply(this, [options]);\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "gml": OpenLayers.Util.applyDefaults({\n
+            "featureMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "Curve": function(node, container) {\n
+                var obj = {points: []};\n
+                this.readChildNodes(node, obj);\n
+                if(!container.components) {\n
+                    container.components = [];\n
+                }\n
+                container.components.push(\n
+                    new OpenLayers.Geometry.LineString(obj.points)\n
+                );\n
+            },\n
+            "segments": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "LineStringSegment": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                if(obj.points) {\n
+                    Array.prototype.push.apply(container.points, obj.points);\n
+                }\n
+            },\n
+            "pos": function(node, obj) {\n
+                var str = this.getChildValue(node).replace(\n
+                    this.regExes.trimSpace, ""\n
+                );\n
+                var coords = str.split(this.regExes.splitSpace);\n
+                var point;\n
+                if(this.xy) {\n
+                    point = new OpenLayers.Geometry.Point(\n
+                        coords[0], coords[1], coords[2]\n
+                    );\n
+                } else {\n
+                    point = new OpenLayers.Geometry.Point(\n
+                        coords[1], coords[0], coords[2]\n
+                    );\n
+                }\n
+                obj.points = [point];\n
+            },\n
+            "posList": function(node, obj) {\n
+                var str = this.getChildValue(node).replace(\n
+                    this.regExes.trimSpace, ""\n
+                );\n
+                var coords = str.split(this.regExes.splitSpace);\n
+                var dim = parseInt(node.getAttribute("dimension")) || 2;\n
+                var j, x, y, z;\n
+                var numPoints = coords.length / dim;\n
+                var points = new Array(numPoints);\n
+                for(var i=0, len=coords.length; i<len; i += dim) {\n
+                    x = coords[i];\n
+                    y = coords[i+1];\n
+                    z = (dim == 2) ? undefined : coords[i+2];\n
+                    if (this.xy) {\n
+                        points[i/dim] = new OpenLayers.Geometry.Point(x, y, z);\n
+                    } else {\n
+                        points[i/dim] = new OpenLayers.Geometry.Point(y, x, z);\n
+                    }\n
+                }\n
+                obj.points = points;\n
+            },\n
+            "Surface": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "patches": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "PolygonPatch": function(node, obj) {\n
+                this.readers.gml.Polygon.apply(this, [node, obj]);\n
+            },\n
+            "exterior": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                container.outer = obj.components[0];\n
+            },\n
+            "interior": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                container.inner.push(obj.components[0]);\n
+            },\n
+            "MultiCurve": function(node, container) {\n
+                var obj = {components: []};\n
+                this.readChildNodes(node, obj);\n
+                if(obj.components.length > 0) {\n
+                    container.components = [\n
+                        new OpenLayers.Geometry.MultiLineString(obj.components)\n
+                    ];\n
+                }\n
+            },\n
+            "curveMember": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "MultiSurface": function(node, container) {\n
+                var obj = {components: []};\n
+                this.readChildNodes(node, obj);\n
+                if(obj.components.length > 0) {\n
+                    container.components = [\n
+                        new OpenLayers.Geometry.MultiPolygon(obj.components)\n
+                    ];\n
+                }\n
+            },\n
+            "surfaceMember": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "surfaceMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "pointMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "lineStringMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "polygonMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "geometryMembers": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "Envelope": function(node, container) {\n
+                var obj = {points: new Array(2)};\n
+                this.readChildNodes(node, obj);\n
+                if(!container.components) {\n
+                    container.components = [];\n
+                }\n
+                var min = obj.points[0];\n
+                var max = obj.points[1];\n
+                container.components.push(\n
+                    new OpenLayers.Bounds(min.x, min.y, max.x, max.y)\n
+                );\n
+            },\n
+            "lowerCorner": function(node, container) {\n
+                var obj = {};\n
+                this.readers.gml.pos.apply(this, [node, obj]);\n
+                container.points[0] = obj.points[0];\n
+            },\n
+            "upperCorner": function(node, container) {\n
+                var obj = {};\n
+                this.readers.gml.pos.apply(this, [node, obj]);\n
+                container.points[1] = obj.points[0];\n
+            }\n
+        }, OpenLayers.Format.GML.Base.prototype.readers["gml"]),            \n
+        "feature": OpenLayers.Format.GML.Base.prototype.readers["feature"],\n
+        "wfs": OpenLayers.Format.GML.Base.prototype.readers["wfs"]\n
+    },\n
+    \n
+    /**\n
+     * Method: write\n
+     *\n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>) | OpenLayers.Feature.Vector}\n
+     *     An array of features or a single feature.\n
+     *\n
+     * Returns:\n
+     * {String} Given an array of features, a doc with a gml:featureMembers\n
+     *     element will be returned.  Given a single feature, a doc with a\n
+     *     gml:featureMember element will be returned.\n
+     */\n
+    write: function(features) {\n
+        var name;\n
+        if(OpenLayers.Util.isArray(features)) {\n
+            name = "featureMembers";\n
+        } else {\n
+            name = "featureMember";\n
+        }\n
+        var root = this.writeNode("gml:" + name, features);\n
+        this.setAttributeNS(\n
+            root, this.namespaces["xsi"],\n
+            "xsi:schemaLocation", this.schemaLocation\n
+        );\n
+\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [root]);\n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "gml": OpenLayers.Util.applyDefaults({\n
+            "featureMembers": function(features) {\n
+                var node = this.createElementNSPlus("gml:featureMembers");\n
+                for(var i=0, len=features.length; i<len; ++i) {\n
+                    this.writeNode("feature:_typeName", features[i], node);\n
+                }\n
+                return node;\n
+            },\n
+            "Point": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Point");\n
+                this.writeNode("pos", geometry, node);\n
+                return node;\n
+            },\n
+            "pos": function(point) {\n
+                // only 2d for simple features profile\n
+                var pos = (this.xy) ?\n
+                    (point.x + " " + point.y) : (point.y + " " + point.x);\n
+                return this.createElementNSPlus("gml:pos", {\n
+                    value: pos\n
+                });\n
+            },\n
+            "LineString": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:LineString");\n
+                this.writeNode("posList", geometry.components, node);\n
+                return node;\n
+            },\n
+            "Curve": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Curve");\n
+                this.writeNode("segments", geometry, node);\n
+                return node;\n
+            },\n
+            "segments": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:segments");\n
+                this.writeNode("LineStringSegment", geometry, node);\n
+                return node;\n
+            },\n
+            "LineStringSegment": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:LineStringSegment");\n
+                this.writeNode("posList", geometry.components, node);\n
+                return node;\n
+            },\n
+            "posList": function(points) {\n
+                // only 2d for simple features profile\n
+                var len = points.length;\n
+                var parts = new Array(len);\n
+                var point;\n
+                for(var i=0; i<len; ++i) {\n
+                    point = points[i];\n
+                    if(this.xy) {\n
+                        parts[i] = point.x + " " + point.y;\n
+                    } else {\n
+                        parts[i] = point.y + " " + point.x;\n
+                    }\n
+                }\n
+                return this.createElementNSPlus("gml:posList", {\n
+                    value: parts.join(" ")\n
+                }); \n
+            },\n
+            "Surface": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Surface");\n
+                this.writeNode("patches", geometry, node);\n
+                return node;\n
+            },\n
+            "patches": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:patches");\n
+                this.writeNode("PolygonPatch", geometry, node);\n
+                return node;\n
+            },\n
+            "PolygonPatch": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:PolygonPatch", {\n
+                    attributes: {interpolation: "planar"}\n
+                });\n
+                this.writeNode("exterior", geometry.components[0], node);\n
+                for(var i=1, len=geometry.components.length; i<len; ++i) {\n
+                    this.writeNode(\n
+                        "interior", geometry.components[i], node\n
+                    );\n
+                }\n
+                return node;\n
+            },\n
+            "Polygon": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Polygon");\n
+                this.writeNode("exterior", geometry.components[0], node);\n
+                for(var i=1, len=geometry.components.length; i<len; ++i) {\n
+                    this.writeNode(\n
+                        "interior", geometry.components[i], node\n
+                    );\n
+                }\n
+                return node;\n
+            },\n
+            "exterior": function(ring) {\n
+                var node = this.createElementNSPlus("gml:exterior");\n
+                this.writeNode("LinearRing", ring, node);\n
+                return node;\n
+            },\n
+            "interior": function(ring) {\n
+                var node = this.createElementNSPlus("gml:interior");\n
+                this.writeNode("LinearRing", ring, node);\n
+                return node;\n
+            },\n
+            "LinearRing": function(ring) {\n
+                var node = this.createElementNSPlus("gml:LinearRing");\n
+                this.writeNode("posList", ring.components, node);\n
+                return node;\n
+            },\n
+            "MultiCurve": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:MultiCurve");\n
+                var components = geometry.components || [geometry];\n
+                for(var i=0, len=components.length; i<len; ++i) {\n
+                    this.writeNode("curveMember", components[i], node);\n
+                }\n
+                return node;\n
+            },\n
+            "curveMember": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:curveMember");\n
+                if(this.curve) {\n
+                    this.writeNode("Curve", geometry, node);\n
+                } else {\n
+                    this.writeNode("LineString", geometry, node);\n
+                }\n
+                return node;\n
+            },\n
+            "MultiSurface": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:MultiSurface");\n
+                var components = geometry.components || [geometry];\n
+                for(var i=0, len=components.length; i<len; ++i) {\n
+                    this.writeNode("surfaceMember", components[i], node);\n
+                }\n
+                return node;\n
+            },\n
+            "surfaceMember": function(polygon) {\n
+                var node = this.createElementNSPlus("gml:surfaceMember");\n
+                if(this.surface) {\n
+                    this.writeNode("Surface", polygon, node);\n
+                } else {\n
+                    this.writeNode("Polygon", polygon, node);\n
+                }\n
+                return node;\n
+            },\n
+            "Envelope": function(bounds) {\n
+                var node = this.createElementNSPlus("gml:Envelope");\n
+                this.writeNode("lowerCorner", bounds, node);\n
+                this.writeNode("upperCorner", bounds, node);\n
+                // srsName attribute is required for gml:Envelope\n
+                if(this.srsName) {\n
+                    node.setAttribute("srsName", this.srsName);\n
+                }\n
+                return node;\n
+            },\n
+            "lowerCorner": function(bounds) {\n
+                // only 2d for simple features profile\n
+                var pos = (this.xy) ?\n
+                    (bounds.left + " " + bounds.bottom) :\n
+                    (bounds.bottom + " " + bounds.left);\n
+                return this.createElementNSPlus("gml:lowerCorner", {\n
+                    value: pos\n
+                });\n
+            },\n
+            "upperCorner": function(bounds) {\n
+                // only 2d for simple features profile\n
+                var pos = (this.xy) ?\n
+                    (bounds.right + " " + bounds.top) :\n
+                    (bounds.top + " " + bounds.right);\n
+                return this.createElementNSPlus("gml:upperCorner", {\n
+                    value: pos\n
+                });\n
+            }\n
+        }, OpenLayers.Format.GML.Base.prototype.writers["gml"]),\n
+        "feature": OpenLayers.Format.GML.Base.prototype.writers["feature"],\n
+        "wfs": OpenLayers.Format.GML.Base.prototype.writers["wfs"]\n
+    },\n
+\n
+    /**\n
+     * Method: setGeometryTypes\n
+     * Sets the <geometryTypes> mapping.\n
+     */\n
+    setGeometryTypes: function() {\n
+        this.geometryTypes = {\n
+            "OpenLayers.Geometry.Point": "Point",\n
+            "OpenLayers.Geometry.MultiPoint": "MultiPoint",\n
+            "OpenLayers.Geometry.LineString": (this.curve === true) ? "Curve": "LineString",\n
+            "OpenLayers.Geometry.MultiLineString": (this.multiCurve === false) ? "MultiLineString" : "MultiCurve",\n
+            "OpenLayers.Geometry.Polygon": (this.surface === true) ? "Surface" : "Polygon",\n
+            "OpenLayers.Geometry.MultiPolygon": (this.multiSurface === false) ? "MultiPolygon" : "MultiSurface",\n
+            "OpenLayers.Geometry.Collection": "GeometryCollection"\n
+        };\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.GML.v3" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18906</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

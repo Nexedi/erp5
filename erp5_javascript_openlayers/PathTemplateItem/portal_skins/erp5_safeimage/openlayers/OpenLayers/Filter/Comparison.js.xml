@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Comparison.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Filter.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Filter.Comparison\n
+ * This class represents a comparison filter.\n
+ * \n
+ * Inherits from:\n
+ * - <OpenLayers.Filter>\n
+ */\n
+OpenLayers.Filter.Comparison = OpenLayers.Class(OpenLayers.Filter, {\n
+\n
+    /**\n
+     * APIProperty: type\n
+     * {String} type: type of the comparison. This is one of\n
+     * - OpenLayers.Filter.Comparison.EQUAL_TO                 = "==";\n
+     * - OpenLayers.Filter.Comparison.NOT_EQUAL_TO             = "!=";\n
+     * - OpenLayers.Filter.Comparison.LESS_THAN                = "<";\n
+     * - OpenLayers.Filter.Comparison.GREATER_THAN             = ">";\n
+     * - OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO    = "<=";\n
+     * - OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO = ">=";\n
+     * - OpenLayers.Filter.Comparison.BETWEEN                  = "..";\n
+     * - OpenLayers.Filter.Comparison.LIKE                     = "~"; \n
+     */\n
+    type: null,\n
+    \n
+    /**\n
+     * APIProperty: property\n
+     * {String}\n
+     * name of the context property to compare\n
+     */\n
+    property: null,\n
+    \n
+    /**\n
+     * APIProperty: value\n
+     * {Number} or {String}\n
+     * comparison value for binary comparisons. In the case of a String, this\n
+     * can be a combination of text and propertyNames in the form\n
+     * "literal ${propertyName}"\n
+     */\n
+    value: null,\n
+    \n
+    /**\n
+     * Property: matchCase\n
+     * {Boolean} Force case sensitive searches for EQUAL_TO and NOT_EQUAL_TO\n
+     *     comparisons.  The Filter Encoding 1.1 specification added a matchCase\n
+     *     attribute to ogc:PropertyIsEqualTo and ogc:PropertyIsNotEqualTo\n
+     *     elements.  This property will be serialized with those elements only\n
+     *     if using the v1.1.0 filter format. However, when evaluating filters\n
+     *     here, the matchCase property will always be respected (for EQUAL_TO\n
+     *     and NOT_EQUAL_TO).  Default is true. \n
+     */\n
+    matchCase: true,\n
+    \n
+    /**\n
+     * APIProperty: lowerBoundary\n
+     * {Number} or {String}\n
+     * lower boundary for between comparisons. In the case of a String, this\n
+     * can be a combination of text and propertyNames in the form\n
+     * "literal ${propertyName}"\n
+     */\n
+    lowerBoundary: null,\n
+    \n
+    /**\n
+     * APIProperty: upperBoundary\n
+     * {Number} or {String}\n
+     * upper boundary for between comparisons. In the case of a String, this\n
+     * can be a combination of text and propertyNames in the form\n
+     * "literal ${propertyName}"\n
+     */\n
+    upperBoundary: null,\n
+\n
+    /** \n
+     * Constructor: OpenLayers.Filter.Comparison\n
+     * Creates a comparison rule.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object with properties to set on the\n
+     *           rule\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Filter.Comparison>}\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Filter.prototype.initialize.apply(this, [options]);\n
+        // since matchCase on PropertyIsLike is not schema compliant, we only\n
+        // want to use this if explicitly asked for\n
+        if (this.type === OpenLayers.Filter.Comparison.LIKE \n
+            && options.matchCase === undefined) {\n
+                this.matchCase = null;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: evaluate\n
+     * Evaluates this filter in a specific context.\n
+     * \n
+     * Parameters:\n
+     * context - {Object} Context to use in evaluating the filter.  If a vector\n
+     *     feature is provided, the feature.attributes will be used as context.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The filter applies.\n
+     */\n
+    evaluate: function(context) {\n
+        if (context instanceof OpenLayers.Feature.Vector) {\n
+            context = context.attributes;\n
+        }\n
+        var result = false;\n
+        var got = context[this.property];\n
+        var exp;\n
+        switch(this.type) {\n
+            case OpenLayers.Filter.Comparison.EQUAL_TO:\n
+                exp = this.value;\n
+                if(!this.matchCase &&\n
+                   typeof got == "string" && typeof exp == "string") {\n
+                    result = (got.toUpperCase() == exp.toUpperCase());\n
+                } else {\n
+                    result = (got == exp);\n
+                }\n
+                break;\n
+            case OpenLayers.Filter.Comparison.NOT_EQUAL_TO:\n
+                exp = this.value;\n
+                if(!this.matchCase &&\n
+                   typeof got == "string" && typeof exp == "string") {\n
+                    result = (got.toUpperCase() != exp.toUpperCase());\n
+                } else {\n
+                    result = (got != exp);\n
+                }\n
+                break;\n
+            case OpenLayers.Filter.Comparison.LESS_THAN:\n
+                result = got < this.value;\n
+                break;\n
+            case OpenLayers.Filter.Comparison.GREATER_THAN:\n
+                result = got > this.value;\n
+                break;\n
+            case OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO:\n
+                result = got <= this.value;\n
+                break;\n
+            case OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO:\n
+                result = got >= this.value;\n
+                break;\n
+            case OpenLayers.Filter.Comparison.BETWEEN:\n
+                result = (got >= this.lowerBoundary) &&\n
+                    (got <= this.upperBoundary);\n
+                break;\n
+            case OpenLayers.Filter.Comparison.LIKE:\n
+                var regexp = new RegExp(this.value, "gi");\n
+                result = regexp.test(got);\n
+                break;\n
+        }\n
+        return result;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: value2regex\n
+     * Converts the value of this rule into a regular expression string,\n
+     * according to the wildcard characters specified. This method has to\n
+     * be called after instantiation of this class, if the value is not a\n
+     * regular expression already.\n
+     * \n
+     * Parameters:\n
+     * wildCard   - {Char} wildcard character in the above value, default\n
+     *              is "*"\n
+     * singleChar - {Char} single-character wildcard in the above value\n
+     *              default is "."\n
+     * escapeChar - {Char} escape character in the above value, default is\n
+     *              "!"\n
+     * \n
+     * Returns:\n
+     * {String} regular expression string\n
+     */\n
+    value2regex: function(wildCard, singleChar, escapeChar) {\n
+        if (wildCard == ".") {\n
+            throw new Error("\'.\' is an unsupported wildCard character for " +\n
+                            "OpenLayers.Filter.Comparison");\n
+        }\n
+        \n
+\n
+        // set UMN MapServer defaults for unspecified parameters\n
+        wildCard = wildCard ? wildCard : "*";\n
+        singleChar = singleChar ? singleChar : ".";\n
+        escapeChar = escapeChar ? escapeChar : "!";\n
+        \n
+        this.value = this.value.replace(\n
+                new RegExp("\\\\"+escapeChar+"(.|$)", "g"), "\\\\$1");\n
+        this.value = this.value.replace(\n
+                new RegExp("\\\\"+singleChar, "g"), ".");\n
+        this.value = this.value.replace(\n
+                new RegExp("\\\\"+wildCard, "g"), ".*");\n
+        this.value = this.value.replace(\n
+                new RegExp("\\\\\\\\.\\\\*", "g"), "\\\\"+wildCard);\n
+        this.value = this.value.replace(\n
+                new RegExp("\\\\\\\\\\\\.", "g"), "\\\\"+singleChar);\n
+        \n
+        return this.value;\n
+    },\n
+    \n
+    /**\n
+     * Method: regex2value\n
+     * Convert the value of this rule from a regular expression string into an\n
+     *     ogc literal string using a wildCard of *, a singleChar of ., and an\n
+     *     escape of !.  Leaves the <value> property unmodified.\n
+     * \n
+     * Returns:\n
+     * {String} A string value.\n
+     */\n
+    regex2value: function() {\n
+        \n
+        var value = this.value;\n
+        \n
+        // replace ! with !!\n
+        value = value.replace(/!/g, "!!");\n
+\n
+        // replace \\. with !. (watching out for \\\\.)\n
+        value = value.replace(/(\\\\)?\\\\\\./g, function($0, $1) {\n
+            return $1 ? $0 : "!.";\n
+        });\n
+        \n
+        // replace \\* with #* (watching out for \\\\*)\n
+        value = value.replace(/(\\\\)?\\\\\\*/g, function($0, $1) {\n
+            return $1 ? $0 : "!*";\n
+        });\n
+        \n
+        // replace \\\\ with \\\n
+        value = value.replace(/\\\\\\\\/g, "\\\\");\n
+\n
+        // convert .* to * (the sequence #.* is not allowed)\n
+        value = value.replace(/\\.\\*/g, "*");\n
+        \n
+        return value;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clone\n
+     * Clones this filter.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Filter.Comparison>} Clone of this filter.\n
+     */\n
+    clone: function() {\n
+        return OpenLayers.Util.extend(new OpenLayers.Filter.Comparison(), this);\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Filter.Comparison"\n
+});\n
+\n
+\n
+OpenLayers.Filter.Comparison.EQUAL_TO                 = "==";\n
+OpenLayers.Filter.Comparison.NOT_EQUAL_TO             = "!=";\n
+OpenLayers.Filter.Comparison.LESS_THAN                = "<";\n
+OpenLayers.Filter.Comparison.GREATER_THAN             = ">";\n
+OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO    = "<=";\n
+OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO = ">=";\n
+OpenLayers.Filter.Comparison.BETWEEN                  = "..";\n
+OpenLayers.Filter.Comparison.LIKE                     = "~";\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9330</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

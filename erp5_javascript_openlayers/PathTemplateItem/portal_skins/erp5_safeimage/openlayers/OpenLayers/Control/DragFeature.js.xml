@@ -1,0 +1,410 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DragFeature.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Handler/Drag.js\n
+ * @requires OpenLayers/Handler/Feature.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.DragFeature\n
+ * The DragFeature control moves a feature with a drag of the mouse. Create a\n
+ * new control with the <OpenLayers.Control.DragFeature> constructor.\n
+ *\n
+ * Inherits From:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.DragFeature = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /**\n
+     * APIProperty: geometryTypes\n
+     * {Array(String)} To restrict dragging to a limited set of geometry types,\n
+     *     send a list of strings corresponding to the geometry class names.\n
+     */\n
+    geometryTypes: null,\n
+    \n
+    /**\n
+     * APIProperty: onStart\n
+     * {Function} Define this function if you want to know when a drag starts.\n
+     *     The function should expect to receive two arguments: the feature\n
+     *     that is about to be dragged and the pixel location of the mouse.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that is about to be\n
+     *     dragged.\n
+     * pixel - {<OpenLayers.Pixel>} The pixel location of the mouse.\n
+     */\n
+    onStart: function(feature, pixel) {},\n
+\n
+    /**\n
+     * APIProperty: onDrag\n
+     * {Function} Define this function if you want to know about each move of a\n
+     *     feature. The function should expect to receive two arguments: the\n
+     *     feature that is being dragged and the pixel location of the mouse.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that was dragged.\n
+     * pixel - {<OpenLayers.Pixel>} The pixel location of the mouse.\n
+     */\n
+    onDrag: function(feature, pixel) {},\n
+\n
+    /**\n
+     * APIProperty: onComplete\n
+     * {Function} Define this function if you want to know when a feature is\n
+     *     done dragging. The function should expect to receive two arguments:\n
+     *     the feature that is being dragged and the pixel location of the\n
+     *     mouse.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that was dragged.\n
+     * pixel - {<OpenLayers.Pixel>} The pixel location of the mouse.\n
+     */\n
+    onComplete: function(feature, pixel) {},\n
+\n
+    /**\n
+     * APIProperty: onEnter\n
+     * {Function} Define this function if you want to know when the mouse\n
+     *     goes over a feature and thereby makes this feature a candidate\n
+     *     for dragging.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that is ready\n
+     *     to be dragged.\n
+     */\n
+    onEnter: function(feature) {},\n
+\n
+    /**\n
+     * APIProperty: onLeave\n
+     * {Function} Define this function if you want to know when the mouse\n
+     *     goes out of the feature that was dragged.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that was dragged.\n
+     */\n
+    onLeave: function(feature) {},\n
+\n
+    /**\n
+     * APIProperty: documentDrag\n
+     * {Boolean} If set to true, mouse dragging will continue even if the\n
+     *     mouse cursor leaves the map viewport. Default is false.\n
+     */\n
+    documentDrag: false,\n
+    \n
+    /**\n
+     * Property: layer\n
+     * {<OpenLayers.Layer.Vector>}\n
+     */\n
+    layer: null,\n
+    \n
+    /**\n
+     * Property: feature\n
+     * {<OpenLayers.Feature.Vector>}\n
+     */\n
+    feature: null,\n
+\n
+    /**\n
+     * Property: dragCallbacks\n
+     * {Object} The functions that are sent to the drag handler for callback.\n
+     */\n
+    dragCallbacks: {},\n
+\n
+    /**\n
+     * Property: featureCallbacks\n
+     * {Object} The functions that are sent to the feature handler for callback.\n
+     */\n
+    featureCallbacks: {},\n
+    \n
+    /**\n
+     * Property: lastPixel\n
+     * {<OpenLayers.Pixel>}\n
+     */\n
+    lastPixel: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.DragFeature\n
+     * Create a new control to drag features.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>} The layer containing features to be\n
+     *     dragged.\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     control.\n
+     */\n
+    initialize: function(layer, options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        this.layer = layer;\n
+        this.handlers = {\n
+            drag: new OpenLayers.Handler.Drag(\n
+                this, OpenLayers.Util.extend({\n
+                    down: this.downFeature,\n
+                    move: this.moveFeature,\n
+                    up: this.upFeature,\n
+                    out: this.cancel,\n
+                    done: this.doneDragging\n
+                }, this.dragCallbacks), {\n
+                    documentDrag: this.documentDrag\n
+                }\n
+            ),\n
+            feature: new OpenLayers.Handler.Feature(\n
+                this, this.layer, OpenLayers.Util.extend({\n
+                    // \'click\' and \'clickout\' callback are for the mobile\n
+                    // support: no \'over\' or \'out\' in touch based browsers.\n
+                    click: this.clickFeature,\n
+                    clickout: this.clickoutFeature,\n
+                    over: this.overFeature,\n
+                    out: this.outFeature\n
+                }, this.featureCallbacks),\n
+                {geometryTypes: this.geometryTypes}\n
+            )\n
+        };\n
+    },\n
+\n
+    /**\n
+     * Method: clickFeature\n
+     * Called when the feature handler detects a click-in on a feature.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */\n
+    clickFeature: function(feature) {\n
+        if (this.handlers.feature.touch && !this.over && this.overFeature(feature)) {\n
+            this.handlers.drag.dragstart(this.handlers.feature.evt);\n
+            // to let the events propagate to the feature handler (click callback)\n
+            this.handlers.drag.stopDown = false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: clickoutFeature\n
+     * Called when the feature handler detects a click-out on a feature.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */\n
+    clickoutFeature: function(feature) {\n
+        if (this.handlers.feature.touch && this.over) {\n
+            this.outFeature(feature);\n
+            this.handlers.drag.stopDown = true;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     * Take care of things that are not handled in superclass\n
+     */\n
+    destroy: function() {\n
+        this.layer = null;\n
+        OpenLayers.Control.prototype.destroy.apply(this, []);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the control and the feature handler.\n
+     * \n
+     * Returns:\n
+     * {Boolean} Successfully activated the control and feature handler.\n
+     */\n
+    activate: function() {\n
+        return (this.handlers.feature.activate() &&\n
+                OpenLayers.Control.prototype.activate.apply(this, arguments));\n
+    },\n
+\n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the control and all handlers.\n
+     * \n
+     * Returns:\n
+     * {Boolean} Successfully deactivated the control.\n
+     */\n
+    deactivate: function() {\n
+        // the return from the handlers is unimportant in this case\n
+        this.handlers.drag.deactivate();\n
+        this.handlers.feature.deactivate();\n
+        this.feature = null;\n
+        this.dragging = false;\n
+        this.lastPixel = null;\n
+        OpenLayers.Element.removeClass(\n
+            this.map.viewPortDiv, this.displayClass + "Over"\n
+        );\n
+        return OpenLayers.Control.prototype.deactivate.apply(this, arguments);\n
+    },\n
+\n
+    /**\n
+     * Method: overFeature\n
+     * Called when the feature handler detects a mouse-over on a feature.\n
+     *     This activates the drag handler.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The selected feature.\n
+     *\n
+     * Returns:\n
+     * {Boolean} Successfully activated the drag handler.\n
+     */\n
+    overFeature: function(feature) {\n
+        var activated = false;\n
+        if(!this.handlers.drag.dragging) {\n
+            this.feature = feature;\n
+            this.handlers.drag.activate();\n
+            activated = true;\n
+            this.over = true;\n
+            OpenLayers.Element.addClass(this.map.viewPortDiv, this.displayClass + "Over");\n
+            this.onEnter(feature);\n
+        } else {\n
+            if(this.feature.id == feature.id) {\n
+                this.over = true;\n
+            } else {\n
+                this.over = false;\n
+            }\n
+        }\n
+        return activated;\n
+    },\n
+\n
+    /**\n
+     * Method: downFeature\n
+     * Called when the drag handler detects a mouse-down.\n
+     *\n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} Location of the mouse event.\n
+     */\n
+    downFeature: function(pixel) {\n
+        this.lastPixel = pixel;\n
+        this.onStart(this.feature, pixel);\n
+    },\n
+\n
+    /**\n
+     * Method: moveFeature\n
+     * Called when the drag handler detects a mouse-move.  Also calls the\n
+     *     optional onDrag method.\n
+     * \n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} Location of the mouse event.\n
+     */\n
+    moveFeature: function(pixel) {\n
+        var res = this.map.getResolution();\n
+        this.feature.geometry.move(res * (pixel.x - this.lastPixel.x),\n
+                                   res * (this.lastPixel.y - pixel.y));\n
+        this.layer.drawFeature(this.feature);\n
+        this.lastPixel = pixel;\n
+        this.onDrag(this.feature, pixel);\n
+    },\n
+\n
+    /**\n
+     * Method: upFeature\n
+     * Called when the drag handler detects a mouse-up.\n
+     * \n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} Location of the mouse event.\n
+     */\n
+    upFeature: function(pixel) {\n
+        if(!this.over) {\n
+            this.handlers.drag.deactivate();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: doneDragging\n
+     * Called when the drag handler is done dragging.\n
+     *\n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} The last event pixel location.  If this event\n
+     *     came from a mouseout, this may not be in the map viewport.\n
+     */\n
+    doneDragging: function(pixel) {\n
+        this.onComplete(this.feature, pixel);\n
+    },\n
+\n
+    /**\n
+     * Method: outFeature\n
+     * Called when the feature handler detects a mouse-out on a feature.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature that the mouse left.\n
+     */\n
+    outFeature: function(feature) {\n
+        if(!this.handlers.drag.dragging) {\n
+            this.over = false;\n
+            this.handlers.drag.deactivate();\n
+            OpenLayers.Element.removeClass(\n
+                this.map.viewPortDiv, this.displayClass + "Over"\n
+            );\n
+            this.onLeave(feature);\n
+            this.feature = null;\n
+        } else {\n
+            if(this.feature.id == feature.id) {\n
+                this.over = false;\n
+            }\n
+        }\n
+    },\n
+        \n
+    /**\n
+     * Method: cancel\n
+     * Called when the drag handler detects a mouse-out (from the map viewport).\n
+     */\n
+    cancel: function() {\n
+        this.handlers.drag.deactivate();\n
+        this.over = false;\n
+    },\n
+\n
+    /**\n
+     * Method: setMap\n
+     * Set the map property for the control and all handlers.\n
+     *\n
+     * Parameters: \n
+     * map - {<OpenLayers.Map>} The control\'s map.\n
+     */\n
+    setMap: function(map) {\n
+        this.handlers.drag.setMap(map);\n
+        this.handlers.feature.setMap(map);\n
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.DragFeature"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11478</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

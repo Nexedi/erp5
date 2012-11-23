@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>GeoRSS.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Markers.js\n
+ * @requires OpenLayers/Request/XMLHttpRequest.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.GeoRSS\n
+ * Add GeoRSS Point features to your map. \n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Markers>\n
+ */\n
+OpenLayers.Layer.GeoRSS = OpenLayers.Class(OpenLayers.Layer.Markers, {\n
+\n
+    /** \n
+     * Property: location \n
+     * {String} store url of text file \n
+     */\n
+    location: null,\n
+\n
+    /** \n
+     * Property: features \n
+     * {Array(<OpenLayers.Feature>)} \n
+     */\n
+    features: null,\n
+    \n
+    /**\n
+     * APIProperty: formatOptions\n
+     * {Object} Hash of options which should be passed to the format when it is\n
+     * created. Must be passed in the constructor.\n
+     */\n
+    formatOptions: null, \n
+\n
+    /** \n
+     * Property: selectedFeature \n
+     * {<OpenLayers.Feature>} \n
+     */\n
+    selectedFeature: null,\n
+\n
+    /** \n
+     * APIProperty: icon \n
+     * {<OpenLayers.Icon>}. This determines the Icon to be used on the map\n
+     * for this GeoRSS layer.\n
+     */\n
+    icon: null,\n
+\n
+    /**\n
+     * APIProperty: popupSize\n
+     * {<OpenLayers.Size>} This determines the size of GeoRSS popups. If \n
+     * not provided, defaults to 250px by 120px. \n
+     */\n
+    popupSize: null, \n
+    \n
+    /** \n
+     * APIProperty: useFeedTitle \n
+     * {Boolean} Set layer.name to the first <title> element in the feed. Default is true. \n
+     */\n
+    useFeedTitle: true,\n
+    \n
+    /**\n
+    * Constructor: OpenLayers.Layer.GeoRSS\n
+    * Create a GeoRSS Layer.\n
+    *\n
+    * Parameters:\n
+    * name - {String} \n
+    * location - {String} \n
+    * options - {Object}\n
+    */\n
+    initialize: function(name, location, options) {\n
+        OpenLayers.Layer.Markers.prototype.initialize.apply(this, [name, options]);\n
+        this.location = location;\n
+        this.features = [];\n
+    },\n
+\n
+    /**\n
+     * Method: destroy \n
+     */\n
+    destroy: function() {\n
+        // Warning: Layer.Markers.destroy() must be called prior to calling\n
+        // clearFeatures() here, otherwise we leak memory. Indeed, if\n
+        // Layer.Markers.destroy() is called after clearFeatures(), it won\'t be\n
+        // able to remove the marker image elements from the layer\'s div since\n
+        // the markers will have been destroyed by clearFeatures().\n
+        OpenLayers.Layer.Markers.prototype.destroy.apply(this, arguments);\n
+        this.clearFeatures();\n
+        this.features = null;\n
+    },\n
+\n
+    /**\n
+     * Method: loadRSS\n
+     * Start the load of the RSS data. Don\'t do this when we first add the layer,\n
+     * since we may not be visible at any point, and it would therefore be a waste.\n
+     */\n
+    loadRSS: function() {\n
+        if (!this.loaded) {\n
+            this.events.triggerEvent("loadstart");\n
+            OpenLayers.Request.GET({\n
+                url: this.location,\n
+                success: this.parseData,\n
+                scope: this\n
+            });\n
+            this.loaded = true;\n
+        }    \n
+    },    \n
+    \n
+    /**\n
+     * Method: moveTo\n
+     * If layer is visible and RSS has not been loaded, load RSS. \n
+     * \n
+     * Parameters:\n
+     * bounds - {Object} \n
+     * zoomChanged - {Object} \n
+     * minor - {Object} \n
+     */\n
+    moveTo:function(bounds, zoomChanged, minor) {\n
+        OpenLayers.Layer.Markers.prototype.moveTo.apply(this, arguments);\n
+        if(this.visibility && !this.loaded){\n
+            this.loadRSS();\n
+        }\n
+    },\n
+        \n
+    /**\n
+     * Method: parseData\n
+     * Parse the data returned from the Events call.\n
+     *\n
+     * Parameters:\n
+     * ajaxRequest - {<OpenLayers.Request.XMLHttpRequest>} \n
+     */\n
+    parseData: function(ajaxRequest) {\n
+        var doc = ajaxRequest.responseXML;\n
+        if (!doc || !doc.documentElement) {\n
+            doc = OpenLayers.Format.XML.prototype.read(ajaxRequest.responseText);\n
+        }\n
+        \n
+        if (this.useFeedTitle) {\n
+            var name = null;\n
+            try {\n
+                name = doc.getElementsByTagNameNS(\'*\', \'title\')[0].firstChild.nodeValue;\n
+            }\n
+            catch (e) {\n
+                name = doc.getElementsByTagName(\'title\')[0].firstChild.nodeValue;\n
+            }\n
+            if (name) {\n
+                this.setName(name);\n
+            }    \n
+        }\n
+       \n
+        var options = {};\n
+        \n
+        OpenLayers.Util.extend(options, this.formatOptions);\n
+        \n
+        if (this.map && !this.projection.equals(this.map.getProjectionObject())) {\n
+            options.externalProjection = this.projection;\n
+            options.internalProjection = this.map.getProjectionObject();\n
+        }    \n
+        \n
+        var format = new OpenLayers.Format.GeoRSS(options);\n
+        var features = format.read(doc);\n
+        \n
+        for (var i=0, len=features.length; i<len; i++) {\n
+            var data = {};\n
+            var feature = features[i];\n
+            \n
+            // we don\'t support features with no geometry in the GeoRSS\n
+            // layer at this time. \n
+            if (!feature.geometry) {\n
+                continue;\n
+            }    \n
+            \n
+            var title = feature.attributes.title ? \n
+                         feature.attributes.title : "Untitled";\n
+            \n
+            var description = feature.attributes.description ? \n
+                         feature.attributes.description : "No description.";\n
+            \n
+            var link = feature.attributes.link ? feature.attributes.link : "";\n
+\n
+            var location = feature.geometry.getBounds().getCenterLonLat();\n
+            \n
+            \n
+            data.icon = this.icon == null ? \n
+                                     OpenLayers.Marker.defaultIcon() : \n
+                                     this.icon.clone();\n
+            \n
+            data.popupSize = this.popupSize ? \n
+                             this.popupSize.clone() :\n
+                             new OpenLayers.Size(250, 120);\n
+            \n
+            if (title || description) {\n
+                // we have supplemental data, store them.\n
+                data.title = title;\n
+                data.description = description;\n
+            \n
+                var contentHTML = \'<div class="olLayerGeoRSSClose">[x]</div>\'; \n
+                contentHTML += \'<div class="olLayerGeoRSSTitle">\';\n
+                if (link) {\n
+                    contentHTML += \'<a class="link" href="\'+link+\'" target="_blank">\';\n
+                }\n
+                contentHTML += title;\n
+                if (link) {\n
+                    contentHTML += \'</a>\';\n
+                }\n
+                contentHTML += \'</div>\';\n
+                contentHTML += \'<div style="" class="olLayerGeoRSSDescription">\';\n
+                contentHTML += description;\n
+                contentHTML += \'</div>\';\n
+                data[\'popupContentHTML\'] = contentHTML;                \n
+            }\n
+            var feature = new OpenLayers.Feature(this, location, data);\n
+            this.features.push(feature);\n
+            var marker = feature.createMarker();\n
+            marker.events.register(\'click\', feature, this.markerClick);\n
+            this.addMarker(marker);\n
+        }\n
+        this.events.triggerEvent("loadend");\n
+    },\n
+    \n
+    /**\n
+     * Method: markerClick\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    markerClick: function(evt) {\n
+        var sameMarkerClicked = (this == this.layer.selectedFeature);\n
+        this.layer.selectedFeature = (!sameMarkerClicked) ? this : null;\n
+        for(var i=0, len=this.layer.map.popups.length; i<len; i++) {\n
+            this.layer.map.removePopup(this.layer.map.popups[i]);\n
+        }\n
+        if (!sameMarkerClicked) {\n
+            var popup = this.createPopup();\n
+            OpenLayers.Event.observe(popup.div, "click",\n
+                OpenLayers.Function.bind(function() { \n
+                    for(var i=0, len=this.layer.map.popups.length; i<len; i++) { \n
+                        this.layer.map.removePopup(this.layer.map.popups[i]); \n
+                    }\n
+                }, this)\n
+            );\n
+            this.layer.map.addPopup(popup); \n
+        }\n
+        OpenLayers.Event.stop(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: clearFeatures\n
+     * Destroy all features in this layer.\n
+     */\n
+    clearFeatures: function() {\n
+        if (this.features != null) {\n
+            while(this.features.length > 0) {\n
+                var feature = this.features[0];\n
+                OpenLayers.Util.removeItem(this.features, feature);\n
+                feature.destroy();\n
+            }\n
+        }        \n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Layer.GeoRSS"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8593</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

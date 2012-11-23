@@ -1,0 +1,618 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Point.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Handler.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler.Point\n
+ * Handler to draw a point on the map. Point is displayed on activation,\n
+ *     moves on mouse move, and is finished on mouse up. The handler triggers\n
+ *     callbacks for \'done\', \'cancel\', and \'modify\'. The modify callback is\n
+ *     called with each change in the sketch and will receive the latest point\n
+ *     drawn.  Create a new instance with the <OpenLayers.Handler.Point>\n
+ *     constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler>\n
+ */\n
+OpenLayers.Handler.Point = OpenLayers.Class(OpenLayers.Handler, {\n
+    \n
+    /**\n
+     * Property: point\n
+     * {<OpenLayers.Feature.Vector>} The currently drawn point\n
+     */\n
+    point: null,\n
+\n
+    /**\n
+     * Property: layer\n
+     * {<OpenLayers.Layer.Vector>} The temporary drawing layer\n
+     */\n
+    layer: null,\n
+    \n
+    /**\n
+     * APIProperty: multi\n
+     * {Boolean} Cast features to multi-part geometries before passing to the\n
+     *     layer.  Default is false.\n
+     */\n
+    multi: false,\n
+    \n
+    /**\n
+     * APIProperty: citeCompliant\n
+     * {Boolean} If set to true, coordinates of features drawn in a map extent\n
+     * crossing the date line won\'t exceed the world bounds. Default is false.\n
+     */\n
+    citeCompliant: false,\n
+    \n
+    /**\n
+     * Property: mouseDown\n
+     * {Boolean} The mouse is down\n
+     */\n
+    mouseDown: false,\n
+\n
+    /**\n
+     * Property: stoppedDown\n
+     * {Boolean} Indicate whether the last mousedown stopped the event\n
+     * propagation.\n
+     */\n
+    stoppedDown: null,\n
+\n
+    /**\n
+     * Property: lastDown\n
+     * {<OpenLayers.Pixel>} Location of the last mouse down\n
+     */\n
+    lastDown: null,\n
+\n
+    /**\n
+     * Property: lastUp\n
+     * {<OpenLayers.Pixel>}\n
+     */\n
+    lastUp: null,\n
+\n
+    /**\n
+     * APIProperty: persist\n
+     * {Boolean} Leave the feature rendered until destroyFeature is called.\n
+     *     Default is false.  If set to true, the feature remains rendered until\n
+     *     destroyFeature is called, typically by deactivating the handler or\n
+     *     starting another drawing.\n
+     */\n
+    persist: false,\n
+\n
+    /**\n
+     * APIProperty: stopDown\n
+     * {Boolean} Stop event propagation on mousedown. Must be false to\n
+     *     allow "pan while drawing". Defaults to false.\n
+     */\n
+    stopDown: false,\n
+\n
+    /**\n
+     * APIPropery: stopUp\n
+     * {Boolean} Stop event propagation on mouse. Must be false to\n
+     *     allow "pan while dragging". Defaults to fase.\n
+     */\n
+    stopUp: false,\n
+\n
+    /**\n
+     * Property: layerOptions\n
+     * {Object} Any optional properties to be set on the sketch layer.\n
+     */\n
+    layerOptions: null,\n
+    \n
+    /**\n
+     * APIProperty: pixelTolerance\n
+     * {Number} Maximum number of pixels between down and up (mousedown\n
+     *     and mouseup, or touchstart and touchend) for the handler to\n
+     *     add a new point. If set to an integer value, if the\n
+     *     displacement between down and up is great to this value\n
+     *     no point will be added. Default value is 5.\n
+     */\n
+    pixelTolerance: 5,\n
+\n
+    /**\n
+     * Property: touch\n
+     * {Boolean} Indcates the support of touch events.\n
+     */\n
+    touch: false,\n
+\n
+    /**\n
+     * Property: lastTouchPx\n
+     * {<OpenLayers.Pixel>} The last pixel used to know the distance between\n
+     * two touches (for double touch).\n
+     */\n
+    lastTouchPx: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler.Point\n
+     * Create a new point handler.\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} The control that owns this handler\n
+     * callbacks - {Object} An object with a properties whose values are\n
+     *     functions.  Various callbacks described below.\n
+     * options - {Object} An optional object with properties to be set on the\n
+     *           handler\n
+     *\n
+     * Named callbacks:\n
+     * create - Called when a sketch is first created.  Callback called with\n
+     *     the creation point geometry and sketch feature.\n
+     * modify - Called with each move of a vertex with the vertex (point)\n
+     *     geometry and the sketch feature.\n
+     * done - Called when the point drawing is finished.  The callback will\n
+     *     recieve a single argument, the point geometry.\n
+     * cancel - Called when the handler is deactivated while drawing.  The\n
+     *     cancel callback will receive a geometry.\n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        if(!(options && options.layerOptions && options.layerOptions.styleMap)) {\n
+            this.style = OpenLayers.Util.extend(OpenLayers.Feature.Vector.style[\'default\'], {});\n
+        }\n
+\n
+        OpenLayers.Handler.prototype.initialize.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * turn on the handler\n
+     */\n
+    activate: function() {\n
+        if(!OpenLayers.Handler.prototype.activate.apply(this, arguments)) {\n
+            return false;\n
+        }\n
+        // create temporary vector layer for rendering geometry sketch\n
+        // TBD: this could be moved to initialize/destroy - setting visibility here\n
+        var options = OpenLayers.Util.extend({\n
+            displayInLayerSwitcher: false,\n
+            // indicate that the temp vector layer will never be out of range\n
+            // without this, resolution properties must be specified at the\n
+            // map-level for this temporary layer to init its resolutions\n
+            // correctly\n
+            calculateInRange: OpenLayers.Function.True,\n
+            wrapDateLine: this.citeCompliant\n
+        }, this.layerOptions);\n
+        this.layer = new OpenLayers.Layer.Vector(this.CLASS_NAME, options);\n
+        this.map.addLayer(this.layer);\n
+        return true;\n
+    },\n
+    \n
+    /**\n
+     * Method: createFeature\n
+     * Add temporary features\n
+     *\n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} A pixel location on the map.\n
+     */\n
+    createFeature: function(pixel) {\n
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); \n
+        var geometry = new OpenLayers.Geometry.Point(\n
+            lonlat.lon, lonlat.lat\n
+        );\n
+        this.point = new OpenLayers.Feature.Vector(geometry);\n
+        this.callback("create", [this.point.geometry, this.point]);\n
+        this.point.geometry.clearBounds();\n
+        this.layer.addFeatures([this.point], {silent: true});\n
+    },\n
+\n
+    /**\n
+     * APIMethod: deactivate\n
+     * turn off the handler\n
+     */\n
+    deactivate: function() {\n
+        if(!OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {\n
+            return false;\n
+        }\n
+        this.cancel();\n
+        // If a layer\'s map property is set to null, it means that that layer\n
+        // isn\'t added to the map. Since we ourself added the layer to the map\n
+        // in activate(), we can assume that if this.layer.map is null it means\n
+        // that the layer has been destroyed (as a result of map.destroy() for\n
+        // example.\n
+        if (this.layer.map != null) {\n
+            this.destroyFeature(true);\n
+            this.layer.destroy(false);\n
+        }\n
+        this.layer = null;\n
+        this.touch = false;\n
+        return true;\n
+    },\n
+    \n
+    /**\n
+     * Method: destroyFeature\n
+     * Destroy the temporary geometries\n
+     *\n
+     * Parameters:\n
+     * force - {Boolean} Destroy even if persist is true.\n
+     */\n
+    destroyFeature: function(force) {\n
+        if(this.layer && (force || !this.persist)) {\n
+            this.layer.destroyFeatures();\n
+        }\n
+        this.point = null;\n
+    },\n
+\n
+    /**\n
+     * Method: destroyPersistedFeature\n
+     * Destroy the persisted feature.\n
+     */\n
+    destroyPersistedFeature: function() {\n
+        var layer = this.layer;\n
+        if(layer && layer.features.length > 1) {\n
+            this.layer.features[0].destroy();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: finalize\n
+     * Finish the geometry and call the "done" callback.\n
+     *\n
+     * Parameters:\n
+     * cancel - {Boolean} Call cancel instead of done callback.  Default\n
+     *          is false.\n
+     */\n
+    finalize: function(cancel) {\n
+        var key = cancel ? "cancel" : "done";\n
+        this.mouseDown = false;\n
+        this.lastDown = null;\n
+        this.lastUp = null;\n
+        this.lastTouchPx = null;\n
+        this.callback(key, [this.geometryClone()]);\n
+        this.destroyFeature(cancel);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: cancel\n
+     * Finish the geometry and call the "cancel" callback.\n
+     */\n
+    cancel: function() {\n
+        this.finalize(true);\n
+    },\n
+\n
+    /**\n
+     * Method: click\n
+     * Handle clicks.  Clicks are stopped from propagating to other listeners\n
+     *     on map.events or other dom elements.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    click: function(evt) {\n
+        OpenLayers.Event.stop(evt);\n
+        return false;\n
+    },\n
+\n
+    /**\n
+     * Method: dblclick\n
+     * Handle double-clicks.  Double-clicks are stopped from propagating to other\n
+     *     listeners on map.events or other dom elements.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    dblclick: function(evt) {\n
+        OpenLayers.Event.stop(evt);\n
+        return false;\n
+    },\n
+    \n
+    /**\n
+     * Method: modifyFeature\n
+     * Modify the existing geometry given a pixel location.\n
+     *\n
+     * Parameters:\n
+     * pixel - {<OpenLayers.Pixel>} A pixel location on the map.\n
+     */\n
+    modifyFeature: function(pixel) {\n
+        if(!this.point) {\n
+            this.createFeature(pixel);\n
+        }\n
+        var lonlat = this.layer.getLonLatFromViewPortPx(pixel); \n
+        this.point.geometry.x = lonlat.lon;\n
+        this.point.geometry.y = lonlat.lat;\n
+        this.callback("modify", [this.point.geometry, this.point, false]);\n
+        this.point.geometry.clearBounds();\n
+        this.drawFeature();\n
+    },\n
+\n
+    /**\n
+     * Method: drawFeature\n
+     * Render features on the temporary layer.\n
+     */\n
+    drawFeature: function() {\n
+        this.layer.drawFeature(this.point, this.style);\n
+    },\n
+    \n
+    /**\n
+     * Method: getGeometry\n
+     * Return the sketch geometry.  If <multi> is true, this will return\n
+     *     a multi-part geometry.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Geometry.Point>}\n
+     */\n
+    getGeometry: function() {\n
+        var geometry = this.point && this.point.geometry;\n
+        if(geometry && this.multi) {\n
+            geometry = new OpenLayers.Geometry.MultiPoint([geometry]);\n
+        }\n
+        return geometry;\n
+    },\n
+\n
+    /**\n
+     * Method: geometryClone\n
+     * Return a clone of the relevant geometry.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Geometry>}\n
+     */\n
+    geometryClone: function() {\n
+        var geom = this.getGeometry();\n
+        return geom && geom.clone();\n
+    },\n
+\n
+    /**\n
+     * Method: mousedown\n
+     * Handle mousedown.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    mousedown: function(evt) {\n
+        return this.down(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: touchstart\n
+     * Handle touchstart.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    touchstart: function(evt) {\n
+        if (!this.touch) {\n
+            this.touch = true;\n
+            // unregister mouse listeners\n
+            this.map.events.un({\n
+                mousedown: this.mousedown,\n
+                mouseup: this.mouseup,\n
+                mousemove: this.mousemove,\n
+                click: this.click,\n
+                dblclick: this.dblclick,\n
+                scope: this\n
+            });\n
+        }\n
+        this.lastTouchPx = evt.xy;\n
+        return this.down(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: mousemove\n
+     * Handle mousemove.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    mousemove: function(evt) {\n
+        return this.move(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: touchmove\n
+     * Handle touchmove.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    touchmove: function(evt) {\n
+        this.lastTouchPx = evt.xy;\n
+        return this.move(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: mouseup\n
+     * Handle mouseup.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    mouseup: function(evt) {\n
+        return this.up(evt);\n
+    },\n
+\n
+    /**\n
+     * Method: touchend\n
+     * Handle touchend.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    touchend: function(evt) {\n
+        evt.xy = this.lastTouchPx;\n
+        return this.up(evt);\n
+    },\n
+  \n
+    /**\n
+     * Method: down\n
+     * Handle mousedown and touchstart.  Adjust the geometry and redraw.\n
+     * Return determines whether to propagate the event on the map.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    down: function(evt) {\n
+        this.mouseDown = true;\n
+        this.lastDown = evt.xy;\n
+        if(!this.touch) { // no point displayed until up on touch devices\n
+            this.modifyFeature(evt.xy);\n
+        }\n
+        this.stoppedDown = this.stopDown;\n
+        return !this.stopDown;\n
+    },\n
+\n
+    /**\n
+     * Method: move\n
+     * Handle mousemove and touchmove.  Adjust the geometry and redraw.\n
+     * Return determines whether to propagate the event on the map.\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    move: function (evt) {\n
+        if(!this.touch // no point displayed until up on touch devices\n
+           && (!this.mouseDown || this.stoppedDown)) {\n
+            this.modifyFeature(evt.xy);\n
+        }\n
+        return true;\n
+    },\n
+\n
+    /**\n
+     * Method: up\n
+     * Handle mouseup and touchend.  Send the latest point in the geometry to the control.\n
+     * Return determines whether to propagate the event on the map.\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     *\n
+     * Returns: \n
+     * {Boolean} Allow event propagation\n
+     */\n
+    up: function (evt) {\n
+        this.mouseDown = false;\n
+        this.stoppedDown = this.stopDown;\n
+\n
+        // check keyboard modifiers\n
+        if(!this.checkModifiers(evt)) {\n
+            return true;\n
+        }\n
+        // ignore double-clicks\n
+        if (this.lastUp && this.lastUp.equals(evt.xy)) {\n
+            return true;\n
+        }\n
+        if (this.lastDown && this.passesTolerance(this.lastDown, evt.xy,\n
+                                                  this.pixelTolerance)) {\n
+            if (this.touch) {\n
+                this.modifyFeature(evt.xy);\n
+            }\n
+            if(this.persist) {\n
+                this.destroyPersistedFeature();\n
+            }\n
+            this.lastUp = evt.xy;\n
+            this.finalize();\n
+            return !this.stopUp;\n
+        } else {\n
+            return true;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: mouseout\n
+     * Handle mouse out.  For better user experience reset mouseDown\n
+     * and stoppedDown when the mouse leaves the map viewport.\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} The browser event\n
+     */\n
+    mouseout: function(evt) {\n
+        if(OpenLayers.Util.mouseLeft(evt, this.map.viewPortDiv)) {\n
+            this.stoppedDown = this.stopDown;\n
+            this.mouseDown = false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: passesTolerance\n
+     * Determine whether the event is within the optional pixel tolerance.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The event is within the pixel tolerance (if specified).\n
+     */\n
+    passesTolerance: function(pixel1, pixel2, tolerance) {\n
+        var passes = true;\n
+\n
+        if (tolerance != null && pixel1 && pixel2) {\n
+            var dist = pixel1.distanceTo(pixel2);\n
+            if (dist > tolerance) {\n
+                passes = false;\n
+            }\n
+        }\n
+        return passes;\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Handler.Point"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16306</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

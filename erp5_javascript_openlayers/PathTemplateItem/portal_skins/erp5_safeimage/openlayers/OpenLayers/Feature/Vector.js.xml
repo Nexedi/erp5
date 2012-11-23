@@ -1,0 +1,552 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Vector.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+// TRASH THIS\n
+OpenLayers.State = {\n
+    /** states */\n
+    UNKNOWN: \'Unknown\',\n
+    INSERT: \'Insert\',\n
+    UPDATE: \'Update\',\n
+    DELETE: \'Delete\'\n
+};\n
+\n
+/**\n
+ * @requires OpenLayers/Feature.js\n
+ * @requires OpenLayers/Util.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Feature.Vector\n
+ * Vector features use the OpenLayers.Geometry classes as geometry description.\n
+ * They have an \'attributes\' property, which is the data object, and a \'style\'\n
+ * property, the default values of which are defined in the \n
+ * <OpenLayers.Feature.Vector.style> objects.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Feature>\n
+ */\n
+OpenLayers.Feature.Vector = OpenLayers.Class(OpenLayers.Feature, {\n
+\n
+    /** \n
+     * Property: fid \n
+     * {String} \n
+     */\n
+    fid: null,\n
+    \n
+    /** \n
+     * APIProperty: geometry \n
+     * {<OpenLayers.Geometry>} \n
+     */\n
+    geometry: null,\n
+\n
+    /** \n
+     * APIProperty: attributes \n
+     * {Object} This object holds arbitrary, serializable properties that\n
+     *     describe the feature.\n
+     */\n
+    attributes: null,\n
+\n
+    /**\n
+     * Property: bounds\n
+     * {<OpenLayers.Bounds>} The box bounding that feature\'s geometry, that\n
+     *     property can be set by an <OpenLayers.Format> object when\n
+     *     deserializing the feature, so in most cases it represents an\n
+     *     information set by the server. \n
+     */\n
+    bounds: null,\n
+\n
+    /** \n
+     * Property: state \n
+     * {String} \n
+     */\n
+    state: null,\n
+    \n
+    /** \n
+     * APIProperty: style \n
+     * {Object} \n
+     */\n
+    style: null,\n
+\n
+    /**\n
+     * APIProperty: url\n
+     * {String} If this property is set it will be taken into account by\n
+     *     {<OpenLayers.HTTP>} when upadting or deleting the feature.\n
+     */\n
+    url: null,\n
+    \n
+    /**\n
+     * Property: renderIntent\n
+     * {String} rendering intent currently being used\n
+     */\n
+    renderIntent: "default",\n
+    \n
+    /**\n
+     * APIProperty: modified\n
+     * {Object} An object with the originals of the geometry and attributes of\n
+     * the feature, if they were changed. Currently this property is only read\n
+     * by <OpenLayers.Format.WFST.v1>, and written by\n
+     * <OpenLayers.Control.ModifyFeature>, which sets the geometry property.\n
+     * Applications can set the originals of modified attributes in the\n
+     * attributes property. Note that applications have to check if this\n
+     * object and the attributes property is already created before using it.\n
+     * After a change made with ModifyFeature, this object could look like\n
+     *\n
+     * (code)\n
+     * {\n
+     *     geometry: >Object\n
+     * }\n
+     * (end)\n
+     *\n
+     * When an application has made changes to feature attributes, it could\n
+     * have set the attributes to something like this:\n
+     *\n
+     * (code)\n
+     * {\n
+     *     attributes: {\n
+     *         myAttribute: "original"\n
+     *     }\n
+     * }\n
+     * (end)\n
+     *\n
+     * Note that <OpenLayers.Format.WFST.v1> only checks for truthy values in\n
+     * *modified.geometry* and the attribute names in *modified.attributes*,\n
+     * but it is recommended to set the original values (and not just true) as\n
+     * attribute value, so applications could use this information to undo\n
+     * changes.\n
+     */\n
+    modified: null,\n
+\n
+    /** \n
+     * Constructor: OpenLayers.Feature.Vector\n
+     * Create a vector feature. \n
+     * \n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} The geometry that this feature\n
+     *     represents.\n
+     * attributes - {Object} An optional object that will be mapped to the\n
+     *     <attributes> property. \n
+     * style - {Object} An optional style object.\n
+     */\n
+    initialize: function(geometry, attributes, style) {\n
+        OpenLayers.Feature.prototype.initialize.apply(this,\n
+                                                      [null, null, attributes]);\n
+        this.lonlat = null;\n
+        this.geometry = geometry ? geometry : null;\n
+        this.state = null;\n
+        this.attributes = {};\n
+        if (attributes) {\n
+            this.attributes = OpenLayers.Util.extend(this.attributes,\n
+                                                     attributes);\n
+        }\n
+        this.style = style ? style : null; \n
+    },\n
+    \n
+    /** \n
+     * Method: destroy\n
+     * nullify references to prevent circular references and memory leaks\n
+     */\n
+    destroy: function() {\n
+        if (this.layer) {\n
+            this.layer.removeFeatures(this);\n
+            this.layer = null;\n
+        }\n
+            \n
+        this.geometry = null;\n
+        this.modified = null;\n
+        OpenLayers.Feature.prototype.destroy.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * Method: clone\n
+     * Create a clone of this vector feature.  Does not set any non-standard\n
+     *     properties.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Feature.Vector>} An exact clone of this vector feature.\n
+     */\n
+    clone: function () {\n
+        return new OpenLayers.Feature.Vector(\n
+            this.geometry ? this.geometry.clone() : null,\n
+            this.attributes,\n
+            this.style);\n
+    },\n
+\n
+    /**\n
+     * Method: onScreen\n
+     * Determine whether the feature is within the map viewport.  This method\n
+     *     tests for an intersection between the geometry and the viewport\n
+     *     bounds.  If a more effecient but less precise geometry bounds\n
+     *     intersection is desired, call the method with the boundsOnly\n
+     *     parameter true.\n
+     *\n
+     * Parameters:\n
+     * boundsOnly - {Boolean} Only test whether a feature\'s bounds intersects\n
+     *     the viewport bounds.  Default is false.  If false, the feature\'s\n
+     *     geometry must intersect the viewport for onScreen to return true.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The feature is currently visible on screen (optionally\n
+     *     based on its bounds if boundsOnly is true).\n
+     */\n
+    onScreen:function(boundsOnly) {\n
+        var onScreen = false;\n
+        if(this.layer && this.layer.map) {\n
+            var screenBounds = this.layer.map.getExtent();\n
+            if(boundsOnly) {\n
+                var featureBounds = this.geometry.getBounds();\n
+                onScreen = screenBounds.intersectsBounds(featureBounds);\n
+            } else {\n
+                var screenPoly = screenBounds.toGeometry();\n
+                onScreen = screenPoly.intersects(this.geometry);\n
+            }\n
+        }    \n
+        return onScreen;\n
+    },\n
+\n
+    /**\n
+     * Method: getVisibility\n
+     * Determine whether the feature is displayed or not. It may not displayed\n
+     *     because:\n
+     *     - its style display property is set to \'none\',\n
+     *     - it doesn\'t belong to any layer,\n
+     *     - the styleMap creates a symbolizer with display property set to \'none\'\n
+     *          for it,\n
+     *     - the layer which it belongs to is not visible.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The feature is currently displayed.\n
+     */\n
+    getVisibility: function() {\n
+        return !(this.style && this.style.display == \'none\' ||\n
+                 !this.layer ||\n
+                 this.layer && this.layer.styleMap &&\n
+                 this.layer.styleMap.createSymbolizer(this, this.renderIntent).display == \'none\' ||\n
+                 this.layer && !this.layer.getVisibility());\n
+    },\n
+    \n
+    /**\n
+     * Method: createMarker\n
+     * HACK - we need to decide if all vector features should be able to\n
+     *     create markers\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Marker>} For now just returns null\n
+     */\n
+    createMarker: function() {\n
+        return null;\n
+    },\n
+\n
+    /**\n
+     * Method: destroyMarker\n
+     * HACK - we need to decide if all vector features should be able to\n
+     *     delete markers\n
+     * \n
+     * If user overrides the createMarker() function, s/he should be able\n
+     *   to also specify an alternative function for destroying it\n
+     */\n
+    destroyMarker: function() {\n
+        // pass\n
+    },\n
+\n
+    /**\n
+     * Method: createPopup\n
+     * HACK - we need to decide if all vector features should be able to\n
+     *     create popups\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Popup>} For now just returns null\n
+     */\n
+    createPopup: function() {\n
+        return null;\n
+    },\n
+\n
+    /**\n
+     * Method: atPoint\n
+     * Determins whether the feature intersects with the specified location.\n
+     * \n
+     * Parameters: \n
+     * lonlat - {<OpenLayers.LonLat>|Object} OpenLayers.LonLat or an\n
+     *     object with a \'lon\' and \'lat\' properties.\n
+     * toleranceLon - {float} Optional tolerance in Geometric Coords\n
+     * toleranceLat - {float} Optional tolerance in Geographic Coords\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the feature is at the specified location\n
+     */\n
+    atPoint: function(lonlat, toleranceLon, toleranceLat) {\n
+        var atPoint = false;\n
+        if(this.geometry) {\n
+            atPoint = this.geometry.atPoint(lonlat, toleranceLon, \n
+                                                    toleranceLat);\n
+        }\n
+        return atPoint;\n
+    },\n
+\n
+    /**\n
+     * Method: destroyPopup\n
+     * HACK - we need to decide if all vector features should be able to\n
+     * delete popups\n
+     */\n
+    destroyPopup: function() {\n
+        // pass\n
+    },\n
+\n
+    /**\n
+     * Method: move\n
+     * Moves the feature and redraws it at its new location\n
+     *\n
+     * Parameters:\n
+     * location - {<OpenLayers.LonLat> or <OpenLayers.Pixel>} the\n
+     *         location to which to move the feature.\n
+     */\n
+    move: function(location) {\n
+\n
+        if(!this.layer || !this.geometry.move){\n
+            //do nothing if no layer or immoveable geometry\n
+            return undefined;\n
+        }\n
+\n
+        var pixel;\n
+        if (location.CLASS_NAME == "OpenLayers.LonLat") {\n
+            pixel = this.layer.getViewPortPxFromLonLat(location);\n
+        } else {\n
+            pixel = location;\n
+        }\n
+        \n
+        var lastPixel = this.layer.getViewPortPxFromLonLat(this.geometry.getBounds().getCenterLonLat());\n
+        var res = this.layer.map.getResolution();\n
+        this.geometry.move(res * (pixel.x - lastPixel.x),\n
+                           res * (lastPixel.y - pixel.y));\n
+        this.layer.drawFeature(this);\n
+        return lastPixel;\n
+    },\n
+    \n
+    /**\n
+     * Method: toState\n
+     * Sets the new state\n
+     *\n
+     * Parameters:\n
+     * state - {String} \n
+     */\n
+    toState: function(state) {\n
+        if (state == OpenLayers.State.UPDATE) {\n
+            switch (this.state) {\n
+                case OpenLayers.State.UNKNOWN:\n
+                case OpenLayers.State.DELETE:\n
+                    this.state = state;\n
+                    break;\n
+                case OpenLayers.State.UPDATE:\n
+                case OpenLayers.State.INSERT:\n
+                    break;\n
+            }\n
+        } else if (state == OpenLayers.State.INSERT) {\n
+            switch (this.state) {\n
+                case OpenLayers.State.UNKNOWN:\n
+                    break;\n
+                default:\n
+                    this.state = state;\n
+                    break;\n
+            }\n
+        } else if (state == OpenLayers.State.DELETE) {\n
+            switch (this.state) {\n
+                case OpenLayers.State.INSERT:\n
+                    // the feature should be destroyed\n
+                    break;\n
+                case OpenLayers.State.DELETE:\n
+                    break;\n
+                case OpenLayers.State.UNKNOWN:\n
+                case OpenLayers.State.UPDATE:\n
+                    this.state = state;\n
+                    break;\n
+            }\n
+        } else if (state == OpenLayers.State.UNKNOWN) {\n
+            this.state = state;\n
+        }\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Feature.Vector"\n
+});\n
+\n
+\n
+/**\n
+ * Constant: OpenLayers.Feature.Vector.style\n
+ * OpenLayers features can have a number of style attributes. The \'default\' \n
+ *     style will typically be used if no other style is specified. These\n
+ *     styles correspond for the most part, to the styling properties defined\n
+ *     by the SVG standard. \n
+ *     Information on fill properties: http://www.w3.org/TR/SVG/painting.html#FillProperties\n
+ *     Information on stroke properties: http://www.w3.org/TR/SVG/painting.html#StrokeProperties\n
+ *\n
+ * Symbolizer properties:\n
+ * fill - {Boolean} Set to false if no fill is desired.\n
+ * fillColor - {String} Hex fill color.  Default is "#ee9900".\n
+ * fillOpacity - {Number} Fill opacity (0-1).  Default is 0.4 \n
+ * stroke - {Boolean} Set to false if no stroke is desired.\n
+ * strokeColor - {String} Hex stroke color.  Default is "#ee9900".\n
+ * strokeOpacity - {Number} Stroke opacity (0-1).  Default is 1.\n
+ * strokeWidth - {Number} Pixel stroke width.  Default is 1.\n
+ * strokeLinecap - {String} Stroke cap type.  Default is "round".  [butt | round | square]\n
+ * strokeDashstyle - {String} Stroke dash style.  Default is "solid". [dot | dash | dashdot | longdash | longdashdot | solid]\n
+ * graphic - {Boolean} Set to false if no graphic is desired.\n
+ * pointRadius - {Number} Pixel point radius.  Default is 6.\n
+ * pointerEvents - {String}  Default is "visiblePainted".\n
+ * cursor - {String} Default is "".\n
+ * externalGraphic - {String} Url to an external graphic that will be used for rendering points.\n
+ * graphicWidth - {Number} Pixel width for sizing an external graphic.\n
+ * graphicHeight - {Number} Pixel height for sizing an external graphic.\n
+ * graphicOpacity - {Number} Opacity (0-1) for an external graphic.\n
+ * graphicXOffset - {Number} Pixel offset along the positive x axis for displacing an external graphic.\n
+ * graphicYOffset - {Number} Pixel offset along the positive y axis for displacing an external graphic.\n
+ * rotation - {Number} For point symbolizers, this is the rotation of a graphic in the clockwise direction about its center point (or any point off center as specified by graphicXOffset and graphicYOffset).\n
+ * graphicZIndex - {Number} The integer z-index value to use in rendering.\n
+ * graphicName - {String} Named graphic to use when rendering points.  Supported values include "circle" (default),\n
+ *     "square", "star", "x", "cross", "triangle".\n
+ * graphicTitle - {String} Tooltip for an external graphic.\n
+ * backgroundGraphic - {String} Url to a graphic to be used as the background under an externalGraphic.\n
+ * backgroundGraphicZIndex - {Number} The integer z-index value to use in rendering the background graphic.\n
+ * backgroundXOffset - {Number} The x offset (in pixels) for the background graphic.\n
+ * backgroundYOffset - {Number} The y offset (in pixels) for the background graphic.\n
+ * backgroundHeight - {Number} The height of the background graphic.  If not provided, the graphicHeight will be used.\n
+ * backgroundWidth - {Number} The width of the background width.  If not provided, the graphicWidth will be used.\n
+ * label - {String} The text for an optional label. For browsers that use the canvas renderer, this requires either\n
+ *     fillText or mozDrawText to be available.\n
+ * labelAlign - {String} Label alignment. This specifies the insertion point relative to the text. It is a string\n
+ *     composed of two characters. The first character is for the horizontal alignment, the second for the vertical\n
+ *     alignment. Valid values for horizontal alignment: "l"=left, "c"=center, "r"=right. Valid values for vertical\n
+ *     alignment: "t"=top, "m"=middle, "b"=bottom. Example values: "lt", "cm", "rb". Default is "cm".\n
+ * labelXOffset - {Number} Pixel offset along the positive x axis for displacing the label. Not supported by the canvas renderer.\n
+ * labelYOffset - {Number} Pixel offset along the positive y axis for displacing the label. Not supported by the canvas renderer.\n
+ * labelSelect - {Boolean} If set to true, labels will be selectable using SelectFeature or similar controls.\n
+ *     Default is false.\n
+ * labelOutlineColor - {String} The color of the label outline. Default is \'white\'. Only supported by the canvas & SVG renderers.\n
+ * labelOutlineWidth - {Number} The width of the label outline. Default is 3, set to 0 or null to disable. Only supported by the canvas & SVG renderers.\n
+ * fontColor - {String} The font color for the label, to be provided like CSS.\n
+ * fontOpacity - {Number} Opacity (0-1) for the label\n
+ * fontFamily - {String} The font family for the label, to be provided like in CSS.\n
+ * fontSize - {String} The font size for the label, to be provided like in CSS.\n
+ * fontStyle - {String} The font style for the label, to be provided like in CSS.\n
+ * fontWeight - {String} The font weight for the label, to be provided like in CSS.\n
+ * display - {String} Symbolizers will have no effect if display is set to "none".  All other values have no effect.\n
+ */ \n
+OpenLayers.Feature.Vector.style = {\n
+    \'default\': {\n
+        fillColor: "#ee9900",\n
+        fillOpacity: 0.4, \n
+        hoverFillColor: "white",\n
+        hoverFillOpacity: 0.8,\n
+        strokeColor: "#ee9900",\n
+        strokeOpacity: 1,\n
+        strokeWidth: 1,\n
+        strokeLinecap: "round",\n
+        strokeDashstyle: "solid",\n
+        hoverStrokeColor: "red",\n
+        hoverStrokeOpacity: 1,\n
+        hoverStrokeWidth: 0.2,\n
+        pointRadius: 6,\n
+        hoverPointRadius: 1,\n
+        hoverPointUnit: "%",\n
+        pointerEvents: "visiblePainted",\n
+        cursor: "inherit",\n
+        fontColor: "#000000",\n
+        labelAlign: "cm",\n
+        labelOutlineColor: "white",\n
+        labelOutlineWidth: 3\n
+    },\n
+    \'select\': {\n
+        fillColor: "blue",\n
+        fillOpacity: 0.4, \n
+        hoverFillColor: "white",\n
+        hoverFillOpacity: 0.8,\n
+        strokeColor: "blue",\n
+        strokeOpacity: 1,\n
+        strokeWidth: 2,\n
+        strokeLinecap: "round",\n
+        strokeDashstyle: "solid",\n
+        hoverStrokeColor: "red",\n
+        hoverStrokeOpacity: 1,\n
+        hoverStrokeWidth: 0.2,\n
+        pointRadius: 6,\n
+        hoverPointRadius: 1,\n
+        hoverPointUnit: "%",\n
+        pointerEvents: "visiblePainted",\n
+        cursor: "pointer",\n
+        fontColor: "#000000",\n
+        labelAlign: "cm",\n
+        labelOutlineColor: "white",\n
+        labelOutlineWidth: 3\n
+\n
+    },\n
+    \'temporary\': {\n
+        fillColor: "#66cccc",\n
+        fillOpacity: 0.2, \n
+        hoverFillColor: "white",\n
+        hoverFillOpacity: 0.8,\n
+        strokeColor: "#66cccc",\n
+        strokeOpacity: 1,\n
+        strokeLinecap: "round",\n
+        strokeWidth: 2,\n
+        strokeDashstyle: "solid",\n
+        hoverStrokeColor: "red",\n
+        hoverStrokeOpacity: 1,\n
+        hoverStrokeWidth: 0.2,\n
+        pointRadius: 6,\n
+        hoverPointRadius: 1,\n
+        hoverPointUnit: "%",\n
+        pointerEvents: "visiblePainted",\n
+        cursor: "inherit",\n
+        fontColor: "#000000",\n
+        labelAlign: "cm",\n
+        labelOutlineColor: "white",\n
+        labelOutlineWidth: 3\n
+\n
+    },\n
+    \'delete\': {\n
+        display: "none"\n
+    }\n
+};    \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18603</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

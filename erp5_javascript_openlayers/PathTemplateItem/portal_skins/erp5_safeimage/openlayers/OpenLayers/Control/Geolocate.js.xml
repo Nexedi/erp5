@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Geolocate.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for\n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ * @requires OpenLayers/Projection.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Geolocate\n
+ * The Geolocate control wraps w3c geolocation API into control that can be\n
+ * bound to a map, and generate events on location update\n
+ *\n
+ * To use this control requires to load the proj4js library if the projection\n
+ * of the map is not EPSG:4326 or EPSG:900913.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Geolocate = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * APIProperty: events\n
+     * {<OpenLayers.Events>} Events instance for listeners and triggering\n
+     *     control specific events.\n
+     *\n
+     * Register a listener for a particular event with the following syntax:\n
+     * (code)\n
+     * control.events.register(type, obj, listener);\n
+     * (end)\n
+     *\n
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):\n
+     * locationupdated - Triggered when browser return a new position. Listeners will \n
+     *     receive an object with a \'position\' property which is the browser.geolocation.position\n
+     *     native object, as well as a \'point\' property which is the location transformed in the \n
+     *     current map projection.\n
+     * locationfailed - Triggered when geolocation has failed\n
+     * locationuncapable - Triggered when control is activated on a browser\n
+     *     which doesn\'t support geolocation\n
+     */\n
+\n
+    /**\n
+     * Property: geolocation\n
+     * {Object} The geolocation engine, as a property to be possibly mocked.\n
+     */\n
+    geolocation: navigator.geolocation,\n
+\n
+    /**\n
+     * APIProperty: bind\n
+     * {Boolean} If true, map center will be set on location update.\n
+     */\n
+    bind: true,\n
+\n
+    /**\n
+     * APIProperty: watch\n
+     * {Boolean} If true, position will be update regularly.\n
+     */\n
+    watch: false,\n
+\n
+    /**\n
+     * APIProperty: geolocationOptions\n
+     * {Object} Options to pass to the navigator\'s geolocation API. See\n
+     *     <http://dev.w3.org/geo/api/spec-source.html>. No specific\n
+     *     option is passed to the geolocation API by default.\n
+     */\n
+    geolocationOptions: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.Geolocate\n
+     * Create a new control to deal with browser geolocation API\n
+     *\n
+     */\n
+\n
+    /**\n
+     * Method: destroy\n
+     */\n
+    destroy: function() {\n
+        this.deactivate();\n
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+    },\n
+\n
+    /**\n
+     * Method: activate\n
+     * Activates the control.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The control was effectively activated.\n
+     */\n
+    activate: function () {\n
+        if (!this.geolocation) {\n
+            this.events.triggerEvent("locationuncapable");\n
+            return false;\n
+        }\n
+        if (OpenLayers.Control.prototype.activate.apply(this, arguments)) {\n
+            if (this.watch) {\n
+                this.watchId = this.geolocation.watchPosition(\n
+                    OpenLayers.Function.bind(this.geolocate, this),\n
+                    OpenLayers.Function.bind(this.failure, this),\n
+                    this.geolocationOptions\n
+                );\n
+            } else {\n
+                this.getCurrentLocation();\n
+            }\n
+            return true;\n
+        }\n
+        return false;\n
+    },\n
+\n
+    /**\n
+     * Method: deactivate\n
+     * Deactivates the control.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The control was effectively deactivated.\n
+     */\n
+    deactivate: function () {\n
+        if (this.active && this.watchId !== null) {\n
+            this.geolocation.clearWatch(this.watchId);\n
+        }\n
+        return OpenLayers.Control.prototype.deactivate.apply(\n
+            this, arguments\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: geolocate\n
+     * Activates the control.\n
+     *\n
+     */\n
+    geolocate: function (position) {\n
+        var center = new OpenLayers.LonLat(\n
+            position.coords.longitude,\n
+            position.coords.latitude\n
+        ).transform(\n
+            new OpenLayers.Projection("EPSG:4326"),\n
+            this.map.getProjectionObject()\n
+        );\n
+        if (this.bind) {\n
+            this.map.setCenter(center);\n
+        }\n
+        this.events.triggerEvent("locationupdated", {\n
+            position: position,\n
+            point: new OpenLayers.Geometry.Point(\n
+                center.lon, center.lat\n
+            )\n
+        });\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getCurrentLocation\n
+     *\n
+     * Returns:\n
+     * {Boolean} Returns true if a event will be fired (successfull\n
+     * registration)\n
+     */\n
+    getCurrentLocation: function() {\n
+        if (!this.active || this.watch) {\n
+            return false;\n
+        }\n
+        this.geolocation.getCurrentPosition(\n
+            OpenLayers.Function.bind(this.geolocate, this),\n
+            OpenLayers.Function.bind(this.failure, this),\n
+            this.geolocationOptions\n
+        );\n
+        return true;\n
+    },\n
+\n
+    /**\n
+     * Method: failure\n
+     * method called on browser\'s geolocation failure\n
+     *\n
+     */\n
+    failure: function (error) {\n
+        this.events.triggerEvent("locationfailed", {error: error});\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Geolocate"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5376</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_1_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WFST/v1.js\n
+ * @requires OpenLayers/Format/Filter/v1_1_0.js\n
+ * @requires OpenLayers/Format/OWSCommon/v1_0_0.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WFST.v1_1_0\n
+ * A format for creating WFS v1.1.0 transactions.  Create a new instance with the\n
+ *     <OpenLayers.Format.WFST.v1_1_0> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.Filter.v1_1_0>\n
+ *  - <OpenLayers.Format.WFST.v1>\n
+ */\n
+OpenLayers.Format.WFST.v1_1_0 = OpenLayers.Class(\n
+    OpenLayers.Format.Filter.v1_1_0, OpenLayers.Format.WFST.v1, {\n
+    \n
+    /**\n
+     * Property: version\n
+     * {String} WFS version number.\n
+     */\n
+    version: "1.1.0",\n
+    \n
+    /**\n
+     * Property: schemaLocations\n
+     * {Object} Properties are namespace aliases, values are schema locations.\n
+     */\n
+    schemaLocations: {\n
+        "wfs": "http://schemas.opengis.net/wfs/1.1.0/wfs.xsd"\n
+    },\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WFST.v1_1_0\n
+     * A class for parsing and generating WFS v1.1.0 transactions.\n
+     *\n
+     * To read additional information like hit count (numberOfFeatures) from\n
+     * the  FeatureCollection, call the <OpenLayers.Format.WFST.v1.read> method\n
+     * with {output: "object"} as 2nd argument. Note that it is possible to\n
+     * just request the hit count from a WFS 1.1.0 server with the\n
+     * resultType="hits" request parameter.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     *\n
+     * Valid options properties:\n
+     * featureType - {String} Local (without prefix) feature typeName (required).\n
+     * featureNS - {String} Feature namespace (optional).\n
+     * featurePrefix - {String} Feature namespace alias (optional - only used\n
+     *     if featureNS is provided).  Default is \'feature\'.\n
+     * geometryName - {String} Name of geometry attribute.  Default is \'the_geom\'.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.Filter.v1_1_0.prototype.initialize.apply(this, [options]);\n
+        OpenLayers.Format.WFST.v1.prototype.initialize.apply(this, [options]);\n
+    },\n
+    \n
+    /**\n
+     * Method: readNode\n
+     * Shorthand for applying one of the named readers given the node\n
+     *     namespace and local name.  Readers take two args (node, obj) and\n
+     *     generally extend or modify the second.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} The node to be read (required).\n
+     * obj - {Object} The object to be modified (optional).\n
+     * first - {Boolean} Should be set to true for the first node read. This\n
+     *     is usually the readNode call in the read method. Without this being\n
+     *     set, auto-configured properties will stick on subsequent reads.\n
+     *\n
+     * Returns:\n
+     * {Object} The input object, modified (or a new one if none was provided).\n
+     */\n
+    readNode: function(node, obj, first) {\n
+        // Not the superclass, only the mixin classes inherit from\n
+        // Format.GML.v3. We need this because we don\'t want to get readNode\n
+        // from the superclass\'s superclass, which is OpenLayers.Format.XML.\n
+        return OpenLayers.Format.GML.v3.prototype.readNode.apply(this, [node, obj]);\n
+    },\n
+    \n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "wfs": OpenLayers.Util.applyDefaults({\n
+            "FeatureCollection": function(node, obj) {\n
+                obj.numberOfFeatures = parseInt(node.getAttribute(\n
+                    "numberOfFeatures"));\n
+                OpenLayers.Format.WFST.v1.prototype.readers["wfs"]["FeatureCollection"].apply(\n
+                    this, arguments);\n
+            },\n
+            "TransactionResponse": function(node, obj) {\n
+                obj.insertIds = [];\n
+                obj.success = false;\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "TransactionSummary": function(node, obj) {\n
+                // this is a limited test of success\n
+                obj.success = true;\n
+            },\n
+            "InsertResults": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "Feature": function(node, container) {\n
+                var obj = {fids: []};\n
+                this.readChildNodes(node, obj);\n
+                container.insertIds.push(obj.fids[0]);\n
+            }\n
+        }, OpenLayers.Format.WFST.v1.prototype.readers["wfs"]),\n
+        "gml": OpenLayers.Format.GML.v3.prototype.readers["gml"],\n
+        "feature": OpenLayers.Format.GML.v3.prototype.readers["feature"],\n
+        "ogc": OpenLayers.Format.Filter.v1_1_0.prototype.readers["ogc"],\n
+        "ows": OpenLayers.Format.OWSCommon.v1_0_0.prototype.readers["ows"]\n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "wfs": OpenLayers.Util.applyDefaults({\n
+            "GetFeature": function(options) {\n
+                var node = OpenLayers.Format.WFST.v1.prototype.writers["wfs"]["GetFeature"].apply(this, arguments);\n
+                options && this.setAttributes(node, {\n
+                    resultType: options.resultType,\n
+                    startIndex: options.startIndex,\n
+                    count: options.count\n
+                });\n
+                return node;\n
+            },\n
+            "Query": function(options) {\n
+                options = OpenLayers.Util.extend({\n
+                    featureNS: this.featureNS,\n
+                    featurePrefix: this.featurePrefix,\n
+                    featureType: this.featureType,\n
+                    srsName: this.srsName\n
+                }, options);\n
+                var prefix = options.featurePrefix;\n
+                var node = this.createElementNSPlus("wfs:Query", {\n
+                    attributes: {\n
+                        typeName: (prefix ? prefix + ":" : "") +\n
+                            options.featureType,\n
+                        srsName: options.srsName\n
+                    }\n
+                });\n
+                if(options.featureNS) {\n
+                    node.setAttribute("xmlns:" + prefix, options.featureNS);\n
+                }\n
+                if(options.propertyNames) {\n
+                    for(var i=0,len = options.propertyNames.length; i<len; i++) {\n
+                        this.writeNode(\n
+                            "wfs:PropertyName", \n
+                            {property: options.propertyNames[i]},\n
+                            node\n
+                        );\n
+                    }\n
+                }\n
+                if(options.filter) {\n
+                    OpenLayers.Format.WFST.v1_1_0.prototype.setFilterProperty.call(this, options.filter);\n
+                    this.writeNode("ogc:Filter", options.filter, node);\n
+                }\n
+                return node;\n
+            },\n
+            "PropertyName": function(obj) {\n
+                return this.createElementNSPlus("wfs:PropertyName", {\n
+                    value: obj.property\n
+                });\n
+            }            \n
+        }, OpenLayers.Format.WFST.v1.prototype.writers["wfs"]),\n
+        "gml": OpenLayers.Format.GML.v3.prototype.writers["gml"],\n
+        "feature": OpenLayers.Format.GML.v3.prototype.writers["feature"],\n
+        "ogc": OpenLayers.Format.Filter.v1_1_0.prototype.writers["ogc"]\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WFST.v1_1_0" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7931</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

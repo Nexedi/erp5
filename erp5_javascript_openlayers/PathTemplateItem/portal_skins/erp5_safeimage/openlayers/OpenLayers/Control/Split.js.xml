@@ -1,0 +1,538 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Split.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Handler/Path.js\n
+ * @requires OpenLayers/Layer/Vector.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Split\n
+ * Acts as a split feature agent while editing vector features.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Split = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * APIProperty: events\n
+     * {<OpenLayers.Events>} Events instance for listeners and triggering\n
+     *     control specific events.\n
+     *\n
+     * Register a listener for a particular event with the following syntax:\n
+     * (code)\n
+     * control.events.register(type, obj, listener);\n
+     * (end)\n
+     *\n
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):\n
+     * beforesplit - Triggered before a split occurs.  Listeners receive an\n
+     *     event object with *source* and *target* properties.\n
+     * split - Triggered when a split occurs.  Listeners receive an event with\n
+     *     an *original* property and a *features* property.  The original\n
+     *     is a reference to the target feature that the sketch or modified\n
+     *     feature intersects.  The features property is a list of all features\n
+     *     that result from this single split.  This event is triggered before\n
+     *     the resulting features are added to the layer (while the layer still\n
+     *     has a reference to the original).\n
+     * aftersplit - Triggered after all splits resulting from a single sketch\n
+     *     or feature modification have occurred.  The original features\n
+     *     have been destroyed and features that result from the split\n
+     *     have already been added to the layer.  Listeners receive an event\n
+     *     with a *source* and *features* property.  The source references the\n
+     *     sketch or modified feature used as a splitter.  The features\n
+     *     property is a list of all resulting features.\n
+     */\n
+    \n
+    /**\n
+     * APIProperty: layer\n
+     * {<OpenLayers.Layer.Vector>} The target layer with features to be split.\n
+     *     Set at construction or after construction with <setLayer>.\n
+     */\n
+    layer: null,\n
+    \n
+    /**\n
+     * Property: source\n
+     * {<OpenLayers.Layer.Vector>} Optional source layer.  Any newly created\n
+     *     or modified features from this layer will be used to split features\n
+     *     on the target layer.  If not provided, a temporary sketch layer will\n
+     *     be created.\n
+     */\n
+    source: null,\n
+    \n
+    /**\n
+     * Property: sourceOptions\n
+     * {Options} If a temporary sketch layer is created, these layer options\n
+     *     will be applied.\n
+     */\n
+    sourceOptions: null,\n
+\n
+    /**\n
+     * APIProperty: tolerance\n
+     * {Number} Distance between the calculated intersection and a vertex on\n
+     *     the source geometry below which the existing vertex will be used\n
+     *     for the split.  Default is null.\n
+     */\n
+    tolerance: null,\n
+    \n
+    /**\n
+     * APIProperty: edge\n
+     * {Boolean} Allow splits given intersection of edges only.  Default is\n
+     *     true.  If false, a vertex on the source must be within the\n
+     *     <tolerance> distance of the calculated intersection for a split\n
+     *     to occur.\n
+     */\n
+    edge: true,\n
+    \n
+    /**\n
+     * APIProperty: deferDelete\n
+     * {Boolean} Instead of removing features from the layer, set feature\n
+     *     states of split features to DELETE.  This assumes a save strategy\n
+     *     or other component is in charge of removing features from the\n
+     *     layer.  Default is false.  If false, split features will be\n
+     *     immediately deleted from the layer.\n
+     */\n
+    deferDelete: false,\n
+    \n
+    /**\n
+     * APIProperty: mutual\n
+     * {Boolean} If source and target layers are the same, split source\n
+     *     features and target features where they intersect.  Default is\n
+     *     true.  If false, only target features will be split.\n
+     */\n
+    mutual: true,\n
+    \n
+    /**\n
+     * APIProperty: targetFilter\n
+     * {<OpenLayers.Filter>} Optional filter that will be evaluated\n
+     *     to determine if a feature from the target layer is eligible for\n
+     *     splitting.\n
+     */\n
+    targetFilter: null,\n
+    \n
+    /**\n
+     * APIProperty: sourceFilter\n
+     * {<OpenLayers.Filter>} Optional filter that will be evaluated\n
+     *     to determine if a feature from the source layer is eligible for\n
+     *     splitting.\n
+     */\n
+    sourceFilter: null,\n
+    \n
+    /**\n
+     * Property: handler\n
+     * {<OpenLayers.Handler.Path>} The temporary sketch handler created if\n
+     *     no source layer is provided.\n
+     */\n
+    handler: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.Split\n
+     * Creates a new split control. A control is constructed with a target\n
+     *     layer and an optional source layer. While the control is active,\n
+     *     creating new features or modifying existing features on the source\n
+     *     layer will result in splitting any eligible features on the target\n
+     *     layer.  If no source layer is provided, a temporary sketch layer will\n
+     *     be created to create lines for splitting features on the target.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An object containing all configuration properties for\n
+     *     the control.\n
+     *\n
+     * Valid options:\n
+     * layer - {<OpenLayers.Layer.Vector>} The target layer.  Features from this\n
+     *     layer will be split by new or modified features on the source layer\n
+     *     or temporary sketch layer.\n
+     * source - {<OpenLayers.Layer.Vector>} Optional source layer.  If provided\n
+     *     newly created features or modified features will be used to split\n
+     *     features on the target layer.  If not provided, a temporary sketch\n
+     *     layer will be created for drawing lines.\n
+     * tolerance - {Number} Optional value for the distance between a source\n
+     *     vertex and the calculated intersection below which the split will\n
+     *     occur at the vertex.\n
+     * edge - {Boolean} Allow splits given intersection of edges only.  Default\n
+     *     is true.  If false, a vertex on the source must be within the\n
+     *     <tolerance> distance of the calculated intersection for a split\n
+     *     to occur.\n
+     * mutual - {Boolean} If source and target are the same, split source\n
+     *     features and target features where they intersect.  Default is\n
+     *     true.  If false, only target features will be split.\n
+     * targetFilter - {<OpenLayers.Filter>} Optional filter that will be evaluated\n
+     *     to determine if a feature from the target layer is eligible for\n
+     *     splitting.\n
+     * sourceFilter - {<OpenLayers.Filter>} Optional filter that will be evaluated\n
+     *     to determine if a feature from the target layer is eligible for\n
+     *     splitting.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        this.options = options || {}; // TODO: this could be done by the super\n
+        \n
+        // set the source layer if provided\n
+        if(this.options.source) {\n
+            this.setSource(this.options.source);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: setSource\n
+     * Set the source layer for edits layer.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>}  The new source layer layer.  If\n
+     *     null, a temporary sketch layer will be created.\n
+     */\n
+    setSource: function(layer) {\n
+        if(this.active) {\n
+            this.deactivate();\n
+            if(this.handler) {\n
+                this.handler.destroy();\n
+                delete this.handler;\n
+            }\n
+            this.source = layer;\n
+            this.activate();\n
+        } else {\n
+            this.source = layer;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the control.  Activating the control registers listeners for\n
+     *     editing related events so that during feature creation and\n
+     *     modification, features in the target will be considered for\n
+     *     splitting.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Control.prototype.activate.call(this);\n
+        if(activated) {\n
+            if(!this.source) {\n
+                if(!this.handler) {\n
+                    this.handler = new OpenLayers.Handler.Path(this,\n
+                        {done: function(geometry) {\n
+                            this.onSketchComplete({\n
+                                feature: new OpenLayers.Feature.Vector(geometry)\n
+                            });\n
+                        }},\n
+                        {layerOptions: this.sourceOptions}\n
+                    );\n
+                }\n
+                this.handler.activate();\n
+            } else if(this.source.events) {\n
+                this.source.events.on({\n
+                    sketchcomplete: this.onSketchComplete,\n
+                    afterfeaturemodified: this.afterFeatureModified,\n
+                    scope: this\n
+                });\n
+            }\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the control.  Deactivating the control unregisters listeners\n
+     *     so feature editing may proceed without engaging the split agent.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Control.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            if(this.source && this.source.events) {\n
+                this.layer.events.un({\n
+                    sketchcomplete: this.onSketchComplete,\n
+                    afterfeaturemodified: this.afterFeatureModified,\n
+                    scope: this\n
+                });\n
+            }\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: onSketchComplete\n
+     * Registered as a listener for the sketchcomplete event on the editable\n
+     *     layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The sketch complete event.\n
+     *\n
+     * Returns:\n
+     * {Boolean} Stop the sketch from being added to the layer (it has been\n
+     *     split).\n
+     */\n
+    onSketchComplete: function(event) {\n
+        this.feature = null;\n
+        return !this.considerSplit(event.feature);\n
+    },\n
+    \n
+    /**\n
+     * Method: afterFeatureModified\n
+     * Registered as a listener for the afterfeaturemodified event on the\n
+     *     editable layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The after feature modified event.\n
+     */\n
+    afterFeatureModified: function(event) {\n
+        if(event.modified) {\n
+            var feature = event.feature;\n
+            if (typeof feature.geometry.split === "function") {\n
+                this.feature = event.feature;\n
+                this.considerSplit(event.feature);\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: removeByGeometry\n
+     * Remove a feature from a list based on the given geometry.\n
+     *\n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>)} A list of features.\n
+     * geometry - {<OpenLayers.Geometry>} A geometry.\n
+     */\n
+    removeByGeometry: function(features, geometry) {\n
+        for(var i=0, len=features.length; i<len; ++i) {\n
+            if(features[i].geometry === geometry) {\n
+                features.splice(i, 1);\n
+                break;\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: isEligible\n
+     * Test if a target feature is eligible for splitting.\n
+     *\n
+     * Parameters:\n
+     * target - {<OpenLayers.Feature.Vector>} The target feature.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The target is eligible for splitting.\n
+     */\n
+    isEligible: function(target) {\n
+        if (!target.geometry) {\n
+            return false;\n
+        } else {\n
+            return (\n
+                target.state !== OpenLayers.State.DELETE\n
+            ) && (\n
+                typeof target.geometry.split === "function"\n
+            ) && (\n
+                this.feature !== target\n
+            ) && (\n
+                !this.targetFilter ||\n
+                this.targetFilter.evaluate(target.attributes)\n
+            );\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: considerSplit\n
+     * Decide whether or not to split target features with the supplied\n
+     *     feature.  If <mutual> is true, both the source and target features\n
+     *     will be split if eligible.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The newly created or modified\n
+     *     feature.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The supplied feature was split (and destroyed).\n
+     */\n
+    considerSplit: function(feature) {\n
+        var sourceSplit = false;\n
+        var targetSplit = false;\n
+        if(!this.sourceFilter ||\n
+           this.sourceFilter.evaluate(feature.attributes)) {\n
+            var features = this.layer && this.layer.features || [];\n
+            var target, results, proceed;\n
+            var additions = [], removals = [];\n
+            var mutual = (this.layer === this.source) && this.mutual;\n
+            var options = {\n
+                edge: this.edge,\n
+                tolerance: this.tolerance,\n
+                mutual: mutual\n
+            };\n
+            var sourceParts = [feature.geometry];\n
+            var targetFeature, targetParts;\n
+            var source, parts;\n
+            for(var i=0, len=features.length; i<len; ++i) {\n
+                targetFeature = features[i];\n
+                if(this.isEligible(targetFeature)) {\n
+                    targetParts = [targetFeature.geometry];\n
+                    // work through source geoms - this array may change\n
+                    for(var j=0; j<sourceParts.length; ++j) { \n
+                        source = sourceParts[j];\n
+                        // work through target parts - this array may change\n
+                        for(var k=0; k<targetParts.length; ++k) {\n
+                            target = targetParts[k];\n
+                            if(source.getBounds().intersectsBounds(target.getBounds())) {\n
+                                results = source.split(target, options);\n
+                                if(results) {\n
+                                    proceed = this.events.triggerEvent(\n
+                                        "beforesplit", {source: feature, target: targetFeature}\n
+                                    );\n
+                                    if(proceed !== false) {\n
+                                        if(mutual) {\n
+                                            parts = results[0];\n
+                                            // handle parts that result from source splitting\n
+                                            if(parts.length > 1) {\n
+                                                // splice in new source parts\n
+                                                parts.unshift(j, 1); // add args for splice below\n
+                                                Array.prototype.splice.apply(sourceParts, parts);\n
+                                                j += parts.length - 3;\n
+                                            }\n
+                                            results = results[1];\n
+                                        }\n
+                                        // handle parts that result from target splitting\n
+                                        if(results.length > 1) {\n
+                                            // splice in new target parts\n
+                                            results.unshift(k, 1); // add args for splice below\n
+                                            Array.prototype.splice.apply(targetParts, results);\n
+                                            k += results.length - 3;\n
+                                        }\n
+                                    }\n
+                                }\n
+                            }\n
+                        }\n
+                    }\n
+                    if(targetParts && targetParts.length > 1) {\n
+                        this.geomsToFeatures(targetFeature, targetParts);\n
+                        this.events.triggerEvent("split", {\n
+                            original: targetFeature,\n
+                            features: targetParts\n
+                        });\n
+                        Array.prototype.push.apply(additions, targetParts);\n
+                        removals.push(targetFeature);\n
+                        targetSplit = true;\n
+                    }\n
+                }\n
+            }\n
+            if(sourceParts && sourceParts.length > 1) {\n
+                this.geomsToFeatures(feature, sourceParts);\n
+                this.events.triggerEvent("split", {\n
+                    original: feature,\n
+                    features: sourceParts\n
+                });\n
+                Array.prototype.push.apply(additions, sourceParts);\n
+                removals.push(feature);\n
+                sourceSplit = true;\n
+            }\n
+            if(sourceSplit || targetSplit) {\n
+                // remove and add feature events are suppressed\n
+                // listen for split event on this control instead\n
+                if(this.deferDelete) {\n
+                    // Set state instead of removing.  Take care to avoid\n
+                    // setting delete for features that have not yet been\n
+                    // inserted - those should be destroyed immediately.\n
+                    var feat, destroys = [];\n
+                    for(var i=0, len=removals.length; i<len; ++i) {\n
+                        feat = removals[i];\n
+                        if(feat.state === OpenLayers.State.INSERT) {\n
+                            destroys.push(feat);\n
+                        } else {\n
+                            feat.state = OpenLayers.State.DELETE;\n
+                            this.layer.drawFeature(feat);\n
+                        }\n
+                    }\n
+                    this.layer.destroyFeatures(destroys, {silent: true});\n
+                    for(var i=0, len=additions.length; i<len; ++i) {\n
+                        additions[i].state = OpenLayers.State.INSERT;\n
+                    }\n
+                } else {\n
+                    this.layer.destroyFeatures(removals, {silent: true});\n
+                }\n
+                this.layer.addFeatures(additions, {silent: true});\n
+                this.events.triggerEvent("aftersplit", {\n
+                    source: feature,\n
+                    features: additions\n
+                });\n
+            }\n
+        }\n
+        return sourceSplit;\n
+    },\n
+    \n
+    /**\n
+     * Method: geomsToFeatures\n
+     * Create new features given a template feature and a list of geometries.\n
+     *     The list of geometries is modified in place.  The result will be\n
+     *     a list of new features.\n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} The feature to be cloned.\n
+     * geoms - {Array(<OpenLayers.Geometry>)} List of goemetries.  This will\n
+     *     become a list of new features.\n
+     */\n
+    geomsToFeatures: function(feature, geoms) {\n
+        var clone = feature.clone();\n
+        delete clone.geometry;\n
+        var newFeature;\n
+        for(var i=0, len=geoms.length; i<len; ++i) {\n
+            // turn results list from geoms to features\n
+            newFeature = clone.clone();\n
+            newFeature.geometry = geoms[i];\n
+            newFeature.state = OpenLayers.State.INSERT;\n
+            geoms[i] = newFeature;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: destroy\n
+     * Clean up the control.\n
+     */\n
+    destroy: function() {\n
+        if(this.active) {\n
+            this.deactivate(); // TODO: this should be handled by the super\n
+        }\n
+        OpenLayers.Control.prototype.destroy.call(this);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Split"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19587</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

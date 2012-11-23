@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>UTFGrid.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Handler/Hover.js\n
+ * @requires OpenLayers/Handler/Click.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.UTFGrid\n
+ *\n
+ * This Control provides behavior associated with UTFGrid Layers.\n
+ * These \'hit grids\' provide underlying feature attributes without\n
+ * calling the server (again). This control allows Mousemove, Hovering \n
+ * and Click events to trigger callbacks that use the attributes in \n
+ * whatever way you need. \n
+ *\n
+ * The most common example may be a UTFGrid layer containing feature\n
+ * attributes that are displayed in a div as you mouseover.\n
+ *\n
+ * Example Code:\n
+ *\n
+ * (start code)\n
+ * var world_utfgrid = new OpenLayers.Layer.UTFGrid( \n
+ *     \'UTFGrid Layer\', \n
+ *     "http://tiles/world_utfgrid/${z}/${x}/${y}.json"\n
+ * );\n
+ * map.addLayer(world_utfgrid);\n
+ * \n
+ * var control = new OpenLayers.Control.UTFGrid({\n
+ *     layers: [world_utfgrid],\n
+ *     handlerMode: \'move\',\n
+ *     callback: function(infoLookup) {\n
+ *         // do something with returned data\n
+ *\n
+ *     }\n
+ * })\n
+ * (end code)\n
+ *\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.UTFGrid = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: autoActivate\n
+     * {Boolean} Activate the control when it is added to a map.  Default is\n
+     *     true.\n
+     */\n
+    autoActivate: true,\n
+\n
+    /** \n
+     * APIProperty: Layers\n
+     * List of layers to consider. Must be Layer.UTFGrids\n
+     * `null` is the default indicating all UTFGrid Layers are queried.\n
+     * {Array} <OpenLayers.Layer.UTFGrid> \n
+     */\n
+    layers: null,\n
+\n
+    /* Property: defaultHandlerOptions\n
+     * The default opts passed to the handler constructors\n
+     */\n
+    defaultHandlerOptions: {\n
+        \'delay\': 300,\n
+        \'pixelTolerance\': 4,\n
+        \'stopMove\': false,\n
+        \'single\': true,\n
+        \'double\': false,\n
+        \'stopSingle\': false,\n
+        \'stopDouble\': false\n
+    },\n
+\n
+    /* APIProperty: handlerMode\n
+     * Defaults to \'click\'. Can be \'hover\' or \'move\'.\n
+     */\n
+    handlerMode: \'click\',\n
+\n
+    /**\n
+     * APIMethod: setHandler\n
+     * sets this.handlerMode and calls resetHandler()\n
+     *\n
+     * Parameters:\n
+     * hm - {String} Handler Mode string; \'click\', \'hover\' or \'move\'.\n
+     */\n
+    setHandler: function(hm) {\n
+        this.handlerMode = hm;\n
+        this.resetHandler();\n
+    },\n
+\n
+    /**\n
+     * Method: resetHandler\n
+     * Deactivates the old hanlder and creates a new\n
+     * <OpenLayers.Handler> based on the mode specified in\n
+     * this.handlerMode\n
+     *\n
+     */\n
+    resetHandler: function() {\n
+        if (this.handler) {\n
+            this.handler.deactivate();\n
+            this.handler.destroy();\n
+            this.handler = null;\n
+        }\n
+   \n
+        if (this.handlerMode == \'hover\') {\n
+            // Handle this event on hover\n
+            this.handler = new OpenLayers.Handler.Hover(\n
+                this,\n
+                {\'pause\': this.handleEvent, \'move\': this.reset},\n
+                this.handlerOptions\n
+            );\n
+        } else if (this.handlerMode == \'click\') {\n
+            // Handle this event on click\n
+            this.handler = new OpenLayers.Handler.Click(\n
+                this, {\n
+                    \'click\': this.handleEvent\n
+                }, this.handlerOptions\n
+            );\n
+        } else if (this.handlerMode == \'move\') {\n
+            this.handler = new OpenLayers.Handler.Hover(\n
+                this,\n
+                // Handle this event while hovering OR moving\n
+                {\'pause\': this.handleEvent, \'move\': this.handleEvent},\n
+                this.handlerOptions\n
+            );\n
+        }\n
+        if (this.handler) {\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Constructor: <OpenLayers.Control.UTFGrid>\n
+     *\n
+     * Parameters:\n
+     * options - {Object} \n
+     */\n
+    initialize: function(options) {\n
+        options = options || {};\n
+        options.handlerOptions = options.handlerOptions || this.defaultHandlerOptions;\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        this.resetHandler();\n
+    }, \n
+\n
+    /**\n
+     * Method: handleEvent\n
+     * Internal method called when specified event is triggered.\n
+     * \n
+     * This method does several things:\n
+     *\n
+     * Gets the lonLat of the event.\n
+     *\n
+     * Loops through the appropriate hit grid layers and gathers the attributes.\n
+     *\n
+     * Passes the attributes to the callback\n
+     *\n
+     * Parameters:\n
+     * evt - {<OpenLayers.Event>} \n
+     */\n
+    handleEvent: function(evt) {\n
+        if (evt == null) {\n
+            this.reset();\n
+            return;\n
+        }\n
+\n
+        var lonLat = this.map.getLonLatFromPixel(evt.xy);\n
+        if (!lonLat) { \n
+            return;\n
+        }    \n
+        \n
+        var layers = this.findLayers();\n
+        if (layers.length > 0) {\n
+            var infoLookup = {};\n
+            var layer, idx;\n
+            for (var i=0, len=layers.length; i<len; i++) {\n
+                layer = layers[i];\n
+                idx = OpenLayers.Util.indexOf(this.map.layers, layer);\n
+                infoLookup[idx] = layer.getFeatureInfo(lonLat);\n
+            }\n
+            this.callback(infoLookup, lonLat, evt.xy);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: callback\n
+     * Function to be called when a mouse event corresponds with a location that\n
+     *     includes data in one of the configured UTFGrid layers.\n
+     *\n
+     * Parameters:\n
+     * infoLookup - {Object} Keys of this object are layer indexes and can be\n
+     *     used to resolve a layer in the map.layers array.  The structure of\n
+     *     the property values depend on the data included in the underlying\n
+     *     UTFGrid and may be any valid JSON type.  \n
+     */\n
+    callback: function(infoLookup) {\n
+        // to be provided in the constructor\n
+    },\n
+\n
+    /**\n
+     * Method: reset\n
+     * Calls the callback with null.\n
+     */\n
+    reset: function(evt) {\n
+        this.callback(null);\n
+    },\n
+\n
+    /**\n
+     * Method: findLayers\n
+     * Internal method to get the layers, independent of whether we are\n
+     *     inspecting the map or using a client-provided array\n
+     *\n
+     * The default value of this.layers is null; this causes the \n
+     * findLayers method to return ALL UTFGrid layers encountered.\n
+     *\n
+     * Parameters:\n
+     * None\n
+     *\n
+     * Returns:\n
+     * {Array} Layers to handle on each event\n
+     */\n
+    findLayers: function() {\n
+        var candidates = this.layers || this.map.layers;\n
+        var layers = [];\n
+        var layer;\n
+        for (var i=candidates.length-1; i>=0; --i) {\n
+            layer = candidates[i];\n
+            if (layer instanceof OpenLayers.Layer.UTFGrid ) { \n
+                layers.push(layer);\n
+            }\n
+        }\n
+        return layers;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.UTFGrid"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6984</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

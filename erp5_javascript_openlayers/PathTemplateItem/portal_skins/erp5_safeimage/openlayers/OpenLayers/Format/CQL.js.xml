@@ -1,0 +1,482 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CQL.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WKT.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.CQL\n
+ * Read CQL strings to get <OpenLayers.Filter> objects.  Write \n
+ *     <OpenLayers.Filter> objects to get CQL strings. Create a new parser with \n
+ *     the <OpenLayers.Format.CQL> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format>\n
+ */\n
+OpenLayers.Format.CQL = (function() {\n
+    \n
+    var tokens = [\n
+        "PROPERTY", "COMPARISON", "VALUE", "LOGICAL"\n
+    ],\n
+\n
+    patterns = {\n
+        PROPERTY: /^[_a-zA-Z]\\w*/,\n
+        COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,\n
+        COMMA: /^,/,\n
+        LOGICAL: /^(AND|OR)/i,\n
+        VALUE: /^(\'\\w+\'|\\d+(\\.\\d*)?|\\.\\d+)/,\n
+        LPAREN: /^\\(/,\n
+        RPAREN: /^\\)/,\n
+        SPATIAL: /^(BBOX|INTERSECTS|DWITHIN|WITHIN|CONTAINS)/i,\n
+        NOT: /^NOT/i,\n
+        BETWEEN: /^BETWEEN/i,\n
+        GEOMETRY: function(text) {\n
+            var type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/.exec(text);\n
+            if (type) {\n
+                var len = text.length;\n
+                var idx = text.indexOf("(", type[0].length);\n
+                if (idx > -1) {\n
+                    var depth = 1;\n
+                    while (idx < len && depth > 0) {\n
+                        idx++;\n
+                        switch(text.charAt(idx)) {\n
+                            case \'(\':\n
+                                depth++;\n
+                                break;\n
+                            case \')\':\n
+                                depth--;\n
+                                break;\n
+                            default:\n
+                                // in default case, do nothing\n
+                        }\n
+                    }\n
+                }\n
+                return [text.substr(0, idx+1)];\n
+            }\n
+        },\n
+        END: /^$/\n
+    },\n
+\n
+    follows = {\n
+        LPAREN: [\'GEOMETRY\', \'SPATIAL\', \'PROPERTY\', \'VALUE\', \'LPAREN\'],\n
+        RPAREN: [\'NOT\', \'LOGICAL\', \'END\', \'RPAREN\'],\n
+        PROPERTY: [\'COMPARISON\', \'BETWEEN\', \'COMMA\'],\n
+        BETWEEN: [\'VALUE\'],\n
+        COMPARISON: [\'VALUE\'],\n
+        COMMA: [\'GEOMETRY\', \'VALUE\', \'PROPERTY\'],\n
+        VALUE: [\'LOGICAL\', \'COMMA\', \'RPAREN\', \'END\'],\n
+        SPATIAL: [\'LPAREN\'],\n
+        LOGICAL: [\'NOT\', \'VALUE\', \'SPATIAL\', \'PROPERTY\', \'LPAREN\'],\n
+        NOT: [\'PROPERTY\', \'LPAREN\'],\n
+        GEOMETRY: [\'COMMA\', \'RPAREN\']\n
+    },\n
+\n
+    operators = {\n
+        \'=\': OpenLayers.Filter.Comparison.EQUAL_TO,\n
+        \'<>\': OpenLayers.Filter.Comparison.NOT_EQUAL_TO,\n
+        \'<\': OpenLayers.Filter.Comparison.LESS_THAN,\n
+        \'<=\': OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,\n
+        \'>\': OpenLayers.Filter.Comparison.GREATER_THAN,\n
+        \'>=\': OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,\n
+        \'LIKE\': OpenLayers.Filter.Comparison.LIKE,\n
+        \'BETWEEN\': OpenLayers.Filter.Comparison.BETWEEN\n
+    },\n
+\n
+    operatorReverse = {},\n
+\n
+    logicals = {\n
+        \'AND\': OpenLayers.Filter.Logical.AND,\n
+        \'OR\': OpenLayers.Filter.Logical.OR\n
+    },\n
+\n
+    logicalReverse = {},\n
+\n
+    precedence = {\n
+        \'RPAREN\': 3,\n
+        \'LOGICAL\': 2,\n
+        \'COMPARISON\': 1\n
+    };\n
+\n
+    var i;\n
+    for (i in operators) {\n
+        if (operators.hasOwnProperty(i)) {\n
+            operatorReverse[operators[i]] = i;\n
+        }\n
+    }\n
+\n
+    for (i in logicals) {\n
+        if (logicals.hasOwnProperty(i)) {\n
+            logicalReverse[logicals[i]] = i;\n
+        }\n
+    }\n
+\n
+    function tryToken(text, pattern) {\n
+        if (pattern instanceof RegExp) {\n
+            return pattern.exec(text);\n
+        } else {\n
+            return pattern(text);\n
+        }\n
+    }\n
+\n
+    function nextToken(text, tokens) {\n
+        var i, token, len = tokens.length;\n
+        for (i=0; i<len; i++) {\n
+            token = tokens[i];\n
+            var pat = patterns[token];\n
+            var matches = tryToken(text, pat);\n
+            if (matches) {\n
+                var match = matches[0];\n
+                var remainder = text.substr(match.length).replace(/^\\s*/, "");\n
+                return {\n
+                    type: token,\n
+                    text: match,\n
+                    remainder: remainder\n
+                };\n
+            }\n
+        }\n
+\n
+        var msg = "ERROR: In parsing: [" + text + "], expected one of: ";\n
+        for (i=0; i<len; i++) {\n
+            token = tokens[i];\n
+            msg += "\\n    " + token + ": " + patterns[token];\n
+        }\n
+\n
+        throw new Error(msg);\n
+    }\n
+\n
+    function tokenize(text) {\n
+        var results = [];\n
+        var token, expect = ["NOT", "GEOMETRY", "SPATIAL", "PROPERTY", "LPAREN"];\n
+\n
+        do {\n
+            token = nextToken(text, expect);\n
+            text = token.remainder;\n
+            expect = follows[token.type];\n
+            if (token.type != "END" && !expect) {\n
+                throw new Error("No follows list for " + token.type);\n
+            }\n
+            results.push(token);\n
+        } while (token.type != "END");\n
+\n
+        return results;\n
+    }\n
+\n
+    function buildAst(tokens) {\n
+        var operatorStack = [],\n
+            postfix = [];\n
+\n
+        while (tokens.length) {\n
+            var tok = tokens.shift();\n
+            switch (tok.type) {\n
+                case "PROPERTY":\n
+                case "GEOMETRY":\n
+                case "VALUE":\n
+                    postfix.push(tok);\n
+                    break;\n
+                case "COMPARISON":\n
+                case "BETWEEN":\n
+                case "LOGICAL":\n
+                    var p = precedence[tok.type];\n
+\n
+                    while (operatorStack.length > 0 &&\n
+                        (precedence[operatorStack[operatorStack.length - 1].type] <= p)\n
+                    ) {\n
+                        postfix.push(operatorStack.pop());\n
+                    }\n
+\n
+                    operatorStack.push(tok);\n
+                    break;\n
+                case "SPATIAL":\n
+                case "NOT":\n
+                case "LPAREN":\n
+                    operatorStack.push(tok);\n
+                    break;\n
+                case "RPAREN":\n
+                    while (operatorStack.length > 0 &&\n
+                        (operatorStack[operatorStack.length - 1].type != "LPAREN")\n
+                    ) {\n
+                        postfix.push(operatorStack.pop());\n
+                    }\n
+                    operatorStack.pop(); // toss out the LPAREN\n
+\n
+                    if (operatorStack.length > 0 &&\n
+                        operatorStack[operatorStack.length-1].type == "SPATIAL") {\n
+                        postfix.push(operatorStack.pop());\n
+                    }\n
+                case "COMMA":\n
+                case "END":\n
+                    break;\n
+                default:\n
+                    throw new Error("Unknown token type " + tok.type);\n
+            }\n
+        }\n
+\n
+        while (operatorStack.length > 0) {\n
+            postfix.push(operatorStack.pop());\n
+        }\n
+\n
+        function buildTree() {\n
+            var tok = postfix.pop();\n
+            switch (tok.type) {\n
+                case "LOGICAL":\n
+                    var rhs = buildTree(),\n
+                        lhs = buildTree();\n
+                    return new OpenLayers.Filter.Logical({\n
+                        filters: [lhs, rhs],\n
+                        type: logicals[tok.text.toUpperCase()]\n
+                    });\n
+                case "NOT":\n
+                    var operand = buildTree();\n
+                    return new OpenLayers.Filter.Logical({\n
+                        filters: [operand],\n
+                        type: OpenLayers.Filter.Logical.NOT\n
+                    });\n
+                case "BETWEEN":\n
+                    var min, max, property;\n
+                    postfix.pop(); // unneeded AND token here\n
+                    max = buildTree();\n
+                    min = buildTree();\n
+                    property = buildTree();\n
+                    return new OpenLayers.Filter.Comparison({\n
+                        property: property,\n
+                        lowerBoundary: min,\n
+                        upperBoundary: max,\n
+                        type: OpenLayers.Filter.Comparison.BETWEEN\n
+                    });\n
+                case "COMPARISON":\n
+                    var value = buildTree(),\n
+                        property = buildTree();\n
+                    return new OpenLayers.Filter.Comparison({\n
+                        property: property,\n
+                        value: value,\n
+                        type: operators[tok.text.toUpperCase()]\n
+                    });\n
+                case "VALUE":\n
+                    if ((/^\'.*\'$/).test(tok.text)) {\n
+                        return tok.text.substr(1, tok.text.length - 2);\n
+                    } else {\n
+                        return Number(tok.text);\n
+                    }\n
+                case "SPATIAL":\n
+                    switch(tok.text.toUpperCase()) {\n
+                        case "BBOX":\n
+                            var maxy = buildTree(),\n
+                                maxx = buildTree(),\n
+                                miny = buildTree(),\n
+                                minx = buildTree(),\n
+                                prop = buildTree();\n
+\n
+                            return new OpenLayers.Filter.Spatial({\n
+                                type: OpenLayers.Filter.Spatial.BBOX,\n
+                                property: prop,\n
+                                value: OpenLayers.Bounds.fromArray(\n
+                                    [minx, miny, maxx, maxy]\n
+                                )\n
+                            });\n
+                        case "INTERSECTS":\n
+                            var value = buildTree(),\n
+                                property = buildTree();\n
+                            return new OpenLayers.Filter.Spatial({\n
+                                type: OpenLayers.Filter.Spatial.INTERSECTS,\n
+                                property: property,\n
+                                value: value\n
+                            });\n
+                        case "WITHIN":\n
+                            var value = buildTree(),\n
+                                property = buildTree();\n
+                            return new OpenLayers.Filter.Spatial({\n
+                                type: OpenLayers.Filter.Spatial.WITHIN,\n
+                                property: property,\n
+                                value: value\n
+                            });\n
+                        case "CONTAINS":\n
+                            var value = buildTree(),\n
+                                property = buildTree();\n
+                            return new OpenLayers.Filter.Spatial({\n
+                                type: OpenLayers.Filter.Spatial.CONTAINS,\n
+                                property: property,\n
+                                value: value\n
+                            });\n
+                        case "DWITHIN":\n
+                            var distance = buildTree(),\n
+                                value = buildTree(),\n
+                                property = buildTree();\n
+                            return new OpenLayers.Filter.Spatial({\n
+                                type: OpenLayers.Filter.Spatial.DWITHIN,\n
+                                value: value,\n
+                                property: property,\n
+                                distance: Number(distance)\n
+                            });\n
+                    }\n
+                case "GEOMETRY":\n
+                    return OpenLayers.Geometry.fromWKT(tok.text);\n
+                default:\n
+                    return tok.text;\n
+            }\n
+        }\n
+\n
+        var result = buildTree();\n
+        if (postfix.length > 0) {\n
+            var msg = "Remaining tokens after building AST: \\n";\n
+            for (var i = postfix.length - 1; i >= 0; i--) {\n
+                msg += postfix[i].type + ": " + postfix[i].text + "\\n";\n
+            }\n
+            throw new Error(msg);\n
+        }\n
+\n
+        return result;\n
+    }\n
+\n
+    return OpenLayers.Class(OpenLayers.Format, {\n
+        /**\n
+         * APIMethod: read\n
+         * Generate a filter from a CQL string.\n
+\n
+         * Parameters:\n
+         * text - {String} The CQL text.\n
+         *\n
+         * Returns:\n
+         * {<OpenLayers.Filter>} A filter based on the CQL text.\n
+         */\n
+        read: function(text) { \n
+            var result = buildAst(tokenize(text));\n
+            if (this.keepData) {\n
+                this.data = result;\n
+            }\n
+            return result;\n
+        },\n
+\n
+        /**\n
+         * APIMethod: write\n
+         * Convert a filter into a CQL string.\n
+\n
+         * Parameters:\n
+         * filter - {<OpenLayers.Filter>} The filter.\n
+         *\n
+         * Returns:\n
+         * {String} A CQL string based on the filter.\n
+         */\n
+        write: function(filter) {\n
+            if (filter instanceof OpenLayers.Geometry) {\n
+                return filter.toString();\n
+            }\n
+            switch (filter.CLASS_NAME) {\n
+                case "OpenLayers.Filter.Spatial":\n
+                    switch(filter.type) {\n
+                        case OpenLayers.Filter.Spatial.BBOX:\n
+                            return "BBOX(" +\n
+                                filter.property + "," +\n
+                                filter.value.toBBOX() +\n
+                                ")";\n
+                        case OpenLayers.Filter.Spatial.DWITHIN:\n
+                            return "DWITHIN(" +\n
+                                filter.property + ", " +\n
+                                this.write(filter.value) + ", " +\n
+                                filter.distance + ")";\n
+                        case OpenLayers.Filter.Spatial.WITHIN:\n
+                            return "WITHIN(" +\n
+                                filter.property + ", " +\n
+                                this.write(filter.value) + ")";\n
+                        case OpenLayers.Filter.Spatial.INTERSECTS:\n
+                            return "INTERSECTS(" +\n
+                                filter.property + ", " +\n
+                                this.write(filter.value) + ")";\n
+                        case OpenLayers.Filter.Spatial.CONTAINS:\n
+                            return "CONTAINS(" +\n
+                                filter.property + ", " +\n
+                                this.write(filter.value) + ")";\n
+                        default:\n
+                            throw new Error("Unknown spatial filter type: " + filter.type);\n
+                    }\n
+                case "OpenLayers.Filter.Logical":\n
+                    if (filter.type == OpenLayers.Filter.Logical.NOT) {\n
+                        // TODO: deal with precedence of logical operators to \n
+                        // avoid extra parentheses (not urgent)\n
+                        return "NOT (" + this.write(filter.filters[0]) + ")";\n
+                    } else {\n
+                        var res = "(";\n
+                        var first = true;\n
+                        for (var i = 0; i < filter.filters.length; i++) {\n
+                            if (first) {\n
+                                first = false;\n
+                            } else {\n
+                                res += ") " + logicalReverse[filter.type] + " (";\n
+                            }\n
+                            res += this.write(filter.filters[i]);\n
+                        }\n
+                        return res + ")";\n
+                    }\n
+                case "OpenLayers.Filter.Comparison":\n
+                    if (filter.type == OpenLayers.Filter.Comparison.BETWEEN) {\n
+                        return filter.property + " BETWEEN " + \n
+                            this.write(filter.lowerBoundary) + " AND " + \n
+                            this.write(filter.upperBoundary);\n
+                    } else {\n
+                        \n
+                        return filter.property +\n
+                            " " + operatorReverse[filter.type] + " " + \n
+                            this.write(filter.value);\n
+                    }\n
+                case undefined:\n
+                    if (typeof filter === "string") {\n
+                        return "\'" + filter + "\'";\n
+                    } else if (typeof filter === "number") {\n
+                        return String(filter);\n
+                    }\n
+                default:\n
+                    throw new Error("Can\'t encode: " + filter.CLASS_NAME + " " + filter);\n
+            }\n
+        },\n
+\n
+        CLASS_NAME: "OpenLayers.Format.CQL"\n
+\n
+    });\n
+})();\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

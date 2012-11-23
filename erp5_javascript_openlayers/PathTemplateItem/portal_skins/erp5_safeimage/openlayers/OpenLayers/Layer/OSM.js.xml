@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>OSM.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/XYZ.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.OSM\n
+ * This layer allows accessing OpenStreetMap tiles. By default the OpenStreetMap\n
+ *    hosted tile.openstreetmap.org Mapnik tileset is used. If you wish to use\n
+ *    a different layer instead, you need to provide a different\n
+ *    URL to the constructor. Here\'s an example for using OpenCycleMap:\n
+ * \n
+ * (code)\n
+ *     new OpenLayers.Layer.OSM("OpenCycleMap", \n
+ *       ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",\n
+ *        "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",\n
+ *        "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]); \n
+ * (end)\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.XYZ>\n
+ */\n
+OpenLayers.Layer.OSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {\n
+\n
+    /**\n
+     * APIProperty: name\n
+     * {String} The layer name. Defaults to "OpenStreetMap" if the first\n
+     * argument to the constructor is null or undefined.\n
+     */\n
+    name: "OpenStreetMap",\n
+\n
+    /**\n
+     * APIProperty: url\n
+     * {String} The tileset URL scheme. Defaults to\n
+     * : http://[a|b|c].tile.openstreetmap.org/${z}/${x}/${y}.png\n
+     * (the official OSM tileset) if the second argument to the constructor\n
+     * is null or undefined. To use another tileset you can have something\n
+     * like this:\n
+     * (code)\n
+     *     new OpenLayers.Layer.OSM("OpenCycleMap", \n
+     *       ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",\n
+     *        "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",\n
+     *        "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]); \n
+     * (end)\n
+     */\n
+    url: [\n
+        \'http://a.tile.openstreetmap.org/${z}/${x}/${y}.png\',\n
+        \'http://b.tile.openstreetmap.org/${z}/${x}/${y}.png\',\n
+        \'http://c.tile.openstreetmap.org/${z}/${x}/${y}.png\'\n
+    ],\n
+\n
+    /**\n
+     * Property: attribution\n
+     * {String} The layer attribution.\n
+     */\n
+    attribution: "Data CC-By-SA by <a href=\'http://openstreetmap.org/\'>OpenStreetMap</a>",\n
+\n
+    /**\n
+     * Property: sphericalMercator\n
+     * {Boolean}\n
+     */\n
+    sphericalMercator: true,\n
+\n
+    /**\n
+     * Property: wrapDateLine\n
+     * {Boolean}\n
+     */\n
+    wrapDateLine: true,\n
+\n
+    /** APIProperty: tileOptions\n
+     *  {Object} optional configuration options for <OpenLayers.Tile> instances\n
+     *  created by this Layer. Default is\n
+     *\n
+     *  (code)\n
+     *  {crossOriginKeyword: \'anonymous\'}\n
+     *  (end)\n
+     *\n
+     *  When using OSM tilesets other than the default ones, it may be\n
+     *  necessary to set this to\n
+     *\n
+     *  (code)\n
+     *  {crossOriginKeyword: null}\n
+     *  (end)\n
+     *\n
+     *  if the server does not send Access-Control-Allow-Origin headers.\n
+     */\n
+    tileOptions: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.OSM\n
+     *\n
+     * Parameters:\n
+     * name - {String} The layer name.\n
+     * url - {String} The tileset URL scheme.\n
+     * options - {Object} Configuration options for the layer. Any inherited\n
+     *     layer option can be set in this object (e.g.\n
+     *     <OpenLayers.Layer.Grid.buffer>).\n
+     */\n
+    initialize: function(name, url, options) {\n
+        OpenLayers.Layer.XYZ.prototype.initialize.apply(this, arguments);\n
+        this.tileOptions = OpenLayers.Util.extend({\n
+            crossOriginKeyword: \'anonymous\'\n
+        }, this.options && this.options.tileOptions);\n
+    },\n
+\n
+    /**\n
+     * Method: clone\n
+     */\n
+    clone: function(obj) {\n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.OSM(\n
+                this.name, this.url, this.getOptions());\n
+        }\n
+        obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);\n
+        return obj;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.OSM"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3922</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

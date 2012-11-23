@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SLD.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML/VersionedOGC.js\n
+ * @requires OpenLayers/Style.js\n
+ * @requires OpenLayers/Rule.js\n
+ * @requires OpenLayers/Filter/FeatureId.js\n
+ * @requires OpenLayers/Filter/Logical.js\n
+ * @requires OpenLayers/Filter/Comparison.js\n
+ * @requires OpenLayers/Filter/Spatial.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.SLD\n
+ * Read/Wite SLD. Create a new instance with the <OpenLayers.Format.SLD>\n
+ *     constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML.VersionedOGC>\n
+ */\n
+OpenLayers.Format.SLD = OpenLayers.Class(OpenLayers.Format.XML.VersionedOGC, {\n
+    \n
+    /**\n
+     * APIProperty: profile\n
+     * {String} If provided, use a custom profile.\n
+     *\n
+     * Currently supported profiles:\n
+     * - GeoServer - parses GeoServer vendor specific capabilities for SLD.\n
+     */\n
+    profile: null,\n
+\n
+    /**\n
+     * APIProperty: defaultVersion\n
+     * {String} Version number to assume if none found.  Default is "1.0.0".\n
+     */\n
+    defaultVersion: "1.0.0",\n
+    \n
+    /**\n
+     * APIProperty: stringifyOutput\n
+     * {Boolean} If true, write will return a string otherwise a DOMElement.\n
+     * Default is true.\n
+     */\n
+    stringifyOutput: true,\n
+    \n
+    /**\n
+     * APIProperty: namedLayersAsArray\n
+     * {Boolean} Generate a namedLayers array.  If false, the namedLayers\n
+     *     property value will be an object keyed by layer name. Default is\n
+     *     false.\n
+     */\n
+    namedLayersAsArray: false,\n
+    \n
+    /**\n
+     * APIMethod: write\n
+     * Write a SLD document given a list of styles.\n
+     *\n
+     * Parameters:\n
+     * sld - {Object} An object representing the SLD.\n
+     * options - {Object} Optional configuration object.\n
+     *\n
+     * Returns:\n
+     * {String} An SLD document string.\n
+     */\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Read and SLD doc and return an object representing the SLD.\n
+     *\n
+     * Parameters:\n
+     * data - {String | DOMElement} Data to read.\n
+     * options - {Object} Options for the reader.\n
+     *\n
+     * Returns:\n
+     * {Object} An object representing the SLD.\n
+     */\n
+\n
+    CLASS_NAME: "OpenLayers.Format.SLD" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2321</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,525 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Image.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Tile.js\n
+ * @requires OpenLayers/Animation.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Tile.Image\n
+ * Instances of OpenLayers.Tile.Image are used to manage the image tiles\n
+ * used by various layers.  Create a new image tile with the\n
+ * <OpenLayers.Tile.Image> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Tile>\n
+ */\n
+OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {\n
+\n
+    /** \n
+     * APIProperty: url\n
+     * {String} The URL of the image being requested. No default. Filled in by\n
+     * layer.getURL() function. May be modified by loadstart listeners.\n
+     */\n
+    url: null,\n
+    \n
+    /** \n
+     * Property: imgDiv\n
+     * {HTMLImageElement} The image for this tile.\n
+     */\n
+    imgDiv: null,\n
+    \n
+    /**\n
+     * Property: frame\n
+     * {DOMElement} The image element is appended to the frame.  Any gutter on\n
+     * the image will be hidden behind the frame. If no gutter is set,\n
+     * this will be null.\n
+     */ \n
+    frame: null, \n
+\n
+    /** \n
+     * Property: imageReloadAttempts\n
+     * {Integer} Attempts to load the image.\n
+     */\n
+    imageReloadAttempts: null,\n
+    \n
+    /**\n
+     * Property: layerAlphaHack\n
+     * {Boolean} True if the png alpha hack needs to be applied on the layer\'s div.\n
+     */\n
+    layerAlphaHack: null,\n
+    \n
+    /**\n
+     * Property: asyncRequestId\n
+     * {Integer} ID of an request to see if request is still valid. This is a\n
+     * number which increments by 1 for each asynchronous request.\n
+     */\n
+    asyncRequestId: null,\n
+    \n
+    /**\n
+     * Property: blankImageUrl\n
+     * {String} Using a data scheme url is not supported by all browsers, but\n
+     * we don\'t care because we either set it as css backgroundImage, or the\n
+     * image\'s display style is set to "none" when we use it.\n
+     */\n
+    blankImageUrl: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAQAIBRAA7",\n
+\n
+    /**\n
+     * APIProperty: maxGetUrlLength\n
+     * {Number} If set, requests that would result in GET urls with more\n
+     * characters than the number provided will be made using form-encoded\n
+     * HTTP POST. It is good practice to avoid urls that are longer than 2048\n
+     * characters.\n
+     *\n
+     * Caution:\n
+     * Older versions of Gecko based browsers (e.g. Firefox < 3.5) and most\n
+     * Opera versions do not fully support this option. On all browsers,\n
+     * transition effects are not supported if POST requests are used.\n
+     */\n
+    maxGetUrlLength: null,\n
+\n
+    /**\n
+     * Property: canvasContext\n
+     * {CanvasRenderingContext2D} A canvas context associated with\n
+     * the tile image.\n
+     */\n
+    canvasContext: null,\n
+    \n
+    /**\n
+     * APIProperty: crossOriginKeyword\n
+     * The value of the crossorigin keyword to use when loading images. This is\n
+     * only relevant when using <getCanvasContext> for tiles from remote\n
+     * origins and should be set to either \'anonymous\' or \'use-credentials\'\n
+     * for servers that send Access-Control-Allow-Origin headers with their\n
+     * tiles.\n
+     */\n
+    crossOriginKeyword: null,\n
+\n
+    /** TBD 3.0 - reorder the parameters to the init function to remove \n
+     *             URL. the getUrl() function on the layer gets called on \n
+     *             each draw(), so no need to specify it here.\n
+     */\n
+\n
+    /** \n
+     * Constructor: OpenLayers.Tile.Image\n
+     * Constructor for a new <OpenLayers.Tile.Image> instance.\n
+     * \n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer>} layer that the tile will go in.\n
+     * position - {<OpenLayers.Pixel>}\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     * url - {<String>} Deprecated. Remove me in 3.0.\n
+     * size - {<OpenLayers.Size>}\n
+     * options - {Object}\n
+     */   \n
+    initialize: function(layer, position, bounds, url, size, options) {\n
+        OpenLayers.Tile.prototype.initialize.apply(this, arguments);\n
+\n
+        this.url = url; //deprecated remove me\n
+        \n
+        this.layerAlphaHack = this.layer.alpha && OpenLayers.Util.alphaHack();\n
+\n
+        if (this.maxGetUrlLength != null || this.layer.gutter || this.layerAlphaHack) {\n
+            // only create frame if it\'s needed\n
+            this.frame = document.createElement("div");\n
+            this.frame.style.position = "absolute";\n
+            this.frame.style.overflow = "hidden";\n
+        }\n
+        if (this.maxGetUrlLength != null) {\n
+            OpenLayers.Util.extend(this, OpenLayers.Tile.Image.IFrame);\n
+        }\n
+    },\n
+    \n
+    /** \n
+     * APIMethod: destroy\n
+     * nullify references to prevent circular references and memory leaks\n
+     */\n
+    destroy: function() {\n
+        if (this.imgDiv)  {\n
+            this.clear();\n
+            this.imgDiv = null;\n
+            this.frame = null;\n
+        }\n
+        // don\'t handle async requests any more\n
+        this.asyncRequestId = null;\n
+        OpenLayers.Tile.prototype.destroy.apply(this, arguments);\n
+    },\n
+    \n
+    /**\n
+     * Method: draw\n
+     * Check that a tile should be drawn, and draw it.\n
+     * \n
+     * Returns:\n
+     * {Boolean} Was a tile drawn?\n
+     */\n
+    draw: function() {\n
+        var drawn = OpenLayers.Tile.prototype.draw.apply(this, arguments);\n
+        if (drawn) {\n
+            // The layer\'s reproject option is deprecated.\n
+            if (this.layer != this.layer.map.baseLayer && this.layer.reproject) {\n
+                // getBoundsFromBaseLayer is defined in deprecated.js.\n
+                this.bounds = this.getBoundsFromBaseLayer(this.position);\n
+            }\n
+            if (this.isLoading) {\n
+                //if we\'re already loading, send \'reload\' instead of \'loadstart\'.\n
+                this._loadEvent = "reload"; \n
+            } else {\n
+                this.isLoading = true;\n
+                this._loadEvent = "loadstart";\n
+            }\n
+            this.positionTile();\n
+            this.renderTile();\n
+        } else {\n
+            this.unload();\n
+        }\n
+        return drawn;\n
+    },\n
+    \n
+    /**\n
+     * Method: renderTile\n
+     * Internal function to actually initialize the image tile,\n
+     *     position it correctly, and set its url.\n
+     */\n
+    renderTile: function() {\n
+        this.layer.div.appendChild(this.getTile());\n
+        if (this.layer.async) {\n
+            // Asynchronous image requests call the asynchronous getURL method\n
+            // on the layer to fetch an image that covers \'this.bounds\'.\n
+            var id = this.asyncRequestId = (this.asyncRequestId || 0) + 1;\n
+            this.layer.getURLasync(this.bounds, function(url) {\n
+                if (id == this.asyncRequestId) {\n
+                    this.url = url;\n
+                    this.initImage();\n
+                }\n
+            }, this);\n
+        } else {\n
+            // synchronous image requests get the url immediately.\n
+            this.url = this.layer.getURL(this.bounds);\n
+            this.initImage();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: positionTile\n
+     * Using the properties currenty set on the layer, position the tile correctly.\n
+     * This method is used both by the async and non-async versions of the Tile.Image\n
+     * code.\n
+     */\n
+    positionTile: function() {\n
+        var style = this.getTile().style,\n
+            size = this.frame ? this.size :\n
+                                this.layer.getImageSize(this.bounds);\n
+        style.left = this.position.x + "%";\n
+        style.top = this.position.y + "%";\n
+        style.width = size.w + "%";\n
+        style.height = size.h + "%";\n
+    },\n
+\n
+    /** \n
+     * Method: clear\n
+     * Remove the tile from the DOM, clear it of any image related data so that\n
+     * it can be reused in a new location.\n
+     */\n
+    clear: function() {\n
+        OpenLayers.Tile.prototype.clear.apply(this, arguments);\n
+        var img = this.imgDiv;\n
+        if (img) {\n
+            OpenLayers.Event.stopObservingElement(img);\n
+            var tile = this.getTile();\n
+            if (tile.parentNode === this.layer.div) {\n
+                this.layer.div.removeChild(tile);\n
+            }\n
+            this.setImgSrc();\n
+            if (this.layerAlphaHack === true) {\n
+                img.style.filter = "";\n
+            }\n
+            OpenLayers.Element.removeClass(img, "olImageLoadError");\n
+        }\n
+        this.canvasContext = null;\n
+    },\n
+    \n
+    /**\n
+     * Method: getImage\n
+     * Returns or creates and returns the tile image.\n
+     */\n
+    getImage: function() {\n
+        if (!this.imgDiv) {\n
+            this.imgDiv = document.createElement("img");\n
+\n
+            this.imgDiv.className = "olTileImage";\n
+            // avoid image gallery menu in IE6\n
+            this.imgDiv.galleryImg = "no";\n
+\n
+            var style = this.imgDiv.style;\n
+            if (this.frame) {\n
+                var left = 0, top = 0;\n
+                if (this.layer.gutter) {\n
+                    left = this.layer.gutter / this.layer.tileSize.w * 100;\n
+                    top = this.layer.gutter / this.layer.tileSize.h * 100;\n
+                }\n
+                style.left = -left + "%";\n
+                style.top = -top + "%";\n
+                style.width = (2 * left + 100) + "%";\n
+                style.height = (2 * top + 100) + "%";\n
+            }\n
+            style.visibility = "hidden";\n
+            style.opacity = 0;\n
+            if (this.layer.opacity < 1) {\n
+                style.filter = \'alpha(opacity=\' +\n
+                               (this.layer.opacity * 100) +\n
+                               \')\';\n
+            }\n
+            style.position = "absolute";\n
+            if (this.layerAlphaHack) {\n
+                // move the image out of sight\n
+                style.paddingTop = style.height;\n
+                style.height = "0";\n
+                style.width = "100%";\n
+            }\n
+            if (this.frame) {\n
+                this.frame.appendChild(this.imgDiv);\n
+            }\n
+        }\n
+\n
+        return this.imgDiv;\n
+    },\n
+\n
+    /**\n
+     * Method: initImage\n
+     * Creates the content for the frame on the tile.\n
+     */\n
+    initImage: function() {\n
+        this.events.triggerEvent(this._loadEvent);\n
+        var img = this.getImage();\n
+        if (this.url && img.getAttribute("src") == this.url) {\n
+            this.onImageLoad();\n
+        } else {\n
+            // We need to start with a blank image, to make sure that no\n
+            // loading image placeholder and no old image is displayed when we\n
+            // set the display style to "" in onImageLoad, which is called\n
+            // after the image is loaded, but before it is rendered. So we set\n
+            // a blank image with a data scheme URI, and register for the load\n
+            // event (for browsers that support data scheme) and the error\n
+            // event (for browsers that don\'t). In the event handler, we set\n
+            // the final src.\n
+            var load = OpenLayers.Function.bind(function() {\n
+                OpenLayers.Event.stopObservingElement(img);\n
+                OpenLayers.Event.observe(img, "load",\n
+                    OpenLayers.Function.bind(this.onImageLoad, this)\n
+                );\n
+                OpenLayers.Event.observe(img, "error",\n
+                    OpenLayers.Function.bind(this.onImageError, this)\n
+                );\n
+                this.imageReloadAttempts = 0;\n
+                this.setImgSrc(this.url);\n
+            }, this);\n
+            if (img.getAttribute("src") == this.blankImageUrl) {\n
+                load();\n
+            } else {\n
+                OpenLayers.Event.observe(img, "load", load);\n
+                OpenLayers.Event.observe(img, "error", load);\n
+                if (this.crossOriginKeyword) {\n
+                    img.removeAttribute("crossorigin");\n
+                }\n
+                img.src = this.blankImageUrl;\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: setImgSrc\n
+     * Sets the source for the tile image\n
+     *\n
+     * Parameters:\n
+     * url - {String} or undefined to hide the image\n
+     */\n
+    setImgSrc: function(url) {\n
+        var img = this.imgDiv;\n
+        img.style.visibility = \'hidden\';\n
+        img.style.opacity = 0;\n
+        if (url) {\n
+            // don\'t set crossOrigin if the url is a data URL\n
+            if (this.crossOriginKeyword) {\n
+                if (url.substr(0, 5) !== \'data:\') {\n
+                    img.setAttribute("crossorigin", this.crossOriginKeyword);\n
+                } else {\n
+                    img.removeAttribute("crossorigin");\n
+                }\n
+            }\n
+            img.src = url;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: getTile\n
+     * Get the tile\'s markup.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The tile\'s markup\n
+     */\n
+    getTile: function() {\n
+        return this.frame ? this.frame : this.getImage();\n
+    },\n
+\n
+    /**\n
+     * Method: createBackBuffer\n
+     * Create a backbuffer for this tile. A backbuffer isn\'t exactly a clone\n
+     * of the tile\'s markup, because we want to avoid the reloading of the\n
+     * image. So we clone the frame, and steal the image from the tile.\n
+     *\n
+     * Returns:\n
+     * {DOMElement} The markup, or undefined if the tile has no image\n
+     * or if it\'s currently loading.\n
+     */\n
+    createBackBuffer: function() {\n
+        if (!this.imgDiv || this.isLoading) {\n
+            return;\n
+        }\n
+        var backBuffer;\n
+        if (this.frame) {\n
+            backBuffer = this.frame.cloneNode(false);\n
+            backBuffer.appendChild(this.imgDiv);\n
+        } else {\n
+            backBuffer = this.imgDiv;\n
+        }\n
+        this.imgDiv = null;\n
+        return backBuffer;\n
+    },\n
+\n
+    /**\n
+     * Method: onImageLoad\n
+     * Handler for the image onload event\n
+     */\n
+    onImageLoad: function() {\n
+        var img = this.imgDiv;\n
+        OpenLayers.Event.stopObservingElement(img);\n
+\n
+        img.style.visibility = \'inherit\';\n
+        img.style.opacity = this.layer.opacity;\n
+\n
+        this.isLoading = false;\n
+        this.canvasContext = null;\n
+        this.events.triggerEvent("loadend");\n
+\n
+        // IE<7 needs a reflow when the tiles are loaded because of the\n
+        // percentage based positioning. Otherwise nothing is shown\n
+        // until the user interacts with the map in some way.\n
+        if (parseFloat(navigator.appVersion.split("MSIE")[1]) < 7 &&\n
+                this.layer && this.layer.div) {\n
+            var span = document.createElement("span");\n
+            span.style.display = "none";\n
+            var layerDiv = this.layer.div;\n
+            layerDiv.appendChild(span);\n
+            window.setTimeout(function() {\n
+                span.parentNode === layerDiv && span.parentNode.removeChild(span);\n
+            }, 0);\n
+        }\n
+\n
+        if (this.layerAlphaHack === true) {\n
+            img.style.filter =\n
+                "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'" +\n
+                img.src + "\', sizingMethod=\'scale\')";\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: onImageError\n
+     * Handler for the image onerror event\n
+     */\n
+    onImageError: function() {\n
+        var img = this.imgDiv;\n
+        if (img.src != null) {\n
+            this.imageReloadAttempts++;\n
+            if (this.imageReloadAttempts <= OpenLayers.IMAGE_RELOAD_ATTEMPTS) {\n
+                this.setImgSrc(this.layer.getURL(this.bounds));\n
+            } else {\n
+                OpenLayers.Element.addClass(img, "olImageLoadError");\n
+                this.events.triggerEvent("loaderror");\n
+                this.onImageLoad();\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: getCanvasContext\n
+     * Returns a canvas context associated with the tile image (with\n
+     * the image drawn on it).\n
+     * Returns undefined if the browser does not support canvas, if\n
+     * the tile has no image or if it\'s currently loading.\n
+     *\n
+     * The function returns a canvas context instance but the\n
+     * underlying canvas is still available in the \'canvas\' property:\n
+     * (code)\n
+     * var context = tile.getCanvasContext();\n
+     * if (context) {\n
+     *     var data = context.canvas.toDataURL(\'image/jpeg\');\n
+     * }\n
+     * (end)\n
+     *\n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+    getCanvasContext: function() {\n
+        if (OpenLayers.CANVAS_SUPPORTED && this.imgDiv && !this.isLoading) {\n
+            if (!this.canvasContext) {\n
+                var canvas = document.createElement("canvas");\n
+                canvas.width = this.size.w;\n
+                canvas.height = this.size.h;\n
+                this.canvasContext = canvas.getContext("2d");\n
+                this.canvasContext.drawImage(this.imgDiv, 0, 0);\n
+            }\n
+            return this.canvasContext;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Tile.Image"\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16449</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

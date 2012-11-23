@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v2.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/GML/Base.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.GML.v2\n
+ * Parses GML version 2.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.GML.Base>\n
+ */\n
+OpenLayers.Format.GML.v2 = OpenLayers.Class(OpenLayers.Format.GML.Base, {\n
+    \n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} Schema location for a particular minor version.\n
+     */\n
+    schemaLocation: "http://www.opengis.net/gml http://schemas.opengis.net/gml/2.1.2/feature.xsd",\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.GML.v2\n
+     * Create a parser for GML v2.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     *\n
+     * Valid options properties:\n
+     * featureType - {String} Local (without prefix) feature typeName (required).\n
+     * featureNS - {String} Feature namespace (required).\n
+     * geometryName - {String} Geometry element name.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.GML.Base.prototype.initialize.apply(this, [options]);\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "gml": OpenLayers.Util.applyDefaults({\n
+            "outerBoundaryIs": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                container.outer = obj.components[0];\n
+            },\n
+            "innerBoundaryIs": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                container.inner.push(obj.components[0]);\n
+            },\n
+            "Box": function(node, container) {\n
+                var obj = {};\n
+                this.readChildNodes(node, obj);\n
+                if(!container.components) {\n
+                    container.components = [];\n
+                }\n
+                var min = obj.points[0];\n
+                var max = obj.points[1];\n
+                container.components.push(\n
+                    new OpenLayers.Bounds(min.x, min.y, max.x, max.y)\n
+                );\n
+            }\n
+        }, OpenLayers.Format.GML.Base.prototype.readers["gml"]),\n
+        "feature": OpenLayers.Format.GML.Base.prototype.readers["feature"],\n
+        "wfs": OpenLayers.Format.GML.Base.prototype.readers["wfs"]\n
+    },\n
+\n
+    /**\n
+     * Method: write\n
+     *\n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>) | OpenLayers.Feature.Vector}\n
+     *     An array of features or a single feature.\n
+     *\n
+     * Returns:\n
+     * {String} Given an array of features, a doc with a gml:featureMembers\n
+     *     element will be returned.  Given a single feature, a doc with a\n
+     *     gml:featureMember element will be returned.\n
+     */\n
+    write: function(features) {\n
+        var name;\n
+        if(OpenLayers.Util.isArray(features)) {\n
+            // GML2 only has abstract feature collections\n
+            // wfs provides a feature collection from a well-known schema\n
+            name = "wfs:FeatureCollection";\n
+        } else {\n
+            name = "gml:featureMember";\n
+        }\n
+        var root = this.writeNode(name, features);\n
+        this.setAttributeNS(\n
+            root, this.namespaces["xsi"],\n
+            "xsi:schemaLocation", this.schemaLocation\n
+        );\n
+\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [root]);\n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "gml": OpenLayers.Util.applyDefaults({\n
+            "Point": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Point");\n
+                this.writeNode("coordinates", [geometry], node);\n
+                return node;\n
+            },\n
+            "coordinates": function(points) {\n
+                var numPoints = points.length;\n
+                var parts = new Array(numPoints);\n
+                var point;\n
+                for(var i=0; i<numPoints; ++i) {\n
+                    point = points[i];\n
+                    if(this.xy) {\n
+                        parts[i] = point.x + "," + point.y;\n
+                    } else {\n
+                        parts[i] = point.y + "," + point.x;\n
+                    }\n
+                    if(point.z != undefined) { // allow null or undefined\n
+                        parts[i] += "," + point.z;\n
+                    }\n
+                }\n
+                return this.createElementNSPlus("gml:coordinates", {\n
+                    attributes: {\n
+                        decimal: ".", cs: ",", ts: " "\n
+                    },\n
+                    value: (numPoints == 1) ? parts[0] : parts.join(" ")\n
+                });\n
+            },\n
+            "LineString": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:LineString");\n
+                this.writeNode("coordinates", geometry.components, node);\n
+                return node;\n
+            },\n
+            "Polygon": function(geometry) {\n
+                var node = this.createElementNSPlus("gml:Polygon");\n
+                this.writeNode("outerBoundaryIs", geometry.components[0], node);\n
+                for(var i=1; i<geometry.components.length; ++i) {\n
+                    this.writeNode(\n
+                        "innerBoundaryIs", geometry.components[i], node\n
+                    );\n
+                }\n
+                return node;\n
+            },\n
+            "outerBoundaryIs": function(ring) {\n
+                var node = this.createElementNSPlus("gml:outerBoundaryIs");\n
+                this.writeNode("LinearRing", ring, node);\n
+                return node;\n
+            },\n
+            "innerBoundaryIs": function(ring) {\n
+                var node = this.createElementNSPlus("gml:innerBoundaryIs");\n
+                this.writeNode("LinearRing", ring, node);\n
+                return node;\n
+            },\n
+            "LinearRing": function(ring) {\n
+                var node = this.createElementNSPlus("gml:LinearRing");\n
+                this.writeNode("coordinates", ring.components, node);\n
+                return node;\n
+            },\n
+            "Box": function(bounds) {\n
+                var node = this.createElementNSPlus("gml:Box");\n
+                this.writeNode("coordinates", [\n
+                    {x: bounds.left, y: bounds.bottom},\n
+                    {x: bounds.right, y: bounds.top}\n
+                ], node);\n
+                // srsName attribute is optional for gml:Box\n
+                if(this.srsName) {\n
+                    node.setAttribute("srsName", this.srsName);\n
+                }\n
+                return node;\n
+            }\n
+        }, OpenLayers.Format.GML.Base.prototype.writers["gml"]),\n
+        "feature": OpenLayers.Format.GML.Base.prototype.writers["feature"],\n
+        "wfs": OpenLayers.Format.GML.Base.prototype.writers["wfs"]\n
+    },\n
+    \n
+    CLASS_NAME: "OpenLayers.Format.GML.v2" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7439</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

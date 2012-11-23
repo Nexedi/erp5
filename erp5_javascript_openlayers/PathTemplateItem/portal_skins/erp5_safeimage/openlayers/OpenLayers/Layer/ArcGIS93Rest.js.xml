@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ArcGIS93Rest.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.ArcGIS93Rest\n
+ * Instances of OpenLayers.Layer.ArcGIS93Rest are used to display data from\n
+ *     ESRI ArcGIS Server 9.3 (and up?) Mapping Services using the REST API.\n
+ *     Create a new ArcGIS93Rest layer with the <OpenLayers.Layer.ArcGIS93Rest>\n
+ *     constructor.  More detail on the REST API is available at\n
+ *     http://sampleserver1.arcgisonline.com/ArcGIS/SDK/REST/index.html ;\n
+ *     specifically, the URL provided to this layer should be an export service\n
+ *     URL: http://sampleserver1.arcgisonline.com/ArcGIS/SDK/REST/export.html \n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.ArcGIS93Rest = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+\n
+    /**\n
+     * Constant: DEFAULT_PARAMS\n
+     * {Object} Hashtable of default parameter key/value pairs \n
+     */\n
+    DEFAULT_PARAMS: { \n
+      format: "png"\n
+    },\n
+        \n
+    /**\n
+     * APIProperty: isBaseLayer\n
+     * {Boolean} Default is true for ArcGIS93Rest layer\n
+     */\n
+    isBaseLayer: true,\n
+ \n
+ \n
+    /**\n
+     * Constructor: OpenLayers.Layer.ArcGIS93Rest\n
+     * Create a new ArcGIS93Rest layer object.\n
+     *\n
+     * Example:\n
+     * (code)\n
+     * var arcims = new OpenLayers.Layer.ArcGIS93Rest("MyName",\n
+     *                                    "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_StateCityHighway_USA/MapServer/export", \n
+     *                                    {\n
+     *                                      layers: "0,1,2"\n
+     *                                    });\n
+     * (end)\n
+     *\n
+     * Parameters:\n
+     * name - {String} A name for the layer\n
+     * url - {String} Base url for the ArcGIS server REST service\n
+     * options - {Object} An object with key/value pairs representing the\n
+     *                    options and option values.\n
+     *\n
+     * Valid Options:\n
+     *        format - {String} MIME type of desired image type.\n
+     *        layers - {String} Comma-separated list of layers to display.\n
+     *        srs - {String} Projection ID.\n
+     */\n
+    initialize: function(name, url, params, options) {\n
+        var newArguments = [];\n
+        //uppercase params\n
+        params = OpenLayers.Util.upperCaseObject(params);\n
+        newArguments.push(name, url, params, options);\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);\n
+        OpenLayers.Util.applyDefaults(\n
+                       this.params, \n
+                       OpenLayers.Util.upperCaseObject(this.DEFAULT_PARAMS)\n
+                       );\n
+                       \n
+        //layer is transparent        \n
+        if (this.params.TRANSPARENT && \n
+            this.params.TRANSPARENT.toString().toLowerCase() == "true") {\n
+            \n
+            // unless explicitly set in options, make layer an overlay\n
+            if ( (options == null) || (!options.isBaseLayer) ) {\n
+                this.isBaseLayer = false;\n
+            } \n
+            \n
+            // jpegs can never be transparent, so intelligently switch the \n
+            //  format, depending on the browser\'s capabilities\n
+            if (this.params.FORMAT == "jpg") {\n
+                this.params.FORMAT = OpenLayers.Util.alphaHack() ? "gif"\n
+                                                                 : "png";\n
+            }\n
+        }\n
+    },    \n
+\n
+    /**\n
+         * Method: clone\n
+         * Create a clone of this layer\n
+         *\n
+         * Returns:\n
+         * {<OpenLayers.Layer.ArcGIS93Rest>} An exact clone of this layer\n
+         */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.ArcGIS93Rest(this.name,\n
+                                           this.url,\n
+                                           this.params,\n
+                                           this.getOptions());\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+\n
+        return obj;\n
+    },\n
+    \n
+    \n
+    /**\n
+     * Method: getURL\n
+     * Return an image url this layer.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} A bounds representing the bbox for the\n
+     *                                request.\n
+     *\n
+     * Returns:\n
+     * {String} A string with the map image\'s url.\n
+     */\n
+    getURL: function (bounds) {\n
+        bounds = this.adjustBounds(bounds);\n
+\n
+        // ArcGIS Server only wants the numeric portion of the projection ID.\n
+        var projWords = this.projection.getCode().split(":");\n
+        var srid = projWords[projWords.length - 1];\n
+\n
+        var imageSize = this.getImageSize(); \n
+        var newParams = {\n
+            \'BBOX\': bounds.toBBOX(),\n
+            \'SIZE\': imageSize.w + "," + imageSize.h,\n
+            // We always want image, the other options were json, image with a whole lotta html around it, etc.\n
+            \'F\': "image",\n
+            \'BBOXSR\': srid,\n
+            \'IMAGESR\': srid\n
+        };\n
+\n
+        // Now add the filter parameters.\n
+        if (this.layerDefs) {\n
+            var layerDefStrList = [];\n
+            var layerID;\n
+            for(layerID in this.layerDefs) {\n
+                if (this.layerDefs.hasOwnProperty(layerID)) {\n
+                    if (this.layerDefs[layerID]) {\n
+                        layerDefStrList.push(layerID);\n
+                        layerDefStrList.push(":");\n
+                        layerDefStrList.push(this.layerDefs[layerID]);\n
+                        layerDefStrList.push(";");\n
+                    }\n
+                }\n
+            }\n
+            if (layerDefStrList.length > 0) {\n
+                newParams[\'LAYERDEFS\'] = layerDefStrList.join("");\n
+            }\n
+        }\n
+        var requestString = this.getFullRequestString(newParams);\n
+        return requestString;\n
+    },\n
+    \n
+    /**\n
+     * Method: setLayerFilter\n
+     * addTile creates a tile, initializes it, and adds it to the layer div. \n
+     *\n
+     * Parameters:\n
+     * id - {String} The id of the layer to which the filter applies.\n
+     * queryDef - {String} A sql-ish query filter, for more detail see the ESRI\n
+     *                     documentation at http://sampleserver1.arcgisonline.com/ArcGIS/SDK/REST/export.html\n
+     */\n
+    setLayerFilter: function ( id, queryDef ) {\n
+        if (!this.layerDefs) {\n
+            this.layerDefs = {};\n
+        }\n
+        if (queryDef) {\n
+            this.layerDefs[id] = queryDef;\n
+        } else {\n
+            delete this.layerDefs[id];\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: clearLayerFilter\n
+     * Clears layer filters, either from a specific layer,\n
+     * or all of them.\n
+     *\n
+     * Parameters:\n
+     * id - {String} The id of the layer from which to remove any\n
+     *               filter.  If unspecified/blank, all filters\n
+     *               will be removed.\n
+     */\n
+    clearLayerFilter: function ( id ) {\n
+        if (id) {\n
+            delete this.layerDefs[id];\n
+        } else {\n
+            delete this.layerDefs;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: mergeNewParams\n
+     * Catch changeParams and uppercase the new params to be merged in\n
+     *     before calling changeParams on the super class.\n
+     * \n
+     *     Once params have been changed, the tiles will be reloaded with\n
+     *     the new parameters.\n
+     * \n
+     * Parameters:\n
+     * newParams - {Object} Hashtable of new params to use\n
+     */\n
+    mergeNewParams:function(newParams) {\n
+        var upperParams = OpenLayers.Util.upperCaseObject(newParams);\n
+        var newArguments = [upperParams];\n
+        return OpenLayers.Layer.Grid.prototype.mergeNewParams.apply(this, \n
+                                                             newArguments);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.ArcGIS93Rest"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7956</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

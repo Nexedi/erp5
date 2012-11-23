@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Zoom.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Events/buttonclick.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Zoom\n
+ * The Zoom control is a pair of +/- links for zooming in and out.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Zoom = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: zoomInText\n
+     * {String}\n
+     * Text for zoom-in link.  Default is "+".\n
+     */\n
+    zoomInText: "+",\n
+\n
+    /**\n
+     * APIProperty: zoomInId\n
+     * {String}\n
+     * Instead of having the control create a zoom in link, you can provide \n
+     *     the identifier for an anchor element already added to the document.\n
+     *     By default, an element with id "olZoomInLink" will be searched for\n
+     *     and used if it exists.\n
+     */\n
+    zoomInId: "olZoomInLink",\n
+\n
+    /**\n
+     * APIProperty: zoomOutText\n
+     * {String}\n
+     * Text for zoom-out link.  Default is "-".\n
+     */\n
+    zoomOutText: "-",\n
+\n
+    /**\n
+     * APIProperty: zoomOutId\n
+     * {String}\n
+     * Instead of having the control create a zoom out link, you can provide \n
+     *     the identifier for an anchor element already added to the document.\n
+     *     By default, an element with id "olZoomOutLink" will be searched for\n
+     *     and used if it exists.\n
+     */\n
+    zoomOutId: "olZoomOutLink",\n
+\n
+    /**\n
+     * Method: draw\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A reference to the DOMElement containing the zoom links.\n
+     */\n
+    draw: function() {\n
+        var div = OpenLayers.Control.prototype.draw.apply(this),\n
+            links = this.getOrCreateLinks(div),\n
+            zoomIn = links.zoomIn,\n
+            zoomOut = links.zoomOut,\n
+            eventsInstance = this.map.events;\n
+        \n
+        if (zoomOut.parentNode !== div) {\n
+            eventsInstance = this.events;\n
+            eventsInstance.attachToElement(zoomOut.parentNode);\n
+        }\n
+        eventsInstance.register("buttonclick", this, this.onZoomClick);\n
+        \n
+        this.zoomInLink = zoomIn;\n
+        this.zoomOutLink = zoomOut;\n
+        return div;\n
+    },\n
+    \n
+    /**\n
+     * Method: getOrCreateLinks\n
+     * \n
+     * Parameters:\n
+     * el - {DOMElement}\n
+     *\n
+     * Return: \n
+     * {Object} Object with zoomIn and zoomOut properties referencing links.\n
+     */\n
+    getOrCreateLinks: function(el) {\n
+        var zoomIn = document.getElementById(this.zoomInId),\n
+            zoomOut = document.getElementById(this.zoomOutId);\n
+        if (!zoomIn) {\n
+            zoomIn = document.createElement("a");\n
+            zoomIn.href = "#zoomIn";\n
+            zoomIn.appendChild(document.createTextNode(this.zoomInText));\n
+            zoomIn.className = "olControlZoomIn";\n
+            el.appendChild(zoomIn);\n
+        }\n
+        OpenLayers.Element.addClass(zoomIn, "olButton");\n
+        if (!zoomOut) {\n
+            zoomOut = document.createElement("a");\n
+            zoomOut.href = "#zoomOut";\n
+            zoomOut.appendChild(document.createTextNode(this.zoomOutText));\n
+            zoomOut.className = "olControlZoomOut";\n
+            el.appendChild(zoomOut);\n
+        }\n
+        OpenLayers.Element.addClass(zoomOut, "olButton");\n
+        return {\n
+            zoomIn: zoomIn, zoomOut: zoomOut\n
+        };\n
+    },\n
+    \n
+    /**\n
+     * Method: onZoomClick\n
+     * Called when zoomin/out link is clicked.\n
+     */\n
+    onZoomClick: function(evt) {\n
+        var button = evt.buttonElement;\n
+        if (button === this.zoomInLink) {\n
+            this.map.zoomIn();\n
+        } else if (button === this.zoomOutLink) {\n
+            this.map.zoomOut();\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: destroy\n
+     * Clean up.\n
+     */\n
+    destroy: function() {\n
+        if (this.map) {\n
+            this.map.events.unregister("buttonclick", this, this.onZoomClick);\n
+        }\n
+        delete this.zoomInLink;\n
+        delete this.zoomOutLink;\n
+        OpenLayers.Control.prototype.destroy.apply(this);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Zoom"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4142</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

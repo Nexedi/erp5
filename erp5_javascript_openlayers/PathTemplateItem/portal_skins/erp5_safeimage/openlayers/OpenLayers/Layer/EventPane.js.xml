@@ -1,0 +1,485 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventPane.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer.js\n
+ * @requires OpenLayers/Util.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.EventPane\n
+ * Base class for 3rd party layers, providing a DOM element which isolates\n
+ * the 3rd-party layer from mouse events.\n
+ * Only used by Google layers.\n
+ *\n
+ * Automatically instantiated by the Google constructor, and not usually instantiated directly.\n
+ *\n
+ * Create a new event pane layer with the\n
+ * <OpenLayers.Layer.EventPane> constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer>\n
+ */\n
+OpenLayers.Layer.EventPane = OpenLayers.Class(OpenLayers.Layer, {\n
+    \n
+    /**\n
+     * APIProperty: smoothDragPan\n
+     * {Boolean} smoothDragPan determines whether non-public/internal API\n
+     *     methods are used for better performance while dragging EventPane \n
+     *     layers. When not in sphericalMercator mode, the smoother dragging \n
+     *     doesn\'t actually move north/south directly with the number of \n
+     *     pixels moved, resulting in a slight offset when you drag your mouse \n
+     *     north south with this option on. If this visual disparity bothers \n
+     *     you, you should turn this option off, or use spherical mercator. \n
+     *     Default is on.\n
+     */\n
+    smoothDragPan: true,\n
+\n
+    /**\n
+     * Property: isBaseLayer\n
+     * {Boolean} EventPaned layers are always base layers, by necessity.\n
+     */ \n
+    isBaseLayer: true,\n
+\n
+    /**\n
+     * APIProperty: isFixed\n
+     * {Boolean} EventPaned layers are fixed by default.\n
+     */ \n
+    isFixed: true,\n
+\n
+    /**\n
+     * Property: pane\n
+     * {DOMElement} A reference to the element that controls the events.\n
+     */\n
+    pane: null,\n
+\n
+\n
+    /**\n
+     * Property: mapObject\n
+     * {Object} This is the object which will be used to load the 3rd party library\n
+     * in the case of the google layer, this will be of type GMap, \n
+     * in the case of the ve layer, this will be of type VEMap\n
+     */ \n
+    mapObject: null,\n
+\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.EventPane\n
+     * Create a new event pane layer\n
+     *\n
+     * Parameters:\n
+     * name - {String}\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, options) {\n
+        OpenLayers.Layer.prototype.initialize.apply(this, arguments);\n
+        if (this.pane == null) {\n
+            this.pane = OpenLayers.Util.createDiv(this.div.id + "_EventPane");\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     * Deconstruct this layer.\n
+     */\n
+    destroy: function() {\n
+        this.mapObject = null;\n
+        this.pane = null;\n
+        OpenLayers.Layer.prototype.destroy.apply(this, arguments); \n
+    },\n
+\n
+    \n
+    /**\n
+     * Method: setMap\n
+     * Set the map property for the layer. This is done through an accessor\n
+     * so that subclasses can override this and take special action once \n
+     * they have their map variable set. \n
+     *\n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Layer.prototype.setMap.apply(this, arguments);\n
+        \n
+        this.pane.style.zIndex = parseInt(this.div.style.zIndex) + 1;\n
+        this.pane.style.display = this.div.style.display;\n
+        this.pane.style.width="100%";\n
+        this.pane.style.height="100%";\n
+        if (OpenLayers.BROWSER_NAME == "msie") {\n
+            this.pane.style.background = \n
+                "url(" + OpenLayers.Util.getImageLocation("blank.gif") + ")";\n
+        }\n
+\n
+        if (this.isFixed) {\n
+            this.map.viewPortDiv.appendChild(this.pane);\n
+        } else {\n
+            this.map.layerContainerDiv.appendChild(this.pane);\n
+        }\n
+\n
+        // once our layer has been added to the map, we can load it\n
+        this.loadMapObject();\n
+    \n
+        // if map didn\'t load, display warning\n
+        if (this.mapObject == null) {\n
+            this.loadWarningMessage();\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: removeMap\n
+     * On being removed from the map, we\'ll like to remove the invisible \'pane\'\n
+     *     div that we added to it on creation. \n
+     * \n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    removeMap: function(map) {\n
+        if (this.pane && this.pane.parentNode) {\n
+            this.pane.parentNode.removeChild(this.pane);\n
+        }\n
+        OpenLayers.Layer.prototype.removeMap.apply(this, arguments);\n
+    },\n
+  \n
+    /**\n
+     * Method: loadWarningMessage\n
+     * If we can\'t load the map lib, then display an error message to the \n
+     *     user and tell them where to go for help.\n
+     * \n
+     *     This function sets up the layout for the warning message. Each 3rd\n
+     *     party layer must implement its own getWarningHTML() function to \n
+     *     provide the actual warning message.\n
+     */\n
+    loadWarningMessage:function() {\n
+\n
+        this.div.style.backgroundColor = "darkblue";\n
+\n
+        var viewSize = this.map.getSize();\n
+        \n
+        var msgW = Math.min(viewSize.w, 300);\n
+        var msgH = Math.min(viewSize.h, 200);\n
+        var size = new OpenLayers.Size(msgW, msgH);\n
+\n
+        var centerPx = new OpenLayers.Pixel(viewSize.w/2, viewSize.h/2);\n
+\n
+        var topLeft = centerPx.add(-size.w/2, -size.h/2);            \n
+\n
+        var div = OpenLayers.Util.createDiv(this.name + "_warning", \n
+                                            topLeft, \n
+                                            size,\n
+                                            null,\n
+                                            null,\n
+                                            null,\n
+                                            "auto");\n
+\n
+        div.style.padding = "7px";\n
+        div.style.backgroundColor = "yellow";\n
+\n
+        div.innerHTML = this.getWarningHTML();\n
+        this.div.appendChild(div);\n
+    },\n
+  \n
+    /** \n
+     * Method: getWarningHTML\n
+     * To be implemented by subclasses.\n
+     * \n
+     * Returns:\n
+     * {String} String with information on why layer is broken, how to get\n
+     *          it working.\n
+     */\n
+    getWarningHTML:function() {\n
+        //should be implemented by subclasses\n
+        return "";\n
+    },\n
+  \n
+    /**\n
+     * Method: display\n
+     * Set the display on the pane\n
+     *\n
+     * Parameters:\n
+     * display - {Boolean}\n
+     */\n
+    display: function(display) {\n
+        OpenLayers.Layer.prototype.display.apply(this, arguments);\n
+        this.pane.style.display = this.div.style.display;\n
+    },\n
+  \n
+    /**\n
+     * Method: setZIndex\n
+     * Set the z-index order for the pane.\n
+     * \n
+     * Parameters:\n
+     * zIndex - {int}\n
+     */\n
+    setZIndex: function (zIndex) {\n
+        OpenLayers.Layer.prototype.setZIndex.apply(this, arguments);\n
+        this.pane.style.zIndex = parseInt(this.div.style.zIndex) + 1;\n
+    },\n
+    \n
+    /**\n
+     * Method: moveByPx\n
+     * Move the layer based on pixel vector. To be implemented by subclasses.\n
+     *\n
+     * Parameters:\n
+     * dx - {Number} The x coord of the displacement vector.\n
+     * dy - {Number} The y coord of the displacement vector.\n
+     */\n
+    moveByPx: function(dx, dy) {\n
+        OpenLayers.Layer.prototype.moveByPx.apply(this, arguments);\n
+        \n
+        if (this.dragPanMapObject) {\n
+            this.dragPanMapObject(dx, -dy);\n
+        } else {\n
+            this.moveTo(this.map.getCachedCenter());\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: moveTo\n
+     * Handle calls to move the layer.\n
+     * \n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     * zoomChanged - {Boolean}\n
+     * dragging - {Boolean}\n
+     */\n
+    moveTo:function(bounds, zoomChanged, dragging) {\n
+        OpenLayers.Layer.prototype.moveTo.apply(this, arguments);\n
+\n
+        if (this.mapObject != null) {\n
+\n
+            var newCenter = this.map.getCenter();\n
+            var newZoom = this.map.getZoom();\n
+\n
+            if (newCenter != null) {\n
+\n
+                var moOldCenter = this.getMapObjectCenter();\n
+                var oldCenter = this.getOLLonLatFromMapObjectLonLat(moOldCenter);\n
+\n
+                var moOldZoom = this.getMapObjectZoom();\n
+                var oldZoom= this.getOLZoomFromMapObjectZoom(moOldZoom);\n
+\n
+                if (!(newCenter.equals(oldCenter)) || newZoom != oldZoom) {\n
+\n
+                    if (!zoomChanged && oldCenter && this.dragPanMapObject && \n
+                        this.smoothDragPan) {\n
+                        var oldPx = this.map.getViewPortPxFromLonLat(oldCenter);\n
+                        var newPx = this.map.getViewPortPxFromLonLat(newCenter);\n
+                        this.dragPanMapObject(newPx.x-oldPx.x, oldPx.y-newPx.y);\n
+                    } else {\n
+                        var center = this.getMapObjectLonLatFromOLLonLat(newCenter);\n
+                        var zoom = this.getMapObjectZoomFromOLZoom(newZoom);\n
+                        this.setMapObjectCenter(center, zoom, dragging);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+    },\n
+\n
+\n
+  /********************************************************/\n
+  /*                                                      */\n
+  /*                 Baselayer Functions                  */\n
+  /*                                                      */\n
+  /********************************************************/\n
+\n
+    /**\n
+     * Method: getLonLatFromViewPortPx\n
+     * Get a map location from a pixel location\n
+     * \n
+     * Parameters:\n
+     * viewPortPx - {<OpenLayers.Pixel>}\n
+     *\n
+     * Returns:\n
+     *  {<OpenLayers.LonLat>} An OpenLayers.LonLat which is the passed-in view\n
+     *  port OpenLayers.Pixel, translated into lon/lat by map lib\n
+     *  If the map lib is not loaded or not centered, returns null\n
+     */\n
+    getLonLatFromViewPortPx: function (viewPortPx) {\n
+        var lonlat = null;\n
+        if ( (this.mapObject != null) && \n
+             (this.getMapObjectCenter() != null) ) {\n
+            var moPixel = this.getMapObjectPixelFromOLPixel(viewPortPx);\n
+            var moLonLat = this.getMapObjectLonLatFromMapObjectPixel(moPixel);\n
+            lonlat = this.getOLLonLatFromMapObjectLonLat(moLonLat);\n
+        }\n
+        return lonlat;\n
+    },\n
+\n
+ \n
+    /**\n
+     * Method: getViewPortPxFromLonLat\n
+     * Get a pixel location from a map location\n
+     *\n
+     * Parameters:\n
+     * lonlat - {<OpenLayers.LonLat>}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} An OpenLayers.Pixel which is the passed-in\n
+     * OpenLayers.LonLat, translated into view port pixels by map lib\n
+     * If map lib is not loaded or not centered, returns null\n
+     */\n
+    getViewPortPxFromLonLat: function (lonlat) {\n
+        var viewPortPx = null;\n
+        if ( (this.mapObject != null) && \n
+             (this.getMapObjectCenter() != null) ) {\n
+\n
+            var moLonLat = this.getMapObjectLonLatFromOLLonLat(lonlat);\n
+            var moPixel = this.getMapObjectPixelFromMapObjectLonLat(moLonLat);\n
+        \n
+            viewPortPx = this.getOLPixelFromMapObjectPixel(moPixel);\n
+        }\n
+        return viewPortPx;\n
+    },\n
+\n
+  /********************************************************/\n
+  /*                                                      */\n
+  /*               Translation Functions                  */\n
+  /*                                                      */\n
+  /*   The following functions translate Map Object and   */\n
+  /*            OL formats for Pixel, LonLat              */\n
+  /*                                                      */\n
+  /********************************************************/\n
+\n
+  //\n
+  // TRANSLATION: MapObject LatLng <-> OpenLayers.LonLat\n
+  //\n
+\n
+    /**\n
+     * Method: getOLLonLatFromMapObjectLonLat\n
+     * Get an OL style map location from a 3rd party style map location\n
+     *\n
+     * Parameters\n
+     * moLonLat - {Object}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.LonLat>} An OpenLayers.LonLat, translated from the passed in \n
+     *          MapObject LonLat\n
+     *          Returns null if null value is passed in\n
+     */\n
+    getOLLonLatFromMapObjectLonLat: function(moLonLat) {\n
+        var olLonLat = null;\n
+        if (moLonLat != null) {\n
+            var lon = this.getLongitudeFromMapObjectLonLat(moLonLat);\n
+            var lat = this.getLatitudeFromMapObjectLonLat(moLonLat);\n
+            olLonLat = new OpenLayers.LonLat(lon, lat);\n
+        }\n
+        return olLonLat;\n
+    },\n
+\n
+    /**\n
+     * Method: getMapObjectLonLatFromOLLonLat\n
+     * Get a 3rd party map location from an OL map location.\n
+     *\n
+     * Parameters:\n
+     * olLonLat - {<OpenLayers.LonLat>}\n
+     * \n
+     * Returns:\n
+     * {Object} A MapObject LonLat, translated from the passed in \n
+     *          OpenLayers.LonLat\n
+     *          Returns null if null value is passed in\n
+     */\n
+    getMapObjectLonLatFromOLLonLat: function(olLonLat) {\n
+        var moLatLng = null;\n
+        if (olLonLat != null) {\n
+            moLatLng = this.getMapObjectLonLatFromLonLat(olLonLat.lon,\n
+                                                         olLonLat.lat);\n
+        }\n
+        return moLatLng;\n
+    },\n
+\n
+\n
+  //\n
+  // TRANSLATION: MapObject Pixel <-> OpenLayers.Pixel\n
+  //\n
+\n
+    /**\n
+     * Method: getOLPixelFromMapObjectPixel\n
+     * Get an OL pixel location from a 3rd party pixel location.\n
+     *\n
+     * Parameters:\n
+     * moPixel - {Object}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} An OpenLayers.Pixel, translated from the passed in \n
+     *          MapObject Pixel\n
+     *          Returns null if null value is passed in\n
+     */\n
+    getOLPixelFromMapObjectPixel: function(moPixel) {\n
+        var olPixel = null;\n
+        if (moPixel != null) {\n
+            var x = this.getXFromMapObjectPixel(moPixel);\n
+            var y = this.getYFromMapObjectPixel(moPixel);\n
+            olPixel = new OpenLayers.Pixel(x, y);\n
+        }\n
+        return olPixel;\n
+    },\n
+\n
+    /**\n
+     * Method: getMapObjectPixelFromOLPixel\n
+     * Get a 3rd party pixel location from an OL pixel location\n
+     *\n
+     * Parameters:\n
+     * olPixel - {<OpenLayers.Pixel>}\n
+     * \n
+     * Returns:\n
+     * {Object} A MapObject Pixel, translated from the passed in \n
+     *          OpenLayers.Pixel\n
+     *          Returns null if null value is passed in\n
+     */\n
+    getMapObjectPixelFromOLPixel: function(olPixel) {\n
+        var moPixel = null;\n
+        if (olPixel != null) {\n
+            moPixel = this.getMapObjectPixelFromXY(olPixel.x, olPixel.y);\n
+        }\n
+        return moPixel;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.EventPane"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14272</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

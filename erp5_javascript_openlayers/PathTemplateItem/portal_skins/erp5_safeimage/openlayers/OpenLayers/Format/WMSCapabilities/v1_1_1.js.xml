@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_1_1.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WMSCapabilities/v1_1.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WMSCapabilities/v1_1_1\n
+ * Read WMS Capabilities version 1.1.1.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.WMSCapabilities.v1_1>\n
+ */\n
+OpenLayers.Format.WMSCapabilities.v1_1_1 = OpenLayers.Class(\n
+    OpenLayers.Format.WMSCapabilities.v1_1, {\n
+    \n
+    /**\n
+     * Property: version\n
+     * {String} The specific parser version.\n
+     */\n
+    version: "1.1.1",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WMSCapabilities.v1_1_1\n
+     * Create a new parser for WMS capabilities version 1.1.1.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "wms": OpenLayers.Util.applyDefaults({\n
+            "SRS": function(node, obj) {\n
+                obj.srs[this.getChildValue(node)] = true;\n
+            }\n
+        }, OpenLayers.Format.WMSCapabilities.v1_1.prototype.readers["wms"])\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WMSCapabilities.v1_1_1" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1677</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

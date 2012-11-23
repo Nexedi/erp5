@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SOS.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Protocol.js\n
+ */\n
+\n
+/**\n
+ * Function: OpenLayers.Protocol.SOS\n
+ * Used to create a versioned SOS protocol.  Default version is 1.0.0.\n
+ *\n
+ * Returns:\n
+ * {<OpenLayers.Protocol>} An SOS protocol for the given version.\n
+ */\n
+OpenLayers.Protocol.SOS = function(options) {\n
+    options = OpenLayers.Util.applyDefaults(\n
+        options, OpenLayers.Protocol.SOS.DEFAULTS\n
+    );\n
+    var cls = OpenLayers.Protocol.SOS["v"+options.version.replace(/\\./g, "_")];\n
+    if(!cls) {\n
+        throw "Unsupported SOS version: " + options.version;\n
+    }\n
+    return new cls(options);\n
+};\n
+\n
+/**\n
+ * Constant: OpenLayers.Protocol.SOS.DEFAULTS\n
+ */\n
+OpenLayers.Protocol.SOS.DEFAULTS = {\n
+    "version": "1.0.0"\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>956</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Hover.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Handler.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Handler.Hover\n
+ * The hover handler is to be used to emulate mouseovers on objects\n
+ *      on the map that aren\'t DOM elements. For example one can use\n
+ *      this handler to send WMS/GetFeatureInfo requests as the user\n
+ *      moves the mouve over the map.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler> \n
+ */\n
+OpenLayers.Handler.Hover = OpenLayers.Class(OpenLayers.Handler, {\n
+\n
+    /**\n
+     * APIProperty: delay\n
+     * {Integer} - Number of milliseconds between mousemoves before\n
+     *      the event is considered a hover. Default is 500.\n
+     */\n
+    delay: 500,\n
+    \n
+    /**\n
+     * APIProperty: pixelTolerance\n
+     * {Integer} - Maximum number of pixels between mousemoves for\n
+     *      an event to be considered a hover. Default is null.\n
+     */\n
+    pixelTolerance: null,\n
+\n
+    /**\n
+     * APIProperty: stopMove\n
+     * {Boolean} - Stop other listeners from being notified on mousemoves.\n
+     *      Default is false.\n
+     */\n
+    stopMove: false,\n
+\n
+    /**\n
+     * Property: px\n
+     * {<OpenLayers.Pixel>} - The location of the last mousemove, expressed\n
+     *      in pixels.\n
+     */\n
+    px: null,\n
+\n
+    /**\n
+     * Property: timerId\n
+     * {Number} - The id of the timer.\n
+     */\n
+    timerId: null,\n
+ \n
+    /**\n
+     * Constructor: OpenLayers.Handler.Hover\n
+     * Construct a hover handler.\n
+     *\n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} The control that initialized this\n
+     *     handler.  The control is assumed to have a valid map property; that\n
+     *     map is used in the handler\'s own setMap method.\n
+     * callbacks - {Object} An object with keys corresponding to callbacks\n
+     *     that will be called by the handler. The callbacks should\n
+     *     expect to receive a single argument, the event. Callbacks for\n
+     *     \'move\', the mouse is moving, and \'pause\', the mouse is pausing,\n
+     *     are supported.\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     the handler.\n
+     */\n
+\n
+    /**\n
+     * Method: mousemove\n
+     * Called when the mouse moves on the map.\n
+     *\n
+     * Parameters:\n
+     * evt - {<OpenLayers.Event>}\n
+     *\n
+     * Returns:\n
+     * {Boolean} Continue propagating this event.\n
+     */\n
+    mousemove: function(evt) {\n
+        if(this.passesTolerance(evt.xy)) {\n
+            this.clearTimer();\n
+            this.callback(\'move\', [evt]);\n
+            this.px = evt.xy;\n
+            // clone the evt so original properties can be accessed even\n
+            // if the browser deletes them during the delay\n
+            evt = OpenLayers.Util.extend({}, evt);\n
+            this.timerId = window.setTimeout(\n
+                OpenLayers.Function.bind(this.delayedCall, this, evt),\n
+                this.delay\n
+            );\n
+        }\n
+        return !this.stopMove;\n
+    },\n
+\n
+    /**\n
+     * Method: mouseout\n
+     * Called when the mouse goes out of the map.\n
+     *\n
+     * Parameters:\n
+     * evt - {<OpenLayers.Event>}\n
+     *\n
+     * Returns:\n
+     * {Boolean} Continue propagating this event.\n
+     */\n
+    mouseout: function(evt) {\n
+        if (OpenLayers.Util.mouseLeft(evt, this.map.viewPortDiv)) {\n
+            this.clearTimer();\n
+            this.callback(\'move\', [evt]);\n
+        }\n
+        return true;\n
+    },\n
+\n
+    /**\n
+     * Method: passesTolerance\n
+     * Determine whether the mouse move is within the optional pixel tolerance.\n
+     *\n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>}\n
+     *\n
+     * Returns:\n
+     * {Boolean} The mouse move is within the pixel tolerance.\n
+     */\n
+    passesTolerance: function(px) {\n
+        var passes = true;\n
+        if(this.pixelTolerance && this.px) {\n
+            var dpx = Math.sqrt(\n
+                Math.pow(this.px.x - px.x, 2) +\n
+                Math.pow(this.px.y - px.y, 2)\n
+            );\n
+            if(dpx < this.pixelTolerance) {\n
+                passes = false;\n
+            }\n
+        }\n
+        return passes;\n
+    },\n
+\n
+    /**\n
+     * Method: clearTimer\n
+     * Clear the timer and set <timerId> to null.\n
+     */\n
+    clearTimer: function() {\n
+        if(this.timerId != null) {\n
+            window.clearTimeout(this.timerId);\n
+            this.timerId = null;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: delayedCall\n
+     * Triggers pause callback.\n
+     *\n
+     * Parameters:\n
+     * evt - {<OpenLayers.Event>}\n
+     */\n
+    delayedCall: function(evt) {\n
+        this.callback(\'pause\', [evt]);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the handler.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The handler was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = false;\n
+        if(OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {\n
+            this.clearTimer();\n
+            deactivated = true;\n
+        }\n
+        return deactivated;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Handler.Hover"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5076</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

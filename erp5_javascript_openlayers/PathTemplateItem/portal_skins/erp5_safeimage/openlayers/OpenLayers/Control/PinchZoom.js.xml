@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>PinchZoom.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for\n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Handler/Pinch.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.PinchZoom\n
+ *\n
+ * Inherits:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.PinchZoom = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * Property: type\n
+     * {OpenLayers.Control.TYPES}\n
+     */\n
+    type: OpenLayers.Control.TYPE_TOOL,\n
+\n
+    /**\n
+     * Property: containerCenter\n
+     * {Object} Cached object representing the layer container center (in pixels).\n
+     */\n
+    containerCenter: null,\n
+\n
+    /**\n
+     * Property: pinchOrigin\n
+     * {Object} Cached object representing the pinch start (in pixels).\n
+     */\n
+    pinchOrigin: null,    \n
+    \n
+    /**\n
+     * Property: currentCenter\n
+     * {Object} Cached object representing the latest pinch center (in pixels).\n
+     */\n
+    currentCenter: null,    \n
+\n
+    /**\n
+     * APIProperty: autoActivate\n
+     * {Boolean} Activate the control when it is added to a map.  Default is\n
+     *     true.\n
+     */\n
+    autoActivate: true,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Control.PinchZoom\n
+     * Create a control for zooming with pinch gestures.  This works on devices\n
+     *     with multi-touch support.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *                    the control\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);\n
+        this.handler = new OpenLayers.Handler.Pinch(this, {\n
+            start: this.pinchStart,\n
+            move: this.pinchMove,\n
+            done: this.pinchDone\n
+        }, this.handlerOptions);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate this control.  Must be called after the control is added to a \n
+     * map.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The control was successfully activated.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Control.prototype.activate.apply(this,arguments);\n
+        if (activated) {\n
+            this.map.events.on({\n
+                moveend: this.updateContainerCenter,\n
+                scope: this\n
+            });\n
+            this.updateContainerCenter();\n
+        }\n
+        return activated;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate this control.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The control was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Control.prototype.deactivate.apply(this,arguments);\n
+        if (this.map && this.map.events) {\n
+            this.map.events.un({\n
+                moveend: this.updateContainerCenter,\n
+                scope: this\n
+            });\n
+        }\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: updateContainerCenter\n
+     * Must be called each time the layer container moves.\n
+     */\n
+    updateContainerCenter: function() {\n
+        var container = this.map.layerContainerDiv;\n
+        // the layer container div is a square of 100px/100px\n
+        this.containerCenter = {\n
+            x: parseInt(container.style.left, 10) + 50,\n
+            y: parseInt(container.style.top, 10) + 50\n
+        };\n
+    },\n
+\n
+    /**\n
+     * Method: pinchStart\n
+     *\n
+     * Parameters:\n
+     * evt - {Event}\n
+     * pinchData - {Object} pinch data object related to the current touchmove\n
+     *     of the pinch gesture. This give us the current scale of the pinch.\n
+     */\n
+    pinchStart: function(evt, pinchData) {\n
+        this.pinchOrigin = evt.xy;\n
+        this.currentCenter = evt.xy;\n
+    },\n
+    \n
+    /**\n
+     * Method: pinchMove\n
+     *\n
+     * Parameters:\n
+     * evt - {Event}\n
+     * pinchData - {Object} pinch data object related to the current touchmove\n
+     *     of the pinch gesture. This give us the current scale of the pinch.\n
+     */\n
+    pinchMove: function(evt, pinchData) {\n
+        var scale = pinchData.scale;\n
+        var containerCenter = this.containerCenter;\n
+        var pinchOrigin = this.pinchOrigin;\n
+        var current = evt.xy;\n
+\n
+        var dx = Math.round((current.x - pinchOrigin.x) + (scale - 1) * (containerCenter.x - pinchOrigin.x));\n
+        var dy = Math.round((current.y - pinchOrigin.y) + (scale - 1) * (containerCenter.y - pinchOrigin.y));\n
+\n
+        this.applyTransform(\n
+            "translate(" + dx + "px, " + dy + "px) scale(" + scale + ")"\n
+        );\n
+        this.currentCenter = current;\n
+    },\n
+    \n
+    /**\n
+     * Method: applyTransform\n
+     * Applies the given transform to layers.\n
+     */\n
+    applyTransform: function(transform) {\n
+        var style = this.map.layerContainerDiv.style;\n
+        style[\'-webkit-transform\'] = transform;\n
+        style[\'-moz-transform\'] = transform;\n
+    },\n
+    \n
+    /**\n
+     * Method: pinchDone\n
+     *\n
+     * Parameters:\n
+     * evt - {Event}\n
+     * start - {Object} pinch data object related to the touchstart event that\n
+     *     started the pinch gesture.\n
+     * last - {Object} pinch data object related to the last touchmove event\n
+     *     of the pinch gesture. This give us the final scale of the pinch.\n
+     */\n
+    pinchDone: function(evt, start, last) {\n
+        this.applyTransform("");\n
+        var zoom = this.map.getZoomForResolution(this.map.getResolution() / last.scale, true);\n
+        if (zoom !== this.map.getZoom() || !this.currentCenter.equals(this.pinchOrigin)) {\n
+            var resolution = this.map.getResolutionForZoom(zoom);\n
+\n
+            var location = this.map.getLonLatFromPixel(this.pinchOrigin);\n
+            var zoomPixel = this.currentCenter;        \n
+            var size = this.map.getSize();\n
+\n
+            location.lon += resolution * ((size.w / 2) - zoomPixel.x);\n
+            location.lat -= resolution * ((size.h / 2) - zoomPixel.y);\n
+\n
+            // Force a reflow before calling setCenter. This is to work\n
+            // around an issue occuring in iOS.\n
+            //\n
+            // See https://github.com/openlayers/openlayers/pull/351.\n
+            //\n
+            // Without a reflow setting the layer container div\'s top left\n
+            // style properties to "0px" - as done in Map.moveTo when zoom\n
+            // is changed - won\'t actually correctly reposition the layer\n
+            // container div.\n
+            //\n
+            // Also, we need to use a statement that the Google Closure\n
+            // compiler won\'t optimize away.\n
+            this.map.div.clientWidth = this.map.div.clientWidth;\n
+\n
+            this.map.setCenter(location, zoom);\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.PinchZoom"\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6646</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

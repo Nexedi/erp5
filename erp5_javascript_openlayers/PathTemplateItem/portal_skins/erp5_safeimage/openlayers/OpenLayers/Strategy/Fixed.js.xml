@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Fixed.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Strategy.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Strategy.Fixed\n
+ * A simple strategy that requests features once and never requests new data.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Strategy>\n
+ */\n
+OpenLayers.Strategy.Fixed = OpenLayers.Class(OpenLayers.Strategy, {\n
+    \n
+    /**\n
+     * APIProperty: preload\n
+     * {Boolean} Load data before layer made visible. Enabling this may result\n
+     *   in considerable overhead if your application loads many data layers\n
+     *   that are not visible by default. Default is false.\n
+     */\n
+    preload: false,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Strategy.Fixed\n
+     * Create a new Fixed strategy.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     */\n
+\n
+    /**\n
+     * Method: activate\n
+     * Activate the strategy: load data or add listener to load when visible\n
+     *\n
+     * Returns:\n
+     * {Boolean} True if the strategy was successfully activated or false if\n
+     *      the strategy was already active.\n
+     */\n
+    activate: function() {\n
+        if(OpenLayers.Strategy.prototype.activate.apply(this, arguments)) {\n
+            this.layer.events.on({\n
+                "refresh": this.load,\n
+                scope: this\n
+            });\n
+            if(this.layer.visibility == true || this.preload) {\n
+                this.load();\n
+            } else {\n
+                this.layer.events.on({\n
+                    "visibilitychanged": this.load,\n
+                    scope: this\n
+                });\n
+            }\n
+            return true;\n
+        }\n
+        return false;\n
+    },\n
+    \n
+    /**\n
+     * Method: deactivate\n
+     * Deactivate the strategy.  Undo what is done in <activate>.\n
+     * \n
+     * Returns:\n
+     * {Boolean} The strategy was successfully deactivated.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Strategy.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            this.layer.events.un({\n
+                "refresh": this.load,\n
+                "visibilitychanged": this.load,\n
+                scope: this\n
+            });\n
+        }\n
+        return deactivated;\n
+    },\n
+\n
+    /**\n
+     * Method: load\n
+     * Tells protocol to load data and unhooks the visibilitychanged event\n
+     *\n
+     * Parameters:\n
+     * options - {Object} options to pass to protocol read.\n
+     */\n
+    load: function(options) {\n
+        var layer = this.layer;\n
+        layer.events.triggerEvent("loadstart");\n
+        layer.protocol.read(OpenLayers.Util.applyDefaults({\n
+            callback: OpenLayers.Function.bind(this.merge, this,\n
+                layer.map.getProjectionObject()),\n
+            filter: layer.filter\n
+        }, options));\n
+        layer.events.un({\n
+            "visibilitychanged": this.load,\n
+            scope: this\n
+        });\n
+    },\n
+\n
+    /**\n
+     * Method: merge\n
+     * Add all features to the layer.\n
+     *\n
+     * Parameters:\n
+     * mapProjection - {<OpenLayers.Projection>} the map projection\n
+     * resp - {Object} options to pass to protocol read.\n
+     */\n
+    merge: function(mapProjection, resp) {\n
+        var layer = this.layer;\n
+        layer.destroyFeatures();\n
+        var features = resp.features;\n
+        if (features && features.length > 0) {\n
+            if(!mapProjection.equals(layer.projection)) {\n
+                var geom;\n
+                for(var i=0, len=features.length; i<len; ++i) {\n
+                    geom = features[i].geometry;\n
+                    if(geom) {\n
+                        geom.transform(layer.projection, mapProjection);\n
+                    }\n
+                }\n
+            }\n
+            layer.addFeatures(features);\n
+        }\n
+        layer.events.triggerEvent("loadend");\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Strategy.Fixed"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3985</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

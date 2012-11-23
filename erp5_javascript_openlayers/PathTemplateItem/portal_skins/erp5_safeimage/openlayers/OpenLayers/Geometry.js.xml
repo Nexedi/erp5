@@ -1,0 +1,516 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Geometry.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+ \n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Geometry\n
+ * A Geometry is a description of a geographic object.  Create an instance of\n
+ * this class with the <OpenLayers.Geometry> constructor.  This is a base class,\n
+ * typical geometry types are described by subclasses of this class.\n
+ *\n
+ * Note that if you use the <OpenLayers.Geometry.fromWKT> method, you must\n
+ * explicitly include the OpenLayers.Format.WKT in your build.\n
+ */\n
+OpenLayers.Geometry = OpenLayers.Class({\n
+\n
+    /**\n
+     * Property: id\n
+     * {String} A unique identifier for this geometry.\n
+     */\n
+    id: null,\n
+\n
+    /**\n
+     * Property: parent\n
+     * {<OpenLayers.Geometry>}This is set when a Geometry is added as component\n
+     * of another geometry\n
+     */\n
+    parent: null,\n
+\n
+    /**\n
+     * Property: bounds \n
+     * {<OpenLayers.Bounds>} The bounds of this geometry\n
+     */\n
+    bounds: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Geometry\n
+     * Creates a geometry object.  \n
+     */\n
+    initialize: function() {\n
+        this.id = OpenLayers.Util.createUniqueID(this.CLASS_NAME+ "_");\n
+    },\n
+    \n
+    /**\n
+     * Method: destroy\n
+     * Destroy this geometry.\n
+     */\n
+    destroy: function() {\n
+        this.id = null;\n
+        this.bounds = null;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: clone\n
+     * Create a clone of this geometry.  Does not set any non-standard\n
+     *     properties of the cloned geometry.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Geometry>} An exact clone of this geometry.\n
+     */\n
+    clone: function() {\n
+        return new OpenLayers.Geometry();\n
+    },\n
+    \n
+    /**\n
+     * Method: setBounds\n
+     * Set the bounds for this Geometry.\n
+     * \n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} \n
+     */\n
+    setBounds: function(bounds) {\n
+        if (bounds) {\n
+            this.bounds = bounds.clone();\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: clearBounds\n
+     * Nullify this components bounds and that of its parent as well.\n
+     */\n
+    clearBounds: function() {\n
+        this.bounds = null;\n
+        if (this.parent) {\n
+            this.parent.clearBounds();\n
+        }    \n
+    },\n
+    \n
+    /**\n
+     * Method: extendBounds\n
+     * Extend the existing bounds to include the new bounds. \n
+     * If geometry\'s bounds is not yet set, then set a new Bounds.\n
+     * \n
+     * Parameters:\n
+     * newBounds - {<OpenLayers.Bounds>} \n
+     */\n
+    extendBounds: function(newBounds){\n
+        var bounds = this.getBounds();\n
+        if (!bounds) {\n
+            this.setBounds(newBounds);\n
+        } else {\n
+            this.bounds.extend(newBounds);\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getBounds\n
+     * Get the bounds for this Geometry. If bounds is not set, it \n
+     * is calculated again, this makes queries faster.\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Bounds>}\n
+     */\n
+    getBounds: function() {\n
+        if (this.bounds == null) {\n
+            this.calculateBounds();\n
+        }\n
+        return this.bounds;\n
+    },\n
+    \n
+    /** \n
+     * APIMethod: calculateBounds\n
+     * Recalculate the bounds for the geometry. \n
+     */\n
+    calculateBounds: function() {\n
+        //\n
+        // This should be overridden by subclasses.\n
+        //\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: distanceTo\n
+     * Calculate the closest distance between two geometries (on the x-y plane).\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry>} The target geometry.\n
+     * options - {Object} Optional properties for configuring the distance\n
+     *     calculation.\n
+     *\n
+     * Valid options depend on the specific geometry type.\n
+     * \n
+     * Returns:\n
+     * {Number | Object} The distance between this geometry and the target.\n
+     *     If details is true, the return will be an object with distance,\n
+     *     x0, y0, x1, and x2 properties.  The x0 and y0 properties represent\n
+     *     the coordinates of the closest point on this geometry. The x1 and y1\n
+     *     properties represent the coordinates of the closest point on the\n
+     *     target geometry.\n
+     */\n
+    distanceTo: function(geometry, options) {\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getVertices\n
+     * Return a list of all points in this geometry.\n
+     *\n
+     * Parameters:\n
+     * nodes - {Boolean} For lines, only return vertices that are\n
+     *     endpoints.  If false, for lines, only vertices that are not\n
+     *     endpoints will be returned.  If not provided, all vertices will\n
+     *     be returned.\n
+     *\n
+     * Returns:\n
+     * {Array} A list of all vertices in the geometry.\n
+     */\n
+    getVertices: function(nodes) {\n
+    },\n
+\n
+    /**\n
+     * Method: atPoint\n
+     * Note - This is only an approximation based on the bounds of the \n
+     * geometry.\n
+     * \n
+     * Parameters:\n
+     * lonlat - {<OpenLayers.LonLat>|Object} OpenLayers.LonLat or an\n
+     *     object with a \'lon\' and \'lat\' properties.\n
+     * toleranceLon - {float} Optional tolerance in Geometric Coords\n
+     * toleranceLat - {float} Optional tolerance in Geographic Coords\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the geometry is at the specified location\n
+     */\n
+    atPoint: function(lonlat, toleranceLon, toleranceLat) {\n
+        var atPoint = false;\n
+        var bounds = this.getBounds();\n
+        if ((bounds != null) && (lonlat != null)) {\n
+\n
+            var dX = (toleranceLon != null) ? toleranceLon : 0;\n
+            var dY = (toleranceLat != null) ? toleranceLat : 0;\n
+    \n
+            var toleranceBounds = \n
+                new OpenLayers.Bounds(this.bounds.left - dX,\n
+                                      this.bounds.bottom - dY,\n
+                                      this.bounds.right + dX,\n
+                                      this.bounds.top + dY);\n
+\n
+            atPoint = toleranceBounds.containsLonLat(lonlat);\n
+        }\n
+        return atPoint;\n
+    },\n
+    \n
+    /**\n
+     * Method: getLength\n
+     * Calculate the length of this geometry. This method is defined in\n
+     * subclasses.\n
+     * \n
+     * Returns:\n
+     * {Float} The length of the collection by summing its parts\n
+     */\n
+    getLength: function() {\n
+        //to be overridden by geometries that actually have a length\n
+        //\n
+        return 0.0;\n
+    },\n
+\n
+    /**\n
+     * Method: getArea\n
+     * Calculate the area of this geometry. This method is defined in subclasses.\n
+     * \n
+     * Returns:\n
+     * {Float} The area of the collection by summing its parts\n
+     */\n
+    getArea: function() {\n
+        //to be overridden by geometries that actually have an area\n
+        //\n
+        return 0.0;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: getCentroid\n
+     * Calculate the centroid of this geometry. This method is defined in subclasses.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Geometry.Point>} The centroid of the collection\n
+     */\n
+    getCentroid: function() {\n
+        return null;\n
+    },\n
+\n
+    /**\n
+     * Method: toString\n
+     * Returns a text representation of the geometry.  If the WKT format is\n
+     *     included in a build, this will be the Well-Known Text \n
+     *     representation.\n
+     *\n
+     * Returns:\n
+     * {String} String representation of this geometry.\n
+     */\n
+    toString: function() {\n
+        var string;\n
+        if (OpenLayers.Format && OpenLayers.Format.WKT) {\n
+            string = OpenLayers.Format.WKT.prototype.write(\n
+                new OpenLayers.Feature.Vector(this)\n
+            );\n
+        } else {\n
+            string = Object.prototype.toString.call(this);\n
+        }\n
+        return string;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Geometry"\n
+});\n
+\n
+/**\n
+ * Function: OpenLayers.Geometry.fromWKT\n
+ * Generate a geometry given a Well-Known Text string.  For this method to\n
+ *     work, you must include the OpenLayers.Format.WKT in your build \n
+ *     explicitly.\n
+ *\n
+ * Parameters:\n
+ * wkt - {String} A string representing the geometry in Well-Known Text.\n
+ *\n
+ * Returns:\n
+ * {<OpenLayers.Geometry>} A geometry of the appropriate class.\n
+ */\n
+OpenLayers.Geometry.fromWKT = function(wkt) {\n
+    var geom;\n
+    if (OpenLayers.Format && OpenLayers.Format.WKT) {\n
+        var format = OpenLayers.Geometry.fromWKT.format;\n
+        if (!format) {\n
+            format = new OpenLayers.Format.WKT();\n
+            OpenLayers.Geometry.fromWKT.format = format;\n
+        }\n
+        var result = format.read(wkt);\n
+        if (result instanceof OpenLayers.Feature.Vector) {\n
+            geom = result.geometry;\n
+        } else if (OpenLayers.Util.isArray(result)) {\n
+            var len = result.length;\n
+            var components = new Array(len);\n
+            for (var i=0; i<len; ++i) {\n
+                components[i] = result[i].geometry;\n
+            }\n
+            geom = new OpenLayers.Geometry.Collection(components);\n
+        }\n
+    }\n
+    return geom;\n
+};\n
+    \n
+/**\n
+ * Method: OpenLayers.Geometry.segmentsIntersect\n
+ * Determine whether two line segments intersect.  Optionally calculates\n
+ *     and returns the intersection point.  This function is optimized for\n
+ *     cases where seg1.x2 >= seg2.x1 || seg2.x2 >= seg1.x1.  In those\n
+ *     obvious cases where there is no intersection, the function should\n
+ *     not be called.\n
+ *\n
+ * Parameters:\n
+ * seg1 - {Object} Object representing a segment with properties x1, y1, x2,\n
+ *     and y2.  The start point is represented by x1 and y1.  The end point\n
+ *     is represented by x2 and y2.  Start and end are ordered so that x1 < x2.\n
+ * seg2 - {Object} Object representing a segment with properties x1, y1, x2,\n
+ *     and y2.  The start point is represented by x1 and y1.  The end point\n
+ *     is represented by x2 and y2.  Start and end are ordered so that x1 < x2.\n
+ * options - {Object} Optional properties for calculating the intersection.\n
+ *\n
+ * Valid options:\n
+ * point - {Boolean} Return the intersection point.  If false, the actual\n
+ *     intersection point will not be calculated.  If true and the segments\n
+ *     intersect, the intersection point will be returned.  If true and\n
+ *     the segments do not intersect, false will be returned.  If true and\n
+ *     the segments are coincident, true will be returned.\n
+ * tolerance - {Number} If a non-null value is provided, if the segments are\n
+ *     within the tolerance distance, this will be considered an intersection.\n
+ *     In addition, if the point option is true and the calculated intersection\n
+ *     is within the tolerance distance of an end point, the endpoint will be\n
+ *     returned instead of the calculated intersection.  Further, if the\n
+ *     intersection is within the tolerance of endpoints on both segments, or\n
+ *     if two segment endpoints are within the tolerance distance of eachother\n
+ *     (but no intersection is otherwise calculated), an endpoint on the\n
+ *     first segment provided will be returned.\n
+ *\n
+ * Returns:\n
+ * {Boolean | <OpenLayers.Geometry.Point>}  The two segments intersect.\n
+ *     If the point argument is true, the return will be the intersection\n
+ *     point or false if none exists.  If point is true and the segments\n
+ *     are coincident, return will be true (and the instersection is equal\n
+ *     to the shorter segment).\n
+ */\n
+OpenLayers.Geometry.segmentsIntersect = function(seg1, seg2, options) {\n
+    var point = options && options.point;\n
+    var tolerance = options && options.tolerance;\n
+    var intersection = false;\n
+    var x11_21 = seg1.x1 - seg2.x1;\n
+    var y11_21 = seg1.y1 - seg2.y1;\n
+    var x12_11 = seg1.x2 - seg1.x1;\n
+    var y12_11 = seg1.y2 - seg1.y1;\n
+    var y22_21 = seg2.y2 - seg2.y1;\n
+    var x22_21 = seg2.x2 - seg2.x1;\n
+    var d = (y22_21 * x12_11) - (x22_21 * y12_11);\n
+    var n1 = (x22_21 * y11_21) - (y22_21 * x11_21);\n
+    var n2 = (x12_11 * y11_21) - (y12_11 * x11_21);\n
+    if(d == 0) {\n
+        // parallel\n
+        if(n1 == 0 && n2 == 0) {\n
+            // coincident\n
+            intersection = true;\n
+        }\n
+    } else {\n
+        var along1 = n1 / d;\n
+        var along2 = n2 / d;\n
+        if(along1 >= 0 && along1 <= 1 && along2 >=0 && along2 <= 1) {\n
+            // intersect\n
+            if(!point) {\n
+                intersection = true;\n
+            } else {\n
+                // calculate the intersection point\n
+                var x = seg1.x1 + (along1 * x12_11);\n
+                var y = seg1.y1 + (along1 * y12_11);\n
+                intersection = new OpenLayers.Geometry.Point(x, y);\n
+            }\n
+        }\n
+    }\n
+    if(tolerance) {\n
+        var dist;\n
+        if(intersection) {\n
+            if(point) {\n
+                var segs = [seg1, seg2];\n
+                var seg, x, y;\n
+                // check segment endpoints for proximity to intersection\n
+                // set intersection to first endpoint within the tolerance\n
+                outer: for(var i=0; i<2; ++i) {\n
+                    seg = segs[i];\n
+                    for(var j=1; j<3; ++j) {\n
+                        x = seg["x" + j];\n
+                        y = seg["y" + j];\n
+                        dist = Math.sqrt(\n
+                            Math.pow(x - intersection.x, 2) +\n
+                            Math.pow(y - intersection.y, 2)\n
+                        );\n
+                        if(dist < tolerance) {\n
+                            intersection.x = x;\n
+                            intersection.y = y;\n
+                            break outer;\n
+                        }\n
+                    }\n
+                }\n
+                \n
+            }\n
+        } else {\n
+            // no calculated intersection, but segments could be within\n
+            // the tolerance of one another\n
+            var segs = [seg1, seg2];\n
+            var source, target, x, y, p, result;\n
+            // check segment endpoints for proximity to intersection\n
+            // set intersection to first endpoint within the tolerance\n
+            outer: for(var i=0; i<2; ++i) {\n
+                source = segs[i];\n
+                target = segs[(i+1)%2];\n
+                for(var j=1; j<3; ++j) {\n
+                    p = {x: source["x"+j], y: source["y"+j]};\n
+                    result = OpenLayers.Geometry.distanceToSegment(p, target);\n
+                    if(result.distance < tolerance) {\n
+                        if(point) {\n
+                            intersection = new OpenLayers.Geometry.Point(p.x, p.y);\n
+                        } else {\n
+                            intersection = true;\n
+                        }\n
+                        break outer;\n
+                    }\n
+                }\n
+            }\n
+        }\n
+    }\n
+    return intersection;\n
+};\n
+\n
+/**\n
+ * Function: OpenLayers.Geometry.distanceToSegment\n
+ *\n
+ * Parameters:\n
+ * point - {Object} An object with x and y properties representing the\n
+ *     point coordinates.\n
+ * segment - {Object} An object with x1, y1, x2, and y2 properties\n
+ *     representing endpoint coordinates.\n
+ *\n
+ * Returns:\n
+ * {Object} An object with distance, x, and y properties.  The distance\n
+ *     will be the shortest distance between the input point and segment.\n
+ *     The x and y properties represent the coordinates along the segment\n
+ *     where the shortest distance meets the segment.\n
+ */\n
+OpenLayers.Geometry.distanceToSegment = function(point, segment) {\n
+    var x0 = point.x;\n
+    var y0 = point.y;\n
+    var x1 = segment.x1;\n
+    var y1 = segment.y1;\n
+    var x2 = segment.x2;\n
+    var y2 = segment.y2;\n
+    var dx = x2 - x1;\n
+    var dy = y2 - y1;\n
+    var along = ((dx * (x0 - x1)) + (dy * (y0 - y1))) /\n
+                (Math.pow(dx, 2) + Math.pow(dy, 2));\n
+    var x, y;\n
+    if(along <= 0.0) {\n
+        x = x1;\n
+        y = y1;\n
+    } else if(along >= 1.0) {\n
+        x = x2;\n
+        y = y2;\n
+    } else {\n
+        x = x1 + along * dx;\n
+        y = y1 + along * dy;\n
+    }\n
+    return {\n
+        distance: Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2)),\n
+        x: x, y: y\n
+    };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15685</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

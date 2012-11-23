@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Scale.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Scale\n
+ * The Scale control displays the current map scale as a ratio (e.g. Scale = \n
+ * 1:1M). By default it is displayed in the lower right corner of the map.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Scale = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * Property: element\n
+     * {DOMElement}\n
+     */\n
+    element: null,\n
+    \n
+    /**\n
+     * APIProperty: geodesic\n
+     * {Boolean} Use geodesic measurement. Default is false. The recommended\n
+     * setting for maps in EPSG:4326 is false, and true EPSG:900913. If set to\n
+     * true, the scale will be calculated based on the horizontal size of the\n
+     * pixel in the center of the map viewport.\n
+     */\n
+    geodesic: false,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.Scale\n
+     * \n
+     * Parameters:\n
+     * element - {DOMElement} \n
+     * options - {Object} \n
+     */\n
+    initialize: function(element, options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        this.element = OpenLayers.Util.getElement(element);        \n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     * \n
+     * Returns:\n
+     * {DOMElement}\n
+     */    \n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+        if (!this.element) {\n
+            this.element = document.createElement("div");\n
+            this.div.appendChild(this.element);\n
+        }\n
+        this.map.events.register( \'moveend\', this, this.updateScale);\n
+        this.updateScale();\n
+        return this.div;\n
+    },\n
+   \n
+    /**\n
+     * Method: updateScale\n
+     */\n
+    updateScale: function() {\n
+        var scale;\n
+        if(this.geodesic === true) {\n
+            var units = this.map.getUnits();\n
+            if(!units) {\n
+                return;\n
+            }\n
+            var inches = OpenLayers.INCHES_PER_UNIT;\n
+            scale = (this.map.getGeodesicPixelSize().w || 0.000001) *\n
+                    inches["km"] * OpenLayers.DOTS_PER_INCH;\n
+        } else {\n
+            scale = this.map.getScale();\n
+        }\n
+            \n
+        if (!scale) {\n
+            return;\n
+        }\n
+\n
+        if (scale >= 9500 && scale <= 950000) {\n
+            scale = Math.round(scale / 1000) + "K";\n
+        } else if (scale >= 950000) {\n
+            scale = Math.round(scale / 1000000) + "M";\n
+        } else {\n
+            scale = Math.round(scale);\n
+        }    \n
+        \n
+        this.element.innerHTML = OpenLayers.i18n("Scale = 1 : ${scaleDenom}", {\'scaleDenom\':scale});\n
+    }, \n
+\n
+    CLASS_NAME: "OpenLayers.Control.Scale"\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2856</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

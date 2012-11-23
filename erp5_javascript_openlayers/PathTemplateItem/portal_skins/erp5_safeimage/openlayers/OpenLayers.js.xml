@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>OpenLayers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/* \n
+ * @requires OpenLayers/BaseTypes.js\n
+ * @requires OpenLayers/Lang/en.js\n
+ * @requires OpenLayers/Console.js\n
+ */\n
+ \n
+/*\n
+ * TODO: In 3.0, we will stop supporting build profiles that include\n
+ * OpenLayers.js. This means we will not need the singleFile and scriptFile\n
+ * variables, because we don\'t have to handle the singleFile case any more.\n
+ */\n
+\n
+(function() {\n
+    /**\n
+     * Before creating the OpenLayers namespace, check to see if\n
+     * OpenLayers.singleFile is true.  This occurs if the\n
+     * OpenLayers/SingleFile.js script is included before this one - as is the\n
+     * case with old single file build profiles that included both\n
+     * OpenLayers.js and OpenLayers/SingleFile.js.\n
+     */\n
+    var singleFile = (typeof OpenLayers == "object" && OpenLayers.singleFile);\n
+    \n
+    /**\n
+     * Relative path of this script.\n
+     */\n
+    var scriptName = (!singleFile) ? "lib/OpenLayers.js" : "OpenLayers.js";\n
+\n
+    /*\n
+     * If window.OpenLayers isn\'t set when this script (OpenLayers.js) is\n
+     * evaluated (and if singleFile is false) then this script will load\n
+     * *all* OpenLayers scripts. If window.OpenLayers is set to an array\n
+     * then this script will attempt to load scripts for each string of\n
+     * the array, using the string as the src of the script.\n
+     *\n
+     * Example:\n
+     * (code)\n
+     *     <script type="text/javascript">\n
+     *         window.OpenLayers = [\n
+     *             "OpenLayers/Util.js",\n
+     *             "OpenLayers/BaseTypes.js"\n
+     *         ];\n
+     *     </script>\n
+     *     <script type="text/javascript" src="../lib/OpenLayers.js"></script>\n
+     * (end)\n
+     * In this example OpenLayers.js will load Util.js and BaseTypes.js only.\n
+     */\n
+    var jsFiles = window.OpenLayers;\n
+\n
+    /**\n
+     * Namespace: OpenLayers\n
+     * The OpenLayers object provides a namespace for all things OpenLayers\n
+     */\n
+    window.OpenLayers = {\n
+        /**\n
+         * Method: _getScriptLocation\n
+         * Return the path to this script. This is also implemented in\n
+         * OpenLayers/SingleFile.js\n
+         *\n
+         * Returns:\n
+         * {String} Path to this script\n
+         */\n
+        _getScriptLocation: (function() {\n
+            var r = new RegExp("(^|(.*?\\\\/))(" + scriptName + ")(\\\\?|$)"),\n
+                s = document.getElementsByTagName(\'script\'),\n
+                src, m, l = "";\n
+            for(var i=0, len=s.length; i<len; i++) {\n
+                src = s[i].getAttribute(\'src\');\n
+                if(src) {\n
+                    m = src.match(r);\n
+                    if(m) {\n
+                        l = m[1];\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+            return (function() { return l; });\n
+        })(),\n
+        \n
+        /**\n
+         * APIProperty: ImgPath\n
+         * {String} Set this to the path where control images are stored, a path  \n
+         * given here must end with a slash. If set to \'\' (which is the default) \n
+         * OpenLayers will use its script location + "img/".\n
+         * \n
+         * You will need to set this property when you have a singlefile build of \n
+         * OpenLayers that either is not named "OpenLayers.js" or if you move\n
+         * the file in a way such that the image directory cannot be derived from \n
+         * the script location.\n
+         * \n
+         * If your custom OpenLayers build is named "my-custom-ol.js" and the images\n
+         * of OpenLayers are in a folder "/resources/external/images/ol" a correct\n
+         * way of including OpenLayers in your HTML would be:\n
+         * \n
+         * (code)\n
+         *   <script src="/path/to/my-custom-ol.js" type="text/javascript"></script>\n
+         *   <script type="text/javascript">\n
+         *      // tell OpenLayers where the control images are\n
+         *      // remember the trailing slash\n
+         *      OpenLayers.ImgPath = "/resources/external/images/ol/";\n
+         *   </script>\n
+         * (end code)\n
+         * \n
+         * Please remember that when your OpenLayers script is not named \n
+         * "OpenLayers.js" you will have to make sure that the default theme is \n
+         * loaded into the page by including an appropriate <link>-tag, \n
+         * e.g.:\n
+         * \n
+         * (code)\n
+         *   <link rel="stylesheet" href="/path/to/default/style.css"  type="text/css">\n
+         * (end code)\n
+         */\n
+        ImgPath : \'\'\n
+    };\n
+\n
+    /**\n
+     * OpenLayers.singleFile is a flag indicating this file is being included\n
+     * in a Single File Library build of the OpenLayers Library.\n
+     * \n
+     * When we are *not* part of a SFL build we dynamically include the\n
+     * OpenLayers library code.\n
+     * \n
+     * When we *are* part of a SFL build we do not dynamically include the \n
+     * OpenLayers library code as it will be appended at the end of this file.\n
+     */\n
+    if(!singleFile) {\n
+        if (!jsFiles) {\n
+            jsFiles = [\n
+                "OpenLayers/BaseTypes/Class.js",\n
+                "OpenLayers/Util.js",\n
+                "OpenLayers/Animation.js",\n
+                "OpenLayers/BaseTypes.js",\n
+                "OpenLayers/BaseTypes/Bounds.js",\n
+                "OpenLayers/BaseTypes/Date.js",\n
+                "OpenLayers/BaseTypes/Element.js",\n
+                "OpenLayers/BaseTypes/LonLat.js",\n
+                "OpenLayers/BaseTypes/Pixel.js",\n
+                "OpenLayers/BaseTypes/Size.js",\n
+                "OpenLayers/Console.js",\n
+                "OpenLayers/Tween.js",\n
+                "OpenLayers/Kinetic.js",\n
+                "Rico/Corner.js",\n
+                "Rico/Color.js",\n
+                "OpenLayers/Events.js",\n
+                "OpenLayers/Events/buttonclick.js",\n
+                "OpenLayers/Request.js",\n
+                "OpenLayers/Request/XMLHttpRequest.js",\n
+                "OpenLayers/Projection.js",\n
+                "OpenLayers/Map.js",\n
+                "OpenLayers/Layer.js",\n
+                "OpenLayers/Icon.js",\n
+                "OpenLayers/Marker.js",\n
+                "OpenLayers/Marker/Box.js",\n
+                "OpenLayers/Popup.js",\n
+                "OpenLayers/Tile.js",\n
+                "OpenLayers/Tile/Image.js",\n
+                "OpenLayers/Tile/Image/IFrame.js",\n
+                "OpenLayers/Tile/UTFGrid.js",\n
+                "OpenLayers/Layer/Image.js",\n
+                "OpenLayers/Layer/SphericalMercator.js",\n
+                "OpenLayers/Layer/EventPane.js",\n
+                "OpenLayers/Layer/FixedZoomLevels.js",\n
+                "OpenLayers/Layer/Google.js",\n
+                "OpenLayers/Layer/Google/v3.js",\n
+                "OpenLayers/Layer/HTTPRequest.js",\n
+                "OpenLayers/Layer/Grid.js",\n
+                "OpenLayers/Layer/MapGuide.js",\n
+                "OpenLayers/Layer/MapServer.js",\n
+                "OpenLayers/Layer/KaMap.js",\n
+                "OpenLayers/Layer/KaMapCache.js",\n
+                "OpenLayers/Layer/Markers.js",\n
+                "OpenLayers/Layer/Text.js",\n
+                "OpenLayers/Layer/WorldWind.js",\n
+                "OpenLayers/Layer/ArcGIS93Rest.js",\n
+                "OpenLayers/Layer/WMS.js",\n
+                "OpenLayers/Layer/WMTS.js",\n
+                "OpenLayers/Layer/ArcIMS.js",\n
+                "OpenLayers/Layer/GeoRSS.js",\n
+                "OpenLayers/Layer/Boxes.js",\n
+                "OpenLayers/Layer/XYZ.js",\n
+                "OpenLayers/Layer/UTFGrid.js",\n
+                "OpenLayers/Layer/OSM.js",\n
+                "OpenLayers/Layer/Bing.js",\n
+                "OpenLayers/Layer/TMS.js",\n
+                "OpenLayers/Layer/TileCache.js",\n
+                "OpenLayers/Layer/Zoomify.js",\n
+                "OpenLayers/Layer/ArcGISCache.js",\n
+                "OpenLayers/Popup/Anchored.js",\n
+                "OpenLayers/Popup/AnchoredBubble.js",\n
+                "OpenLayers/Popup/Framed.js",\n
+                "OpenLayers/Popup/FramedCloud.js",\n
+                "OpenLayers/Feature.js",\n
+                "OpenLayers/Feature/Vector.js",\n
+                "OpenLayers/Handler.js",\n
+                "OpenLayers/Handler/Click.js",\n
+                "OpenLayers/Handler/Hover.js",\n
+                "OpenLayers/Handler/Point.js",\n
+                "OpenLayers/Handler/Path.js",\n
+                "OpenLayers/Handler/Polygon.js",\n
+                "OpenLayers/Handler/Feature.js",\n
+                "OpenLayers/Handler/Drag.js",\n
+                "OpenLayers/Handler/Pinch.js",\n
+                "OpenLayers/Handler/RegularPolygon.js",\n
+                "OpenLayers/Handler/Box.js",\n
+                "OpenLayers/Handler/MouseWheel.js",\n
+                "OpenLayers/Handler/Keyboard.js",\n
+                "OpenLayers/Control.js",\n
+                "OpenLayers/Control/Attribution.js",\n
+                "OpenLayers/Control/Button.js",\n
+                "OpenLayers/Control/CacheRead.js",\n
+                "OpenLayers/Control/CacheWrite.js",\n
+                "OpenLayers/Control/ZoomBox.js",\n
+                "OpenLayers/Control/ZoomToMaxExtent.js",\n
+                "OpenLayers/Control/DragPan.js",\n
+                "OpenLayers/Control/Navigation.js",\n
+                "OpenLayers/Control/PinchZoom.js",\n
+                "OpenLayers/Control/TouchNavigation.js",\n
+                "OpenLayers/Control/MousePosition.js",\n
+                "OpenLayers/Control/OverviewMap.js",\n
+                "OpenLayers/Control/KeyboardDefaults.js",\n
+                "OpenLayers/Control/PanZoom.js",\n
+                "OpenLayers/Control/PanZoomBar.js",\n
+                "OpenLayers/Control/ArgParser.js",\n
+                "OpenLayers/Control/Permalink.js",\n
+                "OpenLayers/Control/Scale.js",\n
+                "OpenLayers/Control/ScaleLine.js",\n
+                "OpenLayers/Control/Snapping.js",\n
+                "OpenLayers/Control/Split.js",\n
+                "OpenLayers/Control/LayerSwitcher.js",\n
+                "OpenLayers/Control/DrawFeature.js",\n
+                "OpenLayers/Control/DragFeature.js",\n
+                "OpenLayers/Control/ModifyFeature.js",\n
+                "OpenLayers/Control/Panel.js",\n
+                "OpenLayers/Control/SelectFeature.js",\n
+                "OpenLayers/Control/NavigationHistory.js",\n
+                "OpenLayers/Control/Measure.js",\n
+                "OpenLayers/Control/WMSGetFeatureInfo.js",\n
+                "OpenLayers/Control/WMTSGetFeatureInfo.js",\n
+                "OpenLayers/Control/Graticule.js",\n
+                "OpenLayers/Control/TransformFeature.js",\n
+                "OpenLayers/Control/UTFGrid.js",\n
+                "OpenLayers/Control/SLDSelect.js",\n
+                "OpenLayers/Control/Zoom.js",\n
+                "OpenLayers/Geometry.js",\n
+                "OpenLayers/Geometry/Collection.js",\n
+                "OpenLayers/Geometry/Point.js",\n
+                "OpenLayers/Geometry/MultiPoint.js",\n
+                "OpenLayers/Geometry/Curve.js",\n
+                "OpenLayers/Geometry/LineString.js",\n
+                "OpenLayers/Geometry/LinearRing.js",\n
+                "OpenLayers/Geometry/Polygon.js",\n
+                "OpenLayers/Geometry/MultiLineString.js",\n
+                "OpenLayers/Geometry/MultiPolygon.js",\n
+                "OpenLayers/Renderer.js",\n
+                "OpenLayers/Renderer/Elements.js",\n
+                "OpenLayers/Renderer/SVG.js",\n
+                "OpenLayers/Renderer/Canvas.js",\n
+                "OpenLayers/Renderer/VML.js",\n
+                "OpenLayers/Layer/Vector.js",\n
+                "OpenLayers/Layer/PointGrid.js",\n
+                "OpenLayers/Layer/Vector/RootContainer.js",\n
+                "OpenLayers/Strategy.js",\n
+                "OpenLayers/Strategy/Filter.js",\n
+                "OpenLayers/Strategy/Fixed.js",\n
+                "OpenLayers/Strategy/Cluster.js",\n
+                "OpenLayers/Strategy/Paging.js",\n
+                "OpenLayers/Strategy/BBOX.js",\n
+                "OpenLayers/Strategy/Save.js",\n
+                "OpenLayers/Strategy/Refresh.js",\n
+                "OpenLayers/Filter.js",\n
+                "OpenLayers/Filter/FeatureId.js",\n
+                "OpenLayers/Filter/Logical.js",\n
+                "OpenLayers/Filter/Comparison.js",\n
+                "OpenLayers/Filter/Spatial.js",\n
+                "OpenLayers/Filter/Function.js",                \n
+                "OpenLayers/Protocol.js",\n
+                "OpenLayers/Protocol/HTTP.js",\n
+                "OpenLayers/Protocol/WFS.js",\n
+                "OpenLayers/Protocol/WFS/v1.js",\n
+                "OpenLayers/Protocol/WFS/v1_0_0.js",\n
+                "OpenLayers/Protocol/WFS/v1_1_0.js",\n
+                "OpenLayers/Protocol/CSW.js", \n
+                "OpenLayers/Protocol/CSW/v2_0_2.js",\n
+                "OpenLayers/Protocol/Script.js",\n
+                "OpenLayers/Protocol/SOS.js",\n
+                "OpenLayers/Protocol/SOS/v1_0_0.js",\n
+                "OpenLayers/Layer/PointTrack.js",\n
+                "OpenLayers/Style.js",\n
+                "OpenLayers/Style2.js",\n
+                "OpenLayers/StyleMap.js",\n
+                "OpenLayers/Rule.js",\n
+                "OpenLayers/Format.js",\n
+                "OpenLayers/Format/QueryStringFilter.js",\n
+                "OpenLayers/Format/XML.js",\n
+                "OpenLayers/Format/XML/VersionedOGC.js",\n
+                "OpenLayers/Format/Context.js",\n
+                "OpenLayers/Format/ArcXML.js",\n
+                "OpenLayers/Format/ArcXML/Features.js",\n
+                "OpenLayers/Format/GML.js",\n
+                "OpenLayers/Format/GML/Base.js",\n
+                "OpenLayers/Format/GML/v2.js",\n
+                "OpenLayers/Format/GML/v3.js",\n
+                "OpenLayers/Format/Atom.js",\n
+                "OpenLayers/Format/KML.js",\n
+                "OpenLayers/Format/GeoRSS.js",\n
+                "OpenLayers/Format/WFS.js",\n
+                "OpenLayers/Format/OWSCommon.js",\n
+                "OpenLayers/Format/OWSCommon/v1.js",\n
+                "OpenLayers/Format/OWSCommon/v1_0_0.js",\n
+                "OpenLayers/Format/OWSCommon/v1_1_0.js",\n
+                "OpenLayers/Format/WFSCapabilities.js",\n
+                "OpenLayers/Format/WFSCapabilities/v1.js",\n
+                "OpenLayers/Format/WFSCapabilities/v1_0_0.js",\n
+                "OpenLayers/Format/WFSCapabilities/v1_1_0.js",\n
+                "OpenLayers/Format/WFSDescribeFeatureType.js",\n
+                "OpenLayers/Format/WMSDescribeLayer.js",\n
+                "OpenLayers/Format/WMSDescribeLayer/v1_1.js",\n
+                "OpenLayers/Format/WKT.js",\n
+                "OpenLayers/Format/CQL.js",\n
+                "OpenLayers/Format/OSM.js",\n
+                "OpenLayers/Format/GPX.js",\n
+                "OpenLayers/Format/Filter.js",\n
+                "OpenLayers/Format/Filter/v1.js",\n
+                "OpenLayers/Format/Filter/v1_0_0.js",\n
+                "OpenLayers/Format/Filter/v1_1_0.js",\n
+                "OpenLayers/Format/SLD.js",\n
+                "OpenLayers/Format/SLD/v1.js",\n
+                "OpenLayers/Format/SLD/v1_0_0.js",\n
+                "OpenLayers/Format/SLD/v1_0_0_GeoServer.js",\n
+                "OpenLayers/Format/OWSCommon.js",\n
+                "OpenLayers/Format/OWSCommon/v1.js",\n
+                "OpenLayers/Format/OWSCommon/v1_0_0.js",\n
+                "OpenLayers/Format/OWSCommon/v1_1_0.js",\n
+                "OpenLayers/Format/CSWGetDomain.js",\n
+                "OpenLayers/Format/CSWGetDomain/v2_0_2.js",\n
+                "OpenLayers/Format/CSWGetRecords.js",\n
+                "OpenLayers/Format/CSWGetRecords/v2_0_2.js",\n
+                "OpenLayers/Format/WFST.js",\n
+                "OpenLayers/Format/WFST/v1.js",\n
+                "OpenLayers/Format/WFST/v1_0_0.js",\n
+                "OpenLayers/Format/WFST/v1_1_0.js",\n
+                "OpenLayers/Format/Text.js",\n
+                "OpenLayers/Format/JSON.js",\n
+                "OpenLayers/Format/GeoJSON.js",\n
+                "OpenLayers/Format/WMC.js",\n
+                "OpenLayers/Format/WMC/v1.js",\n
+                "OpenLayers/Format/WMC/v1_0_0.js",\n
+                "OpenLayers/Format/WMC/v1_1_0.js",\n
+                "OpenLayers/Format/WCSGetCoverage.js",\n
+                "OpenLayers/Format/WMSCapabilities.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_1.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_1_0.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_1_1.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_3.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_3_0.js",\n
+                "OpenLayers/Format/WMSCapabilities/v1_1_1_WMSC.js",\n
+                "OpenLayers/Format/WMSGetFeatureInfo.js",\n
+                "OpenLayers/Format/SOSCapabilities.js",\n
+                "OpenLayers/Format/SOSCapabilities/v1_0_0.js",\n
+                "OpenLayers/Format/SOSGetFeatureOfInterest.js",\n
+                "OpenLayers/Format/SOSGetObservation.js",\n
+                "OpenLayers/Format/OWSContext.js",\n
+                "OpenLayers/Format/OWSContext/v0_3_1.js",\n
+                "OpenLayers/Format/WMTSCapabilities.js",\n
+                "OpenLayers/Format/WMTSCapabilities/v1_0_0.js",\n
+                "OpenLayers/Format/WPSCapabilities.js",\n
+                "OpenLayers/Format/WPSCapabilities/v1_0_0.js",\n
+                "OpenLayers/Format/WPSDescribeProcess.js",\n
+                "OpenLayers/Format/WPSExecute.js",\n
+                "OpenLayers/Format/XLS.js",\n
+                "OpenLayers/Format/XLS/v1.js",\n
+                "OpenLayers/Format/XLS/v1_1_0.js",\n
+                "OpenLayers/Format/OGCExceptionReport.js",\n
+                "OpenLayers/Control/GetFeature.js",\n
+                "OpenLayers/Control/NavToolbar.js",\n
+                "OpenLayers/Control/PanPanel.js",\n
+                "OpenLayers/Control/Pan.js",\n
+                "OpenLayers/Control/ZoomIn.js",\n
+                "OpenLayers/Control/ZoomOut.js",\n
+                "OpenLayers/Control/ZoomPanel.js",\n
+                "OpenLayers/Control/EditingToolbar.js",\n
+                "OpenLayers/Control/Geolocate.js",\n
+                "OpenLayers/Symbolizer.js",\n
+                "OpenLayers/Symbolizer/Point.js",\n
+                "OpenLayers/Symbolizer/Line.js",\n
+                "OpenLayers/Symbolizer/Polygon.js",\n
+                "OpenLayers/Symbolizer/Text.js",\n
+                "OpenLayers/Symbolizer/Raster.js",\n
+                "OpenLayers/Lang.js",\n
+                "OpenLayers/Lang/en.js",\n
+                "OpenLayers/Spherical.js"\n
+            ]; // etc.\n
+        }\n
+\n
+        // use "parser-inserted scripts" for guaranteed execution order\n
+        // http://hsivonen.iki.fi/script-execution/\n
+        var scriptTags = new Array(jsFiles.length);\n
+        var host = OpenLayers._getScriptLocation() + "lib/";\n
+        for (var i=0, len=jsFiles.length; i<len; i++) {\n
+            scriptTags[i] = "<script src=\'" + host + jsFiles[i] +\n
+                                   "\'></script>"; \n
+        }\n
+        if (scriptTags.length > 0) {\n
+            document.write(scriptTags.join(""));\n
+        }\n
+    }\n
+})();\n
+\n
+/**\n
+ * Constant: VERSION_NUMBER\n
+ */\n
+OpenLayers.VERSION_NUMBER="Release 2.12";\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18867</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>OWSContext.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/Context.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.OWSContext\n
+ * Read and write OWS Context documents. OWS Context documents are a \n
+ * preliminary OGC (Open Geospatial Consortium) standard for storing the \n
+ * state of a web mapping application. In a way it is the successor to\n
+ * Web Map Context (WMC), since it is more generic and more types of layers\n
+ * can be stored. Also, nesting of layers is supported since version 0.3.1.\n
+ * For more information see: http://www.ogcnetwork.net/context\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.Context>\n
+ */\n
+OpenLayers.Format.OWSContext = OpenLayers.Class(OpenLayers.Format.Context,{\n
+    \n
+    /**\n
+     * APIProperty: defaultVersion\n
+     * {String} Version number to assume if none found.  Default is "0.3.1".\n
+     */\n
+    defaultVersion: "0.3.1",\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Format.OWSContext\n
+     * Create a new parser for OWS Context documents.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    \n
+    /**\n
+     * Method: getVersion\n
+     * Returns the version to use. Subclasses can override this function\n
+     * if a different version detection is needed.\n
+     *\n
+     * Parameters:\n
+     * root - {DOMElement}\n
+     * options - {Object} Optional configuration object.\n
+     *\n
+     * Returns:\n
+     * {String} The version to use.\n
+     */\n
+    getVersion: function(root, options) {\n
+        var version = OpenLayers.Format.XML.VersionedOGC.prototype.getVersion.apply(\n
+            this, arguments);\n
+        // 0.3.1 is backwards compatible with 0.3.0\n
+        if (version === "0.3.0") {\n
+            version = this.defaultVersion;\n
+        }\n
+        return version;\n
+    },\n
+\n
+    /**\n
+     * Method: toContext\n
+     * Create a context object free from layer given a map or a\n
+     * context object.\n
+     *\n
+     * Parameters:\n
+     * obj - {<OpenLayers.Map> | Object} The map or context.\n
+     *\n
+     * Returns:\n
+     * {Object} A context object.\n
+     */\n
+    toContext: function(obj) {\n
+        var context = {};\n
+        if(obj.CLASS_NAME == "OpenLayers.Map") {\n
+            context.bounds = obj.getExtent();\n
+            context.maxExtent = obj.maxExtent;\n
+            context.projection = obj.projection;\n
+            context.size = obj.getSize();\n
+            context.layers = obj.layers;\n
+        }\n
+        return context;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.OWSContext" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2691</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

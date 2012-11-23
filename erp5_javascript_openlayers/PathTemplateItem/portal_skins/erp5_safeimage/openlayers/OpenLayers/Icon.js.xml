@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Icon.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Icon\n
+ * \n
+ * The icon represents a graphical icon on the screen.  Typically used in\n
+ * conjunction with a <OpenLayers.Marker> to represent markers on a screen.\n
+ *\n
+ * An icon has a url, size and position.  It also contains an offset which \n
+ * allows the center point to be represented correctly.  This can be\n
+ * provided either as a fixed offset or a function provided to calculate\n
+ * the desired offset. \n
+ * \n
+ */\n
+OpenLayers.Icon = OpenLayers.Class({\n
+    \n
+    /** \n
+     * Property: url \n
+     * {String}  image url\n
+     */\n
+    url: null,\n
+    \n
+    /** \n
+     * Property: size \n
+     * {<OpenLayers.Size>|Object} An OpenLayers.Size or\n
+     * an object with a \'w\' and \'h\' properties.\n
+     */\n
+    size: null,\n
+\n
+    /** \n
+     * Property: offset \n
+     * {<OpenLayers.Pixel>|Object} distance in pixels to offset the\n
+     * image when being rendered. An OpenLayers.Pixel or an object\n
+     * with a \'x\' and \'y\' properties.\n
+     */\n
+    offset: null,    \n
+    \n
+    /** \n
+     * Property: calculateOffset \n
+     * {Function} Function to calculate the offset (based on the size)\n
+     */\n
+    calculateOffset: null,    \n
+    \n
+    /** \n
+     * Property: imageDiv \n
+     * {DOMElement} \n
+     */\n
+    imageDiv: null,\n
+\n
+    /** \n
+     * Property: px \n
+     * {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or an object\n
+     * with a \'x\' and \'y\' properties.\n
+     */\n
+    px: null,\n
+    \n
+    /** \n
+     * Constructor: OpenLayers.Icon\n
+     * Creates an icon, which is an image tag in a div.  \n
+     *\n
+     * url - {String} \n
+     * size - {<OpenLayers.Size>|Object} An OpenLayers.Size or an\n
+     *                                   object with a \'w\' and \'h\'\n
+     *                                   properties.\n
+     * offset - {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or an\n
+     *                                      object with a \'x\' and \'y\'\n
+     *                                      properties.\n
+     * calculateOffset - {Function} \n
+     */\n
+    initialize: function(url, size, offset, calculateOffset) {\n
+        this.url = url;\n
+        this.size = size || {w: 20, h: 20};\n
+        this.offset = offset || {x: -(this.size.w/2), y: -(this.size.h/2)};\n
+        this.calculateOffset = calculateOffset;\n
+\n
+        var id = OpenLayers.Util.createUniqueID("OL_Icon_");\n
+        this.imageDiv = OpenLayers.Util.createAlphaImageDiv(id);\n
+    },\n
+    \n
+    /** \n
+     * Method: destroy\n
+     * Nullify references and remove event listeners to prevent circular \n
+     * references and memory leaks\n
+     */\n
+    destroy: function() {\n
+        // erase any drawn elements\n
+        this.erase();\n
+\n
+        OpenLayers.Event.stopObservingElement(this.imageDiv.firstChild); \n
+        this.imageDiv.innerHTML = "";\n
+        this.imageDiv = null;\n
+    },\n
+\n
+    /** \n
+     * Method: clone\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Icon>} A fresh copy of the icon.\n
+     */\n
+    clone: function() {\n
+        return new OpenLayers.Icon(this.url, \n
+                                   this.size, \n
+                                   this.offset, \n
+                                   this.calculateOffset);\n
+    },\n
+    \n
+    /**\n
+     * Method: setSize\n
+     * \n
+     * Parameters:\n
+     * size - {<OpenLayers.Size>|Object} An OpenLayers.Size or\n
+     * an object with a \'w\' and \'h\' properties.\n
+     */\n
+    setSize: function(size) {\n
+        if (size != null) {\n
+            this.size = size;\n
+        }\n
+        this.draw();\n
+    },\n
+    \n
+    /**\n
+     * Method: setUrl\n
+     * \n
+     * Parameters:\n
+     * url - {String} \n
+     */\n
+    setUrl: function(url) {\n
+        if (url != null) {\n
+            this.url = url;\n
+        }\n
+        this.draw();\n
+    },\n
+\n
+    /** \n
+     * Method: draw\n
+     * Move the div to the given pixel.\n
+     * \n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or an\n
+     *                                  object with a \'x\' and \'y\' properties.\n
+     * \n
+     * Returns:\n
+     * {DOMElement} A new DOM Image of this icon set at the location passed-in\n
+     */\n
+    draw: function(px) {\n
+        OpenLayers.Util.modifyAlphaImageDiv(this.imageDiv, \n
+                                            null, \n
+                                            null, \n
+                                            this.size, \n
+                                            this.url, \n
+                                            "absolute");\n
+        this.moveTo(px);\n
+        return this.imageDiv;\n
+    }, \n
+\n
+    /** \n
+     * Method: erase\n
+     * Erase the underlying image element.\n
+     */\n
+    erase: function() {\n
+        if (this.imageDiv != null && this.imageDiv.parentNode != null) {\n
+            OpenLayers.Element.remove(this.imageDiv);\n
+        }\n
+    }, \n
+    \n
+    /** \n
+     * Method: setOpacity\n
+     * Change the icon\'s opacity\n
+     *\n
+     * Parameters:\n
+     * opacity - {float} \n
+     */\n
+    setOpacity: function(opacity) {\n
+        OpenLayers.Util.modifyAlphaImageDiv(this.imageDiv, null, null, null, \n
+                                            null, null, null, null, opacity);\n
+\n
+    },\n
+    \n
+    /**\n
+     * Method: moveTo\n
+     * move icon to passed in px.\n
+     *\n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>|Object} the pixel position to move to.\n
+     * An OpenLayers.Pixel or an object with a \'x\' and \'y\' properties.\n
+     */\n
+    moveTo: function (px) {\n
+        //if no px passed in, use stored location\n
+        if (px != null) {\n
+            this.px = px;\n
+        }\n
+\n
+        if (this.imageDiv != null) {\n
+            if (this.px == null) {\n
+                this.display(false);\n
+            } else {\n
+                if (this.calculateOffset) {\n
+                    this.offset = this.calculateOffset(this.size);  \n
+                }\n
+                OpenLayers.Util.modifyAlphaImageDiv(this.imageDiv, null, {\n
+                    x: this.px.x + this.offset.x,\n
+                    y: this.px.y + this.offset.y\n
+                });\n
+            }\n
+        }\n
+    },\n
+    \n
+    /** \n
+     * Method: display\n
+     * Hide or show the icon\n
+     *\n
+     * Parameters:\n
+     * display - {Boolean} \n
+     */\n
+    display: function(display) {\n
+        this.imageDiv.style.display = (display) ? "" : "none"; \n
+    },\n
+    \n
+\n
+    /**\n
+     * APIMethod: isDrawn\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the icon is drawn.\n
+     */\n
+    isDrawn: function() {\n
+        // nodeType 11 for ie, whose nodes *always* have a parentNode\n
+        // (of type document fragment)\n
+        var isDrawn = (this.imageDiv && this.imageDiv.parentNode && \n
+                       (this.imageDiv.parentNode.nodeType != 11));    \n
+\n
+        return isDrawn;   \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Icon"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6817</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

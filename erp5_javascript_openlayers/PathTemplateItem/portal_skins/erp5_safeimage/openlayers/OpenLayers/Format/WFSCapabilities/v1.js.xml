@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684101.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/WFSCapabilities.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WFSCapabilities.v1\n
+ * Abstract class not to be instantiated directly.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.WFSCapabilities.v1 = OpenLayers.Class(\n
+    OpenLayers.Format.XML, {\n
+\n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        wfs: "http://www.opengis.net/wfs",\n
+        xlink: "http://www.w3.org/1999/xlink",\n
+        xsi: "http://www.w3.org/2001/XMLSchema-instance",\n
+        ows: "http://www.opengis.net/ows"\n
+    },\n
+\n
+    /**\n
+     * Property: defaultPrefix\n
+     */\n
+    defaultPrefix: "wfs",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WFSCapabilities.v1_1\n
+     * Create an instance of one of the subclasses.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read capabilities data from a string, and return a list of layers. \n
+     * \n
+     * Parameters: \n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Array} List of named layers.\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        var raw = data;\n
+        if(data && data.nodeType == 9) {\n
+            data = data.documentElement;\n
+        }\n
+        var capabilities = {};\n
+        this.readNode(data, capabilities);\n
+        return capabilities;\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "wfs": {\n
+            "WFS_Capabilities": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "FeatureTypeList": function(node, request) {\n
+                request.featureTypeList = {\n
+                    featureTypes: []\n
+                };\n
+                this.readChildNodes(node, request.featureTypeList);\n
+            },\n
+            "FeatureType": function(node, featureTypeList) {\n
+                var featureType = {};\n
+                this.readChildNodes(node, featureType);\n
+                featureTypeList.featureTypes.push(featureType);\n
+            },\n
+            "Name": function(node, obj) {\n
+                var name = this.getChildValue(node);\n
+                if(name) {\n
+                    var parts = name.split(":");\n
+                    obj.name = parts.pop();\n
+                    if(parts.length > 0) {\n
+                        obj.featureNS = this.lookupNamespaceURI(node, parts[0]);\n
+                    }\n
+                }\n
+            },\n
+            "Title": function(node, obj) {\n
+                var title = this.getChildValue(node);\n
+                if(title) {\n
+                    obj.title = title;\n
+                }\n
+            },\n
+            "Abstract": function(node, obj) {\n
+                var abst = this.getChildValue(node);\n
+                if(abst) {\n
+                    obj["abstract"] = abst;\n
+                }\n
+            }\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WFSCapabilities.v1" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3724</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

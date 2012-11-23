@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MousePosition.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.MousePosition\n
+ * The MousePosition control displays geographic coordinates of the mouse\n
+ * pointer, as it is moved about the map.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.MousePosition = OpenLayers.Class(OpenLayers.Control, {\n
+    \n
+    /**\n
+     * APIProperty: autoActivate\n
+     * {Boolean} Activate the control when it is added to a map.  Default is\n
+     *     true.\n
+     */\n
+    autoActivate: true,\n
+\n
+    /** \n
+     * Property: element\n
+     * {DOMElement} \n
+     */\n
+    element: null,\n
+    \n
+    /** \n
+     * APIProperty: prefix\n
+     * {String}\n
+     */\n
+    prefix: \'\',\n
+    \n
+    /** \n
+     * APIProperty: separator\n
+     * {String}\n
+     */\n
+    separator: \', \',\n
+    \n
+    /** \n
+     * APIProperty: suffix\n
+     * {String}\n
+     */\n
+    suffix: \'\',\n
+    \n
+    /** \n
+     * APIProperty: numDigits\n
+     * {Integer}\n
+     */\n
+    numDigits: 5,\n
+    \n
+    /** \n
+     * APIProperty: granularity\n
+     * {Integer} \n
+     */\n
+    granularity: 10,\n
+\n
+    /**\n
+     * APIProperty: emptyString \n
+     * {String} Set this to some value to set when the mouse is outside the\n
+     *     map.\n
+     */\n
+    emptyString: null,\n
+    \n
+    /** \n
+     * Property: lastXy\n
+     * {<OpenLayers.Pixel>}\n
+     */\n
+    lastXy: null,\n
+\n
+    /**\n
+     * APIProperty: displayProjection\n
+     * {<OpenLayers.Projection>} The projection in which the \n
+     * mouse position is displayed\n
+     */\n
+    displayProjection: null, \n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Control.MousePosition\n
+     * \n
+     * Parameters:\n
+     * options - {Object} Options for control.\n
+     */\n
+\n
+    /**\n
+     * Method: destroy\n
+     */\n
+     destroy: function() {\n
+         this.deactivate();\n
+         OpenLayers.Control.prototype.destroy.apply(this, arguments);\n
+     },\n
+\n
+    /**\n
+     * APIMethod: activate\n
+     */\n
+    activate: function() {\n
+        if (OpenLayers.Control.prototype.activate.apply(this, arguments)) {\n
+            this.map.events.register(\'mousemove\', this, this.redraw);\n
+            this.map.events.register(\'mouseout\', this, this.reset);\n
+            this.redraw();\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     */\n
+    deactivate: function() {\n
+        if (OpenLayers.Control.prototype.deactivate.apply(this, arguments)) {\n
+            this.map.events.unregister(\'mousemove\', this, this.redraw);\n
+            this.map.events.unregister(\'mouseout\', this, this.reset);\n
+            this.element.innerHTML = "";\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: draw\n
+     * {DOMElement}\n
+     */    \n
+    draw: function() {\n
+        OpenLayers.Control.prototype.draw.apply(this, arguments);\n
+\n
+        if (!this.element) {\n
+            this.div.left = "";\n
+            this.div.top = "";\n
+            this.element = this.div;\n
+        }\n
+        \n
+        return this.div;\n
+    },\n
+   \n
+    /**\n
+     * Method: redraw  \n
+     */\n
+    redraw: function(evt) {\n
+\n
+        var lonLat;\n
+\n
+        if (evt == null) {\n
+            this.reset();\n
+            return;\n
+        } else {\n
+            if (this.lastXy == null ||\n
+                Math.abs(evt.xy.x - this.lastXy.x) > this.granularity ||\n
+                Math.abs(evt.xy.y - this.lastXy.y) > this.granularity)\n
+            {\n
+                this.lastXy = evt.xy;\n
+                return;\n
+            }\n
+\n
+            lonLat = this.map.getLonLatFromPixel(evt.xy);\n
+            if (!lonLat) { \n
+                // map has not yet been properly initialized\n
+                return;\n
+            }    \n
+            if (this.displayProjection) {\n
+                lonLat.transform(this.map.getProjectionObject(), \n
+                                 this.displayProjection );\n
+            }      \n
+            this.lastXy = evt.xy;\n
+            \n
+        }\n
+        \n
+        var newHtml = this.formatOutput(lonLat);\n
+\n
+        if (newHtml != this.element.innerHTML) {\n
+            this.element.innerHTML = newHtml;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: reset\n
+     */\n
+    reset: function(evt) {\n
+        if (this.emptyString != null) {\n
+            this.element.innerHTML = this.emptyString;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: formatOutput\n
+     * Override to provide custom display output\n
+     *\n
+     * Parameters:\n
+     * lonLat - {<OpenLayers.LonLat>} Location to display\n
+     */\n
+    formatOutput: function(lonLat) {\n
+        var digits = parseInt(this.numDigits);\n
+        var newHtml =\n
+            this.prefix +\n
+            lonLat.lon.toFixed(digits) +\n
+            this.separator + \n
+            lonLat.lat.toFixed(digits) +\n
+            this.suffix;\n
+        return newHtml;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.MousePosition"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4960</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1021 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Events.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Util.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Event\n
+ * Utility functions for event handling.\n
+ */\n
+OpenLayers.Event = {\n
+\n
+    /** \n
+     * Property: observers \n
+     * {Object} A hashtable cache of the event observers. Keyed by\n
+     * element._eventCacheID \n
+     */\n
+    observers: false,\n
+\n
+    /**\n
+     * Constant: KEY_SPACE\n
+     * {int}\n
+     */\n
+    KEY_SPACE: 32,\n
+    \n
+    /** \n
+     * Constant: KEY_BACKSPACE \n
+     * {int} \n
+     */\n
+    KEY_BACKSPACE: 8,\n
+\n
+    /** \n
+     * Constant: KEY_TAB \n
+     * {int} \n
+     */\n
+    KEY_TAB: 9,\n
+\n
+    /** \n
+     * Constant: KEY_RETURN \n
+     * {int} \n
+     */\n
+    KEY_RETURN: 13,\n
+\n
+    /** \n
+     * Constant: KEY_ESC \n
+     * {int} \n
+     */\n
+    KEY_ESC: 27,\n
+\n
+    /** \n
+     * Constant: KEY_LEFT \n
+     * {int} \n
+     */\n
+    KEY_LEFT: 37,\n
+\n
+    /** \n
+     * Constant: KEY_UP \n
+     * {int} \n
+     */\n
+    KEY_UP: 38,\n
+\n
+    /** \n
+     * Constant: KEY_RIGHT \n
+     * {int} \n
+     */\n
+    KEY_RIGHT: 39,\n
+\n
+    /** \n
+     * Constant: KEY_DOWN \n
+     * {int} \n
+     */\n
+    KEY_DOWN: 40,\n
+\n
+    /** \n
+     * Constant: KEY_DELETE \n
+     * {int} \n
+     */\n
+    KEY_DELETE: 46,\n
+\n
+\n
+    /**\n
+     * Method: element\n
+     * Cross browser event element detection.\n
+     * \n
+     * Parameters:\n
+     * event - {Event} \n
+     * \n
+     * Returns:\n
+     * {DOMElement} The element that caused the event \n
+     */\n
+    element: function(event) {\n
+        return event.target || event.srcElement;\n
+    },\n
+\n
+    /**\n
+     * Method: isSingleTouch\n
+     * Determine whether event was caused by a single touch\n
+     *\n
+     * Parameters:\n
+     * event - {Event}\n
+     *\n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+    isSingleTouch: function(event) {\n
+        return event.touches && event.touches.length == 1;\n
+    },\n
+\n
+    /**\n
+     * Method: isMultiTouch\n
+     * Determine whether event was caused by a multi touch\n
+     *\n
+     * Parameters:\n
+     * event - {Event}\n
+     *\n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+    isMultiTouch: function(event) {\n
+        return event.touches && event.touches.length > 1;\n
+    },\n
+\n
+    /**\n
+     * Method: isLeftClick\n
+     * Determine whether event was caused by a left click. \n
+     *\n
+     * Parameters:\n
+     * event - {Event} \n
+     * \n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+    isLeftClick: function(event) {\n
+        return (((event.which) && (event.which == 1)) ||\n
+                ((event.button) && (event.button == 1)));\n
+    },\n
+\n
+    /**\n
+     * Method: isRightClick\n
+     * Determine whether event was caused by a right mouse click. \n
+     *\n
+     * Parameters:\n
+     * event - {Event} \n
+     * \n
+     * Returns:\n
+     * {Boolean}\n
+     */\n
+     isRightClick: function(event) {\n
+        return (((event.which) && (event.which == 3)) ||\n
+                ((event.button) && (event.button == 2)));\n
+    },\n
+     \n
+    /**\n
+     * Method: stop\n
+     * Stops an event from propagating. \n
+     *\n
+     * Parameters: \n
+     * event - {Event} \n
+     * allowDefault - {Boolean} If true, we stop the event chain but \n
+     *     still allow the default browser behaviour (text selection,\n
+     *     radio-button clicking, etc).  Default is false.\n
+     */\n
+    stop: function(event, allowDefault) {\n
+        \n
+        if (!allowDefault) { \n
+            if (event.preventDefault) {\n
+                event.preventDefault();\n
+            } else {\n
+                event.returnValue = false;\n
+            }\n
+        }\n
+                \n
+        if (event.stopPropagation) {\n
+            event.stopPropagation();\n
+        } else {\n
+            event.cancelBubble = true;\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: findElement\n
+     * \n
+     * Parameters:\n
+     * event - {Event} \n
+     * tagName - {String} \n
+     * \n
+     * Returns:\n
+     * {DOMElement} The first node with the given tagName, starting from the\n
+     * node the event was triggered on and traversing the DOM upwards\n
+     */\n
+    findElement: function(event, tagName) {\n
+        var element = OpenLayers.Event.element(event);\n
+        while (element.parentNode && (!element.tagName ||\n
+              (element.tagName.toUpperCase() != tagName.toUpperCase()))){\n
+            element = element.parentNode;\n
+        }\n
+        return element;\n
+    },\n
+\n
+    /** \n
+     * Method: observe\n
+     * \n
+     * Parameters:\n
+     * elementParam - {DOMElement || String} \n
+     * name - {String} \n
+     * observer - {function} \n
+     * useCapture - {Boolean} \n
+     */\n
+    observe: function(elementParam, name, observer, useCapture) {\n
+        var element = OpenLayers.Util.getElement(elementParam);\n
+        useCapture = useCapture || false;\n
+\n
+        if (name == \'keypress\' &&\n
+           (navigator.appVersion.match(/Konqueror|Safari|KHTML/)\n
+           || element.attachEvent)) {\n
+            name = \'keydown\';\n
+        }\n
+\n
+        //if observers cache has not yet been created, create it\n
+        if (!this.observers) {\n
+            this.observers = {};\n
+        }\n
+\n
+        //if not already assigned, make a new unique cache ID\n
+        if (!element._eventCacheID) {\n
+            var idPrefix = "eventCacheID_";\n
+            if (element.id) {\n
+                idPrefix = element.id + "_" + idPrefix;\n
+            }\n
+            element._eventCacheID = OpenLayers.Util.createUniqueID(idPrefix);\n
+        }\n
+\n
+        var cacheID = element._eventCacheID;\n
+\n
+        //if there is not yet a hash entry for this element, add one\n
+        if (!this.observers[cacheID]) {\n
+            this.observers[cacheID] = [];\n
+        }\n
+\n
+        //add a new observer to this element\'s list\n
+        this.observers[cacheID].push({\n
+            \'element\': element,\n
+            \'name\': name,\n
+            \'observer\': observer,\n
+            \'useCapture\': useCapture\n
+        });\n
+\n
+        //add the actual browser event listener\n
+        if (element.addEventListener) {\n
+            element.addEventListener(name, observer, useCapture);\n
+        } else if (element.attachEvent) {\n
+            element.attachEvent(\'on\' + name, observer);\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: stopObservingElement\n
+     * Given the id of an element to stop observing, cycle through the \n
+     *   element\'s cached observers, calling stopObserving on each one, \n
+     *   skipping those entries which can no longer be removed.\n
+     * \n
+     * parameters:\n
+     * elementParam - {DOMElement || String} \n
+     */\n
+    stopObservingElement: function(elementParam) {\n
+        var element = OpenLayers.Util.getElement(elementParam);\n
+        var cacheID = element._eventCacheID;\n
+\n
+        this._removeElementObservers(OpenLayers.Event.observers[cacheID]);\n
+    },\n
+\n
+    /**\n
+     * Method: _removeElementObservers\n
+     *\n
+     * Parameters:\n
+     * elementObservers - {Array(Object)} Array of (element, name, \n
+     *                                         observer, usecapture) objects, \n
+     *                                         taken directly from hashtable\n
+     */\n
+    _removeElementObservers: function(elementObservers) {\n
+        if (elementObservers) {\n
+            for(var i = elementObservers.length-1; i >= 0; i--) {\n
+                var entry = elementObservers[i];\n
+                var args = new Array(entry.element,\n
+                                     entry.name,\n
+                                     entry.observer,\n
+                                     entry.useCapture);\n
+                var removed = OpenLayers.Event.stopObserving.apply(this, args);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: stopObserving\n
+     * \n
+     * Parameters:\n
+     * elementParam - {DOMElement || String} \n
+     * name - {String} \n
+     * observer - {function} \n
+     * useCapture - {Boolean} \n
+     *  \n
+     * Returns:\n
+     * {Boolean} Whether or not the event observer was removed\n
+     */\n
+    stopObserving: function(elementParam, name, observer, useCapture) {\n
+        useCapture = useCapture || false;\n
+    \n
+        var element = OpenLayers.Util.getElement(elementParam);\n
+        var cacheID = element._eventCacheID;\n
+\n
+        if (name == \'keypress\') {\n
+            if ( navigator.appVersion.match(/Konqueror|Safari|KHTML/) || \n
+                 element.detachEvent) {\n
+              name = \'keydown\';\n
+            }\n
+        }\n
+\n
+        // find element\'s entry in this.observers cache and remove it\n
+        var foundEntry = false;\n
+        var elementObservers = OpenLayers.Event.observers[cacheID];\n
+        if (elementObservers) {\n
+    \n
+            // find the specific event type in the element\'s list\n
+            var i=0;\n
+            while(!foundEntry && i < elementObservers.length) {\n
+                var cacheEntry = elementObservers[i];\n
+    \n
+                if ((cacheEntry.name == name) &&\n
+                    (cacheEntry.observer == observer) &&\n
+                    (cacheEntry.useCapture == useCapture)) {\n
+    \n
+                    elementObservers.splice(i, 1);\n
+                    if (elementObservers.length == 0) {\n
+                        delete OpenLayers.Event.observers[cacheID];\n
+                    }\n
+                    foundEntry = true;\n
+                    break; \n
+                }\n
+                i++;           \n
+            }\n
+        }\n
+    \n
+        //actually remove the event listener from browser\n
+        if (foundEntry) {\n
+            if (element.removeEventListener) {\n
+                element.removeEventListener(name, observer, useCapture);\n
+            } else if (element && element.detachEvent) {\n
+                element.detachEvent(\'on\' + name, observer);\n
+            }\n
+        }\n
+        return foundEntry;\n
+    },\n
+    \n
+    /** \n
+     * Method: unloadCache\n
+     * Cycle through all the element entries in the events cache and call\n
+     *   stopObservingElement on each. \n
+     */\n
+    unloadCache: function() {\n
+        // check for OpenLayers.Event before checking for observers, because\n
+        // OpenLayers.Event may be undefined in IE if no map instance was\n
+        // created\n
+        if (OpenLayers.Event && OpenLayers.Event.observers) {\n
+            for (var cacheID in OpenLayers.Event.observers) {\n
+                var elementObservers = OpenLayers.Event.observers[cacheID];\n
+                OpenLayers.Event._removeElementObservers.apply(this, \n
+                                                           [elementObservers]);\n
+            }\n
+            OpenLayers.Event.observers = false;\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Event"\n
+};\n
+\n
+/* prevent memory leaks in IE */\n
+OpenLayers.Event.observe(window, \'unload\', OpenLayers.Event.unloadCache, false);\n
+\n
+/**\n
+ * Class: OpenLayers.Events\n
+ */\n
+OpenLayers.Events = OpenLayers.Class({\n
+\n
+    /** \n
+     * Constant: BROWSER_EVENTS\n
+     * {Array(String)} supported events \n
+     */\n
+    BROWSER_EVENTS: [\n
+        "mouseover", "mouseout",\n
+        "mousedown", "mouseup", "mousemove", \n
+        "click", "dblclick", "rightclick", "dblrightclick",\n
+        "resize", "focus", "blur",\n
+        "touchstart", "touchmove", "touchend",\n
+        "keydown"\n
+    ],\n
+\n
+    /** \n
+     * Property: listeners \n
+     * {Object} Hashtable of Array(Function): events listener functions  \n
+     */\n
+    listeners: null,\n
+\n
+    /** \n
+     * Property: object \n
+     * {Object}  the code object issuing application events \n
+     */\n
+    object: null,\n
+\n
+    /** \n
+     * Property: element \n
+     * {DOMElement}  the DOM element receiving browser events \n
+     */\n
+    element: null,\n
+\n
+    /** \n
+     * Property: eventHandler \n
+     * {Function}  bound event handler attached to elements \n
+     */\n
+    eventHandler: null,\n
+\n
+    /** \n
+     * APIProperty: fallThrough \n
+     * {Boolean} \n
+     */\n
+    fallThrough: null,\n
+\n
+    /** \n
+     * APIProperty: includeXY\n
+     * {Boolean} Should the .xy property automatically be created for browser\n
+     *    mouse events? In general, this should be false. If it is true, then\n
+     *    mouse events will automatically generate a \'.xy\' property on the \n
+     *    event object that is passed. (Prior to OpenLayers 2.7, this was true\n
+     *    by default.) Otherwise, you can call the getMousePosition on the\n
+     *    relevant events handler on the object available via the \'evt.object\'\n
+     *    property of the evt object. So, for most events, you can call:\n
+     *    function named(evt) { \n
+     *        this.xy = this.object.events.getMousePosition(evt) \n
+     *    } \n
+     *\n
+     *    This option typically defaults to false for performance reasons:\n
+     *    when creating an events object whose primary purpose is to manage\n
+     *    relatively positioned mouse events within a div, it may make\n
+     *    sense to set it to true.\n
+     *\n
+     *    This option is also used to control whether the events object caches\n
+     *    offsets. If this is false, it will not: the reason for this is that\n
+     *    it is only expected to be called many times if the includeXY property\n
+     *    is set to true. If you set this to true, you are expected to clear \n
+     *    the offset cache manually (using this.clearMouseCache()) if:\n
+     *        the border of the element changes\n
+     *        the location of the element in the page changes\n
+    */\n
+    includeXY: false,      \n
+    \n
+    /**\n
+     * APIProperty: extensions\n
+     * {Object} Event extensions registered with this instance. Keys are\n
+     *     event types, values are {OpenLayers.Events.*} extension instances or\n
+     *     {Boolean} for events that an instantiated extension provides in\n
+     *     addition to the one it was created for.\n
+     *\n
+     * Extensions create an event in addition to browser events, which usually\n
+     * fires when a sequence of browser events is completed. Extensions are\n
+     * automatically instantiated when a listener is registered for an event\n
+     * provided by an extension.\n
+     *\n
+     * Extensions are created in the <OpenLayers.Events> namespace using\n
+     * <OpenLayers.Class>, and named after the event they provide.\n
+     * The constructor receives the target <OpenLayers.Events> instance as\n
+     * argument. Extensions that need to capture browser events before they\n
+     * propagate can register their listeners events using <register>, with\n
+     * {extension: true} as 4th argument.\n
+     *\n
+     * If an extension creates more than one event, an alias for each event\n
+     * type should be created and reference the same class. The constructor\n
+     * should set a reference in the target\'s extensions registry to itself.\n
+     *\n
+     * Below is a minimal extension that provides the "foostart" and "fooend"\n
+     * event types, which replace the native "click" event type if clicked on\n
+     * an element with the css class "foo":\n
+     *\n
+     * (code)\n
+     *   OpenLayers.Events.foostart = OpenLayers.Class({\n
+     *       initialize: function(target) {\n
+     *           this.target = target;\n
+     *           this.target.register("click", this, this.doStuff, {extension: true});\n
+     *           // only required if extension provides more than one event type\n
+     *           this.target.extensions["foostart"] = true;\n
+     *           this.target.extensions["fooend"] = true;\n
+     *       },\n
+     *       destroy: function() {\n
+     *           var target = this.target;\n
+     *           target.unregister("click", this, this.doStuff);\n
+     *           delete this.target;\n
+     *           // only required if extension provides more than one event type\n
+     *           delete target.extensions["foostart"];\n
+     *           delete target.extensions["fooend"];\n
+     *       },\n
+     *       doStuff: function(evt) {\n
+     *           var propagate = true;\n
+     *           if (OpenLayers.Event.element(evt).className === "foo") {\n
+     *               propagate = false;\n
+     *               var target = this.target;\n
+     *               target.triggerEvent("foostart");\n
+     *               window.setTimeout(function() {\n
+     *                   target.triggerEvent("fooend");\n
+     *               }, 1000);\n
+     *           }\n
+     *           return propagate;\n
+     *       }\n
+     *   });\n
+     *   // only required if extension provides more than one event type\n
+     *   OpenLayers.Events.fooend = OpenLayers.Events.foostart;\n
+     * (end)\n
+     * \n
+     */\n
+    extensions: null,\n
+    \n
+    /**\n
+     * Property: extensionCount\n
+     * {Object} Keys are event types (like in <listeners>), values are the\n
+     *     number of extension listeners for each event type.\n
+     */\n
+    extensionCount: null,\n
+\n
+    /**\n
+     * Method: clearMouseListener\n
+     * A version of <clearMouseCache> that is bound to this instance so that\n
+     *     it can be used with <OpenLayers.Event.observe> and\n
+     *     <OpenLayers.Event.stopObserving>.\n
+     */\n
+    clearMouseListener: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Events\n
+     * Construct an OpenLayers.Events object.\n
+     *\n
+     * Parameters:\n
+     * object - {Object} The js object to which this Events object  is being added\n
+     * element - {DOMElement} A dom element to respond to browser events\n
+     * eventTypes - {Array(String)} Deprecated.  Array of custom application\n
+     *     events.  A listener may be registered for any named event, regardless\n
+     *     of the values provided here.\n
+     * fallThrough - {Boolean} Allow events to fall through after these have\n
+     *                         been handled?\n
+     * options - {Object} Options for the events object.\n
+     */\n
+    initialize: function (object, element, eventTypes, fallThrough, options) {\n
+        OpenLayers.Util.extend(this, options);\n
+        this.object     = object;\n
+        this.fallThrough = fallThrough;\n
+        this.listeners  = {};\n
+        this.extensions = {};\n
+        this.extensionCount = {};\n
+        \n
+        // if a dom element is specified, add a listeners list \n
+        // for browser events on the element and register them\n
+        if (element != null) {\n
+            this.attachToElement(element);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     */\n
+    destroy: function () {\n
+        for (var e in this.extensions) {\n
+            if (typeof this.extensions[e] !== "boolean") {\n
+                this.extensions[e].destroy();\n
+            }\n
+        }\n
+        this.extensions = null;\n
+        if (this.element) {\n
+            OpenLayers.Event.stopObservingElement(this.element);\n
+            if(this.element.hasScrollEvent) {\n
+                OpenLayers.Event.stopObserving(\n
+                    window, "scroll", this.clearMouseListener\n
+                );\n
+            }\n
+        }\n
+        this.element = null;\n
+\n
+        this.listeners = null;\n
+        this.object = null;\n
+        this.fallThrough = null;\n
+        this.eventHandler = null;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: addEventType\n
+     * Deprecated.  Any event can be triggered without adding it first.\n
+     * \n
+     * Parameters:\n
+     * eventName - {String}\n
+     */\n
+    addEventType: function(eventName) {\n
+    },\n
+\n
+    /**\n
+     * Method: attachToElement\n
+     *\n
+     * Parameters:\n
+     * element - {HTMLDOMElement} a DOM element to attach browser events to\n
+     */\n
+    attachToElement: function (element) {\n
+        if (this.element) {\n
+            OpenLayers.Event.stopObservingElement(this.element);\n
+        } else {\n
+            // keep a bound copy of handleBrowserEvent() so that we can\n
+            // pass the same function to both Event.observe() and .stopObserving()\n
+            this.eventHandler = OpenLayers.Function.bindAsEventListener(\n
+                this.handleBrowserEvent, this\n
+            );\n
+            \n
+            // to be used with observe and stopObserving\n
+            this.clearMouseListener = OpenLayers.Function.bind(\n
+                this.clearMouseCache, this\n
+            );\n
+        }\n
+        this.element = element;\n
+        for (var i = 0, len = this.BROWSER_EVENTS.length; i < len; i++) {\n
+            // register the event cross-browser\n
+            OpenLayers.Event.observe(\n
+                element, this.BROWSER_EVENTS[i], this.eventHandler\n
+            );\n
+        }\n
+        // disable dragstart in IE so that mousedown/move/up works normally\n
+        OpenLayers.Event.observe(element, "dragstart", OpenLayers.Event.stop);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: on\n
+     * Convenience method for registering listeners with a common scope.\n
+     *     Internally, this method calls <register> as shown in the examples\n
+     *     below.\n
+     *\n
+     * Example use:\n
+     * (code)\n
+     * // register a single listener for the "loadstart" event\n
+     * events.on({"loadstart": loadStartListener});\n
+     *\n
+     * // this is equivalent to the following\n
+     * events.register("loadstart", undefined, loadStartListener);\n
+     *\n
+     * // register multiple listeners to be called with the same `this` object\n
+     * events.on({\n
+     *     "loadstart": loadStartListener,\n
+     *     "loadend": loadEndListener,\n
+     *     scope: object\n
+     * });\n
+     *\n
+     * // this is equivalent to the following\n
+     * events.register("loadstart", object, loadStartListener);\n
+     * events.register("loadend", object, loadEndListener);\n
+     * (end)\n
+     *\n
+     * Parameters:\n
+     *  object - {Object}     \n
+     */\n
+    on: function(object) {\n
+        for(var type in object) {\n
+            if(type != "scope" && object.hasOwnProperty(type)) {\n
+                this.register(type, object.scope, object[type]);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: register\n
+     * Register an event on the events object.\n
+     *\n
+     * When the event is triggered, the \'func\' function will be called, in the\n
+     * context of \'obj\'. Imagine we were to register an event, specifying an \n
+     * OpenLayers.Bounds Object as \'obj\'. When the event is triggered, the \n
+     * context in the callback function will be our Bounds object. This means\n
+     * that within our callback function, we can access the properties and \n
+     * methods of the Bounds object through the "this" variable. So our \n
+     * callback could execute something like: \n
+     * :    leftStr = "Left: " + this.left;\n
+     *   \n
+     *                   or\n
+     *  \n
+     * :    centerStr = "Center: " + this.getCenterLonLat();\n
+     *\n
+     * Parameters:\n
+     * type - {String} Name of the event to register\n
+     * obj - {Object} The object to bind the context to for the callback#.\n
+     *     If no object is specified, default is the Events\'s \'object\' property.\n
+     * func - {Function} The callback function. If no callback is \n
+     *     specified, this function does nothing.\n
+     * priority - {Boolean|Object} If true, adds the new listener to the\n
+     *     *front* of the events queue instead of to the end.\n
+     *\n
+     * Valid options for priority:\n
+     * extension - {Boolean} If true, then the event will be registered as\n
+     *     extension event. Extension events are handled before all other\n
+     *     events.\n
+     */\n
+    register: function (type, obj, func, priority) {\n
+        if (type in OpenLayers.Events && !this.extensions[type]) {\n
+            this.extensions[type] = new OpenLayers.Events[type](this);\n
+        }\n
+        if (func != null) {\n
+            if (obj == null)  {\n
+                obj = this.object;\n
+            }\n
+            var listeners = this.listeners[type];\n
+            if (!listeners) {\n
+                listeners = [];\n
+                this.listeners[type] = listeners;\n
+                this.extensionCount[type] = 0;\n
+            }\n
+            var listener = {obj: obj, func: func};\n
+            if (priority) {\n
+                listeners.splice(this.extensionCount[type], 0, listener);\n
+                if (typeof priority === "object" && priority.extension) {\n
+                    this.extensionCount[type]++;\n
+                }\n
+            } else {\n
+                listeners.push(listener);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: registerPriority\n
+     * Same as register() but adds the new listener to the *front* of the\n
+     *     events queue instead of to the end.\n
+     *    \n
+     *     TODO: get rid of this in 3.0 - Decide whether listeners should be \n
+     *     called in the order they were registered or in reverse order.\n
+     *\n
+     *\n
+     * Parameters:\n
+     * type - {String} Name of the event to register\n
+     * obj - {Object} The object to bind the context to for the callback#.\n
+     *                If no object is specified, default is the Events\'s \n
+     *                \'object\' property.\n
+     * func - {Function} The callback function. If no callback is \n
+     *                   specified, this function does nothing.\n
+     */\n
+    registerPriority: function (type, obj, func) {\n
+        this.register(type, obj, func, true);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: un\n
+     * Convenience method for unregistering listeners with a common scope.\n
+     *     Internally, this method calls <unregister> as shown in the examples\n
+     *     below.\n
+     *\n
+     * Example use:\n
+     * (code)\n
+     * // unregister a single listener for the "loadstart" event\n
+     * events.un({"loadstart": loadStartListener});\n
+     *\n
+     * // this is equivalent to the following\n
+     * events.unregister("loadstart", undefined, loadStartListener);\n
+     *\n
+     * // unregister multiple listeners with the same `this` object\n
+     * events.un({\n
+     *     "loadstart": loadStartListener,\n
+     *     "loadend": loadEndListener,\n
+     *     scope: object\n
+     * });\n
+     *\n
+     * // this is equivalent to the following\n
+     * events.unregister("loadstart", object, loadStartListener);\n
+     * events.unregister("loadend", object, loadEndListener);\n
+     * (end)\n
+     */\n
+    un: function(object) {\n
+        for(var type in object) {\n
+            if(type != "scope" && object.hasOwnProperty(type)) {\n
+                this.unregister(type, object.scope, object[type]);\n
+            }\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: unregister\n
+     *\n
+     * Parameters:\n
+     * type - {String} \n
+     * obj - {Object} If none specified, defaults to this.object\n
+     * func - {Function} \n
+     */\n
+    unregister: function (type, obj, func) {\n
+        if (obj == null)  {\n
+            obj = this.object;\n
+        }\n
+        var listeners = this.listeners[type];\n
+        if (listeners != null) {\n
+            for (var i=0, len=listeners.length; i<len; i++) {\n
+                if (listeners[i].obj == obj && listeners[i].func == func) {\n
+                    listeners.splice(i, 1);\n
+                    break;\n
+                }\n
+            }\n
+        }\n
+    },\n
+\n
+    /** \n
+     * Method: remove\n
+     * Remove all listeners for a given event type. If type is not registered,\n
+     *     does nothing.\n
+     *\n
+     * Parameters:\n
+     * type - {String} \n
+     */\n
+    remove: function(type) {\n
+        if (this.listeners[type] != null) {\n
+            this.listeners[type] = [];\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: triggerEvent\n
+     * Trigger a specified registered event.  \n
+     * \n
+     * Parameters:\n
+     * type - {String} \n
+     * evt - {Event}\n
+     *\n
+     * Returns:\n
+     * {Boolean} The last listener return.  If a listener returns false, the\n
+     *     chain of listeners will stop getting called.\n
+     */\n
+    triggerEvent: function (type, evt) {\n
+        var listeners = this.listeners[type];\n
+\n
+        // fast path\n
+        if(!listeners || listeners.length == 0) {\n
+            return undefined;\n
+        }\n
+\n
+        // prep evt object with object & div references\n
+        if (evt == null) {\n
+            evt = {};\n
+        }\n
+        evt.object = this.object;\n
+        evt.element = this.element;\n
+        if(!evt.type) {\n
+            evt.type = type;\n
+        }\n
+    \n
+        // execute all callbacks registered for specified type\n
+        // get a clone of the listeners array to\n
+        // allow for splicing during callbacks\n
+        listeners = listeners.slice();\n
+        var continueChain;\n
+        for (var i=0, len=listeners.length; i<len; i++) {\n
+            var callback = listeners[i];\n
+            // bind the context to callback.obj\n
+            continueChain = callback.func.apply(callback.obj, [evt]);\n
+\n
+            if ((continueChain != undefined) && (continueChain == false)) {\n
+                // if callback returns false, execute no more callbacks.\n
+                break;\n
+            }\n
+        }\n
+        // don\'t fall through to other DOM elements\n
+        if (!this.fallThrough) {           \n
+            OpenLayers.Event.stop(evt, true);\n
+        }\n
+        return continueChain;\n
+    },\n
+\n
+    /**\n
+     * Method: handleBrowserEvent\n
+     * Basically just a wrapper to the triggerEvent() function, but takes \n
+     *     care to set a property \'xy\' on the event with the current mouse \n
+     *     position.\n
+     *\n
+     * Parameters:\n
+     * evt - {Event} \n
+     */\n
+    handleBrowserEvent: function (evt) {\n
+        var type = evt.type, listeners = this.listeners[type];\n
+        if(!listeners || listeners.length == 0) {\n
+            // noone\'s listening, bail out\n
+            return;\n
+        }\n
+        // add clientX & clientY to all events - corresponds to average x, y\n
+        var touches = evt.touches;\n
+        if (touches && touches[0]) {\n
+            var x = 0;\n
+            var y = 0;\n
+            var num = touches.length;\n
+            var touch;\n
+            for (var i=0; i<num; ++i) {\n
+                touch = touches[i];\n
+                x += touch.clientX;\n
+                y += touch.clientY;\n
+            }\n
+            evt.clientX = x / num;\n
+            evt.clientY = y / num;\n
+        }\n
+        if (this.includeXY) {\n
+            evt.xy = this.getMousePosition(evt);\n
+        } \n
+        this.triggerEvent(type, evt);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clearMouseCache\n
+     * Clear cached data about the mouse position. This should be called any \n
+     *     time the element that events are registered on changes position \n
+     *     within the page.\n
+     */\n
+    clearMouseCache: function() { \n
+        this.element.scrolls = null;\n
+        this.element.lefttop = null;\n
+        // OpenLayers.Util.pagePosition needs to use\n
+        // element.getBoundingClientRect to correctly calculate the offsets\n
+        // for the iPhone, but once the page is scrolled, getBoundingClientRect\n
+        // returns incorrect offsets. So our best bet is to not invalidate the\n
+        // offsets once we have them, and hope that the page was not scrolled\n
+        // when we did the initial calculation.\n
+        var body = document.body;\n
+        if (body && !((body.scrollTop != 0 || body.scrollLeft != 0) &&\n
+                                    navigator.userAgent.match(/iPhone/i))) {\n
+            this.element.offsets = null;\n
+        }\n
+    },      \n
+\n
+    /**\n
+     * Method: getMousePosition\n
+     * \n
+     * Parameters:\n
+     * evt - {Event} \n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} The current xy coordinate of the mouse, adjusted\n
+     *                      for offsets\n
+     */\n
+    getMousePosition: function (evt) {\n
+        if (!this.includeXY) {\n
+            this.clearMouseCache();\n
+        } else if (!this.element.hasScrollEvent) {\n
+            OpenLayers.Event.observe(window, "scroll", this.clearMouseListener);\n
+            this.element.hasScrollEvent = true;\n
+        }\n
+        \n
+        if (!this.element.scrolls) {\n
+            var viewportElement = OpenLayers.Util.getViewportElement();\n
+            this.element.scrolls = [\n
+                viewportElement.scrollLeft,\n
+                viewportElement.scrollTop\n
+            ];\n
+        }\n
+\n
+        if (!this.element.lefttop) {\n
+            this.element.lefttop = [\n
+                (document.documentElement.clientLeft || 0),\n
+                (document.documentElement.clientTop  || 0)\n
+            ];\n
+        }\n
+        \n
+        if (!this.element.offsets) {\n
+            this.element.offsets = OpenLayers.Util.pagePosition(this.element);\n
+        }\n
+\n
+        return new OpenLayers.Pixel(\n
+            (evt.clientX + this.element.scrolls[0]) - this.element.offsets[0]\n
+                         - this.element.lefttop[0], \n
+            (evt.clientY + this.element.scrolls[1]) - this.element.offsets[1]\n
+                         - this.element.lefttop[1]\n
+        ); \n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Events"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>31565</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

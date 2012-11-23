@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>nb.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["nb"]\n
+ * Dictionary for norwegian bokmål (Norway). Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["nb"] = {\n
+\n
+    \'unhandledRequest\': "Ubehandlet forespørsel returnerte ${statusText}",\n
+\n
+    \'Permalink\': "Kobling til denne siden",\n
+\n
+    \'Overlays\': "Kartlag",\n
+\n
+    \'Base Layer\': "Bakgrunnskart",\n
+\n
+    \'noFID\': "Kan ikke oppdatere et feature (et objekt) som ikke har FID.",\n
+\n
+    \'browserNotSupported\':\n
+        "Din nettleser støtter ikke vektortegning. Tegnemetodene som støttes er:\\n${renderers}",\n
+\n
+    // console message\n
+    \'minZoomLevelError\':\n
+        "Egenskapen minZoomLevel er kun ment til bruk på lag " +\n
+        "basert på FixedZoomLevels. At dette wfs-laget sjekker " +\n
+        "minZoomLevel er en etterlevning fra tidligere versjoner. Det kan dog ikke " +\n
+        "tas bort uten å risikere at OL-baserte applikasjoner " +\n
+        "slutter å virke, så det er merket som foreldet: " +\n
+        "minZoomLevel i sjekken nedenfor vil fjernes i 3.0. " +\n
+        "Vennligst bruk innstillingene for min/maks oppløsning " +\n
+        "som er beskrevet her: "+\n
+        "http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS-transaksjon: LYKTES ${response}",\n
+\n
+    \'commitFailed\': "WFS-transaksjon: MISLYKTES ${response}",\n
+\n
+    \'googleWarning\':\n
+        "Google-laget kunne ikke lastes.<br><br>" +\n
+        "Bytt til et annet bakgrunnslag i lagvelgeren i " +\n
+        "øvre høyre hjørne for å slippe denne meldingen.<br><br>" +\n
+        "Sannsynligvis forårsakes feilen av at Google Maps-biblioteket " +\n
+        "ikke er riktig inkludert på nettsiden, eller at det ikke er " +\n
+        "angitt riktig API-nøkkel for nettstedet.<br><br>" +\n
+        "Utviklere: For hjelp til å få dette til å virke se "+\n
+        "<a href=\'http://trac.openlayers.org/wiki/Google\' " +\n
+        "target=\'_blank\'>her</a>.",\n
+\n
+    \'getLayerWarning\':\n
+        "${layerType}-laget kunne ikke lastes.<br><br>" +\n
+        "Bytt til et annet bakgrunnslag i lagvelgeren i " +\n
+        "øvre høyre hjørne for å slippe denne meldingen.<br><br>" +\n
+        "Sannsynligvis forårsakes feilen av at " +\n
+        "${layerLib}-biblioteket ikke var riktig inkludert " +\n
+        "på nettsiden.<br><br>" +\n
+        "Utviklere: For hjelp til å få dette til å virke se " +\n
+        "<a href=\'http://trac.openlayers.org/wiki/${layerLib}\' " +\n
+        "target=\'_blank\'>her</a>.",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "<strong>Skala</strong> 1 : ${scaleDenom}",\n
+\n
+    // console message\n
+    \'reprojectDeprecated\':\n
+        "Du bruker innstillingen \'reproject\' på laget ${layerName}. " +\n
+        "Denne innstillingen er foreldet, den var ment for å støtte " +\n
+        "visning av kartdata over kommersielle bakgrunnskart, men det " +\n
+        "bør nå gjøres med støtten for Spherical Mercator. Mer informasjon " +\n
+        "finnes på http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    // console message\n
+    \'methodDeprecated\':\n
+        "Denne metoden er markert som foreldet og vil bli fjernet i 3.0. " +\n
+        "Vennligst bruk ${newMethod} i stedet.",\n
+\n
+    \'end\': \'\'\n
+};\n
+\n
+OpenLayers.Lang["no"] = OpenLayers.Lang["nb"];\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3342</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

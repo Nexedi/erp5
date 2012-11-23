@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WFS.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/GML.js\n
+ * @requires OpenLayers/Console.js\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WFS\n
+ * Read/Write WFS. \n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.GML>\n
+ */\n
+OpenLayers.Format.WFS = OpenLayers.Class(OpenLayers.Format.GML, {\n
+    \n
+    /** \n
+     * Property: layer\n
+     * {<OpenLayers.Layer>}\n
+     */\n
+    layer: null,\n
+    \n
+    /**\n
+     * APIProperty: wfsns\n
+     * {String}\n
+     */\n
+    wfsns: "http://www.opengis.net/wfs",\n
+    \n
+    /**\n
+     * Property: ogcns\n
+     * {String}\n
+     */\n
+    ogcns: "http://www.opengis.net/ogc",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WFS\n
+     * Create a WFS-T formatter. This requires a layer: that layer should\n
+     * have two properties: geometry_column and typename. The parser\n
+     * for this format is subclassed entirely from GML: There is a writer \n
+     * only, which uses most of the code from the GML layer, and wraps\n
+     * it in transactional elements.\n
+     * \n
+     * Parameters: \n
+     * options - {Object} \n
+     * layer - {<OpenLayers.Layer>} \n
+     */\n
+    initialize: function(options, layer) {\n
+        OpenLayers.Format.GML.prototype.initialize.apply(this, [options]);\n
+        this.layer = layer;\n
+        if (this.layer.featureNS) {\n
+            this.featureNS = this.layer.featureNS;\n
+        }    \n
+        if (this.layer.options.geometry_column) {\n
+            this.geometryName = this.layer.options.geometry_column;\n
+        }\n
+        if (this.layer.options.typename) {\n
+            this.featureName = this.layer.options.typename;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: write \n
+     * Takes a feature list, and generates a WFS-T Transaction \n
+     *\n
+     * Parameters:\n
+     * features - {Array(<OpenLayers.Feature.Vector>)} \n
+     */\n
+    write: function(features) {\n
+    \n
+        var transaction = this.createElementNS(this.wfsns, \'wfs:Transaction\');\n
+        transaction.setAttribute("version","1.0.0");\n
+        transaction.setAttribute("service","WFS");\n
+        for (var i=0; i < features.length; i++) {\n
+            switch (features[i].state) {\n
+                case OpenLayers.State.INSERT:\n
+                    transaction.appendChild(this.insert(features[i]));\n
+                    break;\n
+                case OpenLayers.State.UPDATE:\n
+                    transaction.appendChild(this.update(features[i]));\n
+                    break;\n
+                case OpenLayers.State.DELETE:\n
+                    transaction.appendChild(this.remove(features[i]));\n
+                    break;\n
+            }\n
+        }\n
+        \n
+        return OpenLayers.Format.XML.prototype.write.apply(this,[transaction]);\n
+    },\n
+   \n
+    /**\n
+     * Method: createFeatureXML\n
+     *\n
+     * Parameters: \n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */ \n
+    createFeatureXML: function(feature) {\n
+        var geometryNode = this.buildGeometryNode(feature.geometry);\n
+        var geomContainer = this.createElementNS(this.featureNS, "feature:" + this.geometryName);\n
+        geomContainer.appendChild(geometryNode);\n
+        var featureContainer = this.createElementNS(this.featureNS, "feature:" + this.featureName);\n
+        featureContainer.appendChild(geomContainer);\n
+        for(var attr in feature.attributes) {\n
+            var attrText = this.createTextNode(feature.attributes[attr]); \n
+            var nodename = attr;\n
+            if (attr.search(":") != -1) {\n
+                nodename = attr.split(":")[1];\n
+            }    \n
+            var attrContainer = this.createElementNS(this.featureNS, "feature:" + nodename);\n
+            attrContainer.appendChild(attrText);\n
+            featureContainer.appendChild(attrContainer);\n
+        }    \n
+        return featureContainer;\n
+    },\n
+    \n
+    /**\n
+     * Method: insert \n
+     * Takes a feature, and generates a WFS-T Transaction "Insert" \n
+     *\n
+     * Parameters: \n
+     * feature - {<OpenLayers.Feature.Vector>} \n
+     */\n
+    insert: function(feature) {\n
+        var insertNode = this.createElementNS(this.wfsns, \'wfs:Insert\');\n
+        insertNode.appendChild(this.createFeatureXML(feature));\n
+        return insertNode;\n
+    },\n
+    \n
+    /**\n
+     * Method: update\n
+     * Takes a feature, and generates a WFS-T Transaction "Update" \n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} \n
+     */\n
+    update: function(feature) {\n
+        if (!feature.fid) { OpenLayers.Console.userError(OpenLayers.i18n("noFID")); }\n
+        var updateNode = this.createElementNS(this.wfsns, \'wfs:Update\');\n
+        updateNode.setAttribute("typeName", this.featurePrefix + \':\' + this.featureName); \n
+        updateNode.setAttribute("xmlns:" + this.featurePrefix, this.featureNS); \n
+\n
+        var propertyNode = this.createElementNS(this.wfsns, \'wfs:Property\');\n
+        var nameNode = this.createElementNS(this.wfsns, \'wfs:Name\');\n
+        \n
+        var txtNode = this.createTextNode(this.geometryName);\n
+        nameNode.appendChild(txtNode);\n
+        propertyNode.appendChild(nameNode);\n
+        \n
+        var valueNode = this.createElementNS(this.wfsns, \'wfs:Value\');\n
+        \n
+        var geometryNode = this.buildGeometryNode(feature.geometry);\n
+        \n
+        if(feature.layer){\n
+            geometryNode.setAttribute(\n
+                "srsName", feature.layer.projection.getCode()\n
+            );\n
+        }\n
+        \n
+        valueNode.appendChild(geometryNode);\n
+        \n
+        propertyNode.appendChild(valueNode);\n
+        updateNode.appendChild(propertyNode);\n
+        \n
+         // add in attributes\n
+        for(var propName in feature.attributes) {\n
+            propertyNode = this.createElementNS(this.wfsns, \'wfs:Property\');\n
+            nameNode = this.createElementNS(this.wfsns, \'wfs:Name\');\n
+            nameNode.appendChild(this.createTextNode(propName));\n
+            propertyNode.appendChild(nameNode);\n
+            valueNode = this.createElementNS(this.wfsns, \'wfs:Value\');\n
+            valueNode.appendChild(this.createTextNode(feature.attributes[propName]));\n
+            propertyNode.appendChild(valueNode);\n
+            updateNode.appendChild(propertyNode);\n
+        }\n
+        \n
+        \n
+        var filterNode = this.createElementNS(this.ogcns, \'ogc:Filter\');\n
+        var filterIdNode = this.createElementNS(this.ogcns, \'ogc:FeatureId\');\n
+        filterIdNode.setAttribute("fid", feature.fid);\n
+        filterNode.appendChild(filterIdNode);\n
+        updateNode.appendChild(filterNode);\n
+\n
+        return updateNode;\n
+    },\n
+    \n
+    /**\n
+     * Method: remove \n
+     * Takes a feature, and generates a WFS-T Transaction "Delete" \n
+     *\n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>} \n
+     */\n
+    remove: function(feature) {\n
+        if (!feature.fid) { \n
+            OpenLayers.Console.userError(OpenLayers.i18n("noFID")); \n
+            return false; \n
+        }\n
+        var deleteNode = this.createElementNS(this.wfsns, \'wfs:Delete\');\n
+        deleteNode.setAttribute("typeName", this.featurePrefix + \':\' + this.featureName); \n
+        deleteNode.setAttribute("xmlns:" + this.featurePrefix, this.featureNS); \n
+\n
+        var filterNode = this.createElementNS(this.ogcns, \'ogc:Filter\');\n
+        var filterIdNode = this.createElementNS(this.ogcns, \'ogc:FeatureId\');\n
+        filterIdNode.setAttribute("fid", feature.fid);\n
+        filterNode.appendChild(filterIdNode);\n
+        deleteNode.appendChild(filterNode);\n
+\n
+        return deleteNode;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: destroy\n
+     * Remove ciruclar ref to layer \n
+     */\n
+    destroy: function() {\n
+        this.layer = null;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WFS" \n
+});    \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7716</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

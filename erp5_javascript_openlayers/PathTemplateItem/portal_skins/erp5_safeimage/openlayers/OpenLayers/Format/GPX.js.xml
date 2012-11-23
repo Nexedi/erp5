@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>GPX.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ * @requires OpenLayers/Geometry/Point.js\n
+ * @requires OpenLayers/Geometry/LineString.js\n
+ * @requires OpenLayers/Projection.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.GPX\n
+ * Read/write GPX parser. Create a new instance with the \n
+ *     <OpenLayers.Format.GPX> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.GPX = OpenLayers.Class(OpenLayers.Format.XML, {\n
+    \n
+\n
+    /** \n
+     * APIProperty: defaultDesc\n
+     * {String} Default description for the waypoints/tracks in the case\n
+     *     where the feature has no "description" attribute.\n
+     *     Default is "No description available".\n
+     */\n
+    defaultDesc: "No description available",\n
+\n
+   /**\n
+    * APIProperty: extractWaypoints\n
+    * {Boolean} Extract waypoints from GPX. (default: true)\n
+    */\n
+    extractWaypoints: true,\n
+    \n
+   /**\n
+    * APIProperty: extractTracks\n
+    * {Boolean} Extract tracks from GPX. (default: true)\n
+    */\n
+    extractTracks: true,\n
+    \n
+   /**\n
+    * APIProperty: extractRoutes\n
+    * {Boolean} Extract routes from GPX. (default: true)\n
+    */\n
+    extractRoutes: true,\n
+    \n
+    /**\n
+     * APIProperty: extractAttributes\n
+     * {Boolean} Extract feature attributes from GPX. (default: true)\n
+     *     NOTE: Attributes as part of extensions to the GPX standard may not\n
+     *     be extracted.\n
+     */\n
+    extractAttributes: true,\n
+\n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        gpx: "http://www.topografix.com/GPX/1/1",\n
+        xsi: "http://www.w3.org/2001/XMLSchema-instance"\n
+    },\n
+\n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} Schema location. Defaults to\n
+     *  "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd"\n
+     */\n
+    schemaLocation: "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd",\n
+\n
+    /**\n
+     * APIProperty: creator\n
+     * {String} The creator attribute to be added to the written GPX files.\n
+     * Defaults to "OpenLayers"\n
+     */\n
+    creator: "OpenLayers",\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.GPX\n
+     * Create a new parser for GPX.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        // GPX coordinates are always in longlat WGS84\n
+        this.externalProjection = new OpenLayers.Projection("EPSG:4326");\n
+\n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: read\n
+     * Return a list of features from a GPX doc\n
+     *\n
+     * Parameters:\n
+     * doc - {Element} \n
+     *\n
+     * Returns:\n
+     * Array({<OpenLayers.Feature.Vector>})\n
+     */\n
+    read: function(doc) {\n
+        if (typeof doc == "string") { \n
+            doc = OpenLayers.Format.XML.prototype.read.apply(this, [doc]);\n
+        }\n
+        var features = [];\n
+        \n
+        if(this.extractTracks) {\n
+            var tracks = doc.getElementsByTagName("trk");\n
+            for (var i=0, len=tracks.length; i<len; i++) {\n
+                // Attributes are only in trk nodes, not trkseg nodes\n
+                var attrs = {};\n
+                if(this.extractAttributes) {\n
+                    attrs = this.parseAttributes(tracks[i]);\n
+                }\n
+                \n
+                var segs = this.getElementsByTagNameNS(tracks[i], tracks[i].namespaceURI, "trkseg");\n
+                for (var j = 0, seglen = segs.length; j < seglen; j++) {\n
+                    // We don\'t yet support extraction of trkpt attributes\n
+                    // All trksegs of a trk get that trk\'s attributes\n
+                    var track = this.extractSegment(segs[j], "trkpt");\n
+                    features.push(new OpenLayers.Feature.Vector(track, attrs));\n
+                }\n
+            }\n
+        }\n
+        \n
+        if(this.extractRoutes) {\n
+            var routes = doc.getElementsByTagName("rte");\n
+            for (var k=0, klen=routes.length; k<klen; k++) {\n
+                var attrs = {};\n
+                if(this.extractAttributes) {\n
+                    attrs = this.parseAttributes(routes[k]);\n
+                }\n
+                var route = this.extractSegment(routes[k], "rtept");\n
+                features.push(new OpenLayers.Feature.Vector(route, attrs));\n
+            }\n
+        }\n
+        \n
+        if(this.extractWaypoints) {\n
+            var waypoints = doc.getElementsByTagName("wpt");\n
+            for (var l = 0, len = waypoints.length; l < len; l++) {\n
+                var attrs = {};\n
+                if(this.extractAttributes) {\n
+                    attrs = this.parseAttributes(waypoints[l]);\n
+                }\n
+                var wpt = new OpenLayers.Geometry.Point(waypoints[l].getAttribute("lon"), waypoints[l].getAttribute("lat"));\n
+                features.push(new OpenLayers.Feature.Vector(wpt, attrs));\n
+            }\n
+        }\n
+        \n
+        if (this.internalProjection && this.externalProjection) {\n
+            for (var g = 0, featLength = features.length; g < featLength; g++) {\n
+                features[g].geometry.transform(this.externalProjection,\n
+                                    this.internalProjection);\n
+            }\n
+        }\n
+        \n
+        return features;\n
+    },\n
+    \n
+   /**\n
+    * Method: extractSegment\n
+    *\n
+    * Parameters:\n
+    * segment - {DOMElement} a trkseg or rte node to parse\n
+    * segmentType - {String} nodeName of waypoints that form the line\n
+    *\n
+    * Returns:\n
+    * {<OpenLayers.Geometry.LineString>} A linestring geometry\n
+    */\n
+    extractSegment: function(segment, segmentType) {\n
+        var points = this.getElementsByTagNameNS(segment, segment.namespaceURI, segmentType);\n
+        var point_features = [];\n
+        for (var i = 0, len = points.length; i < len; i++) {\n
+            point_features.push(new OpenLayers.Geometry.Point(points[i].getAttribute("lon"), points[i].getAttribute("lat")));\n
+        }\n
+        return new OpenLayers.Geometry.LineString(point_features);\n
+    },\n
+    \n
+    /**\n
+     * Method: parseAttributes\n
+     *\n
+     * Parameters:\n
+     * node - {<DOMElement>}\n
+     *\n
+     * Returns:\n
+     * {Object} An attributes object.\n
+     */\n
+    parseAttributes: function(node) {\n
+        // node is either a wpt, trk or rte\n
+        // attributes are children of the form <attr>value</attr>\n
+        var attributes = {};\n
+        var attrNode = node.firstChild, value, name;\n
+        while(attrNode) {\n
+            if(attrNode.nodeType == 1 && attrNode.firstChild) {\n
+                value = attrNode.firstChild;\n
+                if(value.nodeType == 3 || value.nodeType == 4) {\n
+                    name = (attrNode.prefix) ?\n
+                        attrNode.nodeName.split(":")[1] :\n
+                        attrNode.nodeName;\n
+                    if(name != "trkseg" && name != "rtept") {\n
+                        attributes[name] = value.nodeValue;\n
+                    }\n
+                }\n
+            }\n
+            attrNode = attrNode.nextSibling;\n
+        }\n
+        return attributes;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: write\n
+     * Accepts Feature Collection, and returns a string. \n
+     * \n
+     * Parameters: \n
+     * features - {Array(<OpenLayers.Feature.Vector>)} List of features to serialize into a string.\n
+     * metadata - {Object} A key/value pairs object to build a metadata node to\n
+     *      add to the gpx. Supported keys are \'name\', \'desc\', \'author\'.\n
+     */\n
+    write: function(features, metadata) {\n
+        features = OpenLayers.Util.isArray(features) ?\n
+            features : [features];\n
+        var gpx = this.createElementNS(this.namespaces.gpx, "gpx");\n
+        gpx.setAttribute("version", "1.1");\n
+        gpx.setAttribute("creator", this.creator);\n
+        this.setAttributes(gpx, {\n
+            "xsi:schemaLocation": this.schemaLocation\n
+        });\n
+\n
+        if (metadata && typeof metadata == \'object\') {\n
+            gpx.appendChild(this.buildMetadataNode(metadata));\n
+        }\n
+        for(var i=0, len=features.length; i<len; i++) {\n
+            gpx.appendChild(this.buildFeatureNode(features[i]));\n
+        }\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [gpx]);\n
+    },\n
+\n
+    /**\n
+     * Method: buildMetadataNode\n
+     * Creates a "metadata" node.\n
+     *\n
+     * Returns:\n
+     * {DOMElement}\n
+     */\n
+    buildMetadataNode: function(metadata) {\n
+        var types = [\'name\', \'desc\', \'author\'],\n
+            node = this.createElementNSPlus(\'gpx:metadata\');\n
+        for (var i=0; i < types.length; i++) {\n
+            var type = types[i];\n
+            if (metadata[type]) {\n
+                var n = this.createElementNSPlus("gpx:" + type);\n
+                n.appendChild(this.createTextNode(metadata[type]));\n
+                node.appendChild(n);\n
+            }\n
+        }\n
+        return node;\n
+    },\n
+\n
+    /**\n
+     * Method: buildFeatureNode\n
+     * Accepts an <OpenLayers.Feature.Vector>, and builds a node for it.\n
+     * \n
+     * Parameters:\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} - The created node, either a \'wpt\' or a \'trk\'.\n
+     */\n
+    buildFeatureNode: function(feature) {\n
+        var geometry = feature.geometry;\n
+            geometry = geometry.clone();\n
+        if (this.internalProjection && this.externalProjection) {\n
+            geometry.transform(this.internalProjection, \n
+                               this.externalProjection);\n
+        }\n
+        if (geometry.CLASS_NAME == "OpenLayers.Geometry.Point") {\n
+            var wpt = this.buildWptNode(geometry);\n
+            this.appendAttributesNode(wpt, feature);\n
+            return wpt;\n
+        } else {\n
+            var trkNode = this.createElementNSPlus("gpx:trk");\n
+            this.appendAttributesNode(trkNode, feature);\n
+            var trkSegNodes = this.buildTrkSegNode(geometry);\n
+            trkSegNodes = OpenLayers.Util.isArray(trkSegNodes) ?\n
+                trkSegNodes : [trkSegNodes];\n
+            for (var i = 0, len = trkSegNodes.length; i < len; i++) {\n
+                trkNode.appendChild(trkSegNodes[i]);\n
+            }\n
+            return trkNode;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: buildTrkSegNode\n
+     * Builds trkseg node(s) given a geometry\n
+     *\n
+     * Parameters:\n
+     * trknode\n
+     * geometry - {<OpenLayers.Geometry>}\n
+     */\n
+    buildTrkSegNode: function(geometry) {\n
+        var node,\n
+            i,\n
+            len,\n
+            point,\n
+            nodes;\n
+        if (geometry.CLASS_NAME == "OpenLayers.Geometry.LineString" ||\n
+            geometry.CLASS_NAME == "OpenLayers.Geometry.LinearRing") {\n
+            node = this.createElementNSPlus("gpx:trkseg");\n
+            for (i = 0, len=geometry.components.length; i < len; i++) {\n
+                point = geometry.components[i];\n
+                node.appendChild(this.buildTrkPtNode(point));\n
+            }\n
+            return node;\n
+        } else {\n
+            nodes = [];\n
+            for (i = 0, len = geometry.components.length; i < len; i++) {\n
+                nodes.push(this.buildTrkSegNode(geometry.components[i]));\n
+            }\n
+            return nodes;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: buildTrkPtNode\n
+     * Builds a trkpt node given a point \n
+     *\n
+     * Parameters:\n
+     * point - {<OpenLayers.Geometry.Point>}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A trkpt node\n
+     */\n
+    buildTrkPtNode: function(point) {\n
+        var node = this.createElementNSPlus("gpx:trkpt");\n
+        node.setAttribute("lon", point.x);\n
+        node.setAttribute("lat", point.y);\n
+        return node;\n
+    },\n
+\n
+    /**\n
+     * Method: buildWptNode\n
+     * Builds a wpt node given a point\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry.Point>}\n
+     *\n
+     * Returns:\n
+     * {DOMElement} A wpt node\n
+     */\n
+    buildWptNode: function(geometry) {\n
+        var node = this.createElementNSPlus("gpx:wpt");\n
+        node.setAttribute("lon", geometry.x);\n
+        node.setAttribute("lat", geometry.y);\n
+        return node;\n
+    },\n
+\n
+    /**\n
+     * Method: appendAttributesNode\n
+     * Adds some attributes node.\n
+     *\n
+     * Parameters:\n
+     * node - {DOMElement} the node to append the attribute nodes to.\n
+     * feature - {<OpenLayers.Feature.Vector>}\n
+     */\n
+    appendAttributesNode: function(node, feature) {\n
+        var name = this.createElementNSPlus(\'gpx:name\');\n
+        name.appendChild(this.createTextNode(\n
+            feature.attributes.name || feature.id));\n
+        node.appendChild(name);\n
+        var desc = this.createElementNSPlus(\'gpx:desc\');\n
+        desc.appendChild(this.createTextNode(\n
+            feature.attributes.description || this.defaultDesc));\n
+        node.appendChild(desc);\n
+        // TBD - deal with remaining (non name/description) attributes.\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.GPX"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12944</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

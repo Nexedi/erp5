@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>KaMap.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.KaMap\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.KaMap = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+\n
+    /** \n
+     * APIProperty: isBaseLayer\n
+     * {Boolean} KaMap Layer is always a base layer \n
+     */    \n
+    isBaseLayer: true,\n
+\n
+    /**\n
+     * Constant: DEFAULT_PARAMS\n
+     * {Object} parameters set by default. The default parameters set \n
+     * the format via the \'i\' parameter to \'jpeg\'.    \n
+     */\n
+    DEFAULT_PARAMS: {\n
+        i: \'jpeg\',\n
+        map: \'\'\n
+    },\n
+        \n
+    /**\n
+     * Constructor: OpenLayers.Layer.KaMap\n
+     * \n
+     * Parameters:\n
+     * name - {String}\n
+     * url - {String}\n
+     * params - {Object} Parameters to be sent to the HTTP server in the\n
+     *    query string for the tile. The format can be set via the \'i\'\n
+     *    parameter (defaults to jpg) , and the map should be set via \n
+     *    the \'map\' parameter. It has been reported that ka-Map may behave\n
+     *    inconsistently if your format parameter does not match the format\n
+     *    parameter configured in your config.php. (See ticket #327 for more\n
+     *    information.)\n
+     * options - {Object} Additional options for the layer. Any of the \n
+     *     APIProperties listed on this layer, and any layer types it\n
+     *     extends, can be overridden through the options parameter. \n
+     */\n
+    initialize: function(name, url, params, options) {\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, arguments);\n
+        this.params = OpenLayers.Util.applyDefaults(\n
+            this.params, this.DEFAULT_PARAMS\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: getURL\n
+     * \n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} \n
+     * \n
+     * Returns:\n
+     * {String} A string with the layer\'s url and parameters and also the \n
+     *          passed-in bounds and appropriate tile size specified as \n
+     *          parameters\n
+     */\n
+    getURL: function (bounds) {\n
+        bounds = this.adjustBounds(bounds);\n
+        var mapRes = this.map.getResolution();\n
+        var scale = Math.round((this.map.getScale() * 10000)) / 10000;\n
+        var pX = Math.round(bounds.left / mapRes);\n
+        var pY = -Math.round(bounds.top / mapRes);\n
+        return this.getFullRequestString(\n
+                      { t: pY, \n
+                        l: pX,\n
+                        s: scale\n
+                      });\n
+    },\n
+\n
+    /** \n
+     * Method: calculateGridLayout\n
+     * ka-Map uses the center point of the map as an origin for \n
+     * its tiles. Override calculateGridLayout to center tiles \n
+     * correctly for this case.\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bound>}\n
+     * origin - {<OpenLayers.LonLat>}\n
+     * resolution - {Number}\n
+     *\n
+     * Returns:\n
+     * {Object} Object containing properties tilelon, tilelat, tileoffsetlat,\n
+     * tileoffsetlat, tileoffsetx, tileoffsety\n
+     */\n
+    calculateGridLayout: function(bounds, origin, resolution) {\n
+        var tilelon = resolution*this.tileSize.w;\n
+        var tilelat = resolution*this.tileSize.h;\n
+        \n
+        var offsetlon = bounds.left;\n
+        var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;\n
+        var tilecolremain = offsetlon/tilelon - tilecol;\n
+        var tileoffsetx = -tilecolremain * this.tileSize.w;\n
+        var tileoffsetlon = tilecol * tilelon;\n
+        \n
+        var offsetlat = bounds.top;  \n
+        var tilerow = Math.ceil(offsetlat/tilelat) + this.buffer;\n
+        var tilerowremain = tilerow - offsetlat/tilelat;\n
+        var tileoffsety = -(tilerowremain+1) * this.tileSize.h;\n
+        var tileoffsetlat = tilerow * tilelat;\n
+        \n
+        return { \n
+          tilelon: tilelon, tilelat: tilelat,\n
+          tileoffsetlon: tileoffsetlon, tileoffsetlat: tileoffsetlat,\n
+          tileoffsetx: tileoffsetx, tileoffsety: tileoffsety\n
+        };\n
+    },    \n
+\n
+    /**\n
+     * APIMethod: clone\n
+     * \n
+     * Parameters: \n
+     * obj - {Object}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Layer.Kamap>} An exact clone of this OpenLayers.Layer.KaMap\n
+     */\n
+    clone: function (obj) {\n
+        \n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.KaMap(this.name,\n
+                                            this.url,\n
+                                            this.params,\n
+                                            this.getOptions());\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+        if (this.tileSize != null) {\n
+            obj.tileSize = this.tileSize.clone();\n
+        }\n
+        \n
+        // we do not want to copy reference to grid, so we make a new array\n
+        obj.grid = [];\n
+\n
+        return obj;\n
+    },    \n
+    \n
+    /**\n
+     * APIMethod: getTileBounds\n
+     * Returns The tile bounds for a layer given a pixel location.\n
+     *\n
+     * Parameters:\n
+     * viewPortPx - {<OpenLayers.Pixel>} The location in the viewport.\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Bounds>} Bounds of the tile at the given pixel location.\n
+     */\n
+    getTileBounds: function(viewPortPx) {\n
+        var resolution = this.getResolution();\n
+        var tileMapWidth = resolution * this.tileSize.w;\n
+        var tileMapHeight = resolution * this.tileSize.h;\n
+        var mapPoint = this.getLonLatFromViewPortPx(viewPortPx);\n
+        var tileLeft = tileMapWidth * Math.floor(mapPoint.lon / tileMapWidth);\n
+        var tileBottom = tileMapHeight * Math.floor(mapPoint.lat / tileMapHeight);\n
+        return new OpenLayers.Bounds(tileLeft, tileBottom,\n
+                                     tileLeft + tileMapWidth,\n
+                                     tileBottom + tileMapHeight);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.KaMap"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6009</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,604 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Snapping.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Control.js\n
+ * @requires OpenLayers/Layer/Vector.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Control.Snapping\n
+ * Acts as a snapping agent while editing vector features.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Control>\n
+ */\n
+OpenLayers.Control.Snapping = OpenLayers.Class(OpenLayers.Control, {\n
+\n
+    /** \n
+     * APIProperty: events\n
+     * {<OpenLayers.Events>} Events instance for listeners and triggering\n
+     *     control specific events.\n
+     *\n
+     * Register a listener for a particular event with the following syntax:\n
+     * (code)\n
+     * control.events.register(type, obj, listener);\n
+     * (end)\n
+     *\n
+     * Supported event types (in addition to those from <OpenLayers.Control.events>):\n
+     * beforesnap - Triggered before a snap occurs.  Listeners receive an\n
+     *     event object with *point*, *x*, *y*, *distance*, *layer*, and\n
+     *     *snapType* properties.  The point property will be original point\n
+     *     geometry considered for snapping. The x and y properties represent\n
+     *     coordinates the point will receive. The distance is the distance\n
+     *     of the snap.  The layer is the target layer.  The snapType property\n
+     *     will be one of "node", "vertex", or "edge". Return false to stop\n
+     *     snapping from occurring.\n
+     * snap - Triggered when a snap occurs.  Listeners receive an event with\n
+     *     *point*, *snapType*, *layer*, and *distance* properties.  The point\n
+     *     will be the location snapped to.  The snapType will be one of "node",\n
+     *     "vertex", or "edge".  The layer will be the target layer.  The\n
+     *     distance will be the distance of the snap in map units.\n
+     * unsnap - Triggered when a vertex is unsnapped.  Listeners receive an\n
+     *     event with a *point* property.\n
+     */\n
+    \n
+    /**\n
+     * CONSTANT: DEFAULTS\n
+     * Default target properties.\n
+     */\n
+    DEFAULTS: {\n
+        tolerance: 10,\n
+        node: true,\n
+        edge: true,\n
+        vertex: true\n
+    },\n
+    \n
+    /**\n
+     * Property: greedy\n
+     * {Boolean} Snap to closest feature in first layer with an eligible\n
+     *     feature.  Default is true.\n
+     */\n
+    greedy: true,\n
+    \n
+    /**\n
+     * Property: precedence\n
+     * {Array} List representing precedence of different snapping types.\n
+     *     Default is "node", "vertex", "edge".\n
+     */\n
+    precedence: ["node", "vertex", "edge"],\n
+    \n
+    /**\n
+     * Property: resolution\n
+     * {Float} The map resolution for the previously considered snap.\n
+     */\n
+    resolution: null,\n
+    \n
+    /**\n
+     * Property: geoToleranceCache\n
+     * {Object} A cache of geo-tolerances.  Tolerance values (in map units) are\n
+     *     calculated when the map resolution changes.\n
+     */\n
+    geoToleranceCache: null,\n
+    \n
+    /**\n
+     * Property: layer\n
+     * {<OpenLayers.Layer.Vector>} The current editable layer.  Set at\n
+     *     construction or after construction with <setLayer>.\n
+     */\n
+    layer: null,\n
+    \n
+    /**\n
+     * Property: feature\n
+     * {<OpenLayers.Feature.Vector>} The current editable feature.\n
+     */\n
+    feature: null,\n
+    \n
+    /**\n
+     * Property: point\n
+     * {<OpenLayers.Geometry.Point>} The currently snapped vertex.\n
+     */\n
+    point: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Control.Snapping\n
+     * Creates a new snapping control. A control is constructed with an editable\n
+     *     layer and a set of configuration objects for target layers. While the\n
+     *     control is active, dragging vertices while drawing new features or\n
+     *     modifying existing features on the editable layer will engage\n
+     *     snapping to features on the target layers. Whether a vertex snaps to\n
+     *     a feature on a target layer depends on the target layer configuration.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An object containing all configuration properties for\n
+     *     the control.\n
+     *\n
+     * Valid options:\n
+     * layer - {<OpenLayers.Layer.Vector>} The editable layer.  Features from this\n
+     *     layer that are digitized or modified may have vertices snapped to\n
+     *     features from any of the target layers.\n
+     * targets - {Array(Object | OpenLayers.Layer.Vector)} A list of objects for\n
+     *     configuring target layers.  See valid properties of the target\n
+     *     objects below.  If the items in the targets list are vector layers\n
+     *     (instead of configuration objects), the defaults from the <defaults>\n
+     *     property will apply.  The editable layer itself may be a target\n
+     *     layer - allowing newly created or edited features to be snapped to\n
+     *     existing features from the same layer.  If no targets are provided\n
+     *     the layer given in the constructor (as <layer>) will become the\n
+     *     initial target.\n
+     * defaults - {Object} An object with default properties to be applied\n
+     *     to all target objects.\n
+     * greedy - {Boolean} Snap to closest feature in first target layer that\n
+     *     applies.  Default is true.  If false, all features in all target\n
+     *     layers will be checked and the closest feature in all target layers\n
+     *     will be chosen.  The greedy property determines if the order of the\n
+     *     target layers is significant.  By default, the order of the target\n
+     *     layers is significant where layers earlier in the target layer list\n
+     *     have precedence over layers later in the list.  Within a single\n
+     *     layer, the closest feature is always chosen for snapping.  This\n
+     *     property only determines whether the search for a closer feature\n
+     *     continues after an eligible feature is found in a target layer.\n
+     *\n
+     * Valid target properties:\n
+     * layer - {<OpenLayers.Layer.Vector>} A target layer.  Features from this\n
+     *     layer will be eligible to act as snapping target for the editable\n
+     *     layer.\n
+     * tolerance - {Float} The distance (in pixels) at which snapping may occur.\n
+     *     Default is 10.\n
+     * node - {Boolean} Snap to nodes (first or last point in a geometry) in\n
+     *     target layer.  Default is true.\n
+     * nodeTolerance - {Float} Optional distance at which snapping may occur\n
+     *     for nodes specifically.  If none is provided, <tolerance> will be\n
+     *     used.\n
+     * vertex - {Boolean} Snap to vertices in target layer.  Default is true.\n
+     * vertexTolerance - {Float} Optional distance at which snapping may occur\n
+     *     for vertices specifically.  If none is provided, <tolerance> will be\n
+     *     used.\n
+     * edge - {Boolean} Snap to edges in target layer.  Default is true.\n
+     * edgeTolerance - {Float} Optional distance at which snapping may occur\n
+     *     for edges specifically.  If none is provided, <tolerance> will be\n
+     *     used.\n
+     * filter - {<OpenLayers.Filter>} Optional filter to evaluate to determine if\n
+     *     feature is eligible for snapping.  If filter evaluates to true for a\n
+     *     target feature a vertex may be snapped to the feature. \n
+     * minResolution - {Number} If a minResolution is provided, snapping to this\n
+     *     target will only be considered if the map resolution is greater than\n
+     *     or equal to this value (the minResolution is inclusive).  Default is\n
+     *     no minimum resolution limit.\n
+     * maxResolution - {Number} If a maxResolution is provided, snapping to this\n
+     *     target will only be considered if the map resolution is strictly\n
+     *     less than this value (the maxResolution is exclusive).  Default is\n
+     *     no maximum resolution limit.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);\n
+        this.options = options || {}; // TODO: this could be done by the super\n
+        \n
+        // set the editable layer if provided\n
+        if(this.options.layer) {\n
+            this.setLayer(this.options.layer);\n
+        }\n
+        // configure target layers\n
+        var defaults = OpenLayers.Util.extend({}, this.options.defaults);\n
+        this.defaults = OpenLayers.Util.applyDefaults(defaults, this.DEFAULTS);\n
+        this.setTargets(this.options.targets);\n
+        if(this.targets.length === 0 && this.layer) {\n
+            this.addTargetLayer(this.layer);\n
+        }\n
+\n
+        this.geoToleranceCache = {};\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: setLayer\n
+     * Set the editable layer.  Call the setLayer method if the editable layer\n
+     *     changes and the same control should be used on a new editable layer.\n
+     *     If the control is already active, it will be active after the new\n
+     *     layer is set.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>}  The new editable layer.\n
+     */\n
+    setLayer: function(layer) {\n
+        if(this.active) {\n
+            this.deactivate();\n
+            this.layer = layer;\n
+            this.activate();\n
+        } else {\n
+            this.layer = layer;\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: setTargets\n
+     * Set the targets for the snapping agent.\n
+     *\n
+     * Parameters:\n
+     * targets - {Array} An array of target configs or target layers.\n
+     */\n
+    setTargets: function(targets) {\n
+        this.targets = [];\n
+        if(targets && targets.length) {\n
+            var target;\n
+            for(var i=0, len=targets.length; i<len; ++i) {\n
+                target = targets[i];\n
+                if(target instanceof OpenLayers.Layer.Vector) {\n
+                    this.addTargetLayer(target);\n
+                } else {\n
+                    this.addTarget(target);\n
+                }\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: addTargetLayer\n
+     * Add a target layer with the default target config.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>} A target layer.\n
+     */\n
+    addTargetLayer: function(layer) {\n
+        this.addTarget({layer: layer});\n
+    },\n
+    \n
+    /**\n
+     * Method: addTarget\n
+     * Add a configured target layer.\n
+     *\n
+     * Parameters:\n
+     * target - {Object} A target config.\n
+     */\n
+    addTarget: function(target) {\n
+        target = OpenLayers.Util.applyDefaults(target, this.defaults);\n
+        target.nodeTolerance = target.nodeTolerance || target.tolerance;\n
+        target.vertexTolerance = target.vertexTolerance || target.tolerance;\n
+        target.edgeTolerance = target.edgeTolerance || target.tolerance;\n
+        this.targets.push(target);\n
+    },\n
+    \n
+    /**\n
+     * Method: removeTargetLayer\n
+     * Remove a target layer.\n
+     *\n
+     * Parameters:\n
+     * layer - {<OpenLayers.Layer.Vector>} The target layer to remove.\n
+     */\n
+    removeTargetLayer: function(layer) {\n
+        var target;\n
+        for(var i=this.targets.length-1; i>=0; --i) {\n
+            target = this.targets[i];\n
+            if(target.layer === layer) {\n
+                this.removeTarget(target);\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: removeTarget\n
+     * Remove a target.\n
+     *\n
+     * Parameters:\n
+     * target - {Object} A target config.\n
+     *\n
+     * Returns:\n
+     * {Array} The targets array.\n
+     */\n
+    removeTarget: function(target) {\n
+        return OpenLayers.Util.removeItem(this.targets, target);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: activate\n
+     * Activate the control.  Activating the control registers listeners for\n
+     *     editing related events so that during feature creation and\n
+     *     modification, moving vertices will trigger snapping.\n
+     */\n
+    activate: function() {\n
+        var activated = OpenLayers.Control.prototype.activate.call(this);\n
+        if(activated) {\n
+            if(this.layer && this.layer.events) {\n
+                this.layer.events.on({\n
+                    sketchstarted: this.onSketchModified,\n
+                    sketchmodified: this.onSketchModified,\n
+                    vertexmodified: this.onVertexModified,\n
+                    scope: this\n
+                });\n
+            }\n
+        }\n
+        return activated;\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: deactivate\n
+     * Deactivate the control.  Deactivating the control unregisters listeners\n
+     *     so feature editing may proceed without engaging the snapping agent.\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = OpenLayers.Control.prototype.deactivate.call(this);\n
+        if(deactivated) {\n
+            if(this.layer && this.layer.events) {\n
+                this.layer.events.un({\n
+                    sketchstarted: this.onSketchModified,\n
+                    sketchmodified: this.onSketchModified,\n
+                    vertexmodified: this.onVertexModified,\n
+                    scope: this\n
+                });\n
+            }\n
+        }\n
+        this.feature = null;\n
+        this.point = null;\n
+        return deactivated;\n
+    },\n
+    \n
+    /**\n
+     * Method: onSketchModified\n
+     * Registered as a listener for the sketchmodified event on the editable\n
+     *     layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The sketch modified event.\n
+     */\n
+    onSketchModified: function(event) {\n
+        this.feature = event.feature;\n
+        this.considerSnapping(event.vertex, event.vertex);\n
+    },\n
+    \n
+    /**\n
+     * Method: onVertexModified\n
+     * Registered as a listener for the vertexmodified event on the editable\n
+     *     layer.\n
+     *\n
+     * Parameters:\n
+     * event - {Object} The vertex modified event.\n
+     */\n
+    onVertexModified: function(event) {\n
+        this.feature = event.feature;\n
+        var loc = this.layer.map.getLonLatFromViewPortPx(event.pixel);\n
+        this.considerSnapping(\n
+            event.vertex, new OpenLayers.Geometry.Point(loc.lon, loc.lat)\n
+        );\n
+    },\n
+\n
+    /**\n
+     * Method: considerSnapping\n
+     *\n
+     * Parameters:\n
+     * point - {<OpenLayers.Geometry.Point>} The vertex to be snapped (or\n
+     *     unsnapped).\n
+     * loc - {<OpenLayers.Geometry.Point>} The location of the mouse in map\n
+     *     coords.\n
+     */\n
+    considerSnapping: function(point, loc) {\n
+        var best = {\n
+            rank: Number.POSITIVE_INFINITY,\n
+            dist: Number.POSITIVE_INFINITY,\n
+            x: null, y: null\n
+        };\n
+        var snapped = false;\n
+        var result, target;\n
+        for(var i=0, len=this.targets.length; i<len; ++i) {\n
+            target = this.targets[i];\n
+            result = this.testTarget(target, loc);\n
+            if(result) {\n
+                if(this.greedy) {\n
+                    best = result;\n
+                    best.target = target; \n
+                    snapped = true;\n
+                    break;\n
+                } else {\n
+                    if((result.rank < best.rank) ||\n
+                       (result.rank === best.rank && result.dist < best.dist)) {\n
+                        best = result;\n
+                        best.target = target;\n
+                        snapped = true;\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        if(snapped) {\n
+            var proceed = this.events.triggerEvent("beforesnap", {\n
+                point: point, x: best.x, y: best.y, distance: best.dist,\n
+                layer: best.target.layer, snapType: this.precedence[best.rank]\n
+            });\n
+            if(proceed !== false) {\n
+                point.x = best.x;\n
+                point.y = best.y;\n
+                this.point = point;\n
+                this.events.triggerEvent("snap", {\n
+                    point: point,\n
+                    snapType: this.precedence[best.rank],\n
+                    layer: best.target.layer,\n
+                    distance: best.dist\n
+                });\n
+            } else {\n
+                snapped = false;\n
+            }\n
+        }\n
+        if(this.point && !snapped) {\n
+            point.x = loc.x;\n
+            point.y = loc.y;\n
+            this.point = null;\n
+            this.events.triggerEvent("unsnap", {point: point});\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * Method: testTarget\n
+     *\n
+     * Parameters:\n
+     * target - {Object} Object with target layer configuration.\n
+     * loc - {<OpenLayers.Geometry.Point>} The location of the mouse in map\n
+     *     coords.\n
+     *\n
+     * Returns:\n
+     * {Object} A result object with rank, dist, x, and y properties.\n
+     *     Returns null if candidate is not eligible for snapping.\n
+     */\n
+    testTarget: function(target, loc) {\n
+        var resolution = this.layer.map.getResolution();\n
+        if ("minResolution" in target) {\n
+            if (resolution < target.minResolution) {\n
+                return null;\n
+            }\n
+        }\n
+        if ("maxResolution" in target) {\n
+            if (resolution >= target.maxResolution) {\n
+                return null;\n
+            }\n
+        }\n
+        var tolerance = {\n
+            node: this.getGeoTolerance(target.nodeTolerance, resolution),\n
+            vertex: this.getGeoTolerance(target.vertexTolerance, resolution),\n
+            edge: this.getGeoTolerance(target.edgeTolerance, resolution)\n
+        };\n
+        // this could be cached if we don\'t support setting tolerance values directly\n
+        var maxTolerance = Math.max(\n
+            tolerance.node, tolerance.vertex, tolerance.edge\n
+        );\n
+        var result = {\n
+            rank: Number.POSITIVE_INFINITY, dist: Number.POSITIVE_INFINITY\n
+        };\n
+        var eligible = false;\n
+        var features = target.layer.features;\n
+        var feature, type, vertices, vertex, closest, dist, found;\n
+        var numTypes = this.precedence.length;\n
+        var ll = new OpenLayers.LonLat(loc.x, loc.y);\n
+        for(var i=0, len=features.length; i<len; ++i) {\n
+            feature = features[i];\n
+            if(feature !== this.feature && !feature._sketch &&\n
+               feature.state !== OpenLayers.State.DELETE &&\n
+               (!target.filter || target.filter.evaluate(feature))) {\n
+                if(feature.atPoint(ll, maxTolerance, maxTolerance)) {\n
+                    for(var j=0, stop=Math.min(result.rank+1, numTypes); j<stop; ++j) {\n
+                        type = this.precedence[j];\n
+                        if(target[type]) {\n
+                            if(type === "edge") {\n
+                                closest = feature.geometry.distanceTo(loc, {details: true});\n
+                                dist = closest.distance;\n
+                                if(dist <= tolerance[type] && dist < result.dist) {\n
+                                    result = {\n
+                                        rank: j, dist: dist,\n
+                                        x: closest.x0, y: closest.y0 // closest coords on feature\n
+                                    };\n
+                                    eligible = true;\n
+                                    // don\'t look for lower precedence types for this feature\n
+                                    break;\n
+                                }\n
+                            } else {\n
+                                // look for nodes or vertices\n
+                                vertices = feature.geometry.getVertices(type === "node");\n
+                                found = false;\n
+                                for(var k=0, klen=vertices.length; k<klen; ++k) {\n
+                                    vertex = vertices[k];\n
+                                    dist = vertex.distanceTo(loc);\n
+                                    if(dist <= tolerance[type] &&\n
+                                       (j < result.rank || (j === result.rank && dist < result.dist))) {\n
+                                        result = {\n
+                                            rank: j, dist: dist,\n
+                                            x: vertex.x, y: vertex.y\n
+                                        };\n
+                                        eligible = true;\n
+                                        found = true;\n
+                                    }\n
+                                }\n
+                                if(found) {\n
+                                    // don\'t look for lower precedence types for this feature\n
+                                    break;\n
+                                }\n
+                            }\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return eligible ? result : null;\n
+    },\n
+    \n
+    /**\n
+     * Method: getGeoTolerance\n
+     * Calculate a tolerance in map units given a tolerance in pixels.  This\n
+     *     takes advantage of the <geoToleranceCache> when the map resolution\n
+     *     has not changed.\n
+     *     \n
+     * Parameters:\n
+     * tolerance - {Number} A tolerance value in pixels.\n
+     * resolution - {Number} Map resolution.\n
+     *\n
+     * Returns:\n
+     * {Number} A tolerance value in map units.\n
+     */\n
+    getGeoTolerance: function(tolerance, resolution) {\n
+        if(resolution !== this.resolution) {\n
+            this.resolution = resolution;\n
+            this.geoToleranceCache = {};\n
+        }\n
+        var geoTolerance = this.geoToleranceCache[tolerance];\n
+        if(geoTolerance === undefined) {\n
+            geoTolerance = tolerance * resolution;\n
+            this.geoToleranceCache[tolerance] = geoTolerance;\n
+        }\n
+        return geoTolerance;\n
+    },\n
+    \n
+    /**\n
+     * Method: destroy\n
+     * Clean up the control.\n
+     */\n
+    destroy: function() {\n
+        if(this.active) {\n
+            this.deactivate(); // TODO: this should be handled by the super\n
+        }\n
+        delete this.layer;\n
+        delete this.targets;\n
+        OpenLayers.Control.prototype.destroy.call(this);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Control.Snapping"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>21409</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

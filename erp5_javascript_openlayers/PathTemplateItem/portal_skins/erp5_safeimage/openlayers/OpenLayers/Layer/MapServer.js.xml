@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MapServer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.MapServer\n
+ * Instances of OpenLayers.Layer.MapServer are used to display\n
+ * data from a MapServer CGI instance.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.MapServer = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+\n
+    /**\n
+     * Constant: DEFAULT_PARAMS\n
+     * {Object} Hashtable of default parameter key/value pairs \n
+     */\n
+    DEFAULT_PARAMS: {\n
+        mode: "map",\n
+        map_imagetype: "png"\n
+    },\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.MapServer\n
+     * Create a new MapServer layer object\n
+     *\n
+     * Parameters:\n
+     * name - {String} A name for the layer\n
+     * url - {String} Base url for the MapServer CGI\n
+     *       (e.g. http://www2.dmsolutions.ca/cgi-bin/mapserv)\n
+     * params - {Object} An object with key/value pairs representing the\n
+     *          GetMap query string parameters and parameter values.\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, url, params, options) {\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, arguments);\n
+\n
+        this.params = OpenLayers.Util.applyDefaults(\n
+            this.params, this.DEFAULT_PARAMS\n
+        );\n
+\n
+        // unless explicitly set in options, if the layer is transparent, \n
+        // it will be an overlay\n
+        if (options == null || options.isBaseLayer == null) {\n
+            this.isBaseLayer = ((this.params.transparent != "true") && \n
+                                (this.params.transparent != true));\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: clone\n
+     * Create a clone of this layer\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Layer.MapServer>} An exact clone of this layer\n
+     */\n
+    clone: function (obj) {\n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.MapServer(this.name,\n
+                                           this.url,\n
+                                           this.params,\n
+                                           this.getOptions());\n
+        }\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+\n
+        return obj;\n
+    },\n
+    \n
+    /**\n
+     * Method: getURL\n
+     * Return a query string for this layer\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>} A bounds representing the bbox \n
+     *                                for the request\n
+     *\n
+     * Returns:\n
+     * {String} A string with the layer\'s url and parameters and also \n
+     *          the passed-in bounds and appropriate tile size specified \n
+     *          as parameters.\n
+     */\n
+    getURL: function (bounds) {\n
+        bounds = this.adjustBounds(bounds);\n
+        // Make a list, so that getFullRequestString uses literal "," \n
+        var extent = [bounds.left, bounds. bottom, bounds.right, bounds.top];\n
+\n
+        var imageSize = this.getImageSize(); \n
+        \n
+        // make lists, so that literal \',\'s are used \n
+        var url = this.getFullRequestString(\n
+                     {mapext:   extent,\n
+                      imgext:   extent,\n
+                      map_size: [imageSize.w, imageSize.h],\n
+                      imgx:     imageSize.w / 2,\n
+                      imgy:     imageSize.h / 2,\n
+                      imgxy:    [imageSize.w, imageSize.h]\n
+                      });\n
+        \n
+        return url;\n
+    },\n
+    \n
+    /** \n
+     * Method: getFullRequestString\n
+     * combine the layer\'s url with its params and these newParams. \n
+     *   \n
+     * Parameters:\n
+     * newParams - {Object} New parameters that should be added to the \n
+     *                      request string.\n
+     * altUrl - {String} (optional) Replace the URL in the full request  \n
+     *                              string with the provided URL.\n
+     * \n
+     * Returns: \n
+     * {String} A string with the layer\'s url and parameters embedded in it.\n
+     */\n
+    getFullRequestString:function(newParams, altUrl) {\n
+        // use layer\'s url unless altUrl passed in\n
+        var url = (altUrl == null) ? this.url : altUrl;\n
+        \n
+        // create a new params hashtable with all the layer params and the \n
+        // new params together. then convert to string\n
+        var allParams = OpenLayers.Util.extend({}, this.params);\n
+        allParams = OpenLayers.Util.extend(allParams, newParams);\n
+        var paramsString = OpenLayers.Util.getParameterString(allParams);\n
+        \n
+        // if url is not a string, it should be an array of strings, \n
+        // in which case we will deterministically select one of them in \n
+        // order to evenly distribute requests to different urls.\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            url = this.selectUrl(paramsString, url);\n
+        }   \n
+        \n
+        // ignore parameters that are already in the url search string\n
+        var urlParams = OpenLayers.Util.upperCaseObject(\n
+                            OpenLayers.Util.getParameters(url));\n
+        for(var key in allParams) {\n
+            if(key.toUpperCase() in urlParams) {\n
+                delete allParams[key];\n
+            }\n
+        }\n
+        paramsString = OpenLayers.Util.getParameterString(allParams);\n
+        \n
+        // requestString always starts with url\n
+        var requestString = url;        \n
+\n
+        // MapServer needs \'+\' seperating things like bounds/height/width.\n
+        //   Since typically this is URL encoded, we use a slight hack: we\n
+        //  depend on the list-like functionality of getParameterString to\n
+        //  leave \',\' only in the case of list items (since otherwise it is\n
+        //  encoded) then do a regular expression replace on the , characters\n
+        //  to \'+\'\n
+        //\n
+        paramsString = paramsString.replace(/,/g, "+");\n
+        \n
+        if (paramsString != "") {\n
+            var lastServerChar = url.charAt(url.length - 1);\n
+            if ((lastServerChar == "&") || (lastServerChar == "?")) {\n
+                requestString += paramsString;\n
+            } else {\n
+                if (url.indexOf(\'?\') == -1) {\n
+                    //serverPath has no ? -- add one\n
+                    requestString += \'?\' + paramsString;\n
+                } else {\n
+                    //serverPath contains ?, so must already have paramsString at the end\n
+                    requestString += \'&\' + paramsString;\n
+                }\n
+            }\n
+        }\n
+        return requestString;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.MapServer"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6713</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

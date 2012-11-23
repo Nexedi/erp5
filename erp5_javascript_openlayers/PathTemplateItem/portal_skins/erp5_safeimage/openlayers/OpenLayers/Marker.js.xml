@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Marker.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ * @requires OpenLayers/Events.js\n
+ * @requires OpenLayers/Icon.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Marker\n
+ * Instances of OpenLayers.Marker are a combination of a \n
+ * <OpenLayers.LonLat> and an <OpenLayers.Icon>.  \n
+ *\n
+ * Markers are generally added to a special layer called\n
+ * <OpenLayers.Layer.Markers>.\n
+ *\n
+ * Example:\n
+ * (code)\n
+ * var markers = new OpenLayers.Layer.Markers( "Markers" );\n
+ * map.addLayer(markers);\n
+ *\n
+ * var size = new OpenLayers.Size(21,25);\n
+ * var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);\n
+ * var icon = new OpenLayers.Icon(\'http://www.openlayers.org/dev/img/marker.png\', size, offset);\n
+ * markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(0,0),icon));\n
+ * markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(0,0),icon.clone()));\n
+ *\n
+ * (end)\n
+ *\n
+ * Note that if you pass an icon into the Marker constructor, it will take\n
+ * that icon and use it. This means that you should not share icons between\n
+ * markers -- you use them once, but you should clone() for any additional\n
+ * markers using that same icon.\n
+ */\n
+OpenLayers.Marker = OpenLayers.Class({\n
+    \n
+    /** \n
+     * Property: icon \n
+     * {<OpenLayers.Icon>} The icon used by this marker.\n
+     */\n
+    icon: null,\n
+\n
+    /** \n
+     * Property: lonlat \n
+     * {<OpenLayers.LonLat>} location of object\n
+     */\n
+    lonlat: null,\n
+    \n
+    /** \n
+     * Property: events \n
+     * {<OpenLayers.Events>} the event handler.\n
+     */\n
+    events: null,\n
+    \n
+    /** \n
+     * Property: map \n
+     * {<OpenLayers.Map>} the map this marker is attached to\n
+     */\n
+    map: null,\n
+    \n
+    /** \n
+     * Constructor: OpenLayers.Marker\n
+     *\n
+     * Parameters:\n
+     * lonlat - {<OpenLayers.LonLat>} the position of this marker\n
+     * icon - {<OpenLayers.Icon>}  the icon for this marker\n
+     */\n
+    initialize: function(lonlat, icon) {\n
+        this.lonlat = lonlat;\n
+        \n
+        var newIcon = (icon) ? icon : OpenLayers.Marker.defaultIcon();\n
+        if (this.icon == null) {\n
+            this.icon = newIcon;\n
+        } else {\n
+            this.icon.url = newIcon.url;\n
+            this.icon.size = newIcon.size;\n
+            this.icon.offset = newIcon.offset;\n
+            this.icon.calculateOffset = newIcon.calculateOffset;\n
+        }\n
+        this.events = new OpenLayers.Events(this, this.icon.imageDiv);\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: destroy\n
+     * Destroy the marker. You must first remove the marker from any \n
+     * layer which it has been added to, or you will get buggy behavior.\n
+     * (This can not be done within the marker since the marker does not\n
+     * know which layer it is attached to.)\n
+     */\n
+    destroy: function() {\n
+        // erase any drawn features\n
+        this.erase();\n
+\n
+        this.map = null;\n
+\n
+        this.events.destroy();\n
+        this.events = null;\n
+\n
+        if (this.icon != null) {\n
+            this.icon.destroy();\n
+            this.icon = null;\n
+        }\n
+    },\n
+    \n
+    /** \n
+    * Method: draw\n
+    * Calls draw on the icon, and returns that output.\n
+    * \n
+    * Parameters:\n
+    * px - {<OpenLayers.Pixel>}\n
+    * \n
+    * Returns:\n
+    * {DOMElement} A new DOM Image with this marker\'s icon set at the \n
+    * location passed-in\n
+    */\n
+    draw: function(px) {\n
+        return this.icon.draw(px);\n
+    }, \n
+\n
+    /** \n
+    * Method: erase\n
+    * Erases any drawn elements for this marker.\n
+    */\n
+    erase: function() {\n
+        if (this.icon != null) {\n
+            this.icon.erase();\n
+        }\n
+    }, \n
+\n
+    /**\n
+    * Method: moveTo\n
+    * Move the marker to the new location.\n
+    *\n
+    * Parameters:\n
+    * px - {<OpenLayers.Pixel>|Object} the pixel position to move to.\n
+    * An OpenLayers.Pixel or an object with a \'x\' and \'y\' properties.\n
+    */\n
+    moveTo: function (px) {\n
+        if ((px != null) && (this.icon != null)) {\n
+            this.icon.moveTo(px);\n
+        }           \n
+        this.lonlat = this.map.getLonLatFromLayerPx(px);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: isDrawn\n
+     * \n
+     * Returns:\n
+     * {Boolean} Whether or not the marker is drawn.\n
+     */\n
+    isDrawn: function() {\n
+        var isDrawn = (this.icon && this.icon.isDrawn());\n
+        return isDrawn;   \n
+    },\n
+\n
+    /**\n
+     * Method: onScreen\n
+     *\n
+     * Returns:\n
+     * {Boolean} Whether or not the marker is currently visible on screen.\n
+     */\n
+    onScreen:function() {\n
+        \n
+        var onScreen = false;\n
+        if (this.map) {\n
+            var screenBounds = this.map.getExtent();\n
+            onScreen = screenBounds.containsLonLat(this.lonlat);\n
+        }    \n
+        return onScreen;\n
+    },\n
+    \n
+    /**\n
+     * Method: inflate\n
+     * Englarges the markers icon by the specified ratio.\n
+     *\n
+     * Parameters:\n
+     * inflate - {float} the ratio to enlarge the marker by (passing 2\n
+     *                   will double the size).\n
+     */\n
+    inflate: function(inflate) {\n
+        if (this.icon) {\n
+            this.icon.setSize({\n
+                w: this.icon.size.w * inflate,\n
+                h: this.icon.size.h * inflate\n
+            });\n
+        }        \n
+    },\n
+    \n
+    /** \n
+     * Method: setOpacity\n
+     * Change the opacity of the marker by changin the opacity of \n
+     *   its icon\n
+     * \n
+     * Parameters:\n
+     * opacity - {float}  Specified as fraction (0.4, etc)\n
+     */\n
+    setOpacity: function(opacity) {\n
+        this.icon.setOpacity(opacity);\n
+    },\n
+\n
+    /**\n
+     * Method: setUrl\n
+     * Change URL of the Icon Image.\n
+     * \n
+     * url - {String} \n
+     */\n
+    setUrl: function(url) {\n
+        this.icon.setUrl(url);\n
+    },    \n
+\n
+    /** \n
+     * Method: display\n
+     * Hide or show the icon\n
+     * \n
+     * display - {Boolean} \n
+     */\n
+    display: function(display) {\n
+        this.icon.display(display);\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Marker"\n
+});\n
+\n
+\n
+/**\n
+ * Function: defaultIcon\n
+ * Creates a default <OpenLayers.Icon>.\n
+ * \n
+ * Returns:\n
+ * {<OpenLayers.Icon>} A default OpenLayers.Icon to use for a marker\n
+ */\n
+OpenLayers.Marker.defaultIcon = function() {\n
+    return new OpenLayers.Icon(OpenLayers.Util.getImageLocation("marker.png"),\n
+                               {w: 21, h: 25}, {x: -10.5, y: -25});\n
+};\n
+    \n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6315</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Keyboard.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Handler.js\n
+ * @requires OpenLayers/Events.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.handler.Keyboard\n
+ * A handler for keyboard events.  Create a new instance with the\n
+ *     <OpenLayers.Handler.Keyboard> constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Handler> \n
+ */\n
+OpenLayers.Handler.Keyboard = OpenLayers.Class(OpenLayers.Handler, {\n
+\n
+    /* http://www.quirksmode.org/js/keys.html explains key x-browser\n
+        key handling quirks in pretty nice detail */\n
+\n
+    /** \n
+     * Constant: KEY_EVENTS\n
+     * keydown, keypress, keyup\n
+     */\n
+    KEY_EVENTS: ["keydown", "keyup"],\n
+\n
+    /** \n
+    * Property: eventListener\n
+    * {Function}\n
+    */\n
+    eventListener: null,\n
+\n
+    /**\n
+     * Property: observeElement\n
+     * {DOMElement|String} The DOM element on which we listen for\n
+     *     key events. Default to the document.\n
+     */\n
+    observeElement: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Handler.Keyboard\n
+     * Returns a new keyboard handler.\n
+     * \n
+     * Parameters:\n
+     * control - {<OpenLayers.Control>} The control that is making use of\n
+     *     this handler.  If a handler is being used without a control, the\n
+     *     handlers setMap method must be overridden to deal properly with\n
+     *     the map.\n
+     * callbacks - {Object} An object containing a single function to be\n
+     *     called when the drag operation is finished. The callback should\n
+     *     expect to recieve a single argument, the pixel location of the event.\n
+     *     Callbacks for \'keydown\', \'keypress\', and \'keyup\' are supported.\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     handler.\n
+     */\n
+    initialize: function(control, callbacks, options) {\n
+        OpenLayers.Handler.prototype.initialize.apply(this, arguments);\n
+        // cache the bound event listener method so it can be unobserved later\n
+        this.eventListener = OpenLayers.Function.bindAsEventListener(\n
+            this.handleKeyEvent, this\n
+        );\n
+    },\n
+    \n
+    /**\n
+     * Method: destroy\n
+     */\n
+    destroy: function() {\n
+        this.deactivate();\n
+        this.eventListener = null;\n
+        OpenLayers.Handler.prototype.destroy.apply(this, arguments);\n
+    },\n
+\n
+    /**\n
+     * Method: activate\n
+     */\n
+    activate: function() {\n
+        if (OpenLayers.Handler.prototype.activate.apply(this, arguments)) {\n
+            this.observeElement = this.observeElement || document;\n
+            for (var i=0, len=this.KEY_EVENTS.length; i<len; i++) {\n
+                OpenLayers.Event.observe(\n
+                    this.observeElement, this.KEY_EVENTS[i], this.eventListener);\n
+            }\n
+            return true;\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: deactivate\n
+     */\n
+    deactivate: function() {\n
+        var deactivated = false;\n
+        if (OpenLayers.Handler.prototype.deactivate.apply(this, arguments)) {\n
+            for (var i=0, len=this.KEY_EVENTS.length; i<len; i++) {\n
+                OpenLayers.Event.stopObserving(\n
+                    this.observeElement, this.KEY_EVENTS[i], this.eventListener);\n
+            }\n
+            deactivated = true;\n
+        }\n
+        return deactivated;\n
+    },\n
+\n
+    /**\n
+     * Method: handleKeyEvent \n
+     */\n
+    handleKeyEvent: function (evt) {\n
+        if (this.checkModifiers(evt)) {\n
+            this.callback(evt.type, [evt]);\n
+        }\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Handler.Keyboard"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3660</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

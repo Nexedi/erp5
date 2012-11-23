@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v1_0_0.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/SOSCapabilities.js\n
+ * @requires OpenLayers/Format/OWSCommon/v1_1_0.js\n
+ * @requires OpenLayers/Format/GML/v3.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.SOSCapabilities.v1_0_0\n
+ * Read SOS Capabilities version 1.0.0.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.SOSCapabilities>\n
+ */\n
+OpenLayers.Format.SOSCapabilities.v1_0_0 = OpenLayers.Class(\n
+    OpenLayers.Format.SOSCapabilities, {\n
+\n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        ows: "http://www.opengis.net/ows/1.1",\n
+        sos: "http://www.opengis.net/sos/1.0",\n
+        gml: "http://www.opengis.net/gml",\n
+        xlink: "http://www.w3.org/1999/xlink"\n
+    },\n
+\n
+    /**\n
+     * Property: regExes\n
+     * Compiled regular expressions for manipulating strings.\n
+     */\n
+    regExes: {\n
+        trimSpace: (/^\\s*|\\s*$/g),\n
+        removeSpace: (/\\s*/g),\n
+        splitSpace: (/\\s+/),\n
+        trimComma: (/\\s*,\\s*/g)\n
+    },\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.SOSCapabilities.v1_0_0\n
+     * Create a new parser for SOS capabilities version 1.0.0. \n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *     this instance.\n
+     */\n
+    initialize: function(options) {\n
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);\n
+        this.options = options;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Read capabilities data from a string, and return info about the SOS.\n
+     * \n
+     * Parameters: \n
+     * data - {String} or {DOMElement} data to read/parse.\n
+     *\n
+     * Returns:\n
+     * {Object} Information about the SOS service.\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") {\n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        if(data && data.nodeType == 9) {\n
+            data = data.documentElement;\n
+        }\n
+        var capabilities = {};\n
+        this.readNode(data, capabilities);\n
+        return capabilities;\n
+    },\n
+\n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "gml": OpenLayers.Util.applyDefaults({\n
+            "name": function(node, obj) {\n
+                obj.name = this.getChildValue(node);\n
+            },\n
+            "TimePeriod": function(node, obj) {\n
+                obj.timePeriod = {};\n
+                this.readChildNodes(node, obj.timePeriod);\n
+            },\n
+            "beginPosition": function(node, timePeriod) {\n
+                timePeriod.beginPosition = this.getChildValue(node);\n
+            },\n
+            "endPosition": function(node, timePeriod) {\n
+                timePeriod.endPosition = this.getChildValue(node);\n
+            }\n
+        }, OpenLayers.Format.GML.v3.prototype.readers["gml"]),\n
+        "sos": {\n
+            "Capabilities": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "Contents": function(node, obj) {\n
+                obj.contents = {};\n
+                this.readChildNodes(node, obj.contents);\n
+            },\n
+            "ObservationOfferingList": function(node, contents) {\n
+                contents.offeringList = {};\n
+                this.readChildNodes(node, contents.offeringList);\n
+            },\n
+            "ObservationOffering": function(node, offeringList) {\n
+                var id = this.getAttributeNS(node, this.namespaces.gml, "id");\n
+                offeringList[id] = {\n
+                    procedures: [],\n
+                    observedProperties: [],\n
+                    featureOfInterestIds: [],\n
+                    responseFormats: [],\n
+                    resultModels: [],\n
+                    responseModes: []\n
+                };\n
+                this.readChildNodes(node, offeringList[id]);\n
+            },\n
+            "time": function(node, offering) {\n
+                offering.time = {};\n
+                this.readChildNodes(node, offering.time);\n
+            },\n
+            "procedure": function(node, offering) {\n
+                offering.procedures.push(this.getAttributeNS(node, \n
+                    this.namespaces.xlink, "href"));\n
+            },\n
+            "observedProperty": function(node, offering) {\n
+                offering.observedProperties.push(this.getAttributeNS(node, \n
+                    this.namespaces.xlink, "href"));\n
+            },\n
+            "featureOfInterest": function(node, offering) {\n
+                offering.featureOfInterestIds.push(this.getAttributeNS(node, \n
+                    this.namespaces.xlink, "href"));\n
+            },\n
+            "responseFormat": function(node, offering) {\n
+                offering.responseFormats.push(this.getChildValue(node));\n
+            },\n
+            "resultModel": function(node, offering) {\n
+                offering.resultModels.push(this.getChildValue(node));\n
+            },\n
+            "responseMode": function(node, offering) {\n
+                offering.responseModes.push(this.getChildValue(node));\n
+            }\n
+        },\n
+        "ows": OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers["ows"]\n
+    },    \n
+    \n
+    CLASS_NAME: "OpenLayers.Format.SOSCapabilities.v1_0_0" \n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5680</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

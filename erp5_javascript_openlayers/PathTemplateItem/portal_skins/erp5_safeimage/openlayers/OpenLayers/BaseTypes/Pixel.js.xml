@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Pixel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/BaseTypes/Class.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Pixel\n
+ * This class represents a screen coordinate, in x and y coordinates\n
+ */\n
+OpenLayers.Pixel = OpenLayers.Class({\n
+    \n
+    /**\n
+     * APIProperty: x\n
+     * {Number} The x coordinate\n
+     */\n
+    x: 0.0,\n
+\n
+    /**\n
+     * APIProperty: y\n
+     * {Number} The y coordinate\n
+     */\n
+    y: 0.0,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Pixel\n
+     * Create a new OpenLayers.Pixel instance\n
+     *\n
+     * Parameters:\n
+     * x - {Number} The x coordinate\n
+     * y - {Number} The y coordinate\n
+     *\n
+     * Returns:\n
+     * An instance of OpenLayers.Pixel\n
+     */\n
+    initialize: function(x, y) {\n
+        this.x = parseFloat(x);\n
+        this.y = parseFloat(y);\n
+    },\n
+    \n
+    /**\n
+     * Method: toString\n
+     * Cast this object into a string\n
+     *\n
+     * Returns:\n
+     * {String} The string representation of Pixel. ex: "x=200.4,y=242.2"\n
+     */\n
+    toString:function() {\n
+        return ("x=" + this.x + ",y=" + this.y);\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clone\n
+     * Return a clone of this pixel object\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} A clone pixel\n
+     */\n
+    clone:function() {\n
+        return new OpenLayers.Pixel(this.x, this.y); \n
+    },\n
+    \n
+    /**\n
+     * APIMethod: equals\n
+     * Determine whether one pixel is equivalent to another\n
+     *\n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or an object with\n
+     *                                  a \'x\' and \'y\' properties.\n
+     *\n
+     * Returns:\n
+     * {Boolean} The point passed in as parameter is equal to this. Note that\n
+     * if px passed in is null, returns false.\n
+     */\n
+    equals:function(px) {\n
+        var equals = false;\n
+        if (px != null) {\n
+            equals = ((this.x == px.x && this.y == px.y) ||\n
+                      (isNaN(this.x) && isNaN(this.y) && isNaN(px.x) && isNaN(px.y)));\n
+        }\n
+        return equals;\n
+    },\n
+\n
+    /**\n
+     * APIMethod: distanceTo\n
+     * Returns the distance to the pixel point passed in as a parameter.\n
+     *\n
+     * Parameters:\n
+     * px - {<OpenLayers.Pixel>}\n
+     *\n
+     * Returns:\n
+     * {Float} The pixel point passed in as parameter to calculate the\n
+     *     distance to.\n
+     */\n
+    distanceTo:function(px) {\n
+        return Math.sqrt(\n
+            Math.pow(this.x - px.x, 2) +\n
+            Math.pow(this.y - px.y, 2)\n
+        );\n
+    },\n
+\n
+    /**\n
+     * APIMethod: add\n
+     *\n
+     * Parameters:\n
+     * x - {Integer}\n
+     * y - {Integer}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} A new Pixel with this pixel\'s x&y augmented by the \n
+     * values passed in.\n
+     */\n
+    add:function(x, y) {\n
+        if ( (x == null) || (y == null) ) {\n
+            throw new TypeError(\'Pixel.add cannot receive null values\');\n
+        }\n
+        return new OpenLayers.Pixel(this.x + x, this.y + y);\n
+    },\n
+\n
+    /**\n
+    * APIMethod: offset\n
+    * \n
+    * Parameters\n
+    * px - {<OpenLayers.Pixel>|Object} An OpenLayers.Pixel or an object with\n
+    *                                  a \'x\' and \'y\' properties.\n
+    * \n
+    * Returns:\n
+    * {<OpenLayers.Pixel>} A new Pixel with this pixel\'s x&y augmented by the \n
+    *                      x&y values of the pixel passed in.\n
+    */\n
+    offset:function(px) {\n
+        var newPx = this.clone();\n
+        if (px) {\n
+            newPx = this.add(px.x, px.y);\n
+        }\n
+        return newPx;\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Pixel"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3649</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

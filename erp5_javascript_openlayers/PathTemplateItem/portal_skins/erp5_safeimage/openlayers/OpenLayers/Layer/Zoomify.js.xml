@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Zoomify.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/*\n
+ * Development supported by a R&D grant DC08P02OUK006 - Old Maps Online\n
+ * (www.oldmapsonline.org) from Ministry of Culture of the Czech Republic.\n
+ */\n
+\n
+\n
+/**\n
+ * @requires OpenLayers/Layer/Grid.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Layer.Zoomify\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Layer.Grid>\n
+ */\n
+OpenLayers.Layer.Zoomify = OpenLayers.Class(OpenLayers.Layer.Grid, {\n
+\n
+    /**\n
+     * Property: size\n
+     * {<OpenLayers.Size>} The Zoomify image size in pixels.\n
+     */\n
+    size: null,\n
+\n
+    /**\n
+     * APIProperty: isBaseLayer\n
+     * {Boolean}\n
+     */\n
+    isBaseLayer: true,\n
+\n
+    /**\n
+     * Property: standardTileSize\n
+     * {Integer} The size of a standard (non-border) square tile in pixels.\n
+     */\n
+    standardTileSize: 256,\n
+\n
+    /** \n
+     * Property: tileOriginCorner\n
+     * {String} This layer uses top-left as tile origin\n
+     **/\n
+    tileOriginCorner: "tl",\n
+\n
+    /**\n
+     * Property: numberOfTiers\n
+     * {Integer} Depth of the Zoomify pyramid, number of tiers (zoom levels)\n
+     *                          - filled during Zoomify pyramid initialization.\n
+     */\n
+    numberOfTiers: 0,\n
+\n
+    /**\n
+     * Property: tileCountUpToTier\n
+     * {Array(Integer)} Number of tiles up to the given tier of pyramid.\n
+     *                          - filled during Zoomify pyramid initialization.\n
+     */\n
+    tileCountUpToTier: null,\n
+\n
+    /**\n
+     * Property: tierSizeInTiles\n
+     * {Array(<OpenLayers.Size>)} Size (in tiles) for each tier of pyramid.\n
+     *                          - filled during Zoomify pyramid initialization.\n
+     */\n
+    tierSizeInTiles: null,\n
+\n
+    /**\n
+     * Property: tierImageSize\n
+     * {Array(<OpenLayers.Size>)} Image size in pixels for each pyramid tier.\n
+     *                          - filled during Zoomify pyramid initialization.\n
+     */\n
+    tierImageSize: null,\n
+\n
+    /**\n
+     * Constructor: OpenLayers.Layer.Zoomify\n
+     *\n
+     * Parameters:\n
+     * name - {String} A name for the layer.\n
+     * url - {String} - Relative or absolute path to the image or more\n
+     *        precisly to the TileGroup[X] directories root.\n
+     *        Flash plugin use the variable name "zoomifyImagePath" for this.\n
+     * size - {<OpenLayers.Size>} The size (in pixels) of the image.\n
+     * options - {Object} Hashtable of extra options to tag onto the layer\n
+     */\n
+    initialize: function(name, url, size, options) {\n
+\n
+        // initilize the Zoomify pyramid for given size\n
+        this.initializeZoomify(size);\n
+\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, [\n
+            name, url, size, {}, options\n
+        ]);\n
+    },\n
+\n
+    /**\n
+     * Method: initializeZoomify\n
+     * It generates constants for all tiers of the Zoomify pyramid\n
+     *\n
+     * Parameters:\n
+     * size - {<OpenLayers.Size>} The size of the image in pixels\n
+     *\n
+     */\n
+    initializeZoomify: function( size ) {\n
+\n
+        var imageSize = size.clone();\n
+        var tiles = new OpenLayers.Size(\n
+            Math.ceil( imageSize.w / this.standardTileSize ),\n
+            Math.ceil( imageSize.h / this.standardTileSize )\n
+            );\n
+\n
+        this.tierSizeInTiles = [tiles];\n
+        this.tierImageSize = [imageSize];\n
+\n
+        while (imageSize.w > this.standardTileSize ||\n
+               imageSize.h > this.standardTileSize ) {\n
+\n
+            imageSize = new OpenLayers.Size(\n
+                Math.floor( imageSize.w / 2 ),\n
+                Math.floor( imageSize.h / 2 )\n
+                );\n
+            tiles = new OpenLayers.Size(\n
+                Math.ceil( imageSize.w / this.standardTileSize ),\n
+                Math.ceil( imageSize.h / this.standardTileSize )\n
+                );\n
+            this.tierSizeInTiles.push( tiles );\n
+            this.tierImageSize.push( imageSize );\n
+        }\n
+\n
+        this.tierSizeInTiles.reverse();\n
+        this.tierImageSize.reverse();\n
+\n
+        this.numberOfTiers = this.tierSizeInTiles.length;\n
+\n
+        this.tileCountUpToTier = [0];\n
+        for (var i = 1; i < this.numberOfTiers; i++) {\n
+            this.tileCountUpToTier.push(\n
+                this.tierSizeInTiles[i-1].w * this.tierSizeInTiles[i-1].h +\n
+                this.tileCountUpToTier[i-1]\n
+                );\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod:destroy\n
+     */\n
+    destroy: function() {\n
+        // for now, nothing special to do here.\n
+        OpenLayers.Layer.Grid.prototype.destroy.apply(this, arguments);\n
+\n
+        // Remove from memory the Zoomify pyramid - is that enough?\n
+        this.tileCountUpToTier.length = 0;\n
+        this.tierSizeInTiles.length = 0;\n
+        this.tierImageSize.length = 0;\n
+\n
+    },\n
+\n
+    /**\n
+     * APIMethod: clone\n
+     *\n
+     * Parameters:\n
+     * obj - {Object}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Layer.Zoomify>} An exact clone of this <OpenLayers.Layer.Zoomify>\n
+     */\n
+    clone: function (obj) {\n
+\n
+        if (obj == null) {\n
+            obj = new OpenLayers.Layer.Zoomify(this.name,\n
+                                           this.url,\n
+                                           this.size,\n
+                                           this.options);\n
+        }\n
+\n
+        //get all additions from superclasses\n
+        obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);\n
+\n
+        // copy/set any non-init, non-simple values here\n
+\n
+        return obj;\n
+    },\n
+\n
+    /**\n
+     * Method: getURL\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bounds>}\n
+     *\n
+     * Returns:\n
+     * {String} A string with the layer\'s url and parameters and also the\n
+     *          passed-in bounds and appropriate tile size specified as\n
+     *          parameters\n
+     */\n
+    getURL: function (bounds) {\n
+        bounds = this.adjustBounds(bounds);\n
+        var res = this.map.getResolution();\n
+        var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));\n
+        var y = Math.round((this.tileOrigin.lat - bounds.top) / (res * this.tileSize.h));\n
+        var z = this.map.getZoom();\n
+\n
+        var tileIndex = x + y * this.tierSizeInTiles[z].w + this.tileCountUpToTier[z];\n
+        var path = "TileGroup" + Math.floor( (tileIndex) / 256 ) +\n
+            "/" + z + "-" + x + "-" + y + ".jpg";\n
+        var url = this.url;\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            url = this.selectUrl(path, url);\n
+        }\n
+        return url + path;\n
+    },\n
+\n
+    /**\n
+     * Method: getImageSize\n
+     * getImageSize returns size for a particular tile. If bounds are given as\n
+     * first argument, size is calculated (bottom-right tiles are non square).\n
+     *\n
+     */\n
+    getImageSize: function() {\n
+        if (arguments.length > 0) {\n
+            var bounds = this.adjustBounds(arguments[0]);\n
+            var res = this.map.getResolution();\n
+            var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));\n
+            var y = Math.round((this.tileOrigin.lat - bounds.top) / (res * this.tileSize.h));\n
+            var z = this.map.getZoom();\n
+            var w = this.standardTileSize;\n
+            var h = this.standardTileSize;\n
+            if (x == this.tierSizeInTiles[z].w -1 ) {\n
+                var w = this.tierImageSize[z].w % this.standardTileSize;\n
+            }\n
+            if (y == this.tierSizeInTiles[z].h -1 ) {\n
+                var h = this.tierImageSize[z].h % this.standardTileSize;\n
+            }\n
+            return (new OpenLayers.Size(w, h));\n
+        } else {\n
+            return this.tileSize;\n
+        }\n
+    },\n
+\n
+    /**\n
+     * APIMethod: setMap\n
+     * When the layer is added to a map, then we can fetch our origin\n
+     *    (if we don\'t have one.)\n
+     *\n
+     * Parameters:\n
+     * map - {<OpenLayers.Map>}\n
+     */\n
+    setMap: function(map) {\n
+        OpenLayers.Layer.Grid.prototype.setMap.apply(this, arguments);\n
+        this.tileOrigin = new OpenLayers.LonLat(this.map.maxExtent.left,\n
+                                                this.map.maxExtent.top);\n
+    },\n
+\n
+    /**\n
+     * Method: calculateGridLayout\n
+     * Generate parameters for the grid layout. This\n
+     *\n
+     * Parameters:\n
+     * bounds - {<OpenLayers.Bound>}\n
+     * origin - {<OpenLayers.LonLat>}\n
+     * resolution - {Number}\n
+     *\n
+     * Returns:\n
+     * {Object} Object containing properties tilelon, tilelat, tileoffsetlat,\n
+     * tileoffsetlat, tileoffsetx, tileoffsety\n
+     */\n
+    calculateGridLayout: function(bounds, origin, resolution) {\n
+        var tilelon = resolution * this.tileSize.w;\n
+        var tilelat = resolution * this.tileSize.h;\n
+\n
+        var offsetlon = bounds.left - origin.lon;\n
+        var tilecol = Math.floor(offsetlon/tilelon) - this.buffer;\n
+        var tilecolremain = offsetlon/tilelon - tilecol;\n
+        var tileoffsetx = -tilecolremain * this.tileSize.w;\n
+        var tileoffsetlon = origin.lon + tilecol * tilelon;\n
+\n
+        var offsetlat = origin.lat - bounds.top + tilelat;\n
+        var tilerow = Math.floor(offsetlat/tilelat) - this.buffer;\n
+        var tilerowremain = tilerow - offsetlat/tilelat;\n
+        var tileoffsety = tilerowremain * this.tileSize.h;\n
+        var tileoffsetlat = origin.lat - tilelat*tilerow;\n
+\n
+        return {\n
+          tilelon: tilelon, tilelat: tilelat,\n
+          tileoffsetlon: tileoffsetlon, tileoffsetlat: tileoffsetlat,\n
+          tileoffsetx: tileoffsetx, tileoffsety: tileoffsety\n
+        };\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Layer.Zoomify"\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

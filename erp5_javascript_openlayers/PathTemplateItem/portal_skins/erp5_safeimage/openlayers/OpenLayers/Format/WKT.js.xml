@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WKT.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format.js\n
+ * @requires OpenLayers/Feature/Vector.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.WKT\n
+ * Class for reading and writing Well-Known Text.  Create a new instance\n
+ * with the <OpenLayers.Format.WKT> constructor.\n
+ * \n
+ * Inherits from:\n
+ *  - <OpenLayers.Format>\n
+ */\n
+OpenLayers.Format.WKT = OpenLayers.Class(OpenLayers.Format, {\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.WKT\n
+     * Create a new parser for WKT\n
+     *\n
+     * Parameters:\n
+     * options - {Object} An optional object whose properties will be set on\n
+     *           this instance\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Format.WKT>} A new WKT parser.\n
+     */\n
+    initialize: function(options) {\n
+        this.regExes = {\n
+            \'typeStr\': /^\\s*(\\w+)\\s*\\(\\s*(.*)\\s*\\)\\s*$/,\n
+            \'spaces\': /\\s+/,\n
+            \'parenComma\': /\\)\\s*,\\s*\\(/,\n
+            \'doubleParenComma\': /\\)\\s*\\)\\s*,\\s*\\(\\s*\\(/,  // can\'t use {2} here\n
+            \'trimParens\': /^\\s*\\(?(.*?)\\)?\\s*$/\n
+        };\n
+        OpenLayers.Format.prototype.initialize.apply(this, [options]);\n
+    },\n
+\n
+    /**\n
+     * Method: read\n
+     * Deserialize a WKT string and return a vector feature or an\n
+     * array of vector features.  Supports WKT for POINT, MULTIPOINT,\n
+     * LINESTRING, MULTILINESTRING, POLYGON, MULTIPOLYGON, and\n
+     * GEOMETRYCOLLECTION.\n
+     *\n
+     * Parameters:\n
+     * wkt - {String} A WKT string\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Feature.Vector>|Array} A feature or array of features for\n
+     * GEOMETRYCOLLECTION WKT.\n
+     */\n
+    read: function(wkt) {\n
+        var features, type, str;\n
+        wkt = wkt.replace(/[\\n\\r]/g, " ");\n
+        var matches = this.regExes.typeStr.exec(wkt);\n
+        if(matches) {\n
+            type = matches[1].toLowerCase();\n
+            str = matches[2];\n
+            if(this.parse[type]) {\n
+                features = this.parse[type].apply(this, [str]);\n
+            }\n
+            if (this.internalProjection && this.externalProjection) {\n
+                if (features && \n
+                    features.CLASS_NAME == "OpenLayers.Feature.Vector") {\n
+                    features.geometry.transform(this.externalProjection,\n
+                                                this.internalProjection);\n
+                } else if (features &&\n
+                           type != "geometrycollection" &&\n
+                           typeof features == "object") {\n
+                    for (var i=0, len=features.length; i<len; i++) {\n
+                        var component = features[i];\n
+                        component.geometry.transform(this.externalProjection,\n
+                                                     this.internalProjection);\n
+                    }\n
+                }\n
+            }\n
+        }    \n
+        return features;\n
+    },\n
+\n
+    /**\n
+     * Method: write\n
+     * Serialize a feature or array of features into a WKT string.\n
+     *\n
+     * Parameters:\n
+     * features - {<OpenLayers.Feature.Vector>|Array} A feature or array of\n
+     *            features\n
+     *\n
+     * Returns:\n
+     * {String} The WKT string representation of the input geometries\n
+     */\n
+    write: function(features) {\n
+        var collection, geometry, type, data, isCollection;\n
+        if (features.constructor == Array) {\n
+            collection = features;\n
+            isCollection = true;\n
+        } else {\n
+            collection = [features];\n
+            isCollection = false;\n
+        }\n
+        var pieces = [];\n
+        if (isCollection) {\n
+            pieces.push(\'GEOMETRYCOLLECTION(\');\n
+        }\n
+        for (var i=0, len=collection.length; i<len; ++i) {\n
+            if (isCollection && i>0) {\n
+                pieces.push(\',\');\n
+            }\n
+            geometry = collection[i].geometry;\n
+            pieces.push(this.extractGeometry(geometry));\n
+        }\n
+        if (isCollection) {\n
+            pieces.push(\')\');\n
+        }\n
+        return pieces.join(\'\');\n
+    },\n
+\n
+    /**\n
+     * Method: extractGeometry\n
+     * Entry point to construct the WKT for a single Geometry object.\n
+     *\n
+     * Parameters:\n
+     * geometry - {<OpenLayers.Geometry.Geometry>}\n
+     *\n
+     * Returns:\n
+     * {String} A WKT string of representing the geometry\n
+     */\n
+    extractGeometry: function(geometry) {\n
+        var type = geometry.CLASS_NAME.split(\'.\')[2].toLowerCase();\n
+        if (!this.extract[type]) {\n
+            return null;\n
+        }\n
+        if (this.internalProjection && this.externalProjection) {\n
+            geometry = geometry.clone();\n
+            geometry.transform(this.internalProjection, this.externalProjection);\n
+        }                       \n
+        var wktType = type == \'collection\' ? \'GEOMETRYCOLLECTION\' : type.toUpperCase();\n
+        var data = wktType + \'(\' + this.extract[type].apply(this, [geometry]) + \')\';\n
+        return data;\n
+    },\n
+    \n
+    /**\n
+     * Object with properties corresponding to the geometry types.\n
+     * Property values are functions that do the actual data extraction.\n
+     */\n
+    extract: {\n
+        /**\n
+         * Return a space delimited string of point coordinates.\n
+         * @param {OpenLayers.Geometry.Point} point\n
+         * @returns {String} A string of coordinates representing the point\n
+         */\n
+        \'point\': function(point) {\n
+            return point.x + \' \' + point.y;\n
+        },\n
+\n
+        /**\n
+         * Return a comma delimited string of point coordinates from a multipoint.\n
+         * @param {OpenLayers.Geometry.MultiPoint} multipoint\n
+         * @returns {String} A string of point coordinate strings representing\n
+         *                  the multipoint\n
+         */\n
+        \'multipoint\': function(multipoint) {\n
+            var array = [];\n
+            for(var i=0, len=multipoint.components.length; i<len; ++i) {\n
+                array.push(\'(\' +\n
+                           this.extract.point.apply(this, [multipoint.components[i]]) +\n
+                           \')\');\n
+            }\n
+            return array.join(\',\');\n
+        },\n
+        \n
+        /**\n
+         * Return a comma delimited string of point coordinates from a line.\n
+         * @param {OpenLayers.Geometry.LineString} linestring\n
+         * @returns {String} A string of point coordinate strings representing\n
+         *                  the linestring\n
+         */\n
+        \'linestring\': function(linestring) {\n
+            var array = [];\n
+            for(var i=0, len=linestring.components.length; i<len; ++i) {\n
+                array.push(this.extract.point.apply(this, [linestring.components[i]]));\n
+            }\n
+            return array.join(\',\');\n
+        },\n
+\n
+        /**\n
+         * Return a comma delimited string of linestring strings from a multilinestring.\n
+         * @param {OpenLayers.Geometry.MultiLineString} multilinestring\n
+         * @returns {String} A string of of linestring strings representing\n
+         *                  the multilinestring\n
+         */\n
+        \'multilinestring\': function(multilinestring) {\n
+            var array = [];\n
+            for(var i=0, len=multilinestring.components.length; i<len; ++i) {\n
+                array.push(\'(\' +\n
+                           this.extract.linestring.apply(this, [multilinestring.components[i]]) +\n
+                           \')\');\n
+            }\n
+            return array.join(\',\');\n
+        },\n
+        \n
+        /**\n
+         * Return a comma delimited string of linear ring arrays from a polygon.\n
+         * @param {OpenLayers.Geometry.Polygon} polygon\n
+         * @returns {String} An array of linear ring arrays representing the polygon\n
+         */\n
+        \'polygon\': function(polygon) {\n
+            var array = [];\n
+            for(var i=0, len=polygon.components.length; i<len; ++i) {\n
+                array.push(\'(\' +\n
+                           this.extract.linestring.apply(this, [polygon.components[i]]) +\n
+                           \')\');\n
+            }\n
+            return array.join(\',\');\n
+        },\n
+\n
+        /**\n
+         * Return an array of polygon arrays from a multipolygon.\n
+         * @param {OpenLayers.Geometry.MultiPolygon} multipolygon\n
+         * @returns {String} An array of polygon arrays representing\n
+         *                  the multipolygon\n
+         */\n
+        \'multipolygon\': function(multipolygon) {\n
+            var array = [];\n
+            for(var i=0, len=multipolygon.components.length; i<len; ++i) {\n
+                array.push(\'(\' +\n
+                           this.extract.polygon.apply(this, [multipolygon.components[i]]) +\n
+                           \')\');\n
+            }\n
+            return array.join(\',\');\n
+        },\n
+\n
+        /**\n
+         * Return the WKT portion between \'GEOMETRYCOLLECTION(\' and \')\' for an <OpenLayers.Geometry.Collection>\n
+         * @param {OpenLayers.Geometry.Collection} collection\n
+         * @returns {String} internal WKT representation of the collection\n
+         */\n
+        \'collection\': function(collection) {\n
+            var array = [];\n
+            for(var i=0, len=collection.components.length; i<len; ++i) {\n
+                array.push(this.extractGeometry.apply(this, [collection.components[i]]));\n
+            }\n
+            return array.join(\',\');\n
+        }\n
+\n
+    },\n
+\n
+    /**\n
+     * Object with properties corresponding to the geometry types.\n
+     * Property values are functions that do the actual parsing.\n
+     */\n
+    parse: {\n
+        /**\n
+         * Return point feature given a point WKT fragment.\n
+         * @param {String} str A WKT fragment representing the point\n
+         * @returns {OpenLayers.Feature.Vector} A point feature\n
+         * @private\n
+         */\n
+        \'point\': function(str) {\n
+            var coords = OpenLayers.String.trim(str).split(this.regExes.spaces);\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.Point(coords[0], coords[1])\n
+            );\n
+        },\n
+\n
+        /**\n
+         * Return a multipoint feature given a multipoint WKT fragment.\n
+         * @param {String} str A WKT fragment representing the multipoint\n
+         * @returns {OpenLayers.Feature.Vector} A multipoint feature\n
+         * @private\n
+         */\n
+        \'multipoint\': function(str) {\n
+            var point;\n
+            var points = OpenLayers.String.trim(str).split(\',\');\n
+            var components = [];\n
+            for(var i=0, len=points.length; i<len; ++i) {\n
+                point = points[i].replace(this.regExes.trimParens, \'$1\');\n
+                components.push(this.parse.point.apply(this, [point]).geometry);\n
+            }\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.MultiPoint(components)\n
+            );\n
+        },\n
+        \n
+        /**\n
+         * Return a linestring feature given a linestring WKT fragment.\n
+         * @param {String} str A WKT fragment representing the linestring\n
+         * @returns {OpenLayers.Feature.Vector} A linestring feature\n
+         * @private\n
+         */\n
+        \'linestring\': function(str) {\n
+            var points = OpenLayers.String.trim(str).split(\',\');\n
+            var components = [];\n
+            for(var i=0, len=points.length; i<len; ++i) {\n
+                components.push(this.parse.point.apply(this, [points[i]]).geometry);\n
+            }\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.LineString(components)\n
+            );\n
+        },\n
+\n
+        /**\n
+         * Return a multilinestring feature given a multilinestring WKT fragment.\n
+         * @param {String} str A WKT fragment representing the multilinestring\n
+         * @returns {OpenLayers.Feature.Vector} A multilinestring feature\n
+         * @private\n
+         */\n
+        \'multilinestring\': function(str) {\n
+            var line;\n
+            var lines = OpenLayers.String.trim(str).split(this.regExes.parenComma);\n
+            var components = [];\n
+            for(var i=0, len=lines.length; i<len; ++i) {\n
+                line = lines[i].replace(this.regExes.trimParens, \'$1\');\n
+                components.push(this.parse.linestring.apply(this, [line]).geometry);\n
+            }\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.MultiLineString(components)\n
+            );\n
+        },\n
+        \n
+        /**\n
+         * Return a polygon feature given a polygon WKT fragment.\n
+         * @param {String} str A WKT fragment representing the polygon\n
+         * @returns {OpenLayers.Feature.Vector} A polygon feature\n
+         * @private\n
+         */\n
+        \'polygon\': function(str) {\n
+            var ring, linestring, linearring;\n
+            var rings = OpenLayers.String.trim(str).split(this.regExes.parenComma);\n
+            var components = [];\n
+            for(var i=0, len=rings.length; i<len; ++i) {\n
+                ring = rings[i].replace(this.regExes.trimParens, \'$1\');\n
+                linestring = this.parse.linestring.apply(this, [ring]).geometry;\n
+                linearring = new OpenLayers.Geometry.LinearRing(linestring.components);\n
+                components.push(linearring);\n
+            }\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.Polygon(components)\n
+            );\n
+        },\n
+\n
+        /**\n
+         * Return a multipolygon feature given a multipolygon WKT fragment.\n
+         * @param {String} str A WKT fragment representing the multipolygon\n
+         * @returns {OpenLayers.Feature.Vector} A multipolygon feature\n
+         * @private\n
+         */\n
+        \'multipolygon\': function(str) {\n
+            var polygon;\n
+            var polygons = OpenLayers.String.trim(str).split(this.regExes.doubleParenComma);\n
+            var components = [];\n
+            for(var i=0, len=polygons.length; i<len; ++i) {\n
+                polygon = polygons[i].replace(this.regExes.trimParens, \'$1\');\n
+                components.push(this.parse.polygon.apply(this, [polygon]).geometry);\n
+            }\n
+            return new OpenLayers.Feature.Vector(\n
+                new OpenLayers.Geometry.MultiPolygon(components)\n
+            );\n
+        },\n
+\n
+        /**\n
+         * Return an array of features given a geometrycollection WKT fragment.\n
+         * @param {String} str A WKT fragment representing the geometrycollection\n
+         * @returns {Array} An array of OpenLayers.Feature.Vector\n
+         * @private\n
+         */\n
+        \'geometrycollection\': function(str) {\n
+            // separate components of the collection with |\n
+            str = str.replace(/,\\s*([A-Za-z])/g, \'|$1\');\n
+            var wktArray = OpenLayers.String.trim(str).split(\'|\');\n
+            var components = [];\n
+            for(var i=0, len=wktArray.length; i<len; ++i) {\n
+                components.push(OpenLayers.Format.WKT.prototype.read.apply(this,[wktArray[i]]));\n
+            }\n
+            return components;\n
+        }\n
+\n
+    },\n
+\n
+    CLASS_NAME: "OpenLayers.Format.WKT" \n
+});     \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14807</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

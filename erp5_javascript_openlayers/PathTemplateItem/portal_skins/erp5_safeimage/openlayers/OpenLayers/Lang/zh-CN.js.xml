@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>zh-CN.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * @requires OpenLayers/Lang.js\n
+ */\n
+\n
+/**\n
+ * Namespace: OpenLayers.Lang["zh-CN"]\n
+ * Dictionary for Simplified Chinese.  Keys for entries are used in calls to\n
+ *     <OpenLayers.Lang.translate>.  Entry bodies are normal strings or\n
+ *     strings formatted for use with <OpenLayers.String.format> calls.\n
+ */\n
+OpenLayers.Lang["zh-CN"] = {\n
+\n
+    \'unhandledRequest\': "未处理的请求，返回值为 ${statusText}",\n
+\n
+    \'Permalink\': "永久链接",\n
+\n
+    \'Overlays\': "叠加层",\n
+\n
+    \'Base Layer\': "基础图层",\n
+\n
+    \'noFID\': "无法更新feature，缺少FID。",\n
+\n
+    \'browserNotSupported\':\n
+        "你使用的浏览器不支持矢量渲染。当前支持的渲染方式包括：\\n${renderers}",\n
+\n
+    // console message\n
+    \'minZoomLevelError\':\n
+        "minZoomLevel属性仅适合用于" +\n
+        "使用了固定缩放级别的图层。这个 " +\n
+        "wfs 图层检查 minZoomLevel 是过去遗留下来的。" +\n
+        "然而，我们不能移除它，" +\n
+        "而破坏依赖于它的基于OL的应用程序。" +\n
+        "因此，我们废除了它 -- minZoomLevel " +\n
+        "将会在3.0中被移除。请改用 " +\n
+        "min/max resolution 设置，参考：" +\n
+        "http://trac.openlayers.org/wiki/SettingZoomLevels",\n
+\n
+    \'commitSuccess\': "WFS Transaction: 成功。 ${response}",\n
+\n
+    \'commitFailed\': "WFS Transaction: 失败。 ${response}",\n
+\n
+    \'googleWarning\':\n
+        "Google图层不能正确加载。<br><br>" +\n
+        "要消除这个信息，请在右上角的" +\n
+        "图层控制面板中选择其他的基础图层。<br><br>" +\n
+        "这种情况很可能是没有正确的包含Google地图脚本库，" +\n
+        "或者是没有包含在你的站点上" +\n
+        "使用的正确的Google Maps API密匙。<br><br>" +\n
+        "开发者：获取使其正确工作的帮助信息，" +\n
+        "<a href=\'http://trac.openlayers.org/wiki/Google\' " +\n
+        "target=\'_blank\'>点击这里</a>",\n
+\n
+    \'getLayerWarning\':\n
+        "${layerType} 图层不能正确加载。<br><br>" +\n
+        "要消除这个信息，请在右上角的" +\n
+        "图层控制面板中选择其他的基础图层。<br><br>" +\n
+        "这种情况很可能是没有正确的包含" +\n
+        "${layerLib} 脚本库。<br><br>" +\n
+        "开发者：获取使其正确工作的帮助信息，" +\n
+        "<a href=\'http://trac.openlayers.org/wiki/${layerLib}\' " +\n
+        "target=\'_blank\'>点击这里</a>",\n
+\n
+    \'Scale = 1 : ${scaleDenom}\': "比例尺 = 1 : ${scaleDenom}",\n
+\n
+    // console message\n
+    \'reprojectDeprecated\':\n
+        "你正在使用 ${layerName} 图层上的\'reproject\'选项。" +\n
+        "这个选项已经不再使用：" +\n
+        "它是被设计用来支持显示商业的地图数据，" + \n
+        "不过现在该功能可以通过使用Spherical Mercator来实现。" +\n
+        "更多信息可以参阅" +\n
+        "http://trac.openlayers.org/wiki/SphericalMercator.",\n
+\n
+    // console message\n
+    \'methodDeprecated\':\n
+        "该方法已经不再被支持，并且将在3.0中被移除。" +\n
+        "请使用 ${newMethod} 方法来替代。",\n
+\n
+    \'end\': \'\'\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3129</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

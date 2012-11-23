@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts53684100.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>v2_0_2.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Copyright (c) 2006-2012 by OpenLayers Contributors (see authors.txt for \n
+ * full list of contributors). Published under the 2-clause BSD license.\n
+ * See license.txt in the OpenLayers distribution or repository for the\n
+ * full text of the license. */\n
+\n
+/**\n
+ * @requires OpenLayers/Format/XML.js\n
+ * @requires OpenLayers/Format/CSWGetDomain.js\n
+ */\n
+\n
+/**\n
+ * Class: OpenLayers.Format.CSWGetDomain.v2_0_2\n
+ *     A format for creating CSWGetDomain v2.0.2 transactions. \n
+ *     Create a new instance with the\n
+ *     <OpenLayers.Format.CSWGetDomain.v2_0_2> constructor.\n
+ *\n
+ * Inherits from:\n
+ *  - <OpenLayers.Format.XML>\n
+ */\n
+OpenLayers.Format.CSWGetDomain.v2_0_2 = OpenLayers.Class(OpenLayers.Format.XML, {\n
+    \n
+    /**\n
+     * Property: namespaces\n
+     * {Object} Mapping of namespace aliases to namespace URIs.\n
+     */\n
+    namespaces: {\n
+        xlink: "http://www.w3.org/1999/xlink",\n
+        xsi: "http://www.w3.org/2001/XMLSchema-instance",\n
+        csw: "http://www.opengis.net/cat/csw/2.0.2"\n
+    },\n
+\n
+    /**\n
+     * Property: defaultPrefix\n
+     * {String} The default prefix (used by Format.XML).\n
+     */\n
+    defaultPrefix: "csw",\n
+    \n
+    /**\n
+     * Property: version\n
+     * {String} CSW version number.\n
+     */\n
+    version: "2.0.2",\n
+    \n
+    /**\n
+     * Property: schemaLocation\n
+     * {String} http://www.opengis.net/cat/csw/2.0.2\n
+     *   http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd\n
+     */\n
+    schemaLocation: "http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd",\n
+\n
+    /**\n
+     * APIProperty: PropertyName\n
+     * {String} Value of the csw:PropertyName element, used when\n
+     *     writing a GetDomain document.\n
+     */\n
+    PropertyName: null,\n
+\n
+    /**\n
+     * APIProperty: ParameterName\n
+     * {String} Value of the csw:ParameterName element, used when\n
+     *     writing a GetDomain document.\n
+     */\n
+    ParameterName: null,\n
+    \n
+    /**\n
+     * Constructor: OpenLayers.Format.CSWGetDomain.v2_0_2\n
+     * A class for parsing and generating CSWGetDomain v2.0.2 transactions.\n
+     *\n
+     * Parameters:\n
+     * options - {Object} Optional object whose properties will be set on the\n
+     *     instance.\n
+     *\n
+     * Valid options properties:\n
+     * - PropertyName\n
+     * - ParameterName\n
+     */\n
+\n
+    /**\n
+     * APIMethod: read\n
+     * Parse the response from a GetDomain request.\n
+     */\n
+    read: function(data) {\n
+        if(typeof data == "string") { \n
+            data = OpenLayers.Format.XML.prototype.read.apply(this, [data]);\n
+        }\n
+        if(data && data.nodeType == 9) {\n
+            data = data.documentElement;\n
+        }\n
+        var obj = {};\n
+        this.readNode(data, obj);\n
+        return obj;\n
+    },\n
+    \n
+    /**\n
+     * Property: readers\n
+     * Contains public functions, grouped by namespace prefix, that will\n
+     *     be applied when a namespaced node is found matching the function\n
+     *     name.  The function will be applied in the scope of this parser\n
+     *     with two arguments: the node being read and a context object passed\n
+     *     from the parent.\n
+     */\n
+    readers: {\n
+        "csw": {\n
+            "GetDomainResponse": function(node, obj) {\n
+                this.readChildNodes(node, obj);\n
+            },\n
+            "DomainValues": function(node, obj) {\n
+                if (!(OpenLayers.Util.isArray(obj.DomainValues))) {\n
+                    obj.DomainValues = [];\n
+                }\n
+                var attrs = node.attributes;\n
+                var domainValue = {};\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    domainValue[attrs[i].name] = attrs[i].nodeValue;\n
+                }\n
+                this.readChildNodes(node, domainValue);\n
+                obj.DomainValues.push(domainValue);\n
+            },\n
+            "PropertyName": function(node, obj) {\n
+                obj.PropertyName = this.getChildValue(node);\n
+            },\n
+            "ParameterName": function(node, obj) {\n
+                obj.ParameterName = this.getChildValue(node);\n
+            },\n
+            "ListOfValues": function(node, obj) {\n
+                if (!(OpenLayers.Util.isArray(obj.ListOfValues))) {\n
+                    obj.ListOfValues = [];\n
+                }\n
+                this.readChildNodes(node, obj.ListOfValues);\n
+            },\n
+            "Value": function(node, obj) {\n
+                var attrs = node.attributes;\n
+                var value = {};\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    value[attrs[i].name] = attrs[i].nodeValue;\n
+                }\n
+                value.value = this.getChildValue(node);\n
+                obj.push({Value: value});\n
+            },\n
+            "ConceptualScheme": function(node, obj) {\n
+                obj.ConceptualScheme = {};\n
+                this.readChildNodes(node, obj.ConceptualScheme);\n
+            },\n
+            "Name": function(node, obj) {\n
+                obj.Name = this.getChildValue(node);\n
+            },\n
+            "Document": function(node, obj) {\n
+                obj.Document = this.getChildValue(node);\n
+            },\n
+            "Authority": function(node, obj) {\n
+                obj.Authority = this.getChildValue(node);\n
+            },\n
+            "RangeOfValues": function(node, obj) {\n
+                obj.RangeOfValues = {};\n
+                this.readChildNodes(node, obj.RangeOfValues);\n
+            },\n
+            "MinValue": function(node, obj) {\n
+                var attrs = node.attributes;\n
+                var value = {};\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    value[attrs[i].name] = attrs[i].nodeValue;\n
+                }\n
+                value.value = this.getChildValue(node);\n
+                obj.MinValue = value;\n
+            },\n
+            "MaxValue": function(node, obj) {\n
+                var attrs = node.attributes;\n
+                var value = {};\n
+                for(var i=0, len=attrs.length; i<len; ++i) {\n
+                    value[attrs[i].name] = attrs[i].nodeValue;\n
+                }\n
+                value.value = this.getChildValue(node);\n
+                obj.MaxValue = value;\n
+            }\n
+        }\n
+    },\n
+    \n
+    /**\n
+     * APIMethod: write\n
+     * Given an configuration js object, write a CSWGetDomain request. \n
+     *\n
+     * Parameters:\n
+     * options - {Object} A object mapping the request.\n
+     *\n
+     * Returns:\n
+     * {String} A serialized CSWGetDomain request.\n
+     */\n
+    write: function(options) {\n
+        var node = this.writeNode("csw:GetDomain", options);\n
+        return OpenLayers.Format.XML.prototype.write.apply(this, [node]);\n
+    },\n
+\n
+    /**\n
+     * Property: writers\n
+     * As a compliment to the readers property, this structure contains public\n
+     *     writing functions grouped by namespace alias and named like the\n
+     *     node names they produce.\n
+     */\n
+    writers: {\n
+        "csw": {\n
+            "GetDomain": function(options) {\n
+                var node = this.createElementNSPlus("csw:GetDomain", {\n
+                    attributes: {\n
+                        service: "CSW",\n
+                        version: this.version\n
+                    }\n
+                });\n
+                if (options.PropertyName || this.PropertyName) {\n
+                    this.writeNode(\n
+                        "csw:PropertyName",\n
+                        options.PropertyName || this.PropertyName,\n
+                        node\n
+                    );\n
+                } else if (options.ParameterName || this.ParameterName) {\n
+                    this.writeNode(\n
+                        "csw:ParameterName",\n
+                        options.ParameterName || this.ParameterName,\n
+                        node\n
+                    );\n
+                }\n
+                this.readChildNodes(node, options);\n
+                return node;\n
+            },\n
+            "PropertyName": function(value) {\n
+                var node = this.createElementNSPlus("csw:PropertyName", {\n
+                    value: value\n
+                });\n
+                return node;\n
+            },\n
+            "ParameterName": function(value) {\n
+                var node = this.createElementNSPlus("csw:ParameterName", {\n
+                    value: value\n
+                });\n
+                return node;\n
+            }\n
+        }\n
+    },\n
+   \n
+    CLASS_NAME: "OpenLayers.Format.CSWGetDomain.v2_0_2" \n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8222</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
