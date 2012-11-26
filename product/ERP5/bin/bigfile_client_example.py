@@ -17,7 +17,7 @@ headers = {
     'Authorization': 'Basic %s' % base64string,
     }
 connection.request('POST', "/erp5/portal_contributions/newContent?" \
-                           "portal_type=Video&filename=input_file.webm&container_path=video_module&data=", "", headers)
+                           "portal_type=Big%20File&filename=input_file.webm&container_path=big_file_module&data=", "", headers)
 result = connection.getresponse()
 path = result.getheader("X-Document-Location")
 result.close()
