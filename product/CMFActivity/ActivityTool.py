@@ -1375,18 +1375,19 @@ class ActivityTool (Folder, UniqueObject):
               self.absolute_url(), message))
 
     security.declarePublic('getMessageList')
-    def getMessageList(self,**kw):
+    def getMessageList(self, activity=None, **kw):
       """
         List messages waiting in queues
       """
       # Initialize if needed
       if not is_initialized:
         self.initialize()
-
+      if activity:
+        return activity_dict[activity].getMessageList(aq_inner(self), **kw)
       message_list = []
       for activity in activity_dict.itervalues():
         try:
-          message_list += activity.getMessageList(aq_inner(self),**kw)
+          message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list

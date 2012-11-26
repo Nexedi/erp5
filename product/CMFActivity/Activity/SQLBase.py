@@ -28,6 +28,8 @@
 
 import sys
 import transaction
+from DateTime import DateTime
+from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
@@ -39,10 +41,43 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
 from Queue import Queue, VALIDATION_ERROR_DELAY
 
 def sort_message_key(message):
-  # same sort key as in SQL{Dict,Queue}_readMessageList
+  # same sort key as in SQLBase.getMessageList
   return message.line.priority, message.line.date, message.uid
 
 _DequeueMessageException = Exception()
+
+# sqltest_dict ({'condition_name': <render_function>}) defines how to render
+# condition statements in the SQL query used by SQLBase.getMessageList
+def sqltest_dict():
+  sqltest_dict = {}
+  no_quote_type = int, float, long
+  def _(name, column=None, op="="):
+    if column is None:
+      column = name
+    column_op = "%s %s " % (column, op)
+    def render(value, render_string):
+      if value is None: # XXX: see comment in SQLBase._getMessageList
+        assert op == '='
+        return column + " IS NULL"
+      if isinstance(value, no_quote_type):
+        return column_op + str(value)
+      if isinstance(value, DateTime):
+        value = value.toZone('UTC').ISO()
+      assert isinstance(value, basestring), value
+      return column_op + render_string(value)
+    sqltest_dict[name] = render
+  _('active_process_uid')
+  _('group_method_id')
+  _('method_id')
+  _('path')
+  _('processing')
+  _('processing_node')
+  _('serialization_tag')
+  _('tag')
+  _('to_date', column="date", op="<=")
+  _('uid')
+  return sqltest_dict
+sqltest_dict = sqltest_dict()
 
 class SQLBase(Queue):
   """
@@ -60,26 +95,33 @@ class SQLBase(Queue):
     assert len(result[0]) == 1
     return result[0][0]
 
-  def getMessageList(self, activity_tool, processing_node=None,
-                     include_processing=0, **kw):
-    # YO: reading all lines might cause a deadlock
+  def _getMessageList(self, activity_tool, offset=0, count=1000, src__=0, **kw):
+    # XXX: Because most columns have NOT NULL constraint, conditions with None
+    #      value should be ignored, instead of trying to render them
+    #      (with comparisons with NULL).
+    sql_connection = activity_tool.getPortalObject().cmf_activity_sql_connection
+    q = sql_connection.sql_quote__
+    if offset:
+      limit = '\nLIMIT %d,%d' % (offset, sys.maxint if count is None else count)
+    else:
+      limit = '' if count is None else '\nLIMIT %d' % count
+    sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
+    sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
+      self.sql_table, sql and '\nWHERE ' + sql, limit)
+    return sql if src__ else Results(sql_connection().query(sql, max_rows=0))
+
+  def getMessageList(self, *args, **kw):
+    result = self._getMessageList(*args, **kw)
+    if type(result) is str: # src__ == 1
+      return result,
     class_name = self.__class__.__name__
-    readMessageList = getattr(activity_tool,
-                              class_name + '_readMessageList',
-                              None)
-    if readMessageList is None:
-      return []
     return [self.loadMessage(line.message,
                              activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
                              retry=line.retry,
                              processing=line.processing)
-            for line in readMessageList(path=None,
-                                        method_id=None,
-                                        processing_node=processing_node,
-                                        to_date=None,
-                                        include_processing=include_processing)]
+      for line in result]
 
   def _getPriority(self, activity_tool, method, default):
     result = method()

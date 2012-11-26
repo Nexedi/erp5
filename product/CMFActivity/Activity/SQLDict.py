@@ -211,8 +211,8 @@ class SQLDict(SQLBase):
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))
     method_dict = {}
-    readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
-    if readMessageList is not None:
+    readUidList = getattr(activity_tool, 'SQLDict_readUidList', None)
+    if readUidList is not None:
       # Parse each message in registered
       for m in activity_tool.getRegisteredMessageList(self):
         if m.object_path == object_path and (method_id is None or method_id == m.method_id):
@@ -237,8 +237,8 @@ class SQLDict(SQLBase):
                     'Could not validate %s on %s' % (m.method_id , path))
           activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL dict
-      result = readMessageList(path=path, method_id=method_id,
-                               processing_node=None,include_processing=0, to_date=None)
+      result = self._getMessageList(activity_tool, processing=0, path=path,
+        **({'method_id': method_id} if method_id else {}))
       for line in result:
         path = line.path
         line_method_id = line.method_id
@@ -270,8 +270,7 @@ class SQLDict(SQLBase):
                   'Could not validate %s on %s' % (m.method_id , path))
 
       if result:
-        uid_list = activity_tool.SQLDict_readUidList(
-          path=path, method_id=method_id)
+        uid_list = readUidList(path=path, method_id=method_id)
         if uid_list:
           activity_tool.SQLBase_delMessage(table=self.sql_table,
                                            uid=[x.uid for x in uid_list])
@@ -289,14 +288,14 @@ class SQLDict(SQLBase):
 
   def distribute(self, activity_tool, node_count):
     offset = 0
-    readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
-    if readMessageList is not None:
+    assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
+    if assignMessage is not None:
       now_date = self.getNow(activity_tool)
       validated_count = 0
       while 1:
-        result = readMessageList(path=None, method_id=None, processing_node=-1,
-                                 to_date=now_date, include_processing=0,
-                                 offset=offset, count=READ_MESSAGE_LIMIT)
+        result = self._getMessageList(activity_tool, processing_node=-1,
+                                      to_date=now_date, processing=0,
+                                      offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
         transaction.commit()
@@ -355,7 +354,7 @@ class SQLDict(SQLBase):
                                              uid=deletable_uid_list)
           distributable_count = len(distributable_uid_set)
           if distributable_count:
-            activity_tool.SQLBase_assignMessage(table=self.sql_table,
+            assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
             validated_count += distributable_count
             if validated_count >= MAX_VALIDATED_LIMIT:
