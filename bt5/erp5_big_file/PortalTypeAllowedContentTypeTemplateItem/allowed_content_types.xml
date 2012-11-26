@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Big File Module">
+  <item>Big File</item>
+ </portal_type>
+ <portal_type id="Contribution Tool">
+  <item>Big File</item>
+ </portal_type>
+</allowed_content_type_list>

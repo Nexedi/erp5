@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Big File</type>
+  <workflow>document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>
