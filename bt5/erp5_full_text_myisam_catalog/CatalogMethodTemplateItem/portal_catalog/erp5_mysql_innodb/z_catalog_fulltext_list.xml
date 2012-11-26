@@ -55,20 +55,31 @@ SearchableText</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-REPLACE INTO\n
+DELETE FROM\n
+  full_text\n
+WHERE\n
+<dtml-in uid>\n
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+<dtml-var "\'\\0\'"><dtml-let document_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "SearchableText[loop_item]">\n
+      <dtml-call expr="document_list.append(loop_item)">\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if expr="_.len(document_list) > 0">\n
+INSERT INTO\n
   full_text\n
 VALUES\n
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-(\n
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,  \n
+    <dtml-in prefix="loop" expr="document_list">\n
+( \n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="SearchableText[loop_item]" type="string" optional>\n
-)\n
-<dtml-if sequence-end>\n
-<dtml-else>\n
-,\n
-</dtml-if>\n
-</dtml-in>\n
-
+)<dtml-unless sequence-end>,</dtml-unless>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>
 
 ]]></string> </value>
         </item>
