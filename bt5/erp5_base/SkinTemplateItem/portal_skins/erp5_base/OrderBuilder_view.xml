@@ -97,6 +97,7 @@
                         <string>my_simulation_select_method_id</string>
                         <string>my_delivery_cell_separate_order_list</string>
                         <string>my_delivery_module_before_building_script_id</string>
+                        <string>my_delivery_select_method_id</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +110,7 @@
                         <string>my_delivery_line_portal_type</string>
                         <string>my_delivery_cell_portal_type</string>
                         <string>my_delivery_after_generation_script_id</string>
+                        <string>my_delivery_creatable</string>
                       </list>
                     </value>
                 </item>
