@@ -23,7 +23,8 @@ sys.path.extend([
 
 from erp5.util.testnode.testnode import TestNode
 from erp5.util.testnode.testnode import SlapOSInstance
-from erp5.util.testnode.ProcessManager import ProcessManager
+from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
+
 from erp5.util.testnode.SlapOSControler import SlapOSControler
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TaskDistributionTool
@@ -78,12 +79,12 @@ class ERP5TestNode(TestCase):
     config["test_node_title"] = "Foo-Test-Node"
     return TestNode(log, config)
 
-  def getTestSuiteData(self, add_third_repository=False):
+  def getTestSuiteData(self, add_third_repository=False, reference="foo"):
     data = [{
        "test_suite": "Foo",
-       "project_title": "Foo",
+       "project_title": reference,
        "test_suite_title": "Foo-Test",
-       "test_suite_reference": "foo",
+       "test_suite_reference": reference,
        "vcs_repository_list": [
             {'url': self.remote_repository0,
              'profile_path': 'software.cfg',
@@ -275,7 +276,7 @@ branch = foo
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
 
-  def test_07_checkOldTestSuite(self):
+  def test_07_checkExistingTestSuite(self):
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
@@ -313,68 +314,90 @@ branch = foo
     Check parameters passed to runTestSuite
     Also make sure that --firefox_bin and --xvfb_bin are passed when needed
     """
-    def _createPath(path_to_create, end_path):
-      os.makedirs(path_to_create)
-      return os.close(os.open(os.path.join(path_to_create,
-                               end_path),os.O_CREAT))
-    def get_parameters(self, *args, **kw):
-      call_parameter_list.append({'args': [x for x in args], 'kw':kw})
-    def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
-     if '--firefox_bin' and '--xvfb_bin' in parameter_list:
-       return set(['--firefox_bin','--xvfb_bin'])
-     else:
-       return []
-    test_node = self.getTestNode()
-    test_node.slapos_controler = SlapOSControler(self.working_directory,
-                                             test_node.config,test_node.log)
-    node_test_suite = test_node.getNodeTestSuite('foo')
-    self.updateNodeTestSuiteData(node_test_suite)
-    node_test_suite.revision = 'dummy'
-    run_test_suite_path = _createPath(
-        os.path.join(test_node.slapos_controler.instance_root,'a/bin'),'runTestSuite')
-    def checkRunTestSuiteParameters(additional_parameter_list=None):
-      ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
-      ProcessManager.spawn = get_parameters
-      test_node.runTestSuite(node_test_suite,"http://foo.bar")
-      expected_parameter_list = ['%s/a/bin/runTestSuite'
-           %(test_node.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
-           'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
-           'http://foo.bar']
-      if additional_parameter_list:
-        expected_parameter_list.extend(additional_parameter_list)
-      self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
-    call_parameter_list = []
-    checkRunTestSuiteParameters()
-    _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
-    _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/xserver/bin'),'Xvfb')
-    call_parameter_list = []
-    checkRunTestSuiteParameters(additional_parameter_list=['--firefox_bin',
-      '%s/soft/a/parts/firefox/firefox-slapos'
-       %(test_node.config['slapos_directory']),
-      '--xvfb_bin',
-      '%s/soft/a/parts/xserver/bin/Xvfb'
-        %(test_node.config['slapos_directory'])])
+    original_getSupportedParameter = ProcessManager.getSupportedParameterSet
+    original_spawn = ProcessManager.spawn
+    try:
+      def _createPath(path_to_create, end_path):
+        os.makedirs(path_to_create)
+        return os.close(os.open(os.path.join(path_to_create,
+                                 end_path),os.O_CREAT))
+      def get_parameters(self, *args, **kw):
+        call_parameter_list.append({'args': [x for x in args], 'kw':kw})
+      def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
+       if '--firefox_bin' and '--xvfb_bin' in parameter_list:
+         return set(['--firefox_bin','--xvfb_bin'])
+       else:
+         return []
+      test_node = self.getTestNode()
+      test_node.slapos_controler = SlapOSControler(self.working_directory,
+                                               test_node.config)
+      node_test_suite = test_node.getNodeTestSuite('foo')
+      self.updateNodeTestSuiteData(node_test_suite)
+      node_test_suite.revision = 'dummy'
+      run_test_suite_path = _createPath(
+          os.path.join(test_node.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+      def checkRunTestSuiteParameters(additional_parameter_list=None):
+        ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
+        ProcessManager.spawn = get_parameters
+        test_node.runTestSuite(node_test_suite,"http://foo.bar")
+        expected_parameter_list = ['%s/a/bin/runTestSuite'
+             %(test_node.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
+             'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
+             'http://foo.bar']
+        if additional_parameter_list:
+          expected_parameter_list.extend(additional_parameter_list)
+        self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
+      call_parameter_list = []
+      checkRunTestSuiteParameters()
+      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
+      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/xserver/bin'),'Xvfb')
+      call_parameter_list = []
+      checkRunTestSuiteParameters(additional_parameter_list=['--firefox_bin',
+        '%s/soft/a/parts/firefox/firefox-slapos'
+         %(test_node.config['slapos_directory']),
+        '--xvfb_bin',
+        '%s/soft/a/parts/xserver/bin/Xvfb'
+          %(test_node.config['slapos_directory'])])
+    finally:
+      ProcessManager.getSupportedParameterSet   = original_getSupportedParameter
+      ProcessManager.spawn = original_spawn
 
   def test_10_prepareSlapOS(self):
-    def patch_initializeSlapOSControler(self, *args, **kw):
-      pass
     test_node = self.getTestNode()
     test_node_slapos = SlapOSInstance()
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
     status_dict = {"status_code" : 0}
-    def patch_run(self, *args,**kw):
-      return status_dict
-    SlapOSControler.initializeSlapOSControler = patch_initializeSlapOSControler
-    SlapOSControler.runSoftwareRelease = patch_run
-    SlapOSControler.runComputerPartition = patch_run
+    global call_list
+    call_list = []
+    class Patch:
+      def __init__(self, method_name, status_code=0):
+        self.method_name = method_name
+        self.status_code = status_code
+      def __call__(self, *args, **kw):
+        global call_list
+        call_list.append({"method_name": self.method_name,
+                         "args": [x for x in args],
+                          "kw": kw})
+        return {"status_code": self.status_code}
+    SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
+    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
+    SlapOSControler.runComputerPartition = Patch("runComputerPartition")
     test_node.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEqual(status_dict,{'status_code':0})
+    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease"],
+                      [x["method_name"] for x in call_list])
+    call_list = []
     test_node.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEqual(status_dict,{'status_code':0})
+    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease",
+                       "runComputerPartition"],
+                      [x["method_name"] for x in call_list])
+    call_list = []
+    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
+    self.assertRaises(SubprocessError, test_node.prepareSlapOSForTestSuite,
+                     node_test_suite)
 
   def test_11_run(self):
-    def patch_function(self, *args, **kw):
+    def doNothing(self, *args, **kw):
         pass
     def patch_killPrevious():
         pass
@@ -385,29 +408,74 @@ branch = foo
     counter = 0
     def patch_startTestSuite(self,test_node_title):
       global counter
-      if counter == 2:
-       raise StopIteration
-      counter += 1
       config_list = []
-      config_list.append(test_self.getTestSuiteData()[0])
-      config_list.append(test_self.getTestSuiteData(add_third_repository=True)[0])
+      def _checkExistingTestSuite(reference_set):
+        test_self.assertEquals(set(reference_set),
+                    set(os.listdir(test_node.config["working_directory"])))
+        for x in reference_set:
+          test_self.assertTrue(os.path.exists(os.path.join(
+                               test_node.config["working_directory"],x)),True)
+      if counter == 0:
+        config_list.append(test_self.getTestSuiteData()[0])
+        config_list.append(test_self.getTestSuiteData(reference='bar')[0])
+      elif counter == 1:
+        _checkExistingTestSuite(set(['foo']))
+        config_list.append(test_self.getTestSuiteData(reference='bar')[0])
+        config_list.append(test_self.getTestSuiteData()[0])
+      elif counter == 2:
+        _checkExistingTestSuite(set(['foo','bar']))
+        config_list.append(test_self.getTestSuiteData()[0])
+        config_list.append(test_self.getTestSuiteData(reference='qux')[0])
+      elif counter == 3:
+        _checkExistingTestSuite(set(['foo','qux']))
+        test_node.process_manager.under_cancellation = True
+        config_list.append(test_self.getTestSuiteData(reference='foox')[0])
+      elif counter == 4:
+        test_node.process_manager.under_cancellation = False
+        config_list.append(test_self.getTestSuiteData(reference='bax')[0])
+      elif counter == 5:
+        _checkExistingTestSuite(set(['bax']))
+        raise StopIteration
+      counter += 1
       return json.dumps(config_list)
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
-      test_result_path = os.path.join(test_result_path_root, test_title)
-      result =  TestResultProxy(self._proxy, self._retry_time,
+      global counter
+      if counter == 3 and project_title != 'qux':
+        result = None
+      else:
+        test_result_path = os.path.join(test_result_path_root, test_title)
+        result =  TestResultProxy(self._proxy, self._retry_time,
                 self._logger, test_result_path, node_title, revision)
       return result
-    time.sleep = patch_function
+    original_sleep = time.sleep
+    time.sleep = doNothing
     self.generateTestRepositoryList()
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
-    test_node._prepareSlapOS = patch_function
-    test_node.runTestSuite = patch_function
-    SlapOSControler.initializeSlapOSControler = patch_function
+    test_node._prepareSlapOS = doNothing
+    test_node.runTestSuite = doNothing
+    SlapOSControler.initializeSlapOSControler = doNothing
     test_node.process_manager.killPreviousRun = patch_killPrevious
     try:
       test_node.run()
     except Exception as e:
       self.assertEqual(type(e),StopIteration)
+    finally:
+      time.sleep = original_sleep
+
+  def test_12_spawn(self):
+    def _log(*args,**kw):
+      for arg in args:
+        print "TESTNODE LOG : %r" % (arg,)
+    def _checkCorrectStatus(expected_status,*args):
+      result = process_manager.spawn(*args)
+      self.assertEqual(result['status_code'], expected_status)
+    def patch_sleep(n):
+      subprocess.check_call(["sleep", n/10000])
+    original_sleep = time.sleep
+    process_manager = ProcessManager(log=_log)
+    _checkCorrectStatus(0, *['sleep','3'])
+    _checkCorrectStatus(-15, *['sleep','8'])
+    time.sleep = original_sleep

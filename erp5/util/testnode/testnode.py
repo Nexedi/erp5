@@ -257,7 +257,7 @@ branch = %(branch)s
     We will build slapos software needed by the testnode itself,
     like the building of selenium-runner by default
     """
-    self._prepareSlapOS(self.config['slapos_directory'],
+    return self._prepareSlapOS(self.config['slapos_directory'],
               test_node_slapos, create_partition=0,
               software_path_list=self.config.get("software_list"))
 
