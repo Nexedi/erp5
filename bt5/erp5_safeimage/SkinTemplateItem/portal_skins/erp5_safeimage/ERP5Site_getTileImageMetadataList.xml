@@ -51,12 +51,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>import json\n
-\n
+portal = context.getPortalObject()\n
 context.REQUEST.response.setHeader(\'Access-Control-Allow-Origin\', \'*\')\n
+print portal.portal_catalog(portal_type="Image Title", src__=1)\n
+#return printed\n
 data = {}\n
 data["image_list"] = []\n
 image_list = data["image_list"]\n
-for tile_image in context.portal_catalog(portal_type="Image Tile"):\n
+for tile_image in portal.portal_catalog(portal_type="Image Tile"):\n
   title = tile_image.getTitle() \n
   id =  tile_image.getId()\n
   image_list.append({"title":title, "id": id})\n
@@ -79,6 +81,14 @@ return json.dumps(data)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getTileImageMetadataList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple>
+                <string>Prints, but never reads \'printed\' variable.</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>
