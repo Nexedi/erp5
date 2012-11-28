@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>__ac_roles__</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+                <string>Anonymous</string>
+                <string>Authenticated</string>
+                <string>Associate</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_local_properties</string> </key>
             <value>
               <tuple>
