@@ -30,6 +30,9 @@ import subprocess
 import threading
 import signal
 import sys
+import time
+
+MAX_TIMEOUT = 5
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
@@ -38,6 +41,12 @@ class SubprocessError(EnvironmentError):
     return self.status_dict[name]
   def __str__(self):
     return 'Error %i' % self.status_code
+
+class TimeoutError(EnvironmentError):
+  def __init__(self):
+    pass
+  def __str__(self):
+    return 'Timeout expired. Process killed'
 
 class CancellationError(EnvironmentError):
   pass
@@ -98,8 +107,16 @@ class ProcessManager(object):
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
     self.under_cancellation = False
+    self.p = None
+    self.result = None
 
   def spawn(self, *args, **kw):
+    def timeoutExpired(p):
+      time.sleep(MAX_TIMEOUT)
+      if p.poll() is None:
+        p.terminate()
+        raise TimeoutError
+
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
     get_output = kw.pop('get_output', True)
@@ -120,6 +137,8 @@ class ProcessManager(object):
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env, **subprocess_kw)
     self.process_pid_set.add(p.pid)
+    thread = threading.Thread(target=timeoutExpired, args=(p,))
+    thread.start()
     stdout, stderr = subprocess_capture(p, self.log, log_prefix,
                                         get_output=get_output)
     result = dict(status_code=p.returncode, command=command,
@@ -127,7 +146,7 @@ class ProcessManager(object):
     self.process_pid_set.discard(p.pid)
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
-    if raise_error_if_fail and p.returncode:
+    if raise_error_if_fail and p.returncode != -15 and p.returncode:
       raise SubprocessError(result)
     return result
 
