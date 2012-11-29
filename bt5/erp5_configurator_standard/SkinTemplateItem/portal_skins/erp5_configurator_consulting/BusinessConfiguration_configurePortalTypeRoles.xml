@@ -65,7 +65,6 @@ configuration_save.addConfigurationItem("Permission Configurator Item",\n
 \n
 # Create ERP5Site_getSecurityCategoryMapping\n
 configuration_save.addConfigurationItem("Security Category Mapping Configurator Item")\n
-
 </string> </value>
         </item>
         <item>

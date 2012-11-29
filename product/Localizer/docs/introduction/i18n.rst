@@ -1,0 +1,81 @@
+Internationalization and localization
+=====================================
+
+Software needs to be adapted to the local conditions. For example, a word
+processor has labels, menus and buttons that need to be translated, the dates
+must be shown in the rigth locale format, the help system and any other text
+must be available in the user's language. The software industry has faced this
+problem for years, I've tried to learn from other's experience to provide Zope
+users a solution for their needs. The name of this solution is Localizer.
+
+
+To be multilingual
+------------------
+
+Imagine that you've developed an application, it provides a user interface
+with text for example in english. Then your application gets success and
+starts to be used in non-english speaking regions. These new users will begin
+to ask you about a version in their language. Then, how to do it?
+
+There're several approaches to solve this problem, you could for example fork
+the software and provide a version in english, another in spanish, etc.. This
+is the quickest solution as you won't need any special infrastructure to
+implement it, just fork. But, of course, fork is not an option, it would be
+too much work to keep the different versions in sync.
+
+The best you can do is to look at what other developers have already done for
+their software. Then you'll discover that this problem is addressed in two
+steps:
+
+* Internationalization (i18n)
+
+  The operation by which a program is made aware of and able to support
+  multiple languages. This is done once and forever.
+
+  Of course, you could write internationalized software since the begining.
+  You'll probably do it this way if you've already developed multilingual
+  software before.
+
+  In written language the **i18n** abbreviation is usually used for the term
+  internationalization. The letter **i** is the first letter of the term, the
+  letter **n** is the last letter of the term, **18** is the number of letters
+  between the **i** and the **n**.
+
+* Localization (l10n)
+
+  The operation by which, in a program already internationalized, one gives
+  the program all the needed information so that it can adapt itself to handle
+  its input and output in a fashion which is correct for some native language
+  and cultural habits. This is done once per language.
+
+  This information needs to be maintained to keep it updated in every version
+  of the software.
+
+  For the term localization the abbreviation **l10n** is used. I'm sure you
+  already know where the **l**, the **n** and the **10** come from.
+
+
+To localize
+-----------
+
+But this is not only about being multilingual, this is about adapting your
+software, your application, your web site to the local conditions of the
+users.
+
+For example, imagine you work for a company that sells computers in the U.S.A.
+and in the United Kingdom. The language of the both countries is english, you
+don't need to translate the text of the company's web site. But perhaps the
+company offers different computer models in each country, the contact address
+will probably be different too. This means that the web site will show
+different content for each market, you'll need to adapt it to the users local
+conditions.
+
+
+Continue reading please
+-----------------------
+
+In this introduction I've tried to answer the question : what
+internationalization and localization are about?. In the following sections
+we'll see the details of every concrete problem, at least the ones that for
+now Localizer address.
+

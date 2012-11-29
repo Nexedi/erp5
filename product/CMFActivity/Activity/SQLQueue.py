@@ -104,8 +104,8 @@ class SQLQueue(SQLBase):
     """
       object_path is a tuple
     """
-    readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
-    if readMessageList is not None:
+    delMessage = getattr(activity_tool, 'SQLBase_delMessage', None)
+    if delMessage is not None:
       #return # Do nothing here to precent overlocking
       path = '/'.join(object_path)
       # Parse each message in registered
@@ -129,7 +129,8 @@ class SQLQueue(SQLBase):
                   'Could not validate %s on %s' % (m.method_id , path))
           activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL queue
-      result = readMessageList(path=path, method_id=method_id, processing_node=None, to_date=None, include_processing=0)
+      result = self._getMessageList(activity_tool, processing=0, path=path,
+        **({'method_id': method_id} if method_id else {}))
       for line in result:
         path = line.path
         method_id = line.method_id
@@ -153,10 +154,8 @@ class SQLQueue(SQLBase):
           else:
             raise ActivityFlushError, (
                 'Could not validate %s on %s' % (m.method_id , path))
-
-      if len(result):
-        activity_tool.SQLBase_delMessage(table=self.sql_table,
-                                         uid=[line.uid for line in result])
+      if result:
+        delMessage(table=self.sql_table, uid=[line.uid for line in result])
 
   def countMessage(self, activity_tool, tag=None, path=None,
                    method_id=None, message_uid=None, **kw):
@@ -194,14 +193,14 @@ class SQLQueue(SQLBase):
 
   def distribute(self, activity_tool, node_count):
     offset = 0
-    readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
-    if readMessageList is not None:
+    assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
+    if assignMessage is not None:
       now_date = self.getNow(activity_tool)
       validated_count = 0
       while 1:
-        result = readMessageList(path=None, method_id=None, processing_node=-1,
-                                 to_date=now_date, include_processing=0,
-                                 offset=offset, count=READ_MESSAGE_LIMIT)
+        result = self._getMessageList(activity_tool, processing_node=-1,
+                                      to_date=now_date, processing=0,
+                                      offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
         transaction.commit()
@@ -236,7 +235,7 @@ class SQLQueue(SQLBase):
                 distributable_uid_set.add(message.uid)
           distributable_count = len(distributable_uid_set)
           if distributable_count:
-            activity_tool.SQLBase_assignMessage(table=self.sql_table,
+            assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
             validated_count += distributable_count
             if validated_count >= MAX_VALIDATED_LIMIT:

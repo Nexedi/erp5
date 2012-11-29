@@ -44,8 +44,6 @@ from Products.ERP5Type.patches import ActionInformation
 from Products.ERP5Type.patches import ActionProviderBase
 from Products.ERP5Type.patches import ActionsTool
 from Products.ERP5Type.patches import CookieCrumbler
-from Products.ERP5Type.patches import i18n
-from Products.ERP5Type.patches import Localizer
 from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
@@ -73,6 +71,8 @@ from Products.ERP5Type.patches import ExternalMethod
 from Products.ERP5Type.patches import User
 from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
+from Products.ERP5Type.patches import _transaction
+from Products.ERP5Type.patches import default_zpublisher_encoding
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager

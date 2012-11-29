@@ -1,3 +1,6 @@
+2012-07-17 Kazuhiko
+* do not use birthday property in Credential Request or Credential Update, because its storage is start_date and start_date has different meaning in these portal types.
+
 2012-04-27 Kazuhiko
 * use document_reference in Credential Recovery as the reference of nofitication message if exists.
 

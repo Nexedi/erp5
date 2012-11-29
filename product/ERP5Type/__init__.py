@@ -182,6 +182,7 @@ allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
 
 allow_module('Products.ERP5Type.Error')
+allow_module('Products.ERP5Type.Errors')
 allow_module('Products.ERP5Type.JSONEncoder')
 allow_module('Products.ERP5Type.Log')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')

@@ -36,15 +36,8 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
   """ This class allows to check different cases of Slae Order's sync. """
 
   def getBusinessTemplateList(self):
-    return testPrestashopMixin.getBusinessTemplateList(self) + ('erp5_accounting',
-                                                                'erp5_invoicing',
-                                                                'erp5_simplified_invoicing',
-                                                                'erp5_simulation',
-                                                                'erp5_simulation_legacy',
-                                                                'erp5_trade_simulation_legacy',
-                                                                'erp5_accounting_simulation_legacy',
-                                                                'erp5_invoicing_simulation_legacy',
-                                                                )
+    return testPrestashopMixin.getBusinessTemplateList(self) + (
+      'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing')
 
   def afterSetUp(self):
     """ This method is called after the SetUp method. """

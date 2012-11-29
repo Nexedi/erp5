@@ -22,7 +22,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transaction Group&local_roles=Assignor&validation_state=closed
+payment_transaction_group_module?validation_state=closed&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>

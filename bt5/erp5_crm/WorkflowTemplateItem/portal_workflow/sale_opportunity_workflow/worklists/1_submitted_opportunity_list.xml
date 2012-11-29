@@ -11,6 +11,10 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Submitted Sale Opportunities to Validate (%(count)s)</string> </value>
         </item>
@@ -18,7 +22,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_opportunity_module/view?simulation_state=submitted&local_roles=Assignor
+sale_opportunity_module?reset:int=1&simulation_state=submitted&local_roles=Assignor
 
 ]]></string> </value>
         </item>
@@ -47,10 +51,7 @@ sale_opportunity_module/view?simulation_state=submitted&local_roles=Assignor
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,10 +68,7 @@ sale_opportunity_module/view?simulation_state=submitted&local_roles=Assignor
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>

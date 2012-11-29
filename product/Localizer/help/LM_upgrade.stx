@@ -1,0 +1,12 @@
+Localizer - Upgrade LocalPropertyManager
+
+  Description
+
+    This view allows to upgrade an object when a new version of its class
+    has been installed that requires changes to the object.
+
+    This feature is specific to the Localizer product.
+
+  Controls
+
+    Upgrade -- Upgrades the object.

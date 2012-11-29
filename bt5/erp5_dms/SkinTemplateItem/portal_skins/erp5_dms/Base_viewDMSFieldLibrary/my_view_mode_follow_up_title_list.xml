@@ -186,7 +186,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:  map(lambda x: [x,x], here.getPortalNodeTypeList() + here.getPortalProjectTypeList() +  here.getPortalTicketTypeList() + here.getPortalDeliveryTypeList())</string> </value>
+            <value> <string>python:  map(lambda x: [x,x], here.getPortalNodeTypeList() + here.getPortalProjectTypeList() +  here.getPortalTicketTypeList() + here.getPortalDeliveryTypeList() + here.getPortalResourceTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

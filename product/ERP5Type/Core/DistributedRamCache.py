@@ -31,8 +31,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.mixin.cache_provider import CacheProviderMixIn
 
-class DistributedRamCache(XMLObject):
+class DistributedRamCache(CacheProviderMixIn, XMLObject):
   """
   DistributedRamCache is a Zope (persistent) representation of 
   the Distributed RAM Cache real cache plugin object.

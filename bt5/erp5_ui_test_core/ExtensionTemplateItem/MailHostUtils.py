@@ -26,14 +26,16 @@
 #
 ##############################################################################
 
+from ExtensionClass import pmc_init_of
 from Products.ERP5Type.tests.utils import DummyMailHost
 
 def setupDummyMailHost(self):
-  portal = self.getPortalObject()
-  # Replace MailHost by DummyMailHost
-  if 'MailHost' in portal.objectIds():
-    portal.manage_delObjects(['MailHost'])
-  portal._setObject('MailHost', DummyMailHost('MailHost'))
+  """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
+
+  Copied & pasted from ERP5TypeTestCaseMixin._setUpDummyMailHost
+  """
+  cls = self.getPortalObject().portal.MailHost.__class__
+  if not issubclass(cls, DummyMailHostMixin):
+    cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+    pmc_init_of(cls)
   return True
-  
-  

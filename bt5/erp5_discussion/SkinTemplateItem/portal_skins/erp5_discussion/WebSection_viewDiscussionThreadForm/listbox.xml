@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getDocumentValueList</string> </value>
+            <value> <string>WebSection_getDiscussionThreadList</string> </value>
         </item>
       </dictionary>
     </pickle>

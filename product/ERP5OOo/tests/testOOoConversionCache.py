@@ -265,19 +265,17 @@ class TestDocumentConversionCache(TestDocumentMixin):
     document.convert(**kw)
     cache_id = document._getCacheKey(**kw)
     cache_factory = document._getCacheFactory()
-    for cache_plugin in cache_factory.getCachePluginList():
-      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
-      data_dict = cache_entry.getValue()
-      #get data from cache
-      self.assertTrue(data_dict['content_md5'])
-      self.assertTrue(data_dict['conversion_md5'])
-      self.assertTrue(data_dict['mime'])
-      self.assertTrue(data_dict['data'])
-      self.assertTrue(data_dict['date'])
-      self.assertTrue(data_dict['size'])
-      #Change md5 manualy
-      data_dict['content_md5'] = 'Anything which is not md5'
-      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE, data_dict, 100, 0)
+    data_dict = cache_factory.get(cache_id)
+    #get data from cache
+    self.assertTrue(data_dict['content_md5'])
+    self.assertTrue(data_dict['conversion_md5'])
+    self.assertTrue(data_dict['mime'])
+    self.assertTrue(data_dict['data'])
+    self.assertTrue(data_dict['date'])
+    self.assertTrue(data_dict['size'])
+    #Change md5 manualy
+    data_dict['content_md5'] = 'Anything which is not md5'
+    cache_factory.set(cache_id, data_dict)
     self.commit()
     self.assertRaises(KeyError, document.getConversion, format='html')
 

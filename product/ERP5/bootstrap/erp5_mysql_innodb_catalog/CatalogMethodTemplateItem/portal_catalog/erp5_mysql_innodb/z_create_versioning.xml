@@ -41,7 +41,7 @@
   KEY `language` (`language`),\n
   KEY `subject_set_uid` (`subject_set_uid`),\n
   KEY `effective_date` (`effective_date`),\n
-  KEY `expiration_date` (`effective_date`),\n
+  KEY `expiration_date` (`expiration_date`),\n
   KEY `frequency_index` (`creation_date_index`, `frequency_index`)\n
 ) ENGINE=InnoDB;\n
 </string> </value>

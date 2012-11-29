@@ -59,9 +59,9 @@ class RamCache(BaseCache):
 
   cache_expire_check_interval = 300
 
-  def __init__(self, params={}):
+  def __init__(self, uid, params={}):
     self._cache_dict = {}
-    BaseCache.__init__(self)
+    BaseCache.__init__(self, uid)
 
   def initCacheStorage(self):
     """ Init cache storage """

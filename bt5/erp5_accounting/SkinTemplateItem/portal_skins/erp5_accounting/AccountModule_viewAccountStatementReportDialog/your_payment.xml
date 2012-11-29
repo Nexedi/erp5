@@ -284,7 +284,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.AccountModule_getBankAccountItemList( section_category=request.get(\'your_section_category\'), section_category_strict_membership=request.get(\'your_section_category_strict\'))</string> </value>
+            <value> <string>python: context.AccountModule_getBankAccountItemList( section_category=request.get(\'your_section_category\', request.get(\'field_your_section_category\', preferences.getPreferredAccountingTransactionSectionCategory())), section_category_strict_membership=request.get(\'your_section_category_strict\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

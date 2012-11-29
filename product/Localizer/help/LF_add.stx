@@ -1,0 +1,11 @@
+Localizer - Add Locale Folder
+
+  Description
+
+    This view allows to create a new Locale Folder.
+
+  Controls
+
+    Id --  The id of the Locale Folder, must be a language code.
+
+    Title -- The optional title for the Locale Folder.

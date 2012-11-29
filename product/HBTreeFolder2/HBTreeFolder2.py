@@ -358,6 +358,11 @@ class HBTreeFolder2Base (Persistent):
           return 0
         return 1
 
+    # Work around for the performance regression introduced in Zope 2.12.23.
+    # Otherwise, we use superclass' __contains__ implementation, which uses
+    # objectIds, which is inefficient in HBTreeFolder2 to lookup a single key.
+    __contains__ = has_key
+
     def _htree_iteritems(self, min=None):
         # BUG: Due to bad design of HBTreeFolder2, buckets other than the root
         #      one must not contain both buckets & leafs. Otherwise, this method

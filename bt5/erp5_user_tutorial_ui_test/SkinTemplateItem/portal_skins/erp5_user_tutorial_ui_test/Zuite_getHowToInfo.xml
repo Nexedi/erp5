@@ -97,6 +97,7 @@ return {\'now\': DateTime(),\n
         \'sale_howto_currency_title\': \'Euro\',\n
         \'sale_howto_currency_tag\': \'EUR\',\n
         \'sale_howto_product_reference\': \'ZUITE-TEST-SALEORDER-RL01\',\n
+        \'sale_howto_trade_condition_title\': \'ZUITE-TEST-SALE-TRADE-CONDITION-001\',\n
         \'campaign_howto_person_title\': \'ZUITE-TEST-CAMPAIGN-PERSON-SUPERVISOR\',\n
         \'campaign_howto_person2_title\': \'ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER\',\n
         \'campaign_howto_organisation_title\': \'ZUITE-TEST-CAMPAIGN-ORGANISATION-001\',\n

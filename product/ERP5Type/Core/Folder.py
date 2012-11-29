@@ -226,6 +226,22 @@ class FolderMixIn(ExtensionClass.Base):
     self._setLastId(my_id) # Make sure no reindexing happens
     return my_id
 
+  def _generatePerNodeNumberId(self):
+    """
+    Generate id base on node number, useful for import and mass creation
+    of objects inside a module using activities
+    We also append random id
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    node_list = list(activity_tool.getNodeList())
+    current_node = activity_tool.getCurrentNode()
+    try:
+      node_number = node_list.index(current_node)
+    except ValueError:
+      # Not a processing node
+      node_number = 111
+    return "%03d-%s" %(node_number, self._generateRandomId())
+
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
@@ -971,8 +987,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   def _setObject(self, *args, **kw):
     if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        HBTreeFolder2Base.__init__(self, self.id)
       return CMFHBTreeFolder._setObject(self, *args, **kw)
     else:
+      if self._tree is None:
+        BTreeFolder2Base.__init__(self, self.id)
       return CMFBTreeFolder._setObject(self, *args, **kw)
 
   def get(self, id, default=None):
@@ -1053,6 +1073,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return False
       return CMFBTreeFolder.hasObject(self, id)
+
+  # Work around for the performance regression introduced in Zope 2.12.23.
+  # Otherwise, we use superclass' __contains__ implementation, which uses
+  # objectIds, which is inefficient in HBTreeFolder2 to lookup a single key.
+  __contains__ = hasObject
 
   # Override Zope default by folder id generation
   def _get_id(self, id):
@@ -1266,10 +1291,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
-        (and its descendants).
     """
-    # In ERP5, simply reindex all objects.
-    self.recursiveReindexObject(*args, **kw)
+    # In ERP5, simply reindex all objects, recursively by default.
+    reindex = self._getTypeBasedMethod('reindexObjectSecurity',
+                                       'recursiveReindexObject')
+    reindex(*args, **kw)
 
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, activate_kw=None, **kw):

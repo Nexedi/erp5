@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
+from DateTime import DateTime
 import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
@@ -366,6 +367,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         last_name='Simpson',
         reference=credential_reference,
         password='secret',
+        date_of_birth=DateTime('1970/01/01'),
         default_email_text='homer.simpson@fox.com',
         role_list=['internal'],
         )
@@ -547,6 +549,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = person_module.newContent(title='Barney',
                              reference='barney',
                              password='secret',
+                             start_date=DateTime('1970/01/01'),
                              default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
@@ -843,6 +846,17 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepLogin(self, sequence):
     self.login()
 
+  def stepCheckPersonAfterSubscriptionRequest(self, sequence=None,
+      sequence_list=None, **kw):
+    self.login()
+    person = self.portal.portal_catalog.getResultValue(
+      reference=sequence["person_reference"], portal_type="Person")
+    self.assertEquals("Homer", person.getFirstName())
+    self.assertEquals("Simpson", person.getLastName())
+    self.assertEquals("homer.simpson@fox.com", person.getDefaultEmailText())
+    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
+    self.logout()
+
   def stepSetAuditorRoleToCurrentPerson(self, sequence=None,
       sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
@@ -859,6 +873,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals("tom", person.getFirstName())
     self.assertEquals("Simpson", person.getLastName())
     self.assertEquals("tom@host.com", person.getDefaultEmailText())
+    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
 
   def stepCheckPersonWhenCredentialUpdateFail(self, sequence=None,
       sequence_list=None, **kw):
@@ -1202,6 +1217,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_string = "CreateSimpleSubscriptionRequest Tic " \
            "SubmitSubscriptionRequest Tic " \
            "AcceptSubscriptionRequest Tic " \
+           "stepCheckPersonAfterSubscriptionRequest " \
            "SetAuditorRoleToCurrentPerson " \
            "SetAssigneeRoleToCurrentPersonInCredentialUpdateModule Tic " \
            "LoginAsCurrentPersonReference " \

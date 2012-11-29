@@ -166,10 +166,6 @@ class TaskDistributionTool(BaseTool):
       else:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))
-    else:
-      # Backward compatibility
-      project = portal.ERP5Site_getProjectFromTestSuite(name)
-      test_result.setSourceProjectValue(project)
     test_result.updateLocalRolesOnSecurityGroups() # XXX
     test_result_path = test_result.getRelativeUrl()
     self.test_result_dict[test_title] = test_result_path, line_dict
@@ -279,3 +275,12 @@ class TaskDistributionTool(BaseTool):
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
+
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  def getMemcachedDict(self):
+    """ Return a dictionary used for non persistent data related to distribution
+    """
+    portal = self.getPortalObject()
+    memcached_dict = portal.portal_memcached.getMemcachedDict(
+                            "task_distribution", "default_memcached_plugin")
+    return memcached_dict

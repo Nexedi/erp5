@@ -89,10 +89,10 @@
     \n
       <!--Form render goes here -->\n
       <div id="form_gadget"\n
-           tal:attributes="gadget string:${current_form_id}/Form_asRenderJSGadget;\n
-                           gadget:data-source string:Form_asJSON?form_id=${current_form_id};\n
-                           gadget:data-handler string:ERP5Form.update;\n
-                           gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${current_form_id}&quot;}">\n
+           tal:attributes="data-gadget string:${current_form_id}/Form_asRenderJSGadget;\n
+                           data-gadget:data-source string:Form_asJSON?form_id=${current_form_id};\n
+                           data-gadget:data-handler string:ERP5Form.update;\n
+                           data-gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${current_form_id}&quot;}">\n
       </div>\n
        \n
     </div>\n

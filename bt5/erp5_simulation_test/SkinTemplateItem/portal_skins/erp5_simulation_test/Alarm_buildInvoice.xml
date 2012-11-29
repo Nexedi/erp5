@@ -71,14 +71,21 @@ for builder_id in builder_id_list:\n
   serialization_tag    = \'build:%s\' % delivery_portal_type\n
   index_tag            = \'index:%s\' % delivery_portal_type\n
   after_tag            = index_tag\n
+  # depend on reindexing so that select methods\n
+  # do not return movements that are already built\n
   after_method_id      = (\'recursiveImmediateReindexObject\',\n
                           \'immediateReindexObject\',\n
-                          \'Delivery_updateAppliedRule\')\n
+                          \'_updateSimulation\')\n
   activate_kw          = dict(tag=index_tag)\n
   builder.activate(\n
+    tag=\'invoice_builder_alarm\',\n
     serialization_tag=serialization_tag,\n
     after_tag=after_tag,\n
     after_method_id=after_method_id).build(activate_kw=activate_kw)\n
+\n
+# add a dummy activity so alarm calling can detect we still have a pending activity\n
+# and do not start this script again before previous call is finished\n
+context.activate(after_tag=\'invoice_builder_alarm\').getId()\n
 </string> </value>
         </item>
         <item>

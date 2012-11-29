@@ -54,6 +54,7 @@ from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
+from zope.site.hooks import setSite
 
 try:
   from Products import iHotfix
@@ -306,6 +307,8 @@ class Message(BaseMessage):
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
                                    context=activity_tool)
           else:
+            # Store site info
+            setSite(activity_tool.getParentValue())
             if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
             else:
@@ -766,7 +769,7 @@ class ActivityTool (Folder, UniqueObject):
       nodes = self._nodes
       if isinstance(nodes, tuple):
         new_nodes = OIBTree()
-        new_nodes.update([(x, ROLE_PROCESSING) for x in self._nodes])
+        new_nodes.update([(x, ROLE_PROCESSING) for x in nodes])
         self._nodes = nodes = new_nodes
       return nodes
 
@@ -844,7 +847,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
       """ Change one or more idle nodes into processing nodes """
       if unused_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in unused_node_list:
           self.updateNode(node, ROLE_PROCESSING)
       if REQUEST is not None:
@@ -861,7 +863,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
       """ Change one or more procesing nodes into idle nodes """
       if processing_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in processing_node_list:
           self.updateNode(node, ROLE_IDLE)
       if REQUEST is not None:
@@ -1111,8 +1112,7 @@ class ActivityTool (Folder, UniqueObject):
         # runing unit tests. Recreate it if it does not exist.
         if getattr(request.other, 'PARENTS', None) is None:
           request.other['PARENTS'] = parents
-        # XXX: itools (used by Localizer) requires PATH_INFO to be set, and it's
-        # not when runing unit tests. Recreate it if it does not exist.
+        # XXX: PATH_INFO might not be set when runing unit tests.
         if request.environ.get('PATH_INFO') is None:
           request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
         
@@ -1375,18 +1375,19 @@ class ActivityTool (Folder, UniqueObject):
               self.absolute_url(), message))
 
     security.declarePublic('getMessageList')
-    def getMessageList(self,**kw):
+    def getMessageList(self, activity=None, **kw):
       """
         List messages waiting in queues
       """
       # Initialize if needed
       if not is_initialized:
         self.initialize()
-
+      if activity:
+        return activity_dict[activity].getMessageList(aq_inner(self), **kw)
       message_list = []
       for activity in activity_dict.itervalues():
         try:
-          message_list += activity.getMessageList(aq_inner(self),**kw)
+          message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list

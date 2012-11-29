@@ -38,11 +38,9 @@ del safe_builtins['list']
 add_builtins(Ellipsis=Ellipsis, NotImplemented=NotImplemented,
              dict=dict, list=list, set=set, frozenset=frozenset)
 
-add_builtins(classmethod=classmethod, object=object, property=property,
-             slice=slice, staticmethod=staticmethod, super=super, type=type)
-
-if sys.version_info >= (2, 6):
-    add_builtins(bin=bin, format=format)
+add_builtins(bin=bin, classmethod=classmethod, format=format, object=object,
+             property=property, slice=slice, staticmethod=staticmethod,
+             super=super, type=type)
 
 def guarded_next(iterator, default=_marker):
     """next(iterator[, default])
@@ -89,16 +87,6 @@ def get_iteritems(c, name):
     return lambda: SafeIterItems(c.iteritems(), c)
 _dict_white_list['iteritems'] = get_iteritems
 
-if sys.version_info < (2, 5):
-    # these are backported in Products.ERP5Type.patches.python
-    def guarded_any(seq):
-        return any(guarded_iter(seq))
-    safe_builtins['any'] = guarded_any
-
-    def guarded_all(seq):
-        return all(guarded_iter(seq))
-    safe_builtins['all'] = guarded_all
-
 def guarded_sorted(seq, cmp=None, key=None, reverse=False):
     if not isinstance(seq, SafeIter):
         for i, x in enumerate(seq):
@@ -109,6 +97,10 @@ safe_builtins['sorted'] = guarded_sorted
 def guarded_reversed(seq):
     return SafeIter(reversed(seq))
 safe_builtins['reversed'] = guarded_reversed
+
+def guarded_enumerate(seq, start=0):
+    return NullIter(enumerate(guarded_iter(seq), start=start))
+safe_builtins['enumerate'] = guarded_enumerate
 
 def get_set_pop(s, name):
     def guarded_pop():
@@ -193,3 +185,25 @@ ModuleSecurityInfo('os.path').declarePublic(
 # Also allow some handy data properties.
   'sep', 'pardir', 'curdir', 'extsep',
 )
+
+# Alias modules - only applied to restricted python.
+MNAME_MAP = {
+  'zipfile': 'Products.ERP5Type.ZipFile',
+}
+for alias, real in MNAME_MAP.items():
+  assert '.' not in alias, alias # TODO: support this
+  allow_module(real)
+del alias, real
+orig_guarded_import = safe_builtins['__import__']
+def guarded_import(mname, globals=None, locals=None, fromlist=None,
+    level=-1):
+  for fromname in fromlist or ():
+    if fromname[:1] == '_':
+      raise Unauthorized(fromname)
+  if mname in MNAME_MAP:
+    mname = MNAME_MAP[mname]
+    if not fromlist:
+      # fromlist value is meaningless but required. See __import__ doc.
+      fromlist = ['__name__']
+  return orig_guarded_import(mname, globals, locals, fromlist, level)
+safe_builtins['__import__'] = guarded_import

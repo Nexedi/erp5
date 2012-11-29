@@ -132,16 +132,51 @@ class SQLDict(SQLBase):
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
         m = self.loadMessage(line.message, uid=uid, line=line)
+        merge_parent = m.activity_kw.get('merge_parent')
         try:
-          result = activity_tool.SQLDict_selectDuplicatedLineList(
-            path=path,
-            method_id=method_id,
-            group_method_id=line.group_method_id,
-          )
-          uid_list = [x.uid for x in result]
-          if uid_list:
+          if merge_parent:
+            path_list = []
+            while merge_parent != path:
+              path = path.rsplit('/', 1)[0]
+              assert path
+              original_uid = path_and_method_id_dict.get((path, method_id))
+              if original_uid is not None:
+                return None, original_uid, [uid]
+              path_list.append(path)
+            uid_list = []
+            if path_list:
+              result = activity_tool.SQLDict_selectParentMessage(
+                path=path_list,
+                method_id=method_id,
+                group_method_id=line.group_method_id,
+                processing_node=processing_node)
+              if result: # found a parent
+                # mark child as duplicate
+                uid_list.append(uid)
+                # switch to parent
+                line = result[0]
+                key = line.path, method_id
+                uid = line.uid
+                m = self.loadMessage(line.message, uid=uid, line=line)
+            # return unreserved similar children
+            result = activity_tool.SQLDict_selectChildMessageList(
+              path=line.path,
+              method_id=method_id,
+              group_method_id=line.group_method_id)
+            reserve_uid_list = [x.uid for x in result]
+            uid_list += reserve_uid_list
+            if not line.processing_node:
+              # reserve found parent
+              reserve_uid_list.append(uid)
+          else:
+            result = activity_tool.SQLDict_selectDuplicatedLineList(
+              path=path,
+              method_id=method_id,
+              group_method_id=line.group_method_id)
+            reserve_uid_list = uid_list = [x.uid for x in result]
+          if reserve_uid_list:
             activity_tool.SQLDict_reserveDuplicatedLineList(
-              processing_node=processing_node, uid=uid_list)
+              processing_node=processing_node, uid=reserve_uid_list)
           else:
             activity_tool.SQLDict_commit() # release locks
         except:
@@ -152,6 +187,8 @@ class SQLDict(SQLBase):
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
         path_and_method_id_dict[key] = uid
         return m, uid, uid_list
+      # We know that original_uid != uid because caller skips lines we returned
+      # earlier.
       return None, original_uid, [uid]
     return load
 
@@ -174,8 +211,8 @@ class SQLDict(SQLBase):
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))
     method_dict = {}
-    readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
-    if readMessageList is not None:
+    readUidList = getattr(activity_tool, 'SQLDict_readUidList', None)
+    if readUidList is not None:
       # Parse each message in registered
       for m in activity_tool.getRegisteredMessageList(self):
         if m.object_path == object_path and (method_id is None or method_id == m.method_id):
@@ -200,8 +237,8 @@ class SQLDict(SQLBase):
                     'Could not validate %s on %s' % (m.method_id , path))
           activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL dict
-      result = readMessageList(path=path, method_id=method_id,
-                               processing_node=None,include_processing=0, to_date=None)
+      result = self._getMessageList(activity_tool, processing=0, path=path,
+        **({'method_id': method_id} if method_id else {}))
       for line in result:
         path = line.path
         line_method_id = line.method_id
@@ -233,8 +270,7 @@ class SQLDict(SQLBase):
                   'Could not validate %s on %s' % (m.method_id , path))
 
       if result:
-        uid_list = activity_tool.SQLDict_readUidList(
-          path=path, method_id=method_id)
+        uid_list = readUidList(path=path, method_id=method_id)
         if uid_list:
           activity_tool.SQLBase_delMessage(table=self.sql_table,
                                            uid=[x.uid for x in uid_list])
@@ -252,14 +288,14 @@ class SQLDict(SQLBase):
 
   def distribute(self, activity_tool, node_count):
     offset = 0
-    readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
-    if readMessageList is not None:
+    assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
+    if assignMessage is not None:
       now_date = self.getNow(activity_tool)
       validated_count = 0
       while 1:
-        result = readMessageList(path=None, method_id=None, processing_node=-1,
-                                 to_date=now_date, include_processing=0,
-                                 offset=offset, count=READ_MESSAGE_LIMIT)
+        result = self._getMessageList(activity_tool, processing_node=-1,
+                                      to_date=now_date, processing=0,
+                                      offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
         transaction.commit()
@@ -318,7 +354,7 @@ class SQLDict(SQLBase):
                                              uid=deletable_uid_list)
           distributable_count = len(distributable_uid_set)
           if distributable_count:
-            activity_tool.SQLBase_assignMessage(table=self.sql_table,
+            assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
             validated_count += distributable_count
             if validated_count >= MAX_VALIDATED_LIMIT:

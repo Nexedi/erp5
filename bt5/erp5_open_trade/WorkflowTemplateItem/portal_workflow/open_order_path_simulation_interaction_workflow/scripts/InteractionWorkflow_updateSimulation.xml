@@ -50,15 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>path = state_change[\'object\']\n
-open_order_type_list = state_change.getPortal().getPortalOpenOrderTypeList()\n
-\n
-def getOpenOrder(path):\n
-  if path.getPortalType() in open_order_type_list:\n
-     return path\n
-  return getOpenOrder(path.getParentValue())\n
-\n
-getOpenOrder(path).OpenOrder_updateSimulation()\n
+            <value> <string>ob = state_change[\'object\']\n
+while not ob.isOpenOrderType():\n
+  ob = ob.getParentValue()\n
+ob.OpenOrder_updateSimulation()\n
 </string> </value>
         </item>
         <item>

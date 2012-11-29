@@ -60,7 +60,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Import / Export</td>\n
+  <td>//button[@title="Import / Export"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -101,7 +101,7 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Import / Export</td>\n
+   <td>//button[@title="Import / Export"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

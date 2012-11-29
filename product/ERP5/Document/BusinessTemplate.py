@@ -545,7 +545,7 @@ class BaseTemplateItem(Implicit, Persistent):
     classname = klass.__name__
 
     attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'last_id', 'uid',
-                    '__ac_local_roles__'))
+                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__'))
     if export:
       if not keep_workflow_history:
         attr_set.add('workflow_history')
@@ -1128,7 +1128,8 @@ class ObjectTemplateItem(BaseTemplateItem):
               container._mapTransform(obj)
           elif obj.meta_type in ('ERP5 Ram Cache',
                                  'ERP5 Distributed Ram Cache',):
-            assert container.meta_type == 'ERP5 Cache Factory'
+            assert container.meta_type in ('ERP5 Cache Factory',
+                                           'ERP5 Cache Bag')
             container.getParentValue().updateCache()
           elif (container.meta_type == 'CMF Skins Tool') and \
               (old_obj is not None):
@@ -3047,11 +3048,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             k = k[5:]
           elif k == 'role_name':
             k, v = 'id', '; '.join(v)
-          elif k not in ('title', 'description'):
+          elif k not in ('title', 'description', 'categories'):
             k = {'id': 'object_id', # for stable sort
                  'role_base_category': 'base_category',
                  'role_base_category_script_id': 'base_category_script',
-                 'role_category': 'category'}.get(k)
+                 'role_category': 'category',
+                 'local_roles_group_id': 'local_roles_group_id'}.get(k)
             if not k:
               continue
           type_role_dict[k] = v
@@ -3074,7 +3076,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
-      for property in ('category', 'base_category'):
+      for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
             prop_value = prop_value.decode('utf-8')
@@ -3161,7 +3163,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
       try:
         obj = p.unrestrictedTraverse(path)
-        setattr(obj, '_roles', [])
+        obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
       except (NotFound, KeyError):
         pass
 
@@ -3998,16 +4000,12 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if not self._is_already_migrated(self._archive.keys()):
       document_id_list = self.getTemplateIdList()
-
-      try:
-        context.getPortalObject().unrestrictedTraverse(
-          'portal_components/' + document_id_list[0])
-      except (IndexError, KeyError):
+      if document_id_list[0] not in getattr(context.getPortalObject(),
+                                            'portal_components', ()):
         return FilesystemDocumentTemplateItem.build(self, context, **kw)
-      else:
-        self._archive.clear()
-        for name in document_id_list:
-          self._archive['portal_components/' + name] = None
+      self._archive.clear()
+      for name in document_id_list:
+        self._archive['portal_components/' + name] = None
 
     return ObjectTemplateItem.build(self, context, **kw)
 
@@ -4172,10 +4170,7 @@ class RoleTemplateItem(BaseTemplateItem):
     path = obsolete_key
     bta.addObject(xml_data, name=path)
 
-class CatalogSearchKeyTemplateItem(BaseTemplateItem):
-  key_list_attr = 'sql_catalog_search_keys'
-  key_list_title = 'search_key_list'
-  key_title = 'Search key'
+class CatalogKeyTemplateItemBase(BaseTemplateItem):
 
   def build(self, context, **kw):
     catalog = _getCatalogValue(self)
@@ -4200,6 +4195,10 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
     key_list = [key.text for key in xml.getroot()]
     self._objects[file_name[:-4]] = key_list
 
+  def _getUpdateDictAction(self, update_dict):
+    action = update_dict.get(self.key_list_title, 'nothing')
+    return action
+
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
@@ -4217,16 +4216,16 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
       keys = self._archive.keys()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key(self.key_list_title) or force:
-      if not force:
-        action = update_dict[self.key_list_title]
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in catalog_key_list:
-          catalog_key_list.append(key)
+    if force or self._getUpdateDictAction(update_dict) != 'nothing':
+      catalog_key_list = self._getUpdatedCatalogKeyList(catalog_key_list, keys)
       setattr(catalog, self.key_list_attr, catalog_key_list)
+
+  def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
+    catalog_key_list = list(catalog_key_list) # copy
+    for key in new_key_list:
+      if key not in catalog_key_list:
+        catalog_key_list.append(key)
+    return catalog_key_list
 
   def uninstall(self, context, **kw):
     catalog = _getCatalogValue(self)
@@ -4262,103 +4261,108 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(xml_data, name=path)
 
-class CatalogResultKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
+  # like CatalogKeyTemplateItemBase, but for keys which use
+  # "key | value" syntax to configure dictionaries.
+  # The keys (part before the pipe) must be unique.
+
+  def _getMapFromKeyList(self, key_list):
+    # in case of duplicates, only the last installed entry will survive
+    return dict(tuple(part.strip() for part in key.split('|', 1))
+                for key in key_list)
+
+  def _getListFromKeyMap(self, key_map):
+    return [" | ".join(item) for item in sorted(key_map.items())]
+
+  def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
+    # treat key lists as dictionaries, parse and update:
+    catalog_key_map = self._getMapFromKeyList(catalog_key_list)
+    catalog_key_map.update(self._getMapFromKeyList(new_key_list))
+    return self._getListFromKeyMap(catalog_key_map)
+
+class CatalogSearchKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
+  key_list_attr = 'sql_catalog_search_keys'
+  key_list_title = 'search_key_list'
+  key_title = 'Search key'
+
+class CatalogResultKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_search_result_keys'
   key_list_title = 'result_key_list'
   key_title = 'Result key'
 
-class CatalogRelatedKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRelatedKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_related_keys'
   key_list_title = 'related_key_list'
   key_title = 'Related key'
 
   # override this method to support 'key_list' for backward compatibility.
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
+  def _getUpdateDictAction(self, update_dict):
+    action = update_dict.get(self.key_list_title, _MARKER)
+    if action is _MARKER:
+      action = update_dict.get('key_list', 'nothing')
+    return action
 
-    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage related key
-    if update_dict.has_key(self.key_list_title) or update_dict.has_key('key_list') or force:
-      if not force:
-        if update_dict.has_key(self.key_list_title):
-          action = update_dict[self.key_list_title]
-        else: # XXX for backward compatibility
-          action = update_dict['key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in catalog_key_list:
-          catalog_key_list.append(key)
-      setattr(catalog, self.key_list_attr, catalog_key_list)
-
-class CatalogResultTableTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogResultTableTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_search_tables'
   key_list_title = 'result_table_list'
   key_title = 'Result table'
 
 # keyword
-class CatalogKeywordKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogKeywordKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_keyword_search_keys'
   key_list_title = 'keyword_key_list'
   key_title = 'Keyword key'
 
 # datetime
-class CatalogDateTimeKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogDateTimeKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_datetime_search_keys'
   key_list_title = 'datetime_key_list'
   key_title = 'DateTime key'
 
 # full text
-class CatalogFullTextKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogFullTextKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_full_text_search_keys'
   key_list_title = 'full_text_key_list'
   key_title = 'Fulltext key'
 
 # request
-class CatalogRequestKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRequestKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_request_keys'
   key_list_title = 'request_key_list'
   key_title = 'Request key'
 
 # multivalue
-class CatalogMultivalueKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogMultivalueKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_multivalue_keys'
   key_list_title = 'multivalue_key_list'
   key_title = 'Multivalue key'
 
 # topic
-class CatalogTopicKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogTopicKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_topic_search_keys'
   key_list_title = 'topic_key_list'
   key_title = 'Topic key'
 
-class CatalogScriptableKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogScriptableKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_scriptable_keys'
   key_list_title = 'scriptable_key_list'
   key_title = 'Scriptable key'
 
-class CatalogRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_role_keys'
   key_list_title = 'role_key_list'
   key_title = 'Role key'
 
-class CatalogLocalRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogLocalRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_local_role_keys'
   key_list_title = 'local_role_key_list'
   key_title = 'LocalRole key'
+
+class CatalogSecurityUidColumnTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_security_uid_columns'
+  key_list_title = 'security_uid_column_list'
+  key_title = 'Security Uid Columns'
+
 
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
@@ -4532,13 +4536,27 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(path.split('/', 1)[1])
       local_roles_dict = getattr(obj, '__ac_local_roles__',
                                         {}) or {}
-      self._objects[path] = (local_roles_dict, )
+      local_roles_group_id_dict = getattr(
+        obj, '__ac_local_roles_group_id_dict__', {}) or {}
+      self._objects[path] = (local_roles_dict, local_roles_group_id_dict)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
-    local_roles_dict = self._objects[path][0]
-    # local roles
+    # With local roles groups id, self._object contains for each path a tuple
+    # containing the dict of local roles and the dict of local roles group ids.
+    # Before it was only containing the dict of local roles. This method is
+    # also used on installed business templates to show a diff during
+    # installation, so it might be called on old format objects.
+    if len(self._objects[path]) == 2:
+      # new format
+      local_roles_dict, local_roles_group_id_dict = self._objects[path]
+    else:
+      # old format, before local roles group id
+      local_roles_group_id_dict = dict()
+      local_roles_dict, = self._objects[path]
+
     xml_data = '<local_roles_item>'
+    # local roles
     xml_data += '\n <local_roles>'
     for key in sorted(local_roles_dict):
       xml_data += "\n  <role id='%s'>" %(key,)
@@ -4547,6 +4565,20 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         xml_data += "\n   <item>%s</item>" %(item,)
       xml_data += '\n  </role>'
     xml_data += '\n </local_roles>'
+
+    if local_roles_group_id_dict:
+      # local roles group id dict (not included by default to be stable with
+      # old bts)
+      xml_data += '\n <local_roles_group_id>'
+      for principal, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
+        xml_data += "\n  <principal id='%s'>" % escape(principal)
+        for local_roles_group_id in local_roles_group_id_list:
+          for item in local_roles_group_id:
+            xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
+                escape(item)
+        xml_data += "\n  </principal>"
+      xml_data += '\n </local_roles_group_id>'
+
     xml_data += '\n</local_roles_item>'
     if isinstance(xml_data, unicode):
       xml_data = xml_data.encode('utf8')
@@ -4571,7 +4603,15 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       id = role.get('id')
       item_type_list = [item.text for item in role]
       local_roles_dict[id] = item_type_list
-    self._objects['local_roles/%s' % (file_name[:-4],)] = (local_roles_dict, )
+
+    # local roles group id
+    local_roles_group_id_dict = {}
+    for principal in xml.findall('//principal'):
+      local_roles_group_id_dict[principal.get('id')] = set([tuple(
+        [group_id.text for group_id in
+            principal.findall('./local_roles_group_id')])])
+    self._objects['local_roles/%s' % (file_name[:-4],)] = (
+      local_roles_dict, local_roles_group_id_dict)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -4585,8 +4625,22 @@ class LocalRolesTemplateItem(BaseTemplateItem):
             continue
         path = roles_path.split('/')[1:]
         obj = p.unrestrictedTraverse(path)
-        local_roles_dict = self._objects[roles_path][0]
+        # again we might be installing an business template in format before
+        # existance of local roles group id.
+        if len(self._objects[roles_path]) == 2:
+          local_roles_dict, local_roles_group_id_dict = self._objects[roles_path]
+        else:
+          local_roles_group_id_dict = dict()
+          local_roles_dict, = self._objects[roles_path]
         setattr(obj, '__ac_local_roles__', local_roles_dict)
+        if local_roles_group_id_dict:
+          setattr(obj, '__ac_local_roles_group_id_dict__',
+                  local_roles_group_id_dict)
+          # we try to have __ac_local_roles_group_id_dict__ set only if
+          # it is actually defining something else than default
+        elif getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
+                    None) is not None:
+          delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
   def uninstall(self, context, object_path=None, **kw):
@@ -4748,6 +4802,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_catalog_scriptable_key_item',
       '_catalog_role_key_item',
       '_catalog_local_role_key_item',
+      '_catalog_security_uid_column_item',
     ]
 
     def __init__(self, *args, **kw):
@@ -4910,6 +4965,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
+      try:
+        self._catalog_security_uid_column_item = \
+          CatalogSecurityUidColumnTemplateItem(
+               self.getTemplateCatalogSecurityUidColumnList())
+      except AttributeError:
+        # be backwards compatible with old zope instances which
+        # do not contain recent version of erp5_property_sheets
+        pass
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0):
@@ -4935,6 +4998,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Build each part
       for item_name in self._item_name_list:
         item = getattr(self, item_name)
+        if item is None:
+          continue
         if self.getBtForDiff():
           item.is_bt_for_diff = 1
         item.build(self)
@@ -5493,7 +5558,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Export each part
       for item_name in self._item_name_list:
-        getattr(self, item_name).export(context=self, bta=bta)
+        item = getattr(self, item_name, None)
+        if item is not None:
+          item.export(context=self, bta=bta)
 
       return bta.finishCreation()
 
@@ -5523,7 +5590,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
       for item_name in self._item_name_list:
-        getattr(self, item_name).importFile(bta)
+        item_object = getattr(self, item_name, None)
+        # this check is due to backwards compatability when there can be a
+        # difference between install erp5_property_sheets (esp. BusinessTemplate
+        # property sheet) 
+        if item_object is not None:
+          item_object.importFile(bta)
 
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).
@@ -5631,6 +5703,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogScriptableKey' : '_catalog_scriptable_key_item',
         'CatalogRoleKey' : '_catalog_role_key_item',
         'CatalogLocalRoleKey' : '_catalog_local_role_key_item',
+        'CatalogSecurityUidColumn' : '_catalog_security_uid_column_item',
         }
 
       object_id = REQUEST.object_id
@@ -5693,6 +5766,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_scriptable_key_item',
                      '_catalog_role_key_item',
                      '_catalog_local_role_key_item',
+                     '_catalog_security_uid_column_item',
                      '_portal_type_allowed_content_type_item',
                      '_portal_type_hidden_content_type_item',
                      '_portal_type_property_sheet_item',

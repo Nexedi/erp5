@@ -74,20 +74,15 @@ class CachedConvertableMixin:
   def _getCacheFactory(self):
     """
     """
+    # XXX: is this really needed ?
     if self.getOriginalDocument() is None:
       return None
+
     portal = self.getPortalObject()
-    cache_tool = portal.portal_caches
-    preference_tool = portal.portal_preferences
-    cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
-    cache_factory = cache_tool.getRamCacheRoot().get(cache_factory_name)
-    #XXX This conditional statement should be remove as soon as
-    #Broadcasting will be enable among all zeo clients.
-    #Interaction which update portal_caches should interact with all nodes.
-    if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
-      #ram_cache_root is not up to date for current node
-      cache_tool.updateCache()
-    return cache_tool.getRamCacheRoot().get(cache_factory_name)
+    cache_factory_name = portal.portal_preferences.getPreferredConversionCacheFactory('document_cache_factory')
+    if cache_factory_name is not None:
+      return getattr(portal.portal_caches, cache_factory_name, None)
+
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                              'generateCacheId')
@@ -167,23 +162,18 @@ class CachedConvertableMixin:
         self.temp_conversion_data = {}
       self.temp_conversion_data[cache_id] = stored_data_dict
       return
-    cache_duration = cache_factory.cache_duration
     # The purpose of this transaction cache is to help calls
     # to the same cache value in the same transaction.
     tv = getTransactionalVariable()
     tv[cache_id] = stored_data_dict
-    for cache_plugin in cache_factory.getCachePluginList():
-      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
-                       stored_data_dict, cache_duration=cache_duration)
+    cache_factory.set(cache_id, stored_data_dict)
 
   security.declareProtected(Permissions.View, '_getConversionDataDict')
   def _getConversionDataDict(self, **kw):
     """
     """
     cache_id = self._getCacheKey(**kw)
-    cache_factory = self._getCacheFactory()
-    if cache_factory is None:
-      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
+
     # The purpose of this cache is to help calls to the same cache value
     # in the same transaction.
     tv = getTransactionalVariable()
@@ -191,26 +181,33 @@ class CachedConvertableMixin:
       return tv[cache_id]
     except KeyError:
       pass
-    for cache_plugin in cache_factory.getCachePluginList():
-      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
-      if cache_entry is not None:
-        data_dict = cache_entry.getValue()
-        if data_dict:
-          if isinstance(data_dict, tuple):
-            # Backward compatibility: if cached value is a tuple
-            # as it was before refactoring
-            # http://svn.erp5.org?rev=35216&view=rev
-            # raise a KeyError to invalidate this cache entry and force
-            # calculation of a new conversion
-            raise KeyError('Old cache conversion format,'\
-                               'cache entry invalidated for key:%r' % cache_id)
-          content_md5 = data_dict['content_md5']
-          if content_md5 != self.getContentMd5():
-            raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
-          # Fill transactional cache in order to help
-          # querying real cache during same transaction
-          tv[cache_id] = data_dict
-          return data_dict
+
+    # get preferred cache factory or cache bag
+    cache_factory = self._getCacheFactory()
+
+    # volatile case
+    if cache_factory is None:
+      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
+
+    else:
+      data_dict = cache_factory.get(cache_id, None)
+      if data_dict:
+        if isinstance(data_dict, tuple):
+          # Backward compatibility: if cached value is a tuple
+          # as it was before refactoring
+          # http://svn.erp5.org?rev=35216&view=rev
+          # raise a KeyError to invalidate this cache entry and force
+          # calculation of a new conversion
+          raise KeyError('Old cache conversion format,'\
+                       'cache entry invalidated for key:%r' % cache_id)
+        content_md5 = data_dict['content_md5']
+        if content_md5 != self.getContentMd5():
+          raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
+        # Fill transactional cache in order to help
+        # querying real cache during same transaction
+        tv[cache_id] = data_dict
+        return data_dict
+
     raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.View, 'getConversion')

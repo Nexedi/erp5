@@ -10,7 +10,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>divergence_scope/property</string>
                 <string>collect_order_group/delivery</string>
               </tuple>
             </value>

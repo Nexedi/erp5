@@ -322,12 +322,26 @@ class FakeMovement:
     """
     return self.__movement_list
 
-  def setDeliveryValue(self, object):
+  def isTempDocument(self):
+    for movement in self.__movement_list:
+      if movement.isTempDocument():
+        return True
+    return False
+
+  def _setDelivery(self, object):
     """
       Set Delivery value for each movement
     """
     for movement in self.__movement_list:
-      movement.edit(delivery_value=object)
+      movement._setDelivery(object)
+
+  def getDeliveryList(self):
+    """
+      Only used to know if _setDeliveryValue needs to be called.
+      Be careful: behaviour differs from CMFCategory in that returned
+      list may include None, when there is at least 1 unlinked SM.
+    """
+    return list(set(x.getDelivery() for x in self.__movement_list))
 
   def getDeliveryValue(self):
     """
@@ -335,13 +349,10 @@ class FakeMovement:
       configure DeliveryBuilder well...).
       Be careful.
     """
-    result = None
     for movement in self.__movement_list:
       mvt_delivery = movement.getDeliveryValue()
       if mvt_delivery is not None:
-        result = mvt_delivery
-        break
-    return result
+        return mvt_delivery
 
   def getRelativeUrl(self):
     """
@@ -351,7 +362,7 @@ class FakeMovement:
     """
     return self.__movement_list[0].getRelativeUrl()
 
-  def setDeliveryRatio(self, delivery_ratio):
+  def _setDeliveryRatio(self, delivery_ratio):
     """
       Calculate delivery_ratio
     """
@@ -359,15 +370,15 @@ class FakeMovement:
     for movement in self.__movement_list:
       total_quantity += movement.getMappedProperty('quantity')
 
-    if total_quantity != 0:
+    if total_quantity:
       for movement in self.__movement_list:
         quantity = movement.getMappedProperty('quantity')
-        movement.edit(delivery_ratio=quantity*float(delivery_ratio)/total_quantity)
+        movement._setDeliveryRatio(quantity*float(delivery_ratio)/total_quantity)
     else:
-      # Distribute equally ratio to all movement
+      # Distribute equally ratio to all movements
       mvt_ratio = float(delivery_ratio) / len(self.__movement_list)
       for movement in self.__movement_list:
-        movement.edit(delivery_ratio=mvt_ratio)
+        movement._setDeliveryRatio(mvt_ratio)
 
   def getPrice(self):
     """
@@ -450,19 +461,12 @@ class FakeMovement:
     price_dict = self._getPriceDict()
     return sum(price * quantity for price, quantity in price_dict.items())
 
-  def recursiveReindexObject(self):
+  def recursiveReindexObject(self, *args, **kw):
     """
       Reindex all movements
     """
     for movement in self.getMovementList():
-      movement.recursiveReindexObject()
-
-  def immediateReindexObject(self):
-    """
-      Reindex immediately all movements
-    """
-    for movement in self.getMovementList():
-      movement.immediateReindexObject()
+      movement.recursiveReindexObject(*args, **kw)
 
   def getPath(self):
     """
@@ -508,23 +512,6 @@ class FakeMovement:
       return self.getQuantity()
     else:
       raise NotImplementedError
-
-  def edit(self, activate_kw=None, **kw):
-    """
-      Written in order to call edit in delivery builder,
-      as it is the generic way to modify object.
-
-      activate_kw is here for compatibility reason with Base.edit,
-      it will not be used here.
-    """
-    for key in kw.keys():
-      if key == 'delivery_ratio':
-        self.setDeliveryRatio(kw[key])
-      elif key == 'delivery_value':
-        self.setDeliveryValue(kw[key])
-      else:
-        raise FakeMovementError,\
-              "Could not call edit on Fakemovement with parameters: %r" % key
 
   def __repr__(self):
     repr_str = '<%s object at 0x%x for %r' % (self.__class__.__name__,
@@ -599,35 +586,6 @@ class IntIndexMovementGroup(RootMovementGroup):
     return self.getIntIndex(movement) == self.int_index
 
 allow_class(IntIndexMovementGroup)
-
-class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
-  """
-  Groups movement that comes from simulation movement that shares the
-  same Production Applied Rule.
-  """
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    explanation_relative_url = self._getExplanationRelativeUrl(movement)
-    self.explanation = explanation_relative_url
-    explanation_value = movement.getPortalObject().restrictedTraverse(
-                                                    explanation_relative_url)
-    self.setGroupEdit(causality_value=explanation_value)
-
-  def _getExplanationRelativeUrl(self, movement):
-    """ Get the order value for a movement """
-    transformation_applied_rule = movement.getParentValue()
-    transformation_rule = transformation_applied_rule.getSpecialiseValue()
-    if transformation_rule.getPortalType() != 'Transformation Rule':
-      raise MovementGroupError, 'movement! %s' % movement.getPath()
-    # XXX Dirty hardcoded
-    production_movement = transformation_applied_rule.pr
-    production_packing_list = production_movement.getExplanationValue()
-    return production_packing_list.getRelativeUrl()
-
-  def test(self,movement):
-    return self._getExplanationRelativeUrl(movement) == self.explanation
-
-allow_class(TransformationAppliedRuleCausalityMovementGroup)
 
 class ParentExplanationMovementGroup(RootMovementGroup): pass
 

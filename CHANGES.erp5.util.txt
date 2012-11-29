@@ -1,6 +1,129 @@
 Changes
 =======
 
+0.4.16 (2012-11-14)
+------------------
+
+ * erp5.util.testnode:
+
+  - Improve handling of Xvfb and firefox [Sebastien Robin]
+  - check supported parameters of runTestSuite [Pere Cortes]
+  - add unit for runTestSuite [Pere Cortes]
+
+0.4.15 (2012-11-07)
+------------------
+
+ * erp5.util.testnode:
+
+  - fixed profile generation when software repos is not defined first
+    [Sebastien Robin]
+  - ask wich test has priority to master more often [Sebastien Robin]
+
+0.4.14 (2012-11-05)
+------------------
+
+ * erp5.util.testnode:
+
+  - force rebuilding software to avoid using old soft/code [Sebastien Robin]
+
+ * erp5.util.taskdistribution:
+
+  - handle another possible error with master [Sebastien Robin]
+
+0.4.13 (2012-10-31)
+------------------
+
+ * erp5.util.testnode:
+
+  - Add unit test for erp5testnode (with some hardcoded path that
+    needs to be fixed ASAP) [Sebastien Robin]
+  - Split long functions into several more simple ones for code
+    simplicity and readability [Sebastien Robin]
+
+0.4.12 (2012-10-25)
+------------------
+
+ * erp5.util.testnode:
+
+  - Fixed several issues introduced by the management of test
+    suite by the master [Sebastien Robin] 
+
+0.4.11 (2012-10-22)
+------------------
+
+ * erp5.util.testnode:
+
+  - Take test suite parameters from the master, to allow distribution
+    of the work by the master [Pere Cortes], [Sebastien Robin] 
+
+0.4.10 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - Allow to use a firefox built by testnode for
+    functional tests [Gabriel Monnerat]
+
+0.4.9 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - remove --now parameter when calling slapgrid-sr since
+    it is not yet well supported [Sebastien Robin]
+
+0.4.8 (2012-09-27)
+------------------
+
+ * erp5.util.testnode:
+
+  - use taskdistribution module to reduce code
+    [Vincent Pelletier], [Pere Cortes]
+
+0.4.7 (2012-09-03)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - work around test lines acquiring values from parent when no value is
+    provided. [Vincent Pelletier]
+  - fix a regression introduced in 0.4.6 which allowed parallel XMLRPC calls,
+    which is not supported. [Rafael Monnerat]
+
+ * erp5.util.benchmark:
+
+  - check whether at least one result file could be found when generating a
+    scalability report. [Arnaud Fontaine]
+  - make sure that diagram bars are properly aligned in scalability test
+    report. [Arnaud Fontaine]
+
+ * erp5.util.testsuite:
+
+  - new module [Rafael Monnerat]
+
+0.4.6 (2012-08-10)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - set socket timeout for RPC calls to prevent a deadlock happens.
+    [Rafael Monnerat]
+
+0.4.5 (2012-07-04)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - xmlrpclib does not support named parameters, use positional ones
+    [Vincent Pelletier]
+
+0.4.4 (2012-07-04)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - New module [Vincent Pelletier]
+
 0.4.3 (2012-04-24)
 ----------------
 

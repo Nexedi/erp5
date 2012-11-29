@@ -1,0 +1,27 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+
+<dtml-if need_upgrade>
+  <p class="form-help">
+    <dtml-gettext>
+      This object must be upgraded.
+    </dtml-gettext>
+  </p>
+
+  <blockquote>
+    <form action="manage_upgrade" action="post">
+      <input type="submit" value=" <dtml-var "gettext('Upgrade')"> ">
+    </form>
+  </blockquote>
+
+<dtml-else>
+  <p class="form-help">
+    <dtml-gettext>
+      This object is up-to-date.
+    </dtml-gettext>
+  </p>
+</dtml-if>
+
+
+<dtml-var manage_page_footer>

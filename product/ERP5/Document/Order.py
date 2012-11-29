@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.Document.Delivery import Delivery
 
 from warnings import warn
@@ -115,74 +115,14 @@ class Order(Delivery):
       """Returns the total quantity for this Order. """
       kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
       return Delivery.getTotalQuantity(self, **kw)
-    
-    def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
-                                       method_id='expand',**kw):
-      """
-        Warning: does not work if it was not catalogued immediately
-      """
+
+    @deprecated
+    def applyToOrderRelatedMovement(self, method_id='expand', **kw):
+      # WARNING: does not work if it was not catalogued immediately
       # 'order' category is deprecated. it is kept for compatibility.
-      for my_simulation_movement in self.getDeliveryRelatedValueList(
-          portal_type='Simulation Movement') or \
-          self.getOrderRelatedValueList(
-          portal_type='Simulation Movement'):
-          # And apply
-          getattr(my_simulation_movement, method_id)(**kw)
-      for m in self.contentValues(filter={'portal_type': \
-                                          self.getPortalMovementTypeList()}):
-        # Find related in simulation
+      for m in self.getMovementList():
         for my_simulation_movement in m.getDeliveryRelatedValueList(
             portal_type='Simulation Movement') or \
             m.getOrderRelatedValueList(
             portal_type='Simulation Movement'):
-          # And apply
           getattr(my_simulation_movement, method_id)(**kw)
-        for c in m.contentValues(filter={'portal_type':
-            self.getPortalMovementTypeList()}):
-          for my_simulation_movement in c.getDeliveryRelatedValueList(
-              portal_type='Simulation Movement') or \
-              c.getOrderRelatedValueList(
-              portal_type='Simulation Movement'):
-            # And apply
-            getattr(my_simulation_movement, method_id)(**kw)
-
-    # 'order' category is deprecated. it is kept for compatibility.
-    applyToOrderRelatedMovement = applyToDeliveryRelatedMovement
-
-    def applyToOrderRelatedAppliedRule(self, method_id='expand',**kw):
-      my_applied_rule = self.getCausalityRelatedValue( \
-                                      portal_type='Applied Rule')
-      getattr(my_applied_rule.getObject(), method_id)(**kw)
-
-    def manage_beforeDelete(self, item, container):
-      """
-          Delete related Applied Rule
-      """
-      for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
-        o.getParentValue().deleteContent(o.getId())
-      Delivery.manage_beforeDelete(self, item, container)
-
-    ##########################################################################
-    # Applied Rule stuff
-    def updateAppliedRule(self, rule_id=None, rule_reference=None, **kw):
-      """XXX FIXME: Kept for compatibility.
-      updateAppliedRule must be called with a rule_reference in a workflow
-      script.
-      """
-      if rule_id is None and rule_reference is None:
-        warn('Relying on a default order rule is deprecated; ' \
-             'rule_reference must be specified explicitly.',
-             DeprecationWarning)
-        rule_reference = 'default_order_rule'
-      Delivery.updateAppliedRule(self, rule_id=rule_id, 
-                                 rule_reference=rule_reference, **kw)
-
-    def expandAppliedRuleRelatedToOrder(self, activate_kw=None,**kw):
-      """
-      Expand the applied rule related 
-      """
-      applied_rule_list = self.getCausalityRelatedValueList(
-                                           portal_type='Applied Rule')
-      for applied_rule in applied_rule_list:
-        # XXX Missing activate keys
-        applied_rule.activate(activate_kw=activate_kw).expand(**kw)

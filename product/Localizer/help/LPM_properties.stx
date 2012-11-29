@@ -1,0 +1,32 @@
+Localizer - Manage local properties
+
+  Description
+
+    This view allows to manage the local properties.
+
+    Add properties
+
+      To add a new property enter its name and select its type, then click
+      the 'Add' button.
+
+
+    Property selector
+
+      Below the form to add new properties there's an interface that allows
+      to modify and delete them.
+
+      Only one local property is edited at a time, it's highlighted in the
+      property selection bar. To select a different one click on it's name.
+
+      If there're lots of properties the selection bar will have two buttons
+      to browse the properties at the right side of the bar.
+
+    Delete a property
+
+      To delete the property being edited click the 'Delete' button.
+
+    Edit properties
+
+      The body of the interface shows all the language versions for the
+      selected property. To modify them introduce the right text and click
+      the 'Save changes' button.

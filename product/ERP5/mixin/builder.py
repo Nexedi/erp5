@@ -690,16 +690,22 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         # the callable object is a Python Script.
         meta_type = getattr(script, 'meta_type', None)
         if meta_type == 'Script (Python)':
-          # check if the script accepts related_simulation_movement_path_list
+          # check parameters accepted by the script
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()
+            if param == "movement_list": # XXX-Aurel: path does not work with temp objects
+              script(movement_list=movement_list)
+              break
             if param == 'related_simulation_movement_path_list' \
                     or param.startswith('**'):
+              script(related_simulation_movement_path_list=related_simulation_movement_path_list)
               break
           else:
             script()
             continue
-        script(related_simulation_movement_path_list=related_simulation_movement_path_list)
+        else:
+          script(related_simulation_movement_path_list=related_simulation_movement_path_list)
+
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getMovementGroupList')

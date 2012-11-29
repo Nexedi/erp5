@@ -52,6 +52,8 @@ bt5_base_path = os.environ.get('erp5_tests_bt5_path',
 bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
                                    'bootstrap')
 
+# some forms have intentionally empty listbox selections like RSS generators
+FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
 
 class TestXHTML(ERP5TypeTestCase):
 
@@ -237,7 +239,8 @@ class TestXHTML(ERP5TypeTestCase):
       for field in self.getFieldList(form, form_path):
         if field.getRecursiveTemplateField().meta_type == 'ListBox':
           selection_name = field.get_value("selection_name")
-          if selection_name in ("",None):
+          if selection_name in ("",None) and \
+            form_path not in FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
             error_list.append(form_path)
     self.assertEquals(error_list, [])
     
@@ -634,13 +637,14 @@ validator = None
 # create the validator object
 if validator_to_use == 'w3c':
   default = '/usr/share/w3c-markup-validator/cgi-bin:/usr/lib/cgi-bin'
-  for path in os.environ.get('CGI_PATH', default).split(os.pathsep):
+  validator_path_list = os.environ.get('CGI_PATH', default).split(os.pathsep)
+  for path in validator_path_list:
     validator_path = os.path.join(path, 'check')
     if os.path.exists(validator_path):
       validator = W3Validator(validator_path, show_warnings)
       break
   else:
-    print 'No w3c validator found at', validator_path
+    print 'No w3c validator found at', validator_path_list
 
 elif validator_to_use == 'tidy':
   error = False

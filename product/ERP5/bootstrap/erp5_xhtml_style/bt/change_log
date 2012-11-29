@@ -1,3 +1,9 @@
+2012-10-16 arnaud.fontaine
+* Fix background color of stat and no cell ListBox lines.
+
+2012-08-07 Kazuhiko
+* update FCKeditor to 2.6.8.
+
 2011-01-20 Ivan
 * Remove contained MochiKit Javascript library
 

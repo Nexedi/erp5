@@ -183,5 +183,6 @@ operator_dict = {
   'sphinxse': SphinxSEComparisonOperator('sphinxse'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
+  'is not': MonovaluedComparisonOperator('is not', '!='),
 }
 

@@ -1,3 +1,6 @@
+2012-10-30 Kazuhiko
+* add destination_decision_language related key.
+
 2011-12-13 Kazuhiko
 * use event_simulation_workflow instead of event_workflow for Event-type portal types. use portal_alarms/upgrader_migrate_event_workflow_history for migration.
 

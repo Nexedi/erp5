@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-from testDms import TestDocument
+from testDms import TestDocument, makeFileUpload
 
 class TestDocumentWithPreConversion(TestDocument):
   """
@@ -39,6 +39,47 @@ class TestDocumentWithPreConversion(TestDocument):
 
   def getTitle(self):
     return "DMS with Preconversion"
+
+  def test_preConvertedEmbeddedImageInWebPageContent(self):
+    # create an image
+    upload_file = makeFileUpload('cmyk_sample.jpg')
+    image = self.portal.image_module.newContent(portal_type='Image',
+                                               reference='Embedded-XXX',
+                                               version='001',
+                                               language='en')
+    image.edit(file=upload_file)
+    image.publish()
+    self.tic()
+
+    web_page = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page.setTextContent('''<b> test </b>
+<img src="Embedded-XXX?format=png&display=large&quality=75"/>
+<img src="Embedded-XXX?format=jpeg&display=large&quality=75"/>''')
+    self.tic()
+
+    # check that referenced in Web Page's content image(s) is well converted
+    self.assertTrue(image.hasConversion(**{'format':'jpeg', 'display':'large', 'quality':75}))
+    self.assertTrue(image.hasConversion(**{'format':'png', 'display':'large', 'quality':75}))
+    self.assertSameSet(['Embedded-XXX?format=png&display=large&quality=75', \
+                        'Embedded-XXX?format=jpeg&display=large&quality=75'], 
+                        web_page.Base_extractImageUrlList())
+
+  def test_Base_isConvertible(self):
+    """
+      Test pre converion only happens on proper documents.
+    """
+    image = self.portal.image_module.newContent(portal_type='Image',
+                                               reference='Embedded-XXX',
+                                               version='001',
+                                               language='en')
+    # empty image is not convertible
+    self.assertEqual(False, image.Base_isConvertible())
+    
+    # image with data is convertible
+    upload_file = makeFileUpload('cmyk_sample.jpg')
+    image.edit(file=upload_file)
+    self.tic()
+    self.assertEqual(True, image.Base_isConvertible())
 
 def test_suite():
   suite = unittest.TestSuite()

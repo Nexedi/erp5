@@ -95,8 +95,18 @@ def createWebSectionFromCategoryValue(container, category, depth, section_id=Non
       else:\n
         section_id = getNiceID(category.getTitle()) or getNiceID(category.getId())\n
     except ValueError:\n
-      # It is not an int, so it can be used as is\n
-      section_id = category.getId()\n
+      if not generate_nice_id:\n
+        # It is not an int, so it can be used as is\n
+        section_id = category.getId()\n
+      else:\n
+        if category.hasReference():\n
+          section_id = getNiceID(category.getReference())\\\n
+                  or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+        if category.hasShortTitle():\n
+          section_id = getNiceID(category.getShortTitle())\\\n
+                  or getNiceID(category.getTitle()) or getNiceID(category.getId())\n
+        else:\n
+          section_id = getNiceID(category.getTitle()) or getNiceID(category.getId())\n
   # Create a new Web Section if necessary\n
   new_section = None\n
   if section_id not in container.contentIds():\n
@@ -184,7 +194,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category, section_id, depth=1, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
+            <value> <string>category, section_id, depth=1, generate_nice_id=False, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

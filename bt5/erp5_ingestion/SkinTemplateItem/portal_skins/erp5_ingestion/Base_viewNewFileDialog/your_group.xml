@@ -116,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.ERP5Site_getAuthenticatedMemberPersonValue() is not None and here.ERP5Site_getAuthenticatedMemberPersonValue().getGroup() or \'\'</string> </value>
+            <value> <string>python: context.getProperty(\'group\') or context.ERP5Site_getAuthenticatedMemberPersonValue() is not None and here.ERP5Site_getAuthenticatedMemberPersonValue().getGroup() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

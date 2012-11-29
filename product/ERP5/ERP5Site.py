@@ -44,6 +44,7 @@ from zLOG import LOG, INFO, WARNING, ERROR
 from string import join
 import os
 import warnings
+from App.config import getConfiguration
 MARKER = []
 
 
@@ -268,7 +269,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
   def _doTranslationDomainRegistration(self):
     from zope.i18n.interfaces import ITranslationDomain
-    from Products.ERP5Type.patches.Localizer import (
+    from Products.Localizer.MessageCatalog import (
       message_catalog_alias_sources
     )
     sm = self.getSiteManager()
@@ -484,7 +485,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     # Make sure that reset is not performed when creating a new site
     if not getattr(self, '_v_bootstrapping', False):
-      self.portal_components.resetOnceAtTransactionBoundary()
+      try:
+        self.portal_components.resetOnceAtTransactionBoundary()
+      except AttributeError:
+        # This should only happen before erp5_core is installed
+        pass
 
   version_priority_list = property(getVersionPriorityList,
                                    setVersionPriorityList)
@@ -638,6 +643,38 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     # Fall back to the default.
     return getattr(ERP5Defaults, id, None)
+
+  security.declareProtected(Permissions.ManagePortal, 'getPromiseParameter')
+  def getPromiseParameter(self, section, option):
+    """
+    Read external promise parameters.
+
+    The parameters should be provided by an external configuration file.
+    Location of this configuration file is defined in the zope configuration
+    file in a product_config named as the path of the ERP5 site.
+    Example if the site id is erp5:
+      <product-config /erp5>
+        promise_path /tmp/promise.cfg
+      </product-config>
+
+    The promise configuration is a simple ConfigParser readable file (a list of
+    section containing a list of string parameters.
+
+    getPromiseParameter returns None if the parameter isn't found.
+    """
+    config = getConfiguration()
+    if getattr(config, 'product_config', None) is not None:
+      parameter_dict = config.product_config.get(self.getPath(), {})
+      if 'promise_path' in parameter_dict:
+        promise_path = parameter_dict['promise_path']
+        import ConfigParser
+        configuration = ConfigParser.ConfigParser()
+        configuration.read(promise_path)
+        try:
+          return configuration.get(section, option)
+        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+          pass
+    return None
 
   def _getPortalGroupedTypeList(self, group, enable_sort=True):
     """
@@ -2130,6 +2167,7 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
+      self.setupERP5Promise(p,**kw)
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
@@ -2154,3 +2192,16 @@ class ERP5Generator(PortalGenerator):
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
         bt.install(**kw)
+
+  def setupERP5Promise(self,p,**kw):
+    """
+    Install the ERP5 promise configurator
+    """
+    template_tool = p.portal_templates
+    # Configure the bt5 repository
+    repository = p.getPromiseParameter('portal_templates', 'repository')
+    if repository is not None:
+      template_tool.updateRepositoryBusinessTemplateList(repository.split())
+      template_tool.installBusinessTemplateListFromRepository(
+          ['erp5_promise'], activate=True, install_dependency=True)
+      p.portal_alarms.subscribe()

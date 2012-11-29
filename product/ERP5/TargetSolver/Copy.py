@@ -79,5 +79,5 @@ class Copy(TargetSolver):
       simulation_movement.recordProperty(property_id)
     simulation_movement.edit(**value_dict)
 
-    # XXX can we use activity for further expand?
-    simulation_movement.expand()
+    # XXX: would it be safe to expand by activity ?
+    simulation_movement.expand('immediate')

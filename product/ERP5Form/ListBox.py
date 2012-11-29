@@ -2746,7 +2746,7 @@ class ListBoxValidator(Validator.Validator):
         editable_columns = field.get_value('editable_columns')
         column_ids = [x[0] for x in columns]
         editable_column_ids = [x[0] for x in editable_columns]
-        editable_field_dict = dict()
+        editable_field_dict = {}
         for sql in editable_column_ids:
           alias = sql.replace('.', '_')
           editable_field_dict[alias] = ListBoxRenderer(
@@ -2754,55 +2754,56 @@ class ListBoxValidator(Validator.Validator):
           
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
-        params = here.portal_selections.getSelectionParamsFor(
+        portal = here.getPortalObject()
+        params = portal.portal_selections.getSelectionParamsFor(
                                                            selection_name,
                                                            REQUEST=REQUEST)
-        portal_url = getToolByName(here, 'portal_url')
-        portal = portal_url.getPortalObject()
+        portal_url = portal.portal_url
 
         result = {}
         error_result = {}
-        MARKER = []
-        listbox_uids = REQUEST.get('%s_uid' % field.id, MARKER)
-        if listbox_uids is MARKER:
-          raise KeyError, 'Field %s is not present in request object.' % (field.id, )
+        listbox_empty = REQUEST.get('%s_empty' % field.id, False)
+        if listbox_empty:
+          listbox_uids = []
+        else:
+          try:
+            listbox_uids = REQUEST['%s_uid' % field.id]
+          except KeyError:
+            raise KeyError('Field %s is not present in request object.'
+                           % field.id)
+        select = field.get_value('select')
+        if select:
+          selected_uid_set = set(REQUEST.get('uids', ()))
         #LOG('ListBox.validate: REQUEST',0,REQUEST)
         errors = []
-        object_list = []
+        object_list = None
         # We have two things to do in the case of temp objects,
         # the first thing is to create a list with new temp objects
         # then try to validate some data, and then create again
         # the list with a listbox as parameter. Like this we
         # can use tales expression
-        for uid in listbox_uids:
-          if str(uid).find('new') == 0:
-            list_method = field.get_value('list_method')
-            list_method = getattr(here, list_method.method_name)
-            #LOG('ListBoxValidator', 0, 'call %s' % repr(list_method))
-            object_list = list_method(REQUEST=REQUEST, **params)
-            break
         listbox = {}
         for uid in listbox_uids:
-          if str(uid).find('new') == 0:
-            o = None
-            for object in object_list:
-              if object.getUid()==uid:
-                o = object
-            if o is None:
+          if uid[:4] == 'new_':
+            if object_list is None:
+              list_method = field.get_value('list_method')
+              list_method = getattr(here, list_method.method_name)
+              #LOG('ListBoxValidator', 0, 'call %s' % repr(list_method))
+              object_list = list_method(REQUEST=REQUEST, **params)
+            row_key = uid[4:]
+            for o in object_list:
+              if o.getUid() == uid:
+                break
+            else:
               # First case: dialog input to create new objects
-              o = newTempBase(portal, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
+              o = newTempBase(portal, row_key) # Arghhh - XXX acquisition problem - use portal root
               o.uid = uid
-            listbox[uid[4:]] = {}
+            listbox[row_key] = row_result = {}
             # We first try to set a listbox corresponding to all things
             # we can validate, so that we can use the same list
             # as the one used for displaying the listbox
             for sql in editable_column_ids:
-              alias = sql.replace('.', '_')
-              if '.' in sql:
-                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
-              else:
-                property_id = alias
-              editable_field = editable_field_dict.get(alias)
+              editable_field = editable_field_dict.get(sql.replace('.', '_'))
               if editable_field is not None:
                 error_result_key = '%s_%s' % (editable_field.id, o.uid)
                 key = 'field_' + error_result_key
@@ -2810,39 +2811,31 @@ class ListBoxValidator(Validator.Validator):
                 try:
                   value = editable_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
-                  listbox[uid[4:]][sql] = value
+                  row_result[sql] = value
                 except ValidationError, err:
                   pass
                 except KeyError:
                   pass
         # Here we generate again the object_list with listbox the listbox we
         # have just created
-        if len(listbox)>0:
+        if listbox:
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
           REQUEST.set(field.id, listbox)
           object_list = list_method(REQUEST=REQUEST, **params)
         for uid in listbox_uids:
-          if str(uid).find('new') == 0:
+          row_result = {}
+          if uid[:4] == 'new_':
             # First case: dialog input to create new objects
-            #o = newTempBase(here, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
-            #o.uid = uid
-            o = None
-            for object in object_list:
-              if object.getUid()==uid:
-                o = object
-            if o is None:
-              # First case: dialog input to create new objects
-              o = newTempBase(portal, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
+            row_key = uid[4:]
+            for o in object_list:
+              if o.getUid() == uid:
+                break
+            else:
+              o = newTempBase(portal, row_key) # Arghhh - XXX acquisition problem - use portal root
               o.uid = uid
-            result[uid[4:]] = {}
             for sql in editable_column_ids:
-              alias = sql.replace('.', '_')
-              if '.' in sql:
-                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
-              else:
-                property_id = alias
-              editable_field = editable_field_dict.get(alias)
+              editable_field = editable_field_dict.get(sql.replace('.', '_'))
               if editable_field is not None:
                 REQUEST.set('cell', o)
                 editable = editable_field.get_value('editable', REQUEST=REQUEST)
@@ -2851,8 +2844,8 @@ class ListBoxValidator(Validator.Validator):
                   error_result_key = '%s_%s' % (editable_field.id, o.uid)
                   key = 'field_' + error_result_key
                   try:
-                    value = editable_field._validate_helper(key, REQUEST) # We need cell
-                    result[uid[4:]][sql] = value
+                    row_result[sql] = editable_field._validate_helper(
+                      key, REQUEST) # We need cell
                   except ValidationError, err:
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
@@ -2869,43 +2862,34 @@ class ListBoxValidator(Validator.Validator):
               # because sometimes, we can be provided bad uids
               try :
                 o = here.portal_catalog.getObject(uid)
-              except (KeyError, NotFound, ValueError):
-                o = None
-              if o is None:
+              except (KeyError, NotFound, ValueError), err:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
-                if not object_list:
+                if object_list is None:
                   list_method = field.get_value('list_method')
                   list_method = getattr(here, list_method.method_name)
                   object_list = list_method(REQUEST=REQUEST, **params)
-                for object in object_list:
+                for o in object_list:
                   try:
-                    if object.getUid() == int(uid):
-                      o = object
+                    if o.getUid() == int(uid):
                       break
                   except ValueError:
-                    if str(object.getUid()) == uid:
-                      o = object
+                    if str(o.getUid()) == uid:
                       break
-              for sql in editable_column_ids:
-                alias = sql.replace('.', '_')
-                if '.' in sql:
-                  property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
                 else:
-                  property_id = alias
-                editable_field = editable_field_dict.get(alias)
+                  raise err
+              row_key = o.getUrl()
+              for sql in editable_column_ids:
+                editable_field = editable_field_dict.get(sql.replace('.', '_'))
                 if editable_field is not None:
                   REQUEST.set('cell', o) # We need cell
-                  if editable_field.get_value('editable', REQUEST=REQUEST) \
-                                              and field.need_validate(REQUEST):
+                  if editable_field.get_value('editable', REQUEST=REQUEST) and \
+                     editable_field.need_validate(REQUEST):
                     error_result_key = '%s_%s' % (editable_field.id, o.uid)
                     key = 'field_' + error_result_key
                     try:
-                      value = editable_field._validate_helper(key, REQUEST)
-                      error_result[error_result_key] = value
-                      if not result.has_key(o.getUrl()):
-                        result[o.getUrl()] = {}
-                      result[o.getUrl()][sql] = value
+                      row_result[sql] = error_result[error_result_key] = \
+                        editable_field._validate_helper(key, REQUEST)
                     except ValidationError, err:
                       err.field_id = error_result_key
                       errors.append(err)
@@ -2916,6 +2900,9 @@ class ListBoxValidator(Validator.Validator):
             #except:
             else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
+          result[row_key] = row_result
+          if select:
+            row_result['listbox_selected'] = uid in selected_uid_set
         if len(errors) > 0:
             #LOG("ListBox FormValidationError",0,str(error_result))
             #LOG("ListBox FormValidationError",0,str(errors))

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts83858910.02</string> </value>
+            <value> <string>ts44338476.75</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/x-unknown-content-type</string> </value>
+            <value> <string>application/x-php</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -52,7 +52,7 @@ function print_textinputs_var() {\r\n
 \tglobal $textinputs;\r\n
 \tforeach( $textinputs as $key=>$val ) {\r\n
 \t\t# $val = str_replace( "\'", "%27", $val );\r\n
-\t\techo "textinputs[$key] = decodeURIComponent(\\"" . $val . "\\");\\n";\r\n
+\t\techo "textinputs[$key] = decodeURIComponent(\\"" . htmlspecialchars($val, ENT_QUOTES) . "\\");\\n";\r\n
 \t}\r\n
 }\r\n
 \r\n
@@ -235,7 +235,7 @@ wordWindowObj.writeBody();\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5854</int> </value>
+            <value> <int>5884</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

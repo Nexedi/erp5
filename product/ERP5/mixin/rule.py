@@ -26,12 +26,16 @@
 #
 ##############################################################################
 
+import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5Type.Errors import SimulationError
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5.ExpandPolicy import policy_dict
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 from zLOG import LOG
@@ -153,8 +157,7 @@ class RuleMixin(Predicate):
   movement_type = 'Simulation Movement'
 
   # Implementation of IRule
-  def constructNewAppliedRule(self, context, id=None,
-                              activate_kw=None, **kw):
+  def constructNewAppliedRule(self, context, **kw):
     """
     Create a new applied rule in the context.
 
@@ -170,14 +173,8 @@ class RuleMixin(Predicate):
 
     kw -- XXX-JPS probably wrong interface specification
     """
-    if id is None:
-      id = context.generateNewId()
-    if getattr(aq_base(context), id, None) is None:
-      context.newContent(id=id,
-                         portal_type='Applied Rule',
-                         specialise_value=self,
-                         activate_kw=activate_kw)
-    return context.get(id)
+    return context.newContent(portal_type='Applied Rule',
+                              specialise_value=self, **kw)
 
   if 0: # XXX-JPS - if people are stupid enough not to configfure predicates,
         # it is not our role to be clever for them
@@ -192,7 +189,7 @@ class RuleMixin(Predicate):
       return False
     return super(RuleMixin, self).test(*args, **kw)
 
-  def expand(self, applied_rule, **kw):
+  def expand(self, applied_rule, expand_policy=None, **kw):
     """
     Expand this applied rule to create new documents inside the
     applied rule.
@@ -202,13 +199,17 @@ class RuleMixin(Predicate):
     by a decision (ie. a resource is changed), then we
     should not try to compensate such a decision.
     """
-    # Update movements
+    policy_dict[expand_policy](**kw).expand(self, applied_rule)
+
+  def _expandNow(self, maybe_expand, applied_rule):
+    # Update moveme-nts
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
-    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator(applied_rule))
+    self.updateMovementCollection(applied_rule,
+      movement_generator=self._getMovementGenerator(applied_rule))
     # And forward expand
     for movement in applied_rule.getMovementList():
-      movement.expand(**kw)
+      maybe_expand(movement)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isAccountable')
@@ -474,3 +475,133 @@ class RuleMixin(Predicate):
         new_movement = self._newProfitAndLossMovement(prevision_movement)
         movement_collection_diff.addNewMovement(new_movement)
 
+
+class SimulableMixin(Base):
+
+  def updateSimulation(self, **kw):
+    """Create/update related simulation trees by activity
+
+    This method is used to maintain related objects in simulation trees:
+    - hiding complexity of activity dependencies
+    - avoiding duplicate work
+
+    Repeated calls of this method for the same delivery will result in a single
+    call to _updateSimulation. Grouping may happen at the end of the transaction
+    or by the grouping method.
+
+    See _updateSimulation for accepted parameters.
+    """
+    tv = getTransactionalVariable()
+    key = 'SimulableMixin.updateSimulation', self.getUid()
+    item_list = kw.items()
+    try:
+      kw, ignore = tv[key]
+      kw.update(item_list)
+    except KeyError:
+      ignore_key = key + ('ignore',)
+      ignore = tv.pop(ignore_key, set())
+      tv[key] = kw, ignore
+      def before_commit():
+        if kw:
+          path = self.getPath()
+          if aq_base(self.unrestrictedTraverse(path, None)) is aq_base(self):
+            self.activate(
+              activity='SQLQueue',
+              group_method_id='portal_rules/updateSimulation',
+              tag='expand:' + path,
+              after_tag='built:'+ path, # see SimulatedDeliveryBuilder
+              priority=3,
+              )._updateSimulation(**kw)
+        del tv[key]
+        ignore.update(kw)
+        tv[ignore_key] = ignore
+      transaction.get().addBeforeCommitHook(before_commit)
+    for k, v in item_list:
+      if not v:
+        ignore.add(k)
+      elif k not in ignore:
+        continue
+      del kw[k]
+
+  def _updateSimulation(self, create_root=0, expand_root=0,
+                              expand_related=0, index_related=0):
+    """
+    Depending on set parameters, this method will:
+      create_root    -- if a root applied rule is missing, create and expand it
+      expand_root    -- expand related root applied rule,
+                        create it before if missing
+      expand_related -- reindex related simulation movements (recursively)
+      index_related  -- expand related simulation movements
+    """
+    if create_root or expand_root:
+      applied_rule = self._getRootAppliedRule()
+      if applied_rule is None:
+        applied_rule = self._createRootAppliedRule()
+        expand_root = applied_rule is not None
+    activate_kw = {'tag': 'expand:'+self.getPath()}
+    if expand_root:
+      applied_rule.expand(activate_kw=activate_kw)
+    else:
+      applied_rule = None
+    if expand_related:
+      for movement in self._getAllRelatedSimulationMovementList():
+        movement = movement.getObject()
+        if not movement.aq_inContextOf(applied_rule):
+          # XXX: make sure this will also reindex of all sub-objects recursively
+          movement.expand(activate_kw=activate_kw)
+    elif index_related:
+      for movement in self._getAllRelatedSimulationMovementList():
+        movement = movement.getObject()
+        if not movement.aq_inContextOf(applied_rule):
+          movement.recursiveReindexObject(activate_kw=activate_kw)
+
+  def getRuleReference(self):
+    """Returns an appropriate rule reference
+
+    XXX: Using reference to select a rule (for a root applied rule) is wrong
+         and should be replaced by predicate and workflow state.
+    """
+    method = self._getTypeBasedMethod('getRuleReference')
+    if method is None:
+      raise SimulationError("Missing type-based 'getRuleReference' script for "
+                            + repr(self))
+    return method()
+
+  def _getRootAppliedRule(self):
+    """Get related root applied rule if it exists"""
+    applied_rule_list = self.getCausalityRelatedValueList(
+        portal_type='Applied Rule')
+    if len(applied_rule_list) == 1:
+      return applied_rule_list[0]
+    elif applied_rule_list:
+      raise SimulationError('%r has more than one applied rule.' % self)
+
+  def _createRootAppliedRule(self):
+    """Create a root applied rule"""
+    # XXX: Consider moving this first test to Delivery
+    if self.isSimulated():
+      # No need to have a root applied rule
+      # if we are already in the simulation process
+      return
+    rule_reference = self.getRuleReference()
+    if rule_reference:
+      portal = self.getPortalObject()
+      rule_list = portal.portal_catalog.unrestrictedSearchResults(
+        portal_type=portal.getPortalRuleTypeList(),
+        validation_state="validated", reference=rule_reference,
+        sort_on='version', sort_order='descending')
+      if rule_list:
+        applied_rule = rule_list[0].constructNewAppliedRule(
+          portal.portal_simulation, is_indexable=False)
+        applied_rule._setCausalityValue(self)
+        del applied_rule.isIndexable
+        applied_rule.immediateReindexObject()
+        self.serialize() # prevent duplicate root Applied Rule
+        return applied_rule
+      raise SimulationError("No such rule as %r is found" % rule_reference)
+
+  def manage_beforeDelete(self, item, container):
+    """Delete related Applied Rule"""
+    for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
+      o.getParentValue().deleteContent(o.getId())
+    super(SimulableMixin, self).manage_beforeDelete(item, container)

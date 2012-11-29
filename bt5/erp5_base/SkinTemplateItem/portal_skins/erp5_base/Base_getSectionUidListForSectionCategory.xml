@@ -55,14 +55,15 @@
 This will only return organisations member of this section category.\n
 If \'strict_membership\' is true, then only organisations strictly member\n
 of the category will be returned.\n
+If no organisations are member of this section category, then [-1] is returned.\n
 """\n
 portal = context.getPortalObject()\n
 \n
 section = portal.portal_categories.restrictedTraverse(section_category)\n
-return [x.getUid() for x in\n
+return [x.uid for x in\n
             section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
                                              strict_membership=strict_membership,\n
-                                             checked_permission=\'View\')]\n
+                                             checked_permission=\'View\')] or [-1]\n
 </string> </value>
         </item>
         <item>

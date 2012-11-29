@@ -1898,6 +1898,66 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     self.failUnless('catalog.reference'
                     in catalog.sql_search_result_keys)
 
+  def stepModifyRelatedKey(self, sequence):
+    catalog = self.getCatalogTool().getSQLCatalog()
+    related_key = sequence['related_key']
+    related_key_list = list(catalog.sql_catalog_related_keys)
+    related_key_list.remove(related_key)
+    # related_key_2 <- 'fake_id | category/catalog/z_fake_method_2':
+    related_key_2 = related_key + '_2'
+    related_key_list.append(related_key_2)
+    catalog.sql_catalog_related_keys = tuple(related_key_list)
+    sequence['related_key_2'] = related_key_2
+    # check related key column is not present twice:
+    self.assertTrue(related_key_2.startswith('fake_id |'), related_key_2)
+    self.assertEqual(len([key for key in related_key_list
+                          if key.startswith('fake_id |')]), 1)
+
+  def stepCheckRelatedKeyNonDuplicated(self, sequence):
+    catalog = self.getCatalogTool().getSQLCatalog()
+    related_key = sequence['related_key']
+    related_key_2 = sequence['related_key_2']
+    related_key_list = list(catalog.sql_catalog_related_keys)
+    # stepModifyRelatedKey added related_key_2 and removed related_key
+    # but the reinstallation of the BT replaced related_key_2 with
+    # related_key:
+    self.assertTrue(related_key in related_key_list)
+    self.assertFalse(related_key_2 in related_key_list)
+    # make sure there's only one entry
+    self.assertTrue(related_key.startswith('fake_id |'), related_key)
+    self.assertEqual(len([key for key in related_key_list
+                          if key.startswith('fake_id |')]), 1)
+
+  def stepDuplicateRelatedKeyColumn(self, sequence):
+    catalog = self.getCatalogTool().getSQLCatalog()
+    related_key = sequence['related_key']
+    related_key_2 = sequence['related_key_2']
+    related_key_list = list(catalog.sql_catalog_related_keys)
+    self.assertTrue(related_key in related_key_list)
+    self.assertFalse(related_key_2 in related_key_list)
+    # we manually duplicate the key in the list, creating an invalid situation
+    self.assertEqual(len([key for key in related_key_list
+                          if key.startswith('fake_id |')]), 1)
+    related_key_list.append(related_key_2)
+    catalog.sql_catalog_related_keys = tuple(related_key_list)
+    self.assertEqual(len([key for key in related_key_list
+                          if key.startswith('fake_id |')]), 2)
+    
+  def stepCheckOnlyDuplicateRelatedKeyRemains(self, sequence):
+    catalog = self.getCatalogTool().getSQLCatalog()
+    related_key = sequence['related_key']
+    related_key_2 = sequence['related_key_2']
+    related_key_list = list(catalog.sql_catalog_related_keys)
+    # after the uninstallation of the BT, only the wrong/duplicated
+    # entry remains because the original was uninstalled with the BT.
+    # This also means that an uninstallation of a BT does not
+    # accidentally removes an overriding key from another BT that
+    # depends on it.
+    self.assertFalse(related_key in related_key_list)
+    self.assertTrue(related_key_2 in related_key_list)
+    self.assertEqual(len([key for key in related_key_list
+                          if key.startswith('fake_id |')]), 1)
+
   def stepRemoveCatalogLocalConfiguration(self, sequence, **kw):
     """
     Remove modification made in stepModifyCatalogConfiguration
@@ -1919,7 +1979,13 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     sql_search_tables.remove(result_table)
     sql_search_tables.sort()
     catalog.sql_search_tables = tuple(sql_search_tables)
-    self.failUnless(result_table not in catalog.sql_search_tables)
+    self.assertFalse(result_table in catalog.sql_search_tables)
+    # related key
+    related_key_2 = sequence['related_key_2']
+    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
+    sql_catalog_related_keys.remove(related_key_2)
+    catalog.sql_catalog_related_keys = tuple(sql_catalog_related_keys)
+    self.assertFalse(related_key_2 in catalog.sql_catalog_related_keys)
 
   def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, **kw):
     """
@@ -5250,7 +5316,10 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.play(self)
 
   def test_30_CheckInstalledCatalogProperties(self):
-    """Test if installing some new catalog properties overwrites existing ones"""
+    """
+    Test if installing some new catalog properties do not overwrite existing ones
+
+    Also check that it doesn't install two keys for the same column"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -5262,12 +5331,16 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        ModifyCatalogConfiguration \
+                       ModifyRelatedKey \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallBusinessTemplate \
                        Tic \
                        CheckCatalogConfigurationKept \
+                       CheckRelatedKeyNonDuplicated \
+                       DuplicateRelatedKeyColumn \
                        UninstallBusinessTemplate \
+                       CheckOnlyDuplicateRelatedKeyRemains \
                        CheckCatalogConfigurationKept \
                        RemoveCatalogLocalConfiguration \
                        '
@@ -6523,6 +6596,90 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt5_obj.edit()
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
+
+  def test_local_roles_group_id(self):
+    """Tests that roles definition defining local roles group ids are properly
+    exported and installed.
+    """
+    # change security uid columns
+    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    saved_sql_catalog_security_uid_columns = \
+      sql_catalog.sql_catalog_security_uid_columns
+
+    sql_catalog.sql_catalog_security_uid_columns = (
+      ' | security_uid',
+      'Alternate | alternate_security_uid',
+    )
+    # add category
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category', 
+      reference = 'Alternate',
+      id = 'Alternate')
+
+    types_tool = self.portal.portal_types
+    object_type = types_tool.newContent('Geek Object', 'Base Type',
+                                type_class='Person')
+
+    types_tool.newContent('Geek Module', 'Base Type',
+      type_class='Folder',
+      type_filter_content_type=1,
+      type_allowed_content_type_list=('Geek Object',), )
+
+    self.portal.newContent(portal_type='Geek Module', id='geek_module')
+    new_object = self.portal.geek_module.newContent(
+      portal_type='Geek Object', id='1')
+
+    # simulate role assignment
+    new_object.__ac_local_roles__ = dict(group=['Assignee'])
+    initial___ac_local_roles_group_id_dict__ = dict(Alternate=set([('group', 'Assignee')]))
+    new_object.__ac_local_roles_group_id_dict__ = initial___ac_local_roles_group_id_dict__
+    self.tic()
+
+    object_type.newContent(portal_type='Role Information',
+                           local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),
+                           role_name_list=('Assignee', ))
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title=self.id(),
+                          template_local_roles_list=('geek_module/1',),
+                          template_path_list=('geek_module/1',),
+                          template_portal_type_role_list=('Geek Object',),)
+
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # uninstall role information and paths
+    object_type.manage_delObjects([x.id for x in object_type.getRoleInformationList()])
+    self.portal.geek_module.manage_delObjects(['1'])
+    self.tic()
+
+    new_bt.install()
+    try:
+      role, = object_type.getRoleInformationList()
+      self.assertEquals(self.portal.portal_categories.local_role_group.Alternate, 
+                        role.getLocalRoleGroupValue())
+      path = self.portal.geek_module['1']
+      self.assertEquals([('group', ['Assignee'],)], [item for item in
+            path.__ac_local_roles__.items() if item[1] != ['Owner']])
+      self.assertEquals(initial___ac_local_roles_group_id_dict__,
+        path.__ac_local_roles_group_id_dict__)
+    finally:
+      # restore state
+      sql_catalog.sql_catalog_security_uid_columns = \
+        saved_sql_catalog_security_uid_columns
+      types_tool.manage_delObjects(['Geek Object', 'Geek Module'])
+      self.portal.manage_delObjects(['geek_module'])
+      self.tic()
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()

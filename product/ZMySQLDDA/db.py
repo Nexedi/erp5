@@ -222,7 +222,11 @@ class ThreadedDeferredDB:
         if '@' in db_host:
             db, host = split(db_host,'@',1)
             kwargs['db'] = db
-            if ':' in host:
+            if host.startswith('['):
+                host, port = split(host[1:], ']', 1)
+                if port.startswith(':'):
+                  kwargs['port'] = int(port[1:])
+            elif ':' in host:
                 host, port = split(host,':',1)
                 kwargs['port'] = int(port)
             kwargs['host'] = host

@@ -129,6 +129,10 @@
                           <string>Cache Factory</string>
                           <string>Cache Factory</string>
                         </tuple>
+                        <tuple>
+                          <string>Cache Bag</string>
+                          <string>Cache Bag</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

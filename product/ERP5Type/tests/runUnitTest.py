@@ -139,8 +139,7 @@ Options:
                              Make ZServer listen on given host:port
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
-  --neo_storage              Use a volatile NEO storage instead of a DemoStorage
-                             (not compatible with --save or --load).
+  --neo_storage              Use a NEO storage (SQLite) instead of FileStorage.
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
   --sys_path=path,path       Comma-separated list of paths which will be used to
@@ -637,6 +636,8 @@ def main(argument_list=None):
         "hpvD", ["help", "verbose", "profile", "coverage=", "portal_id=",
         "data_fs_path=",
         "bt5_path=",
+        "firefox_bin=",
+        "xvfb_bin=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
@@ -712,6 +713,10 @@ def main(argument_list=None):
     elif opt ==  '--bt5_path':
       os.environ["erp5_tests_bt5_path"] = \
           os.environ.get("erp5_tests_bt5_path", "") + arg
+    elif opt == '--firefox_bin':
+      os.environ["firefox_bin"] = arg
+    elif opt == '--xvfb_bin':
+      os.environ["xvfb_bin"] = arg
     elif opt == '--recreate_catalog':
       os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":

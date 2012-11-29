@@ -35,6 +35,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Base import Base
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -2066,23 +2067,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       raise ValueError, 'This method always fail'
     Message.notifyUser = failingMethod
     Organisation.failingMethod = failingMethod
-    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList'% (activity, ))
+    getMessageList = self.getPortalObject().portal_activities.getMessageList
     try:
       obj.activate(activity=activity, priority=6).failingMethod()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      with_processing_len = len(readMessageList(path=None,
-                                                to_date=None,
-                                                method_id='failingMethod',
-                                                include_processing=1,
-                                                processing_node=None))
-      without_processing_len = len(readMessageList(path=None,
-                                                   to_date=None,
-                                                   method_id='failingMethod',
-                                                   include_processing=0,
-                                                   processing_node=None))
-      self.assertEqual(with_processing_len, 1)
-      self.assertEqual(without_processing_len, 1)
+      message, = getMessageList(activity=activity, method_id='failingMethod')
+      self.assertEqual(message.processing, 0)
     finally:
       Message.notifyUser = original_notifyUser
       delattr(Organisation, 'failingMethod')
@@ -2627,7 +2618,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       processing_node.
       This must happen on first message execution, without any delay.
     """
-    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList' % (activity, ))
     activity_tool = self.getActivityTool()
     container = self.getPortal().organisation_module
     organisation = container.newContent(portal_type='Organisation')
@@ -2644,13 +2634,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(getattr(container, organisation_id, None), None)
     self.assertEqual(len(activity_tool.getMessageList()), 1)
     activity_tool.distribute()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 0)
+    self.assertEqual([], activity_tool.getMessageList(activity=activity,
+                                                      processing_node=-3))
     activity_tool.tic()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 1)
+    self.assertEqual(1, len(activity_tool.getMessageList(activity=activity,
+                                                         processing_node=-3)))
 
   def test_109_checkMissingActivityContextObjectSQLDict(self, quiet=0,
       run=run_all_test):
@@ -2682,7 +2670,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                 'group_method_id (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    readMessageList = self.getPortalObject().SQLDict_readMessageList
     activity_tool = self.getActivityTool()
     container = self.getPortalObject().organisation_module
     organisation = container.newContent(portal_type='Organisation')
@@ -2701,15 +2688,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(getattr(container, organisation_id, None), None)
     self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.distribute()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 0)
+    self.assertEqual([], activity_tool.getMessageList(activity="SQLDict",
+                                                      processing_node=-3))
     activity_tool.tic()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 1)
+    message, = activity_tool.getMessageList()
     # The message excuted on "organisation_2" must have succeeded.
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(message.processing_node, -3)
 
   def CheckLocalizerWorks(self, activity):
     FROM_STRING = 'Foo'
@@ -3116,21 +3100,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
 
     from Products.CMFActivity import ActivityTool
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 1)
+    activity = ActivityTool.activity_dict['SQLDict']
+    activity.getProcessableMessageList(activity_tool, 1)
     self.commit()
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 2)
+    activity.getProcessableMessageList(activity_tool, 2)
     self.commit()
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 3)
+    activity.getProcessableMessageList(activity_tool, 3)
     self.commit()
 
-    result = activity_tool.SQLDict_readMessageList(include_processing=1,
-                                                   processing_node=None,
-                                                   path=None,
-                                                   method_id=None,
-                                                   to_date=None,
-                                                   offset=0,
-                                                   count=1000)
-
+    result = activity._getMessageList(activity_tool)
     try:
       self.assertEqual(len([message
                             for message in result
@@ -3585,6 +3563,70 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       activity_tool.__class__.invokeGroup = ActivityTool_invokeGroup
     self.assertEqual(invoked, [1])
+
+  def test_mergeParent(self):
+    category_tool = self.portal.portal_categories
+    # Test data:     c0
+    #               /  \
+    #             c1    c2
+    #            /  \   |
+    #           c3  c4  c5
+    c = [category_tool.newContent()]
+    for i in xrange(5):
+      c.append(c[i//2].newContent())
+    transaction.commit()
+    self.tic()
+    def activate(i, priority=1, **kw):
+      kw.setdefault('merge_parent', c[0].getPath())
+      c[i].activate(priority=priority, **kw).doSomething()
+    def check(*expected):
+      transaction.commit()
+      self.tic()
+      self.assertEquals(tuple(invoked), expected)
+      del invoked[:]
+    invoked = []
+    def doSomething(self):
+      invoked.append(c.index(self))
+    Base.doSomething = doSomething
+    try:
+      for t in (0, 1), (0, 4, 2), (1, 0, 5), (3, 2, 0):
+        for p, i in enumerate(t):
+          activate(i, p)
+        check(0)
+      activate(1, 0); activate(5, 1); check(1, 5)
+      activate(3, 0); activate(1, 1); check(1)
+      activate(2, 0); activate(1, 1); activate(4, 2); check(2, 1)
+      activate(4, 0); activate(5, 1); activate(3, 2); check(4, 5, 3)
+      activate(3, 0, merge_parent=c[1].getPath()); activate(0, 1); check(3, 0)
+      # Following test shows that a child can be merged with a parent even if
+      # 'merge_parent' is not specified. This can't be avoided without loading
+      # all found duplicates, which would be bad for performance.
+      activate(0, 0); activate(4, 1, merge_parent=None); check(0)
+    finally:
+      del Base.doSomething
+    def activate(i, priority=1, **kw):
+      c[i].activate(group_method_id='portal_categories/invokeGroup',
+                    merge_parent=c[(i-1)//2 or i].getPath(),
+                    priority=priority, **kw).doSomething()
+    def invokeGroup(self, message_list):
+      invoked.append([c.index(m[0]) for m in message_list])
+    category_tool.__class__.invokeGroup = invokeGroup
+    try:
+      activate(5, 0); activate(1, 1); check([5, 1])
+      activate(4, 0); activate(1, 1); activate(2, 0); check([1, 2])
+      activate(1, 0); activate(5, 0); activate(3, 1); check([1, 5])
+      for p, i in enumerate((5, 3, 2, 1, 4)):
+        activate(i, p, group_id=str(2 != i != 5))
+      check([2], [1])
+      for cost in 0.3, 0.1:
+        activate(2, 0, group_method_cost=cost)
+        activate(3, 1);  activate(4, 2); activate(1, 3)
+        check([2, 1])
+    finally:
+      del category_tool.__class__.invokeGroup
+    category_tool._delObject(c[0].getId())
+    transaction.commit()
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

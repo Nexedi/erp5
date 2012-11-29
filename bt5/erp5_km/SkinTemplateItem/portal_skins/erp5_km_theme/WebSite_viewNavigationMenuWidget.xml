@@ -161,6 +161,11 @@
             i18n:domain="ui">My Profile</a>\n
       </li>\n
       <li>\n
+      <a href="ERP5Site_viewNewPersonCredentialUpdateDialog" \n
+         i18n:translate="" \n
+         i18n:domain="ui">My Credentials</a>\n
+      </li>\n
+      <li>\n
       <a href="WebSite_redirectToUserPreference" \n
          i18n:translate="" \n
          i18n:domain="ui">My Preferences</a>\n

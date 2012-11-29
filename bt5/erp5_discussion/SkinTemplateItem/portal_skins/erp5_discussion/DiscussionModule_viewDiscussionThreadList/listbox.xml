@@ -122,6 +122,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -139,6 +143,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>agent_value</string>

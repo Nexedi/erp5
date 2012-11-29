@@ -50,14 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>"""\n
+  Create a blog message for current Web Section.\n
+  Try to guess as much as possible from current Web Section.\n
+"""\n
+\n
+portal = context.getPortalObject()\n
 portal_type = \'Web Page\'\n
 module = portal.getDefaultModule(portal_type=portal_type)\n
 \n
-authenticated_member = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-contributor_list=[]\n
-if authenticated_member is not None:\n
-  contributor_list.append(authenticated_member.getRelativeUrl())\n
+# set predicate settings for current Web Section\n
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
+\n
+# generate nice reference from title\n
+reference = context.Base_generateReferenceFromString(title)\n
+existing_document = context.getDocumentValue(reference)\n
+if existing_document is not None:\n
+  # if there are other document which reference duplicates just add some random part\n
+  # so we can distinguish)\n
+  reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
+\n
 article = module.newContent(portal_type=portal_type,\n
                   title=title,\n
                   version=version,\n
@@ -70,16 +82,25 @@ article = module.newContent(portal_type=portal_type,\n
                   group_list=group_list,\n
                   function_list=function_list,\n
                   effective_date=effective_date,\n
-                  classification=classification,\n
-                  contributor_list=contributor_list,)\n
+                  classification=classification)\n
+article.setCategoryList(membership_criterion_category_list)\n
 article.submit("Automatic Submit")\n
-portal_status_message = context.Base_translateString("New Blog Message created.")\n
-return article.Base_redirect(\'\', keep_items = dict(portal_status_message=portal_status_message ))\n
+\n
+portal_status_message = context.Base_translateString("New Blog Message created. It will be submitted for approval before it becomes visible.")\n
+return context.Base_redirect(\'\', keep_items = dict(portal_status_message=portal_status_message ))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>classification=None, effective_date=None, function_list=None, group_list=None, language=None, publication_section_list=None, reference=None, site_list=None, subject_list=None, text_content=None, title=None, version=None, **kw</string> </value>
+            <value> <string>classification=None, effective_date=None, function_list=None, group_list=None, language=\'en\', publication_section_list=None, reference=None, site_list=None, subject_list=None, text_content=None, title=None, version=\'001\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

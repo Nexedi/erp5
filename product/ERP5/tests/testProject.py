@@ -31,7 +31,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProject(ERP5TypeTestCase):
   """ Test for Project API and scripts and forms 
@@ -110,7 +109,6 @@ class TestProject(ERP5TypeTestCase):
 
     self.tic()
 
-  @newSimulationExpectedFailure
   def testProject_getSourceProjectRelatedTaskReportList(self):
     """
      Basic Test if the script behaviour as expected.

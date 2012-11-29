@@ -50,30 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].calculate()\n
+            <value> <string>delivery = state_change[\'object\'].getExplanationValue()\n
+try:\n
+  delivery.aq_explicit.getCausalityState\n
+except AttributeError:\n
+  return\n
+delivery.activate(tag=\'expand:\'+delivery.getPath()).Delivery_calculate()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

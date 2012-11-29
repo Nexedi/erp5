@@ -6,7 +6,7 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: getattr(context, 'getVersion', None) is not None</value>
+  <value>python: getattr(context, 'getLanguage', None) is not None or getattr(context, 'getVersion', None) is not None</value>
  </item>
  <item key="_filter_expression_cache_key_archive" type="tuple">
   <value>portal_type</value>

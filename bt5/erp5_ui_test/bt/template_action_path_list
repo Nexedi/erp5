@@ -17,6 +17,7 @@ Foo | view_duration_field
 Foo | view_formbox
 Foo | view_formbox_dialog
 Foo | view_listbox
+Foo | view_multiple_listbox
 Foo | view_planning
 Foo | view_proxy_field
 Foo | view_relation_field

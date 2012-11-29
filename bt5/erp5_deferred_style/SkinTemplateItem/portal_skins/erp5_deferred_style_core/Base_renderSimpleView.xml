@@ -76,7 +76,7 @@ attachment_list = (\n
 # XXX Use notification message to improve message content\n
 portal.portal_notifications.sendMessage(\n
   recipient=user_name,\n
-  subject=attachment_name.rsplit(\'.\', 1)[0],\n
+  subject=str(attachment_name.rsplit(\'.\', 1)[0]),\n
   message=str(translateString(\'Your report is attached.\\n\')),\n
   message_text_format=\'text/plain\',\n
   notifier_list=(\'Mail Message\',),\n

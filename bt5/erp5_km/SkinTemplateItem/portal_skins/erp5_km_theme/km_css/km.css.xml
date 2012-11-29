@@ -1340,6 +1340,22 @@ button.formbt > span{\n
 .full-width{\n
   width:100%;\n
 }\n
+\n
+/* discussions */\n
+.discussion-post-body-container a{\n
+  color:#686868;\n
+  text-decoration: underline;\n
+}\n
+/* web page list item */\n
+.page ul li {\n
+    list-style: square outside none;\n
+}\n
+\n
+/* contained inside content area images should be re-sized to fit in */\n
+.content img {\n
+  max-width: 720px;\n
+}\n
+\n
 </tal:block>
 
 ]]></unicode> </value>

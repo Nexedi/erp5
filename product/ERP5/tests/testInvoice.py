@@ -30,6 +30,8 @@
   Tests invoice creation from simulation.
 
 """
+import sys, zipfile, xml.dom.minidom
+import StringIO
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload, DummyMailHost
@@ -669,20 +671,12 @@ class TestInvoiceMixin(TestPackingListMixin):
   def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ checks invoice properties are well set. """
     # Now we will check that we have two invoices created
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-         portal_type=self.invoice_portal_type)
-    self.assertEquals(len(invoice_list),1)
-    invoice = invoice_list[0]
-    self.assertEquals(invoice.getSimulationState(), 'confirmed')
-    sequence.edit(invoice=invoice)
-    new_packing_list = sequence.get('new_packing_list')
-    new_invoice_list = new_packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEquals(len(new_invoice_list),1)
-    new_invoice = new_invoice_list[0]
-    self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
-    sequence.edit(new_invoice=new_invoice)
+    for x in '', 'new_':
+      packing_list = sequence.get(x + 'packing_list')
+      invoice, = packing_list.getCausalityRelatedValueList(
+          portal_type=self.invoice_portal_type)
+      self.assertEqual(invoice.getSimulationState(), 'confirmed')
+      sequence.set(x + 'invoice', invoice)
 
   def stepStartTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ start both invoices. """
@@ -781,50 +775,28 @@ class TestInvoiceMixin(TestPackingListMixin):
     newSecurityManager(None, user)
 
   def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current invoice, to trigger updateAppliedRule."""
+    """Edit the current invoice, to trigger updateSimulation."""
     invoice = sequence.get('invoice')
-    invoice.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_invoice_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    invoice.updateAppliedRule(rule_reference=rule_reference)
+    invoice.edit(description='This invoice was edited!')
 
   def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
                     sequence=None, sequence_list=None, **kw):
     """If we call edit on the invoice, invoice rule should not be
     applied on lines created by delivery builder."""
     invoice = sequence.get('invoice')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(invoice.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for invoice_mvt in invoice.getMovementList():
-      self.assertEquals(len(invoice_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
+    self.assertEqual([], invoice.getCausalityRelatedValueList())
 
   def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current packing list, to trigger updateAppliedRule."""
+    """Edit the current packing list, to trigger updateSimulation."""
     packing_list = sequence.get('packing_list')
-    packing_list.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_delivery_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    packing_list.updateAppliedRule(rule_reference=rule_reference)
+    packing_list.edit(description='This packing list was edited!')
 
   def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
                     sequence=None, sequence_list=None, **kw):
     """If we call edit on the packing list, delivery rule should not be
     applied on lines created by delivery builder."""
     packing_list = sequence.get('packing_list')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(packing_list.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for delivery_mvt in packing_list.getMovementList():
-      self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
+    self.assertEqual([], packing_list.getCausalityRelatedValueList())
 
   def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
       **kw):
@@ -1037,14 +1009,9 @@ class TestInvoiceMixin(TestPackingListMixin):
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),
           '%s does not start with "tic is looping forever."' % str(exc))
-      msg_list = ['/'.join(x.object_path) for x in
-          self.getActivityTool().getMessageList()]
-      self.assertTrue(invoice.getPath() in msg_list, '%s in %s' %
-          (invoice.getPath(), msg_list))
-      method_id_list = [x.method_id for x in
-          self.getActivityTool().getMessageList()]
-      self.assertTrue('Delivery_buildOnComposedDocument' in method_id_list, '%s in %s' %
-          ('Delivery_buildOnComposedDocument', method_id_list))
+      msg_list = [('/'.join(x.object_path), x.method_id)
+          for x in self.getActivityTool().getMessageList()]
+      self.assertTrue((invoice.getPath(), '_localBuild') in msg_list, msg_list)
       # flush failing activities
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
@@ -1609,12 +1576,15 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_transaction_movement.getStopDate())
 
-
   def test_Invoice_viewAsODT(self):
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
+    resource_tax = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource Tax',)
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client')
     vendor = self.portal.organisation_module.newContent(
@@ -1628,14 +1598,78 @@ class TestInvoice(TestInvoiceMixin):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = invoice.newContent(portal_type=self.invoice_line_portal_type,
+    product_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
                             quantity=10,
+                            base_contribution='tax1',
                             price=3)
+    product_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=20,
+                            base_contribution='tax1',
+                            price=5)
+    product_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=60,
+                            base_contribution='tax2',
+                            price=5)
+    product_line4 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=60,
+                            price=3)
+    product_line5 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=7,
+                            price=20)
+    tax_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax1',
+                            quantity=130,
+                            price=0.2)
+    tax_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax2',
+                            quantity=300,
+                            price=0.05)
+    tax_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax3',
+                            quantity=20,
+                            price=0.1)
     invoice.confirm()
     self.tic()
-
     odt = invoice.Invoice_viewAsODT()
+    import cStringIO
+    output = cStringIO.StringIO()
+    output.write(odt)
+    m = OpenDocumentTextFile(output)
+    text_content=m.toString().encode('ascii','replace')
+    if text_content.find('Resource Tax') != -1 :
+      self.fail('fail to delete the vat line in product line')
+    if text_content.find('Vat Code') == -1 :
+      self.fail('fail to add the vat code')
+    if text_content.find('Amount') == -1 :
+      self.fail('fail to add the amount for each tax')
+    if text_content.find('Rate') == -1 :
+      self.fail('fail to add the Rate for each tax')
+    tax1_product_total_price=str(10*3+20*5)
+    if text_content.find(tax1_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which tax1')
+    tax2_product_total_price=str(60*5)
+    if text_content.find(tax2_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which tax2')
+    no_tax_product_total_price=str(60*3+7*20)
+    if text_content.find(no_tax_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which have no tax')
+    product_total_price_no_tax=str(10*3+20*5+60*5+60*3+7*20)
+    if text_content.find(product_total_price_no_tax) == -1 :
+      self.fail('fail to get the total price of the products without tax')
+    product_total_price=str(10*3+20*5+60*5+60*3+7*20+130*0.2+300*0.05+20*0.1)
+    if text_content.find(product_total_price) == -1 :
+      self.fail('fail to get the total price of the products with tax')
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
@@ -2613,7 +2647,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     We want to prevent this from happening:
       - Create a packing list
       - An invoice is created from packing list
-      - Invoice is edited, updateAppliedRule is called
+      - Invoice is edited, updateSimulation is called
       - A new Invoice Rule is created for this invoice, and accounting
         movements for this invoice are present twice in the simulation.
     """
@@ -2633,9 +2667,9 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepTic
         stepCheckInvoiceBuilding
         stepEditInvoice
+        stepTic
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
         stepCheckInvoicesConsistency
-        stepTic
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2652,9 +2686,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
       """
         stepEditPackingList
-        stepCheckDeliveryRuleNotAppliedOnPackingListEdit
-        stepCheckInvoicesConsistency
         stepTic
+        stepCheckDeliveryRuleNotAppliedOnPackingListEdit
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2725,6 +2758,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
     """
       stepAddPackingListLine
+      stepTic
       stepSetContainerFullQuantity
       stepTic
       stepSetReadyPackingList
@@ -3536,6 +3570,28 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepCheckDeliveryBuilding
       stepTic
     """
+
+class OpenDocumentTextFile :
+  def __init__ (self, filelikeobj) :
+    zip = zipfile.ZipFile(filelikeobj)
+    self.content = xml.dom.minidom.parseString(zip.read("content.xml"))
+
+  def toString (self) :
+    """ Converts the document to a string. """
+    buffer = u""
+    for val in ["text:p", "text:h", "text:list"]:
+      for paragraph in self.content.getElementsByTagName(val) :
+        buffer += self.textToString(paragraph) + "\n"
+    return buffer
+
+  def textToString(self, element) :
+    buffer = u""
+    for node in element.childNodes :
+      if node.nodeType == xml.dom.Node.TEXT_NODE :
+        buffer += node.nodeValue
+      elif node.nodeType == xml.dom.Node.ELEMENT_NODE :
+        buffer += self.textToString(node)
+    return buffer
 
 import unittest
 def test_suite():

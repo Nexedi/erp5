@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(context.Base_translateString(x[0]), x[1]) for x in field.get_orig_value(\'items\')]</string> </value>
+            <value> <string>python:here.portal_categories.payment_transaction_group_type.getCategoryChildTranslatedCompactLogicalPathItemList(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -315,13 +315,11 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  , operator='and'), operator='and'),
                  {column: '2008/10/01 %s' % timezone})
     if timezone == 'GMT+9':
-      # Very temporary expected failure. Expected failure mark must be removed soon.(Yusei)
       self.catalog(ReferenceQuery(ReferenceQuery(
                      ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
                      ReferenceQuery(operator='<', date=DateTime('2009/01/01 %s' % timezone))
                    , operator='and'), operator='and'),
-                   {column: '2008 %s' % timezone},
-                   expected_failure=True)
+                   {column: '2008 %s' % timezone})
     else:
       self.catalog(ReferenceQuery(ReferenceQuery(
                      ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
@@ -577,6 +575,10 @@ class TestSQLCatalog(ERP5TypeTestCase):
                      SimpleQuery(default=None))
     self.assertEqual(ReferenceQuery(operator='is', default=None),
                      SimpleQuery(default=None, comparison_operator='='))
+    self.assertEqual(ReferenceQuery(operator='is not', default=None),
+                     SimpleQuery(default=None, comparison_operator='!='))
+    self.assertEqual(ReferenceQuery(operator='is not', default=None),
+                     SimpleQuery(default=None, comparison_operator='is not'))
     self.assertRaises(ValueError, SimpleQuery, default=None, comparison_operator='>=')
     self.assertRaises(ValueError, SimpleQuery, default=1, comparison_operator='is')
 

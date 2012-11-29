@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>call updateAppliedRule after a modification</string> </value>
+            <value> <string>Reexpand root applied rule if the setter involves a movement that should be linked to a root simulation movement.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

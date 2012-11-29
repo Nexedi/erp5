@@ -503,6 +503,8 @@
                 <span i18n:translate="" i18n:domain="ui">\n
                   No result.\n
                 </span>\n
+                <input type="hidden" value="1" name="listbox_empty:boolean"\n
+                       tal:attributes="name string:${field_prefix}${field_id}_empty:boolean" />\n
               </td>\n
             </tr>\n
           </tbody>\n

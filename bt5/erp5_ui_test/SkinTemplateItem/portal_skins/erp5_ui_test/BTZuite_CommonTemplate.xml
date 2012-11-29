@@ -67,9 +67,13 @@
       <td>Reset Successfully.</td>\n
       <td></td>\n
     </tr>\n
+    <tr>\n
+      <td>setTimeout</td>\n
+      <td>120000</td> <!-- business template operation takes time, so we use a larger timeout -->\n
+      <td></td>\n
+    </tr>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

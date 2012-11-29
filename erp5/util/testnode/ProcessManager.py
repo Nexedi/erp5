@@ -131,6 +131,12 @@ class ProcessManager(object):
       raise SubprocessError(result)
     return result
 
+  def getSupportedParameterSet(self, program_path ,parameter_list):
+    help_string = self.spawn(*[program_path,'--help'])['stdout']
+    help_words = set(help_string.split())
+    return help_words.intersection(set(parameter_list))
+
+
   def killPreviousRun(self, cancellation=False):
     self.log('ProcessManager killPreviousRun, going to kill %r' % (self.process_pid_set,))
     if cancellation:

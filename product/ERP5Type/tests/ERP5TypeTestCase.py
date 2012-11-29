@@ -19,6 +19,7 @@ import sys
 import time
 import traceback
 import urllib
+import ConfigParser
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
@@ -26,6 +27,7 @@ from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from ZTUtils import make_query
+from DateTime import DateTime
 
 # XXX make sure that get_request works.
 import Products.ERP5Type.Utils
@@ -52,12 +54,6 @@ Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
 from zope.site.hooks import setSite
-
-try:
-  import itools.zope
-  itools.zope.get_context = get_context
-except ImportError:
-  pass
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
@@ -134,9 +130,10 @@ ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
 try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
   # ZopeTestCase REQUESTs (it's the same as iHotFix
-  from Products.Localizer import patches
+  from Products.Localizer import patches, utils
   # revert monkey patches from Localizer
   patches.get_request = get_request
+  utils.get_request = get_request
 except ImportError:
   pass
 
@@ -268,6 +265,27 @@ def _getPersistentMemcachedServerDict():
   port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
 
+def _createTestPromiseConfigurationFile(promise_path):
+  kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getVolatileMemcachedServerDict()
+  memcached_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getPersistentMemcachedServerDict()
+  cloudooo_url = "cloudooo://%(hostname)s:%(port)s/" % \
+                             _getConversionServerDict()
+
+  promise_config = ConfigParser.RawConfigParser()
+  promise_config.add_section('external_service')
+  promise_config.set('external_service', 'cloudooo_url', cloudooo_url)
+  promise_config.set('external_service', 'memcached_url',memcached_url)
+  promise_config.set('external_service', 'kumofs_url', kumofs_url)
+
+  if os.environ.get('TEST_CA_PATH') is not None:
+    promise_config.add_section('portal_certificate_authority')
+    promise_config.set('portal_certificate_authority', 'certificate_authority_path',
+                                           os.environ['TEST_CA_PATH'])
+
+  promise_config.write(open(promise_path, 'w'))
+
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
       def decorator(self, method):
@@ -280,6 +298,21 @@ def profile_if_environ(environment_var_name):
     else:
       # No profiling, return identity decorator
       return lambda self, method: method
+
+# Patch DateTime to allow pinning the notion of "now".
+assert getattr(DateTime, '_original_parse_args', None) is None
+DateTime._original_parse_args = DateTime._parse_args
+
+_pinned_date_time = None
+
+def _parse_args(self, *args, **kw):
+  if _pinned_date_time is not None and (not args or args[0] == None):
+    # simulate fixed "Now"
+    args = (_pinned_date_time,) + args[1:]
+  return self._original_parse_args(*args, **kw)
+
+_parse_args._original = DateTime._original_parse_args
+DateTime._parse_args = _parse_args
 
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
@@ -359,6 +392,17 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       assert cls.__bases__[0] is DummyMailHostMixin
       cls.__bases__ = cls.__bases__[1:]
       pmc_init_of(cls)
+
+    def pinDateTime(self, date_time):
+      # pretend time has stopped at a certain date (i.e. the test runs
+      # infinitely fast), to avoid errors on tests that are started
+      # just before midnight.
+      global _pinned_date_time
+      assert date_time is None or isinstance(date_time, DateTime)
+      _pinned_date_time = date_time
+
+    def unpinDateTime(self):
+      self.pinDateTime(None)
 
     def getDefaultSitePreferenceId(self):
       """Default id, usefull method to override
@@ -520,28 +564,36 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
            DeprecationWarning)
       return self.createUserAssignment(user, assignment_kw)
 
-    def setupAutomaticBusinessTemplateRepository(self, accept_public=True):
+    def setupAutomaticBusinessTemplateRepository(self, accept_public=True,
+                              searchable_business_template_list=None):
      # Try to setup some valid Repository List by reusing ERP5TypeTestCase API.
      # if accept_public we can accept public repository can be set, otherwise
      # we let failure happens.
+     if searchable_business_template_list is None:
+       searchable_business_template_list = ["erp5_base"]
 
      # Assume that the public official repository is a valid repository     
      public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
-     
-     template_list = self._getBTPathAndIdList(["erp5_base"])
+
+     template_list = []
+     for bt_id in searchable_business_template_list:
+       bt_template_list = self._getBTPathAndIdList([bt_id])
+       if len(bt_template_list):
+         template_list.append(bt_template_list[0])
      if len(template_list) > 0:
-       bt5_repository_path = "/".join(template_list[0][0].split("/")[:-1])
+       bt5_repository_path_list = ["/".join(x[0].split("/")[:-1])
+                                   for x in template_list]
        if accept_public:
          try:
            self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                  [bt5_repository_path], None)
+                  bt5_repository_path_list, None)
          except (RuntimeError, IOError), e:
            # If bt5 repository is not a repository use public one.
            self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                                    public_bt5_repository_list)
        else:
          self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                  [bt5_repository_path], None) 
+                  bt5_repository_path_list, None)
      elif accept_public:
        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                                      public_bt5_repository_list)
@@ -899,6 +951,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       return ()
 
+    def loadPromise(self):
+      """ Create promise configuration file and load it into configuration
+      """
+      promise_path = os.path.join(instancehome, "promise.cfg")
+      ZopeTestCase._print('Adding Promise at %s...\n' % promise_path)
+      _createTestPromiseConfigurationFile(promise_path)
+      config.product_config["/%s" % self.getPortalName()] = \
+         {"promise_path": promise_path}
+
     def _updateConnectionStrings(self):
       """Update connection strings with values passed by the testRunner
       """
@@ -916,6 +977,14 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                         self.getDefaultSitePreferenceId()]
       preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
       preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
+
+    def _updateMemcachedConfiguration(self):
+      """Update default memcached plugin configuration
+      """
+      portal_memcached = self.portal.portal_memcached
+      connection_dict = _getVolatileMemcachedServerDict()
+      url_string = '%(hostname)s:%(port)s' % connection_dict
+      portal_memcached.default_memcached_plugin.setUrlString(url_string)
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
@@ -1059,6 +1128,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               self._setUpDummyMailHost()
               self.serverhost, self.serverport = self.startZServer(verbose=True)
               self._registerNode(distributing=1, processing=1)
+              self.loadPromise()
 
             self._updateConnectionStrings()
             self._recreateCatalog()
@@ -1066,6 +1136,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                               light_install=light_install,
                                               quiet=quiet)
             self._updateConversionServerConfiguration()
+            self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',

@@ -57,12 +57,11 @@
                   <label tal:content="title" tal:condition="not:is_listbox"/>\n
                   <div class="input">\n
 \n
-<!--                    <span tal:replace="structure python: getattr(here.gadgets.form, field_type).gadget(field_name=field_name)"/> -->\n
-\n
-                    <!-- XXX: render gadget asynchronously -->\n
-                    <div tal:attributes="gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name};\n
+                    <!-- render gadget asynchronously -->\n
+                    <div data-gadget-cacheable="1"\n
+                         tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name};\n
                                          id string:${form_id}_${field_name};\n
-                                         gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${form_id}_${field_name}&quot;}"></div>\n
+                                         data-gadget-cache-id string: ${form_id}_${field_name};"></div>\n
 \n
                   </div>\n
                 </div>\n

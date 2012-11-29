@@ -125,7 +125,8 @@ class UnifySolver(AcceptSolver):
         if not simulation_movement.isPropertyRecorded(solved_property):
           simulation_movement.recordProperty(solved_property)
         simulation_movement.setMappedProperty(solved_property, value)
-        simulation_movement.expand(activate_kw=activate_kw)
+        # XXX: would it be safe to expand by activity ?
+        simulation_movement.expand('immediate')
     # Finish solving
     if portal.portal_workflow.isTransitionPossible(self, 'succeed'):
       self.succeed()

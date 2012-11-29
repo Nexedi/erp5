@@ -15,16 +15,20 @@
 import random
 import unittest
 import ZODB
-import Testing
+from Testing import ZopeTestCase
 import Zope2
 from Products.HBTreeFolder2.HBTreeFolder2 \
      import HBTreeFolder2, ExhaustedUniqueIdsError
 from OFS.ObjectManager import BadRequestException
 from OFS.Folder import Folder
 from Acquisition import aq_base
+import timeit
+from textwrap import dedent
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
-class HBTreeFolder2Tests(unittest.TestCase):
+class HBTreeFolder2Tests(ERP5TypeTestCase):
 
     def getBase(self, ob):
         # This is overridden in subclasses.
@@ -225,6 +229,75 @@ class HBTreeFolder2Tests(unittest.TestCase):
           i = random.choice(id_list)
           id_list.remove(i)
           h._delOb(i)
+
+    @expectedFailure
+    def testPerformanceInDepth(self):
+        """
+        Check HBTreeFolder2 GET performance with the depth and the number of
+        documents.
+        """
+        init_1 = dedent("""
+        from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
+        from Products.CMFDefault.File import File
+        h_depth_1 = HBTreeFolder2()
+        for i in xrange(%d):
+            id = str(i)
+            h_depth_1[id] = File(id)
+        """)
+        init_2 = dedent("""
+        from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
+        from Products.CMFDefault.File import File
+        h_depth_2 = HBTreeFolder2()
+        for i in xrange(10):
+            for j in xrange(%d / 10):
+                id = "-".join(map(str, (i,j)))
+                h_depth_2[id] = File(id)
+        """)
+        init_3 = dedent("""
+        from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
+        from Products.CMFDefault.File import File
+        h_depth_3 = HBTreeFolder2()
+        for i in xrange(10):
+            for j in xrange(10):
+                for k in xrange(%d / (10 * 10)):
+                    id = "-".join(map(str, (i, j, k)))
+                    h_depth_3[id] = File(id)
+        """)
+
+        N = 1000
+        # measure 100 times of each test with timeit()
+        t1 = timeit.Timer("h_depth_1['555']", init_1 % N).timeit(100)
+        t2 = timeit.Timer("h_depth_2['5-55']", init_2 % N).timeit(100)
+        t3 = timeit.Timer("h_depth_3['5-5-5']", init_3 % N).timeit(100)
+        ZopeTestCase._print("\nN = 1000\n")
+        ZopeTestCase._print("L1=%s\tL2=%s\tL3=%s" % (t1, t2, t3))
+
+        N = 10000 # The N is 10 times larger than the previous measurement
+        t2_1 = timeit.Timer("h_depth_1['5555']", init_1 % N).timeit(100)
+        t2_2 = timeit.Timer("h_depth_2['5-555']", init_2 % N).timeit(100)
+        t2_3 = timeit.Timer("h_depth_3['5-5-55']", init_3 % N).timeit(100)
+        ZopeTestCase._print("\nN = 10000\n")
+        ZopeTestCase._print("L1'=%s\tL2'=%s\tL3'=%s" % (t2_1, t2_2, t2_3))
+
+        N = 100000  # The N is 10 times larger than the pevious measurement
+        t3_1 = timeit.Timer("h_depth_1['22222']", init_1 % N).timeit(100)
+        t3_2 = timeit.Timer("h_depth_2['2-2222']", init_2 % N).timeit(100)
+        t3_3 = timeit.Timer("h_depth_3['2-2-222']", init_3 % N).timeit(100)
+        ZopeTestCase._print("\nN = 100000\n")
+        ZopeTestCase._print("L1''=%s\tL2''=%s\tL3''=%s" % (t3_1, t3_2, t3_3))
+
+        # These assert are should be True, but right now those are not passed
+
+        # assert L2 is faster than L1, because the leaves are fewer than L1
+        self.assertTrue(t1 > t2)
+        self.assertTrue(t2_1 > t2_2)
+        self.assertTrue(t3_1 > t3_2)
+
+        # assert L3 is faster than L2, because the leaves are fewer than L1
+        self.assertTrue(t2 > t3)
+        self.assertTrue(t2_2 > t2_3)
+        self.assertTrue(t3_2 > t3_3)
+
 
 class TrojanKey:
     """Pretends to be a consistent, immutable, humble citizen...

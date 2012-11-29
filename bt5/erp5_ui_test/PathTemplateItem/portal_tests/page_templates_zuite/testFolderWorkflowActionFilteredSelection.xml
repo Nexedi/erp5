@@ -103,39 +103,33 @@
 <!-- we have a listbox with 1 line, for 1 Draft Foo -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
   <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
   <td>label=Validate Action</td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -145,9 +139,15 @@
 </tr>\n
 \n
 <tr>\n
-  <td>assertText</td>\n
+  <td>type</td>\n
+  <td>field_your_comment</td>\n
+  <td>Comment !</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1 records</td>\n
+  <td>We did not check the "display detailed list" checkbox, so we don\'t have a listbox here</td>\n
 </tr>\n
 \n
 <tr>\n

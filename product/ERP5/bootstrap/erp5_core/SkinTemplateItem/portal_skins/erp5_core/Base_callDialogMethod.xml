@@ -267,9 +267,11 @@ if (not(can_redirect) or len(url_params_string) > 2000):\n
       if deferred_portal_skin:\n
         request.set(\'deferred_portal_skin\', deferred_portal_skin)\n
     # and to cleanup formulator\'s special key in request\n
-    for key in list(request.keys()):\n
-      if key.startswith(\'field\') or key.startswith(\'subfield\'):\n
-        request.form.pop(key, None)\n
+    # XXX unless we are in Folder_modifyWorkflowStatus which validates again !\n
+    if dialog_method != \'Folder_modifyWorkflowStatus\':\n
+      for key in list(request.keys()):\n
+        if key.startswith(\'field\') or key.startswith(\'subfield\'):\n
+          request.form.pop(key, None)\n
 \n
   # If we cannot redirect, then call the form directly.\n
   dialog_form = getattr(context, dialog_method)\n

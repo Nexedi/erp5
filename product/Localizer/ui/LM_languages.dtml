@@ -1,0 +1,93 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<fieldset><legend><dtml-var "gettext('Add language')"></legend>
+<p class="form-help">
+  <dtml-gettext>
+    To add a language select it and click the <tt>Add</tt> button.
+  </dtml-gettext>
+</p>
+
+<dtml-let languages=get_languages>
+  <form action="manage_addLanguage" method="post">
+    <table>
+      <tr>
+        <td>
+          <select name="language">
+            <dtml-in get_all_languages mapping sort=name>
+              <dtml-unless "code in languages">
+                <option value="<dtml-var code>">
+                  <dtml-var "gettext(name)"> [&dtml-code;]</option>
+              </dtml-unless>
+            </dtml-in>
+          </select>
+          <input type="submit" value=" <dtml-var "gettext('Add')"> ">
+        </td>
+      </tr>
+    </table>
+  </form>
+</dtml-let>
+</fieldset>
+
+
+<fieldset><legend><dtml-var "gettext('Delete languages')"></legend>
+<dtml-let languages=get_languages_mapping>
+  <dtml-if languages>
+    <p class="form-help">
+      <dtml-gettext>
+        To delete a language check it and click the <tt>Delete</tt> button.
+      </dtml-gettext>
+    </p>
+
+      <form action="<dtml-var URL1>" method="post">
+        <table>
+          <tr>
+            <th></th>
+            <th align="left"></th>
+          </tr>
+          <dtml-in languages mapping sort=name>
+            <tr>
+              <td><input type="checkbox" name="languages:tuple"
+                         value="<dtml-var code>"></td>
+	      <td><dtml-var "gettext(name)"> [<dtml-var code>]</td>
+            </tr>
+          </dtml-in>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" name="manage_delLanguages:method"
+                     value=" <dtml-var "gettext('Delete')"> ">
+            </td>
+          </tr>
+        </table>
+      </form>
+  <dtml-else>
+    <em><dtml-gettext>There are no languages</dtml-gettext></em>
+  </dtml-if>
+</dtml-let>
+</fieldset>
+
+<fieldset><legend><dtml-var "gettext('Default language')"></legend>
+  <form action="<dtml-var URL1>" method="post">
+    <table>
+      <tr>
+        <td>
+      <dtml-gettext>
+        To change the default language select it and click the
+        <tt>Change</tt> button.
+      </dtml-gettext>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" name="language" value="<dtml-var get_default_language>">
+          <input type="submit" name="manage_changeDefaultLang:method"
+                 value=" <dtml-var "gettext('Change')"> ">
+        </td>
+      </tr>
+    </table>
+  </form>
+</fieldset>
+
+
+<dtml-var manage_page_footer>

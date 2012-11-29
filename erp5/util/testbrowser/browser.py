@@ -31,11 +31,12 @@
 ##############################################################################
 
 import logging
-
 import sys
+import urllib
+
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
-from zope.testbrowser.browser import onlyOne
+from zope.testbrowser.browser import onlyOne, fix_exception_name
 
 def measurementMetaClass(prefix):
   """
@@ -185,21 +186,73 @@ class Browser(ExtendedTestBrowser):
 
     super(Browser, self).__init__()
 
-  def open(self, url_or_path=None, data=None):
+  def open(self, url_or_path=None, data=None, site_relative=True):
     """
-    Open a relative (to the ERP5 base URL) or absolute URL. If the
-    given URL is not given, then it will open the home ERP5 page.
+    Open a relative (to the ERP5 base URL) or absolute URL. If the given URL
+    is not given, then it will open the home ERP5 page. If C{site_relative} is
+    False, it will open the URL within the current context.
 
     @param url_or_path: Relative or absolute URL
     @type url_or_path: str
     """
-    # In case url_or_path is an absolute URL, urljoin() will return
-    # it, otherwise it is a relative path and will be concatenated to
-    # ERP5 base URL
-    absolute_url = urljoin(self._erp5_base_url, url_or_path)
+    if site_relative:
+      # In case url_or_path is an absolute URL, urljoin() will return
+      # it, otherwise it is a relative path and will be concatenated to
+      # ERP5 base URL
+      url_or_path = urljoin(self._erp5_base_url, url_or_path)
 
-    self._logger.debug("Opening url: " + absolute_url)
-    super(Browser, self).open(absolute_url, data)
+    if isinstance(data, dict):
+      data = urllib.urlencode(data)
+
+    self._logger.debug("Opening: " + url_or_path)
+    super(Browser, self).open(url_or_path, data)
+
+  def openNoVisit(self, url_or_path, data=None, site_relative=True):
+    """
+    Copy/paste from zope.testbrowser.Browser.open() to allow opening an URL
+    without changing the current page. See L{open}.
+
+    @see zope.testbrowser.interfaces.IBrowser
+    """
+    if site_relative:
+      # In case url_or_path is an absolute URL, urljoin() will return
+      # it, otherwise it is a relative path and will be concatenated to
+      # ERP5 base URL
+      url_or_path = urljoin(self._erp5_base_url, url_or_path)
+
+    import mechanize
+
+    if isinstance(data, dict):
+      data = urllib.urlencode(data)
+
+    response = None
+    url_or_path = str(url_or_path)
+    self._logger.debug("Opening: " + url_or_path)
+    self._start_timer()
+    try:
+      try:
+        try:
+          response = self.mech_browser.open_novisit(url_or_path, data)
+        except Exception, e:
+          fix_exception_name(e)
+          raise
+      except mechanize.HTTPError, e:
+        if e.code >= 200 and e.code <= 299:
+          # 200s aren't really errors
+          pass
+        elif self.raiseHttpErrors:
+          raise
+    finally:
+      self._stop_timer()
+
+    # if the headers don't have a status, I suppose there can't be an error
+    if 'Status' in self.headers:
+      code, msg = self.headers['Status'].split(' ', 1)
+      code = int(code)
+      if self.raiseHttpErrors and code >= 400:
+        raise mechanize.HTTPError(url_or_path, code, msg, self.headers, fp=None)
+
+    return response
 
   def randomSleep(self, minimum, maximum):
     """
@@ -371,9 +424,15 @@ class Browser(ExtendedTestBrowser):
     @raise LookupError: Not found
     """
     try:
-      return self.etree.xpath('//div[@id="transition_message"]')[0].text
+      transition_message = self.etree.xpath(
+        '//div[@id="transition_message"]')[0].text
     except IndexError:
       raise LookupError("Cannot find div with ID 'transition_message'")
+    else:
+      if isinstance(transition_message, unicode):
+        transition_message = transition_message.encode('utf-8')
+
+      return transition_message
 
   def getInformationArea(self):
     """
@@ -562,6 +621,33 @@ class Browser(ExtendedTestBrowser):
 
     return activity_counter
 
+  def waitForActivity(self, interval=20, maximum_attempt_number=30):
+    """
+    Wait for activities every C{interval} seconds at most
+    C{maximum_attempt_number} of times and return the waiting time (excluding
+    loading time to get the number of remaining time).
+
+    This is mainly relevant when a setup script triggering activities has to
+    be executed before running the actual script.
+
+    @param interval: Interval between checking for remaining activities
+    @type interval: int
+    @param maximum_attempt_number: Number of attempts before failing
+    @type maximum_attempt_number: int
+    @return: Number of seconds spent waiting
+    @rtype: int
+    """
+    current_attempt_counter = 0
+    while current_attempt_counter < maximum_attempt_number:
+      if self.getRemainingActivityCounter() == 0:
+        return current_attempt_counter * interval
+
+      time.sleep(interval)
+      current_attempt_counter += 1
+
+    raise AssertionError("Maximum number of attempts reached while waiting "
+                         "for activities to be processed")
+
 from zope.testbrowser.browser import Form, ListControl
 
 class LoginError(Exception):
@@ -697,7 +783,8 @@ class MainForm(Form):
     @todo: Use information sent back as headers rather than looking
            into the page content?
     """
-    if 'Logged In as' in self.browser.contents:
+    check_logged_in_xpath = '//div[@id="logged_in_as"]/*'
+    if self.etree.xpath(check_logged_in_xpath):
       self._logger.debug("Already logged in")
       # TODO: Perhaps zope.testbrowser should be patched instead?
       self.browser.timer.start_time = self.browser.timer.end_time = 0
@@ -717,7 +804,7 @@ class MainForm(Form):
       self.browser.open('login_form')
       login(self.browser.mainForm)
 
-    if 'Logged In as' not in self.browser.contents:
+    if not self.etree.xpath(check_logged_in_xpath):
       raise LoginError("%s: Could not log in as '%s:%s'" % \
                          (self.browser._erp5_base_url,
                           self.browser._username,
@@ -864,6 +951,13 @@ class ContextMainForm(MainForm):
     """
     self.submit(name='Folder_create:method')
 
+  def submitClone(self):
+    """
+    Clone the previously selected objects. Use the class attribute
+    rather than the name as the latter is dependent on the context.
+    """
+    self.submit(class_attribute='clone')
+
   def submitDelete(self):
     """
     Delete the previously selected objects.
@@ -899,7 +993,7 @@ class ContextMainForm(MainForm):
                            maximum_attempt_number=1,
                            sleep_between_attempt=0,
                            dialog_name=None,
-                           dialog_expected_transition_message=None,
+                           expected_transition_message=None,
                            **kw):
     """
     Select and submit a workflow action, given either by its label
@@ -934,8 +1028,8 @@ class ContextMainForm(MainForm):
     @type sleep_between_attempt: int
     @param dialog_name: Function to call after the workflow action ('cancel' or 'confirm')
     @type dialog_name: str
-    @param dialog_expected_transition_message: Expected dialog transition message
-    @type dialog_expected_transition_message: str
+    @param expected_transition_message: Expected dialog transition message
+    @type expected_transition_message: str
     """
     url_before = self.browser.url
 
@@ -957,13 +1051,14 @@ class ContextMainForm(MainForm):
         getattr(self.browser.mainForm,
                 'submitDialog' + dialog_name.capitalize())()
 
-        if dialog_expected_transition_message:
-          transition_message = self.browser.getTransitionMessage()
-          if transition_message != dialog_expected_transition_message:
-            raise AssertionError("Expected transition message: %s, got: %s" % \
-                                   (dialog_expected_transition_message,
-                                    transition_message))
+      if expected_transition_message:
+        transition_message = self.browser.getTransitionMessage()
+        if transition_message != expected_transition_message:
+          raise AssertionError("Expected transition message: %s, got: %s" % \
+                                 (expected_transition_message,
+                                  transition_message))
 
+      if dialog_name:
         return show_dialog_time
 
     if maximum_attempt_number == 1:
@@ -1095,6 +1190,44 @@ class ContextMainForm(MainForm):
 
     return control
 
+from zope.testbrowser.browser import SubmitControl
+
+class SubmitControlWithTime(SubmitControl):
+  """
+  Only define to wrap click methods to measure the time spent
+  """
+  __metaclass__ = measurementMetaClass(prefix='click')
+
+from zope.testbrowser.browser import ImageControl
+
+class ImageControlWithTime(ImageControl):
+  """
+  Only define to wrap click methods to measure the time spent
+  """
+  __metaclass__ = measurementMetaClass(prefix='click')
+
+import zope.testbrowser.browser
+
+browser_controlFactory = zope.testbrowser.browser.controlFactory
+def controlFactory(control, *args, **kwargs):
+  """
+  Monkey patch controlFactory in zope.testbrowser to get elapsed time on
+  ImageControl and SubmitControl
+  """
+  try:
+    t = control.type
+  except AttributeError:
+    # This is a subcontrol
+    pass
+  else:
+    if t in ('submit', 'submitbutton'):
+      return SubmitControlWithTime(control, *args, **kwargs)
+    elif t == 'image':
+      return ImageControlWithTime(control, *args, **kwargs)
+
+  return browser_controlFactory(control, *args, **kwargs)
+
+zope.testbrowser.browser.controlFactory = controlFactory
 
 from zope.testbrowser.browser import Link
 

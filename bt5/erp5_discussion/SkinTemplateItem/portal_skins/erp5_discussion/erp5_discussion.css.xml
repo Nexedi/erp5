@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts38383138.94</string> </value>
+            <value> <string>ts51500035.8</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -42,7 +42,7 @@
 }\n
 \n
 .discussion-post-header .thumbnail{\n
-  width:14%;\n
+  /*width:14%;*/\n
   margin:4px;\n
 }\n
 \n
@@ -96,7 +96,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>960</int> </value>
+            <value> <int>964</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

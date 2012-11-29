@@ -58,7 +58,7 @@ follow_up_related_document_list = portal_catalog(\n
            portal_type=portal_type,\n
            follow_up_uid=context.getUid(), **kw)\n
 \n
-kw[\'query\'] = Query(relative_url=\'%s/%%\' % context.getRelativeUrl())\n
+kw[\'query\'] = Query(relative_url=\'%s/%%\' % context.getRelativeUrl().replace(\'_\', r\'\\_\'))\n
 if follow_up_related_document_list:\n
   kw[\'query\'] = ComplexQuery(\n
     kw[\'query\'],\n

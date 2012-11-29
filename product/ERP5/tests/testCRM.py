@@ -1609,6 +1609,7 @@ class TestCRMMailSend(BaseTestCRM):
       self.assertEquals(event.getSourceSection(), user.getSubordination())
     finally:
       # clean up created roles on portal_types
+      self.login() # admin
       for portal_type in portal_type_list:
         portal_type_object = getattr(self.portal.portal_types, portal_type)
         portal_type_object._delObject('manager_role')

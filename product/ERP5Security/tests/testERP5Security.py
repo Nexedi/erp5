@@ -32,6 +32,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -476,16 +478,21 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
           ),)
         """)
     # configure group, site, function categories
+    category_tool = self.getCategoryTool()
     for bc in ['group', 'site', 'function']:
-      base_cat = self.getCategoryTool()[bc]
+      base_cat = category_tool[bc]
       code = bc[0].upper()
+      if base_cat.get('subcat', None) is not None:
+        continue
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
     # add another function subcategory.
-    self.getCategoryTool()['function'].newContent(portal_type='Category',
-                                                  id='another_subcat',
-                                                  codification='F2')
+    function_category = category_tool['function']
+    if function_category.get('another_subcat', None) is None:
+      function_category.newContent(portal_type='Category',
+                                   id='another_subcat',
+                                   codification='F2')
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -503,11 +510,13 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
+    self.person = pers
     self.tic()
 
   def beforeTearDown(self):
     """Called before teardown."""
     # clear base categories
+    self.person.getParentValue().manage_delObjects([self.person.getId()])
     for bc in ['group', 'site', 'function']:
       base_cat = self.getCategoryTool()[bc]
       base_cat.manage_delObjects(list(base_cat.objectIds()))
@@ -570,6 +579,29 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
     self.abort()
+
+  def testLocalRolesGroupId(self):
+    """Assigning a role with local roles group id.
+    """
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category', 
+      reference = 'Alternate',
+      id = 'Alternate')
+    self._getTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignor',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),      
+      role_category=self.defined_category)
+
+    self.loginAsUser(self.username)
+    user = getSecurityManager().getUser()
+
+    obj = self._makeOne()
+    self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertTrue('Assignor' in user.getRolesInContext(obj))
+    self.assertEqual(set([('F1_G1_S1', 'Assignor')]),
+      obj.__ac_local_roles_group_id_dict__.get('Alternate'))
+    self.abort()
+
 
   def testDynamicLocalRole(self):
     """Test simple case of setting a dynamic role.
@@ -901,6 +933,39 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
         cloned_subdocument.get_local_roles(),
         (((cloning_owner_id), ('Owner',)),)
     )
+
+  def _checkMessageMethodIdList(self, expected_method_id_list):
+    actual_method_id_list = sorted([
+        message.method_id
+        for message in self.portal.portal_activities.getMessageList()
+    ])
+    self.assertEqual(expected_method_id_list, actual_method_id_list)
+
+  def test_reindexObjectSecurity_on_modules(self):
+    person_module = self.portal.person_module
+    portal_activities = self.portal.portal_activities
+    check = self._checkMessageMethodIdList
+
+    check([])
+    # We need at least one person for this test.
+    self.assertTrue(len(person_module.keys()))
+    # When we update security of a module...
+    person_module.reindexObjectSecurity()
+    transaction.commit()
+    # we don't want all underlying objects to be recursively
+    # reindexed. After all, its contents do not acquire local roles.
+    check(['immediateReindexObject'])
+    self.tic()
+    check([])
+    # But non-module objects, with subobjects that acquire local
+    # roles, should reindex their security recursively:
+    person, = [rec.getObject()
+               for rec in person_module.searchFolder(reference=self.username)]
+    self.assertTrue(len(person.objectIds()))
+    person.reindexObjectSecurity()
+    transaction.commit()
+    check(['recursiveImmediateReindexObject'])
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

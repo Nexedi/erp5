@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.3'
+version = '0.4.16'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -71,7 +71,8 @@ setup(name=name,
             'erp5.util.benchmark.report:generateReport [benchmark-report]',
           'web_checker_utility = erp5.util.webchecker:web_checker_utility'
         ],
-      }
+      },
+      test_suite='erp5.tests'
     )
 
 # cleanup garbage

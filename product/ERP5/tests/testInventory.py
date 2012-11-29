@@ -51,7 +51,7 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5.tests.testOrder import TestOrderMixin
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Form.Selection import DomainSelection
 
 class TestInventory(TestOrderMixin, ERP5TypeTestCase):
@@ -1970,6 +1970,52 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  @expectedFailure
+  def test_05_CancelInventoryAfterDelivered(self, quiet=0, run=run_all_test):
+    """
+      Make sure that changing workflow state after delivered changes
+      records in stock table.
+    """
+    delivered_state = self.portal.portal_workflow.inventory_workflow.states['delivered']
+    delivered_state.transitions = delivered_state.transitions + ('cancel',)
+
+    self.commit()
+
+    organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
+    product = self.portal.product_module.newContent(portal_type='Product')
+    inventory = self.portal.inventory_module.newContent(portal_type='Inventory')
+    inventory.edit(destination_value=organisation,
+                   stop_date=DateTime('2012/09/12 00:00:00 GMT+9'))
+    line = inventory.newContent(portal_type='Inventory Line')
+    line.setResourceValue(product)
+    line.setQuantity(100)
+
+    self.tic()
+
+    self.assertEqual(
+      self.portal.portal_simulation.getCurrentInventory(
+        node_uid=organisation.getUid(),
+        resource_uid=product.getUid()),
+      0)
+
+    inventory.deliver()
+    self.tic()
+
+    self.assertEqual(
+      self.portal.portal_simulation.getCurrentInventory(
+        node_uid=organisation.getUid(),
+        resource_uid=product.getUid()),
+      100)
+
+    inventory.cancel()
+    self.tic()
+
+    self.assertEqual(
+      self.portal.portal_simulation.getCurrentInventory(
+        node_uid=organisation.getUid(),
+        resource_uid=product.getUid()),
+      0)
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -269,7 +269,7 @@ class OOoParser(Implicit):
     """
       Return a dictionnary of all pictures in the document
     """
-    if len(self.pictures) <= 0:
+    if not self.pictures:
       for file_name in self.oo_files:
         raw_data = self.oo_files[file_name]
         pict_type = imghdr.what(None, raw_data)
@@ -498,13 +498,7 @@ class OOoParser(Implicit):
     """
       Get table dimension as dictionnary contain both height and width
     """
-    max_cols = 0
-    for line_index in range(len(table)):
-      line = table[line_index]
-      if len(line) > max_cols:
-        max_cols = len(line)
-
-    return { 'width' : max_cols
+    return { 'width' : max(len(x) for x in table or [[]])
            , 'height': len(table)
            }
 
@@ -512,11 +506,9 @@ class OOoParser(Implicit):
     """
       Add necessary cells and lines to obtain given bounds
     """
-    while height > len(table):
-      table.append([])
-    for line in range(height):
-      while width > len(table[line]):
-        table[line].append(None)
+    table += [[]] * (len(table) - height)
+    for line in table:
+      line += [None] * (len(line) - width)
     return table
 
   def _getTableListUnion(self, list1, list2):
@@ -526,10 +518,10 @@ class OOoParser(Implicit):
         several embedded spreadsheets with the same id. This explain the
         use of random suffix in such extreme case.
     """
-    for list2_key in list2.keys():
+    for list2_key in list2:
       # Generate a new table ID if needed
       new_key = list2_key
-      while new_key in list1.keys():
+      while new_key in list1:
         new_key = list2_key + '_' + str(random.randint(1000,9999))
       list1[new_key] = list2[list2_key]
     return list1

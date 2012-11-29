@@ -300,7 +300,7 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
           raise
   """
   if host_port:
-    host_port = host_port.rsplit(':', 1)
+    host_port = tuple(host_port.rsplit(':', 1))
     if len(host_port) == 1:
       host_port = default_host, host_port[0]
     try:

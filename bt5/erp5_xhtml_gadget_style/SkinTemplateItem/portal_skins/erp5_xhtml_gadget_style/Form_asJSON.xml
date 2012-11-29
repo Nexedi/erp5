@@ -119,7 +119,6 @@ for field_id in form.get_field_ids():\n
 \n
   # add field value\n
   field_dict[\'value\'] =  field_value\n
-  context.log(\'%s %s\' %(original_field.getId(), field_dict))\n
  \n
 return dumps(result)\n
 </string> </value>

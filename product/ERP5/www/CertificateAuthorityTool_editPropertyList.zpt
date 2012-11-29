@@ -18,13 +18,6 @@
    </td>
 </tr>
 <tr>
-   <td>Absolute path to OpenSSL binary</td>
-   <td>
-     <input type="text" name="openssl_binary" value=""
-            tal:attributes="value openssl_binary;" />
-   </td>
-</tr>
-<tr>
    <td colspan="2">
     <input type="submit" value="save"/>
    </td>

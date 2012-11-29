@@ -1,0 +1,12 @@
+Localizer - Add Local Content
+
+  Description
+
+    This view allows to create a new Local Content object.
+
+  Controls
+
+    Id -- The id of the object.
+
+    Languages -- The list of available languages that the Local Content
+    will have.
