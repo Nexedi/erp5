@@ -1,0 +1,524 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts54195359.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>style.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>div.olMap {\n
+    z-index: 0;\n
+    padding: 0 !important;\n
+    margin: 0 !important;\n
+    cursor: default;\n
+}\n
+\n
+div.olMapViewport {\n
+    text-align: left;\n
+}\n
+\n
+div.olLayerDiv {\n
+   -moz-user-select: none;\n
+   -khtml-user-select: none;\n
+}\n
+\n
+.olLayerGoogleCopyright {\n
+    left: 2px;\n
+    bottom: 2px;\n
+}\n
+.olLayerGoogleV3.olLayerGoogleCopyright {\n
+    right: auto !important;\n
+}\n
+.olLayerGooglePoweredBy {\n
+    left: 2px;\n
+    bottom: 15px;\n
+}\n
+.olLayerGoogleV3.olLayerGooglePoweredBy {\n
+    bottom: 15px !important;\n
+}\n
+.olControlAttribution {\n
+    font-size: smaller;\n
+    right: 3px;\n
+    bottom: 4.5em;\n
+    position: absolute;\n
+    display: block;\n
+}\n
+.olControlScale {\n
+    right: 3px;\n
+    bottom: 3em;\n
+    display: block;\n
+    position: absolute;\n
+    font-size: smaller;\n
+}\n
+.olControlScaleLine {\n
+   display: block;\n
+   position: absolute;\n
+   left: 10px;\n
+   bottom: 15px;\n
+   font-size: xx-small;\n
+}\n
+.olControlScaleLineBottom {\n
+   border: solid 2px black;\n
+   border-bottom: none;\n
+   margin-top:-2px;\n
+   text-align: center;\n
+}\n
+.olControlScaleLineTop {\n
+   border: solid 2px black;\n
+   border-top: none;\n
+   text-align: center;\n
+}\n
+\n
+.olControlPermalink {\n
+    right: 3px;\n
+    bottom: 1.5em;\n
+    display: block;\n
+    position: absolute;\n
+    font-size: smaller;\n
+}\n
+\n
+div.olControlMousePosition {\n
+    bottom: 0;\n
+    right: 3px;\n
+    display: block;\n
+    position: absolute;\n
+    font-family: Arial;\n
+    font-size: smaller;\n
+}\n
+\n
+.olControlOverviewMapContainer {\n
+    position: absolute;\n
+    bottom: 0;\n
+    right: 0;\n
+}\n
+\n
+.olControlOverviewMapElement {\n
+    padding: 10px 18px 10px 10px;\n
+    background-color: #00008B;\n
+    -moz-border-radius: 1em 0 0 0;\n
+}\n
+\n
+.olControlOverviewMapMinimizeButton,\n
+.olControlOverviewMapMaximizeButton {\n
+    height: 18px;\n
+    width: 18px;\n
+    right: 0;\n
+    bottom: 80px;\n
+    cursor: pointer;\n
+}\n
+\n
+.olControlOverviewMapExtentRectangle {\n
+    overflow: hidden;\n
+    background-image: url("img/blank.gif");\n
+    cursor: move;\n
+    border: 2px dotted red;\n
+}\n
+.olControlOverviewMapRectReplacement {\n
+    overflow: hidden;\n
+    cursor: move;\n
+    background-image: url("img/overview_replacement.gif");\n
+    background-repeat: no-repeat;\n
+    background-position: center;\n
+}\n
+\n
+.olLayerGeoRSSDescription {\n
+    float:left;\n
+    width:100%;\n
+    overflow:auto;\n
+    font-size:1.0em;\n
+}\n
+.olLayerGeoRSSClose {\n
+    float:right;\n
+    color:gray;\n
+    font-size:1.2em;\n
+    margin-right:6px;\n
+    font-family:sans-serif;\n
+}\n
+.olLayerGeoRSSTitle {\n
+    float:left;font-size:1.2em;\n
+}\n
+\n
+.olPopupContent {\n
+    padding:5px;\n
+    overflow: auto;\n
+}\n
+\n
+.olControlNavigationHistory {\n
+   background-image: url("img/navigation_history.png");\n
+   background-repeat: no-repeat;\n
+   width:  24px;\n
+   height: 24px;\n
+\n
+}\n
+.olControlNavigationHistoryPreviousItemActive {\n
+  background-position: 0 0;\n
+}\n
+.olControlNavigationHistoryPreviousItemInactive {\n
+   background-position: 0 -24px;\n
+}\n
+.olControlNavigationHistoryNextItemActive {\n
+   background-position: -24px 0;\n
+}\n
+.olControlNavigationHistoryNextItemInactive {\n
+   background-position: -24px -24px;\n
+}\n
+\n
+div.olControlSaveFeaturesItemActive {\n
+    background-image: url(img/save_features_on.png);\n
+    background-repeat: no-repeat;\n
+    background-position: 0 1px;\n
+}\n
+div.olControlSaveFeaturesItemInactive {\n
+    background-image: url(img/save_features_off.png);\n
+    background-repeat: no-repeat;\n
+    background-position: 0 1px;\n
+}\n
+\n
+.olHandlerBoxZoomBox {\n
+    border: 2px solid red;\n
+    position: absolute;\n
+    background-color: white;\n
+    opacity: 0.50;\n
+    font-size: 1px;\n
+    filter: alpha(opacity=50);\n
+}\n
+.olHandlerBoxSelectFeature {\n
+    border: 2px solid blue;\n
+    position: absolute;\n
+    background-color: white;\n
+    opacity: 0.50;\n
+    font-size: 1px;\n
+    filter: alpha(opacity=50);\n
+}\n
+\n
+.olControlPanPanel {\n
+    top: 10px;\n
+    left: 5px;\n
+}\n
+\n
+.olControlPanPanel div {\n
+    background-image: url(img/pan-panel.png);\n
+    height: 18px;\n
+    width: 18px;\n
+    cursor: pointer;\n
+    position: absolute;\n
+}\n
+\n
+.olControlPanPanel .olControlPanNorthItemInactive {\n
+    top: 0;\n
+    left: 9px;\n
+    background-position: 0 0;\n
+}\n
+.olControlPanPanel .olControlPanSouthItemInactive {\n
+    top: 36px;\n
+    left: 9px;\n
+    background-position: 18px 0;\n
+}\n
+.olControlPanPanel .olControlPanWestItemInactive {\n
+    position: absolute;\n
+    top: 18px;\n
+    left: 0;\n
+    background-position: 0 18px;\n
+}\n
+.olControlPanPanel .olControlPanEastItemInactive {\n
+    top: 18px;\n
+    left: 18px;\n
+    background-position: 18px 18px;\n
+}\n
+\n
+.olControlZoomPanel {\n
+    top: 71px;\n
+    left: 14px;\n
+}\n
+\n
+.olControlZoomPanel div {\n
+    background-image: url(img/zoom-panel.png);\n
+    position: absolute;\n
+    height: 18px;\n
+    width: 18px;\n
+    cursor: pointer;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomInItemInactive {\n
+    top: 0;\n
+    left: 0;\n
+    background-position: 0 0;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomToMaxExtentItemInactive {\n
+    top: 18px;\n
+    left: 0;\n
+    background-position: 0 -18px;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomOutItemInactive {\n
+    top: 36px;\n
+    left: 0;\n
+    background-position: 0 18px;\n
+}\n
+\n
+/*\n
+ * When a potential text is bigger than the image it move the image\n
+ * with some headers (closes #3154)\n
+ */\n
+.olControlPanZoomBar div {\n
+    font-size: 1px;\n
+}\n
+\n
+.olPopupCloseBox {\n
+  background: url("img/close.gif") no-repeat;\n
+  cursor: pointer;\n
+}\n
+\n
+.olFramedCloudPopupContent {\n
+    padding: 5px;\n
+    overflow: auto;\n
+}\n
+\n
+.olControlNoSelect {\n
+ -moz-user-select: none;\n
+ -khtml-user-select: none;\n
+}\n
+\n
+.olImageLoadError {\n
+    background-color: pink;\n
+    opacity: 0.5;\n
+    filter: alpha(opacity=50); /* IE */\n
+}\n
+\n
+/**\n
+ * Cursor styles\n
+ */\n
+\n
+.olCursorWait {\n
+    cursor: wait;\n
+}\n
+.olDragDown {\n
+    cursor: move;\n
+}\n
+.olDrawBox {\n
+    cursor: crosshair;\n
+}\n
+.olControlDragFeatureOver {\n
+    cursor: move;\n
+}\n
+.olControlDragFeatureActive.olControlDragFeatureOver.olDragDown {\n
+    cursor: -moz-grabbing;\n
+}\n
+\n
+/**\n
+ * Layer switcher\n
+ */\n
+.olControlLayerSwitcher {\n
+    position: absolute;\n
+    top: 25px;\n
+    right: 0;\n
+    width: 20em;\n
+    font-family: sans-serif;\n
+    font-weight: bold;\n
+    margin-top: 3px;\n
+    margin-left: 3px;\n
+    margin-bottom: 3px;\n
+    font-size: smaller;\n
+    color: white;\n
+    background-color: transparent;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv {\n
+    padding-top: 5px;\n
+    padding-left: 10px;\n
+    padding-bottom: 5px;\n
+    padding-right: 10px;\n
+    background-color: darkblue;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv .baseLbl,\n
+.olControlLayerSwitcher .layersDiv .dataLbl {\n
+    margin-top: 3px;\n
+    margin-left: 3px;\n
+    margin-bottom: 3px;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv .baseLayersDiv,\n
+.olControlLayerSwitcher .layersDiv .dataLayersDiv {\n
+    padding-left: 10px;\n
+}\n
+\n
+.olControlLayerSwitcher .maximizeDiv,\n
+.olControlLayerSwitcher .minimizeDiv {\n
+    width: 18px;\n
+    height: 18px;\n
+    top: 5px;\n
+    right: 0;\n
+    cursor: pointer;\n
+}\n
+\n
+.olBingAttribution {\n
+    color: #DDD;\n
+}\n
+.olBingAttribution.road {\n
+    color: #333;\n
+}\n
+\n
+.olGoogleAttribution.hybrid, .olGoogleAttribution.satellite {\n
+    color: #EEE;\n
+}\n
+.olGoogleAttribution {\n
+    color: #333;\n
+}\n
+span.olGoogleAttribution a {\n
+    color: #77C;\n
+}\n
+span.olGoogleAttribution.hybrid a, span.olGoogleAttribution.satellite a {\n
+    color: #EEE;\n
+}\n
+\n
+/**\n
+ * Editing and navigation icons.\n
+ * (using the editing_tool_bar.png sprint image)\n
+ */\n
+.olControlNavToolbar ,\n
+.olControlEditingToolbar {\n
+    margin: 5px 5px 0 0;\n
+}\n
+.olControlNavToolbar div,\n
+.olControlEditingToolbar div {\n
+    background-image: url("img/editing_tool_bar.png");\n
+    background-repeat: no-repeat;\n
+    margin: 0 0 5px 5px;\n
+    width: 24px;\n
+    height: 22px;\n
+    cursor: pointer\n
+}\n
+/* positions */\n
+.olControlEditingToolbar {\n
+    right: 0;\n
+    top: 0;\n
+}\n
+.olControlNavToolbar {\n
+    top: 295px;\n
+    left: 9px;\n
+}\n
+/* layouts */\n
+.olControlEditingToolbar div {\n
+    float: right;\n
+}\n
+/* individual controls */\n
+.olControlNavToolbar .olControlNavigationItemInactive,\n
+.olControlEditingToolbar .olControlNavigationItemInactive {\n
+    background-position: -103px -1px;\n
+}\n
+.olControlNavToolbar .olControlNavigationItemActive ,\n
+.olControlEditingToolbar .olControlNavigationItemActive  {\n
+    background-position: -103px -24px;\n
+}\n
+.olControlNavToolbar .olControlZoomBoxItemInactive {\n
+    background-position: -128px -1px;\n
+}\n
+.olControlNavToolbar .olControlZoomBoxItemActive  {\n
+    background-position: -128px -24px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePointItemInactive {\n
+    background-position: -77px -1px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePointItemActive {\n
+    background-position: -77px -24px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePathItemInactive {\n
+    background-position: -51px -1px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePathItemActive {\n
+    background-position: -51px -24px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePolygonItemInactive{\n
+    background-position: -26px -1px;\n
+}\n
+.olControlEditingToolbar .olControlDrawFeaturePolygonItemActive {\n
+    background-position: -26px -24px;\n
+}\n
+\n
+div.olControlZoom {\n
+    position: absolute;\n
+    top: 8px;\n
+    left: 8px;\n
+    background: rgba(255,255,255,0.4);\n
+    border-radius: 4px;\n
+    padding: 2px;\n
+}\n
+div.olControlZoom a {\n
+    display: block;\n
+    margin: 1px;\n
+    padding: 0;\n
+    color: white;\n
+    font-size: 18px;\n
+    font-family: \'Lucida Grande\', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;\n
+    font-weight: bold;\n
+    text-decoration: none;\n
+    text-align: center;\n
+    height: 22px;\n
+    width:22px;\n
+    line-height: 19px;\n
+    background: #130085; /* fallback for IE - IE6 requires background shorthand*/\n
+    background: rgba(0, 60, 136, 0.5);\n
+    filter: alpha(opacity=80);\n
+}\n
+div.olControlZoom a:hover {\n
+    background: #130085; /* fallback for IE */\n
+    background: rgba(0, 60, 136, 0.7);\n
+    filter: alpha(opacity=100);\n
+}\n
+@media only screen and (max-width: 600px) {\n
+    div.olControlZoom a:hover {\n
+        background: rgba(0, 60, 136, 0.5);\n
+    }\n
+}\n
+a.olControlZoomIn {\n
+    border-radius: 4px 4px 0 0;\n
+}\n
+a.olControlZoomOut {\n
+    border-radius: 0 0 4px 4px;\n
+}\n
+\n
+\n
+/**\n
+ * Animations\n
+ */\n
+\n
+.olLayerGrid .olTileImage {\n
+    -webkit-transition: opacity 0.2s linear;\n
+    -moz-transition: opacity 0.2s linear;\n
+    -o-transition: opacity 0.2s linear;\n
+    transition: opacity 0.2s linear;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9948</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>style.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
