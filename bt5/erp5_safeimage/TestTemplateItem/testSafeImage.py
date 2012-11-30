@@ -47,7 +47,7 @@ class TestSafeImage(ERP5TypeTestCase):
     if getattr(self.image_module,'testTileTransformed',None) is not None: 
       self.image_module.manage_delObjects(ids=['testTileTransformed'])
     transaction.commit()
-    self.tic()  
+    self.tic()
 
   def _createImage(self):
     portal = self.getPortalObject()
@@ -62,7 +62,7 @@ class TestSafeImage(ERP5TypeTestCase):
     tile = self.image_module.newContent(portal_type='Image Tile',title='testTile',
                              id='testTile',file=tile_image,filename='testTile')
     return tile 
-  
+
   def _createTileImageTransformed(self):
     portal = self.getPortalObject()
     tile_image_transformed = makeFileUpload('image_test.jpg')
@@ -70,14 +70,14 @@ class TestSafeImage(ERP5TypeTestCase):
                              title='testTileTransformed',id='testTileTransformed',
                              file=tile_image_transformed,filename='testTileTransformed')
     return tile_transformed 
- 
+
   def test_01_CreateImage(self):
     image = self._createImage()
     self.assertTrue(image.hasData())
     transaction.commit()
     self.tic()
     self.assertNotEqual(image,None) 
-  
+
   def test_02_CreateTileImage(self):
      """"
      We are going to check that tile image has following structure
@@ -140,3 +140,7 @@ class TestSafeImage(ERP5TypeTestCase):
         self.assertTrue(x.hasData())
      self.assertEquals(123,image_group['0-0-0'].getHeight()) 
      self.assertEquals(165,image_group['0-0-0'].getWidth())
+     if getattr(self.image_module,'testTileTransformed',None) is not None:
+      self.image_module.manage_delObjects(ids=['testTileTransformed'])
+     transaction.commit()
+     self.tic()
