@@ -30,6 +30,12 @@ def makeFileUpload(name, as_name=None):
 
 class TestSafeImage(ERP5TypeTestCase):
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_dms',
+            'erp5_safeimage',
+           )
+
   def afterSetUp(self):
     portal = self.getPortalObject()
     self.image_module = self.portal.getDefaultModule(portal_type = 'Image Module')
