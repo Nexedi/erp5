@@ -32,26 +32,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.ERP5.Document.Node import Node
+class Node(XMLObject):
+    """Node base class.
 
-class Organisation(Node):
+    See interfaces.INode.
     """
-      An Organisation object holds the information about
-      an organisation (ex. a division in a company, a company,
-      a service in a public administration).
-
-      Organisation objects can contain Coordinate objects
-      (ex. Telephone, Url) as well a documents of various types.
-
-      Organisation objects can be synchronized accross multiple
-      sites.
-
-      Organisation objects inherit from the MetaNode base class
-      (one of the 5 base classes in the ERP5 universal business model)
-    """
-
-    meta_type = 'ERP5 Organisation'
-    portal_type = 'Organisation'
+    meta_type = 'ERP5 Node'
+    portal_type = 'Node'
     add_permission = Permissions.AddPortalContent
 
     zope.interface.implements(interfaces.INode)
@@ -65,9 +52,6 @@ class Organisation(Node):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.Organisation
-                      , PropertySheet.Mapping
-                      , PropertySheet.Task
                       , PropertySheet.Reference
                       )
 
