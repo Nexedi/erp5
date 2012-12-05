@@ -66,6 +66,9 @@ class SplitAndDefer(CopyToTarget):
       # Adopt different dates for deferred movements
       movement_dict = _getPropertyAndCategoryList(simulation_movement)
       # new properties
+      delivery = simulation_movement.getDeliveryValue()
+      aggregate_set = set(simulation_movement.getAggregateList())
+      aggregate_diff_set = aggregate_set.difference(delivery.getAggregateList())
       movement_dict.update(
         portal_type="Simulation Movement",
         id=new_id,
@@ -98,7 +101,15 @@ class SplitAndDefer(CopyToTarget):
       if stop_date is not None:
         new_movement.recordProperty('stop_date')
         new_movement.edit(stop_date=stop_date)
+
+      new_movement.recordProperty('aggregate')
+      new_movement.edit(aggregate_list = list(aggregate_diff_set))
       new_movement.expand(activate_kw=self.additional_parameters)
+
+      # Only update simulation movement if quantity was changed.
+      simulation_movement.recordProperty('aggregate')
+      simulation_movement.edit(aggregate_list=delivery.getAggregateList())
+
     # adopt new quantity on original simulation movement
     simulation_movement.edit(quantity=new_movement_quantity)
     simulation_movement.setDefaultActivateParameterDict(self.activate_kw)
