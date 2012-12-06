@@ -52,9 +52,7 @@ class BankAccount(Node, Coordinate):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
+    property_sheets = ( PropertySheet.CategoryCore
                       , PropertySheet.Task
                       , PropertySheet.Resource
                       , PropertySheet.Reference
