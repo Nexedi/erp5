@@ -121,8 +121,7 @@ class CertificateAuthorityTool(BaseTool):
     if not os.path.isdir(self.certificate_authority_path):
       raise CertificateAuthorityDamaged('Path to Certificate Authority %r is '
         'wrong' % self.certificate_authority_path)
-    if not self.openssl_binary:
-      raise CertificateAuthorityDamaged('OpenSSL binary was not found!')
+    self.openssl_binary = binary_search('openssl')
     self.serial = os.path.join(self.certificate_authority_path, 'serial')
     self.crl = os.path.join(self.certificate_authority_path, 'crlnumber')
     self.index = os.path.join(self.certificate_authority_path, 'index.txt')
