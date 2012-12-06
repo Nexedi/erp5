@@ -124,7 +124,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The default address of this organisations</string> </value>
+            <value> <string>The default address of this organisation</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
