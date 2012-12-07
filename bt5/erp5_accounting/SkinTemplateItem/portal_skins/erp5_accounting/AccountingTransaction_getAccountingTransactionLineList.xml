@@ -50,7 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>sort_dict = { \'income\': 0,\n
+            <value> <string>if not portal_type:\n
+  portal_type = context.getPortalObject().getPortalAccountingMovementTypeList()\n
+\n
+sort_dict = { \'income\': 0,\n
               \'expense\': -2,\n
               \'receivable\': -2,\n
               \'payable\': 0,\n
@@ -60,10 +63,7 @@
 def getAccountingTransactionLineSortKey(line):\n
   return sort_dict.get(line.getId(), line.getIntIndex() or line.getIntId())\n
 \n
-object_list = list(context.contentValues(\n
-                      filter={\'portal_type\': portal_type}))\n
-object_list.sort(key=getAccountingTransactionLineSortKey)\n
-return object_list\n
+return sorted(context.contentValues(portal_type=portal_type), key=getAccountingTransactionLineSortKey)\n
 </string> </value>
         </item>
         <item>
