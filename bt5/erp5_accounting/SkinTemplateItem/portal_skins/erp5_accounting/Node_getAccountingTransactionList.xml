@@ -137,11 +137,11 @@ if params.get(\'node_uid\'):\n
                  or node.isMemberOf(\'account_type/income\')\n
 \n
 \n
+period_start_date = params.pop(\'period_start_date\', None)\n
 if is_pl_account and not from_date:\n
-  from_date = params.get(\'period_start_date\')\n
+  from_date = period_start_date\n
 \n
 if from_date or is_pl_account:\n
-  period_start_date = None\n
   # Create a new parameter list to get the previous balance\n
   get_inventory_kw = params.copy()\n
 \n
@@ -150,11 +150,10 @@ if from_date or is_pl_account:\n
   # ignore any at_date that could lay in params\n
   get_inventory_kw.pop(\'at_date\', None)\n
 \n
-  if params.has_key(\'period_start_date\'):\n
+  if period_start_date:\n
     if is_pl_account:\n
       # if we have on an expense / income account, only take into account\n
       # movements from the current period.\n
-      period_start_date = params[\'period_start_date\']\n
       if initial_balance_from_date:\n
         initial_balance_from_date = max(period_start_date,\n
                                         initial_balance_from_date)\n
@@ -162,7 +161,6 @@ if from_date or is_pl_account:\n
         initial_balance_from_date = period_start_date\n
     else:\n
       # for all other accounts, we calculate initial balance\n
-      period_start_date = params[\'period_start_date\']\n
       if not initial_balance_from_date:\n
         # I don\'t think this should happen\n
         log(\'from_date not passed, defaulting to period_start_date\')\n

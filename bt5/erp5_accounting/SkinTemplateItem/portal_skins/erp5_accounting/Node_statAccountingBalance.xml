@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
 portal = context.getPortalObject()\n
+\n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
 getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor\n
@@ -116,7 +117,9 @@ if kw.get(\'where_expression\'):\n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
 \n
-if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
+period_start_date = params.pop(\'period_start_date\', None)\n
+\n
+if period_start_date and params.get(\'node_uid\'):\n
   # find the node for this node_uid\n
   if context.getUid() == params[\'node_uid\']: # I bet it\'s context\n
     node = context\n
@@ -129,12 +132,11 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
     # beginning is passed explicitly.\n
     # if we are in the regular user interface, we only limit\n
     if \'from_date\' in kw:\n
-      params[\'from_date\'] = min(kw[\'from_date\'], params[\'period_start_date\'])\n
+      params[\'from_date\'] = min(kw[\'from_date\'], period_start_date)\n
   else:\n
     # for other account, we calculate the initial balance as the "absolute"\n
     # balance at the beginning of the period, plus debit or credit from this\n
     # beginning of period to the from_date\n
-    period_start_date = params[\'period_start_date\']\n
     at_date = params.pop(\'at_date\', None)\n
     period_openning_balance = getInventoryAssetPrice(\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
