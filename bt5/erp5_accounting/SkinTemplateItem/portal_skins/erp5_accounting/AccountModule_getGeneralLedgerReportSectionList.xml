@@ -110,13 +110,23 @@ if funding_category:\n
   if funding_category == \'None\':\n
     params[\'funding_uid\'] = Query(funding_uid=None)\n
   else:\n
-    params[\'funding_category\'] = funding_category\n
+    funding_value = portal.restrictedTraverse(funding_category, None)\n
+    if funding_value is not None and funding_value.getPortalType() != \'Category\':\n
+      params[\'funding_uid\'] = funding_value.getUid()\n
+    else:\n
+      params[\'funding_category\'] = funding_category\n
+\n
 function_category = request.get(\'function\')\n
 if function_category:\n
   if function_category == \'None\':\n
     params[\'function_uid\'] = Query(function_uid=None)\n
   else:\n
-    params[\'function_category\'] = function_category\n
+    function_value = portal.restrictedTraverse(function_category, None)\n
+    if function_value is not None and function_value.getPortalType() != \'Category\':\n
+      params[\'function_uid\'] = function_value.getUid()\n
+    else:\n
+      params[\'function_category\'] = function_category\n
+\n
 if mirror_section:\n
   mirror_section_uid = portal.restrictedTraverse(mirror_section).getUid()\n
   params[\'mirror_section_uid\'] = mirror_section_uid\n
