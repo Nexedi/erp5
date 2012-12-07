@@ -51,12 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lambda x:x.getId()):\n
-  for ri in sorted(ti.contentValues(portal_type=\'Role Information\'), key=lambda x:(x.getTitle(), x.getRoleBaseCategoryScriptId(), x.getRoleBaseCategoryList())):\n
+  for ri in sorted(ti.contentValues(portal_type=\'Role Information\'), key=lambda x:(x.getTitle(), x.getLocalRoleGroupId(), x.getRoleBaseCategoryScriptId(), x.getRoleBaseCategoryList())):\n
     print ti.getId()\n
     print " ", "\\n  ".join([x for x in (\n
       "Title: %s" % ri.getTitle(),\n
       "Roles: %r" % ri.getRoleNameList(),\n
       "Condition: %s" % ri.getConditionText(),\n
+      "Local Roles Group Id: %s" % ri.getLocalRoleGroupId(),\n
       "Base Categories: %r" % ri.getRoleBaseCategoryList(),\n
       "Base Category Script: %s" % ri.getRoleBaseCategoryScriptId(),\n
       "Categories: %r" % ri.getRoleCategoryList() )])\n
