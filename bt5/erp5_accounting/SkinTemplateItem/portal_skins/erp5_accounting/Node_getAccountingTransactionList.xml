@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
@@ -141,6 +141,15 @@ period_start_date = params.pop(\'period_start_date\', None)\n
 if is_pl_account and not from_date:\n
   from_date = period_start_date\n
 \n
+if portal.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
+  if params.get(\'at_date\'):\n
+    params[\'grouping_query\'] = ComplexQuery(\n
+      Query(grouping_reference=None),\n
+      Query(grouping_date=params[\'at_date\'], range="min"),\n
+      operator="OR")\n
+  else:\n
+    params[\'grouping_reference\'] = None\n
+\n
 if from_date or is_pl_account:\n
   # Create a new parameter list to get the previous balance\n
   get_inventory_kw = params.copy()\n
@@ -228,8 +237,6 @@ if from_date or is_pl_account:\n
       previous_balance.edit(Movement_getExplanationTitle=\'\')\n
 \n
     new_result = [previous_balance]\n
-    if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
-      params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
     new_result.extend(\n
       portal.portal_simulation.getMovementHistoryList(\n
                    from_date=from_date,\n
@@ -241,9 +248,6 @@ if from_date or is_pl_account:\n
                    ignore_group_by=True,\n
                    **params))\n
     return new_result\n
-\n
-if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
-  params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
 \n
 # We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n

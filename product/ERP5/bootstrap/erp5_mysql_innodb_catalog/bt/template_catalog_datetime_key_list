@@ -3,6 +3,8 @@ alarm_date
 catalog.creation_date
 catalog.modification_date
 creation_date
+grouping_date
+catalog.grouping_date
 date
 delivery.start_date
 delivery.start_date_range_max

@@ -2813,12 +2813,15 @@ class TestTransactions(AccountingTestCase):
       line = accounting_transaction.newContent(
                   id = 'line_with_grouping_reference',
                   grouping_reference='A',
+                  grouping_date=DateTime(),
                   portal_type=transaction_to_line_mapping[portal_type])
 
       cp = accounting_module.manage_copyObjects(ids=[accounting_transaction.getId()])
       copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
       self.failIf(accounting_module[copy_id]\
           .line_with_grouping_reference.getGroupingReference())
+      self.failIf(accounting_module[copy_id]\
+          .line_with_grouping_reference.getGroupingDate())
 
   def test_AccountingTransaction_lineResetGroupingReference(self):
     invoice = self._makeOne(
@@ -2829,6 +2832,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=100,
                            id='line_with_grouping_reference',
+                           grouping_date=DateTime(),
                            grouping_reference='A'),))
     invoice_line = invoice.line_with_grouping_reference
 
@@ -2840,6 +2844,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.goods_sales,
                            source_credit=100,
                            id='line_with_grouping_reference',
+                           grouping_date=DateTime(),
                            grouping_reference='A'),))
     other_account_line = other_account_invoice.line_with_grouping_reference
     
@@ -2851,6 +2856,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=100,
                            id='line_with_grouping_reference',
+                           grouping_date=DateTime(),
                            grouping_reference='A'),))
     other_section_line = other_section_invoice.line_with_grouping_reference
 
@@ -2862,6 +2868,7 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            source_credit=100,
                            id='line_with_grouping_reference',
+                           grouping_date=DateTime(),
                            grouping_reference='B'),))
     other_letter_line = other_letter_invoice.line_with_grouping_reference
 
@@ -2874,6 +2881,7 @@ class TestTransactions(AccountingTestCase):
                lines=(dict(source_value=self.account_module.receivable,
                            id='line_with_grouping_reference',
                            grouping_reference='A',
+                           grouping_date=DateTime(),
                            source_debit=100),
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
@@ -2883,16 +2891,21 @@ class TestTransactions(AccountingTestCase):
     # ungrouped
     payment_line.AccountingTransactionLine_resetGroupingReference()
     self.failIf(payment_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingDate())
     self.failIf(invoice_line.getGroupingReference())
+    self.failIf(invoice_line.getGroupingDate())
 
     # other lines are not touched:
     self.failUnless(other_account_line.getGroupingReference())
+    self.failUnless(other_account_line.getGroupingDate())
     self.failUnless(other_section_line.getGroupingReference())
-    self.failUnless(other_letter_line.getGroupingReference())
+    self.failUnless(other_section_line.getGroupingDate())
+    self.failUnless(other_letter_line.getGroupingDate())
 
   def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
                title='First Invoice',
+               start_date=DateTime(2012, 1, 2),
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.goods_purchase,
                            source_debit=100),
@@ -2905,6 +2918,7 @@ class TestTransactions(AccountingTestCase):
                title='First Invoice Payment',
                portal_type='Payment Transaction',
                simulation_state='delivered',
+               start_date=DateTime(2012, 1, 3),
                causality_value=invoice,
                source_payment_value=self.section.newContent(
                                             portal_type='Bank Account'),
@@ -2915,23 +2929,34 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.bank,
                            source_credit=100,)))
     payment_line = payment.line_for_grouping_reference
-    
+
     self.failIf(invoice_line.getGroupingReference())
+    self.failIf(invoice_line.getGroupingDate())
     self.failIf(payment_line.getGroupingReference())
-    
+    self.failIf(payment_line.getGroupingDate())
+
     # lines match, they are automatically grouped
     invoice.stop()
     self.failUnless(invoice_line.getGroupingReference())
     self.failUnless(payment_line.getGroupingReference())
-  
+    # the grouping date is set to the latest date of all grouped lines
+    self.assertEquals(DateTime(2012, 1, 3), invoice_line.getGroupingDate())
+    self.assertEquals(DateTime(2012, 1, 3), payment_line.getGroupingDate())
+
     # when restarting, grouping is removed
     invoice.restart()
     self.tic()
     self.failIf(invoice_line.getGroupingReference())
+    self.failIf(invoice_line.getGroupingDate())
     self.failIf(payment_line.getGroupingReference())
+    self.failIf(payment_line.getGroupingDate())
+
+    # when stopping again, grouping is set again
     invoice.stop()
     self.failUnless(invoice_line.getGroupingReference())
     self.failUnless(payment_line.getGroupingReference())
+    self.assertEquals(DateTime(2012, 1, 3), invoice_line.getGroupingDate())
+    self.assertEquals(DateTime(2012, 1, 3), payment_line.getGroupingDate())
 
   def test_automatically_setting_grouping_reference_same_group(self):
     # invoice is for section, payment is for main_section

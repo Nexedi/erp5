@@ -50,23 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Reset the grouping reference after a copy & paste.\n
+            <value> <string>"""This script is a placeholder for projects to implement extra constraint to prevent grouping of accounting transaction lines.\n
+Note that the sequence of letters will still remain unique for section, mirror_section and node, regardless of extra grouping parameters.\n
+\n
+For instance, we can refuse to group together lines for different order by returning the reference of the order in that script.\n
+\n
+The returned value must be hashable.\n
 """\n
-context.setGroupingReference(None)\n
-context.setGroupingDate(None)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>source=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_afterClone</string> </value>
+            <value> <string>AccountingTransactionLine_getGroupingExtraParameterList</string> </value>
         </item>
       </dictionary>
     </pickle>

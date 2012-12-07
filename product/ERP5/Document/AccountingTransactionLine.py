@@ -131,3 +131,12 @@ class AccountingTransactionLine(DeliveryLine):
     # directly from the URL, that's why this method is without docstring.
     self._baseSetGroupingReference(value)
     self.reindexObject()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setGroupingDate')
+  def setGroupingDate(self, value):
+    # Sets the grouping date.
+    # See also setGroupingReference.
+    self._baseSetGroupingDate(value)
+    self.reindexObject()
+

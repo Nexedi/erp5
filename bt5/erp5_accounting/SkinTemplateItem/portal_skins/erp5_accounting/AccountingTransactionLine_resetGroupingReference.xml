@@ -90,11 +90,12 @@ line_list = portal.portal_simulation.getMovementHistoryList(\n
                   mirror_section_uid=mirror_section_uid)\n
 \n
 # If the group is still valid, we may want to keep it as is.\n
-if round(sum([(l.total_price or 0) for l in line_list]), precision) == 0 and keep_if_valid_group:\n
+if keep_if_valid_group and round(sum([(l.total_price or 0) for l in line_list]), precision) == 0:\n
   return\n
-  \n
+\n
 for line in line_list:\n
   line.setGroupingReference(None)\n
+  line.setGroupingDate(None)\n
 \n
 return line_list\n
 </string> </value>

@@ -87,6 +87,7 @@ CREATE TABLE `catalog` (\n
   `immobilisation_state` varchar(255) default \'\',\n
   `reference` varchar(255) binary default \'\',\n
   `grouping_reference` varchar(255) default \'\',\n
+  `grouping_date` datetime,\n
   `source_reference` varchar(255) default \'\',\n
   `destination_reference` varchar(255) default \'\',\n
   `string_index` varchar(255),\n

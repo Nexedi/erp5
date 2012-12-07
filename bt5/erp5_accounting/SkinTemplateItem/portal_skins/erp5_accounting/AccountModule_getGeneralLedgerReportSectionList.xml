@@ -54,13 +54,12 @@
 
 """Get the report sections for general ledger\n
 """\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
 from Products.ERP5Form.Report import ReportSection\n
 portal   = context.portal_url.getPortalObject()\n
 request  = portal.REQUEST\n
 cat_tool = portal.portal_categories\n
-sim_tool = portal.portal_simulation\n
-Base_translateString = context.Base_translateString\n
+Base_translateString = portal.Base_translateString\n
 \n
 at_date             = request[\'at_date\']\n
 section_category    = request[\'section_category\']\n
@@ -133,6 +132,17 @@ if mirror_section:\n
 \n
 default_selection_params = params.copy()\n
 \n
+# if user request report without grouping reference, don\'t show accounts that only have grouped lines in the period.\n
+if request.get(\'omit_grouping_reference\', False):\n
+  if at_date:\n
+    params[\'grouping_query\'] = ComplexQuery(\n
+      Query(grouping_reference=None),\n
+      Query(grouping_date=at_date, range="min"),\n
+      operator="OR")\n
+  else:\n
+    params[\'grouping_reference\'] = None\n
+\n
+\n
 analytic_column_list = ()\n
 if hide_analytic:\n
   default_selection_params[\'group_by\'] = ( \'explanation_uid\',\n
@@ -197,7 +207,7 @@ def getFullAccountName(account_info):\n
 \n
 \n
 # look at inventories to decide which sections will be shown\n
-balance_sheet_account_type_list = [c[0] for c in \n
+balance_sheet_account_type_list = [c[0] for c in\n
  cat_tool.account_type.asset.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False ) + \\\n
  cat_tool.account_type.equity.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False) + \\\n
  cat_tool.account_type.liability.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False) ]\n
