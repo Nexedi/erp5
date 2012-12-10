@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.17 (2012-12-10)
+------------------
+
+ * erp5.util.testnode:
+
+  - Add thread Timer to terminate locked processes [Sebastien Robin]
+  - Add more unit tests [Pere Cortes]
+
 0.4.16 (2012-11-14)
 ------------------
 
