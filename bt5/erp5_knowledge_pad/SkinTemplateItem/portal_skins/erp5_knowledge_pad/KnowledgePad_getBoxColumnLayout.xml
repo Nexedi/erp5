@@ -58,7 +58,7 @@ boxes = context.contentValues(portal_type = \'Knowledge Box\', \n
 isAnon = context.portal_membership.isAnonymousUser()\n
 validation_state_map = {1: (\'public\',),\n
                         0: (\'visible\', \'invisible\', \'public\',)}\n
-boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon], boxes)\n
+boxes = filter(lambda x: x.getValidationState() in validation_state_map[isAnon] and x.test(context), boxes)\n
 for box in boxes:\n
   all_box_ids.append(box.getId())\n
 \n
