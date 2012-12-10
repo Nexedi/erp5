@@ -2243,8 +2243,8 @@ class TestClosingPeriod(AccountingTestCase):
                               section_uid=self.section.getUid(),
                               node_uid=node_uid)
     self.assertEquals(2, len(movement_history_list))
-    self.assertEquals([-50, -100], [x.total_quantity for x in \
-          movement_history_list])
+    self.assertEquals(sorted([-50, -100]),
+      sorted([x.total_quantity for x in movement_history_list]))
 
 
   def test_BalanceTransactionDateInInventoryAPI(self):
