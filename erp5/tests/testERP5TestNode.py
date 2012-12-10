@@ -400,8 +400,6 @@ branch = foo
   def test_11_run(self):
     def doNothing(self, *args, **kw):
         pass
-    def patch_killPrevious():
-        pass
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -417,22 +415,21 @@ branch = foo
           test_self.assertTrue(os.path.exists(os.path.join(
                                test_node.config["working_directory"],x)),True)
       if counter == 0:
-        config_list.append(test_self.getTestSuiteData()[0])
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
         config_list.append(test_self.getTestSuiteData(reference='bar')[0])
       elif counter == 1:
         _checkExistingTestSuite(set(['foo']))
         config_list.append(test_self.getTestSuiteData(reference='bar')[0])
-        config_list.append(test_self.getTestSuiteData()[0])
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
       elif counter == 2:
         _checkExistingTestSuite(set(['foo','bar']))
-        config_list.append(test_self.getTestSuiteData()[0])
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
         config_list.append(test_self.getTestSuiteData(reference='qux')[0])
       elif counter == 3:
         _checkExistingTestSuite(set(['foo','qux']))
-        test_node.process_manager.under_cancellation = True
         config_list.append(test_self.getTestSuiteData(reference='foox')[0])
       elif counter == 4:
-        test_node.process_manager.under_cancellation = False
+        _checkExistingTestSuite(set(['foox']))
         config_list.append(test_self.getTestSuiteData(reference='bax')[0])
       elif counter == 5:
         _checkExistingTestSuite(set(['bax']))
@@ -442,6 +439,7 @@ branch = foo
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       global counter
+      # return no test to check if run method will run the next test suite
       if counter == 3 and project_title != 'qux':
         result = None
       else:
@@ -452,19 +450,26 @@ branch = foo
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
+    original_startTestSuite = TaskDistributor.startTestSuite
     TaskDistributor.startTestSuite = patch_startTestSuite
+    original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
+    original_prepareSlapOS = test_node._prepareSlapOS
     test_node._prepareSlapOS = doNothing
+    original_runTestSuite = test_node.runTestSuite
     test_node.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.process_manager.killPreviousRun = patch_killPrevious
     try:
       test_node.run()
     except Exception as e:
       self.assertEqual(type(e),StopIteration)
     finally:
       time.sleep = original_sleep
+      TaskDistributor.startTestSuite = original_startTestSuite
+      TaskDistributionTool.createTestResult = original_createTestResult
+      test_node._prepareSlapOS = original_prepareSlapOS
+      test_node.runTestSuite = original_runTestSuite
 
   def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
