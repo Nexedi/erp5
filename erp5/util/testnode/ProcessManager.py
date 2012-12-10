@@ -32,7 +32,7 @@ import signal
 import sys
 import time
 
-MAX_TIMEOUT = 5
+MAX_TIMEOUT = 36000
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
@@ -109,13 +109,13 @@ class ProcessManager(object):
     self.under_cancellation = False
     self.p = None
     self.result = None
+    self.max_timeout = kw.get("max_timeout") or MAX_TIMEOUT
 
   def spawn(self, *args, **kw):
-    def timeoutExpired(p):
-      time.sleep(MAX_TIMEOUT)
+    def timeoutExpired(p, log):
       if p.poll() is None:
+        log('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
         p.terminate()
-        raise TimeoutError
 
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
@@ -137,10 +137,11 @@ class ProcessManager(object):
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env, **subprocess_kw)
     self.process_pid_set.add(p.pid)
-    thread = threading.Thread(target=timeoutExpired, args=(p,))
-    thread.start()
+    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p, self.log))
+    timer.start()
     stdout, stderr = subprocess_capture(p, self.log, log_prefix,
                                         get_output=get_output)
+    timer.cancel()
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     self.process_pid_set.discard(p.pid)
