@@ -58,14 +58,15 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
+    def log(*args,**kw):
+      for arg in args:
+        print "TESTNODE LOG : %r" % (arg,)
+    self.log = log
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
 
   def getTestNode(self):
-    def log(*args,**kw):
-      for arg in args:
-        print "TESTNODE LOG : %r" % (arg,)
     # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "/srv/slapgrid/slappart80/srv/runner/software/ba1e09f3364989dc92da955b64e72f8d/parts/git/bin/git"
@@ -77,7 +78,7 @@ class ERP5TestNode(TestCase):
     config["log_file"] = self.log_file
     config["test_suite_master_url"] = None
     config["test_node_title"] = "Foo-Test-Node"
-    return TestNode(log, config)
+    return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
     data = [{
@@ -466,16 +467,9 @@ branch = foo
       time.sleep = original_sleep
 
   def test_12_spawn(self):
-    def _log(*args,**kw):
-      for arg in args:
-        print "TESTNODE LOG : %r" % (arg,)
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
-    def patch_sleep(n):
-      subprocess.check_call(["sleep", n/10000])
-    original_sleep = time.sleep
-    process_manager = ProcessManager(log=_log)
-    _checkCorrectStatus(0, *['sleep','3'])
-    _checkCorrectStatus(-15, *['sleep','8'])
-    time.sleep = original_sleep
+    process_manager = ProcessManager(log=self.log, max_timeout=1)
+    _checkCorrectStatus(0, *['sleep','0'])
+    _checkCorrectStatus(-15, *['sleep','2'])
