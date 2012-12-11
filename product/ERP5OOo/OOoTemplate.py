@@ -528,7 +528,9 @@ class OOoTemplate(ZopePageTemplate):
     if self.OLE_documents_zipstring:
       additional_builder = OOoBuilder( self.OLE_documents_zipstring )
       for name in additional_builder.getNameList():
-        ooo_builder.replace(name, additional_builder.extract(name) )
+        if name not in ('META-INF/manifest.xml',):
+          # We don't replace manifest
+          ooo_builder.replace(name, additional_builder.extract(name) )
 
     # Update the META informations
     ooo_builder.updateManifest()
