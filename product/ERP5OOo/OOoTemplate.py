@@ -524,15 +524,15 @@ class OOoTemplate(ZopePageTemplate):
     # Get batch_mode
     batch_mode = opts.get('batch_mode', None)
 
-    # If the file has embedded OLE documents, restore it
+    # If the file has embedded OLE documents, restore them
     if self.OLE_documents_zipstring:
-      additional_builder = OOoBuilder( self.OLE_documents_zipstring )
+      additional_builder = OOoBuilder(self.OLE_documents_zipstring)
       for name in additional_builder.getNameList():
         if name not in ('META-INF/manifest.xml',):
           # We don't replace manifest
-          ooo_builder.replace(name, additional_builder.extract(name) )
+          ooo_builder.replace(name, additional_builder.extract(name))
 
-    # Update the META informations
+    # Update the META information
     ooo_builder.updateManifest()
 
     # Produce final result
