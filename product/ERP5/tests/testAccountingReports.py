@@ -791,8 +791,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=300.0)))
 
   @todo_erp5
-  def test_Resource_zGetInventoryList(self):
-    # TODO: Fix Resource_zGetInventoryList so that we don't need to workaround
+  def test_Resource_zGetMovementHistoryList(self):
+    # TODO: Fix Resource_zGetMovementHistoryList so that we don't need to workaround
     #       new behaviour of MariaDB.
     #       Indeed, https://bugs.launchpad.net/maria/+bug/985828 has been marked
     #       as WONTFIX.
