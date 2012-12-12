@@ -430,7 +430,7 @@ class ScribusParser:
           usable_property['group'] = '0'
           if user_property.has_key('group'):
             usable_property['group'] = user_property['group']
-        # object is datetimefield and need several informations
+        # object is DateTimeField
         if usable_property['type'] == 'DateTimeField':
           # has been tested successfully
           usable_property['rendering'] = 'multiple'

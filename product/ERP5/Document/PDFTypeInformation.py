@@ -51,7 +51,7 @@ def getPropertiesCSSDict(parsed_scribus
                       , portal_preferences):
   """
   recover all CSS data relative to the current page_object (field)
-  and save these informations in the output dict
+  and save these information in the output dict
   """
   #image_width = 800
   scaling_factor = min(float(image_width)/scribus_width,

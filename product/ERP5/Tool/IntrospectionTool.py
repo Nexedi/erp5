@@ -423,7 +423,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
   security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
   def getSystemSignatureDict(self):
-    """ Returns a dictionary with all informations related to the instance.
+    """ Returns a dictionary with all information related to the instance.
     This information can report what resources (memcache, mysql, zope,
     python, libraries) the instance is using. Also, what business templates are
     installed.

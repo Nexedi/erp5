@@ -123,7 +123,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
           block_found['old_X'] = block_previous['old_X']
           block_found['old_Y'] = block_previous['old_Y']
         else:
-          # block has not been moved again, adding old block informations to
+          # block has not been moved again, adding old block information to
           # the current list of block_moved
           block_moved_list.append(block_previous)
     elif block_previous_list != []:
@@ -139,7 +139,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       return None
     # block_moved_list is updated
 
-    # dict aimed to hold all informations about block
+    # dict aimed to hold all information about block
     final_block_dict = {}
     # dict holding all the activities that will need an update because at least
     # one of the blocks concerned is moved
@@ -150,13 +150,13 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     error_block_list = []
     error_info_dict = {}
 
-    ########## GETTING BLOCK INFORMATIONS ############
+    ########## GETTING BLOCK INFORMATION ############
     # iterating each block_moved element and recovering all usefull properties
     # BEWARE : no update is done here as an activity can be composed of several
     # blocks and so we need first to check all the blocks moved
     for block_moved in block_moved_list:
       final_block = {}
-      # recovering the block object from block_moved informations
+      # recovering the block object from block_moved information
       final_block['block_object'] = self.getBlockObject(block_moved['name'], \
                                                         planning.content)
       # recovering original activity object
@@ -226,7 +226,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
           warning_activity_list.append(final_block['activity_origin'].name)
         lane_axis_positions = [ None , None ]
       else:
-        # now that all informations about the main axis changes are
+        # now that all information about the main axis changes are
         # known, checking modifications over the lane axis.
         lane_axis_positions = self.getDestinationBounds(basic, planning,
                 block_moved, final_block['block_object'],
@@ -300,7 +300,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # adding object name to list of objects to update
         if activity_object.object.getUrl() not in update_list:
           update_list.append(activity_object.object.getUrl())
-        # saving updated informations in the final dict
+        # saving updated information in the final dict
         for activity_desc in object_dict[activity_object.object.getUrl()]:
           if activity_desc['activity_name'] == activity_object.name:
             activity_desc['axis_start'] = start_value
@@ -309,7 +309,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     ############### UPDATING OBJECTS #################
     # using result from updated activities to process update on objects.
     update_dict = {}
-    # first building a dict with all informations for each object.
+    # first building a dict with all information for each object.
     # now processing activity updates
     for object_name in update_list:
       object_info = object_dict[object_name]
@@ -444,7 +444,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # XXX CALENDAR
     # has to be improved : for now the axis bounds are recovered globally, it
     # implies that all groups have the same bounds, which is not the case in
-    # calendar mode. for that will need to add special informations about the
+    # calendar mode. for that will need to add special information about the
     # group itself to know its own bounds.
     # => In case of calendar mode, axis_bounds are recovered from the
     #    destination group instead of the planning itself
@@ -1540,7 +1540,7 @@ class BasicStructure:
     lane_axis_ocurence holds couples of data (begin,end) related to
     basicActivity blocks, and axis if the instance representing the sec axis.
     it is now possible to recover begin and end value of the planning and then
-    apply selection informations to get start and stop.
+    apply selection information to get start and stop.
     """
     axis_dict = {}
     # XXX Min and Max not handle none values
@@ -1644,9 +1644,9 @@ class BasicStructure:
         stat_context.domain_url = \
                      report_group_object.getObject().getRelativeUrl()
         url=getattr(stat_context,'domain_url','')
-        # updating position_informations
+        # updating position_information
         position +=1
-        # recovering usefull informations, basic_structure
+        # recovering usefull information, basic_structure
         if self.title_line not in (None,''):
           title_line_method = getattr(report_group_object.getObject(),
                                       self.title_line, None)
@@ -1659,7 +1659,7 @@ class BasicStructure:
         is_open = report_group_object.getIsOpen()
         is_pure_summary = report_group_object.getIsPureSummary()
 
-        # creating new group_object with all the informations collected
+        # creating new group_object with all the information collected
         group_start = group_stop = None
         if self.calendar_mode == 1:
           # recover start and stop of current object to generate good BasicGroup
@@ -1693,7 +1693,7 @@ class BasicStructure:
 
 class BasicGroup:
   """
-  A BasicGroup holds informations about an ERP5Object and is stored
+  A BasicGroup holds information about an ERP5Object and is stored
   exclusively in BasicStructure. for each activity that will need to be
   represented in the PlanningBox, a BasicActivity is created and added to
   the current structure (for example BasicGroup represents an employee,
@@ -2007,7 +2007,7 @@ class PlanningStructure:
   """
   class aimed to generate the Planning final structure, including :
   - activities with their blocs (so contains Activity structure)
-  - Axis informations (contains Axis Structure).
+  - Axis information (contains Axis Structure).
   The zoom properties on lane axis are applied to this structure.
   """
 
@@ -2061,7 +2061,7 @@ class PlanningStructure:
     # used in non calendar mode
     self.lane_axis.axis_group = self.buildLaneAxis(basic_structure, field)
 
-    # completing axisgroup informations according to their bounds
+    # completing axisgroup information according to their bounds
     self.completeAxis()
 
     # the whole structure is almost completed : axis_groups are defined, as
@@ -2089,7 +2089,7 @@ class PlanningStructure:
     # axis_group_number is used to differenciate groups
     axis_group_number = 1
     # now iterating list of dominas and building group list
-    # group position and size informations are saved in position_lane
+    # group position and size information are saved in position_lane
     # using relative coordinates
     for domain in basic_structure.lane_domain_list:
       axis_group = AxisGroup(name='group_lane_' + str(axis_group_number),
@@ -2103,11 +2103,11 @@ class PlanningStructure:
       # set defaut stop bound and size
       axis_group.position_lane.relative_end  = axis_stop
       axis_group.position_lane.relative_range = axis_stop - relative_pos
-      # do not need to update previous axis informations for first
+      # do not need to update previous axis information for first
       # axis
       if len(axis_group_list) > 0:
         # actual delimiter info has a previous delimiter
-        # update its informations
+        # update its information
         axis_group_list[-1].position_lane.relative_end = \
           axis_group.position_lane.relative_begin
         axis_group_list[-1].position_lane.relative_range =\
@@ -2122,7 +2122,7 @@ class PlanningStructure:
 
   def completeAxis(self):
     """
-    complete axis informations (and more precisely axis position objects) thanks
+    complete axis information (and more precisely axis position objects) thanks
     to the actual planning structure
     """
     # processing main axis
@@ -2315,7 +2315,7 @@ class PlanningStructure:
 
         if axis_group_object.property_dict['stat'] == 1:
           # case stat group_object, need to update block size to display
-          # stats informations
+          # stats information
           axis_group_object.updateStatBlocks()
     # no problem during process, returning 'true' flag
     return 1
@@ -2578,7 +2578,7 @@ class Bloc:
   are also referenced in their relative AxisElement (to be able to calculate
   the number of lines required for rendering when having multi-tasking in
   parallel).
-  Contains Bloc Structure for position informations.
+  Contains Bloc Structure for position information.
   """
 
   def __init__ (self, name=None, types=None,
@@ -2667,7 +2667,7 @@ class Bloc:
 
 class Position:
   """
-  gives a bloc [/or an area] informations about it's position on the X or Y
+  gives a bloc [/or an area] information about it's position on the X or Y
   axis. can specify position in every kind of axis : continuous or listed
   with lower and upper bound.
   """
@@ -2687,7 +2687,7 @@ class Position:
 
 class Axis:
   """
-  Structure holding informations about a specified axis. Can be X or Y axis.
+  Structure holding information about a specified axis. Can be X or Y axis.
   Is aimed to handle axis with any kind of unit : continuous or listed (
   including possibly a listed ReportTree).
   Two of them are needed in a PlanningStructure to have X and Y axis.
@@ -3014,7 +3014,7 @@ class AxisElement:
 
 class Info:
   """
-  Class holding all informations to display an info text div inside of a block
+  Class holding all information to display an info text div inside of a block
   or AxisGroup or whatever
   """
   security = ClassSecurityInfo()

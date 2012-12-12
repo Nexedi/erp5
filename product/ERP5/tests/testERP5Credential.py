@@ -415,7 +415,7 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepCreateCredentialUpdate(self, sequence=None, sequence_list=None, **kw):
     '''
     Create a credential update object an fill it with some modified
-    informations
+    information
     '''
     self.login()
     # get the 'homie' person object

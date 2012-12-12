@@ -478,7 +478,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
               pass
       else:
         if owner_type == None:
-          # There is not enough informations to know if the customer is an organisation or
+          # There is not enough information to know if the customer is an organisation or
           # a person and there is no previous record
           # By default, we consider the customer as a person, so we have to force to create one
           owner_type = 'p'
@@ -495,8 +495,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       LOG("Person object >>>>>>>>",0,repr(person_object))
       LOG("Organisation object >>>>>>>>",0,repr(org_object))
 
-      # Copy informations related to the customer in the ERP5 representation of the customer
-      # Be carefull because all informations from the storever ShopOrder are optionnals
+      # Copy information related to the customer in the ERP5 representation of the customer
+      # Be carefull because all information from the storever ShopOrder are optionnals
       if owner_type.find('p') != -1:
         # Link the customer with the Sale Order
         object.setDestination("person/" + owner_id)
@@ -583,7 +583,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         # Link the customer with the Sale Order
         object.setDestination("organisation/" + owner_id)
         object.setDestinationSection("organisation/" + owner_id)
-        # All informations describe the organisation
+        # All information describe the organisation
         if kw.has_key('organisation') and kw['organisation'] != None:
           org_object.setTitle(kw['organisation'].title())
           org_object.setCorporateName(kw['organisation'].title())

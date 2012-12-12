@@ -248,7 +248,7 @@ class Message(BaseMessage):
     user = uf.getUserById(user_name)
     # if the user is not found, try to get it from a parent acl_users
     # XXX this is still far from perfect, because we need to store all
-    # informations about the user (like original user folder, roles) to
+    # information about the user (like original user folder, roles) to
     # replay the activity with exactly the same security context as if
     # it had been executed without activity.
     if user is None:

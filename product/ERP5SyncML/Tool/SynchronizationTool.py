@@ -834,7 +834,7 @@ class SynchronizationTool(BaseTool):
         alert_code = [category.getId() for category in\
                       category_tool.syncml_alert_code.objectValues() if\
                       category.getReference() == alert_code][0]
-      # Get informations from the header
+      # Get information from the header
       client_header = xml_client[0]
       #FIXME to apply a DTD or schema
       if client_header.xpath('local-name()') != "SyncHdr":
@@ -919,7 +919,7 @@ class SynchronizationTool(BaseTool):
     subscriber.initLastMessageId(1)
 
     alert = None
-    # Get informations from the body
+    # Get information from the body
     if xml_client is not None: # We have received a message
       last_anchor = '%s' % xml_client.xpath('string(.//syncml:Alert/'\
                                             'syncml:Item/syncml:Meta/'\
@@ -1230,7 +1230,7 @@ class SynchronizationTool(BaseTool):
     has_response = False #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     #LOG('SyncModif', DEBUG, 'Starting... domain: %s' % domain.getId())
-    # Get informations from the header
+    # Get information from the header
     xml_header = remote_xml[0]
     #FIXME to apply a DTD or schema
     if xml_header.xpath('local-name()') != "SyncHdr":

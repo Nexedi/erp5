@@ -1504,7 +1504,7 @@ class TemplateTool (BaseTool):
                                 It list all business templates who needs
                                 reinstall
       """
-      # make sure that we updated informations on repository
+      # make sure that we updated information on repository
       self.updateRepositoryBusinessTemplateList(self.getRepositoryList())
       # do upgrade
       message_list = []

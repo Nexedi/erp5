@@ -467,7 +467,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
                     portal_type='Text', version='001', language='en',
                     description=''):
     """
-      Check synchronization with a document and the informations provided
+      Check synchronization with a document and the information provided
     """
     if document is not None:
       self.assertEqual(document.getId(), id)
@@ -479,7 +479,7 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
         self.assertEqual(document.getFilename(), filename)
         self.assertEquals(size_filename, document.get_size())
     else:
-      self.fail("Document is None for check these informations")
+      self.fail("Document is None for check this information")
  
   def checkXMLsSynchronized(self):
     document_server = self.getDocumentServer()

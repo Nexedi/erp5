@@ -371,7 +371,7 @@ class OOoParser(Implicit):
     # Get the table name
     table_name = spreadsheet.get('{%s}name' % spreadsheet.nsmap["table"])
 
-    # Scan table and store usable informations
+    # Scan table and store usable information
     find_path = './/{%s}table-row' % spreadsheet.nsmap['table']
     for line in spreadsheet.findall(find_path):
 

@@ -104,7 +104,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
 
-    #Complete credential with some informations
+    #Complete credential with some information
     if creds:
       creds['remote_host'] = request.get('REMOTE_HOST', '')
       try:

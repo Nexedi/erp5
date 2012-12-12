@@ -246,7 +246,7 @@ class FunctionalTestRunner:
   def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']
 
-    # Such informations should be automatically loaded
+    # Such information should be automatically loaded
     self.user = 'ERP5TypeTestCase'
     self.password = ''
     self.run_only = run_only

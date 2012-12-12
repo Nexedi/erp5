@@ -108,7 +108,6 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     """Clean up."""
-    # type informations
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
 
   def getBusinessTemplateList(self):
