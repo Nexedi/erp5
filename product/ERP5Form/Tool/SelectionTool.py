@@ -1170,13 +1170,26 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
         We want to be sure that the selection did not change
       """
+      return object_uid_list != self._getUIDListChecksum(object_uid_list)
+
+    security.declareProtected(ERP5Permissions.View, 'getSelectionChecksum')
+    def getSelectionChecksum(self, selection_name, uid_list=None):
+      """Generate an MD5 checksum against checked uids. This is used to confirm
+      that selected values do not change between a display of a dialog and an execution.
+      uid_list (deprecated)
+        For backward compatibility with code not updating selected uids.
+      """
+      if uid_list is None:
+        uid_list = self.getSelectionCheckedUidsFor(selection_name,
+          REQUEST=REQUEST)
+      return self._getUIDListChecksum(uid_list)
+
+    def _getUIDListChecksum(self, uid_list):
+      if uid_list is None:
+          return None
       # XXX To avoid the difference of the string representations of int and long,
       # convert each element to a string.
-      object_uid_list = [str(x) for x in object_uid_list]
-      object_uid_list.sort()
-      new_md5_string = md5(str(object_uid_list)).hexdigest()
-      return md5_string != new_md5_string
-
+      return md5(str(sorted(str(uid) for uid in uid_list))).hexdigest()
 
     # Related document searching
     def viewSearchRelatedDocumentDialog(self, index, form_id,
