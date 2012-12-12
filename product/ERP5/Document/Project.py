@@ -33,10 +33,11 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.Node import Node
+from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-class Project(XMLObject, XMLMatrix):
+class Project(Node, Movement, XMLMatrix):
     """
     Project is a class which describes a typical project in consulting firm.
     A project has a client, an invoiced client. A project has also a start
@@ -54,7 +55,7 @@ class Project(XMLObject, XMLMatrix):
     isDelivery = ConstantGetter('isDelivery', value=True)
     isAccountable = ConstantGetter('isAccountable', value=False)
 
-    zope.interface.implements(interfaces.INode)
+    zope.interface.implements(interfaces.INode, interfaces.IMovement)
 
     # Declarative security
     security = ClassSecurityInfo()
