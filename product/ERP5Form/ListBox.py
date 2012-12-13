@@ -50,6 +50,7 @@ from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
+from hashlib import md5
 import cgi
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
@@ -2559,14 +2560,20 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """Generate a MD5 checksum against checked uids. This is used to confirm
     that selected values do not change between a display of a dialog and an execution.
 
-    FIXME: SelectionTool.getSelectionChecksum's uid_list parameter is
-    deprecated, but Folder_deleteObjectList does not use the feature that
-    checked uids are used when no list method is specified.
+    FIXME: this should only use getCheckedUidList, but Folder_deleteObjectList does not use
+    the feature that checked uids are used when no list method is specified.
     """
-    return self.getSelectionTool().getSelectionChecksum(
-      self.getSelectionName(),
-      uid_list=self.request.get('uids'),
-    )
+    checked_uid_list = self.request.get('uids')
+    if checked_uid_list is None:
+      checked_uid_list = self.getCheckedUidList()
+    if checked_uid_list is not None:
+      checked_uid_list = [str(uid) for uid in checked_uid_list]
+      checked_uid_list.sort()
+      md5_string = md5(str(checked_uid_list)).hexdigest()
+    else:
+      md5_string = None
+
+    return md5_string
 
   def getPhysicalRoot(self):
     """Return the physical root (an Application object). This method is required for
