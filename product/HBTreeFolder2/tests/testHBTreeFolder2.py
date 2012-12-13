@@ -84,14 +84,6 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.assertEqual(list(self.f.objectIds()), [])
         self.assertEqual(self.f.objectCount(), 0)
 
-    def testObjectMap(self):
-        map = self.f.objectMap()
-        self.assertEqual(list(map), [{'id': 'item', 'meta_type':
-                                      self.ff.meta_type}])
-        # I'm not sure why objectMap_d() exists, since it appears to be
-        # the same as objectMap(), but it's implemented by Folder.
-        self.assertEqual(list(self.f.objectMap_d()), list(self.f.objectMap()))
-
     def testObjectIds_d(self):
         self.assertEqual(self.f.objectIds_d(), {'item': 1})
 
@@ -145,7 +137,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         f2 = HBTreeFolder2('somefolder')
         self.f._setObject(f2.id, f2)
         # Hack in an absolute_url() method that works without context.
-        self.f.absolute_url = lambda: ''
+        self.f.absolute_url = str
         info = self.f.getBatchObjectListing()
         self.assertEqual(info['b_start'], 1)
         self.assertEqual(info['b_end'], 2)
@@ -177,7 +169,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         name = " some folder "
         f2 = HBTreeFolder2(name)
         self.f._setObject(f2.id, f2)
-        self.f.absolute_url = lambda: ''
+        self.f.absolute_url = str
         info = self.f.getBatchObjectListing()
         expect = '<option value="%s">%s</option>' % (name, name)
         self.assert_(info['formatted_list'].find(expect) > 0)
@@ -231,7 +223,7 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           h._delOb(i)
 
     @expectedFailure
-    def testPerformanceInDepth(self):
+    def _testPerformanceInDepth(self):
         """
         Check HBTreeFolder2 GET performance with the depth and the number of
         documents.

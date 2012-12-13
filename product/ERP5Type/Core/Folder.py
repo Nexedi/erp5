@@ -914,6 +914,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
         return []
+      assert spec is None
       if kw.has_key("base_id"):
         return CMFHBTreeFolder.objectIds(self, base_id=kw["base_id"])
       else:
@@ -927,6 +928,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if self._folder_handler == HBTREE_HANDLER:
       if  self._htree is None:
         return []
+      assert spec is None
       if kw.has_key("base_id"):
         return CMFHBTreeFolder.objectItems(self, base_id=kw["base_id"])
       else:
@@ -935,16 +937,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if  self._tree is None:
         return []
       return CMFBTreeFolder.objectItems(self, spec)
-
-  def objectMap(self):
-    if self._folder_handler == HBTREE_HANDLER:
-      if self._htree is None:
-        return []
-      return CMFHBTreeFolder.objectMap(self)
-    else:
-      if self._tree is None:
-        return []
-      return CMFBTreeFolder.objectIMap(self)
 
   def objectIds_d(self, t=None):
     if self._folder_handler == HBTREE_HANDLER:
@@ -955,16 +947,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if self._tree is None:
         return {}
       return CMFBTreeFolder.objectIds_d(self, t)
-
-  def objectMap_d(self, t=None):
-    if self._folder_handler == HBTREE_HANDLER:
-      if self._htree is None:
-        return {}
-      return CMFHBTreeFolder.objectMap_d(self, t)
-    else:
-      if self._tree is None:
-        return {}
-      return CMFBTreeFolder.objectMap_d(self, t)
 
   def _checkId(self, id, allow_dup=0):
     if self._folder_handler == HBTREE_HANDLER:
@@ -1545,6 +1527,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     elif self._folder_handler == HBTREE_HANDLER:
       if self._htree is None:
         return []
+      assert spec is None
       if 'base_id' in kw:
         object_list = CMFHBTreeFolder.objectValues(self, base_id=kw['base_id'])
       else:
