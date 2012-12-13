@@ -72,7 +72,11 @@ setup(name=name,
           'web_checker_utility = erp5.util.webchecker:web_checker_utility'
         ],
       },
-      test_suite='erp5.tests'
+      test_suite='erp5.tests',
+      tests_require=[
+        'slapos.core',
+        'xml_marshaller',
+      ],
     )
 
 # cleanup garbage
