@@ -4,7 +4,7 @@ import Image
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
 from zLOG import LOG,INFO,ERROR 
-import json 
+import json
 from cStringIO import StringIO
 import os
 
@@ -33,18 +33,18 @@ class TestSafeImage(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_dms',
-            'erp5_safeimage',
+            'erp5_safeimage'
            )
 
   def afterSetUp(self):
     portal = self.getPortalObject()
     self.image_module = self.portal.getDefaultModule(portal_type = 'Image Module')
     self.assertTrue(self.image_module is not None)
-    if getattr(self.image_module,'testImage',None) is not None: 
+    if getattr(self.image_module,'testImage',None) is not None:
       self.image_module.manage_delObjects(ids=['testImage'])
-    if getattr(self.image_module,'testTile',None) is not None: 
+    if getattr(self.image_module,'testTile',None) is not None:
       self.image_module.manage_delObjects(ids=['testTile'])
-    if getattr(self.image_module,'testTileTransformed',None) is not None: 
+    if getattr(self.image_module,'testTileTransformed',None) is not None:
       self.image_module.manage_delObjects(ids=['testTileTransformed'])
     transaction.commit()
     self.tic()
@@ -53,9 +53,9 @@ class TestSafeImage(ERP5TypeTestCase):
     portal = self.getPortalObject()
     _image = makeFileUpload('image_test.jpg')
     image = self.image_module.newContent(portal_type='Image',title='testImage',
-                                id='testImage',file=_image,filename='testImage')   
-    return image 
- 
+                                id='testImage',file=_image,filename='testImage')
+    return image
+
   def _createTileImage(self):
     portal = self.getPortalObject()
     tile_image = makeFileUpload('image_test.jpg')

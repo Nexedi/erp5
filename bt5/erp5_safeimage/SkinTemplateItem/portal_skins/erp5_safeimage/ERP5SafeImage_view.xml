@@ -76,16 +76,28 @@
       </section>\n
     </div>\n
   </div>\n
-  <script type="text/javascript" src="js/template.js"></script>\n
-  <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
-  <script type="text/javascript" src="urlHandler.js"></script>\n
-  <script type="text/javascript" src="ICanHaz.min.js"></script>\n
-  <script type="text/javascript" src="openlayers/OpenLayers.js"></script>\n
-  <script type="text/javascript" src="js/CanvasImage.js"></script>\n
-  <script type="text/javascript" src="js/ERP5_OpenLayers.js"></script>\n
-  <script type="text/javascript" src="js/form.js"></script>\n
-  <script type="text/javascript" src="js/safeimage.js"></script>\n
-  <script type="text/javascript" src="js/pixastic.js"></script>\n
+  <tal:block tal:define="portal_url python:here.getPortalObject().absolute_url()">\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/template.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'jquery/core/jquery.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'urlHandler.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'ICanHaz.min.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'openlayers/OpenLayers.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/CanvasImage.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/ERP5_OpenLayers.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/form.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/safeimage.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/pixastic.js\')"></script>\n
+  </tal:block>\n
   </body>\n
 </html>
 
@@ -101,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Safeview_SafeImage</string> </value>
+            <value> <string>ERP5SafeImage_view</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

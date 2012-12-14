@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts54117152.04</string> </value>
+            <value> <string>ts54293364.05</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,6 @@
   document.write("<div id=\'map\' class=\'smallmap\'></div>");\n
   document.write("</article>");\n
   document.write("</script>");\n
-  document.domain = "localhost";\n
 })();\n
 \n
 
@@ -43,7 +42,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>350</int> </value>
+            <value> <int>317</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
