@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
                 <string>description</string>
                 <string>title</string>
               </list>
@@ -76,10 +75,6 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Pad Group is used to specify defaut pads</string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

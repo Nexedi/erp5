@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_publication_section_title</string> </value>
+            <value> <string>my_publication_section_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -94,6 +94,10 @@
                         <tuple>
                           <string>description</string>
                           <string>description</string>
+                        </tuple>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>Path</string>
                         </tuple>
                       </list>
                     </value>
