@@ -310,7 +310,7 @@ branch = foo
          return []
       test_node = self.getTestNode()
       test_node.slapos_controler = SlapOSControler(self.working_directory,
-                                               test_node.config)
+                                               test_node.config, self.log)
       node_test_suite = test_node.getNodeTestSuite('foo')
       self.updateNodeTestSuiteData(node_test_suite)
       node_test_suite.revision = 'dummy'
@@ -457,3 +457,16 @@ branch = foo
     process_manager = ProcessManager(log=self.log, max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
     _checkCorrectStatus(-15, *['sleep','2'])
+
+  def test_13_SlaposControlerResetSoftware(self):
+    test_node = self.getTestNode()
+    controler = SlapOSControler(self.working_directory,
+                                test_node.config, self.log)
+    os.mkdir(controler.software_root)
+    file_name = 'AC_Ra\xc3\xadzertic\xc3\xa1ma'
+    non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
+    non_ascii_file.close()
+    self.assertEquals([file_name], os.listdir(controler.software_root))
+    controler.software_root = unicode(controler.software_root)
+    controler._resetSoftware()
+    self.assertEquals([], os.listdir(controler.software_root))
