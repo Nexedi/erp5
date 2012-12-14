@@ -42,14 +42,24 @@ def createFolder(folder):
 
 class SlapOSControler(object):
 
-  def __init__(self, working_directory, config):
+  def __init__(self, working_directory, config, log):
     self.config = config
     self.software_root = os.path.join(working_directory, 'soft')
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
+    self.log = log
 
-  def initializeSlapOSControler(self, log, slapproxy_log=None, process_manager=None,
+  def _resetSoftware(self):
+    self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %
+             (self.software_root,))
+    if os.path.exists(self.software_root):
+      shutil.rmtree(self.software_root)
+    os.mkdir(self.software_root)
+    os.chmod(self.software_root, 0750)
+
+
+  def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
         reset_software=False, software_path_list=None):
     self.log = log
     self.process_manager = process_manager
@@ -91,11 +101,7 @@ class SlapOSControler(object):
     computer = slap.registerComputer(config['computer_id'])
     # Reset all previously generated software if needed
     if reset_software:
-      log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' % (self.software_root,))
-      if os.path.exists(self.software_root):
-        shutil.rmtree(self.software_root)
-      os.mkdir(self.software_root)
-      os.chmod(self.software_root, 0750)
+      self._resetSoftware()
     instance_root = self.instance_root
     if os.path.exists(instance_root):
       # delete old paritions which may exists in order to not get its data

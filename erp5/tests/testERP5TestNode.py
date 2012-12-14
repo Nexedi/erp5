@@ -105,13 +105,20 @@ class ERP5TestNode(TestCase):
     for i, repository_path in enumerate(repository_list):
       call = self.getCaller(cwd=repository_path)
       call("git init".split())
+      git_config = open(os.path.join(repository_path, '.git', 'config'), 'a')
+      git_config.write("""
+[user]
+  name = a b
+  email = a@b.c
+""")
+      git_config.close()
       call("touch first_file".split())
       call("git add first_file".split())
-      call("git commit -v -m first_commit".split() + ['--author="a b <a@b.c>"'])
+      call("git commit -v -m first_commit".split())
       my_file = open(os.path.join(repository_path, 'first_file'), 'w')
       my_file.write("initial_content%i" % i)
       my_file.close()
-      call("git commit -av -m next_commit".split() + ['--author="a b <a@b.c>"'])
+      call("git commit -av -m next_commit".split())
       output = call(['git', 'log', '--format=%H %s'])
       output_line_list = output.split("\n")
       self.assertEquals(3, len(output_line_list))
@@ -211,7 +218,7 @@ branch = foo
     my_file.write("next_content")
     my_file.close()
     call = self.getCaller(cwd=self.remote_repository1)
-    call("git commit -av -m new_commit".split() + ['--author="a b <a@b.c>"'])
+    call("git commit -av -m new_commit".split())
     rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
@@ -310,7 +317,7 @@ branch = foo
          return []
       test_node = self.getTestNode()
       test_node.slapos_controler = SlapOSControler(self.working_directory,
-                                               test_node.config)
+                                               test_node.config, self.log)
       node_test_suite = test_node.getNodeTestSuite('foo')
       self.updateNodeTestSuiteData(node_test_suite)
       node_test_suite.revision = 'dummy'
@@ -457,3 +464,16 @@ branch = foo
     process_manager = ProcessManager(log=self.log, max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
     _checkCorrectStatus(-15, *['sleep','2'])
+
+  def test_13_SlaposControlerResetSoftware(self):
+    test_node = self.getTestNode()
+    controler = SlapOSControler(self.working_directory,
+                                test_node.config, self.log)
+    os.mkdir(controler.software_root)
+    file_name = 'AC_Ra\xc3\xadzertic\xc3\xa1ma'
+    non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
+    non_ascii_file.close()
+    self.assertEquals([file_name], os.listdir(controler.software_root))
+    controler.software_root = unicode(controler.software_root)
+    controler._resetSoftware()
+    self.assertEquals([], os.listdir(controler.software_root))
