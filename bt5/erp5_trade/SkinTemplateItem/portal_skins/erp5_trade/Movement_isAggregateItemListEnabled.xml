@@ -54,10 +54,18 @@
 for Base_viewTradeFieldLibrary/my_view_mode_aggregate_title_list.enable\n
 """\n
 \n
-if context.getResource() and context.getResourceValue().getAggregatedPortalTypeList() and context.isMovement() and not context.getVariationCategoryList():\n
+# If the resource accepts items, and the context is a movements (ie. not a line \n
+# already containing cells or line that has variations but not cells yet)\n
+if context.getResource() and context.getResourceValue().getAggregatedPortalTypeList()\\\n
+   and context.isMovement()\\\n
+   and ((\'Cell\' in context.getPortalType()) or not context.getVariationCategoryList()):\n
   return True\n
+  \n
+# If the movement already has an aggregate, display it.\n
 if context.getAggregate():\n
   return True\n
+\n
+# If there\'s not resource yet, we give a chance to set an item.\n
 if context.getResource() is None and context.getPortalItemTypeList():\n
   return True\n
 \n
