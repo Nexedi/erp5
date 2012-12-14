@@ -81,9 +81,6 @@ def main(*args):
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
       'log_directory', 'run_directory'):
     d = CONFIG[key]
-    if isinstance(d, unicode):
-      d = d.encode('utf8')
-      CONFIG[key] = d
     if not os.path.isdir(d):
       raise ValueError('Directory %r does not exists.' % d)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],

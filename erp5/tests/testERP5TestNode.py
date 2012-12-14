@@ -474,6 +474,5 @@ branch = foo
     non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
     non_ascii_file.close()
     self.assertEquals([file_name], os.listdir(controler.software_root))
-    controler.software_root = unicode(controler.software_root)
     controler._resetSoftware()
     self.assertEquals([], os.listdir(controler.software_root))

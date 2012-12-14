@@ -63,6 +63,21 @@ class SlapOSInstance(object):
   def _checkData(self):
     pass
 
+def deunicodeData(data):
+  if isinstance(data, list):
+    new_data = []
+    for sub_data in data:
+      new_data.append(deunicodeData(sub_data))
+  elif isinstance(data, unicode):
+    new_data = data.encode('utf8')
+  elif isinstance(data, dict):
+    new_data = {}
+    for key, value in data.iteritems():
+      key = deunicodeData(key)
+      value = deunicodeData(value)
+      new_data[key] = value
+  return new_data
+
 class NodeTestSuite(SlapOSInstance):
 
   def __init__(self, reference):
@@ -344,7 +359,7 @@ branch = %(branch)s
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
-          test_suite_data = json.loads(test_suite_json)
+          test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
           #Clean-up test suites
