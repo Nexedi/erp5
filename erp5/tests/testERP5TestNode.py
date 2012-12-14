@@ -105,13 +105,20 @@ class ERP5TestNode(TestCase):
     for i, repository_path in enumerate(repository_list):
       call = self.getCaller(cwd=repository_path)
       call("git init".split())
+      git_config = open(os.path.join(repository_path, '.git', 'config'), 'a')
+      git_config.write("""
+[user]
+  name = a b
+  email = a@b.c
+""")
+      git_config.close()
       call("touch first_file".split())
       call("git add first_file".split())
-      call("git commit -v -m first_commit".split() + ['--author="a b <a@b.c>"'])
+      call("git commit -v -m first_commit".split())
       my_file = open(os.path.join(repository_path, 'first_file'), 'w')
       my_file.write("initial_content%i" % i)
       my_file.close()
-      call("git commit -av -m next_commit".split() + ['--author="a b <a@b.c>"'])
+      call("git commit -av -m next_commit".split())
       output = call(['git', 'log', '--format=%H %s'])
       output_line_list = output.split("\n")
       self.assertEquals(3, len(output_line_list))
@@ -211,7 +218,7 @@ branch = foo
     my_file.write("next_content")
     my_file.close()
     call = self.getCaller(cwd=self.remote_repository1)
-    call("git commit -av -m new_commit".split() + ['--author="a b <a@b.c>"'])
+    call("git commit -av -m new_commit".split())
     rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
