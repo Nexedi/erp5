@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts54116947.11</string> </value>
+            <value> <string>ts55133579.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,8 +44,7 @@
 \n
     that.map = new OpenLayers.Map("map", options);\n
     that.map.addLayer(that.zoomify);\n
-\n
-      that.map.setBaseLayer(that.zoomify);\n
+    that.map.setBaseLayer(that.zoomify);\n
     that.map.zoomToMaxExtent();\n
   };\n
   return that\n
@@ -58,7 +57,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1009</int> </value>
+            <value> <int>1006</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
