@@ -123,15 +123,10 @@ class TestRuleMixin(TestOrderMixin):
 
 class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
-  run_all_test = 1
-  quiet = 0
-
-  def test_01_ValidatedRuleWithNoScript(self, quiet=quiet, run=run_all_test):
+  def test_01_ValidatedRuleWithNoScript(self):
     """
     test that when a rule is validated, but has no script it will not apply
     """
-    if not run: return
-
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
     self.tic()
@@ -140,12 +135,10 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
-  def test_02_WrongTestMethod(self, quiet=quiet, run=run_all_test):
+  def test_02_WrongTestMethod(self):
     """
     test that when a rule's test method returns False, it will not apply
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'wrong_script', 'rule',
         'return False')
@@ -158,12 +151,10 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
-  def test_03_GoodTestMethod(self, quiet=quiet, run=run_all_test):
+  def test_03_GoodTestMethod(self):
     """
     test that when a rule's test method returns True, it will apply
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
@@ -176,13 +167,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 1)
 
-  def test_04_NotValidatedRule(self, quiet=quiet, run=run_all_test):
+  def test_04_NotValidatedRule(self):
     """
     test that when a rule is not validated, it will not apply, even if it has
     a good script
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
@@ -196,13 +185,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 0)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
-  def test_06_WrongDateRange(self, quiet=quiet, run=run_all_test):
+  def test_06_WrongDateRange(self):
     """
     test that when a rule is validated but does not have correct date range,
     it will not apply
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
@@ -217,13 +204,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
       validation_state="validated")[0][0], 1)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
-  def test_07_GoodDateRange(self, quiet=quiet, run=run_all_test):
+  def test_07_GoodDateRange(self):
     """
     test that when a rule is validated and has a correct date range, it will
     apply
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
         'return True')
@@ -368,15 +353,13 @@ return context.generatePredicate(
     kw['trade_phase_relative_url'] = []
     self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
 
-  def test_08_createRootAppliedRule(self, quiet=quiet, run=run_all_test):
+  def test_08_createRootAppliedRule(self):
     """
     test that when updateSimulation is called, the rule with the correct
     reference and higher version is used
 
     XXX as expand is triggered here, make sure rules won't be created forever
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'rule_script', 'rule',
         "return False")
@@ -418,7 +401,7 @@ return context.generatePredicate(
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
 
-  def test_09_expandTwoRules(self, quiet=quiet, run=run_all_test):
+  def test_09_expandTwoRules(self):
     """
     test that when expand is called on a simulation movement, if two rules
     with the same reference are found, only the one with the higher version
@@ -426,8 +409,6 @@ return context.generatePredicate(
 
     XXX as expand is triggered here, make sure rules won't be created forever
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
@@ -481,7 +462,7 @@ return context.generatePredicate(
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
 
-  def test_10_expandAddsRule(self, quiet=quiet, run=run_all_test):
+  def test_10_expandAddsRule(self):
     """
     test that if a rule didn't match previously, and does now, it should apply
     if no rule with the same reference is already applied.
@@ -489,8 +470,6 @@ return context.generatePredicate(
     - test that nothing changes if a rule of same reference is already
       applied (no matter what the version is)
     """
-    if not run: return
-
     skin_folder = self.portal.portal_skins.custom
     createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
@@ -551,15 +530,13 @@ return context.generatePredicate(
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
 
-  def test_11_expandRemovesRule(self, quiet=quiet, run=run_all_test):
+  def test_11_expandRemovesRule(self):
     """
     test that if a rule matched previously and does not anymore, it should be
     removed, if no child movement of this rule is delivered
     - test that it happens if no child is delivered
     - test that nothing is changed if at least one child is delivered
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
@@ -638,7 +615,7 @@ return context.generatePredicate(
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
 
-  def test_12_expandReplacesRule(self, quiet=quiet, run=run_all_test):
+  def test_12_expandReplacesRule(self):
     """
     test that if a rule matched previously and does not anymore, and another
     rule matches now, the old rule should be replaced by the new one, if no
@@ -646,8 +623,6 @@ return context.generatePredicate(
     - test that it happens if no child is delivered
     - test that nothing is changed if at least one child is delivered
     """
-    if not run: return
-
     skin_folder = self.getPortal().portal_skins.custom
     skin = createZODBPythonScript(skin_folder, 'delivery_rule_script', 'rule',
         "return False")
