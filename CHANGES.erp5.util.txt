@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.19 (2012-12-17)
+------------------
+
+ * erp5.util.testnode:
+
+  - Fixed undefined variable [Sebastien Robin]
+
 0.4.18 (2012-12-14)
 ------------------
 
