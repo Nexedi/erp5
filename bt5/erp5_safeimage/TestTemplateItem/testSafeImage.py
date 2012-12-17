@@ -1,9 +1,7 @@
-#from Products.ERP5.Document.Image import Image
-#from Products.ERP5Type.tests.utils import FileUpload
 import Image
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
-from zLOG import LOG,INFO,ERROR 
+from zLOG import LOG,INFO,ERROR
 import json
 from cStringIO import StringIO
 import os
@@ -20,7 +18,8 @@ class FileUpload(file):
 
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'tmp', name)
+  #return os.path.join(os.path.dirname(__file__), 'tmp', name)
+  return name
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
@@ -51,25 +50,40 @@ class TestSafeImage(ERP5TypeTestCase):
 
   def _createImage(self):
     portal = self.getPortalObject()
-    _image = makeFileUpload('image_test.jpg')
+    image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
+    path_image = "tmp/image_unit_test.jpg"
+    fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
+    os.write(fd,str(image.data))
+    os.close(fd)
+    _image = makeFileUpload(path_image)
     image = self.image_module.newContent(portal_type='Image',title='testImage',
                                 id='testImage',file=_image,filename='testImage')
     return image
 
   def _createTileImage(self):
     portal = self.getPortalObject()
-    tile_image = makeFileUpload('image_test.jpg')
+    image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
+    path_image = "tmp/image_unit_test.jpg"
+    fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
+    os.write(fd,str(image.data))
+    os.close(fd)
+    tile_image = makeFileUpload(path_image)
     tile = self.image_module.newContent(portal_type='Image Tile',title='testTile',
                              id='testTile',file=tile_image,filename='testTile')
-    return tile 
+    return tile
 
   def _createTileImageTransformed(self):
     portal = self.getPortalObject()
-    tile_image_transformed = makeFileUpload('image_test.jpg')
+    image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
+    path_image = "tmp/image_unit_test.jpg"
+    fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
+    os.write(fd,str(image.data))
+    os.close(fd)
+    tile_image_transformed = makeFileUpload(path_image)
     tile_transformed = self.image_module.newContent(portal_type='Image Tile Transformed',
                              title='testTileTransformed',id='testTileTransformed',
                              file=tile_image_transformed,filename='testTileTransformed')
-    return tile_transformed 
+    return tile_transformed
 
   def test_01_CreateImage(self):
     image = self._createImage()
@@ -123,7 +137,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(tile_transformed,None)
      image_property = getattr(tile_transformed, "ImageProperties.xml", None)
      self.assertEquals(image_property.getData(),
- """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+ """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="52" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
      self.assertEquals("Embedded File", image_property.getPortalType())
      image_transform = getattr(tile_transformed, "TransformFile.txt", None)
