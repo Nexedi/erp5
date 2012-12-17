@@ -26,8 +26,7 @@
 ##############################################################################
 
 import unittest
-
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testOrder import TestOrderMixin
@@ -682,6 +681,59 @@ return context.generatePredicate(
 
     self.getSimulationTool()._delObject(root_applied_rule.getId())
     self.tic()
+
+  def _slowReindex(self):
+    self.getRule('default_delivery_rule').validate()
+    self.tic()
+    self.pl.updateSimulation(create_root=1)
+    self.tic(stop_condition=lambda message_list: 1 == sum(1
+      for m in message_list if m.method_id == 'immediateReindexObject'))
+    root_applied_rule, = self.pl.getCausalityRelatedValueList()
+    sm, = root_applied_rule.objectValues()
+    self.assertEqual([], sm.getDeliveryValue().getDeliveryRelatedList())
+    return root_applied_rule
+
+  @expectedFailure
+  def test_13_unlinkSimulation(self):
+    """
+    When a root delivery line is deleted, the related simulation movement
+    should be deleted at some point.
+    """
+    root_applied_rule = self._slowReindex()
+    r, = self.portal.cmf_activity_sql_connection.manage_test(
+      'update message set priority = 127\0select * from message')
+    self.assertEqual(r.processing_node, -1)
+    line_id, = self.pl.objectIds()
+    self.pl._delObject(line_id)
+    line = self.pl.newContent(portal_type=self.packing_list_line_portal_type,
+                              quantity=1)
+    self.tic()
+    sm, = root_applied_rule.objectValues()
+    self.assertEqual(line, sm.getDeliveryValue())
+
+  def test_14_indexRelated(self):
+    """Check that simulation is indexed before being updated
+
+    It is important that an update of a simulation tree is able to find all
+    related simulation movements, otherwise the following happends:
+        node 1                        node2 2
+                                      start first indexing of SM ...
+      change simulation state of  PL
+      update simulation (no SM found)
+                                      commit result of indexing
+    -> SM has wrong simulation state
+    """
+    root_applied_rule = self._slowReindex()
+    self.portal.portal_activities.distribute()
+    self.pl.updateSimulation(index_related=1)
+    self.commit()
+    # this should distribute nothing as long as the indexing activity
+    # is not processed
+    self.portal.portal_activities.distribute()
+    r, = self.portal.cmf_activity_sql_connection.manage_test(
+      'select * from message_queue')
+    self.assertEqual(r.method_id, '_updateSimulation')
+    expectedFailure(self.assertEqual)(r.processing_node, -1)
 
 
 def test_suite():
