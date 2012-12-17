@@ -14,8 +14,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>table_0\r\n
-table_1</string> </value>
+            <value> <string>query_table\r\n
+table_0\r\n
+table_1\r\n
+RELATED_QUERY_SEPARATOR=" AND "</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -56,10 +58,9 @@ table_1</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.group.getUid()">\n
-AND <dtml-var table_0>.uid = catalog.parent_uid\n
+<dtml-var RELATED_QUERY_SEPARATOR> <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.group.getUid()">\n
+AND <dtml-var table_0>.uid = <dtml-var query_table>.parent_uid\n
 AND <dtml-var table_0>.category_strict_membership = 1\n
-\n
 
 
 ]]></string> </value>
