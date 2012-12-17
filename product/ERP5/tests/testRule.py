@@ -715,10 +715,10 @@ return context.generatePredicate(
     """Check that simulation is indexed before being updated
 
     It is important that an update of a simulation tree is able to find all
-    related simulation movements, otherwise the following happends:
-        node 1                        node2 2
+    related simulation movements, otherwise the following happens:
+        node 1                        node 2
                                       start first indexing of SM ...
-      change simulation state of  PL
+      change simulation state of PL
       update simulation (no SM found)
                                       commit result of indexing
     -> SM has wrong simulation state
@@ -733,7 +733,7 @@ return context.generatePredicate(
     r, = self.portal.cmf_activity_sql_connection.manage_test(
       'select * from message_queue')
     self.assertEqual(r.method_id, '_updateSimulation')
-    expectedFailure(self.assertEqual)(r.processing_node, -1)
+    self.assertEqual(r.processing_node, -1)
 
 
 def test_suite():
