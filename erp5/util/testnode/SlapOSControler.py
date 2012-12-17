@@ -61,10 +61,9 @@ class SlapOSControler(object):
 
   def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
         reset_software=False, software_path_list=None):
-    self.log = log
     self.process_manager = process_manager
     self.software_path_list = software_path_list
-    log('SlapOSControler, initialize, reset_software: %r' % reset_software)
+    self.log('SlapOSControler, initialize, reset_software: %r' % reset_software)
     config = self.config
     slapos_config_dict = self.config.copy()
     slapos_config_dict.update(software_root=self.software_root,
