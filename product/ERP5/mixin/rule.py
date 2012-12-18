@@ -595,6 +595,10 @@ class SimulableMixin(Base):
           portal.portal_simulation, is_indexable=False)
         applied_rule._setCausalityValue(self)
         del applied_rule.isIndexable
+        # To prevent duplicate root Applied Rule, we reindex immediately and
+        # lock ZODB, and we rely on the fact that ZODB is committed after
+        # catalog. This way, we guarantee the catalog is up-to-date as soon as
+        # ZODB is unlocked.
         applied_rule.immediateReindexObject()
         self.serialize() # prevent duplicate root Applied Rule
         return applied_rule
