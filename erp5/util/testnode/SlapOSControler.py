@@ -36,7 +36,9 @@ import glob
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
 
-def createFolder(folder):
+def createFolder(folder, clean=False):
+  if clean and os.path.exists(folder):
+    shutil.rmtree(folder)
   if not(os.path.exists(folder)):
     os.mkdir(folder)
 
