@@ -31,6 +31,9 @@ class TestSafeImage(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
+            'erp5_web',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
             'erp5_dms',
             'erp5_safeimage'
            )
