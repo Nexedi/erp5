@@ -94,10 +94,11 @@ class BaseCache(object):
   ## Time interval (s) to check for expired objects
   cache_expire_check_interval = 60
 
-  def __init__(self, params={}):
+  def __init__(self, id, params={}):
     self._next_cache_expire_check_at = time()
     self._cache_hit_count = 0
     self._cache_miss_count = 0
+    self.id = id
 
   def markCacheHit(self, delta=1):
     """ Mark a read operation from cache """

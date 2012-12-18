@@ -75,7 +75,7 @@ def getCurrencyForSection(section_url):\n
         return currency\n
 \n
     # then from mapping category\n
-    mapping = section.getMappingValue(portal_type=\'Organisation\')\n
+    mapping = section.getMappingRelatedValue(portal_type=\'Organisation\')\n
     if mapping is not None and mapping.getPriceCurrency():\n
       return mapping.getPriceCurrency()\n
 \n

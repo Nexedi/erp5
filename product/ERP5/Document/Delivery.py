@@ -31,6 +31,9 @@
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager, \
+    setSecurityManager, newSecurityManager
+from AccessControl.User import nobody
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
@@ -38,7 +41,8 @@ from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.mixin.rule import SimulableMixin
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
+    unrestricted_apply
 from zLOG import LOG, PROBLEM
 
 class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
@@ -710,7 +714,12 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       else:
         after_tag = list(after_tag) if after_tag else []
       after_tag.append('expand:' + self.getPath())
-      self.activate(after_tag=after_tag, **kw)._localBuild()
+      sm = getSecurityManager()
+      newSecurityManager(None, nobody)
+      try:
+        unrestricted_apply(self.activate(after_tag=after_tag, **kw)._localBuild)
+      finally:
+        setSecurityManager(sm)
 
     def _localBuild(self):
       """Do an immediate local build for this delivery"""
@@ -719,7 +728,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     def _createRootAppliedRule(self):
       portal = self.getPortalObject()
       # Only create RAR if we are not in a "too early" or "too late" state.
-      if self.getSimulationState() not in portal.getPortalDraftOrderStateList():
+      state = self.getSimulationState()
+      if (state != 'deleted' and
+          state not in portal.getPortalDraftOrderStateList()):
         return super(Delivery, self)._createRootAppliedRule()
 
     security.declareProtected( Permissions.AccessContentsInformation,

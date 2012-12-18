@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="author_dict python: here.DiscussionPost_getAuthorDict();\n
+<tal:block tal:define="author_dict python: here.objectValues()[0].DiscussionPost_getAuthorDict();\n
                        is_author_link_available python:author_dict[\'author_url\'] is not None;">\n
 \n
   <a class="listbox-row-discussion-thread-author-link"\n

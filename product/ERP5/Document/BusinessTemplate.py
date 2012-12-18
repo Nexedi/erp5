@@ -845,30 +845,27 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
       Backup the object in portal trash if necessery and return its subobjects
     """
-    subobjects_dict = {}
+    p = self.getPortalObject()
     if trashbin is None: # must return subobjects
-      object_path = container_path + [object_id]
-      obj = self.unrestrictedTraverse(object_path)
-      for subobject_id in list(obj.objectIds()):
-        subobject_path = object_path + [subobject_id]
-        subobject = self.unrestrictedTraverse(subobject_path)
-        subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
-        subobjects_dict[subobject_id] = subobject_copy
-      return subobjects_dict
+      subobject_dict = {}
+      obj = p.unrestrictedTraverse(container_path)[object_id]
+      for subobject_id in obj.objectIds():
+        subobject = obj[subobject_id]
+        subobject_dict[subobject_id] = subobject._p_jar.exportFile(
+            subobject._p_oid, StringIO())
+      return subobject_dict
     # XXX btsave is for backward compatibility
     if action in ('backup', 'btsave', 'save_and_remove',):
-      subobjects_dict = self.portal_trash.backupObject(trashbin, 
-                                                container_path, object_id, 
-                                                save=1, **kw)
+      save = 1
     elif action in ('install', 'remove'):
-      subobjects_dict = self.portal_trash.backupObject(trashbin, 
-                                                container_path, object_id, 
-                                                save=0, **kw)
+      save = 0
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
       raise NotImplementedError, 'Unknown action "%s"' % action
-    return subobjects_dict
+    return p.portal_trash.backupObject(trashbin, container_path, object_id,
+                                       save=save, **kw)
+
 
   def beforeInstall(self):
     """
@@ -950,6 +947,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       original_reindex_parameters = self.setSafeReindexationMode(context)
       object_key_list = self._getObjectKeyList()
       for path in object_key_list:
+        __traceback_info__ = path
         # We do not need to perform any backup because the object was
         # created during the Business Template installation
         if update_dict.get(path) == 'migrate':
@@ -1128,7 +1126,8 @@ class ObjectTemplateItem(BaseTemplateItem):
               container._mapTransform(obj)
           elif obj.meta_type in ('ERP5 Ram Cache',
                                  'ERP5 Distributed Ram Cache',):
-            assert container.meta_type == 'ERP5 Cache Factory'
+            assert container.meta_type in ('ERP5 Cache Factory',
+                                           'ERP5 Cache Bag')
             container.getParentValue().updateCache()
           elif (container.meta_type == 'CMF Skins Tool') and \
               (old_obj is not None):
@@ -3999,16 +3998,12 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if not self._is_already_migrated(self._archive.keys()):
       document_id_list = self.getTemplateIdList()
-
-      try:
-        context.getPortalObject().unrestrictedTraverse(
-          'portal_components/' + document_id_list[0])
-      except (IndexError, KeyError):
+      if document_id_list[0] not in getattr(context.getPortalObject(),
+                                            'portal_components', ()):
         return FilesystemDocumentTemplateItem.build(self, context, **kw)
-      else:
-        self._archive.clear()
-        for name in document_id_list:
-          self._archive['portal_components/' + name] = None
+      self._archive.clear()
+      for name in document_id_list:
+        self._archive['portal_components/' + name] = None
 
     return ObjectTemplateItem.build(self, context, **kw)
 

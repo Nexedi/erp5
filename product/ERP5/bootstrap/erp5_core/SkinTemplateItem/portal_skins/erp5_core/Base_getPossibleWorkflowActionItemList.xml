@@ -57,8 +57,9 @@ for action in context.portal_actions.listFilteredActionsFor(brain).get(\'workflo
   if transition is not None:\n
     workflow_id = action[\'transition\'].aq_parent.aq_parent.getId()\n
     if workflow_id == brain.workflow_id:\n
+      dialog_id = action[\'url\'].split(\'?\', 1)[0].split(\'/\')[-1]\n
       item_list.append((Base_translateString(action[\'title\']),\n
-                        \'%s/%s\' % (workflow_id, action[\'id\'])))\n
+                        \'%s/%s/%s\' % (workflow_id, action[\'id\'], dialog_id)))\n
 \n
 return item_list\n
 </string> </value>

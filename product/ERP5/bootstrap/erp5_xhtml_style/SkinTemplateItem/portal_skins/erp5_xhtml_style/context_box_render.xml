@@ -252,12 +252,12 @@
         </tal:block>\n
         <span tal:condition="exchange_actions | report_actions"\n
               class="separator"><!--separator--></span>\n
-        <a tal:condition="exchange_actions" class="import_export" title="Import / Export"\n
-           tal:attributes="href python: portal.ERP5Site_renderCustomLink(exchange_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_exchange\')"\n
-           i18n:attributes="title" i18n:domain="ui">\n
+        <button tal:condition="exchange_actions" class="import_export"\n
+              type="submit" name="Base_doExchange:method" title="Import / Export"\n
+              i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>\n
-        </a>\n
+        </button>\n
         <button tal:condition="report_actions" class="report" type="submit" name="Base_doReport:method" title="Report"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n

@@ -58,6 +58,10 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>BudgetCell</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

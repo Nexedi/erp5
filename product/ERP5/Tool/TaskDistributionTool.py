@@ -86,7 +86,6 @@ class TaskDistributionTool(BaseTool):
       -> (test_result_path, revision) or None if already completed
     """
     LOG('createTestResult', 0, (name, revision, test_title, project_title))
-    self._p_changed = 1
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
@@ -143,6 +142,7 @@ class TaskDistributionTool(BaseTool):
           elif reference:
             last_revision = last_revision, reference
           if len(line_dict) == 0 and len(test_name_list):
+            self._p_changed = 1
             createTestResultLineList(test_result, test_name_list, line_dict)
           return test_result_path, last_revision
         if last_state == 'stopped':
@@ -169,6 +169,7 @@ class TaskDistributionTool(BaseTool):
     test_result.updateLocalRolesOnSecurityGroups() # XXX
     test_result_path = test_result.getRelativeUrl()
     self.test_result_dict[test_title] = test_result_path, line_dict
+    self._p_changed = 1
     test_result.start()
     createTestResultLineList(test_result, test_name_list, line_dict)
     createNode(test_result, node_title)
@@ -275,3 +276,12 @@ class TaskDistributionTool(BaseTool):
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
+
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  def getMemcachedDict(self):
+    """ Return a dictionary used for non persistent data related to distribution
+    """
+    portal = self.getPortalObject()
+    memcached_dict = portal.portal_memcached.getMemcachedDict(
+                            "task_distribution", "default_memcached_plugin")
+    return memcached_dict

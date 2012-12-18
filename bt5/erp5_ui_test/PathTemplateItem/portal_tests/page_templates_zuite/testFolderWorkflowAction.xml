@@ -93,60 +93,60 @@
 Validated Foo -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
   <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-0 DataA\']/td[5]/select</td>\n
   <td>label=Validate Action</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[1]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[3]/a</td>\n
   <td>Validated</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/a</td>\n
+  <td>//tr[@class=\'workflow_action_listbox-data-line-1 DataB\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>type</td>\n
-  <td>field_your_comment</td>\n
-  <td>Comment !</td>\n
+  <td>click</td>\n
+  <td>field_your_enable_detail_list</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -192,7 +192,7 @@ and the same columns. -->\n
 </tr>\n
 \n
 <tr>\n
-  <td>assertValue</td>\n
+  <td>type</td>\n
   <td>field_your_comment</td>\n
   <td>Comment !</td>\n
 </tr>\n
@@ -232,8 +232,7 @@ script. -->\n
 \n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

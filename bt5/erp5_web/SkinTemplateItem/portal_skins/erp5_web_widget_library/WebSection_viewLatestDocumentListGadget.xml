@@ -73,6 +73,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>rss_link</string>
                       </list>
                     </value>
                 </item>

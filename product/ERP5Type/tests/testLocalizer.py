@@ -127,6 +127,64 @@ class TestLocalizer(ERP5TypeTestCase):
       self.portal.portal_activities.process_timer(None, None)
     self.assertEquals(tmp_obj.getComment(), "C'est 1€.")
 
+  def test_get_selected_language(self):
+    # default selected language is en
+    self.assertEquals('en', self.portal.Localizer.get_selected_language())
+
+  def test_translationContext(self):
+    self.message_catalog._messages['This is 1€.'] = PersistentMapping(
+      {'fr':"C'est 1€.", 'note':'',})
+    localizer = self.portal.Localizer
+    with localizer.translationContext('fr'):
+      self.assertEquals('fr', localizer.get_selected_language())
+      self.assertEquals("C'est 1€.",
+        self.portal.Base_translateString("This is 1€."))
+    # outside of this context manager we are back to english
+    self.assertEquals('en', localizer.get_selected_language())
+    self.assertEquals("This is 1€.",
+      self.portal.Base_translateString("This is 1€."))
+
+  def test_translationContextActivity(self):
+    portal = self.portal
+    self.message_catalog._messages['This is 1€.'] = PersistentMapping(
+      {'fr':"C'est 1€.", 'note':'',})
+    localizer = portal.Localizer
+
+    test_script = createZODBPythonScript(portal.portal_skins.custom,
+        'test_script', '', """
+def assertEquals(a, b):
+  if a != b:
+    raise AssertionError("%r != %r" % (a, b))
+localizer = context.getPortalObject().Localizer
+with localizer.translationContext('fr'):
+  assertEquals('fr', localizer.get_selected_language())
+  assertEquals("C'est 1€.", context.Base_translateString("This is 1€."))
+# outside of this context manager we are back to english
+assertEquals('en', localizer.get_selected_language())
+assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
+""")
+
+    # normal activity
+    portal.portal_activities.activate().test_script()
+    self.tic()
+    # after activity execution we are still in english
+    self.assertEquals('en', localizer.get_selected_language())
+    self.assertEquals("This is 1€.",
+      self.portal.Base_translateString("This is 1€."))
+
+    # execute activity with group_method
+    portal.portal_activities.activate(group_method_id=None).test_script()
+    self.tic()
+    # after activity execution we are still in english
+    self.assertEquals('en', localizer.get_selected_language())
+    self.assertEquals("This is 1€.",
+      self.portal.Base_translateString("This is 1€."))
+
+  def test_get_request(self):
+    # check that Localizer's get_request hack works as expected
+    from Products.Localizer.utils import get_request
+    self.assertEquals(get_request(), self.portal.REQUEST)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestLocalizer))

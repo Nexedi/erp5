@@ -100,7 +100,7 @@
   <tal:block\n
     tal:condition="not: isKnowledgePadTemplateUsed"\n
     tal:define="is_customized_pad python:\n
-          active_knowledge_pad.getPublicationSectionValue()==context and\n
+          context in active_knowledge_pad.getPublicationSectionValueList() and\n
           active_knowledge_pad.getGroup()==default_pad_group">\n
 \n
     <a tal:condition="not: is_customized_pad"\n

@@ -50,8 +50,9 @@ class TestRamCache(ERP5TypeTestCase):
     return "Cache"
 
   def afterSetUp(self):
-    self.cache_plugins = (RamCache(),
-                          DistributedRamCache({'server': '127.0.0.1:11211',
+    self.cache_plugins = (RamCache('ram_cache'),
+                          DistributedRamCache('distributed_ram_cache',
+                                              {'server': '127.0.0.1:11211',
                                                'debug_level': 7,
                                                'server_max_key_length': 250,
                                                'server_max_value_length': 1048576,}),

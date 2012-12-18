@@ -113,7 +113,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       self.stepCleanUpRequest()
 
     self.restricted_security = 0
-    self.setupAutomaticBusinessTemplateRepository()
+    self.setupAutomaticBusinessTemplateRepository(
+                 searchable_business_template_list=["erp5_core", "erp5_base"])
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow

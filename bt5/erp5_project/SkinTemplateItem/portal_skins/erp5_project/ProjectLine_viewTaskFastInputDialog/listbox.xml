@@ -349,6 +349,14 @@
                           <string>Task Title</string>
                         </tuple>
                         <tuple>
+                          <string>task_reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_source</string>
+                          <string>Assignee</string>
+                        </tuple>
+                        <tuple>
                           <string>task_start_date</string>
                           <string>Begin Date</string>
                         </tuple>
@@ -357,12 +365,24 @@
                           <string>End Date</string>
                         </tuple>
                         <tuple>
-                          <string>task_comment</string>
-                          <string>Comment</string>
+                          <string>task_line_resource</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_line_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_line_quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>task_requirement</string>
-                          <string>Requirement</string>
+                          <string>Requierements</string>
                         </tuple>
                       </list>
                     </value>
@@ -380,6 +400,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -388,6 +412,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -409,7 +439,15 @@
                       <list>
                         <tuple>
                           <string>task_title</string>
-                          <string>Requirement Title</string>
+                          <string>Task Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_source</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>task_start_date</string>
@@ -420,12 +458,24 @@
                           <string>End Date</string>
                         </tuple>
                         <tuple>
-                          <string>task_comment</string>
-                          <string>Comment</string>
+                          <string>task_line_resource</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_line_quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_line_quantity_unit</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>task_description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>task_requirement</string>
-                          <string>Requirement</string>
+                          <string>Requierements</string>
                         </tuple>
                       </list>
                     </value>
@@ -445,7 +495,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -469,6 +527,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -487,6 +549,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -534,6 +600,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Tasks</string> </value>
                 </item>
@@ -557,10 +629,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

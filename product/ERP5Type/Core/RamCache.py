@@ -32,8 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.mixin.cache_provider import CacheProviderMixIn
 
-class RamCache(XMLObject):
+class RamCache(CacheProviderMixIn, XMLObject):
   """
   RamCache is a Zope (persistent) representation of 
   the RAM based real cache plugin object.

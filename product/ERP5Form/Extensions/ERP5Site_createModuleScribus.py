@@ -139,7 +139,7 @@ def ERP5Site_createModuleScribus(self,
   # file's content object (string) before saving it
   # onto the hard disk
   form_css_content = ""
-  # properties_css_dict is used to store class informations
+  # properties_css_dict is used to store class information
   properties_css_dict = {}
   # init page number
   page_number_int = 0

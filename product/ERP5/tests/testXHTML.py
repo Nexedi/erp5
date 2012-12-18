@@ -637,13 +637,14 @@ validator = None
 # create the validator object
 if validator_to_use == 'w3c':
   default = '/usr/share/w3c-markup-validator/cgi-bin:/usr/lib/cgi-bin'
-  for path in os.environ.get('CGI_PATH', default).split(os.pathsep):
+  validator_path_list = os.environ.get('CGI_PATH', default).split(os.pathsep)
+  for path in validator_path_list:
     validator_path = os.path.join(path, 'check')
     if os.path.exists(validator_path):
       validator = W3Validator(validator_path, show_warnings)
       break
   else:
-    print 'No w3c validator found at', validator_path
+    print 'No w3c validator found at', validator_path_list
 
 elif validator_to_use == 'tidy':
   error = False

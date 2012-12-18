@@ -216,8 +216,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         old_message_count = 0
         start = time.time()
       count = 1000
-      def getMessageList():
-        return portal_activities.getMessageList(include_processing=1)
+      getMessageList = portal_activities.getMessageList
       message_list = getMessageList()
       message_count = len(message_list)
       while message_count and not stop_condition(message_list):

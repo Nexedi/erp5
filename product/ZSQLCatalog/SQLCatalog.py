@@ -795,17 +795,14 @@ class Catalog(Folder,
     if getattr(aq_base(self), 'security_uid_dict', None) is None:
       self._clearSecurityCache()
 
-    id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
-
     optimised_roles_and_users = []
-    local_roles_group_id_to_security_uid_mapping= dict()
+    local_roles_group_id_to_security_uid_mapping = {}
 
     # Get security information
-    for local_roles_group_id, allowed_roles_and_users in\
-          wrapped_object.getLocalRolesGroupIdDict().iteritems():
+    security_uid = None
+    for key in wrapped_object.getLocalRolesGroupIdDict().iteritems():
+      local_roles_group_id, allowed_roles_and_users = key
       allowed_roles_and_users = tuple(sorted(allowed_roles_and_users))
-
-      key = (local_roles_group_id, allowed_roles_and_users)
       if self.security_uid_dict.has_key(key):
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id] \
                 = self.security_uid_dict[key]
@@ -817,30 +814,26 @@ class Catalog(Folder,
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = \
           self.security_uid_dict[allowed_roles_and_users]
       else:
+        if not security_uid:
+          getTransactionalVariable().pop('getSecurityUidDictAndRoleColumnDict',
+                                         None)
+          id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
+          # We must keep compatibility with existing sites
+          security_uid = getattr(self, 'security_uid_index', None)
+          if security_uid is None:
+            security_uid = 0
+          # At some point, it was a Length
+          elif isinstance(security_uid, Length):
+            security_uid = security_uid()
         # If the id_tool is there, it is better to use it, it allows
         # to create many new security uids by the same time
         # because with this tool we are sure that we will have 2 different
         # uids if two instances are doing this code in the same time
+        security_uid += 1
         if id_tool is not None:
-          default = 1
-          # We must keep compatibility with existing sites
-          previous_security_uid = getattr(self, 'security_uid_index', None)
-          if previous_security_uid is not None:
-            # At some point, it was a Length
-            if isinstance(previous_security_uid, Length):
-              default = previous_security_uid() + 1
-            else:
-              default = previous_security_uid
           security_uid = int(id_tool.generateNewId(id_generator='uid',
-              id_group='security_uid_index', default=default))
+              id_group='security_uid_index', default=security_uid))
         else:
-          previous_security_uid = getattr(self, 'security_uid_index', None)
-          if previous_security_uid is None:
-            previous_security_uid = 0
-          # At some point, it was a Length
-          if isinstance(previous_security_uid, Length):
-            previous_security_uid = previous_security_uid()
-          security_uid = previous_security_uid + 1
           self.security_uid_index = security_uid
 
         self.security_uid_dict[key] = security_uid

@@ -83,7 +83,7 @@ for k, v in request.form.items():\n
       \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\',\n
       \'ACTUAL_URL\'):\n
     # XXX proxy fields stores a cache in request.other that cannot be pickled\n
-    if k.startswith(\'field__proxyfield\'):\n
+    if str(k).startswith(\'field__proxyfield\'):\n
       continue\n
     # Remove FileUpload parameters\n
     elif getattr(v, \'headers\', \'\'):\n

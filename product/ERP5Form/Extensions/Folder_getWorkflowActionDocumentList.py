@@ -29,6 +29,9 @@
 
 from Products.PythonScripts.standard import Object
 
+# Some workflow does not make sense in the context of mass transition and are
+# not proposed.
+skipped_workflow_id_list = ['delivery_causality_workflow',]
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
@@ -81,6 +84,8 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
       for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
         for workflow in wf_tool.getWorkflowsFor(doc):
+          if workflow.getId() in skipped_workflow_id_list:
+            continue
           state_var = workflow.variables.getStateVar()
           translated_workflow_state_title = doc.getProperty(
                           'translated_%s_title' % state_var)
@@ -111,6 +116,8 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
     for document in selected_document_list:
       for state_var in possible_state_list:
         for workflow in wf_tool.getWorkflowsFor(document):
+          if workflow.getId() in skipped_workflow_id_list:
+            continue
           if state_var == workflow.variables.getStateVar():
             key = (document.getPortalTypeName(), workflow.getId(),
                         document.getProperty(state_var))
@@ -155,7 +162,7 @@ def getWorkflowActionDocumentList(self, **kw):
   """This returns the list of all documents on which we will pass a workflow
   transition.
   """
-  listbox = kw.get('listbox', None)
+  listbox = kw.get('workflow_action_listbox', None)
   if listbox is None:
     # if the listbox is empty
     return []
@@ -180,7 +187,7 @@ def getWorkflowActionDocumentList(self, **kw):
       if selection_uid_list:
         selection_params['uid'] = selection_uid_list
 
-      workflow_id, action = listbox_selection['workflow_action'].split('/')
+      workflow_id, action = listbox_selection['workflow_action'].split('/')[:2]
       workflow = wtool.getWorkflowById(workflow_id)
       for doc in selection_tool.callSelectionFor(selection_name, params=selection_params):
         doc = doc.getObject()

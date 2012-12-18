@@ -70,48 +70,23 @@ def main(*args):
   # do not change case of option keys
   config.optionxform = str
   config.readfp(parsed_argument.configuration_file[0])
-  for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
-      'log_directory', 'run_directory', 'proxy_host', 'proxy_port',
-      'git_binary', 'zip_binary', 'test_suite_title', 'test_node_title',
-      'test_suite', 'project_title', 'node_quantity', 'ipv4_address',
-      'ipv6_address', 'test_suite_master_url', 'slapgrid_partition_binary',
-      'slapgrid_software_binary', 'slapproxy_binary'):
-    CONFIG[key] = config.get('testnode', key)
+  for key in ('slapos_directory','working_directory','test_suite_directory',
+              'log_directory','run_directory','proxy_host','proxy_port',
+              'git_binary','zip_binary','node_quantity','test_node_title',
+              'ipv4_address','ipv6_address','test_suite_master_url',
+              'slapgrid_partition_binary','slapgrid_software_binary',
+              'slapproxy_binary'):
+    CONFIG[key] = config.get('testnode',key)
+
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
       'log_directory', 'run_directory'):
     d = CONFIG[key]
     if not os.path.isdir(d):
       raise ValueError('Directory %r does not exists.' % d)
-  slapos_directory = CONFIG['slapos_directory']
-  CONFIG['software_root'] = software_root = os.path.join(slapos_directory,
-    'software')
-  CONFIG['instance_root'] = instance_root = os.path.join(slapos_directory,
-    'instance')
-  CONFIG['proxy_database'] = os.path.join(slapos_directory, 'proxy.db')
-  CONFIG['slapos_config'] = slapos_config = os.path.join(slapos_directory,
-    'slapos.cfg')
-  if not os.path.lexists(software_root):
-    os.mkdir(software_root)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
         CONFIG['proxy_port'])
-  open(slapos_config, 'w').write(pkg_resources.resource_string(
-    'erp5.util.testnode', 'template/slapos.cfg.in') % CONFIG)
-  CONFIG['runTestSuite'] = os.path.join(instance_root,
-    CONFIG['partition_reference'], 'bin', 'runTestSuite')
 
   # generate vcs_repository_list
-  vcs_repository_list = []
-  for section in config.sections():
-    if section.startswith('vcs_repository'):
-      vcs_repository_list.append(dict(config.items(section)))
-
-  CONFIG['bt5_path'] = None
-  if 'bt5_path' in config.options("testnode"):
-    bt5_path = config.get("testnode", 'bt5_path')
-    if bt5_path.lower() != "none":
-      CONFIG['bt5_path'] = bt5_path
-
-  CONFIG['vcs_repository_list'] = vcs_repository_list
   if 'bot_environment' in config.sections():
     bot_environment = dict(config.items('bot_environment'))
   else:

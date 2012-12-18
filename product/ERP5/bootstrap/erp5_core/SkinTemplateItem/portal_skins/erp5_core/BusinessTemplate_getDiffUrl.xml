@@ -57,12 +57,10 @@ from Products.PythonScripts.standard import html_quote\n
 if brain.object_state.startswith(\'Modified\'):\n
   target_object = brain.getObject()\n
   parent_absolute_path = target_object.aq_parent.absolute_url()\n
-  if hasattr(brain, \'bt1\'):\n
+  if hasattr(brain, \'bt1\'): # diff two selected business templates\n
     return html_quote(parent_absolute_path+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class+\'&bt1=\'+brain.bt1+\'&bt2=\'+brain.bt2)\n
-  else:\n
-    return html_quote(parent_absolute_path+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class)\n
-else:\n
-  return None\n
+  # diff against installed version\n
+  return html_quote(parent_absolute_path+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class)\n
 
 
 ]]></string> </value>

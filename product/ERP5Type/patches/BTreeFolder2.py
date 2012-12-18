@@ -97,3 +97,7 @@ def _cleanup(self):
 
 BTreeFolder2Base._cleanup = _cleanup
 
+# Work around for the performance regression introduced in Zope 2.12.23.
+# Otherwise, we use superclass' __contains__ implementation, which uses
+# objectIds, which is inefficient in HBTreeFolder2 to lookup a single key.
+BTreeFolder2Base.__contains__ = BTreeFolder2Base.has_key

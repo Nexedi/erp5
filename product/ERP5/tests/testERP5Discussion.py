@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors.
@@ -92,9 +93,47 @@ class TestERP5Discussion(ERP5TypeTestCase):
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inside a discussion thread"""
 
-    thread = self.stepCreateThread();
-    post = self.stepCreatePost(thread);
+    thread = self.stepCreateThread()
+    post = self.stepCreatePost(thread)
+    # post is not indexed yet 
+    self.assertSameSet([], thread.DiscussionThread_getDiscussionPostList())
+
+    # not indexed but its relative url is passed through REQUEST
+    self.app.REQUEST.set('post_relative_url', post.getRelativeUrl())
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
     self.tic()
+   
+    # indexed already
+    self.assertSameSet([post], thread.DiscussionThread_getDiscussionPostList())
+
+  def test_03_createDiscussionThread(self):
+    """
+      Create a disucssion thread
+    """
+    portal = self.portal
+
+    # create web sections & set predicates
+    group1 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    web_site = portal.web_site_module.newContent(portal_type='Web Site')
+    web_section1 = web_site.newContent(portal_type='Web Section')
+    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
+    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
+    self.tic()
+
+    web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
+    discussion_thread = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getReference()=='test1-new'][0]
+    # not indexed yet
+    self.assertSameSet([], web_section1.WebSection_getDiscussionThreadList())
+
+    # not indexed but its relative url is passed through REQUEST
+    self.app.REQUEST.set('thread_relative_url', discussion_thread.getRelativeUrl())
+    self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
+
+    self.tic()
+    # indexed already
+    self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
 
   def test_MultipleForum(self):
     """
@@ -147,6 +186,22 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
 
+    # test new thread reference do no overlap any other traversable object
+    web_section1.WebSection_createNewDiscussionThread(web_section1.getId(), 'test reference using web section')
+    web_section1.WebSection_createNewDiscussionThread('image_module', 'test1 body')
+    self.tic()
+    self.assertNotEqual(web_section1.getId(), 
+                        portal.portal_catalog.getResultValue(
+                          portal_type = 'Discussion Thread',
+                          title = web_section1.getId()).getReference())
+    self.assertNotEqual('image_module', 
+                        portal.portal_catalog.getResultValue(
+                          portal_type = 'Discussion Thread',
+                          title = 'image_module').getReference())
+
+  def test_02_ReferenceGenerationFromString(self):
+    s = "a test by ivan !@#$%^&*()[]\\é"
+    self.assertEqual('a-test-by-ivan', self.portal.Base_generateReferenceFromString(s))
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -121,10 +121,11 @@ def editListBox(listbox_field, listbox):\n
       for key, value in cleaned_v.items():\n
         if value == \'\':\n
           cleaned_v[key] = None\n
-      if listbox_edit is None:\n
-        context.restrictedTraverse(url).edit(edit_order=edit_order, **cleaned_v)\n
-      else:\n
-        listbox_edit(url, edit_order, cleaned_v)\n
+      if cleaned_v:\n
+        if listbox_edit is None:\n
+          context.restrictedTraverse(url).edit(edit_order=edit_order, **cleaned_v)\n
+        else:\n
+          listbox_edit(url, edit_order, cleaned_v)\n
 \n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n

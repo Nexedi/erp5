@@ -1392,7 +1392,7 @@ function SET_DHTML()\n
   // from this point. Written by jonathan\n
   //creation of the structure of lines \n
   for(var i=0;i < dd.elements.length;i++){\n
-   if(dd.elements[i].nodrag==0){ // do not need to add in lines the informations inside a div\n
+   if(dd.elements[i].nodrag==0){ // do not need to add in lines the information inside a div\n
     test=false; //used for determining if blocks with same y of the current is block are already present\n
     for(var j=0;j < lines.length;j++){\n
       if((dd.elements[i].y+dd.elements[i].h)==(lines[j][0].y+lines[j][0].h)){\n

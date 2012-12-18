@@ -29,14 +29,13 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
 import string
 
-class GeographicAddress(Coordinate, Base):
+class GeographicAddress(Coordinate):
   """
       A geographic address holds a complete set of
       geographic coordinates including street, number,
@@ -44,9 +43,6 @@ class GeographicAddress(Coordinate, Base):
 
       Geographic address is a terminating leaf
       in the OFS. It can not contain anything.
-
-      Geographic address inherits from Base and
-      from the mix-in Coordinate
   """
   meta_type = 'ERP5 Geographic Address'
   portal_type = 'Address'
@@ -57,11 +53,8 @@ class GeographicAddress(Coordinate, Base):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
-                    , PropertySheet.SortIndex
+  property_sheets = ( PropertySheet.SortIndex
                     , PropertySheet.CategoryCore
-                    , PropertySheet.Coordinate
                     , PropertySheet.GeographicAddress
                     )
 

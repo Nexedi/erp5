@@ -30,6 +30,9 @@ import subprocess
 import threading
 import signal
 import sys
+import time
+
+MAX_TIMEOUT = 36000
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
@@ -38,6 +41,12 @@ class SubprocessError(EnvironmentError):
     return self.status_dict[name]
   def __str__(self):
     return 'Error %i' % self.status_code
+
+class TimeoutError(EnvironmentError):
+  def __init__(self):
+    pass
+  def __str__(self):
+    return 'Timeout expired. Process killed'
 
 class CancellationError(EnvironmentError):
   pass
@@ -98,8 +107,16 @@ class ProcessManager(object):
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
     self.under_cancellation = False
+    self.p = None
+    self.result = None
+    self.max_timeout = kw.get("max_timeout") or MAX_TIMEOUT
 
   def spawn(self, *args, **kw):
+    def timeoutExpired(p, log):
+      if p.poll() is None:
+        log('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
+        p.terminate()
+
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
     get_output = kw.pop('get_output', True)
@@ -120,16 +137,25 @@ class ProcessManager(object):
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env, **subprocess_kw)
     self.process_pid_set.add(p.pid)
+    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p, self.log))
+    timer.start()
     stdout, stderr = subprocess_capture(p, self.log, log_prefix,
                                         get_output=get_output)
+    timer.cancel()
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     self.process_pid_set.discard(p.pid)
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
-    if raise_error_if_fail and p.returncode:
+    if raise_error_if_fail and p.returncode != -15 and p.returncode:
       raise SubprocessError(result)
     return result
+
+  def getSupportedParameterSet(self, program_path ,parameter_list):
+    help_string = self.spawn(*[program_path,'--help'])['stdout']
+    help_words = set(help_string.split())
+    return help_words.intersection(set(parameter_list))
+
 
   def killPreviousRun(self, cancellation=False):
     self.log('ProcessManager killPreviousRun, going to kill %r' % (self.process_pid_set,))

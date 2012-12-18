@@ -299,7 +299,7 @@ class PDFForm(File):
   )
 
   def __init__ (self, id, title='', pdf_file=''):
-    # holds all the cell informations, even those not related to this form
+    # holds information about all cells, even those not related to this form
     self.all_cells = PersistentMapping()
     # holds the cells related to this pdf form
     self.cells = PersistentMapping()

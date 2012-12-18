@@ -478,7 +478,8 @@ class AcquiredProperty(StandardProperty):
   }
 
   _content_type_acquired_property_id_setter_definition_dict = {
-    '_set%s': ContentProperty.Setter
+    '_set%s': ContentProperty.Setter,
+    '_baseSet%s': ContentProperty.Setter
   }
 
   _content_type_acquired_property_id_tester_definition_dict = {

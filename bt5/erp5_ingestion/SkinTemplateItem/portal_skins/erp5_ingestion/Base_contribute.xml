@@ -71,7 +71,7 @@ if redirect_to_document is None:\n
 if user_login is None:\n
   # get current authenticated user\n
   user_login = str(portal.portal_membership.getAuthenticatedMember())\n
-  \n
+\n
 document_kw = {\'user_login\': user_login,\n
                \'group\': group,\n
                \'publication_section\': publication_section,\n
@@ -85,6 +85,13 @@ if classification not in MARKER:\n
   document_kw[\'classification\'] = classification\n
 if follow_up_list:\n
   document_kw[\'follow_up_list\'] = follow_up_list\n
+\n
+\n
+# FIXME: this list of properties should not be hardcoded.\n
+for key in (\'title\', \'short_title\', \'reference\', \'language\', \'version\', \'description\', ):\n
+  value = kw.get(key, None)\n
+  if value not in MARKER:\n
+    document_kw[key] = value\n
 \n
 if attach_document_to_context:\n
   # attach document to current context using follow_up\n
@@ -126,20 +133,7 @@ if synchronous_metadata_discovery:\n
                                input_parameter_dict=document_kw)\n
   is_existing_document_updated = (merged_document!=document)\n
   document = merged_document\n
-# introspect document and find editable properties\n
-# then use form or kw and try to get values in two available modes: the\n
-# script coulbe be called: from ERP5 From or directly from Python script\n
-document_edit_kw = {}\n
-property_id_list = document.propertyIds()\n
-form = context.REQUEST.form\n
-for key in property_id_list:\n
-  value = form.get(key, kw.get(key, None))\n
-  if value not in MARKER:\n
-    document_edit_kw[key] = value\n
 \n
-# edit document   \n
-if document_edit_kw is not {}:\n
-  document.edit(**document_edit_kw)\n
 document_portal_type = document.getTranslatedPortalType()\n
 if not is_existing_document_updated:\n
   message = translateString(\'${portal_type} created successfully.\',\n

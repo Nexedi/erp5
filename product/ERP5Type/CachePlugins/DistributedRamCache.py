@@ -55,14 +55,14 @@ class DistributedRamCache(BaseCache):
         interfaces.ICachePlugin
     )
 
-  def __init__(self, params={}):
+  def __init__(self, uid, params={}):
     self._servers = params.get('server', '')
     self._expiration_time = params.get('expiration_time', 0)
     self._server_max_key_length = params.get('server_max_key_length', 250)
     self._server_max_value_length = params.get('server_max_value_length', 1024*1024)
     self._debug_level = params.get('debug_level', 0)
     self._key_prefix = params.get('key_prefix', '')
-    BaseCache.__init__(self)
+    BaseCache.__init__(self, uid)
 
   def initCacheStorage(self):
     """ Init cache storage """

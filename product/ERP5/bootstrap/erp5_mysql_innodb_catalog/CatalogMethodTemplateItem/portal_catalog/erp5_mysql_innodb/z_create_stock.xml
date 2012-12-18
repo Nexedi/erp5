@@ -78,14 +78,13 @@ CREATE TABLE `stock` (\n
   `sub_variation_text` VARCHAR(255),\n
   PRIMARY KEY (`uid`, `order_id`),\n
   KEY `quantity` (`quantity`),\n
-  KEY `section_uid` (`section_uid`),\n
+  KEY `section_uid_portal_type` (`section_uid`, `portal_type`),\n
   KEY `mirror_section_uid` (`mirror_section_uid`),\n
   KEY `mirror_node_uid` (`mirror_node_uid`),\n
   KEY `node_uid` (`node_uid`),\n
   KEY `payment_uid` (`payment_uid`),\n
   KEY `function_uid` (`function_uid`),\n
   KEY `project_uid` (`project_uid`),\n
-  KEY `resource_uid` (`resource_uid`),\n
   KEY `simulation_state` (`simulation_state`),\n
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n

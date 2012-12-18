@@ -2067,23 +2067,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       raise ValueError, 'This method always fail'
     Message.notifyUser = failingMethod
     Organisation.failingMethod = failingMethod
-    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList'% (activity, ))
+    getMessageList = self.getPortalObject().portal_activities.getMessageList
     try:
       obj.activate(activity=activity, priority=6).failingMethod()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      with_processing_len = len(readMessageList(path=None,
-                                                to_date=None,
-                                                method_id='failingMethod',
-                                                include_processing=1,
-                                                processing_node=None))
-      without_processing_len = len(readMessageList(path=None,
-                                                   to_date=None,
-                                                   method_id='failingMethod',
-                                                   include_processing=0,
-                                                   processing_node=None))
-      self.assertEqual(with_processing_len, 1)
-      self.assertEqual(without_processing_len, 1)
+      message, = getMessageList(activity=activity, method_id='failingMethod')
+      self.assertEqual(message.processing, 0)
     finally:
       Message.notifyUser = original_notifyUser
       delattr(Organisation, 'failingMethod')
@@ -2628,7 +2618,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       processing_node.
       This must happen on first message execution, without any delay.
     """
-    readMessageList = getattr(self.getPortalObject(), '%s_readMessageList' % (activity, ))
     activity_tool = self.getActivityTool()
     container = self.getPortal().organisation_module
     organisation = container.newContent(portal_type='Organisation')
@@ -2645,13 +2634,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(getattr(container, organisation_id, None), None)
     self.assertEqual(len(activity_tool.getMessageList()), 1)
     activity_tool.distribute()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 0)
+    self.assertEqual([], activity_tool.getMessageList(activity=activity,
+                                                      processing_node=-3))
     activity_tool.tic()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 1)
+    self.assertEqual(1, len(activity_tool.getMessageList(activity=activity,
+                                                         processing_node=-3)))
 
   def test_109_checkMissingActivityContextObjectSQLDict(self, quiet=0,
       run=run_all_test):
@@ -2683,7 +2670,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                 'group_method_id (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    readMessageList = self.getPortalObject().SQLDict_readMessageList
     activity_tool = self.getActivityTool()
     container = self.getPortalObject().organisation_module
     organisation = container.newContent(portal_type='Organisation')
@@ -2702,15 +2688,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(getattr(container, organisation_id, None), None)
     self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.distribute()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 0)
+    self.assertEqual([], activity_tool.getMessageList(activity="SQLDict",
+                                                      processing_node=-3))
     activity_tool.tic()
-    self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1, path=None, method_id=None,
-                            to_date=None)), 1)
+    message, = activity_tool.getMessageList()
     # The message excuted on "organisation_2" must have succeeded.
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
+    self.assertEqual(message.processing_node, -3)
 
   def CheckLocalizerWorks(self, activity):
     FROM_STRING = 'Foo'
@@ -3117,21 +3100,15 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
 
     from Products.CMFActivity import ActivityTool
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 1)
+    activity = ActivityTool.activity_dict['SQLDict']
+    activity.getProcessableMessageList(activity_tool, 1)
     self.commit()
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 2)
+    activity.getProcessableMessageList(activity_tool, 2)
     self.commit()
-    ActivityTool.activity_dict['SQLDict'].getProcessableMessageList(activity_tool, 3)
+    activity.getProcessableMessageList(activity_tool, 3)
     self.commit()
 
-    result = activity_tool.SQLDict_readMessageList(include_processing=1,
-                                                   processing_node=None,
-                                                   path=None,
-                                                   method_id=None,
-                                                   to_date=None,
-                                                   offset=0,
-                                                   count=1000)
-
+    result = activity._getMessageList(activity_tool)
     try:
       self.assertEqual(len([message
                             for message in result

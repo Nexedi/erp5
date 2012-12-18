@@ -941,7 +941,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
   def addWorkflowNode(self, object, xml, simulate):
     """
-    This allows to specify how to handle the workflow informations.
+    This allows to specify how to handle the workflow information.
     This is really usefull if you want to write your own Conduit.
     """
     conflict_list = []
@@ -975,7 +975,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
   def addLocalRoleNode(self, object, xml):
     """
-    This allows to specify how to handle the local role informations.
+    This allows to specify how to handle the local role information.
     This is really usefull if you want to write your own Conduit.
     """
     # We want to add a local role

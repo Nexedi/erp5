@@ -34,6 +34,13 @@ from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
 from zLOG import LOG, WARNING
 
+NULL_SEARCH_TEXT_OPERATOR_DICT = {
+  '=': 'is',
+  '!=': 'is not',
+}
+for value in NULL_SEARCH_TEXT_OPERATOR_DICT.values():
+  NULL_SEARCH_TEXT_OPERATOR_DICT[value] = value
+
 class SimpleQuery(Query):
   """
     A SimpleQuery represents a single comparison between a single column and
@@ -84,10 +91,12 @@ class SimpleQuery(Query):
         else:
           comparison_operator = 'in'
     if value is None:
-      if comparison_operator == '=':
-        comparison_operator = 'is'
-      elif comparison_operator != 'is':
-        raise ValueError, 'None value with a non-"=" comparison_operator (%r). Not sure what to do.' % (comparison_operator, )
+      try:
+        comparison_operator = NULL_SEARCH_TEXT_OPERATOR_DICT[
+          comparison_operator]
+      except KeyError:
+        raise ValueError('Unexpected comparison_operator %r for None value.'
+          % (comparison_operator, ))
     elif comparison_operator == 'is':
       raise ValueError, 'Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, )
     self.value = value

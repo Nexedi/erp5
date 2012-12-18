@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Folder_viewWorkflowActionDocumentListDialog</string> </value>
+            <value> <string>Folder_viewWorkflowActionDialogSecondStep</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -73,7 +73,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>workflow_action_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -81,10 +81,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_portal_type</string>
-                        <string>listbox_state_var</string>
-                        <string>listbox_workflow_action</string>
-                        <string>listbox_workflow_state</string>
+                        <string>workflow_action_listbox_portal_type</string>
+                        <string>workflow_action_listbox_state_var</string>
+                        <string>workflow_action_listbox_workflow_action</string>
+                        <string>workflow_action_listbox_workflow_state</string>
+                        <string>workflow_action_listbox_relative_url</string>
                       </list>
                     </value>
                 </item>
@@ -92,8 +93,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_comment</string>
                         <string>your_module_selection_name</string>
+                        <string>your_enable_detail_list</string>
                       </list>
                     </value>
                 </item>

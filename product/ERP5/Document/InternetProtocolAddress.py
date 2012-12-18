@@ -29,13 +29,12 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
-class InternetProtocolAddress(Base, Coordinate):
+class InternetProtocolAddress(Coordinate):
   """
   A internet protocol address holds a address of
   a computer on computer network using TCP/IP.
@@ -49,12 +48,9 @@ class InternetProtocolAddress(Base, Coordinate):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Coordinate
-                      , PropertySheet.InternetProtocolAddress
-                      )
+  property_sheets = (  PropertySheet.CategoryCore
+                     , PropertySheet.InternetProtocolAddress
+                    )
 
   def _splitCoordinateText(self, coordinate_text):
     property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]

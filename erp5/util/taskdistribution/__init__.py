@@ -39,6 +39,7 @@ Example use:
       # Run the test_line.name test
       test_line.stop()
 """
+import httplib
 import logging
 import select
 import socket
@@ -50,7 +51,7 @@ __all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'pa
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
 SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError,
-    xmlrpclib.Fault]
+    xmlrpclib.Fault, httplib.BadStatusLine]
 parser, _ = xmlrpclib.getparser()
 if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
     SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
@@ -204,7 +205,6 @@ class TestResultProxy(RPCRetry):
         self._watcher_period = 60
         self._watcher_dict = {}
         self._watcher_condition = threading.Condition()
-
     def __repr__(self):
         return '<%s(%r, %r, %r) at %x>' % (self.__class__.__name__,
             self._test_result_path, self._node_title, self._revision, id(self))
@@ -413,6 +413,33 @@ class TaskDistributionTool(RPCRetry):
             result = TestResultProxy(self._proxy, self._retry_time,
                 self._logger, test_result_path, node_title, revision)
         return result
+
+class TaskDistributor(RPCRetry):
+
+    def __init__(self,portal_url,retry_time=64,logger=None):
+
+        if logger is None:
+           logger = null_logger
+        if portal_url is None:
+            proxy = DummyTaskDistributionTool()
+        else:
+            proxy = xmlrpclib.ServerProxy(
+                portal_url,
+                allow_none=True,
+            )
+        super(TaskDistributor, self).__init__(proxy, retry_time,logger)
+        protocol_revision = self._retryRPC('getProtocolRevision')
+        if protocol_revision != 1:
+            raise ValueError('Unsupported protocol revision: %r',
+                protocol_revision)
+
+    def startTestSuite(self,node_title):
+      """
+        Returns None if no test suite is needed.
+        therwise, returns a JSON with all the test suite parameters.
+      """
+      result = self._retryRPC('startTestSuite',(node_title,))
+      return result
 
 class DummyTaskDistributionTool(object):
     """

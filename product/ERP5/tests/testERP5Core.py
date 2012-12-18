@@ -405,20 +405,23 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
 
+  def _Folder_delete(self, *object_list):
+    selection_name = 'test_selection'
+    portal_selections = self.portal.portal_selections
+    portal_selections.setSelectionCheckedUidsFor(selection_name,
+      [x.getUid() for x in object_list])
+    md5_string = portal_selections.getSelectionChecksum(selection_name)
+    return object_list[0].getParentValue().Folder_delete(
+      selection_name=selection_name, md5_object_uid_list=md5_string)
+
   def test_Folder_delete(self):
     module = self.portal.newContent(portal_type='Folder', id='test_folder')
     document_1 = module.newContent(portal_type='Folder', id='1')
     document_2 = module.newContent(portal_type='Folder', id='2')
-    uid_list = [document_1.getUid(), document_2.getUid()]
-    self.portal.portal_selections.setSelectionParamsFor(
-          'test_selection', dict(uids=uid_list))
     self.tic()
-    md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
-    redirect = module.Folder_delete(selection_name='test_selection',
-                                    uids=uid_list,
-                                    md5_object_uid_list=md5_string)
+    redirect = self._Folder_delete(document_1, document_2)
     self.assert_('Deleted.' in redirect, redirect)
-    self.assertEquals(len(module.objectValues()), 0)
+    self.assertEqual(module.objectCount(), 0)
 
   def test_Folder_delete_related_object(self):
     # deletion is refused if there are related objects
@@ -435,12 +438,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(2, organisation.getRelationCountForDeletion())
     self.assertEqual(0, person.getRelationCountForDeletion())
     def delete(assert_deleted, obj):
-      uid_list = [obj.getUid()]
-      self.portal.portal_selections.setSelectionParamsFor(
-                          'test_selection', dict(uids=uid_list))
-      md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
-      redirect = obj.getParentValue().Folder_delete(uids=uid_list,
-        selection_name='test_selection', md5_object_uid_list=md5_string)
+      redirect = self._Folder_delete(obj)
       self.assertTrue(('Sorry, 1 item is in use.', 'Deleted.')[assert_deleted]
                       in redirect, redirect)
       self.tic()
@@ -463,21 +461,15 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                 context=document_1,
                                 base_category_list=('source',),
                                 category_list=document_2.getRelativeUrl())
-    uid_list = [document_2.getUid(), ]
-    self.portal.portal_selections.setSelectionParamsFor(
-                          'test_selection', dict(uids=uid_list))
     self.tic()
     self.assertEquals([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
-    md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
 
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)
-    redirect = module.Folder_delete(selection_name='test_selection',
-                                    uids=uid_list,
-                                    md5_object_uid_list=md5_string)
+    redirect = self._Folder_delete(document_2)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    self.assertEquals(len(module.objectValues()), 2)
+    self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):
     error_list = []

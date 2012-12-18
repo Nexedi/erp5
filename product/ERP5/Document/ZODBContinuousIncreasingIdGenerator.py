@@ -28,9 +28,9 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.IdGenerator import IdGenerator
+from BTrees.OOBTree import OOBTree
 
 from zLOG import LOG, INFO
 
@@ -97,7 +97,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     """
     LOG('initialize ZODB Generator', INFO, 'Id Generator: %s' % (self,))
     if getattr(self, 'last_id_dict', None) is None:
-      self.last_id_dict = PersistentMapping()
+      self.last_id_dict = OOBTree() 
 
     # XXX compatiblity code below, dump the old dictionnaries
     portal_ids = getattr(self, 'portal_ids', None)
@@ -124,7 +124,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       added here)
     """
     # Remove dictionary
-    self.last_id_dict = PersistentMapping()
+    self.last_id_dict = OOBTree()
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'exportGeneratorIdDict')
@@ -149,3 +149,17 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       if not isinstance(value, int):
         raise TypeError, 'the value given in dictionary is not a integer'
     self.last_id_dict.update(id_dict)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+       'rebuildGeneratorIdDict')
+  def rebuildGeneratorIdDict(self):
+    """
+      Rebuild generator id dict.
+      In fact, export it, clear it and import it into new dict.
+      This is mostly intendted to use when we are migrating the id dict
+      structure.
+    """
+    id_dict = self.exportGeneratorIdDict()
+    self.importGeneratorIdDict(id_dict=id_dict, clear=True)
+
+

@@ -59,7 +59,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
+                <string>left reply-dialog</string>
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
@@ -90,7 +90,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>left reply-dialog</string> </key>
                     <value>
                       <list>
                         <string>your_title</string>

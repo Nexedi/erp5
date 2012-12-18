@@ -30,9 +30,9 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
+from Products.ERP5.Document.Node import Node
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
 from Products.ERP5.mixin.login_account_provider import LoginAccountProviderMixin
 
 try:
@@ -41,8 +41,7 @@ try:
 except ImportError:
   PluggableAuthService = None
 
-#class Person(Node, XMLObject):
-class Person(LoginAccountProviderMixin, EncryptedPasswordMixin, XMLObject):
+class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,

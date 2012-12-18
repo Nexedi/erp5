@@ -52,6 +52,7 @@
                 <string>left</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>right</string>
               </list>
             </value>
         </item>
@@ -72,17 +73,39 @@
                     <value>
                       <list>
                         <string>listbox_task_title</string>
-                        <string>listbox_task_comment</string>
+                        <string>listbox_task_description</string>
                         <string>listbox_task_start_date</string>
                         <string>listbox_task_stop_date</string>
                         <string>listbox_task_requirement</string>
+                        <string>listbox_task_reference</string>
+                        <string>listbox_task_source</string>
+                        <string>listbox_task_line_resource</string>
+                        <string>listbox_task_line_quantity_unit</string>
+                        <string>listbox_task_line_quantity</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>left_information</string>
+                        <string>your_source</string>
+                        <string>your_resource</string>
+                        <string>your_task_line_quantity_unit</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>right_information</string>
+                        <string>your_source_section</string>
+                        <string>your_destination_decision</string>
+                        <string>your_destination_section</string>
+                        <string>your_destination</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

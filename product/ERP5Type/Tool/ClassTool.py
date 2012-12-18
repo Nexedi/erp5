@@ -1208,7 +1208,7 @@ def initialize( context ):
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
         debug=boolean        Invoke debugger on errors / failures.
-        verbose=boolean      Display more informations when running tests
+        verbose=boolean      Display more information when running tests
         """
         # Allow having strings for verbose and debug
         verbose = int(verbose) and True or False

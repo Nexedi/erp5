@@ -58,12 +58,48 @@ class CacheFactory(XMLObject):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
                     , PropertySheet.CacheFactory
+                    , PropertySheet.SortIndex
                     )
 
+  def getCacheId(self):
+    """
+      Get a common Cache Factory / Cache Bag ID in this
+      case relative to portal_caches.
+      It's required to use relative url (i.e. mainly ID) due
+      to CachingMethod legacy.
+    """
+    relative_url = self.getRelativeUrl()
+    assert relative_url[:14] == 'portal_caches/'
+    return relative_url[14:]
 
-  def getCachePluginList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'get')
+  def get(self, cache_id, default=None):
+    """
+      Get value or return default from all contained Cache Bag
+      or Cache Plugin.
+    """
+    cache_plugin_list = self.getCachePluginList(list(self.allowed_types) + ['ERP5 Cache Bag'])
+    for cache_plugin in cache_plugin_list:
+      value = cache_plugin.get(cache_id, default)
+      if value is not None:
+        return value
+    return default
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'set')
+  def set(self, cache_id, value):
+    """
+      Set value to all contained cache plugin or cache bag.
+    """
+    cache_plugin_list = self.getCachePluginList(list(self.allowed_types) + ['ERP5 Cache Bag'])
+    for cache_plugin in cache_plugin_list:
+      cache_plugin.set(cache_id, value)
+
+  def getCachePluginList(self, allowed_type_list=None):
     """ get ordered list of installed cache plugins in ZODB """
-    cache_plugins = self.objectValues(self.allowed_types)
+    if allowed_type_list is None:
+      # fall back to default ones
+      allowed_type_list = self.allowed_types
+    cache_plugins = self.objectValues(allowed_type_list)
     cache_plugins = map(None, cache_plugins)
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return cache_plugins
@@ -71,8 +107,16 @@ class CacheFactory(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
   def getRamCacheFactory(self):
     """ Return RAM based cache factory """
-    erp5_site_id = self.getPortalObject().getId()
-    return CachingMethod.factories[erp5_site_id][self.cache_scope]
+    cache_factory_name =  self.getCacheId()
+    cache_tool = self.portal_caches
+    cache_factory = CachingMethod.factories.get(cache_factory_name)
+    #XXX This conditional statement should be remove as soon as
+    #Broadcasting will be enable among all zeo clients.
+    #Interaction which update portal_caches should interact with all nodes.
+    if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
+      #ram_cache_root is not up to date for current node
+      cache_tool.updateCache()
+    return CachingMethod.factories[cache_factory_name]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactoryPluginList')
   def getRamCacheFactoryPluginList(self):
@@ -81,5 +125,5 @@ class CacheFactory(XMLObject):
 
   def clearCache(self):
     """ clear cache for this cache factory """
-    for cp in self.getRamCacheFactory().getCachePluginList():
+    for cp in self.getRamCacheFactoryPluginList():
       cp.clearCache()

@@ -32,11 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
-#from Products.ERP5.Core.MetaNode import MetaNode
-#from Products.ERP5.Document.MetaNode import MetaNode
+from Products.ERP5.Document.Node import Node
 
-#class Organisation(MetaNode, XMLObject):
-class Organisation(XMLObject):
+class Organisation(Node):
     """
       An Organisation object holds the information about
       an organisation (ex. a division in a company, a company,

@@ -30,6 +30,10 @@
 import os
 import sys
 import unittest
+from cStringIO import StringIO
+from zipfile import ZipFile
+from Products.ERP5Type.tests.backportUnittest import skip
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -48,7 +52,14 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
     return "TestOOoDynamicStyle"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',)
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_full_text_myisam_catalog',
+            'erp5_base',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
+            'erp5_web', 
+            'erp5_dms')
+
 
   def afterSetUp(self):
     self.login()
@@ -194,6 +205,50 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
     self.assertFalse(response.getBody().startswith('PK'))
     self.assertTrue(500, response.getStatus())
+
+  def test_include_img(self):
+    """
+      Create an OOoTemplate from scratch, using pt_editAction to set the
+      content, the content contains an include_img, when the OOo is rendered we
+      have:
+       - valid odf
+       - an image included in the "ZIP"
+       - the image properly listed in manifest
+    """
+    request = self.app.REQUEST
+    filename = 'cmyk_sample.jpg'
+    file_path = os.path.join(os.path.dirname(__file__), 'test_document',
+        filename)
+    upload_file = FileUpload(file_path, filename)
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    addOOoTemplate = self.getPortal().manage_addProduct['ERP5OOo'].addOOoTemplate
+    addOOoTemplate(id='Base_viewIncludeImageAsOdt', title='')
+    custom_content = self.content.replace("<office:text />",
+        "<office:text><office:include_img path='%s'/></office:text>" % document.getRelativeUrl())
+    Base_viewIncludeImageAsOdt = self.getPortal().Base_viewIncludeImageAsOdt
+    Base_viewIncludeImageAsOdt.doSettings(request, title='', xml_file_id='content.xml',
+                                ooo_stylesheet='Base_getODTStyleSheet',
+                                script_name='')
+    Base_viewIncludeImageAsOdt.pt_edit(custom_content,
+        content_type='application/vnd.oasis.opendocument.text')
+    self.tic()
+    response = self.publish('/' + self.getPortal().Base_viewIncludeImageAsOdt.absolute_url(1))
+    self.assertEqual('application/vnd.oasis.opendocument.text',
+                     response.getHeader('content-type').split(';')[0])
+    self.assertEqual('attachment; filename="Base_viewIncludeImageAsOdt.odt"',
+                     response.getHeader('content-disposition'))
+    self.assertTrue(200, response.getStatus())
+    cs = StringIO()
+    cs.write(response.getBody())
+    zip_document = ZipFile(cs)
+    picture_list = filter(lambda x: "Pictures" in x.filename,
+        zip_document.infolist())
+    self.assertNotEquals([], picture_list)
+    manifest = zip_document.read('META-INF/manifest.xml')
+    content = zip_document.read('content.xml')
+    for picture in picture_list:
+      self.assertTrue(picture.filename in manifest)
+      self.assertTrue(picture.filename in content)
 
 
 def test_suite():

@@ -1796,7 +1796,11 @@ class SimulationTool(BaseTool):
 
       result = self.Resource_zGetAssetPrice(
           valuation_method=valuation_method,
+          src__=src__,
           **sql_kw)
+
+      if src__ :
+        return result
 
       if len(result) > 0:
         return result[-1].total_asset_price

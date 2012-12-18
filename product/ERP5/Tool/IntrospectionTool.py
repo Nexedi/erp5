@@ -396,8 +396,6 @@ class IntrospectionTool(LogMixin, BaseTool):
     if certificate_authority is not None:
       collect_information_by_property(certificate_authority,
         'certificate_authority_path')
-      collect_information_by_property(certificate_authority,
-        'openssl_binary')
     return connection_dict
 
   security.declareProtected(Permissions.ManagePortal, 
@@ -425,7 +423,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
   security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
   def getSystemSignatureDict(self):
-    """ Returns a dictionary with all informations related to the instance.
+    """ Returns a dictionary with all information related to the instance.
     This information can report what resources (memcache, mysql, zope,
     python, libraries) the instance is using. Also, what business templates are
     installed.

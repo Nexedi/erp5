@@ -248,7 +248,7 @@ class Message(BaseMessage):
     user = uf.getUserById(user_name)
     # if the user is not found, try to get it from a parent acl_users
     # XXX this is still far from perfect, because we need to store all
-    # informations about the user (like original user folder, roles) to
+    # information about the user (like original user folder, roles) to
     # replay the activity with exactly the same security context as if
     # it had been executed without activity.
     if user is None:
@@ -769,7 +769,7 @@ class ActivityTool (Folder, UniqueObject):
       nodes = self._nodes
       if isinstance(nodes, tuple):
         new_nodes = OIBTree()
-        new_nodes.update([(x, ROLE_PROCESSING) for x in self._nodes])
+        new_nodes.update([(x, ROLE_PROCESSING) for x in nodes])
         self._nodes = nodes = new_nodes
       return nodes
 
@@ -847,7 +847,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
       """ Change one or more idle nodes into processing nodes """
       if unused_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in unused_node_list:
           self.updateNode(node, ROLE_PROCESSING)
       if REQUEST is not None:
@@ -864,7 +863,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
       """ Change one or more procesing nodes into idle nodes """
       if processing_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in processing_node_list:
           self.updateNode(node, ROLE_IDLE)
       if REQUEST is not None:
@@ -1377,18 +1375,19 @@ class ActivityTool (Folder, UniqueObject):
               self.absolute_url(), message))
 
     security.declarePublic('getMessageList')
-    def getMessageList(self,**kw):
+    def getMessageList(self, activity=None, **kw):
       """
         List messages waiting in queues
       """
       # Initialize if needed
       if not is_initialized:
         self.initialize()
-
+      if activity:
+        return activity_dict[activity].getMessageList(aq_inner(self), **kw)
       message_list = []
       for activity in activity_dict.itervalues():
         try:
-          message_list += activity.getMessageList(aq_inner(self),**kw)
+          message_list += activity.getMessageList(aq_inner(self), **kw)
         except AttributeError:
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list

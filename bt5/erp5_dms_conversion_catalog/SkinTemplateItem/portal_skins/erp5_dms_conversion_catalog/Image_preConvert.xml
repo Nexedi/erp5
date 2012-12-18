@@ -53,6 +53,11 @@
             <value> <string>"""\n
   Do actual conversion of any Image type.\n
 """\n
+if quality is None:\n
+  # it\'s required so fall back to system preferences as\n
+  # directly accessed over URL will do the same\n
+  quality = context.getDefaultImageQuality(format)\n
+\n
 # UI uses \'large\' display\n
 display_list.append(\'large\')\n
 context.Base_preConvert(format, quality, display_list)\n
@@ -60,7 +65,7 @@ context.Base_preConvert(format, quality, display_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format, quality, display_list</string> </value>
+            <value> <string>format, quality=None, display_list=[]</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

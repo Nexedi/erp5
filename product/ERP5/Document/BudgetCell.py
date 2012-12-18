@@ -37,6 +37,7 @@ from Products.ERP5.Document.Movement import Movement
 class BudgetCell(Predicate, MetaNode, Movement):
     """ Budget Cell defines a cell of budget.
     XXX This is not a Movement, but we need getDestinationCredit
+    XXX This is not a MetaNode
     """
 
     # Default Properties

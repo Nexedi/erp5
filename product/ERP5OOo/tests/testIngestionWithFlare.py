@@ -29,6 +29,7 @@
 
 import unittest
 from testIngestion import TestIngestion
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
 
 class TestIngestionWithFlare(TestIngestion):
   """
@@ -47,7 +48,15 @@ class TestIngestionWithFlare(TestIngestion):
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
+    memcached = _getPersistentMemcachedServerDict()
+    # create a Cache Factory for tests
+    cache_factory = self.portal.portal_caches.newContent(portal_type = 'Cache Factory')
+    cache_factory.cache_duration = 15768000
+    cache_plugin = cache_factory.newContent(portal_type='Distributed Ram Cache')
+    default_pref.setPreferredConversionCacheFactory(cache_factory.getId())
+    persistent_memcached_plugin = self.portal.portal_memcached.persistent_memcached_plugin
+    persistent_memcached_plugin.setUrlString('%s:%s' %(memcached['hostname'], memcached['port']))
+    cache_plugin.setSpecialiseValue(persistent_memcached_plugin)
     TestIngestion.setSystemPreference(self)
 
 

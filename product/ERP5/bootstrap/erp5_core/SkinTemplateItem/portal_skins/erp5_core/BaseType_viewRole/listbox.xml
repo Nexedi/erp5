@@ -81,8 +81,36 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>condition_text</string>
+                          <string>Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>local_role_group_title</string>
+                          <string>Local Roles Group</string>
+                        </tuple>
+                        <tuple>
                           <string>role_category_list</string>
                           <string>Categories</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_base_category_list</string>
+                          <string>Base Categories</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_base_category_script_id</string>
+                          <string>Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                       </list>
                     </value>
@@ -113,6 +141,14 @@
                         <tuple>
                           <string>role_name</string>
                           <string>role_name</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_base_category_list</string>
+                          <string>role_base_category_list</string>
+                        </tuple>
+                        <tuple>
+                          <string>role_category_list</string>
+                          <string>role_category_list</string>
                         </tuple>
                       </list>
                     </value>

@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from urllib import unquote
+from contextlib import contextmanager
 
 # Import from Zope
 from AccessControl import ClassSecurityInfo
@@ -180,7 +181,7 @@ class Localizer(LanguageManager, Folder):
                 method(accept_language)
             except:
                 LOG(self.meta_type, PROBLEM,
-                    'method "%s" raised an exception.' % id)
+                    'method "%s" raised an exception.' % id, error=True)
 
 
     # Changing the language, useful snippets
@@ -216,7 +217,10 @@ class Localizer(LanguageManager, Folder):
     security.declarePublic('changeLanguage')
     changeLanguageForm = LocalDTMLFile('ui/changeLanguageForm', globals())
     def changeLanguage(self, lang, goto=None, expires=None):
-        """ """
+        """Change the user language to `lang`.
+
+        This method will set a cookie and redirect to `goto` URL.
+        """
         request = self.REQUEST
         response = request.RESPONSE
 
@@ -233,6 +237,35 @@ class Localizer(LanguageManager, Folder):
             goto = request['HTTP_REFERER']
 
         response.redirect(goto)
+
+    security.declarePublic('translationContext')
+    @contextmanager
+    def translationContext(self, lang):
+      """Context manager to temporarily change the current language.
+      """
+      class ForcedLanguage:
+        __allow_access_to_unprotected_subobjects__ = 1
+        def __init__(self, lang):
+          self.lang = lang
+        def select_language(self, available_languages):
+          return self.lang
+        def set(self, lang, priority):
+          if lang != self.lang:
+            LOG('Localizer', PROBLEM,
+               'Cannot change language inside a translationContext', error=1)
+      MARKER = []
+      from patches import get_request # late import, as this is patched by
+                                      # unit tests
+      request = get_request() # Localizer always use this request internally
+      old_accept_language = request.get('AcceptLanguage', MARKER)
+      request.set('AcceptLanguage', ForcedLanguage(lang))
+      try:
+        assert self.get_selected_language() == lang
+        yield
+      finally:
+        request.other.pop('AcceptLanguage')
+        if old_accept_language is not MARKER:
+          request.set('AcceptLanguage', old_accept_language)
 
     security.declarePublic('translate')
     def translate(self, domain, msgid, lang=None, *args, **kw):

@@ -575,6 +575,10 @@ class TestSQLCatalog(ERP5TypeTestCase):
                      SimpleQuery(default=None))
     self.assertEqual(ReferenceQuery(operator='is', default=None),
                      SimpleQuery(default=None, comparison_operator='='))
+    self.assertEqual(ReferenceQuery(operator='is not', default=None),
+                     SimpleQuery(default=None, comparison_operator='!='))
+    self.assertEqual(ReferenceQuery(operator='is not', default=None),
+                     SimpleQuery(default=None, comparison_operator='is not'))
     self.assertRaises(ValueError, SimpleQuery, default=None, comparison_operator='>=')
     self.assertRaises(ValueError, SimpleQuery, default=1, comparison_operator='is')
 

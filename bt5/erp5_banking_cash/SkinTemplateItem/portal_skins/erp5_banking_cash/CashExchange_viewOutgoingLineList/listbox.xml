@@ -389,7 +389,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Number</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Amount</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

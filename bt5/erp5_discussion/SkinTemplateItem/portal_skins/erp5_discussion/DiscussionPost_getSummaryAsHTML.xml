@@ -52,39 +52,38 @@
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
-  <div class="discussion-post-header"\n
-       tal:attributes="style python: test(is_author_thumbnai_available, \'height:104px\',\'\')">\n
+  <div class="discussion-post-header">\n
 \n
     <div class="thumbnail"\n
-          tal:condition="is_author_thumbnai_available">\n
-      <img tal:attributes="src string:${author_thumbnail_url}?display=thumbnail&format=png"/>\n
+         tal:condition="is_author_thumbnai_available">\n
+      <img tal:attributes="src string:${author_thumbnail_url}?display=thumbnail&amp;format=png" />\n
     </div>\n
 \n
     <div class="title">\n
       <a class="discussion-post-title"\n
-        tal:attributes="href string:${discussion_post_url}/view;\n
+         tal:attributes="href string:${discussion_post_url}/view;\n
                         name discussion_post_uid"\n
-        tal:content="discussion_post_title"/>\n
+         tal:content="discussion_post_title"></a>\n
         by\n
         <a class="discussion-post-creator-title-link"\n
-          tal:attributes="href author_url"\n
-          tal:content="author_title"/>\n
+           tal:attributes="href author_url"\n
+           tal:content="author_title"></a>\n
         at \n
-        <span tal:content="discussion_post_creation_date" />\n
+        <span tal:content="discussion_post_creation_date"></span>\n
     </div>\n
 \n
   </div>\n
 \n
   <div class="discussion-post-body-container"\n
-       tal:content="structure discussion_post_stripped_html"/>\n
+       tal:content="structure discussion_post_stripped_html"></div>\n
 \n
   <div tal:condition="python: author_signature is not None"\n
        class="discussion-post-author-signature-container"\n
-       tal:content="author_signature"/>\n
+       tal:content="author_signature"></div>\n
 \n
   <div class="discussion-post-actions">\n
-    <button tal:condition="isUserAllowedToPost" type="submit"\n
-            title="Reply"\n
+    <button tal:condition="isUserAllowedToPost"\n
+            type="submit" title="Reply"\n
             name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
             tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
             class="discussion-post-action-button">Reply</button>\n
@@ -99,12 +98,20 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
+            <key> <string>expand</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>DiscussionPost_getSummaryAsHTML</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
             <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

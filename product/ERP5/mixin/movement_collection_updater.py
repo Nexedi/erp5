@@ -169,17 +169,27 @@ class MovementCollectionUpdaterMixin:
       movement.edit(**kw)
       for property_id in kw:
         movement.clearRecordedProperty(property_id)
-    for movement in movement_diff.getNewMovementList():
+    movement_list = movement_diff.getNewMovementList()
+    if not movement_list:
+      return
+    if context.isRootAppliedRule():
+      reindex_kw = {'activate_kw': {
+        'tag': 'built:' + context.getCausalityValue().getPath()}}
+    else:
+      reindex_kw = None
+    def newMovement(kw={}):
+      return context.newContent(portal_type=self.movement_type,
+          reindex_kw=reindex_kw, **kw)
+    for movement in movement_list:
       d = movement.__dict__
       assert movement.isTempObject()
       if '_original' in d:
         # slow but safe way (required for compensated movements)
-        context.newContent(portal_type=self.movement_type,
-          **_getPropertyAndCategoryList(movement))
+        newMovement(_getPropertyAndCategoryList(movement))
         continue
       # fast way (we had to make sure such optimization
       # does not touch existing persistent data)
       del movement.__dict__
-      movement = context.newContent(portal_type=self.movement_type)
+      movement = newMovement()
       d.update(movement.__dict__)
       movement.__dict__ = d

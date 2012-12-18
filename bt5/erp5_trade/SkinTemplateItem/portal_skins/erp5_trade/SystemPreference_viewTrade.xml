@@ -96,6 +96,7 @@
                         <string>my_preferred_supplier_role_list</string>
                         <string>my_preferred_client_role_list</string>
                         <string>my_preferred_trade_base_amount_list</string>
+                        <string>my_preferred_tax_use_list</string>
                       </list>
                     </value>
                 </item>
