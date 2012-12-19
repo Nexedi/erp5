@@ -1,0 +1,1101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts55933350.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.jcarousel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * jCarousel - Riding carousels with jQuery\n
+ *   http://sorgalla.com/jcarousel/\n
+ *\n
+ * Copyright (c) 2006 Jan Sorgalla (http://sorgalla.com)\n
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)\n
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.\n
+ *\n
+ * Built on top of the jQuery library\n
+ *   http://jquery.com\n
+ *\n
+ * Inspired by the "Carousel Component" by Bill Scott\n
+ *   http://billwscott.com/carousel/\n
+ */\n
+\n
+/*global window, jQuery */\n
+(function($) {\n
+    // Default configuration properties.\n
+    var defaults = {\n
+        vertical: false,\n
+        rtl: false,\n
+        start: 1,\n
+        offset: 1,\n
+        size: null,\n
+        scroll: 3,\n
+        visible: null,\n
+        animation: \'normal\',\n
+        easing: \'swing\',\n
+        auto: 0,\n
+        wrap: null,\n
+        initCallback: null,\n
+        setupCallback: null,\n
+        reloadCallback: null,\n
+        itemLoadCallback: null,\n
+        itemFirstInCallback: null,\n
+        itemFirstOutCallback: null,\n
+        itemLastInCallback: null,\n
+        itemLastOutCallback: null,\n
+        itemVisibleInCallback: null,\n
+        itemVisibleOutCallback: null,\n
+        animationStepCallback: null,\n
+        buttonNextHTML: \'<div></div>\',\n
+        buttonPrevHTML: \'<div></div>\',\n
+        buttonNextEvent: \'click\',\n
+        buttonPrevEvent: \'click\',\n
+        buttonNextCallback: null,\n
+        buttonPrevCallback: null,\n
+        itemFallbackDimension: null\n
+    }, windowLoaded = false;\n
+\n
+    $(window).bind(\'load.jcarousel\', function() { windowLoaded = true; });\n
+\n
+    /**\n
+     * The jCarousel object.\n
+     *\n
+     * @constructor\n
+     * @class jcarousel\n
+     * @param e {HTMLElement} The element to create the carousel for.\n
+     * @param o {Object} A set of key/value pairs to set as configuration properties.\n
+     * @cat Plugins/jCarousel\n
+     */\n
+    $.jcarousel = function(e, o) {\n
+        this.options    = $.extend({}, defaults, o || {});\n
+\n
+        this.locked          = false;\n
+        this.autoStopped     = false;\n
+\n
+        this.container       = null;\n
+        this.clip            = null;\n
+        this.list            = null;\n
+        this.buttonNext      = null;\n
+        this.buttonPrev      = null;\n
+        this.buttonNextState = null;\n
+        this.buttonPrevState = null;\n
+\n
+        // Only set if not explicitly passed as option\n
+        if (!o || o.rtl === undefined) {\n
+            this.options.rtl = ($(e).attr(\'dir\') || $(\'html\').attr(\'dir\') || \'\').toLowerCase() == \'rtl\';\n
+        }\n
+\n
+        this.wh = !this.options.vertical ? \'width\' : \'height\';\n
+        this.lt = !this.options.vertical ? (this.options.rtl ? \'right\' : \'left\') : \'top\';\n
+\n
+        // Extract skin class\n
+        var skin = \'\', split = e.className.split(\' \');\n
+\n
+        for (var i = 0; i < split.length; i++) {\n
+            if (split[i].indexOf(\'jcarousel-skin\') != -1) {\n
+                $(e).removeClass(split[i]);\n
+                skin = split[i];\n
+                break;\n
+            }\n
+        }\n
+\n
+        if (e.nodeName.toUpperCase() == \'UL\' || e.nodeName.toUpperCase() == \'OL\') {\n
+            this.list      = $(e);\n
+            this.clip      = this.list.parents(\'.jcarousel-clip\');\n
+            this.container = this.list.parents(\'.jcarousel-container\');\n
+        } else {\n
+            this.container = $(e);\n
+            this.list      = this.container.find(\'ul,ol\').eq(0);\n
+            this.clip      = this.container.find(\'.jcarousel-clip\');\n
+        }\n
+\n
+        if (this.clip.size() === 0) {\n
+            this.clip = this.list.wrap(\'<div></div>\').parent();\n
+        }\n
+\n
+        if (this.container.size() === 0) {\n
+            this.container = this.clip.wrap(\'<div></div>\').parent();\n
+        }\n
+\n
+        if (skin !== \'\' && this.container.parent()[0].className.indexOf(\'jcarousel-skin\') == -1) {\n
+            this.container.wrap(\'<div class=" \'+ skin + \'"></div>\');\n
+        }\n
+\n
+        this.buttonPrev = $(\'.jcarousel-prev\', this.container);\n
+\n
+        if (this.buttonPrev.size() === 0 && this.options.buttonPrevHTML !== null) {\n
+            this.buttonPrev = $(this.options.buttonPrevHTML).appendTo(this.container);\n
+        }\n
+\n
+        this.buttonPrev.addClass(this.className(\'jcarousel-prev\'));\n
+\n
+        this.buttonNext = $(\'.jcarousel-next\', this.container);\n
+\n
+        if (this.buttonNext.size() === 0 && this.options.buttonNextHTML !== null) {\n
+            this.buttonNext = $(this.options.buttonNextHTML).appendTo(this.container);\n
+        }\n
+\n
+        this.buttonNext.addClass(this.className(\'jcarousel-next\'));\n
+\n
+        this.clip.addClass(this.className(\'jcarousel-clip\')).css({\n
+            position: \'relative\'\n
+        });\n
+\n
+        this.list.addClass(this.className(\'jcarousel-list\')).css({\n
+            overflow: \'hidden\',\n
+            position: \'relative\',\n
+            top: 0,\n
+            margin: 0,\n
+            padding: 0\n
+        }).css((this.options.rtl ? \'right\' : \'left\'), 0);\n
+\n
+        this.container.addClass(this.className(\'jcarousel-container\')).css({\n
+            position: \'relative\'\n
+        });\n
+\n
+        if (!this.options.vertical && this.options.rtl) {\n
+            this.container.addClass(\'jcarousel-direction-rtl\').attr(\'dir\', \'rtl\');\n
+        }\n
+\n
+        var di = this.options.visible !== null ? Math.ceil(this.clipping() / this.options.visible) : null;\n
+        var li = this.list.children(\'li\');\n
+\n
+        var self = this;\n
+\n
+        if (li.size() > 0) {\n
+            var wh = 0, j = this.options.offset;\n
+            li.each(function() {\n
+                self.format(this, j++);\n
+                wh += self.dimension(this, di);\n
+            });\n
+\n
+            this.list.css(this.wh, (wh + 100) + \'px\');\n
+\n
+            // Only set if not explicitly passed as option\n
+            if (!o || o.size === undefined) {\n
+                this.options.size = li.size();\n
+            }\n
+        }\n
+\n
+        // For whatever reason, .show() does not work in Safari...\n
+        this.container.css(\'display\', \'block\');\n
+        this.buttonNext.css(\'display\', \'block\');\n
+        this.buttonPrev.css(\'display\', \'block\');\n
+\n
+        this.funcNext   = function() { self.next(); };\n
+        this.funcPrev   = function() { self.prev(); };\n
+        this.funcResize = function() { \n
+            if (self.resizeTimer) {\n
+                clearTimeout(self.resizeTimer);\n
+            }\n
+\n
+            self.resizeTimer = setTimeout(function() {\n
+                self.reload();\n
+            }, 100);\n
+        };\n
+\n
+        if (this.options.initCallback !== null) {\n
+            this.options.initCallback(this, \'init\');\n
+        }\n
+\n
+        if (!windowLoaded && $.browser.safari) {\n
+            this.buttons(false, false);\n
+            $(window).bind(\'load.jcarousel\', function() { self.setup(); });\n
+        } else {\n
+            this.setup();\n
+        }\n
+    };\n
+\n
+    // Create shortcut for internal use\n
+    var $jc = $.jcarousel;\n
+\n
+    $jc.fn = $jc.prototype = {\n
+        jcarousel: \'0.2.8\'\n
+    };\n
+\n
+    $jc.fn.extend = $jc.extend = $.extend;\n
+\n
+    $jc.fn.extend({\n
+        /**\n
+         * Setups the carousel.\n
+         *\n
+         * @method setup\n
+         * @return undefined\n
+         */\n
+        setup: function() {\n
+            this.first       = null;\n
+            this.last        = null;\n
+            this.prevFirst   = null;\n
+            this.prevLast    = null;\n
+            this.animating   = false;\n
+            this.timer       = null;\n
+            this.resizeTimer = null;\n
+            this.tail        = null;\n
+            this.inTail      = false;\n
+\n
+            if (this.locked) {\n
+                return;\n
+            }\n
+\n
+            this.list.css(this.lt, this.pos(this.options.offset) + \'px\');\n
+            var p = this.pos(this.options.start, true);\n
+            this.prevFirst = this.prevLast = null;\n
+            this.animate(p, false);\n
+\n
+            $(window).unbind(\'resize.jcarousel\', this.funcResize).bind(\'resize.jcarousel\', this.funcResize);\n
+\n
+            if (this.options.setupCallback !== null) {\n
+                this.options.setupCallback(this);\n
+            }\n
+        },\n
+\n
+        /**\n
+         * Clears the list and resets the carousel.\n
+         *\n
+         * @method reset\n
+         * @return undefined\n
+         */\n
+        reset: function() {\n
+            this.list.empty();\n
+\n
+            this.list.css(this.lt, \'0px\');\n
+            this.list.css(this.wh, \'10px\');\n
+\n
+            if (this.options.initCallback !== null) {\n
+                this.options.initCallback(this, \'reset\');\n
+            }\n
+\n
+            this.setup();\n
+        },\n
+\n
+        /**\n
+         * Reloads the carousel and adjusts positions.\n
+         *\n
+         * @method reload\n
+         * @return undefined\n
+         */\n
+        reload: function() {\n
+            if (this.tail !== null && this.inTail) {\n
+                this.list.css(this.lt, $jc.intval(this.list.css(this.lt)) + this.tail);\n
+            }\n
+\n
+            this.tail   = null;\n
+            this.inTail = false;\n
+\n
+            if (this.options.reloadCallback !== null) {\n
+                this.options.reloadCallback(this);\n
+            }\n
+\n
+            if (this.options.visible !== null) {\n
+                var self = this;\n
+                var di = Math.ceil(this.clipping() / this.options.visible), wh = 0, lt = 0;\n
+                this.list.children(\'li\').each(function(i) {\n
+                    wh += self.dimension(this, di);\n
+                    if (i + 1 < self.first) {\n
+                        lt = wh;\n
+                    }\n
+                });\n
+\n
+                this.list.css(this.wh, wh + \'px\');\n
+                this.list.css(this.lt, -lt + \'px\');\n
+            }\n
+\n
+            this.scroll(this.first, false);\n
+        },\n
+\n
+        /**\n
+         * Locks the carousel.\n
+         *\n
+         * @method lock\n
+         * @return undefined\n
+         */\n
+        lock: function() {\n
+            this.locked = true;\n
+            this.buttons();\n
+        },\n
+\n
+        /**\n
+         * Unlocks the carousel.\n
+         *\n
+         * @method unlock\n
+         * @return undefined\n
+         */\n
+        unlock: function() {\n
+            this.locked = false;\n
+            this.buttons();\n
+        },\n
+\n
+        /**\n
+         * Sets the size of the carousel.\n
+         *\n
+         * @method size\n
+         * @return undefined\n
+         * @param s {Number} The size of the carousel.\n
+         */\n
+        size: function(s) {\n
+            if (s !== undefined) {\n
+                this.options.size = s;\n
+                if (!this.locked) {\n
+                    this.buttons();\n
+                }\n
+            }\n
+\n
+            return this.options.size;\n
+        },\n
+\n
+        /**\n
+         * Checks whether a list element exists for the given index (or index range).\n
+         *\n
+         * @method get\n
+         * @return bool\n
+         * @param i {Number} The index of the (first) element.\n
+         * @param i2 {Number} The index of the last element.\n
+         */\n
+        has: function(i, i2) {\n
+            if (i2 === undefined || !i2) {\n
+                i2 = i;\n
+            }\n
+\n
+            if (this.options.size !== null && i2 > this.options.size) {\n
+                i2 = this.options.size;\n
+            }\n
+\n
+            for (var j = i; j <= i2; j++) {\n
+                var e = this.get(j);\n
+                if (!e.length || e.hasClass(\'jcarousel-item-placeholder\')) {\n
+                    return false;\n
+                }\n
+            }\n
+\n
+            return true;\n
+        },\n
+\n
+        /**\n
+         * Returns a jQuery object with list element for the given index.\n
+         *\n
+         * @method get\n
+         * @return jQuery\n
+         * @param i {Number} The index of the element.\n
+         */\n
+        get: function(i) {\n
+            return $(\'>.jcarousel-item-\' + i, this.list);\n
+        },\n
+\n
+        /**\n
+         * Adds an element for the given index to the list.\n
+         * If the element already exists, it updates the inner html.\n
+         * Returns the created element as jQuery object.\n
+         *\n
+         * @method add\n
+         * @return jQuery\n
+         * @param i {Number} The index of the element.\n
+         * @param s {String} The innerHTML of the element.\n
+         */\n
+        add: function(i, s) {\n
+            var e = this.get(i), old = 0, n = $(s);\n
+\n
+            if (e.length === 0) {\n
+                var c, j = $jc.intval(i);\n
+                e = this.create(i);\n
+                while (true) {\n
+                    c = this.get(--j);\n
+                    if (j <= 0 || c.length) {\n
+                        if (j <= 0) {\n
+                            this.list.prepend(e);\n
+                        } else {\n
+                            c.after(e);\n
+                        }\n
+                        break;\n
+                    }\n
+                }\n
+            } else {\n
+                old = this.dimension(e);\n
+            }\n
+\n
+            if (n.get(0).nodeName.toUpperCase() == \'LI\') {\n
+                e.replaceWith(n);\n
+                e = n;\n
+            } else {\n
+                e.empty().append(s);\n
+            }\n
+\n
+            this.format(e.removeClass(this.className(\'jcarousel-item-placeholder\')), i);\n
+\n
+            var di = this.options.visible !== null ? Math.ceil(this.clipping() / this.options.visible) : null;\n
+            var wh = this.dimension(e, di) - old;\n
+\n
+            if (i > 0 && i < this.first) {\n
+                this.list.css(this.lt, $jc.intval(this.list.css(this.lt)) - wh + \'px\');\n
+            }\n
+\n
+            this.list.css(this.wh, $jc.intval(this.list.css(this.wh)) + wh + \'px\');\n
+\n
+            return e;\n
+        },\n
+\n
+        /**\n
+         * Removes an element for the given index from the list.\n
+         *\n
+         * @method remove\n
+         * @return undefined\n
+         * @param i {Number} The index of the element.\n
+         */\n
+        remove: function(i) {\n
+            var e = this.get(i);\n
+\n
+            // Check if item exists and is not currently visible\n
+            if (!e.length || (i >= this.first && i <= this.last)) {\n
+                return;\n
+            }\n
+\n
+            var d = this.dimension(e);\n
+\n
+            if (i < this.first) {\n
+                this.list.css(this.lt, $jc.intval(this.list.css(this.lt)) + d + \'px\');\n
+            }\n
+\n
+            e.remove();\n
+\n
+            this.list.css(this.wh, $jc.intval(this.list.css(this.wh)) - d + \'px\');\n
+        },\n
+\n
+        /**\n
+         * Moves the carousel forwards.\n
+         *\n
+         * @method next\n
+         * @return undefined\n
+         */\n
+        next: function() {\n
+            if (this.tail !== null && !this.inTail) {\n
+                this.scrollTail(false);\n
+            } else {\n
+                this.scroll(((this.options.wrap == \'both\' || this.options.wrap == \'last\') && this.options.size !== null && this.last == this.options.size) ? 1 : this.first + this.options.scroll);\n
+            }\n
+        },\n
+\n
+        /**\n
+         * Moves the carousel backwards.\n
+         *\n
+         * @method prev\n
+         * @return undefined\n
+         */\n
+        prev: function() {\n
+            if (this.tail !== null && this.inTail) {\n
+                this.scrollTail(true);\n
+            } else {\n
+                this.scroll(((this.options.wrap == \'both\' || this.options.wrap == \'first\') && this.options.size !== null && this.first == 1) ? this.options.size : this.first - this.options.scroll);\n
+            }\n
+        },\n
+\n
+        /**\n
+         * Scrolls the tail of the carousel.\n
+         *\n
+         * @method scrollTail\n
+         * @return undefined\n
+         * @param b {Boolean} Whether scroll the tail back or forward.\n
+         */\n
+        scrollTail: function(b) {\n
+            if (this.locked || this.animating || !this.tail) {\n
+                return;\n
+            }\n
+\n
+            this.pauseAuto();\n
+\n
+            var pos  = $jc.intval(this.list.css(this.lt));\n
+\n
+            pos = !b ? pos - this.tail : pos + this.tail;\n
+            this.inTail = !b;\n
+\n
+            // Save for callbacks\n
+            this.prevFirst = this.first;\n
+            this.prevLast  = this.last;\n
+\n
+            this.animate(pos);\n
+        },\n
+\n
+        /**\n
+         * Scrolls the carousel to a certain position.\n
+         *\n
+         * @method scroll\n
+         * @return undefined\n
+         * @param i {Number} The index of the element to scoll to.\n
+         * @param a {Boolean} Flag indicating whether to perform animation.\n
+         */\n
+        scroll: function(i, a) {\n
+            if (this.locked || this.animating) {\n
+                return;\n
+            }\n
+\n
+            this.pauseAuto();\n
+            this.animate(this.pos(i), a);\n
+        },\n
+\n
+        /**\n
+         * Prepares the carousel and return the position for a certian index.\n
+         *\n
+         * @method pos\n
+         * @return {Number}\n
+         * @param i {Number} The index of the element to scoll to.\n
+         * @param fv {Boolean} Whether to force last item to be visible.\n
+         */\n
+        pos: function(i, fv) {\n
+            var pos  = $jc.intval(this.list.css(this.lt));\n
+\n
+            if (this.locked || this.animating) {\n
+                return pos;\n
+            }\n
+\n
+            if (this.options.wrap != \'circular\') {\n
+                i = i < 1 ? 1 : (this.options.size && i > this.options.size ? this.options.size : i);\n
+            }\n
+\n
+            var back = this.first > i;\n
+\n
+            // Create placeholders, new list width/height\n
+            // and new list position\n
+            var f = this.options.wrap != \'circular\' && this.first <= 1 ? 1 : this.first;\n
+            var c = back ? this.get(f) : this.get(this.last);\n
+            var j = back ? f : f - 1;\n
+            var e = null, l = 0, p = false, d = 0, g;\n
+\n
+            while (back ? --j >= i : ++j < i) {\n
+                e = this.get(j);\n
+                p = !e.length;\n
+                if (e.length === 0) {\n
+                    e = this.create(j).addClass(this.className(\'jcarousel-item-placeholder\'));\n
+                    c[back ? \'before\' : \'after\' ](e);\n
+\n
+                    if (this.first !== null && this.options.wrap == \'circular\' && this.options.size !== null && (j <= 0 || j > this.options.size)) {\n
+                        g = this.get(this.index(j));\n
+                        if (g.length) {\n
+                            e = this.add(j, g.clone(true));\n
+                        }\n
+                    }\n
+                }\n
+\n
+                c = e;\n
+                d = this.dimension(e);\n
+\n
+                if (p) {\n
+                    l += d;\n
+                }\n
+\n
+                if (this.first !== null && (this.options.wrap == \'circular\' || (j >= 1 && (this.options.size === null || j <= this.options.size)))) {\n
+                    pos = back ? pos + d : pos - d;\n
+                }\n
+            }\n
+\n
+            // Calculate visible items\n
+            var clipping = this.clipping(), cache = [], visible = 0, v = 0;\n
+            c = this.get(i - 1);\n
+            j = i;\n
+\n
+            while (++visible) {\n
+                e = this.get(j);\n
+                p = !e.length;\n
+                if (e.length === 0) {\n
+                    e = this.create(j).addClass(this.className(\'jcarousel-item-placeholder\'));\n
+                    // This should only happen on a next scroll\n
+                    if (c.length === 0) {\n
+                        this.list.prepend(e);\n
+                    } else {\n
+                        c[back ? \'before\' : \'after\' ](e);\n
+                    }\n
+\n
+                    if (this.first !== null && this.options.wrap == \'circular\' && this.options.size !== null && (j <= 0 || j > this.options.size)) {\n
+                        g = this.get(this.index(j));\n
+                        if (g.length) {\n
+                            e = this.add(j, g.clone(true));\n
+                        }\n
+                    }\n
+                }\n
+\n
+                c = e;\n
+                d = this.dimension(e);\n
+                if (d === 0) {\n
+                    throw new Error(\'jCarousel: No width/height set for items. This will cause an infinite loop. Aborting...\');\n
+                }\n
+\n
+                if (this.options.wrap != \'circular\' && this.options.size !== null && j > this.options.size) {\n
+                    cache.push(e);\n
+                } else if (p) {\n
+                    l += d;\n
+                }\n
+\n
+                v += d;\n
+\n
+                if (v >= clipping) {\n
+                    break;\n
+                }\n
+\n
+                j++;\n
+            }\n
+\n
+             // Remove out-of-range placeholders\n
+            for (var x = 0; x < cache.length; x++) {\n
+                cache[x].remove();\n
+            }\n
+\n
+            // Resize list\n
+            if (l > 0) {\n
+                this.list.css(this.wh, this.dimension(this.list) + l + \'px\');\n
+\n
+                if (back) {\n
+                    pos -= l;\n
+                    this.list.css(this.lt, $jc.intval(this.list.css(this.lt)) - l + \'px\');\n
+                }\n
+            }\n
+\n
+            // Calculate first and last item\n
+            var last = i + visible - 1;\n
+            if (this.options.wrap != \'circular\' && this.options.size && last > this.options.size) {\n
+                last = this.options.size;\n
+            }\n
+\n
+            if (j > last) {\n
+                visible = 0;\n
+                j = last;\n
+                v = 0;\n
+                while (++visible) {\n
+                    e = this.get(j--);\n
+                    if (!e.length) {\n
+                        break;\n
+                    }\n
+                    v += this.dimension(e);\n
+                    if (v >= clipping) {\n
+                        break;\n
+                    }\n
+                }\n
+            }\n
+\n
+            var first = last - visible + 1;\n
+            if (this.options.wrap != \'circular\' && first < 1) {\n
+                first = 1;\n
+            }\n
+\n
+            if (this.inTail && back) {\n
+                pos += this.tail;\n
+                this.inTail = false;\n
+            }\n
+\n
+            this.tail = null;\n
+            if (this.options.wrap != \'circular\' && last == this.options.size && (last - visible + 1) >= 1) {\n
+                var m = $jc.intval(this.get(last).css(!this.options.vertical ? \'marginRight\' : \'marginBottom\'));\n
+                if ((v - m) > clipping) {\n
+                    this.tail = v - clipping - m;\n
+                }\n
+            }\n
+\n
+            if (fv && i === this.options.size && this.tail) {\n
+                pos -= this.tail;\n
+                this.inTail = true;\n
+            }\n
+\n
+            // Adjust position\n
+            while (i-- > first) {\n
+                pos += this.dimension(this.get(i));\n
+            }\n
+\n
+            // Save visible item range\n
+            this.prevFirst = this.first;\n
+            this.prevLast  = this.last;\n
+            this.first     = first;\n
+            this.last      = last;\n
+\n
+            return pos;\n
+        },\n
+\n
+        /**\n
+         * Animates the carousel to a certain position.\n
+         *\n
+         * @method animate\n
+         * @return undefined\n
+         * @param p {Number} Position to scroll to.\n
+         * @param a {Boolean} Flag indicating whether to perform animation.\n
+         */\n
+        animate: function(p, a) {\n
+            if (this.locked || this.animating) {\n
+                return;\n
+            }\n
+\n
+            this.animating = true;\n
+\n
+            var self = this;\n
+            var scrolled = function() {\n
+                self.animating = false;\n
+\n
+                if (p === 0) {\n
+                    self.list.css(self.lt,  0);\n
+                }\n
+\n
+                if (!self.autoStopped && (self.options.wrap == \'circular\' || self.options.wrap == \'both\' || self.options.wrap == \'last\' || self.options.size === null || self.last < self.options.size || (self.last == self.options.size && self.tail !== null && !self.inTail))) {\n
+                    self.startAuto();\n
+                }\n
+\n
+                self.buttons();\n
+                self.notify(\'onAfterAnimation\');\n
+\n
+                // This function removes items which are appended automatically for circulation.\n
+                // This prevents the list from growing infinitely.\n
+                if (self.options.wrap == \'circular\' && self.options.size !== null) {\n
+                    for (var i = self.prevFirst; i <= self.prevLast; i++) {\n
+                        if (i !== null && !(i >= self.first && i <= self.last) && (i < 1 || i > self.options.size)) {\n
+                            self.remove(i);\n
+                        }\n
+                    }\n
+                }\n
+            };\n
+\n
+            this.notify(\'onBeforeAnimation\');\n
+\n
+            // Animate\n
+            if (!this.options.animation || a === false) {\n
+                this.list.css(this.lt, p + \'px\');\n
+                scrolled();\n
+            } else {\n
+                var o = !this.options.vertical ? (this.options.rtl ? {\'right\': p} : {\'left\': p}) : {\'top\': p};\n
+                // Define animation settings.\n
+                var settings = {\n
+                    duration: this.options.animation,\n
+                    easing:   this.options.easing,\n
+                    complete: scrolled\n
+                };\n
+                // If we have a step callback, specify it as well.\n
+                if ($.isFunction(this.options.animationStepCallback)) {\n
+                    settings.step = this.options.animationStepCallback;\n
+                }\n
+                // Start the animation.\n
+                this.list.animate(o, settings);\n
+            }\n
+        },\n
+\n
+        /**\n
+         * Starts autoscrolling.\n
+         *\n
+         * @method auto\n
+         * @return undefined\n
+         * @param s {Number} Seconds to periodically autoscroll the content.\n
+         */\n
+        startAuto: function(s) {\n
+            if (s !== undefined) {\n
+                this.options.auto = s;\n
+            }\n
+\n
+            if (this.options.auto === 0) {\n
+                return this.stopAuto();\n
+            }\n
+\n
+            if (this.timer !== null) {\n
+                return;\n
+            }\n
+\n
+            this.autoStopped = false;\n
+\n
+            var self = this;\n
+            this.timer = window.setTimeout(function() { self.next(); }, this.options.auto * 1000);\n
+        },\n
+\n
+        /**\n
+         * Stops autoscrolling.\n
+         *\n
+         * @method stopAuto\n
+         * @return undefined\n
+         */\n
+        stopAuto: function() {\n
+            this.pauseAuto();\n
+            this.autoStopped = true;\n
+        },\n
+\n
+        /**\n
+         * Pauses autoscrolling.\n
+         *\n
+         * @method pauseAuto\n
+         * @return undefined\n
+         */\n
+        pauseAuto: function() {\n
+            if (this.timer === null) {\n
+                return;\n
+            }\n
+\n
+            window.clearTimeout(this.timer);\n
+            this.timer = null;\n
+        },\n
+\n
+        /**\n
+         * Sets the states of the prev/next buttons.\n
+         *\n
+         * @method buttons\n
+         * @return undefined\n
+         */\n
+        buttons: function(n, p) {\n
+            if (n == null) {\n
+                n = !this.locked && this.options.size !== 0 && ((this.options.wrap && this.options.wrap != \'first\') || this.options.size === null || this.last < this.options.size);\n
+                if (!this.locked && (!this.options.wrap || this.options.wrap == \'first\') && this.options.size !== null && this.last >= this.options.size) {\n
+                    n = this.tail !== null && !this.inTail;\n
+                }\n
+            }\n
+\n
+            if (p == null) {\n
+                p = !this.locked && this.options.size !== 0 && ((this.options.wrap && this.options.wrap != \'last\') || this.first > 1);\n
+                if (!this.locked && (!this.options.wrap || this.options.wrap == \'last\') && this.options.size !== null && this.first == 1) {\n
+                    p = this.tail !== null && this.inTail;\n
+                }\n
+            }\n
+\n
+            var self = this;\n
+\n
+            if (this.buttonNext.size() > 0) {\n
+                this.buttonNext.unbind(this.options.buttonNextEvent + \'.jcarousel\', this.funcNext);\n
+\n
+                if (n) {\n
+                    this.buttonNext.bind(this.options.buttonNextEvent + \'.jcarousel\', this.funcNext);\n
+                }\n
+\n
+                this.buttonNext[n ? \'removeClass\' : \'addClass\'](this.className(\'jcarousel-next-disabled\')).attr(\'disabled\', n ? false : true);\n
+\n
+                if (this.options.buttonNextCallback !== null && this.buttonNext.data(\'jcarouselstate\') != n) {\n
+                    this.buttonNext.each(function() { self.options.buttonNextCallback(self, this, n); }).data(\'jcarouselstate\', n);\n
+                }\n
+            } else {\n
+                if (this.options.buttonNextCallback !== null && this.buttonNextState != n) {\n
+                    this.options.buttonNextCallback(self, null, n);\n
+                }\n
+            }\n
+\n
+            if (this.buttonPrev.size() > 0) {\n
+                this.buttonPrev.unbind(this.options.buttonPrevEvent + \'.jcarousel\', this.funcPrev);\n
+\n
+                if (p) {\n
+                    this.buttonPrev.bind(this.options.buttonPrevEvent + \'.jcarousel\', this.funcPrev);\n
+                }\n
+\n
+                this.buttonPrev[p ? \'removeClass\' : \'addClass\'](this.className(\'jcarousel-prev-disabled\')).attr(\'disabled\', p ? false : true);\n
+\n
+                if (this.options.buttonPrevCallback !== null && this.buttonPrev.data(\'jcarouselstate\') != p) {\n
+                    this.buttonPrev.each(function() { self.options.buttonPrevCallback(self, this, p); }).data(\'jcarouselstate\', p);\n
+                }\n
+            } else {\n
+                if (this.options.buttonPrevCallback !== null && this.buttonPrevState != p) {\n
+                    this.options.buttonPrevCallback(self, null, p);\n
+                }\n
+            }\n
+\n
+            this.buttonNextState = n;\n
+            this.buttonPrevState = p;\n
+        },\n
+\n
+        /**\n
+         * Notify callback of a specified event.\n
+         *\n
+         * @method notify\n
+         * @return undefined\n
+         * @param evt {String} The event name\n
+         */\n
+        notify: function(evt) {\n
+            var state = this.prevFirst === null ? \'init\' : (this.prevFirst < this.first ? \'next\' : \'prev\');\n
+\n
+            // Load items\n
+            this.callback(\'itemLoadCallback\', evt, state);\n
+\n
+            if (this.prevFirst !== this.first) {\n
+                this.callback(\'itemFirstInCallback\', evt, state, this.first);\n
+                this.callback(\'itemFirstOutCallback\', evt, state, this.prevFirst);\n
+            }\n
+\n
+            if (this.prevLast !== this.last) {\n
+                this.callback(\'itemLastInCallback\', evt, state, this.last);\n
+                this.callback(\'itemLastOutCallback\', evt, state, this.prevLast);\n
+            }\n
+\n
+            this.callback(\'itemVisibleInCallback\', evt, state, this.first, this.last, this.prevFirst, this.prevLast);\n
+            this.callback(\'itemVisibleOutCallback\', evt, state, this.prevFirst, this.prevLast, this.first, this.last);\n
+        },\n
+\n
+        callback: function(cb, evt, state, i1, i2, i3, i4) {\n
+            if (this.options[cb] == null || (typeof this.options[cb] != \'object\' && evt != \'onAfterAnimation\')) {\n
+                return;\n
+            }\n
+\n
+            var callback = typeof this.options[cb] == \'object\' ? this.options[cb][evt] : this.options[cb];\n
+\n
+            if (!$.isFunction(callback)) {\n
+                return;\n
+            }\n
+\n
+            var self = this;\n
+\n
+            if (i1 === undefined) {\n
+                callback(self, state, evt);\n
+            } else if (i2 === undefined) {\n
+                this.get(i1).each(function() { callback(self, this, i1, state, evt); });\n
+            } else {\n
+                var call = function(i) {\n
+                    self.get(i).each(function() { callback(self, this, i, state, evt); });\n
+                };\n
+                for (var i = i1; i <= i2; i++) {\n
+                    if (i !== null && !(i >= i3 && i <= i4)) {\n
+                        call(i);\n
+                    }\n
+                }\n
+            }\n
+        },\n
+\n
+        create: function(i) {\n
+            return this.format(\'<li></li>\', i);\n
+        },\n
+\n
+        format: function(e, i) {\n
+            e = $(e);\n
+            var split = e.get(0).className.split(\' \');\n
+            for (var j = 0; j < split.length; j++) {\n
+                if (split[j].indexOf(\'jcarousel-\') != -1) {\n
+                    e.removeClass(split[j]);\n
+                }\n
+            }\n
+            e.addClass(this.className(\'jcarousel-item\')).addClass(this.className(\'jcarousel-item-\' + i)).css({\n
+                \'float\': (this.options.rtl ? \'right\' : \'left\'),\n
+                \'list-style\': \'none\'\n
+            }).attr(\'jcarouselindex\', i);\n
+            return e;\n
+        },\n
+\n
+        className: function(c) {\n
+            return c + \' \' + c + (!this.options.vertical ? \'-horizontal\' : \'-vertical\');\n
+        },\n
+\n
+        dimension: function(e, d) {\n
+            var el = $(e);\n
+\n
+            if (d == null) {\n
+                return !this.options.vertical ?\n
+                       (el.outerWidth(true) || $jc.intval(this.options.itemFallbackDimension)) :\n
+                       (el.outerHeight(true) || $jc.intval(this.options.itemFallbackDimension));\n
+            } else {\n
+                var w = !this.options.vertical ?\n
+                    d - $jc.intval(el.css(\'marginLeft\')) - $jc.intval(el.css(\'marginRight\')) :\n
+                    d - $jc.intval(el.css(\'marginTop\')) - $jc.intval(el.css(\'marginBottom\'));\n
+\n
+                $(el).css(this.wh, w + \'px\');\n
+\n
+                return this.dimension(el);\n
+            }\n
+        },\n
+\n
+        clipping: function() {\n
+            return !this.options.vertical ?\n
+                this.clip[0].offsetWidth - $jc.intval(this.clip.css(\'borderLeftWidth\')) - $jc.intval(this.clip.css(\'borderRightWidth\')) :\n
+                this.clip[0].offsetHeight - $jc.intval(this.clip.css(\'borderTopWidth\')) - $jc.intval(this.clip.css(\'borderBottomWidth\'));\n
+        },\n
+\n
+        index: function(i, s) {\n
+            if (s == null) {\n
+                s = this.options.size;\n
+            }\n
+\n
+            return Math.round((((i-1) / s) - Math.floor((i-1) / s)) * s) + 1;\n
+        }\n
+    });\n
+\n
+    $jc.extend({\n
+        /**\n
+         * Gets/Sets the global default configuration properties.\n
+         *\n
+         * @method defaults\n
+         * @return {Object}\n
+         * @param d {Object} A set of key/value pairs to set as configuration properties.\n
+         */\n
+        defaults: function(d) {\n
+            return $.extend(defaults, d || {});\n
+        },\n
+\n
+        intval: function(v) {\n
+            v = parseInt(v, 10);\n
+            return isNaN(v) ? 0 : v;\n
+        },\n
+\n
+        windowLoaded: function() {\n
+            windowLoaded = true;\n
+        }\n
+    });\n
+\n
+    /**\n
+     * Creates a carousel for all matched elements.\n
+     *\n
+     * @example $("#mycarousel").jcarousel();\n
+     * @before <ul id="mycarousel" class="jcarousel-skin-name"><li>First item</li><li>Second item</li></ul>\n
+     * @result\n
+     *\n
+     * <div class="jcarousel-skin-name">\n
+     *   <div class="jcarousel-container">\n
+     *     <div class="jcarousel-clip">\n
+     *       <ul class="jcarousel-list">\n
+     *         <li class="jcarousel-item-1">First item</li>\n
+     *         <li class="jcarousel-item-2">Second item</li>\n
+     *       </ul>\n
+     *     </div>\n
+     *     <div disabled="disabled" class="jcarousel-prev jcarousel-prev-disabled"></div>\n
+     *     <div class="jcarousel-next"></div>\n
+     *   </div>\n
+     * </div>\n
+     *\n
+     * @method jcarousel\n
+     * @return jQuery\n
+     * @param o {Hash|String} A set of key/value pairs to set as configuration properties or a method name to call on a formerly created instance.\n
+     */\n
+    $.fn.jcarousel = function(o) {\n
+        if (typeof o == \'string\') {\n
+            var instance = $(this).data(\'jcarousel\'), args = Array.prototype.slice.call(arguments, 1);\n
+            return instance[o].apply(instance, args);\n
+        } else {\n
+            return this.each(function() {\n
+                var instance = $(this).data(\'jcarousel\');\n
+                if (instance) {\n
+                    if (o) {\n
+                        $.extend(instance.options, o);\n
+                    }\n
+                    instance.reload();\n
+                } else {\n
+                    $(this).data(\'jcarousel\', new $jc(this, o));\n
+                }\n
+            });\n
+        }\n
+    };\n
+\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>35203</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.jcarousel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
