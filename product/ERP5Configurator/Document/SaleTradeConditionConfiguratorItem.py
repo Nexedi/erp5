@@ -31,6 +31,7 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -82,6 +83,6 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
     trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
-    trade_condition.validate(comment="Validated by Configurator")
+    trade_condition.validate(comment=translateString("Validated by Configurator"))
 
     self.install(trade_condition, business_configuration)

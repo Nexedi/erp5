@@ -30,6 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -72,7 +73,7 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                           title = title,
                                           reference = reference,
                                           base_unit_quantity = base_unit_quantity)
-      currency.validate()
+      currency.validate(comment=translateString("Validated by Configurator"))
     business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
     ## add to customer template
     self.install(currency, business_configuration)
