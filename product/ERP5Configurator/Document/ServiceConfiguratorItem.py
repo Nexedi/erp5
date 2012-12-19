@@ -59,7 +59,12 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    for service_id, service_title in iter(self.getConfigurationListList()):
+    for service_id, service_dict in iter(self.getConfigurationListList()):
+      if isinstance(service_dict, basestring):
+        warn(DeprecationWarning,
+          "ServiceConfiguratorItem now use (service_id, service_dict) as configuration list")
+        service_dict = dict(title=service_dict)
+
       document = getattr(portal.service_module, service_id, None)
       if document is None:
         document = portal.service_module.newContent(portal_type='Service',
