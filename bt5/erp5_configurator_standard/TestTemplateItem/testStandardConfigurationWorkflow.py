@@ -70,6 +70,8 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepViewAddGadget
       stepViewEventModule
       stepAddEvent
+      stepCheckEventResourceItemList
+      stepCheckTicketResourceItemList
       stepSentEventWorkflow
       stepViewAccountModule
       stepAddAccountModule
@@ -380,6 +382,47 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(['use/trade/purchase'], preference_tool.getPreferredPurchaseUseList())
     self.assertEquals(['use/trade/container'], preference_tool.getPreferredPackingUseList())
     self.assertEquals(['use/trade/tax'], preference_tool.getPreferredTaxUseList())
+
+    # CRM
+    self.assertEquals(['use/crm/event'], preference_tool.getPreferredEventUseList())
+    self.assertEquals(['use/crm/campaign'], preference_tool.getPreferredCampaignUseList())
+    self.assertEquals(['use/crm/sale_opportunity'], preference_tool.getPreferredSaleOpportunityUseList())
+    self.assertEquals(['use/crm/support_request'], preference_tool.getPreferredSupportRequestUseList())
+    self.assertEquals(['use/crm/meeting'], preference_tool.getPreferredMeetingUseList())
+
+  def stepCheckEventResourceItemList(self, sequence=None, sequence_list=None):
+    self.assertTrue(self.all_username_list)
+    for username in self.all_username_list:
+      for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
+                         'Phone Call', 'Mail Message', 'Fax Message'):
+        self._loginAsUser(username)
+        event = self.portal.event_module.newContent(portal_type=event_type)
+        self.assertTrue(('Complaint', 'service_module/event_complaint')
+          in event.Event_getResourceItemList())
+
+  def stepCheckTicketResourceItemList(self, sequence=None, sequence_list=None):
+    self.assertTrue(self.all_username_list)
+    for username in self.all_username_list:
+      self._loginAsUser(username)
+      ticket = self.portal.support_request_module.newContent(
+					portal_type='Support Request')
+      self.assertTrue(('Financial Support', 'service_module/support_financial')
+        in ticket.Ticket_getResourceItemList())
+
+      ticket = self.portal.meeting_module.newContent(
+					portal_type='Meeting')
+      self.assertTrue(('Conference', 'service_module/organisation_conference')
+        in ticket.Ticket_getResourceItemList())
+
+      ticket = self.portal.sale_opportunity_module.newContent(
+					portal_type='Sale Opportunity')
+      self.assertTrue(('Product', 'service_module/product')
+        in ticket.Ticket_getResourceItemList())
+
+      ticket = self.portal.campaign_module.newContent(
+					portal_type='Campaign')
+      self.assertTrue(('Marketing Campaign', 'service_module/marketing_campaign')
+        in ticket.Ticket_getResourceItemList())
 
   def stepCheckModulesBusinessApplication(self, sequence=None, sequence_list=None, **kw):
     """

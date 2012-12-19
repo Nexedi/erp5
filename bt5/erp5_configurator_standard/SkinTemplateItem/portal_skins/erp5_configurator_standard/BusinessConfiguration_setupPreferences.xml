@@ -159,38 +159,14 @@ configuration_save.addConfigurationItem(\n
 # some preparation\n
 system_prefs = dict(\n
   # CRM\n
-  preferred_campaign_resource_list = [\n
-                             \'service_module/marketing_campaign\',\n
-                             \'service_module/marketing_survey\',\n
-                             \'service_module/marketing_purchases\',\n
-                             \'service_module/marketing_sales\',\n
-                             \'service_module/marketing_other\',],\n
-  preferred_event_resource_list = [\n
-                             \'service_module/event_complaint\',\n
-                             \'service_module/event_announcement\',\n
-                             \'service_module/event_inquiry\',\n
-                             \'service_module/event_advertisement\',\n
-                             \'service_module/event_spam\',\n
-                             \'service_module/event_information\',\n
-                             \'service_module/event_other\',],\n
-  preferred_meeting_resource_list = [\n
-                             \'service_module/organisation_conference\',\n
-                             \'service_module/organisation_partnership\',\n
-                             \'service_module/organisation_purchases\',\n
-                             \'service_module/organisation_project\',\n
-                             \'service_module/organisation_sales\',\n
-                             \'service_module/organisation_other\',],\n
-  preferred_sale_opportunity_resource_list = [\n
-                             \'service_module/product\',\n
-                             \'service_module/service\',],\n
-  preferred_support_request_resource_list = [\n
-                             \'service_module/support_administrative\',\n
-                             \'service_module/support_financial\',\n
-                             \'service_module/support_it\',\n
-                             \'service_module/support_other\',],\n
+  preferred_campaign_use_list = [\'use/crm/campaign\'],\n
+  preferred_event_use_list = [\'use/crm/event\'],\n
+  preferred_meeting_use_list = [\'use/crm/meeting\'],\n
+  preferred_sale_opportunity_use_list = [\'use/crm/sale_opportunity\'],\n
+  preferred_support_request_use_list = [\'use/crm/support_request\'],\n
   preferred_event_sender_email = preferred_event_sender_email,\n
   preferred_event_assessment_form_id_list = [],\n
-  # dms\n
+  # DMS\n
   # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
   #           representation\n
   preferred_document_file_name_regular_expression = \\\n
@@ -202,7 +178,7 @@ system_prefs = dict(\n
   preferred_document_classification = \'collaborative/team\',\n
   preferred_synchronous_metadata_discovery = True,\n
   preferred_redirect_to_document = True,\n
-  # pdm\n
+  # PDM\n
   preferred_product_individual_variation_base_category_list = [\'variation\'],\n
   preferred_component_individual_variation_base_category_list = [\'variation\'],\n
   preferred_service_individual_variation_base_category_list = [\'variation\'],\n
@@ -217,8 +193,8 @@ system_prefs = dict(\n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n
     object_id = \'default_configurator_system_preference\',\n
-    description="The default system parameters for the site are set on this \'\\\n
-    \'preference",\n
+    description="The default system parameters for the site are set on this "\\\n
+    "preference",\n
     title="Default Configurator System Site Preference",\n
     **system_prefs)\n
 \n
