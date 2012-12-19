@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.20 (2012-12-19)
+------------------
+
+ * erp5.util.testnode:
+
+  - Make sure to kill grandchilds when killing a process [Sebastien Robin]
+
 0.4.19 (2012-12-17)
 ------------------
 
