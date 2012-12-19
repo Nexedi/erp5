@@ -496,3 +496,57 @@ branch = foo
     self.assertEquals(True, os.path.exists(to_drop_path))
     createFolder(folder, clean=True)
     self.assertEquals(False, os.path.exists(to_drop_path))
+
+  def test_15_log_directory(self):
+    def doNothing(self, *args, **kw):
+        pass
+    test_self = self
+    test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
+    os.makedirs(test_result_path_root)
+    global counter
+    counter = 0
+    def patch_startTestSuite(self,test_node_title):
+      global counter
+      config_list = []
+      def _checkExistingTestSuite(reference_set):
+        test_self.assertEquals(set(reference_set),
+                    set(os.listdir(test_node.config["working_directory"])))
+        for x in reference_set:
+          test_self.assertTrue(os.path.exists(os.path.join(
+                               test_node.config["working_directory"],x)),True)
+      if counter == 0:
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
+      elif counter == 1:
+        _checkExistingTestSuite(set(['foo']))
+        raise StopIteration
+      counter += 1
+      return json.dumps(config_list)
+    def patch_createTestResult(self, revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      test_result_path = os.path.join(test_result_path_root, test_title)
+      result = TestResultProxy(self._proxy, self._retry_time,
+               self._logger, test_result_path, node_title, revision)
+      return result
+    original_sleep = time.sleep
+    time.sleep = doNothing
+    self.generateTestRepositoryList()
+    original_startTestSuite = TaskDistributor.startTestSuite
+    TaskDistributor.startTestSuite = patch_startTestSuite
+    original_createTestResult = TaskDistributionTool.createTestResult
+    TaskDistributionTool.createTestResult = patch_createTestResult
+    test_node = self.getTestNode()
+    original_prepareSlapOS = test_node._prepareSlapOS
+    test_node._prepareSlapOS = doNothing
+    original_runTestSuite = test_node.runTestSuite
+    test_node.runTestSuite = doNothing
+    SlapOSControler.initializeSlapOSControler = doNothing
+    try:
+      test_node.run()
+    except Exception as e:
+      self.assertEqual(type(e),StopIteration)
+    finally:
+      time.sleep = original_sleep
+      TaskDistributor.startTestSuite = original_startTestSuite
+      TaskDistributionTool.createTestResult = original_createTestResult
+      test_node._prepareSlapOS = original_prepareSlapOS
+      test_node.runTestSuite = original_runTestSuite

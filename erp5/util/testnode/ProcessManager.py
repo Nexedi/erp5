@@ -142,6 +142,9 @@ class ProcessManager(object):
     get_output = kw.pop('get_output', True)
     log_prefix = kw.pop('log_prefix', '')
     new_session = kw.pop('new_session', True)
+    log = kw.pop('log', None)
+    if log is None:
+      log = self.log
     subprocess_kw = {}
     cwd = kw.pop('cwd', None)
     if cwd:
@@ -151,15 +154,15 @@ class ProcessManager(object):
     raise_error_if_fail = kw.pop('raise_error_if_fail', True)
     env = kw and dict(os.environ, **kw) or None
     command = format_command(*args, **kw)
-    self.log('subprocess_kw : %r' % (subprocess_kw,))
-    self.log('$ ' + command)
+    log('subprocess_kw : %r' % (subprocess_kw,))
+    log('$ ' + command)
     sys.stdout.flush()
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env, **subprocess_kw)
     self.process_pid_set.add(p.pid)
-    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p, self.log))
+    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p, log))
     timer.start()
-    stdout, stderr = subprocess_capture(p, self.log, log_prefix,
+    stdout, stderr = subprocess_capture(p, log, log_prefix,
                                         get_output=get_output)
     timer.cancel()
     result = dict(status_code=p.returncode, command=command,

@@ -34,6 +34,7 @@ import SlapOSControler
 import json
 import time
 import shutil
+import logging
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -105,6 +106,40 @@ class NodeTestSuite(SlapOSInstance):
         repository_path = os.path.join(self.working_directory,repository_id)
         vcs_repository['repository_id'] = repository_id
         vcs_repository['repository_path'] = repository_path
+
+  def createSuiteLog(self):
+    # /srv/slapgrid/slappartXX/srv/var/log/suite/az/mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
+    # /srv/slapgrid/slappartXX/srv/testnode is working directory
+    if getattr(self, "log_directory", None) is not None:
+      if getattr(self, "suite_log_path", None) is None:
+        suite_log_directory = os.path.join(self.log_directory,
+                                          'suite', self.reference)
+        SlapOSControler.createFolders(suite_log_directory)
+        self.suite_log_path = os.path.join(suite_log_directory,
+                                           'suite.log')
+        self._initializeSuiteLog()
+    return self.getSuiteLogPath()
+
+  def getSuiteLogPath(self):
+    if getattr(self, "suite_log_path", None) is None:
+        return None
+    return self.suite_log_path
+
+  def getSuiteLog(self):
+    if getattr(self, "suite_log", None) is None:
+      return None
+    return self.suite_log
+
+  def _initializeSuiteLog(self):
+    logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
+    formatter = logging.Formatter(logger_format)
+    logging.basicConfig(level=logging.INFO, format=logger_format)
+    logger = logging.getLogger('erp5testsuite')
+    file_handler = logging.FileHandler(filename=self.suite_log_path)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    logger.info('Activated logfile %r output' % self.suite_log_path)
+    self.suite_log = logger.info
 
 class TestNode(object):
 
@@ -206,19 +241,22 @@ branch = %(branch)s
     node_test_suite.revision = ','.join(full_revision_list)
     return full_revision_list
 
-  def addWatcher(self,test_result):
-    config = self.config
-    if config.get('log_file'):
-     log_file_name = config['log_file']
-     log_file = open(log_file_name)
-     log_file.seek(0, 2)
-     log_file.seek(-min(5000, log_file.tell()), 2)
-     test_result.addWatch(log_file_name,log_file,max_history_bytes=10000)
-     return log_file_name
+  def addWatcher(self,test_result, node_test_suite):
+    log_file_name = node_test_suite.createSuiteLog()
+    if log_file_name is None and config.get('log_file'):
+      log_file_name = config['log_file']
+    if log_file_name is not None:
+      log_file = open(log_file_name)
+      log_file.seek(0, 2)
+      log_file.seek(-min(5000, log_file.tell()), 2)
+      test_result.addWatch(log_file_name,log_file,max_history_bytes=10000)
+      return log_file_name
 
   def checkRevision(self, test_result, node_test_suite):
     config = self.config
-    log = self.log
+    log = node_test_suite.getSuiteLog()
+    if log is None:
+      log = self.log
     if node_test_suite.revision != test_result.revision:
      log('Disagreement on tested revision, checking out: %r' % (
           (node_test_suite.revision,test_result.revision),))
@@ -235,19 +273,20 @@ branch = %(branch)s
       updater.checkout()
       node_test_suite.revision = test_result.revision
 
-  def _prepareSlapOS(self, working_directory, slapos_instance,
+  def _prepareSlapOS(self, working_directory, slapos_instance, log,
           create_partition=1, software_path_list=None, **kw):
     """
     Launch slapos to build software and partitions
     """
     slapproxy_log = os.path.join(self.config['log_directory'],
                                   'slapproxy.log')
-    self.log('Configured slapproxy log to %r' % slapproxy_log)
+    log('Configured slapproxy log to %r' % slapproxy_log)
     reset_software = slapos_instance.retry_software_count > 10
-    self.log('testnode, retry_software_count : %r' % \
+    log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
+    # XXX:TATUYA TO BE FIXED 
     self.slapos_controler = SlapOSControler.SlapOSControler(
-      working_directory, self.config, self.log)
+      working_directory, self.config, log)
     self.slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
        process_manager=self.process_manager, reset_software=reset_software,
        software_path_list=software_path_list)
@@ -275,12 +314,15 @@ branch = %(branch)s
     like the building of selenium-runner by default
     """
     return self._prepareSlapOS(self.config['slapos_directory'],
-              test_node_slapos, create_partition=0,
+              test_node_slapos, self.log, create_partition=0,
               software_path_list=self.config.get("software_list"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
+    log = node_test_suite.getSuiteLog()
+    if log is None:
+      log = self.log
     return self._prepareSlapOS(node_test_suite.working_directory,
-              node_test_suite,
+              node_test_suite, log,
               software_path_list=[node_test_suite.custom_profile_path])
 
   def _dealShebang(self,run_test_suite_path):
@@ -290,7 +332,7 @@ branch = %(branch)s
       invocation_list = line[2:].split()
     return invocation_list
 
-  def runTestSuite(self, node_test_suite, portal_url):
+  def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.config
     parameter_list = []
     run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
@@ -339,7 +381,9 @@ branch = %(branch)s
     self.process_manager.killPreviousRun()
     if test_result is not None:
       try:
-        test_result.removeWatch(self.config['log_file'])
+        for node_test_suite in self.node_test_suite_dict.values():
+          log_file = node_test_suite.getSuiteLogPath()
+          test_result.removeWatch(log_file)
       except KeyError:
         log("KeyError, Watcher already deleted or not added correctly")
 
@@ -373,7 +417,8 @@ branch = %(branch)s
             node_test_suite = self.getNodeTestSuite(
                test_suite["test_suite_reference"])
             node_test_suite.edit(
-               working_directory=self.config['working_directory'])
+               working_directory=self.config['working_directory'],
+               log_directory=self.config['log_directory'])
             node_test_suite.edit(**test_suite)
             run_software = True
             # Write our own software.cfg to use the local repository
@@ -389,7 +434,7 @@ branch = %(branch)s
             remote_test_result_needs_cleanup = True
             log("testnode, test_result : %r" % (test_result, ))
             if test_result is not None:
-              log_file_name = self.addWatcher(test_result)
+              log_file_name = self.addWatcher(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
               # Now prepare the installation of SlapOS and create instance
               status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
