@@ -25,6 +25,7 @@
 #
 ##############################################################################
 import os
+import psutil
 import re
 import subprocess
 import threading
@@ -98,6 +99,25 @@ def subprocess_capture(p, log, log_prefix, get_output=True):
   return (p.stdout and ''.join(stdout),
           p.stderr and ''.join(stderr))
 
+def killCommand(pid):
+  """
+  To avoid letting orphaned childs, we stop the process and all it's
+  child (until childs does not change) and then we brutally kill
+  everyone at the same time
+  """
+  process = psutil.Process(pid)
+  child_set = set([x.pid for x in process.get_children(recursive=True)])
+  new_child_set = None
+  os.kill(pid, signal.SIGSTOP)
+  while new_child_set != child_set:
+    for child_pid in child_set:
+      os.kill(child_pid, signal.SIGSTOP)
+    time.sleep(1)
+    new_child_set = set([x.pid for x in process.get_children(recursive=True)])
+  for child_pid in child_set:
+    os.kill(child_pid, signal.SIGKILL)
+  os.kill(pid, signal.SIGKILL)
+
 class ProcessManager(object):
 
   stdin = file(os.devnull)
@@ -115,7 +135,7 @@ class ProcessManager(object):
     def timeoutExpired(p, log):
       if p.poll() is None:
         log('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
-        p.terminate()
+        killCommand(p.pid)
 
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
@@ -147,7 +167,7 @@ class ProcessManager(object):
     self.process_pid_set.discard(p.pid)
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
-    if raise_error_if_fail and p.returncode != -15 and p.returncode:
+    if raise_error_if_fail and p.returncode:
       raise SubprocessError(result)
     return result
 
@@ -163,7 +183,7 @@ class ProcessManager(object):
       self.under_cancellation = True
     for pgpid in self.process_pid_set:
       try:
-        os.kill(pgpid, signal.SIGTERM)
+        killCommand(pgpid)
       except:
         pass
     try:

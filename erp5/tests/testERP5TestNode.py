@@ -466,7 +466,9 @@ branch = foo
       self.assertEqual(result['status_code'], expected_status)
     process_manager = ProcessManager(log=self.log, max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
-    _checkCorrectStatus(-15, *['sleep','2'])
+    # We must make sure that if the command is too long that
+    # it will be automatically killed
+    self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
 
   def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()
