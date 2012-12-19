@@ -49,6 +49,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPersonInformationList
       stepCheckValidOrganisationList
       stepCheckValidCurrencyList
+      stepCheckValidServiceList
       stepCheckAlarmList
       stepCheckPublicGadgetList
       stepCheckPreferenceList
@@ -282,6 +283,18 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     for currency in currency_list:
       self.assertEquals('validated', currency.getValidationState())
       currency.Base_checkConsistency()
+
+  def stepCheckValidServiceList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if after configuration the Service objects are validated.
+    """
+    business_configuration = sequence.get("business_configuration")
+    service_list = self.getBusinessConfigurationObjectList(business_configuration, 'Service')
+    self.assertNotEquals(len(service_list), 0)
+    for service in service_list:
+      self.assertEquals('validated', service.getValidationState())
+      self.assertNotEquals(None, service.getUseValue())
+      service.Base_checkConsistency()
 
   def stepCheckAlarmList(self, sequence=None, sequence_list=None, **kw):
     """

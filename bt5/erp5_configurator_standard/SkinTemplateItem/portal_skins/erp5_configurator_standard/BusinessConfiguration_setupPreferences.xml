@@ -88,34 +88,34 @@ organisation_configurator_item_obj.setPriceCurrency(currency_reference)\n
 # XXX I think here is not a good place.(yusei)\n
 service_list = (\n
   # sale opportunity\n
-  (\'product\', \'Product\'),\n
-  (\'service\', \'Service\'),\n
+  (\'product\', dict(title=\'Product\', use=\'crm/sale_opportunity\', )),\n
+  (\'service\', dict(title=\'Service\', use=\'crm/sale_opportunity\', )),\n
   # campaign\n
-  (\'marketing_campaign\', \'Marketing Campaign\'),\n
-  (\'marketing_survey\', \'Market Survey\'),\n
-  (\'marketing_purchases\', \'Purchases Campaign\'),\n
-  (\'marketing_sales\', \'Sales Campaign\'),\n
-  (\'marketing_other\', \'Other Marketing Service\'),\n
+  (\'marketing_campaign\', dict(title=\'Marketing Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_survey\', dict(title=\'Market Survey\', use=\'crm/campaign\', )),\n
+  (\'marketing_purchases\', dict(title=\'Purchases Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_sales\', dict(title=\'Sales Campaign\', use=\'crm/campaign\', )),\n
+  (\'marketing_other\', dict(title=\'Other Marketing Service\', use=\'crm/campaign\', )),\n
   # support request\n
-  (\'support_administrative\', \'Administrative Support\'),\n
-  (\'support_financial\', \'Financial Support\'),\n
-  (\'support_it\', \'IT Support\'),\n
-  (\'support_other\', \'Other Support Service\'),\n
+  (\'support_administrative\', dict(title=\'Administrative Support\', use=\'crm/support_request\', )),\n
+  (\'support_financial\', dict(title=\'Financial Support\', use=\'crm/support_request\', )),\n
+  (\'support_it\', dict(title=\'IT Support\', use=\'crm/support_request\', )),\n
+  (\'support_other\', dict(title=\'Other Support Service\', use=\'crm/support_request\', )),\n
   # meeting\n
-  (\'organisation_conference\', \'Conference\'),\n
-  (\'organisation_partnership\', \'Partnership Meeting\'),\n
-  (\'organisation_purchases\', \'Purchases Meeting\'),\n
-  (\'organisation_project\', \'Project Meeting\'),\n
-  (\'organisation_sales\', \'Sales Meeting\'),\n
-  (\'organisation_other\', \'Other Meeting\'),\n
+  (\'organisation_conference\', dict(title=\'Conference\', use=\'crm/meeting\', )),\n
+  (\'organisation_partnership\', dict(title=\'Partnership Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_purchases\', dict(title=\'Purchases Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_project\', dict(title=\'Project Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_sales\', dict(title=\'Sales Meeting\', use=\'crm/meeting\', )),\n
+  (\'organisation_other\', dict(title=\'Other Meeting\', use=\'crm/meeting\', )),\n
   # event\n
-  (\'event_complaint\', \'Complaint\'),\n
-  (\'event_announcement\', \'Announcement\'),\n
-  (\'event_inquiry\', \'Inquiry\'),\n
-  (\'event_advertisement\', \'Advertisement\'),\n
-  (\'event_spam\', \'Spam\'),\n
-  (\'event_information\', \'Information\'),\n
-  (\'event_other\', \'Other event\'),\n
+  (\'event_complaint\', dict(title=\'Complaint\', use=\'crm/event\', )),\n
+  (\'event_announcement\', dict(title=\'Announcement\', use=\'crm/event\', )),\n
+  (\'event_inquiry\', dict(title=\'Inquiry\', use=\'crm/event\', )),\n
+  (\'event_advertisement\', dict(title=\'Advertisement\', use=\'crm/event\', )),\n
+  (\'event_spam\', dict(title=\'Spam\', use=\'crm/event\', )),\n
+  (\'event_information\', dict(title=\'Information\', use=\'crm/event\', )),\n
+  (\'event_other\', dict(title=\'Other event\', use=\'crm/event\', )),\n
   )\n
 configuration_save.addConfigurationItem("Service Configurator Item",\n
                                         configuration_list=service_list)\n
