@@ -207,12 +207,12 @@ system_prefs = dict(\n
   preferred_component_individual_variation_base_category_list = [\'variation\'],\n
   preferred_service_individual_variation_base_category_list = [\'variation\'],\n
   # trade\n
-  preferred_supplier_role_list = [\'supplier\'],\n
-  preferred_client_role_list = [\'client\'],\n
-  preferred_sale_use_list = [\'trade/sale\'],\n
-  preferred_purchase_use_list = [\'trade/purchase\'],\n
-  preferred_packing_use_list = [\'trade/container\'],\n
-  preferred_tax_use_list=[\'trade/tax\'])\n
+  preferred_supplier_role_list = [\'role/supplier\'],\n
+  preferred_client_role_list = [\'role/client\'],\n
+  preferred_sale_use_list = [\'use/trade/sale\'],\n
+  preferred_purchase_use_list = [\'use/trade/purchase\'],\n
+  preferred_packing_use_list = [\'use/trade/container\'],\n
+  preferred_tax_use_list=[\'use/trade/tax\'])\n
 \n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n

@@ -361,12 +361,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                   preference_tool.getPreferredAccountingTransactionSimulationStateList())
 
     # trade
-    self.assertEquals(['supplier'], preference_tool.getPreferredSupplierRoleList())
-    self.assertEquals(['client'], preference_tool.getPreferredClientRoleList())
-    self.assertEquals(['trade/sale'], preference_tool.getPreferredSaleUseList())
-    self.assertEquals(['trade/purchase'], preference_tool.getPreferredPurchaseUseList())
-    self.assertEquals(['trade/container'], preference_tool.getPreferredPackingUseList())
-    self.assertEquals(['trade/tax'], preference_tool.getPreferredTaxUseList())
+    self.assertEquals(['role/supplier'], preference_tool.getPreferredSupplierRoleList())
+    self.assertEquals(['role/client'], preference_tool.getPreferredClientRoleList())
+    self.assertEquals(['use/trade/sale'], preference_tool.getPreferredSaleUseList())
+    self.assertEquals(['use/trade/purchase'], preference_tool.getPreferredPurchaseUseList())
+    self.assertEquals(['use/trade/container'], preference_tool.getPreferredPackingUseList())
+    self.assertEquals(['use/trade/tax'], preference_tool.getPreferredTaxUseList())
 
   def stepCheckModulesBusinessApplication(self, sequence=None, sequence_list=None, **kw):
     """
