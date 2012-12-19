@@ -54,7 +54,7 @@ class TestSafeImage(ERP5TypeTestCase):
   def _createImage(self):
     portal = self.getPortalObject()
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
-    path_image = "tmp/image_unit_test.jpg"
+    path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
     os.write(fd,str(image.data))
     os.close(fd)
@@ -66,7 +66,7 @@ class TestSafeImage(ERP5TypeTestCase):
   def _createTileImage(self):
     portal = self.getPortalObject()
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
-    path_image = "tmp/image_unit_test.jpg"
+    path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
     os.write(fd,str(image.data))
     os.close(fd)
@@ -78,7 +78,7 @@ class TestSafeImage(ERP5TypeTestCase):
   def _createTileImageTransformed(self):
     portal = self.getPortalObject()
     image = portal.restrictedTraverse('portal_skins/erp5_safeimage/img/image_unit_test.jpg')
-    path_image = "tmp/image_unit_test.jpg"
+    path_image = "image_unit_test.jpg"
     fd = os.open(path_image, os.O_CREAT | os.O_RDWR)
     os.write(fd,str(image.data))
     os.close(fd)
