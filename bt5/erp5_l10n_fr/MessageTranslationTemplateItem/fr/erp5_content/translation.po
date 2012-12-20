@@ -642,6 +642,9 @@ msgstr "Djibouti"
 msgid "Djiboutian"
 msgstr "Djiboutien"
 
+msgid "Doctor"
+msgstr "Docteur"
+
 msgid "Documentation"
 msgstr "Documentation"
 
@@ -1347,6 +1350,9 @@ msgstr "Fabrication de machines et équipements n.c.a."
 msgid "Madagascar"
 msgstr "Madagascar"
 
+msgid "Madam"
+msgstr "Madame"
+
 msgid "Mahorais"
 msgstr "Mahorais"
 
@@ -1508,6 +1514,12 @@ msgstr "Services d'exploitation minière et de forage pour le pétrole et le gaz
 
 msgid "Minute"
 msgstr "Minute"
+
+msgid "Miss"
+msgstr "Mademoiselle"
+
+msgid "Mister"
+msgstr "Monsieur"
 
 msgid "Moldovan"
 msgstr "Moldave"
