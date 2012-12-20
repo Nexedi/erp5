@@ -8,6 +8,7 @@ from zLOG import LOG, WARNING
 import datetime
 import os
 import time
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 present = False
 tz = None
@@ -330,7 +331,17 @@ class PayzenService(XMLObject, PayzenSOAP):
 
   def navigate(self, page_template, payzen_dict, REQUEST=None, **kw):
     """Returns configured template used to do the payment"""
-    self.Base_checkConsistency()
+    check_result = self.checkConsistency()
+    message_list = []
+    for err in check_result:
+      if getattr(err, 'getTranslatedMessage', None) is not None:
+        message_list.append(err.getTranslatedMessage())
+      else:
+        # backward compatibility:
+        message_list.append(err[3])
+    if message_list:
+      raise ValidationFailed, message_list
+
     temp_document = newTempDocument(self, 'id')
     temp_document.edit(
       link_url_string=self.getLinkUrlString(),
