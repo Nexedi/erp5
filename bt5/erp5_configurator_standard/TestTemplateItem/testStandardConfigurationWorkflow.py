@@ -755,8 +755,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                               sale_trade_condition.getTitle())
     self.assertEquals("STC-General", sale_trade_condition.getReference())
 
-    self.assertNotEquals(None, sale_trade_condition.getEffectiveDate())
-    self.assertNotEquals(None, sale_trade_condition.getExpirationDate())
+    # Trade condition does not need dates
+    self.assertEquals(None, sale_trade_condition.getEffectiveDate())
+    self.assertEquals(None, sale_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
     business_process_list = \
@@ -801,8 +802,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                               purchase_trade_condition.getTitle())
     self.assertEquals("PTC-General", purchase_trade_condition.getReference())
 
-    self.assertNotEquals(None, purchase_trade_condition.getEffectiveDate())
-    self.assertNotEquals(None, purchase_trade_condition.getExpirationDate())
+    # Trade condition does not need dates
+    self.assertEquals(None, purchase_trade_condition.getEffectiveDate())
+    self.assertEquals(None, purchase_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
     business_process_list = \
@@ -932,8 +934,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     resource.validate()
     self.tic()
 
-    start_date = sale_trade_condition.getEffectiveDate() + 1
-    stop_date = sale_trade_condition.getExpirationDate() - 1
+    start_date = stop_date = DateTime()
     order = module.newContent(
        portal_type='Sale Order',
        specialise=(sale_trade_condition.getRelativeUrl(),),

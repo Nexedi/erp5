@@ -72,9 +72,7 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     trade_condition = portal.sale_trade_condition_module.newContent(
                                            portal_type="Sale Trade Condition",
                                            reference=self.getReference(),
-                                           title=self.getTitle(),
-                                           effective_date=DateTime() - 1,
-                                           expiration_date=DateTime() + 10 * 365)
+                                           title=self.getTitle())
 
     trade_condition.setSpecialise("business_process_module/%s" %\
                       business_process_id)
