@@ -638,6 +638,13 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
     self.assertEquals(invoicing_path.getTestMethodId(), None)
 
+    tax_path = getattr(business_process, "tax_path", None)
+    self.assertNotEquals(tax_path, None)
+    self.assertEquals(tax_path.getEfficiency(), 1.0)
+    self.assertEquals(tax_path.getTradePhase(), 'trade/tax')
+    self.assertEquals(tax_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEquals(tax_path.getTestMethodId(), None)
+
     accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
     self.assertNotEquals(accounting_credit_path, None)
     self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
@@ -690,8 +697,20 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     self.assertEquals(invoice_link.getDeliveryBuilderList(),
            ["portal_deliveries/purchase_invoice_builder",
-            "portal_deliveries/purchase_invoice_transaction_trade_model_builder",
-            "portal_deliveries/sale_invoice_builder",
+            "portal_deliveries/sale_invoice_builder"])
+
+    tax_link = getattr(business_process, "tax_link", None)
+    self.assertNotEquals(tax_link, None)
+    #self.assertFalse(tax_link.getDeliverable())
+    self.assertEquals(tax_link.getSuccessor(),"trade_state/trade/invoiced")
+    self.assertEquals(tax_link.getPredecessor(),"trade_state/trade/invoiced")
+    self.assertEquals(tax_link.getCompletedStateList(),
+                        ['confirmed','delivered','started','stopped'])
+    self.assertEquals(tax_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(tax_link.getTradePhase(),'trade/tax')
+
+    self.assertEquals(tax_link.getDeliveryBuilderList(),
+           ["portal_deliveries/purchase_invoice_transaction_trade_model_builder",
             "portal_deliveries/sale_invoice_transaction_trade_model_builder"])
 
     account_link = getattr(business_process, "account_link", None)
@@ -713,8 +732,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(pay_link.getTradePhase(), 'trade/payment')
     self.assertEquals(pay_link.getSuccessor(), None)
     self.assertEquals(pay_link.getPredecessor(),"trade_state/trade/accounted")
-    self.assertEquals(pay_link.getCompletedState(), None)
-    self.assertEquals(pay_link.getFrozenState(), None)
+    self.assertEquals(pay_link.getCompletedStateList(),
+                        ['confirmed','delivered','started','stopped'])
+    self.assertEquals(pay_link.getFrozenStateList(),['delivered','stopped'])
 
     self.assertEquals(pay_link.getDeliveryBuilderList(),
            ["portal_deliveries/payment_transaction_builder"])
