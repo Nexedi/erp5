@@ -50,25 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = context\n
-\n
-if kw.get(\'created_by_builder\', 0): \n
+            <value> <string>if kw.get(\'created_by_builder\', 0): \n
   return\n
 \n
-from Products.CMFCore.utils import getToolByName\n
-preference_tool = getToolByName(context, \'portal_preferences\')\n
+preference_tool = context.getPortalObject().portal_preferences\n
+context.setDestinationSection(preference_tool.getPreferredAccountingTransactionSourceSection())\n
+context.setResource(preference_tool.getPreferredAccountingTransactionCurrency())\n
 \n
-transaction.edit (\n
-     # XXX getPreferredAccountingTransactionSourceSection is definitively a bad name ...\n
-    destination_section = preference_tool.getPreferredAccountingTransactionSourceSection(),\n
-    resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
+if \'Invoice Line\' in context.getVisibleAllowedContentTypeList():\n
+  return\n
 \n
-transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'expense\', )\n
-transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'payable\', )\n
-transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-                       id=\'refundable_vat\', )\n
+context.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                   id=\'expense\', )\n
+context.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                   id=\'payable\', )\n
+context.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
+                   id=\'refundable_vat\', )\n
 </string> </value>
         </item>
         <item>
