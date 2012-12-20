@@ -30,6 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -106,6 +107,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                             delivery_builder = delivery_builder,
                             **link_dict)
 
+    business_process.validate(comment=translateString('Validated by configurator'))
     self.install(business_process, business_configuration)
 
   def _getBusinessProcessDict(self):
