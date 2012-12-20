@@ -188,7 +188,8 @@ system_prefs = dict(\n
   preferred_sale_use_list = [\'use/trade/sale\'],\n
   preferred_purchase_use_list = [\'use/trade/purchase\'],\n
   preferred_packing_use_list = [\'use/trade/container\'],\n
-  preferred_tax_use_list=[\'use/trade/tax\'])\n
+  preferred_tax_use_list=[\'use/trade/tax\'],\n
+  preferred_price_ratio_use_list=[\'use/trade/tax\'])\n
 \n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n
