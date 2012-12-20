@@ -233,14 +233,16 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     Base_viewIncludeImageAsOdt.pt_edit(custom_content,
         content_type='application/vnd.oasis.opendocument.text')
     self.tic()
+
     response = self.publish('/' + self.getPortal().Base_viewIncludeImageAsOdt.absolute_url(1))
+    body = response.getBody()
+    self.assertTrue(200, response.getStatus(), body)
     self.assertEqual('application/vnd.oasis.opendocument.text',
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Base_viewIncludeImageAsOdt.odt"',
                      response.getHeader('content-disposition'))
-    self.assertTrue(200, response.getStatus())
     cs = StringIO()
-    cs.write(response.getBody())
+    cs.write(body)
     zip_document = ZipFile(cs)
     picture_list = filter(lambda x: "Pictures" in x.filename,
         zip_document.infolist())
