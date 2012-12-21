@@ -316,6 +316,7 @@ class TemplateTool (BaseTool):
         # XXX: should really check for a magic and offer a falback if it
         # doens't correspond to anything handled.
         tar = tarfile.open(path, 'r:gz')
+        dir_name = tar.members[0].name.split(posixpath.sep, 1)[0]
         try:
           # create bt object
           bt = self.newContent(portal_type='Business Template', id=id)
@@ -323,7 +324,7 @@ class TemplateTool (BaseTool):
           for prop in bt.propertyMap():
             prop_type = prop['type']
             pid = prop['id']
-            prop_path = posixpath.join(tar.members[0].name, 'bt', pid)
+            prop_path = posixpath.join(dir_name, 'bt', pid)
             try:
               info = tar.getmember(prop_path)
               value = tar.extractfile(info).read()
