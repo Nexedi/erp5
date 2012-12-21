@@ -140,7 +140,7 @@ class TestSafeImage(ERP5TypeTestCase):
      self.assertNotEqual(tile_transformed,None)
      image_property = getattr(tile_transformed, "ImageProperties.xml", None)
      self.assertEquals(image_property.getData(),
- """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="52" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
+ """<IMAGE_PROPERTIES WIDTH="660" HEIGHT="495" NUMTILES="9" NUMIMAGES="1" VERSION="1.8" TILESIZE="256" />""")
      self.assertNotEqual(image_property, None)
      self.assertEquals("Embedded File", image_property.getPortalType())
      image_transform = getattr(tile_transformed, "TransformFile.txt", None)
