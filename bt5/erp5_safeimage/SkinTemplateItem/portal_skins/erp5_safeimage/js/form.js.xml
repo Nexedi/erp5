@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts55132689.11</string> </value>
+            <value> <string>ts56103844.31</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,7 +28,7 @@
 (function($) {\n
   \n
    $.getJSON(\n
-      \'http://localhost:12001/erp5/portal_skins/erp5_safeimage/ERP5Site_getTileImageTransformMetadataList\', \n
+      \'http://\'+window.location.host+\'/erp5/ERP5Site_getTileImageTransformMetadataList\', \n
        function(data){\n
             for (var i = 0; i < data["image_list"].length; i ++ ) {\n
                 \n
@@ -72,10 +72,10 @@
 \n
     displayData: function(id){\n
       var zoomify_url, zoomify_width, zoomify_height = null;\n
-      zoomify_url = "http://localhost:12001/erp5/image_module/" + id + "/";\n
+      zoomify_url = "http://"+window.location.host+"/erp5/image_module/" + id + "/";\n
       //XXX look at the xml definition inside image folder\n
       var zoomify_data = $.getJSON(\n
-\t\t\t\t"http://localhost:12001/erp5/image_module/" + id + "/TileImage_getMetadataAsJSON",\n
+\t\t\t\t"http://"+window.location.host+"/erp5/image_module/" + id + "/TileImage_getMetadataAsJSON",\n
 \t\t\t\tfunction(data){\n
 \t\t\t\t\twidth=data["sizes"][0]["width"];\n
 \t\t\t\t\theight=data["sizes"][0]["height"];\n
@@ -89,7 +89,7 @@
 \n
   var transforms = function(width,height){\n
                      $.getJSON(\n
-                        \'http://localhost:12001/erp5/image_module/\'+id+\'/TileImageTransformed_getTransform\',\n
+                        \'http://\'+window.location.host+\'/erp5/image_module/\'+id+\'/TileImageTransformed_getTransform\',\n
                            function(data){\n
                               pass(width,height,data);\n
                             }\n
@@ -99,8 +99,7 @@
 \tvar pass = function(zoomify_width,zoomify_height,data){\n
 \t\t\t\n
 \t\t\t\t$(function() {\n
-                \t\n
-        \t\t\t SafeImage.loadOpenLayerZoomedImage(zoomify_width,zoomify_height, zoomify_url,data);\n
+         \t\t\t SafeImage.loadOpenLayerZoomedImage(zoomify_width,zoomify_height, zoomify_url,data);\n
                if (document.location.search != ""){\n
                  SafeImage.map.zoomTo(Number(document.location.search.split("")[6]));\n
                 } \n
@@ -137,7 +136,7 @@ $("#main").form();\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3057</int> </value>
+            <value> <int>3048</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
