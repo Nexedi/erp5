@@ -207,17 +207,17 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <tr> 
             <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
-            <td> <br></td> 
+            <td> <br> </td> 
           </tr> 
           <tr style="opacity: 1;"> 
             <td>clickAndWait</td> 
             <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br></td> 
+            <td> <br> </td> 
           </tr> <tr> 
             <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
-            <td> <br></td> 
-          </tr>
+            <td> <br> </td> 
+          </tr> 
       </tbody>
     </table>
   </body>
@@ -279,17 +279,17 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <tr> 
             <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
-            <td> <br></td> 
+            <td> <br> </td> 
           </tr> 
           <tr style="opacity: 1;"> 
             <td>clickAndWait</td> 
             <td>css=a.fast_input &gt; span.image</td> 
-            <td> <br></td> 
+            <td> <br> </td> 
           </tr> <tr> 
             <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
-            <td> <br></td> 
-          </tr>
+            <td> <br> </td> 
+          </tr> 
       </tbody>
     </table>
   </body>
