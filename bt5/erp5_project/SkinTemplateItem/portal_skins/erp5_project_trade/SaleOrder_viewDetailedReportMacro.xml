@@ -102,8 +102,8 @@
           <text:p text:style-name=\'Project_20_Box\' tal:condition="line_item/getOutcomeDescription">\n
             <text:span text:style-name=\'T1\' i18n:translate="Result" i18n:domain="erp5_ui">Result</text:span>: <tal:block tal:replace="line_item/getOutcomeDescription">description of result</tal:block>\n
           </text:p>\n
-            <tal:block tal:define="description line_item/getDescription">\n
-              <text:p text:style-name=\'Text_20_body\'><tal:block tal:repeat="partial_description python: description.split(\'\\n\')"><tal:block tal:content="partial_description"/><tal:block tal:condition="python: not(repeat[\'partial_description\'].end)"><text:line-break/></tal:block></tal:block></text:p>\n
+            <tal:block tal:repeat="partial_description python: line_item.getDescription().split(\'\\n\')">\n
+               <text:p text:style-name=\'Text_20_body\' tal:content="partial_description">Project Line description</text:p>\n
             </tal:block>\n
           <tal:block tal:define="global current_line python:line_item"/>\n
           <tal:block metal:use-macro="here/SaleOrder_viewDetailedReportMacro/macros/line"/>\n
@@ -131,7 +131,10 @@
             </tal:block>\n
             <text:span text:style-name=\'T1\' i18n:translate="End" i18n:domain="erp5_ui">End</text:span>: <tal:block tal:replace="line_item/getStopDate">2006-01-01</tal:block>\n
           </text:p>\n
-          <text:p text:style-name=\'Text_20_body\'><tal:block tal:repeat="partial_description python: description.split(\'\\n\')"><tal:block tal:content="partial_description"/><tal:block tal:condition="python: not(repeat[\'partial_description\'].end)"><text:line-break/></tal:block></tal:block></text:p>\n
+          <tal:block tal:repeat="partial_description python: line_item.getDescription().split(\'\\n\')">\n
+             <text:p text:style-name=\'Text_20_body\' tal:content="partial_description">Milestone description</text:p>\n
+          </tal:block>\n
+\n
           <tal:block tal:define="global depth python:depth - 1"/>\n
         </tal:block>\n
 \n
