@@ -52,17 +52,15 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-#from Products.ERP5Type.Log import log\n
-#log("getMessageList", context.getMessageTempObjectList())\n
-\n
 # searching\n
 # processing_node column is manage by methods called by getMessageTempObjectList\n
-if kw[\'processing_node\'] == \'\':\n
+if kw.get(\'processing_node\', None) == \'\':\n
   del kw[\'processing_node\']\n
 \n
 #key_list_to_search = [x for (x,y) in [(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\'retry\',\'processing\']] if y != \'\']\n
+message_kw = dict([(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\'retry\',\'processing\'] if not(kw.get(k) in (\'\',None))])\n
 \n
-message_list = context.getMessageTempObjectList(**kw)\n
+message_list = context.getMessageTempObjectList(**message_kw)\n
 message_list_to_show = []\n
 while len(message_list) > 0:\n
   message = message_list.pop(0)\n

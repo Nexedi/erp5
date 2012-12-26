@@ -74,9 +74,10 @@
       type: \'POST\',\n
       timeout: 10000,\n
       success: function (response) {\n
-        var i, data;\n
+        var i, data, today = new Date();\n
         data = JSON.parse(response);\n
         html_content =\n
+          \'Date : \' + today.toTimeString() +\n
           \'<table>\' +\n
           \'  <tr>\' +\n
           \'    <th>Type</th>\'+\n
