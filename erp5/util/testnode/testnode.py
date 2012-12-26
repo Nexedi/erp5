@@ -35,6 +35,8 @@ import json
 import time
 import shutil
 import logging
+import string
+import random
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -109,11 +111,14 @@ class NodeTestSuite(SlapOSInstance):
 
   def createSuiteLog(self):
     # /srv/slapgrid/slappartXX/srv/var/log/suite/az/mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
-    # /srv/slapgrid/slappartXX/srv/testnode is working directory
     if getattr(self, "log_directory", None) is not None:
       if getattr(self, "suite_log_path", None) is None:
+        alphabets = string.digits + string.letters
+        rand_part = ''.join(random.choice(alphabets) for i in xrange(32))
         suite_log_directory = os.path.join(self.log_directory,
-                                          'suite', self.reference)
+                                          'suite',
+                                           self.reference,
+                                           rand_part)
         SlapOSControler.createFolders(suite_log_directory)
         self.suite_log_path = os.path.join(suite_log_directory,
                                            'suite.log')
@@ -134,7 +139,7 @@ class NodeTestSuite(SlapOSInstance):
     logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
     formatter = logging.Formatter(logger_format)
     logging.basicConfig(level=logging.INFO, format=logger_format)
-    logger = logging.getLogger('erp5testsuite')
+    logger = logging.getLogger('testsuite')
     file_handler = logging.FileHandler(filename=self.suite_log_path)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -241,16 +246,17 @@ branch = %(branch)s
     node_test_suite.revision = ','.join(full_revision_list)
     return full_revision_list
 
-  def addWatcher(self,test_result, node_test_suite):
+  def registerSuiteLog(self, test_result, node_test_suite):
+    """
+      Create a log dedicated for the test suite,
+      and register the url to master node.
+    """
     log_file_name = node_test_suite.createSuiteLog()
     if log_file_name is None and config.get('log_file'):
       log_file_name = config['log_file']
-    if log_file_name is not None:
-      log_file = open(log_file_name)
-      log_file.seek(0, 2)
-      log_file.seek(-min(5000, log_file.tell()), 2)
-      test_result.addWatch(log_file_name,log_file,max_history_bytes=10000)
-      return log_file_name
+    # TODO make the path into url
+    test_result.reportStatus('registerSuiteLog', log_file_name, '')
+    return log_file_name
 
   def checkRevision(self, test_result, node_test_suite):
     config = self.config
@@ -284,7 +290,6 @@ branch = %(branch)s
     reset_software = slapos_instance.retry_software_count > 10
     log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
-    # XXX:TATUYA TO BE FIXED 
     self.slapos_controler = SlapOSControler.SlapOSControler(
       working_directory, self.config, log)
     self.slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
@@ -379,13 +384,6 @@ branch = %(branch)s
     log = self.log
     log('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
-    if test_result is not None:
-      try:
-        for node_test_suite in self.node_test_suite_dict.values():
-          log_file = node_test_suite.getSuiteLogPath()
-          test_result.removeWatch(log_file)
-      except KeyError:
-        log("KeyError, Watcher already deleted or not added correctly")
 
   def run(self):
     log = self.log
@@ -434,7 +432,7 @@ branch = %(branch)s
             remote_test_result_needs_cleanup = True
             log("testnode, test_result : %r" % (test_result, ))
             if test_result is not None:
-              log_file_name = self.addWatcher(test_result, node_test_suite)
+              self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
               # Now prepare the installation of SlapOS and create instance
               status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
@@ -443,7 +441,6 @@ branch = %(branch)s
               # a reliable way to check if they are up or not ...
               time.sleep(20)
               self.runTestSuite(node_test_suite,portal_url)
-              test_result.removeWatch(log_file_name)
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)

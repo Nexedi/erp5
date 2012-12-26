@@ -15,6 +15,8 @@ import subprocess
 import tempfile
 import json
 import time
+import types
+import re
 
 class ERP5TestNode(TestCase):
 
@@ -497,7 +499,7 @@ branch = foo
     createFolder(folder, clean=True)
     self.assertEquals(False, os.path.exists(to_drop_path))
 
-  def test_15_log_directory(self):
+  def test_15_suite_log_directory(self):
     def doNothing(self, *args, **kw):
         pass
     test_self = self
@@ -508,16 +510,11 @@ branch = foo
     def patch_startTestSuite(self,test_node_title):
       global counter
       config_list = []
-      def _checkExistingTestSuite(reference_set):
-        test_self.assertEquals(set(reference_set),
-                    set(os.listdir(test_node.config["working_directory"])))
-        for x in reference_set:
-          test_self.assertTrue(os.path.exists(os.path.join(
-                               test_node.config["working_directory"],x)),True)
       if counter == 0:
-        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
-      elif counter == 1:
-        _checkExistingTestSuite(set(['foo']))
+        config_list.append(test_self.getTestSuiteData(reference='aa')[0])
+      if counter == 1:
+        config_list.append(test_self.getTestSuiteData(reference='bb')[0])
+      elif counter == 2:
         raise StopIteration
       counter += 1
       return json.dumps(config_list)
@@ -527,6 +524,20 @@ branch = foo
       result = TestResultProxy(self._proxy, self._retry_time,
                self._logger, test_result_path, node_title, revision)
       return result
+    def checkTestSuite(test_node):
+      test_node.node_test_suite_dict
+      rand_part_set = set()
+      for ref, suite in test_node.node_test_suite_dict.items():
+        assert(suite.suite_log is not None)
+        assert(isinstance(suite.suite_log, types.MethodType))
+        assert('var/log/suite/%s' % suite.reference in suite.suite_log_path)
+        assert(suite.suite_log_path.endswith('suite.log'))
+        m = re.match('.*\/(.*)\/suite.log', suite.suite_log_path)
+        rand_part = m.groups()[0]
+        assert(len(rand_part) == 32)
+        assert(rand_part not in rand_part_set)
+        rand_part_set.add(rand_part)
+
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -543,6 +554,7 @@ branch = foo
     try:
       test_node.run()
     except Exception as e:
+      checkTestSuite(test_node)
       self.assertEqual(type(e),StopIteration)
     finally:
       time.sleep = original_sleep
