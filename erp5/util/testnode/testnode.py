@@ -126,14 +126,10 @@ class NodeTestSuite(SlapOSInstance):
     return self.getSuiteLogPath()
 
   def getSuiteLogPath(self):
-    if getattr(self, "suite_log_path", None) is None:
-        return None
-    return self.suite_log_path
+    return getattr(self,"suite_log_path", None)
 
   def getSuiteLog(self):
-    if getattr(self, "suite_log", None) is None:
-      return None
-    return self.suite_log
+    return getattr(self, "suite_log", None)
 
   def _initializeSuiteLog(self):
     logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
