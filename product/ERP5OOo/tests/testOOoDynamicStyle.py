@@ -35,7 +35,6 @@ from zipfile import ZipFile
 from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import LOG
@@ -208,7 +207,6 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.assertFalse(response.getBody().startswith('PK'))
     self.assertTrue(500, response.getStatus())
 
-  @expectedFailure
   def test_include_img(self):
     """
       Create an OOoTemplate from scratch, using pt_editAction to set the
