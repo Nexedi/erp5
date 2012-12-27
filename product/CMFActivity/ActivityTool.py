@@ -1302,12 +1302,10 @@ class ActivityTool (Folder, UniqueObject):
       """
         Restart one or several messages
       """
-      if activity == 'SQLQueue':
-        for message_uid in message_uid_list:
-          self.SQLQueue_restartMessage(message_uid=message_uid)
-      else:
-        for message_uid in message_uid_list:
-          self.SQLDict_restartMessage(message_uid=message_uid)
+      if not(isinstance(message_uid_list, list)):
+        message_uid_list = [message_uid_list]
+      self.SQLBase_makeMessageListAvailable(table=activity_dict[activity].sql_table,
+                              uid=message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1331,12 +1329,10 @@ class ActivityTool (Folder, UniqueObject):
       """
         Delete one or several messages
       """
-      if activity == 'SQLQueue':
-        for message_uid in message_uid_list:
-          self.SQLQueue_deleteMessage(message_uid=message_uid)
-      else:
-        for message_uid in message_uid_list:
-          self.SQLDict_deleteMessage(message_uid=message_uid)
+      if not(isinstance(message_uid_list, list)):
+        message_uid_list = [message_uid_list]
+      self.SQLBase_delMessage(table=activity_dict[activity].sql_table,
+                              uid=message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
