@@ -59,7 +59,8 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_web', 
-            'erp5_dms')
+            'erp5_dms',
+            'erp5_odt_style')
 
 
   def afterSetUp(self):
