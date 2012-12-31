@@ -81,6 +81,22 @@ if memcache is not None:
           server_max_key_length=memcache.SERVER_MAX_KEY_LENGTH,
           server_max_value_length=memcache.SERVER_MAX_VALUE_LENGTH,
         ):
+      """
+        server_list (tuple of strings)
+          Servers to connect to, in 'host:port' format.
+        expiration_time (int)
+          Entry expiration time. See "Expiration times" in memcache protocol
+          spec. Summary:
+          0 = never
+          less than 60*60*24*30 = time starting at entry creation/update
+          more = absolute unix timestamp
+        server_max_key_length (int)
+          Maximum key length. Storing larger keys will cause an exception to be
+          raised.
+        server_max_value_length (int)
+          Maximum value length. Storing larger values will cause an exception to
+          be raised.
+      """
       # connection cache with duration limited to transaction length.
       self.local_cache = {}
       # Each key in scheduled_action_dict must be handled at commit.
