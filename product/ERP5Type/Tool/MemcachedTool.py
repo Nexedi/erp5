@@ -145,13 +145,12 @@ if memcache is not None:
                 LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
         LOG('MemcachedDict', 0, 'An exception occured during _finish', error=True)
-      self.scheduled_action_dict.clear()
-      self.local_cache.clear()
+      self.__cleanup()
 
     def _abort(self, *ignored):
-      """
-        Cleanup the action dict and invalidate local cache.
-      """
+      self.__cleanup()
+
+    def __cleanup(self):
       self.local_cache.clear()
       self.scheduled_action_dict.clear()
 
