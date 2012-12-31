@@ -357,6 +357,5 @@ else:
       raise RuntimeError, 'MemcachedTool is disabled. You should ask the'\
         ' server administrator to enable it by installing python-memcached.'
 
-    manage_beforeDelete = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod
