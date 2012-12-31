@@ -215,7 +215,7 @@ if memcache is not None:
       except KeyError:
         return default
 
-  class SharedDict:
+  class SharedDict(object):
     """
       Class to make possible for multiple "users" to store data in the same
       dictionary without risking to overwrite other's data.
