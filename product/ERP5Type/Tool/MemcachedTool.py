@@ -81,23 +81,11 @@ if memcache is not None:
           server_max_key_length=memcache.SERVER_MAX_KEY_LENGTH,
           server_max_value_length=memcache.SERVER_MAX_VALUE_LENGTH,
         ):
-
-      """
-        Initialise properties :
-        memcached_connection
-          Connection to memcached.
-        local_cache
-          Dictionnary used as a connection cache with duration limited to
-          transaction length.
-        scheduled_action_dict
-          Each key in this dictionary must be handled at transaction commit.
-          Value gives the action to take :
-            UPDATE_ACTION 
-              Take value from local cache and send it to memcached.
-            DELETE_ACTION
-              Send a delete order to memcached.
-      """
+      # connection cache with duration limited to transaction length.
       self.local_cache = {}
+      # Each key in scheduled_action_dict must be handled at commit.
+      # UPDATE_ACTION: send local_cache value to server
+      # DELETE_ACTION: delete on server
       self.scheduled_action_dict = {}
       self.server_list = server_list
       self.expiration_time = expiration_time
