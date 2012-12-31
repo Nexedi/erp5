@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import time
 from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
@@ -96,8 +95,6 @@ if memcache is not None:
       self.local_cache = {}
       self.scheduled_action_dict = {}
       self.server_list = server_list
-      # see "Expiration times" from memcached protocol docs
-      self.expiration_time_since_epoch = expiration_time > (60*60*24*30)
       self.expiration_time = expiration_time
       self.server_max_key_length = server_max_key_length
       self.server_max_value_length = server_max_value_length
@@ -130,8 +127,6 @@ if memcache is not None:
       """
       try:
         expiration_time = self.expiration_time
-        if self.expiration_time_since_epoch:
-          expiration_time += time.time()
         for key, value in self.local_cache.iteritems():
           if getattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID, None):
             delattr(value, MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID)
