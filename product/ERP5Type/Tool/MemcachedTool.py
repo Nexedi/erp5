@@ -35,6 +35,16 @@ from Products.ERP5Type.Globals import DTMLFile
 from quopri import encodestring
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
+class _MemcacheTool(BaseTool):
+  id = "portal_memcached"
+  meta_type = "ERP5 Memcached Tool"
+  portal_type = "Memcached Tool"
+  manage_options = (
+    {
+      'label': 'Configure',
+      'action': 'memcached_tool_configure',
+    },
+  ) + BaseTool.manage_options
 
 try:
   import memcache
@@ -281,19 +291,11 @@ if memcache is not None:
 
   allow_class(SharedDict)
 
-  class MemcachedTool(BaseTool):
+  class MemcachedTool(_MemcacheTool):
     """
       Memcached interface available as a tool.
     """
-    id = "portal_memcached"
-    meta_type = "ERP5 Memcached Tool"
-    portal_type = "Memcached Tool"
-
     security = ClassSecurityInfo()
-    manage_options = ({'label': 'Configure',
-                       'action': 'memcached_tool_configure',
-                      },) + BaseTool.manage_options
-
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
     erp5_site_global_id = ''
 
@@ -339,19 +341,13 @@ if memcache is not None:
 
 else:
   # Placeholder memcache tool
-  class MemcachedTool(BaseTool):
+  class MemcachedTool(_MemcachedTool):
     """
       Dummy MemcachedTool placeholder.
     """
-    id = "portal_memcached"
-    meta_type = "ERP5 Memcached Tool"
-    portal_type = "Memcached Tool"
     title = "DISABLED"
 
     security = ClassSecurityInfo()
-    manage_options = ({'label': 'Configure',
-                       'action': 'memcached_tool_configure',
-                      },) + BaseTool.manage_options
 
     def failingMethod(self, *args, **kw):
       """
