@@ -62,7 +62,6 @@ def encodeKey(key):
 memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
-  import traceback
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
   from zLOG import LOG
@@ -157,7 +156,7 @@ if memcache is not None:
               if not succeed:
                 LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
-        LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
+        LOG('MemcachedDict', 0, 'An exception occured during _finish', error=True)
       self.scheduled_action_dict.clear()
       self.local_cache.clear()
 
