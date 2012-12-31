@@ -67,10 +67,6 @@ if memcache is not None:
       available).
       Uses transactions to only update memcached at commit time.
       No conflict generation/resolution : last edit wins.
-
-      TODO:
-        - prove that concurency handling in event queuing is not needed
-        - make picklable ?
     """
     def __init__(self, server_list, expiration_time=0,
           server_max_key_length=memcache.SERVER_MAX_KEY_LENGTH,
@@ -228,9 +224,6 @@ if memcache is not None:
       Class to make possible for multiple "users" to store data in the same
       dictionary without risking to overwrite other's data.
       Each "user" of the dictionary must get an instance of this class.
-
-      TODO:
-        - handle persistence ?
     """
 
     def __init__(self, dictionary, prefix):
