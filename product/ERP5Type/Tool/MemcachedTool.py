@@ -94,21 +94,11 @@ if memcache is not None:
       self._initialiseConnection()
 
     def _initialiseConnection(self):
-      try:
-        self.memcached_connection.disconnect_all()
-      except AttributeError:
-        pass
       self.memcached_connection = memcache.Client(
         self.server_list,
         server_max_key_length=self.server_max_key_length,
         server_max_value_length=self.server_max_value_length,
       )
-
-    def __del__(self):
-      """
-        Close connection before deleting object.
-      """
-      self.memcached_connection.disconnect_all()
 
     def _finish(self, *ignored):
       """
