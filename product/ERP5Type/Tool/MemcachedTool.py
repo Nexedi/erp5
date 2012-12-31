@@ -308,6 +308,7 @@ if memcache is not None:
                       },) + BaseTool.manage_options
 
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
+    erp5_site_global_id = ''
 
     def _getMemcachedDict(self, plugin_path):
       """
@@ -344,7 +345,7 @@ if memcache is not None:
         plugin_path
           relative_url of dedicated Memcached Plugin
       """
-      global_prefix = getattr(self, 'erp5_site_global_id', '')
+      global_prefix = self.erp5_site_global_id
       if global_prefix:
         key_prefix = '%s_%s' % (global_prefix, key_prefix)
       return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
