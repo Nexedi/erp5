@@ -72,9 +72,11 @@ if memcache is not None:
         - prove that concurency handling in event queuing is not needed
         - make picklable ?
     """
+    def __init__(self, server_list, expiration_time=0,
+          server_max_key_length=memcache.SERVER_MAX_KEY_LENGTH,
+          server_max_value_length=memcache.SERVER_MAX_VALUE_LENGTH,
+        ):
 
-    def __init__(self, server_list=('127.0.0.1:11211',), expiration_time=0,
-                 server_max_key_length=MARKER, server_max_value_length=MARKER):
       """
         Initialise properties :
         memcached_connection
@@ -103,12 +105,11 @@ if memcache is not None:
         self.memcached_connection.disconnect_all()
       except AttributeError:
         pass
-      init_dict = {}
-      if self.server_max_key_length is not MARKER:
-        init_dict['server_max_key_length'] = self.server_max_key_length
-      if self.server_max_value_length is not MARKER:
-        init_dict['server_max_value_length'] = self.server_max_value_length
-      self.memcached_connection = memcache.Client(self.server_list, **init_dict)
+      self.memcached_connection = memcache.Client(
+        self.server_list,
+        server_max_key_length=self.server_max_key_length,
+        server_max_value_length=self.server_max_value_length,
+      )
 
     def __del__(self):
       """
