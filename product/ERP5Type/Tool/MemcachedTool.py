@@ -57,9 +57,9 @@ if memcache is not None:
   from Products.PythonScripts.Utility import allow_class
   from zLOG import LOG
   
-  MARKER = tuple()
-  UPDATE_ACTION = 'update'
-  DELETE_ACTION = 'delete'
+  MARKER = object()
+  DELETE_ACTION = 0
+  UPDATE_ACTION = 1
 
   class MemcachedDict(TM):
     """
