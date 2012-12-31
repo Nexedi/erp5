@@ -201,15 +201,9 @@ if memcache is not None:
       self.local_cache[key] = None
 
     def set(self, key, value):
-      """
-        Set an item to local cache and schedule update of memcached.
-      """
       return self.__setitem__(key, value)
 
     def get(self, key, default=None):
-      """
-        Get an item from local cache, otherwise from memcached.
-      """
       try:
         return self.__getitem__(key)
       except KeyError:
@@ -233,29 +227,17 @@ if memcache is not None:
       self.prefix = prefix
 
     def _prefixKey(self, key):
-      """
-        Prefix key with self.prefix .
-      """
       if not isinstance(key, basestring):
         raise TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), )
       return '%s_%s' % (self.prefix, key)
 
     def __getitem__(self, key):
-      """
-        Get item from memcached.
-      """
       return self._dictionary.__getitem__(self._prefixKey(key))
 
     def __setitem__(self, key, value):
-      """
-        Put item in memcached.
-      """
       self._dictionary.__setitem__(self._prefixKey(key), value)
 
     def __delitem__(self, key):
-      """
-        Delete item from memcached.
-      """
       self._dictionary.__delitem__(self._prefixKey(key))
 
     # These are the method names called by zope
@@ -264,15 +246,9 @@ if memcache is not None:
     __guarded_delitem__ = __delitem__
 
     def get(self, key, default=None):
-      """
-        Get item from memcached.
-      """
       return self._dictionary.get(self._prefixKey(key), default)
 
     def set(self, key, value):
-      """
-        Put item in memcached.
-      """
       self._dictionary.set(self._prefixKey(key), value)
 
   allow_class(SharedDict)
