@@ -26,8 +26,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
-from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
@@ -59,7 +57,6 @@ def encodeKey(key):
   # control characters and white spaces.
   return encodestring(key, True).replace('\n', '').replace('\r', '')
 
-memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
   from Shared.DC.ZRDB.TM import TM
@@ -267,28 +264,6 @@ if memcache is not None:
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
     erp5_site_global_id = ''
 
-    def _getMemcachedDict(self, plugin_path):
-      """
-        Return used memcached dict.
-        Create it if does not exist.
-      """
-      try:
-        local_dict = memcached_dict_pool.local_dict
-      except AttributeError:
-        local_dict = memcached_dict_pool.local_dict = {}
-      try:
-        dictionary = local_dict[plugin_path]
-      except KeyError:
-        memcached_plugin = self.restrictedTraverse(plugin_path, None)
-        if memcached_plugin is None:
-          raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
-        dictionary = MemcachedDict((memcached_plugin.getUrlString(''),),
-                   expiration_time=memcached_plugin.getExpirationTime(),
-                   server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
-                   server_max_value_length=memcached_plugin.getServerMaxValueLength())
-        local_dict[plugin_path] = dictionary
-      return dictionary
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
     def getMemcachedDict(self, key_prefix, plugin_path):
       """
@@ -302,10 +277,14 @@ if memcache is not None:
         plugin_path
           relative_url of dedicated Memcached Plugin
       """
+      memcached_plugin = self.restrictedTraverse(plugin_path, None)
+      if memcached_plugin is None:
+        raise ValueError('Memcached Plugin does not exists: %r' % (
+          plugin_path, ))
       global_prefix = self.erp5_site_global_id
       if global_prefix:
-        key_prefix = '%s_%s' % (global_prefix, key_prefix)
-      return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
+        key_prefix = global_prefix + '_' + key_prefix
+      return SharedDict(memcached_plugin.getConnection(), prefix=key_prefix)
 
   InitializeClass(MemcachedTool)
 else:
