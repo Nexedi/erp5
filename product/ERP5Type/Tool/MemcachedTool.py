@@ -52,7 +52,6 @@ def encodeKey(key):
 memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
-  import memcache
   import traceback
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
@@ -61,7 +60,6 @@ if memcache is not None:
   MARKER = tuple()
   UPDATE_ACTION = 'update'
   DELETE_ACTION = 'delete'
-  MEMCACHED_MINIMUM_KEY_CHAR_ORD = ord(' ')
 
   class MemcachedDict(TM):
     """
