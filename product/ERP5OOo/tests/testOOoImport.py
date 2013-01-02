@@ -30,17 +30,13 @@
 import unittest
 import os
 
-from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
-
-ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
 
 class FileUploadTest(file):
 
