@@ -28,10 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.utils import DummyMailHost
-from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.tests.utils import Validator
 import email
@@ -71,11 +68,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                                         default_email_text=self.recipient_email_address)
       assignment = person.newContent(portal_type='Assignment')
       assignment.open()
-
-    # replace MailHost
-    if 'MailHost' in self.portal.objectIds():
-      self.portal.manage_delObjects(['MailHost'])
-    self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     self.tic()
 
   def loginAsUser(self, username):
