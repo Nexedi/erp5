@@ -31,7 +31,7 @@ from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile, InitializeClass
 from quopri import encodestring
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
@@ -339,6 +339,7 @@ if memcache is not None:
         key_prefix = '%s_%s' % (global_prefix, key_prefix)
       return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
 
+  InitializeClass(MemcachedTool)
 else:
   # Placeholder memcache tool
   class MemcachedTool(_MemcachedTool):
