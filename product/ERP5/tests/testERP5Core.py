@@ -472,11 +472,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):
-    error_list = []
-    for i in self.portal.objectValues():
-      if i.getUid() != 0 and i.getUid() != i.getProperty('uid'):
-        error_list.append((i.getId(), i.getUid(), i.getProperty('uid')))
-    self.assertEquals(error_list, [])
+    self.assertEqual([], [
+      (i.getId(), i.getUid(), i.getProperty('uid'))
+      for i in self.portal.objectValues()
+      if i.getId() not in ('portal_uidhandler',) and
+         0 != i.getUid() != i.getProperty('uid')])
 
   def test_site_manager_and_translation_migration(self):
     from zope.site.hooks import getSite, setSite
