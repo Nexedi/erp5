@@ -28,7 +28,7 @@
 
 import unittest
 import os
-from zope.app.testing.placelesssetup import PlacelessSetup
+from zope.component.testing import PlacelessSetup
 from Products.ERP5Form.PDFForm import PDFForm
 from Products.ERP5.Document.Document import Document
 
