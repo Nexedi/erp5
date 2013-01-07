@@ -666,13 +666,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       return CMFHBTreeFolder._initBTrees(self)
     else:
       return CMFBTreeFolder._initBTrees(self)
-    
-  def initBTrees(self):
-    """ """
-    if self._folder_handler == HBTREE_HANDLER:
-      return CMFHBTreeFolder.initBTrees(self)
-    else:
-      return CMFBTreeFolder.initBTrees(self)
 
   def hashId(self, id):
     """Return a hash of id

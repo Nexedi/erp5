@@ -165,10 +165,6 @@ class HBTreeFolder2Base (Persistent):
         self._htree = OOBTree()
         self._count = Length()
         self._tree_list = PersistentMapping()
-        
-    def initBTrees(self):
-        """ """
-        return self._initBTrees()
 
     def _populateFromFolder(self, source):
         """Fill this folder with the contents of another folder.
