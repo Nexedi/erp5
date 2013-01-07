@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.4.21 (2013-01-07)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - really fix lock to avoid errors with concurrent RPC calls
+
+ * erp5.util.testnode:
+
+  - do not run test suites on deleted branches
+
 0.4.20 (2012-12-19)
 ------------------
 
