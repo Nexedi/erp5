@@ -164,18 +164,8 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
     for (element_index = 0; element_index < matched_left_element_list.snapshotLength; element_index++) {\n
       var element = matched_left_element_list.snapshotItem(element_index);\n
       var right = document.evaluate(right_xpath, element, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n
-      var cell;\n
-      var row = $("<tr>");\n
-      var table = $("<table>");\n
-      table.addClass("fake");\n
-      table.insertBefore(element);\n
-      cell = $("<td>");\n
-      cell.append(element);\n
-      row.append(cell[0]);\n
-      cell = $("<td>");\n
-      cell.append(right);\n
-      row.append(cell[0]);\n
-      table.append(row[0]);\n
+      var table = $(\'<table class="fake">\').insertBefore(element);\n
+      table.append($("<tr>").append($("<td>").append(element)).append($("<td>").append(right)));\n
     }\n
   }\n
   autoFocus();\n
@@ -379,8 +369,7 @@ if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
-
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
 
 ]]></string> </value>
         </item>
