@@ -144,7 +144,7 @@ class Updater(object):
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('fetch')
+          self._git('fetch', '--prune')
           self._git('update-index', '--refresh') # see note above
           self._git('reset', '--merge', '@{u}')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))
