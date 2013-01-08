@@ -55,43 +55,22 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore )
 
   def _getPreferenceNameList(self):
-    """Returns all existing preference names.
-
-    TODO: this should be done by introspecting property sheet.
+    """Return names of preference properties.
     """
-    return ( # CRM
-             'preferred_campaign_resource_list',
-             'preferred_event_assessment_form_id_list',
-             'preferred_event_resource_list',
-             'preferred_event_sender_email',
-             'preferred_meeting_resource_list',
-             'preferred_sale_opportunity_resource_list',
-             'preferred_support_request_resource_list',
-             # DMS
-             'preferred_conversion_cache_factory',
-             'preferred_document_email_ingestion_address',
-             'preferred_document_reference_method_id',
-             'preferred_document_file_name_regular_expression',
-             'preferred_document_reference_regular_expression',
-             'preferred_document_classification',
-             'preferred_synchronous_metadata_discovery',
-             'preferred_redirect_to_document',
-             'preferred_ooodoc_server_address',
-             'preferred_ooodoc_server_port_number',
-             # PDM
-             'preferred_product_individual_variation_base_category_list',
-             'preferred_component_individual_variation_base_category_list',
-             'preferred_service_individual_variation_base_category_list',
-             # Trade
-             'preferred_supplier_role_list',
-             'preferred_client_role_list',
-             'preferred_sale_use_list',
-             'preferred_purchase_use_list',
-             'preferred_packing_use_list',
-             'preferred_tax_use_list',
-             # Express
-             )
-
+    property_id_list = []
+    portal = self.getPortalObject()
+    for property_sheet_id in portal.portal_types[
+                     'System Preference'].getTypePropertySheetList():
+      property_sheet = portal.portal_property_sheets[property_sheet_id]
+      for prop in property_sheet.contentValues():
+        if prop.getProperty('preference'):
+          list_prefix = ''
+          if prop.getProperty('multivalued') or (
+               prop.getProperty('elementary_type') in (
+                 'lines', 'multiple_selection', 'tokens')):
+            list_prefix = '_list'
+          property_id_list.append('%s%s' % (prop.getReference(), list_prefix))
+    return property_id_list
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
@@ -112,9 +91,9 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     for preference_name in self._getPreferenceNameList():
       preference_value = getattr(self, preference_name,
                      preference.getProperty(preference_name, marker))
-      if preference_value is None and activated_preference is not None:
-        preference_value = activated_preference.getProperty(preference_name)
-      if preference_value is not marker:
+      if preference_value is marker and activated_preference is not None:
+        preference_value = activated_preference.getProperty(preference_name, marker)
+      if preference_value is not marker and preference_value is not None:
         preference_dict[preference_name] = preference_value
 
     if self.portal_workflow.isTransitionPossible(preference, 'enable'):
