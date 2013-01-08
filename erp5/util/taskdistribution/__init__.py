@@ -358,8 +358,10 @@ class ServerProxy(xmlrpclib.ServerProxy):
         transport = self.__transport
         def make_connection(*args, **kw):
             conn = transport.__class__.make_connection(transport, *args, **kw)
-            assert hasattr(conn, 'timeout'), conn
-            conn.timeout = 120
+            # BBB: On Python < 2.7, HTTP connection is wrapped
+            c = getattr(conn, '_conn', conn)
+            assert hasattr(c, 'timeout')
+            c.timeout = 120
             return conn
         transport.make_connection = make_connection
         self.__rpc_lock = threading.Lock()

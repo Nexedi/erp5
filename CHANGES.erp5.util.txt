@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.22 (2013-01-08)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - fix regression when used on Python < 2.7
+
 0.4.21 (2013-01-07)
 -------------------
 
