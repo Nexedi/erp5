@@ -92,7 +92,6 @@ class TestCopySupport(ERP5TypeTestCase):
     self.tic()
     person.recursiveReindexObject()
     person.default_address.setId('old_address')
-    person.setAddressCity('Paris')
     self.commit()
     # Currently, the test passes only because ActivityTool.distribute always
     # iterates on queues in the same order: SQLQueue before SQLDict.
