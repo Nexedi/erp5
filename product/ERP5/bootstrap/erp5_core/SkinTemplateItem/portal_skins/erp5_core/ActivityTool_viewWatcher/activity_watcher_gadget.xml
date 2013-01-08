@@ -254,7 +254,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: None</string> </value>
+            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -38,7 +38,7 @@
 
 <div>\n
   <div id="activity_watcher_gadget"></div>\n
-  <script src="../erp5_jquery/jquery/core/jquery.js"></script>\n
+  <script src="jquery/core/jquery.js"></script>\n
   <script src="activity-watcher-gadget.js"></script>\n
 </div>
 
