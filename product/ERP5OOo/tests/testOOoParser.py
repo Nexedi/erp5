@@ -106,6 +106,16 @@ class TestOOoParser(unittest.TestCase):
     if not_ok:
       self.fail('Spreadsheet not read!')
 
+  def test_getSpreadSheetMappingText(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('complex_text.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'][0], [' leading space'])
+    self.assertEquals(mapping['Feuille1'][1], ['   leading space'])
+    self.assertEquals(mapping['Feuille1'][2], ['tab\t'])
+    self.assertEquals(mapping['Feuille1'][3], ['New\nLine'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
