@@ -83,16 +83,12 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                               description = self.description,
                               priority = 1)
 
-    # XXX this have to be translated in user language.
     preference_dict = {}
 
     marker = []
-    activated_preference = portal.portal_preferences.getActiveSystemPreference()
     for preference_name in self._getPreferenceNameList():
       preference_value = getattr(self, preference_name,
                      preference.getProperty(preference_name, marker))
-      if preference_value is marker and activated_preference is not None:
-        preference_value = activated_preference.getProperty(preference_name, marker)
       if preference_value is not marker and preference_value is not None:
         preference_dict[preference_name] = preference_value
 
