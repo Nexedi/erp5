@@ -1503,6 +1503,23 @@ class Catalog(Folder,
                   pass
             finally:
               lock.release()
+          elif catalog_path == 'deleted':
+            # Two possible cases:
+            # - Reindexed object's path changed (ie, it or at least one of its
+            #   parents was renamed) but unindexObject was not called yet.
+            #   Reindexing is harmelss: unindexObject and then an
+            #   immediateReindexObject will be called.
+            # - Reindexed object was deleted by a concurrent transaction, which
+            #   committed after we got our ZODB snapshot of this object.
+            #   Reindexing is harmless: unindexObject will be called, and
+            #   cannot be executed in parallel thanks to activity's
+            #   serialisation_tag (so we cannot end up with a fantom object in
+            #   catalog).
+            # So we index object.
+            # We could also not index it to save the time needed to index, but
+            # this would slow down all regular case to slightly improve an
+            # exceptional case.
+            pass
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             # can be due to path length

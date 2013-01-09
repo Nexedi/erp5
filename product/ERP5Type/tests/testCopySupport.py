@@ -86,23 +86,12 @@ class TestCopySupport(ERP5TypeTestCase):
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
 
   def test_02_unindexObjectDependency(self):
-    # XXX This test passes for bad reasons.
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   address_city='Lille')
     self.tic()
     person.recursiveReindexObject()
     person.default_address.setId('old_address')
     self.commit()
-    # Currently, the test passes only because ActivityTool.distribute always
-    # iterates on queues in the same order: SQLQueue before SQLDict.
-    # If Python returned dictionary values in a different order,
-    # reindex activities would fail with the following error:
-    #   uid of <Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper for
-    #   /erp5/person_module/1/old_address> is 599L and is already assigned
-    #   to deleted in catalog !!! This can be fatal.
-    # This test would fail if:
-    # - SQLDict was used for 'unindexObject'
-    # - there were more than MAX_VALIDATED_LIMIT unindexed & reindexed objects
     self.tic()
 
   def test_03_unindexObjectGrouping(self):
