@@ -317,7 +317,6 @@ class TestResultProxy(RPCRetry):
     def _watcher(self):
         cond = self._watcher_condition
         while self._watcher_can_run and self.isAlive():
-            working = time.time()
             caption_list = []
             append = caption_list.append
             for name, (stream, max_history_bytes) in \
@@ -341,8 +340,7 @@ class TestResultProxy(RPCRetry):
                 append(caption)
             self.reportStatus('', '\n'.join(caption_list), '')
             with cond:
-                cond.wait(max(self._watcher_period - (working - time.time()),
-                    0))
+                cond.wait(self._watcher_period)
 
     def _stopWatching(self):
         cond = self._watcher_condition
