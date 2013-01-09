@@ -295,7 +295,7 @@ var rewriteIndentedSelect = function() {\n
     $("#master select").each(function() {\n
       $(this).children().each(function() {\n
         if ($(this).prop("tagName") != "OPTION") {\n
-          continue;\n
+          return non-false;\n
         }\n
         text = $(this).html();\n
         if (text.substring(0, 1) == \'\\n\') {\n
