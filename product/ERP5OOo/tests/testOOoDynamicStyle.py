@@ -127,7 +127,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     self.assertEqual('attachment; filename="Dynamic_viewAsOdt.odt"',
                      response.getHeader('content-disposition'))
     self._validate(response.getBody()) 
-    self.assertTrue(200, response.getStatus())
+    self.assertEquals(200, response.getStatus())
 
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
@@ -157,7 +157,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
     # then, it is not a zip stream 
     self.assertFalse(response.getBody().startswith('PK'))
-    self.assertTrue(500, response.getStatus())
+    self.assertEquals(500, response.getStatus())
    
 
   def test_02_static(self):
@@ -176,7 +176,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
 
     # 1. test a normal case
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
-    self.assertTrue(200, response.getStatus())
+    self.assertEqual(200, response.getStatus())
     self.assertEqual('application/vnd.oasis.opendocument.text',
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Static_viewAsOdt.odt"',
@@ -192,7 +192,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     Static_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
                                 ooo_stylesheet='Test_getODTStyleSheet_en', script_name='')
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
-    self.assertTrue(200, response.getStatus())
+    self.assertEqual(200, response.getStatus())
     self._validate(response.getBody()) 
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
@@ -205,7 +205,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
                                 ooo_stylesheet='NotFound_getODTStyleSheet', script_name='')
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
     self.assertFalse(response.getBody().startswith('PK'))
-    self.assertTrue(500, response.getStatus())
+    self.assertEquals(500, response.getStatus())
 
   def test_include_img(self):
     """
@@ -236,7 +236,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
 
     response = self.publish('/' + self.getPortal().Base_viewIncludeImageAsOdt.absolute_url(1))
     body = response.getBody()
-    self.assertTrue(200, response.getStatus(), body)
+    self.assertEquals(200, response.getStatus(), body)
     self.assertEqual('application/vnd.oasis.opendocument.text',
                      response.getHeader('content-type').split(';')[0])
     self.assertEqual('attachment; filename="Base_viewIncludeImageAsOdt.odt"',
