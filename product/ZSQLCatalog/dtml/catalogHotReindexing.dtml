@@ -1,7 +1,7 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<form action="<dtml-var URL1>">
+<form action="<dtml-var URL1>" method="post">
 <p class="form-help">
 Hot Reindexing allows you to recreate a new SQL Catalog without stopping your system.
 This requires at least two SQL Catalogs.
