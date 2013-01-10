@@ -308,38 +308,34 @@ class CategoryTool( UniqueObject, Folder, Base ):
         such as site/group/a/b/c/b1/c1 where b and b1 are both children
         categories of a.
 
-        relative_url -- a single relative url of a list of
-                        relative urls
+        relative_url -- a single relative url or a list of relative urls
 
         strict       -- if set to 1, only return uids of parents, not
                         relative_url
       """
-      uid_dict = {}
+      uid_set = set()
       if isinstance(relative_url, str):
         relative_url = (relative_url,)
       for path in relative_url:
         try:
           o = self.getCategoryValue(path, base_category=base_category)
           if o is not None:
-            my_base_category = self.getBaseCategoryId(path)
-            bo = self.get(my_base_category, None)
-            if bo is not None:
-              bo_uid = int(bo.getUid())
-              uid_dict[(int(o.uid), bo_uid, 1)] = 1 # Strict Membership
-              if o.meta_type == 'CMF Category' or o.meta_type == 'CMF Base Category':
+            if base_category is None:
+              my_base_category = self.getBaseCategoryId(path)
+            else:
+              my_base_category = base_category
+            bo_uid = self[my_base_category].getUid()
+            uid_set.add((o.getUid(), bo_uid, 1)) # Strict Membership
+            if not strict:
+              while o.portal_type == 'Category':
                 # This goes up in the category tree
                 # XXX we should also go up in some other cases....
                 # ie. when some documents act as categories
-                if not strict:
-                  while o.meta_type == 'CMF Category':
-                    o = o.aq_parent # We want acquisition here without aq_inner
-                    uid_dict[(int(o.uid), bo_uid, 0)] = 1 # Non Strict Membership
+                o = o.aq_parent # We want acquisition here without aq_inner
+                uid_set.add((o.getUid(), bo_uid, 0)) # Non Strict Membership
         except (KeyError, AttributeError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
-      return uid_dict.keys()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getUids')
-    getUids = getCategoryParentUidList
+      return list(uid_set) # cast to list for <dtml-in>
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryChildUidList')
     def getCategoryChildUidList(self, relative_url, base_category = None, strict=0):
