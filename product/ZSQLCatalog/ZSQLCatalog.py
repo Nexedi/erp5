@@ -347,9 +347,9 @@ class ZCatalog(Folder, Persistent, Implicit):
     result = catalog_object.readRecordedObjectList(catalog=catalog)
     if len(result):
       for o in result:
-        if catalog==0:
+        if catalog == 0:
           self.uncatalog_object(uid=o.path, sql_catalog_id=sql_catalog_id)
-        elif catalog==1:
+        elif catalog == 1:
           try:
             obj = self.resolve_path(o.path)
           except ConflictError:
