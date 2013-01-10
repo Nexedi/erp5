@@ -46,9 +46,6 @@ class TaskDistributionTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, *args, **kw):
-    BaseTool.__init__(self, *args, **kw)
-
   security.declarePublic('getProtocolRevision')
   def getProtocolRevision(self):
     """
@@ -84,19 +81,6 @@ class TaskDistributionTool(BaseTool):
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
-    tag = "test_result_creation_%s" % test_title
-    # If there is already pending creation, we raise error, the testnode
-    # will automatically retry later
-    assert portal.portal_activities.countMessageWithTag(tag) == 0, \
-           "There is already a test result under creation"
-    test_result_path = None
-    result_list = portal.test_result_module.searchFolder(
-                         portal_type="Test Result",
-                         simulation_state="started",
-                         title=test_title,
-                         sort_on=[("creation_date","descending")])
-    if len(result_list):
-      test_result_path = result_list[0].getRelativeUrl()
     def createNode(test_result, node_title):
       if node_title is not None:
         node = self._getTestResultNode(test_result, node_title)
@@ -138,9 +122,14 @@ class TaskDistributionTool(BaseTool):
     else:
       # backward compatibility
       int_index, reference = revision
-    test_result = None
-    if test_result_path:
-      test_result = portal.unrestrictedTraverse(test_result_path, None)
+    result_list = portal.test_result_module.searchFolder(
+                         portal_type="Test Result",
+                         simulation_state="started",
+                         title=test_title,
+                         sort_on=(("creation_date","descending"),),
+                         limit=1)
+    if result_list:
+      test_result = result_list[0].getObject()
       if test_result is None or test_result.getSimulationState() in \
                ('cancelled', 'failed'):
         pass
@@ -156,9 +145,9 @@ class TaskDistributionTool(BaseTool):
             last_revision = last_revision, reference
           if len(test_result.objectValues(portal_type="Test Result Line")) == 0 \
               and len(test_name_list):
-            self._p_changed = 1 # avoid two parallel creation
+            test_result.serialize() # prevent duplicate test result lines
             createTestResultLineList(test_result, test_name_list)
-          return test_result_path, last_revision
+          return test_result.getRelativeUrl(), last_revision
         if last_state == 'stopped':
           if reference_list_string is not None:
             if reference_list_string == test_result.getReference():
@@ -169,25 +158,25 @@ class TaskDistributionTool(BaseTool):
       portal_type='Test Result',
       title=test_title,
       reference=reference,
-      predecessor=test_result_path,
-      activate_kw={"tag": tag})
+      is_indexable=False)
     if int_index is not None:
-      test_result.setIntIndex(int_index)
+      test_result._setIntIndex(int_index)
     if project_title is not None:
       project_list = portal.portal_catalog(portal_type='Project',
                                            title='="%s"' % project_title)
-      if len(project_list) == 1:
-        test_result.setSourceProjectValue(project_list[0].getObject())
-      else:
+      if len(project_list) != 1:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))
+      test_result._setSourceProjectValue(project_list[0].getObject())
     test_result.updateLocalRolesOnSecurityGroups() # XXX
-    test_result_path = test_result.getRelativeUrl()
-    self._p_changed = 1
     test_result.start()
+    del test_result.isIndexable
+    test_result.immediateReindexObject()
+    self.serialize() # prevent duplicate test result
+    # following 2 functions only call 'newContent' on test_result
     createTestResultLineList(test_result, test_name_list)
     createNode(test_result, node_title)
-    return test_result_path, revision
+    return test_result.getRelativeUrl(), revision
 
   security.declarePublic('startUnitTest')
   def startUnitTest(self, test_result_path, exclude_list=()):
