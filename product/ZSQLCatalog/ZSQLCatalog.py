@@ -368,7 +368,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           playBackRecordedObjectList(sql_catalog_id=sql_catalog_id,
                                      catalog=catalog)
     else:
-      # If there iss nothing to do, go to next step.
+      # If there is nothing to do, go to next step.
       if catalog == 0:
         # If we were replaying unindex actions, time to replay index actions.
         self.activate(priority=5).\
