@@ -424,7 +424,9 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Starts a hot reindexing.
 
-      Hot reindexing will create a catalog and sync it with the current one.
+      Hot reindexing reindexes all documents using destination_sql_catalog_id
+      with low priority (so site can keep working during hot reindexation).
+
       Once done, both catalogs will be swapped so that current catalog will
       not be used any more and destination catalog will get used "for real".
 
