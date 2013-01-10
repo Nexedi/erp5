@@ -350,12 +350,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         if catalog == 0:
           self.uncatalog_object(uid=o.path, sql_catalog_id=sql_catalog_id)
         elif catalog == 1:
-          try:
-            obj = self.resolve_path(o.path)
-          except ConflictError:
-            raise
-          except:
-            obj = None
+          obj = self.resolve_path(o.path)
           if obj is not None:
             obj.reindexObject(sql_catalog_id=sql_catalog_id)
         else:
