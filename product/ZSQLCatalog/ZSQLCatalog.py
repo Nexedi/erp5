@@ -415,6 +415,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                            skin_name_list=None,
                            skin_selection_list=None,
                            update_destination_sql_catalog=None,
+                           base_priority=5,
                            REQUEST=None, RESPONSE=None):
     """
       Starts a hot reindexing.
@@ -513,24 +514,24 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.ERP5Site_reindexAll(sql_catalog_id=destination_sql_catalog_id,
                              final_activity_tag=final_activity_tag,
                              clear_catalog=1,
-                             additional_priority=1)
+                             additional_priority=base_priority)
     # Once reindexing is finished, change the hot reindexing state so that
     # new catalog changes are applied in both catalogs.
     self.activate(after_tag=final_activity_tag,
-                  priority=5).setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
+                  priority=base_priority).setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       archive_path=archive_path)
     # Once in double-indexing mode, planned reindex can be replayed.
     self.activate(after_method_id='setHotReindexingState',
-                  priority=5).playBackRecordedObjectList(
+                  priority=base_priority).playBackRecordedObjectList(
                       sql_catalog_id=destination_sql_catalog_id)
     # Once there is nothing to replay, databases are sync'ed, so the new
     # catalog can become current.
     self.activate(after_method_id=('playBackRecordedObjectList',
                                    'InventoryModule_reindexMovementList'),
                   after_tag='InventoryModule_reindexMovementList',
-                  priority=5).finishHotReindexing(
+                  priority=base_priority).finishHotReindexing(
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       skin_selection_dict=skin_selection_dict,
