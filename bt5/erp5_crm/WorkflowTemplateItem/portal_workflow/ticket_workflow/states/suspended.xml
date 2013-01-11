@@ -61,6 +61,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -70,6 +71,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -80,6 +82,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
