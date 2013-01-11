@@ -26,6 +26,7 @@ import timeit
 from textwrap import dedent
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.PythonScripts.PythonScript import PythonScript
 
 
 class HBTreeFolder2Tests(ERP5TypeTestCase):
@@ -221,6 +222,44 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
           i = random.choice(id_list)
           id_list.remove(i)
           h._delOb(i)
+
+    def testRestrictedIteration(self):
+        """
+        Check content iterators can be used by restricted python code.
+        """
+        # To let restricted python access methods on folder
+        marker = object()
+        saved_class_attributes = {}
+        for method_id in ('objectIds', 'objectValues', 'objectItems'):
+          roles_id = method_id + '__roles__'
+          saved_class_attributes[roles_id] = getattr(HBTreeFolder2, roles_id,
+            marker)
+          setattr(HBTreeFolder2, roles_id, None)
+        try:
+          h = HBTreeFolder2()
+          # whatever value, as long as it has an __of__
+          h._setOb('foo', HBTreeFolder2())
+          script = PythonScript('script')
+          script.ZPythonScript_edit('h', dedent("""
+            for dummy in h.objectIds():
+              pass
+            for dummy in h.objectValues():
+              pass
+            for dummy in h.objectItems():
+              pass
+          """))
+          class DummyRequest(object):
+            # To make Shared.DC.Scripts.Bindings.Bindings._getTraverseSubpath
+            # happy
+            other = {}
+          script.REQUEST = DummyRequest
+          script(h)
+        finally:
+          for roles_id, orig in saved_class_attributes.iteritems():
+            if orig is marker:
+              delattr(HBTreeFolder2, roles_id)
+            else:
+              setattr(HBTreeFolder2, roles_id, orig)
 
     @expectedFailure
     def _testPerformanceInDepth(self):
