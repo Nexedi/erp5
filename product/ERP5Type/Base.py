@@ -2013,11 +2013,8 @@ class Base( CopyContainer,
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
-    references = []
-    if type(uids) not in (type(()), type([])):
-      uids = [uids]
-    for uid in uids:
-      references.append(self.portal_catalog.getObject(uid))
+    references = map(self.getPortalObject().portal_catalog.getObject,
+                     (uids,) if isinstance(uids, (int, long)) else uids)
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 
