@@ -27,8 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
-
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -345,8 +343,7 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
           set priority=200
         where uid <> %s
       """ % (table, update_causality_message_uid))
-    transaction.commit()
-    self.stepTic(sequence)
+    self.tic()
 
   @newSimulationExpectedFailure
   @expectedFailure

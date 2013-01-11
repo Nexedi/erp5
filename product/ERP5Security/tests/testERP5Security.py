@@ -31,9 +31,6 @@
 """
 
 import unittest
-
-import transaction
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -951,7 +948,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertTrue(len(person_module.keys()))
     # When we update security of a module...
     person_module.reindexObjectSecurity()
-    transaction.commit()
+    self.commit()
     # we don't want all underlying objects to be recursively
     # reindexed. After all, its contents do not acquire local roles.
     check(['immediateReindexObject'])
@@ -963,7 +960,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                for rec in person_module.searchFolder(reference=self.username)]
     self.assertTrue(len(person.objectIds()))
     person.reindexObjectSecurity()
-    transaction.commit()
+    self.commit()
     check(['recursiveImmediateReindexObject'])
     self.tic()
 
