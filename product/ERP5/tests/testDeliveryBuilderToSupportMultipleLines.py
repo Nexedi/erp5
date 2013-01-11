@@ -336,12 +336,11 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
         return False
     self.tic(stop_condition=stop_condition)
     update_causality_message_uid, = prioritize_uid_list
-    # make all other messages have less priority:
     for table in 'message', 'message_queue':
       self.portal.cmf_activity_sql_connection.manage_test("""
         update %s
-          set priority=200
-        where uid <> %s
+          set priority=-200
+        where uid = %s
       """ % (table, update_causality_message_uid))
     self.tic()
 
