@@ -125,7 +125,7 @@ class TaskDistributionTool(BaseTool):
     result_list = portal.test_result_module.searchFolder(
                          portal_type="Test Result",
                          simulation_state="started",
-                         title=test_title,
+                         title="=%s" % test_title,
                          sort_on=(("creation_date","descending"),),
                          limit=1)
     if result_list:
