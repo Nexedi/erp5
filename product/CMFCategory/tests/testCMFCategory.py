@@ -1075,6 +1075,27 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Check indexation
     self.tic()
 
+  def test_setCategoryMemberShip(self):
+    person = self.getPersonModule().newContent(portal_type='Person')
+    category_tool = self.getCategoriesTool()
+    bc = category_tool.newContent()
+    bc.newContent('a')
+    bc.newContent('b')
+    base = (bc.id + '/').__add__
+    def get(*args, **kw):
+      return category_tool.getCategoryMembershipList(person, *args, **kw)
+    def _set(*args, **kw):
+      return category_tool._setCategoryMembership(person, *args, **kw)
+    _set(bc.id, list('aa'))
+    self.assertEqual(get(bc.id), list('aa'))
+    _set(bc.id, list('baa'))
+    self.assertEqual(get(bc.id), list('aba'))
+    _set(bc.id, map(base, 'bb'), 1)
+    self.assertEqual(get(bc.id), list('bb'))
+    _set(bc.id, map(base, 'abb'), 1)
+    self.assertEqual(get(bc.id), list('bab'))
+    _set(bc.id, ())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFCategory))
