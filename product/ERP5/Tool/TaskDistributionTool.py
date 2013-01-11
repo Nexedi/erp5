@@ -248,7 +248,8 @@ class TaskDistributionTool(BaseTool):
       if node.getSimulationState() != 'failed':
         break
     else:
-      test_result.fail()
+      if test_result.getSimulationState() not in ('failed', 'cancelled'):
+        test_result.fail()
 
   security.declarePublic('reportTaskStatus')
   def reportTaskStatus(self, test_result_path, status_dict, node_title):
