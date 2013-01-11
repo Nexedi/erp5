@@ -124,16 +124,12 @@ class TaskDistributionTool(BaseTool):
       int_index, reference = revision
     result_list = portal.test_result_module.searchFolder(
                          portal_type="Test Result",
-                         simulation_state="started",
                          title="=%s" % test_title,
                          sort_on=(("creation_date","descending"),),
                          limit=1)
     if result_list:
       test_result = result_list[0].getObject()
-      if test_result is None or test_result.getSimulationState() in \
-               ('cancelled', 'failed'):
-        pass
-      else:
+      if test_result is not None:
         last_state = test_result.getSimulationState()
         last_revision = str(test_result.getIntIndex())
         if last_state == 'started':
@@ -148,7 +144,7 @@ class TaskDistributionTool(BaseTool):
             test_result.serialize() # prevent duplicate test result lines
             createTestResultLineList(test_result, test_name_list)
           return test_result.getRelativeUrl(), last_revision
-        if last_state == 'stopped':
+        if last_state in ('stopped', 'failed'):
           if reference_list_string is not None:
             if reference_list_string == test_result.getReference():
               return
