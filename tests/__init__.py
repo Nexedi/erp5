@@ -45,7 +45,6 @@ class _ERP5(ERP5TypeTestSuite):
 
 
 class PERF(_ERP5):
-  allow_restart = True
 
   def getTestList(self):
     return [x for x in self._getAllTestList() if x.find('Performance')>0]
