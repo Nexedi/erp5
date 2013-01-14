@@ -146,7 +146,8 @@ class TaskDistributionTool(BaseTool):
           return test_result.getRelativeUrl(), last_revision
         if last_state in ('stopped', 'failed'):
           if reference_list_string is not None:
-            if reference_list_string == test_result.getReference():
+            if reference_list_string == test_result.getReference() \
+                and not allow_restart:
               return
           elif last_revision == int_index and not allow_restart:
             return
