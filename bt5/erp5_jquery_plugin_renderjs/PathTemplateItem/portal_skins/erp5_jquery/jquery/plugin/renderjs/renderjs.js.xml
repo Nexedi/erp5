@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts49355317.03</string> </value>
+            <value> <string>ts58177410.64</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -38,15 +38,9 @@
 // still it\'s possible to override this and use explicit gadget rendering\n
 var RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING = true;\n
 \n
-// by default RenderJs will examin and bind all interaction gadgets\n
-// available\n
+// by default RenderJs will examine and bind all interaction gadgets\n
+// available \n
 var RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND = true;\n
-\n
-if (typeof require !== \'undefined\') {\n
-  // example of how we can use requirejs to load external libraries\n
-  //require(["../../../../lib/jstorage/jstorage.js"], function (util) {\n
-  //});\n
-}\n
 \n
 // fallback for IE\n
 if (typeof console === "undefined" || typeof console.log === "undefined") {\n
@@ -59,19 +53,52 @@ var RenderJs = (function () {\n
     var is_ready = false;\n
 \n
     return {\n
-        bootstrap: function (root) {\n
-            /* initial load application gadget */\n
-            var gadget_id;\n
-            gadget_id = root.attr("id");\n
-            if (gadget_id!==undefined) {\n
-              // bootstart root gadget only if it is indeed a gadget\n
-              RenderJs.loadGadgetFromUrl(root);\n
+\n
+        init: function () {\n
+          /*\n
+           * Do all initialization\n
+           */\n
+          if (RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING) {\n
+              RenderJs.bootstrap($(\'body\'));\n
+          }\n
+          if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND) {\n
+            var root_gadget = RenderJs.GadgetIndex.getRootGadget();\n
+            // We might have a page without gadgets.\n
+            // Be careful, right now we can be in this case because\n
+            // asynchronous gadget loading is not finished\n
+            if (root_gadget !== undefined) {\n
+              RenderJs.bindReady(\n
+                function () {\n
+                  // examine all Intaction Gadgets and bind accordingly\n
+                  $("div[data-gadget-connection]").each( function (index, element) {\n
+                    RenderJs.InteractionGadget.bind($(element));\n
+                  })\n
+                });\n
             }\n
-            RenderJs.load(root);\n
+          };\n
         },\n
 \n
-        load: function (root) {\n
-            /* Load gadget layout by traversing DOM */\n
+        bootstrap: function (root) {\n
+            /*\n
+             * Load all gadgets for this DOM element\n
+             * (including recursively contained ones)\n
+             */\n
+            var gadget_id, is_gadget;\n
+            gadget_id = root.attr("id");\n
+            is_gadget = root.attr("data-gadget") !== undefined;\n
+            // this will make RenderJs fire "ready" event when all gadgets are loaded.\n
+            RenderJs.setReady(false);\n
+            if (is_gadget && gadget_id !== undefined ) {\n
+              // bootstart root gadget only if it is indeed a gadget\n
+              RenderJs.loadGadget(root);\n
+            }\n
+            RenderJs.loadRecursiveGadget(root);\n
+        },\n
+\n
+        loadRecursiveGadget: function (root) {\n
+            /*\n
+             * Load all contained gadgets inside passed DOM element.\n
+             */\n
             var gadget_list, gadget, gadget_id, gadget_js;\n
             gadget_list = root.find("[data-gadget]");\n
 \n
@@ -86,25 +113,30 @@ var RenderJs = (function () {\n
 \n
             // Load chilren\n
             gadget_list.each(function () {\n
-                RenderJs.loadGadgetFromUrl($(this));\n
+                RenderJs.loadGadget($(this));\n
             });\n
         },\n
 \n
-        updateAndRecurse: function (gadget, data) {\n
-            /* Update current gadget and recurse down */\n
+        setGadgetAndRecurse: function (gadget, data) {\n
+            /*\n
+             * Set gadget data and recursively load it in case it holds another\n
+             * gadgets.\n
+             */\n
             gadget.append(data);\n
             // a gadget may contain sub gadgets\n
-            this.load(gadget);\n
+            RenderJs.loadRecursiveGadget(gadget);\n
         },\n
 \n
-        loadGadgetFromUrl: function (gadget) {\n
-            /* Load gadget\'s SPECs from URL */\n
+        loadGadget: function (gadget) {\n
+            /*\n
+             * Load gadget\'s SPECs from URL\n
+             */\n
             var url, gadget_id, gadget_property, cacheable, cache_id,\n
-                app_cache, data, gadget_js;\n
+                app_cache, data, gadget_js, is_update_gadget_data_running;\n
             url = gadget.attr("data-gadget");\n
             gadget_id = gadget.attr("id");\n
             gadget_js = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
-            if (gadget_js===undefined) {\n
+            if (gadget_js === undefined) {\n
               // register gadget in javascript namespace if not already registered\n
               gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
               RenderJs.GadgetIndex.registerGadget(gadget_js);\n
@@ -144,16 +176,18 @@ var RenderJs = (function () {\n
                                 RenderJs.Cache.set(cache_id, data);\n
                                 RenderJs.GadgetIndex.getGadgetById(gadget_id).\n
                                     setReady();\n
-                                RenderJs.updateAndRecurse(gadget, data);\n
+                                RenderJs.setGadgetAndRecurse(gadget, data);\n
                                 RenderJs.checkAndTriggerReady();\n
+                                RenderJs.updateGadgetData(gadget);\n
                             }\n
                         });\n
                     } else {\n
                         // get from cache\n
                         data = app_cache;\n
                         gadget_js.setReady();\n
-                        this.updateAndRecurse(gadget, data);\n
+                        this.setGadgetAndRecurse(gadget, data);\n
                         this.checkAndTriggerReady();\n
+                        RenderJs.updateGadgetData(gadget);\n
                     }\n
                 } else {\n
                     // not to be cached\n
@@ -164,19 +198,28 @@ var RenderJs = (function () {\n
                             gadget_id = this.yourCustomData.gadget_id;\n
                             RenderJs.GadgetIndex.getGadgetById(gadget_id).\n
                                 setReady();\n
-                            RenderJs.updateAndRecurse(gadget, data);\n
+                            RenderJs.setGadgetAndRecurse(gadget, data);\n
                             RenderJs.checkAndTriggerReady();\n
+                            RenderJs.updateGadgetData(gadget);\n
                         }\n
                     });\n
                 }\n
-            } else {\n
-                // gadget is an inline one so no need to load it from network\n
-                gadget_js.setReady();\n
+            }\n
+            else {\n
+                // gadget is an inline (InteractorGadget or one using\n
+                // data-gadget-source / data-gadget-handler) so no need\n
+                // to load it from network\n
+                is_update_gadget_data_running = RenderJs.updateGadgetData(gadget);\n
+                if (!is_update_gadget_data_running) {\n
+                  // no update is running so gadget is basically ready\n
+                  // if update is running then it should take care and set status\n
+                  gadget_js.setReady();\n
+                }\n
                 RenderJs.checkAndTriggerReady();\n
             }\n
         },\n
 \n
-        isReady: function (value) {\n
+        isReady: function () {\n
             /*\n
              * Get rendering status\n
              */\n
@@ -210,29 +253,18 @@ var RenderJs = (function () {\n
                         trigger("ready");\n
                     // trigger ready on root body element\n
                     $("body").trigger("ready");\n
+                    // this set will make sure we fire this event only once\n
                     RenderJs.setReady(true);\n
                 }\n
             }\n
             return is_gadget_list_loaded;\n
         },\n
 \n
-        update: function (root) {\n
-            /* update gadget with data from remote source */\n
-            root.find("[gadget]").each(function (i, v) {\n
-                RenderJs.updateGadgetData($(this));\n
-            });\n
-        },\n
-\n
-        updateGadgetWithDataHandler: function (result) {\n
-            var data_handler;\n
-            data_handler = this.yourCustomData.data_handler;\n
-            if (data_handler !== undefined) {\n
-                eval(data_handler + "(result)");\n
-            }\n
-        },\n
-\n
         updateGadgetData: function (gadget) {\n
-            /* Do real gagdet update here */\n
+            /*\n
+             * Gadget can be updated from "data-gadget-source" (i.e. a json)\n
+             * and "data-gadget-handler" attributes (i.e. a namespace Javascript) \n
+             */\n
             var data_source, data_handler;\n
             data_source = gadget.attr("data-gadget-source");\n
             data_handler = gadget.attr("data-gadget-handler");\n
@@ -241,13 +273,30 @@ var RenderJs = (function () {\n
                 $.ajax({\n
                     url: data_source,\n
                     dataType: "json",\n
-                    yourCustomData: {"data_handler": data_handler},\n
-                    success: RenderJs.updateGadgetWithDataHandler\n
+                    yourCustomData: {"data_handler": data_handler,\n
+                                     "gadget_id": gadget.attr("id")},\n
+                    success: function (result) {\n
+                              var data_handler, gadget_id;\n
+                              data_handler = this.yourCustomData.data_handler;\n
+                              gadget_id = this.yourCustomData.gadget_id;\n
+                              if (data_handler !== undefined) {\n
+                                  // eval is not nice to use\n
+                                  eval(data_handler + "(result)");\n
+                                  gadget = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
+                                  // mark gadget as loaded and fire a check\n
+                                  // to see if all gadgets are loaded\n
+                                  gadget.setReady();\n
+                                  RenderJs.checkAndTriggerReady();\n
+                              }\n
+                             }\n
                 });\n
+                // asynchronous update happens and respective thread will update status\n
+                return true;\n
             }\n
+            return false;\n
         },\n
 \n
-        addGadget: function (dom_id, gadget, gadget_data_handler,\n
+        addGadget: function (dom_id, gadget_id, gadget, gadget_data_handler,\n
                             gadget_data_source) {\n
             /*\n
              * add new gadget and render it\n
@@ -256,7 +305,7 @@ var RenderJs = (function () {\n
             tab_container = $(\'#\' + dom_id);\n
             tab_container.empty();\n
             html_string = [\n
-                \'<div class="gadget" \',\n
+                \'<div  id="\' + gadget_id + \'"\',\n
                 \'data-gadget="\' + gadget + \'"\',\n
                 \'data-gadget-handler="\' + gadget_data_handler + \'" \',\n
                 \'data-gadget-source="\' + gadget_data_source + \'"></div>\'\n
@@ -264,19 +313,10 @@ var RenderJs = (function () {\n
 \n
             tab_container.append(html_string);\n
             tab_gadget = tab_container.find(".gadget");\n
+\n
             // render new gadget\n
-            RenderJs.setReady(false);\n
-            RenderJs.loadGadgetFromUrl(tab_gadget);\n
-            // clear previous events\n
-            RenderJs.GadgetIndex.getRootGadget().getDom().bind(\n
-                "ready",\n
-                function () {\n
-                    if (!is_ready) {\n
-                        RenderJs.updateGadgetData(tab_gadget);\n
-                        is_ready = true;\n
-                    }\n
-                }\n
-            );\n
+            RenderJs.bootstrap(tab_container);\n
+\n
             return tab_gadget;\n
         },\n
 \n
@@ -406,6 +446,16 @@ var RenderJs = (function () {\n
                  */\n
                 this.is_ready = true;\n
             };\n
+\n
+            this.remove = function () {\n
+                /*\n
+                 * Remove gadget (including its DOM element).\n
+                 */\n
+                // unregister from GadgetIndex\n
+                RenderJs.GadgetIndex.unregisterGadget(this);\n
+                // remove its DOM element\n
+                $(this.getDom()).remove();\n
+            };\n
         }),\n
 \n
         TabbularGadget: (function () {\n
@@ -423,14 +473,14 @@ var RenderJs = (function () {\n
                     visible_dom.removeClass("not_selected");\n
                 },\n
 \n
-                addNewTabGadget: function (dom_id, gadget, gadget_data_handler,\n
+                addNewTabGadget: function (dom_id, gadget_id, gadget, gadget_data_handler,\n
                                           gadget_data_source) {\n
                     /*\n
                      * add new gadget and render it\n
                      */\n
                     var tab_gadget;\n
                     tab_gadget = RenderJs.addGadget(\n
-                        dom_id, gadget, gadget_data_handler, gadget_data_source\n
+                        dom_id, gadget_id, gadget, gadget_data_handler, gadget_data_source\n
                     );\n
                     // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
                 }\n
@@ -444,6 +494,26 @@ var RenderJs = (function () {\n
             var gadget_list = [];\n
 \n
             return {\n
+\n
+                getGadgetIdListFromDom: function (dom) {\n
+                  /*\n
+                   * Get list of all gadget\'s ID from DOM\n
+                   */\n
+                  var gadget_id_list = [];\n
+                  $.each(dom.find(\'[data-gadget]\'),\n
+                         function (index, value) {\n
+                           gadget_id_list.push($(value).attr("id"));}\n
+                    );\n
+                  return gadget_id_list;\n
+                },\n
+\n
+                setGadgetList: function (gadget_list_value) {\n
+                    /*\n
+                     * Set list of registered gadgets\n
+                     */\n
+                    gadget_list = gadget_list_value;\n
+                },\n
+\n
                 getGadgetList: function () {\n
                     /*\n
                      * Return list of registered gadgets\n
@@ -519,18 +589,19 @@ var RenderJs = (function () {\n
                     /*\n
                      * Bind event between gadgets.\n
                      */\n
-                    var gadget_id, gadget_connection_list,\n
+                    var gadget_id, gadget_connection_list, \n
                       createMethodInteraction = function (\n
                         original_source_method_id, source_gadget_id,\n
                         source_method_id, destination_gadget_id,\n
                         destination_method_id) {\n
                         var interaction = function () {\n
+                            // execute source method\n
                             RenderJs.GadgetIndex.getGadgetById(\n
                                 source_gadget_id)[original_source_method_id].\n
                                 apply(null, arguments);\n
+                            // call trigger so bind can be asynchronously called\n
                             RenderJs.GadgetIndex.getGadgetById(\n
-                                destination_gadget_id)[destination_method_id].\n
-                                apply(null, arguments);\n
+                                destination_gadget_id).dom.trigger(source_method_id);\n
                         };\n
                         return interaction;\n
                     },\n
@@ -577,6 +648,14 @@ var RenderJs = (function () {\n
                                     destination_gadget_id,\n
                                     destination_method_id\n
                                 );\n
+                            // we use html custom events for asyncronous method call so\n
+                            // bind destination_gadget to respective event\n
+                            destination_gadget.dom.bind(\n
+                                source_method_id,\n
+                                createTriggerInteraction(\n
+                                    destination_gadget_id, destination_method_id\n
+                                )\n
+                            );\n
                         }\n
                         else {\n
                             // this is a custom event attached to HTML gadget\n
@@ -596,26 +675,10 @@ var RenderJs = (function () {\n
 }());\n
 \n
 // impliticly call RenderJs bootstrap\n
-$(document).ready(function () {\n
-    if (RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING) {\n
-        RenderJs.bootstrap($(\'body\'));\n
-    }\n
-    if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND) {\n
-      var root_gadget = RenderJs.GadgetIndex.getRootGadget();\n
-      // We might have a page without gadgets.\n
-      // Be careful, right now we can be in this case because\n
-      // asynchronous gadget loading is not finished\n
-      if (root_gadget !== undefined) {\n
-        RenderJs.bindReady(\n
-           function () {\n
-             // examine all Intaction Gadgets and bind accordingly\n
-             $("div[data-gadget-connection]").each( function(index, element) {\n
-               RenderJs.InteractionGadget.bind($(element));\n
-             })\n
-           });\n
-      }\n
-    }\n
-});
+//  $(document).ready(function () {\n
+//      RenderJs.init();\n
+//  });\n
+
 
 ]]></string> </value>
         </item>
@@ -625,7 +688,7 @@ $(document).ready(function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>22925</int> </value>
+            <value> <int>26111</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
