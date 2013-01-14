@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34648236.68</string> </value>
+            <value> <string>ts58176414.84</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -46,9 +46,9 @@ $.extend($.jgrid,{\r\n
 \tsearch : {\r\n
 \t\tcaption: "Recherche...",\r\n
 \t\tFind: "Chercher",\r\n
-\t\tReset: "Annuler",\r\n
+\t\tReset: "Réinitialiser",\r\n
 \t\todata : [\'égal\', \'différent\', \'inférieur\', \'inférieur ou égal\',\'supérieur\',\'supérieur ou égal\', \'commence par\',\'ne commence pas par\',\'est dans\',"n\'est pas dans",\'finit par\',\'ne finit pas par\',\'contient\',\'ne contient pas\'],\r\n
-\t\tgroupOps: [\t{ op: "AND", text: "tous" },\t{ op: "OR",  text: "aucun" }\t],\r\n
+\t\tgroupOps: [\t{ op: "AND", text: "tous" },\t{ op: "OR",  text: "au moins un" }\t],\r\n
 \t\tmatchText: " correspondance",\r\n
 \t\trulesText: " règles"\r\n
 \t},\r\n
@@ -163,7 +163,7 @@ $.extend($.jgrid,{\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4273</int> </value>
+            <value> <int>4286</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
