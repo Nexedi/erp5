@@ -240,6 +240,10 @@ class UidBuffer(TM):
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
+class DummyDict(dict):
+  def __setitem__(self, key, value):
+    pass
+
 related_key_definition_cache = {}
 related_key_warned_column_set = set()
 
@@ -1545,7 +1549,10 @@ class Catalog(Folder,
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
     econtext = getEngine().getContext()
-    argument_cache = {}
+    if disable_cache:
+      argument_cache = DummyDict()
+    else:
+      argument_cache = {}
 
     with (noReadOnlyTransactionCache if disable_cache else
           readOnlyTransactionCache)():
@@ -1646,8 +1653,7 @@ class Catalog(Folder,
                 LOG('SQLCatalog', WARNING, 'Failed to call method %s on %r' %
                     (arg, object), error=sys.exc_info())
                 value = None
-              if not disable_cache:
-                argument_cache[argument_cache_key] = value
+              argument_cache[argument_cache_key] = value
             append(value)
           kw[arg] = value_list
 
