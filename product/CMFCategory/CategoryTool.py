@@ -1190,8 +1190,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # Make sure all local categories are considered
         if c not in result:
           append(c)
-      if getattr(context, 'isCategory', 0):
-        append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
     # Catalog related methods
