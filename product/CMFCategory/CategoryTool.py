@@ -1152,21 +1152,17 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryList' )
     def getCategoryList(self, context):
-      if getattr(aq_base(context), 'categories', _marker) is not _marker:
-        if isinstance(context.categories, tuple):
-          result = list(context.categories)
-        elif isinstance(context.categories, list):
-          result = context.categories
-        else:
-          result = []
+      result = getattr(aq_base(context), 'categories', None)
+      if result is not None:
+        result = list(result)
       elif isinstance(context, dict):
-        result = list(context.get('categories', []))
+        return list(context.get('categories', ()))
       else:
         result = []
       if getattr(context, 'isCategory', 0):
         category_url = context.getRelativeUrl()
         if category_url not in result:
-          result.append(context.getRelativeUrl()) # Pure category is member of itself
+          result.append(category_url) # Pure category is member of itself
       return result
 
     _getCategoryList = getCategoryList
@@ -1184,12 +1180,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category = self.getBaseCategoryList(context=context))
-      append = result.append
-      non_acquired = self._getCategoryList(context)
-      for c in non_acquired:
+      for c in self._getCategoryList(context):
         # Make sure all local categories are considered
         if c not in result:
-          append(c)
+          result.append(c)
       return result
 
     # Catalog related methods
