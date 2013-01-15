@@ -2175,9 +2175,6 @@ class Base( CopyContainer,
     """
     return self._getCategoryTool().getAcquiredCategoryList(self)
 
-  def _getAcquiredCategoryList(self):
-    return self._getCategoryTool()._getAcquiredCategoryList(self)
-
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
   def setCategoryList(self, path_list):
     self.portal_categories.setCategoryList(self, path_list)

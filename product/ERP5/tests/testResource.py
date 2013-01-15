@@ -862,20 +862,19 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     # Test the cases
     for product, variation, node, base_price in test_case_list:
+      categories = []
       if node is not None:
         self.logMessage("Check product %s with destination section %s" % \
                         (product.getTitle(), node.getTitle()),
                         tab=1)
-        self.assertEquals(base_price,
-             product.getPrice(
-               categories=['destination_section/%s' % node.getRelativeUrl(),
-                           variation]))
+        categories.append('destination_section/' + node.getRelativeUrl())
       else:
         self.logMessage("Check product %s without destination section" % \
                         product.getTitle(),
                         tab=1)
-        self.assertEquals(base_price,
-                          product.getPrice(categories=[variation]))
+      if variation:
+        categories.append(variation)
+      self.assertEqual(base_price, product.getPrice(categories=categories))
   
 
   # The following test tests Movement.getPrice, which is based on the movement

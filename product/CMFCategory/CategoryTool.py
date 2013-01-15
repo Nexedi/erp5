@@ -627,8 +627,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
           portal_type = (portal_type,)
         spec = portal_type
 
-      self._cleanupCategories(context)
-
       if isinstance(category_list, str):
         category_list = (category_list, )
       elif category_list is None:
@@ -705,7 +703,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                         to filter the object on
 
       """
-      self._cleanupCategories(context)
       if isinstance(default_category, (tuple, list)):
         default_category = default_category[0]
       category_list = self.getCategoryMembershipList(context, base_category,
@@ -1148,18 +1145,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       if getattr(aq_base(context), 'isCategory', 0):
         return context.isAcquiredMemberOf(category)
-      for c in self._getAcquiredCategoryList(context):
+      for c in self.getAcquiredCategoryList(context):
         if c.find(category) >= 0:
           return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryList' )
     def getCategoryList(self, context):
-      self._cleanupCategories(context)
-      return self._getCategoryList(context)
-
-    security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryList' )
-    def _getCategoryList(self, context):
       if getattr(aq_base(context), 'categories', _marker) is not _marker:
         if isinstance(context.categories, tuple):
           result = list(context.categories)
@@ -1177,6 +1169,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
           result.append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
+    _getCategoryList = getCategoryList
+
     security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
     def setCategoryList(self, context, value):
        self._setCategoryList(context, value)
@@ -1188,14 +1182,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getAcquiredCategoryList' )
     def getAcquiredCategoryList(self, context):
-      """
-        Returns the list of acquired categories
-      """
-      self._cleanupCategories(context)
-      return self._getAcquiredCategoryList(context)
-
-    security.declareProtected( Permissions.AccessContentsInformation, '_getAcquiredCategoryList' )
-    def _getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category = self.getBaseCategoryList(context=context))
       append = result.append
@@ -1207,21 +1193,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if getattr(context, 'isCategory', 0):
         append(context.getRelativeUrl()) # Pure category is member of itself
       return result
-
-    security.declareProtected( Permissions.ModifyPortalContent, '_cleanupCategories' )
-    def _cleanupCategories(self, context):
-      # Make sure _cleanupCategories does not modify objects each time it is called
-      # or we get many conflicts
-      requires_update = 0
-      categories = []
-      append = categories.append
-      if getattr(context, 'categories', _marker) is not _marker:
-        for cat in self._getCategoryList(context):
-          if isinstance(cat, str):
-            append(cat)
-          else:
-            requires_update = 1
-      if requires_update: self.setCategoryList(context, tuple(categories))
 
     # Catalog related methods
     def updateRelatedCategory(self, category, previous_category_url, new_category_url):
