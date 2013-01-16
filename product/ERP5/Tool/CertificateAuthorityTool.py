@@ -27,15 +27,14 @@
 #
 ##############################################################################
 
+import glob, os, subprocess, sys
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, INFO
-
-import os
-import subprocess
 
 def popenCommunicate(command_list, input=None, **kwargs):
   kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -216,14 +215,15 @@ class CertificateAuthorityTool(BaseTool):
           id=new_id,
           common_name=common_name)
       except:
+        e = sys.exc_info()
         try:
-          for p in [key, csr, cert]:
+          for p in key, csr, cert:
             if os.path.exists(p):
               os.unlink(p)
         except:
           # do not raise during cleanup
           pass
-        raise
+        raise e[0], e[1], e[2]
     finally:
       self._unlockCertificateAuthority()
 
@@ -241,26 +241,32 @@ class CertificateAuthorityTool(BaseTool):
       cert = os.path.join(self.certificate_authority_path, 'certs',
           serial.lower() + '.crt')
       if not os.path.exists(cert):
-        raise ValueError('Certificate with serial %r does not exists' % serial)
+        raise ValueError('Certificate with serial %r does not exist' % serial)
+      created = [crl]
+      popenCommunicate([self.openssl_binary, 'ca', '-config',
+        self.openssl_config, '-revoke', cert])
       try:
         popenCommunicate([self.openssl_binary, 'ca', '-config',
-          self.openssl_config, '-revoke', cert])
-        popenCommunicate([self.openssl_binary, 'ca', '-config',
           self.openssl_config, '-gencrl', '-out', crl])
-        hash = popenCommunicate([self.openssl_binary, 'crl', '-noout',
-          '-hash', '-in', crl]).strip()
-        previous_id = int(len([q for q in os.listdir(crl_path) if hash in q]))
-        os.symlink(crl, os.path.join(crl_path, '%s.%s' % (hash, previous_id)))
+        alias = os.path.join(crl_path, popenCommunicate([self.openssl_binary,
+          'crl', '-noout', '-hash', '-in', crl]).strip() + '.')
+        alias += str(len(glob.glob(alias + '*')))
+        created.append(alias)
+        os.symlink(crl, alias)
         return dict(crl=open(crl).read())
       except:
+        e = sys.exc_info()
         try:
-          for p in [crl]:
+          for p in 'index.txt', 'crlnumber':
+            p = os.path.join(self.certificate_authority_path, p)
+            os.rename(p + '.old', p)
+          for p in created:
             if os.path.exists(p):
               os.unlink(p)
         except:
           # do not raise during cleanup
           pass
-        raise
+        raise e[0], e[1], e[2]
     finally:
       self._unlockCertificateAuthority()
 
