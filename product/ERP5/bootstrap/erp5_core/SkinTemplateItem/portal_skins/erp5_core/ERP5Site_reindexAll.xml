@@ -58,28 +58,15 @@ if clear_catalog:\n
   catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
   catalog.manage_catalogClear()\n
 \n
-print "#### Indexing preferences ####"\n
-tag = \'portal_preferences\'\n
-context.portal_preferences.activate(\n
-                    tag=tag,\n
-                    priority=additional_priority).Folder_reindexAll(\n
-                                         folder_tag=tag,\n
-                                         object_tag=tag,\n
-                                         object_priority=additional_priority,\n
-                                         sql_catalog_id=sql_catalog_id,\n
-                                         start_tree=start_tree,\n
-                                         stop_tree=stop_tree,)\n
-\n
 # Reindex person module\n
 print "#### Indexing person_module, stage 1 ####"\n
 person_module=getattr(portal, \'person_module\', None)\n
 higher_priority = 1 + additional_priority\n
 if person_module is not None :\n
   tag = \'person_stage_1\'\n
-  folder_after_tag = (\'portal_preferences\',)\n
   person_module.activate(tag=tag,\n
                          priority=higher_priority,\n
-                         after_tag=folder_after_tag).Folder_reindexAll(\n
+  ).Folder_reindexAll(\n
                                          folder_tag=tag,\n
                                          object_tag=tag,\n
                                          object_priority=higher_priority,\n
@@ -132,11 +119,24 @@ for folder in [context.portal_alarms, context.portal_activities]:\n
                                            start_tree=start_tree,\n
                                            stop_tree=stop_tree,)\n
 \n
+print "#### Indexing preferences ####"\n
+preference_tag = \'portal_preferences\'\n
+context.portal_preferences.activate(\n
+                    tag=preference_tag,\n
+                    after_tag=\'category\',\n
+                    priority=additional_priority).Folder_reindexAll(\n
+                                         folder_tag=preference_tag,\n
+                                         object_tag=preference_tag,\n
+                                         object_priority=additional_priority,\n
+                                         sql_catalog_id=sql_catalog_id,\n
+                                         start_tree=start_tree,\n
+                                         stop_tree=stop_tree,)\n
+\n
 # We index simulation first to make sure we can calculate tests\n
 # (ie. related quantity)\n
 print "#### Indexing simulation ####"\n
 folder_tag = \'module\'\n
-folder_after_tag = (\'category\', \'document\', \'person_stage_1\', \'group_person_stage_1\')\n
+folder_after_tag = (\'category\', \'document\', \'person_stage_1\', \'group_person_stage_1\', preference_tag)\n
 object_tag = \'simulation\'\n
 object_after_tag = folder_after_tag\n
 object_priority = 3 + additional_priority\n
@@ -171,7 +171,7 @@ print "#### Indexing portal types ####"\n
 print "#### Indexing portal property sheets ####"\n
 \n
 folder_tag = \'module\'\n
-folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
+folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\', preference_tag)\n
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
 object_priority = 2 + additional_priority\n
