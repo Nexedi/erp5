@@ -191,6 +191,8 @@ class CertificateAuthorityTool(BaseTool):
     # No docstring in order to make this method non publishable
     # Returns certificate for passed common name, as dictionary of
     #      {key, certificate, id, common_name}
+    if not common_name:
+      raise ValueError("Invalid common name: %r" % common_name)
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
