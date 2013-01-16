@@ -64,16 +64,18 @@ person_module=getattr(portal, \'person_module\', None)\n
 higher_priority = 1 + additional_priority\n
 if person_module is not None :\n
   tag = \'person_stage_1\'\n
-  person_module.activate(tag=tag,\n
-                         priority=higher_priority,\n
-  ).Folder_reindexAll(\n
-                                         folder_tag=tag,\n
-                                         object_tag=tag,\n
-                                         object_priority=higher_priority,\n
-                                         sql_catalog_id=sql_catalog_id,\n
-                                         start_tree=start_tree,\n
-                                         stop_tree=stop_tree,)\n
-\n
+  person_module.recurseCallMethod(\n
+    method_id=\'immediateReindexObject\',\n
+    group_method_id=\'portal_catalog/catalogObjectList\',\n
+    method_kw={\n
+      \'sql_catalog_id\': sql_catalog_id,\n
+    },\n
+    activate_kw={\n
+      \'tag\': tag,\n
+      \'priority\': higher_priority,\n
+    },\n
+    max_depth=1, # Do not reindex Person\'s subobjects\n
+  )\n
     \n
 print "#### Indexing translations ####"\n
 context.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)\n
