@@ -34,6 +34,7 @@ from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
+from Products.ERP5Type.patches import sqltest
 from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
