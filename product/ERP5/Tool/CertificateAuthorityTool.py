@@ -202,6 +202,7 @@ class CertificateAuthorityTool(BaseTool):
       cert = os.path.join(self.certificate_authority_path, 'certs',
           new_id + '.crt')
       try:
+        os.close(os.open(key, os.O_CREAT | os.O_EXCL, 0600))
         popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
           '3650'], '%s\n' % common_name, stdin=subprocess.PIPE)
