@@ -252,7 +252,7 @@ class CertificateAuthorityTool(BaseTool):
           'crl', '-noout', '-hash', '-in', crl]).strip() + '.')
         alias += str(len(glob.glob(alias + '*')))
         created.append(alias)
-        os.symlink(crl, alias)
+        os.symlink(os.path.basename(crl), alias)
         return dict(crl=open(crl).read())
       except:
         e = sys.exc_info()
