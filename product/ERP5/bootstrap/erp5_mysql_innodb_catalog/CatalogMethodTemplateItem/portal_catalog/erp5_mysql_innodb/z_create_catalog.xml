@@ -106,7 +106,7 @@ CREATE TABLE `catalog` (\n
   KEY `Title` (`title`),\n
   KEY `Reference` (`reference`),\n
   KEY `relative_url` (`relative_url`),\n
-  KEY `Portal Type` (`portal_type`),\n
+  KEY `Portal Type` (`portal_type`, `reference`),\n
   KEY `opportunity_state` (`opportunity_state`),\n
   KEY `validation_state_portal_type` (`validation_state`, `portal_type`),\n
   KEY `simulation_state_portal_type` (`simulation_state`, `portal_type`),\n
