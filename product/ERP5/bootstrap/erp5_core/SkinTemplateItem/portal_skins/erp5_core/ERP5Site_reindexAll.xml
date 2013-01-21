@@ -155,45 +155,18 @@ context.portal_simulation.activate(\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
 \n
-# We index templates secondly\n
-print "#### Indexing templates ####"\n
-# Next we index trash bins\n
-print "#### Indexing trash bins ####"\n
-# Next we index domains\n
-print "#### Indexing domains ####"\n
-# Next we index applied rules\n
-print "#### Indexing applied rules ####"\n
-# Next we index delivery builders\n
-print "#### Indexing delivery builders ####"\n
-# Next we index order builders\n
-print "#### Indexing order builders ####"\n
-# Next we index portal types\n
-print "#### Indexing portal types ####"\n
-# Next we index portal_property_sheets\n
-print "#### Indexing portal property sheets ####"\n
+# We index tools secondly\n
+print "#### Indexing tools ####"\n
 \n
 folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\', preference_tag)\n
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
 object_priority = 2 + additional_priority\n
-tool_list = [portal.portal_templates, portal.portal_trash,\n
-             portal.portal_domains, portal.portal_rules,\n
-             portal.portal_deliveries, portal.portal_orders,\n
-             portal.portal_caches, portal.portal_types,\n
-             portal.portal_property_sheets,\n
-             portal.portal_ids, portal.portal_memcached,]\n
-possible_tool_list = [\n
-  \'portal_contribution_registry\',\n
-  \'portal_contributions\',\n
-  \'portal_gadgets\',\n
-  \'portal_integrations\',\n
-  \'portal_roundings\',\n
-  \'portal_solvers\',\n
-]\n
-for tool_id in possible_tool_list:\n
-  if getattr(portal, tool_id, None) is not None:\n
-    tool_list.append(getattr(portal, tool_id))\n
+tool_list = [x for x in portal.objectValues() if \\\n
+             x.getUid != portal.getUid and \\\n
+             x.meta_type != \'ERP5 Folder\' and \\\n
+             x.id not in (\'portal_alarms\', \'portal_activities\', \'portal_preferences\', \'portal_simulation\', \'portal_uidhandler\')]\n
 \n
 for folder in tool_list:\n
   folder.activate(\n
@@ -208,6 +181,13 @@ for folder in tool_list:\n
                                            sql_catalog_id=sql_catalog_id,\n
                                            start_tree=start_tree,\n
                                            stop_tree=stop_tree,)\n
+\n
+# Then we index ERP5 Python Scripts\n
+print "#### Indexing ERP5 Python Scripts ####"\n
+for path, obj in portal.portal_skins.ZopeFind(portal.portal_skins, obj_metatypes=(\'ERP5 Python Script\',), search_sub=1):\n
+  obj.activate(tag=folder_tag,\n
+               priority=object_priority,\n
+               after_tag=folder_after_tag).immediateReindexObject(sql_catalog_id=sql_catalog_id)\n
 \n
 # Then we index everything except inventories\n
 for folder in portal.objectValues(("ERP5 Folder",)):\n
