@@ -143,3 +143,5 @@ erp5_mysql_innodb/z_show_tables
 erp5_mysql_innodb/z_uncatalog_delivery
 erp5_mysql_innodb/z_uncatalog_object
 erp5_mysql_innodb/z_unique_values
+erp5_mysql_innodb/z_related_funding_uid_from_stock
+erp5_mysql_innodb/z_related_strict_membership_funding_uid_from_stock

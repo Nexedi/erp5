@@ -30,6 +30,8 @@ getSourceFunctionUid\r\n
 getDestinationFunctionUid\r\n
 getSourceProjectUid\r\n
 getDestinationProjectUid\r\n
+getSourceFundingUid\r\n
+getDestinationFundingUid\r\n
 getSimulationState\r\n
 getSourceInventoriatedTotalAssetPrice\r\n
 getDestinationInventoriatedTotalAssetPrice\r\n
@@ -103,6 +105,7 @@ WHERE\n
                       getDestinationPaymentUid[loop_item],\n
                       getDestinationFunctionUid[loop_item],\n
                       getDestinationProjectUid[loop_item],\n
+                      getDestinationFundingUid[loop_item],\n
                       getSourceSectionUid[loop_item],\n
                       getSourceUid[loop_item],\n
                       getResourceUid[loop_item],\n
@@ -126,6 +129,7 @@ WHERE\n
                       getSourcePaymentUid[loop_item],\n
                       getSourceFunctionUid[loop_item],\n
                       getSourceProjectUid[loop_item],\n
+                      getSourceFundingUid[loop_item],\n
                       getDestinationSectionUid[loop_item],\n
                       getDestinationUid[loop_item],\n
                       getResourceUid[loop_item],\n
@@ -158,16 +162,17 @@ VALUES\n
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
-  <dtml-sqlvar expr="row_item[9]" type="int">, \n
-  <dtml-sqlvar expr="row_item[10]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="int">, \n
-  <dtml-sqlvar expr="row_item[12]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[9]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[10]" type="int">, \n
+  <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="int">, \n
   <dtml-sqlvar expr="row_item[13]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[14]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[15]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[16]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[17]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[18]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[18]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[19]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n

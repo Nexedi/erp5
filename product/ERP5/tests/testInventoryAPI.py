@@ -405,7 +405,40 @@ class TestInventory(InventoryAPITestCase):
             function_category_strict_membership='function/function1')
     self.assertInventoryEquals(100,
             function_category_strict_membership='function/function1/function2')
-  
+
+  def test_Funding(self):
+    """Tests inventory on funding"""
+    self._makeMovement(quantity=30, destination_funding='function/function1')
+    self._makeMovement(quantity=-70, source_funding='function/function1')
+
+    self.assertInventoryEquals(100, funding='function/function1')
+    self.assertInventoryEquals(0, funding='function/function1/function2')
+
+  def test_FundingUid(self):
+    """Tests inventory on funding uid"""
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100, destination_funding='function/function1')
+
+    self.assertInventoryEquals(100, funding_uid=function.function1.getUid())
+    self.assertInventoryEquals(0,
+                            funding_uid=function.function1.function2.getUid())
+
+  def test_FundingCategory(self):
+    """Tests inventory on funding category"""
+    self._makeMovement(quantity=100,
+                       destination_funding='function/function1/function2')
+    self.assertInventoryEquals(100, funding_category='function/function1')
+    self.assertInventoryEquals(100, funding='function/function1/function2')
+
+  def test_FundingCategoryStrictMembership(self):
+    """Tests inventory on funding category strict membership"""
+    self._makeMovement(quantity=100,
+                       destination_funding='function/function1/function2')
+    self.assertInventoryEquals(0,
+            funding_category_strict_membership='function/function1')
+    self.assertInventoryEquals(100,
+            funding_category_strict_membership='function/function1/function2')
+
   def test_Project(self):
     """Tests inventory on project"""
     self._makeMovement(quantity=100, destination_project_value=self.project)
@@ -818,6 +851,25 @@ class TestInventoryList(InventoryAPITestCase):
       function1.getUid()][0].inventory, 2)
     self.assertEquals([r for r in inventory_list if r.function_uid ==
       function2.getUid()][0].inventory, 3)
+
+  def test_GroupByFunding(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    funding1 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1')
+    funding2 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1/function2')
+    self._makeMovement(quantity=2,
+                       destination_funding_value=funding1,)
+    self._makeMovement(quantity=3,
+                       destination_funding_value=funding2,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_funding=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+      funding1.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+      funding2.getUid()][0].inventory, 3)
 
   def test_GroupByProject(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1276,7 +1328,23 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals('MovementHistoryListBrain', brain_class,
       "unexpected brain class for getMovementHistoryList InventoryListBrain"
       " != %s (bases %s)" % (brain_class, r_bases))
-  
+
+  def testBrainAttribute(self):
+    """Test attributes exposed on brains."""
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    brain = getMovementHistoryList()[0]
+    self.assertTrue(hasattr(brain, 'node_uid'))
+    self.assertTrue(hasattr(brain, 'resource_uid'))
+    self.assertTrue(hasattr(brain, 'section_uid'))
+    self.assertTrue(hasattr(brain, 'date'))
+    self.assertTrue(hasattr(brain, 'function_uid'))
+    self.assertTrue(hasattr(brain, 'payment_uid'))
+    self.assertTrue(hasattr(brain, 'project_uid'))
+    self.assertTrue(hasattr(brain, 'funding_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_node_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_section_uid'))
+
   def testSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)

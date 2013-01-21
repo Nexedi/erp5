@@ -36,6 +36,8 @@
  <key>resourceType | movement,catalog/portal_type/z_related_resource_from_movement</key>
  <key>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</key>
  <key>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</key>
+ <key>stock_funding_category_strict_membership_uid | category/category_uid/z_related_strict_membership_funding_uid_from_stock</key>
+ <key>stock_funding_category_uid | category/category_uid/z_related_funding_uid_from_stock</key>
  <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</key>
  <key>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</key>
