@@ -486,7 +486,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check if all objects are catalogued as before
     new_path_list = self.getSQLPathList()
     self.assertEquals(set(original_path_list) - set(new_path_list), set())
-    self.assertEquals(set(new_path_list) - set(original_path_list), set())
 
   def test_14_ReindexWithBrokenCategory(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -1532,6 +1531,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Flush message queue
     self.tic()
+    original_path_list = self.getSQLPathList(self.original_connection_id)
+    new_path_list = self.getSQLPathList(self.new_connection_id)
+    self.assertEquals(set(original_path_list) - set(new_path_list), set())
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
