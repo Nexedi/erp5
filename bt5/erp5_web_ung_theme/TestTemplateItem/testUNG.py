@@ -259,7 +259,9 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     portal.event_module.EventModule_createNewEvent()
     self.tic()
-    event = portal.portal_catalog.getResultValue(portal_type="Note")
+    event = portal.portal_catalog.getResultValue(
+      portal_type="Note",
+      title='Buy Phone' )
     self.assertEquals(event.getDescription(), "testUNG Sample")
     start_date = event.getStartDate()
     self.assertEquals(start_date.month(), 2)
