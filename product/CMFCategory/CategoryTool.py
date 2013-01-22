@@ -1278,7 +1278,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedValueList' )
     def getRelatedValueList(self, context, base_category_list=None,
-                            spec=(), filter=None, base=1, 
                             checked_permission=None, **kw):
       """
         This methods returns the list of objects related to the context
@@ -1289,9 +1288,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       if isinstance(portal_type, str):
         portal_type = [portal_type]
-      if spec is (): 
-        # We do not want to care about spec
-        spec = None
 
       # Base Category may not be related, besides sub categories
       if context.getPortalType() == 'Base Category':
@@ -1305,16 +1301,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
-      sql_kw = {}
-      for sql_key in ('limit', 'order_by_expression'): # XXX-JPS it would be better to use Catalog API
-        if sql_key in kw:
-          sql_kw[sql_key] = kw[sql_key]
-
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
                            category_list=category_list,
                            portal_type=portal_type,
-                           strict_membership=strict_membership,
-                           **sql_kw)
+                           strict_membership=strict_membership)
 
       result = []
       if checked_permission is None:
@@ -1345,8 +1335,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedPropertyList' )
     def getRelatedPropertyList(self, context, base_category_list=None,
-                               property_name=None, spec=(), 
-                               filter=None, base=1, 
+                               property_name=None,
                                checked_permission=None, **kw):
       """
         This methods returns the list of property_name on  objects
@@ -1355,8 +1344,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       result = []
       for o in self.getRelatedValueList(
                           context=context,
-                          base_category_list=base_category_list, spec=spec,
-                          filter=filter, base=base, 
+                          base_category_list=base_category_list,
                           checked_permission=checked_permission, **kw):
         result.append(o.getProperty(property_name, None))
       return result
