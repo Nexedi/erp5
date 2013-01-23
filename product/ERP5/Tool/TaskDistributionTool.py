@@ -144,7 +144,7 @@ class TaskDistributionTool(BaseTool):
             test_result.serialize() # prevent duplicate test result lines
             createTestResultLineList(test_result, test_name_list)
           return test_result.getRelativeUrl(), last_revision
-        if last_state in ('stopped', 'failed'):
+        if last_state in ('stopped',):
           if reference_list_string is not None:
             if reference_list_string == test_result.getReference() \
                 and not allow_restart:
