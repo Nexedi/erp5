@@ -464,7 +464,7 @@ class OOoParser(Implicit):
                   return ''.join(part for part in
                     [node.text, node.tail] if part)
                 # we can also have table:annotation, and they are ignored
-              cell_data = format_node(cell)
+              cell_data = format_node(cell) or None
 
             # Add the cell to the line
             table_line.append(cell_data)

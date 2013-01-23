@@ -116,6 +116,18 @@ class TestOOoParser(unittest.TestCase):
     self.assertEquals(mapping['Feuille1'][2], ['tab\t'])
     self.assertEquals(mapping['Feuille1'][3], ['New\nLine'])
 
+  def test_getSpreadSheetMappingEmptyCells(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('empty_cells.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'],
+      [
+        ['A1', None, 'C1'],
+        [],
+        [None, 'B3',],
+      ])
+
 
 def test_suite():
   suite = unittest.TestSuite()
