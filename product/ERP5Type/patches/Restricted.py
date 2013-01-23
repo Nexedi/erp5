@@ -177,7 +177,6 @@ allow_module('difflib')
 allow_module('hashlib')
 allow_module('time')
 allow_module('urlparse')
-allow_module('random')
 
 ModuleSecurityInfo('os.path').declarePublic(
 # Allow functions accessing neither file system nor environment.
