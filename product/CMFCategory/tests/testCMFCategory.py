@@ -60,6 +60,11 @@ class TestCMFCategory(ERP5TypeTestCase):
       ),
     resource = dict(
       ),
+    test0 = dict(
+      ),
+    test1 = dict(
+      contents=('a', ('ab', 'ac', ('acd',))),
+      ),
     )
 
   def getTitle(self):
@@ -104,7 +109,8 @@ class TestCMFCategory(ERP5TypeTestCase):
         acquisition_copy_value=0,
         acquisition_append_value=0,
         acquisition_mask_value=0,
-        acquisition_portal_type_list="python: []")
+        acquisition_portal_type_list="python: []",
+        related_locally_indexed=0)
       edit_kw.update(kw)
       queue = deque(((bc, edit_kw.pop('contents', ())),))
       bc.edit(**edit_kw)
@@ -129,6 +135,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ti = self.getTypesTool().getTypeInfo(portal_type)
       ti.filter_content_types = 0
       self._original_categories[portal_type] = x = ti.getTypeBaseCategoryList()
+      x += 'test0', 'test1'
       ti._setTypeBaseCategoryList(x + categories)
 
     # Make persons.
@@ -1093,6 +1100,55 @@ class TestCMFCategory(ERP5TypeTestCase):
     _set(bc.id, map(base, 'abb'), 1)
     self.assertEqual(get(bc.id), list('bab'))
     _set(bc.id, ())
+
+  def test_relatedIndex(self):
+    category_tool = self.getCategoriesTool()
+    newOrganisation = self.getOrganisationModule().newContent
+    organisation = newOrganisation()
+    other_organisation = newOrganisation(destination_value=organisation)
+    person = self.getPersonModule().newContent(test0_value=organisation,
+                                               test1='a/ac/acd')
+    self.tic()
+    get = organisation.getTest0RelatedValueList
+    a = category_tool.test1.a
+    def check():
+      self.assertEqual([person, other_organisation],
+        category_tool.getRelatedValueList(organisation))
+      self.assertEqual([person], get())
+      self.assertEqual([person], get(portal_type='Person'))
+      self.assertEqual([], get(portal_type='Organisation'))
+      self.assertEqual([person], a.getTest1RelatedValueList(
+        portal_type='Person'))
+      self.assertEqual([a], a.getTest1RelatedValueList(
+        strict_membership=True))
+      self.assertEqual([person], a.ac.acd.getTest1RelatedValueList(
+        portal_type='Person', strict_membership=True))
+    category_tool.test0._setRelatedLocallyIndexed(True)
+    category_tool.test1._setRelatedLocallyIndexed(True)
+    check()
+    related_list = sorted(a.getTest1RelatedList())
+    self.assertTrue(person.getRelativeUrl() in related_list)
+    self.assertEqual(related_list, sorted(x.getRelativeUrl()
+      for x in self.portal.portal_catalog(test1_uid=a.getUid())))
+    related = organisation._related_index
+    self.assertTrue(related)
+    self.assertEqual([person.getRelativeUrl()], list(related.test0))
+    person.unindexObject()
+    self.tic()
+    category_tool.test0._setRelatedLocallyIndexed(False)
+    self.assertEqual([], get())
+    category_tool.test0._setRelatedLocallyIndexed(True)
+    check()
+    person.categories = tuple(x for x in person.categories
+                                if not x.startswith('test0/'))
+    self.assertEqual([], get())
+    self.assertFalse(related)
+    self.assertEqual([], list(related.test0))
+    related = a.ac.acd._related_index.test1
+    self.assertEqual(list(related), [person.getRelativeUrl()])
+    person._setTest1Value(a)
+    self.assertEqual(list(related), [])
+
 
 def test_suite():
   suite = unittest.TestSuite()

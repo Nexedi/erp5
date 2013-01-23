@@ -31,6 +31,7 @@
 ERP portal_categories tool.
 """
 from collections import deque
+from BTrees.OOBTree import OOTreeSet
 from OFS.Folder import Folder
 from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -40,9 +41,11 @@ from Acquisition import aq_base, aq_inner
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
+from Products.CMFCategory.Category import Category, BaseCategory
 from OFS.Traversable import NotFound
 import types
 
@@ -54,6 +57,34 @@ _marker = object()
 
 class CategoryError( Exception ):
     pass
+
+
+class RelatedIndex(): # persistent.Persistent can be added
+                      # without breaking compatibility
+
+  def __repr__(self):
+    try:
+      contents = ', '.join('%s=%r' % (k, list(v))
+                           for (k, v) in self.__dict__.iteritems())
+    except Exception:
+      contents = '...'
+    return '<%s(%s) at 0x%x>' % (self.__class__.__name__, contents, id(self))
+
+  def __nonzero__(self):
+    return any(self.__dict__.itervalues())
+
+  def add(self, base, relative_url):
+    try:
+      getattr(self, base).add(relative_url)
+    except AttributeError:
+      setattr(self, base, OOTreeSet((relative_url,)))
+
+  def remove(self, base, relative_url):
+    try:
+      getattr(self, base).remove(relative_url)
+    except (AttributeError, KeyError):
+      pass
+
 
 class CategoryTool( UniqueObject, Folder, Base ):
     """
@@ -1174,7 +1205,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
     def _setCategoryList(self, context, value):
-       context.categories = tuple(value)
+      old = set(getattr(aq_base(context), 'categories', ()))
+      context.categories = value = tuple(value)
+      if context.isTempDocument():
+        return
+      value = set(value)
+      relative_url = context.getRelativeUrl()
+      for edit, value in ("remove", old - value), ("add", value - old):
+        for path in value:
+          base = self.getBaseCategoryId(path)
+          try:
+            if self[base].isRelatedLocallyIndexed():
+              path = self._removeDuplicateBaseCategoryIdInCategoryPath(base, path)
+              ob = aq_base(self.unrestrictedTraverse(path))
+              try:
+                related = ob._related_index
+              except AttributeError:
+                if edit is "remove":
+                  continue
+                related = ob._related_index = RelatedIndex()
+              getattr(related, edit)(base, relative_url)
+          except KeyError:
+            pass
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getAcquiredCategoryList' )
     def getAcquiredCategoryList(self, context):
@@ -1287,50 +1339,153 @@ class CategoryTool( UniqueObject, Folder, Base ):
       portal_type = kw.get('portal_type')
 
       if isinstance(portal_type, str):
-        portal_type = [portal_type]
+        portal_type = portal_type,
 
       # Base Category may not be related, besides sub categories
-      if context.getPortalType() == 'Base Category':
-        category_list = [context.getRelativeUrl()]
+      relative_url = context.getRelativeUrl()
+      local_index_dict = {}
+      if isinstance(context, BaseCategory):
+        category_list = relative_url,
       else:
+        category_list = []
         if isinstance(base_category_list, str):
-          base_category_list = [base_category_list]
+          base_category_list = base_category_list,
         elif base_category_list is () or base_category_list is None:
           base_category_list = self.getBaseCategoryList()
-        category_list = []
         for base_category in base_category_list:
-          category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
+          if self[base_category].isRelatedLocallyIndexed():
+            category = base_category + '/'
+            local_index_dict[base_category] = '' \
+              if relative_url.startswith(category) else category
+          else:
+            category_list.append("%s/%s" % (base_category, relative_url))
 
-      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
-                           category_list=category_list,
-                           portal_type=portal_type,
-                           strict_membership=strict_membership)
+      search = self.getPortalObject().Base_zSearchRelatedObjectsByCategoryList
+      if local_index_dict:
+        # For some base categories, lookup indexes in ZODB.
+        recurse = isinstance(context, Category) and not strict_membership
+        result_dict = {}
+        def check_local():
+          r = set(getattr(related, base_category, ()))
+          r.difference_update(result_dict)
+          for r in r:
+            try:
+              ob = self.unrestrictedTraverse(r)
+              if category in aq_base(ob).categories:
+                result_dict[r] = ob
+                continue
+              # Do not add 'r' to result_dict, because 'ob' may be linked in
+              # another way.
+            except (AttributeError, KeyError):
+              result_dict[r] = None
+            related.remove(base_category, r)
+        tv = getTransactionalVariable().setdefault(
+          'CategoriesTool.getRelatedValueList', {})
+        try:
+          related = aq_base(context)._related_index
+        except AttributeError:
+          related = RelatedIndex()
+        include_self = False
+        for base_category, category in local_index_dict.iteritems():
+          if not category:
+            # Categories are member of themselves.
+            include_self = True
+            result_dict[relative_url] = context
+          category += relative_url
+          if tv.get(category, -1) < recurse:
+            # Update local index with results from catalog for backward
+            # compatibility. But no need to do it several times in the same
+            # transaction.
+            for r in search(category_list=category,
+                            portal_type=None,
+                            strict_membership=strict_membership):
+              r = r.relative_url
+              # relative_url is empty if object is deleted (but not yet
+              # unindexed). Nothing specific to do in such case because
+              # category tool won't match.
+              try:
+                ob = self.unrestrictedTraverse(r)
+                categories = aq_base(ob).categories
+              except (AttributeError, KeyError):
+                result_dict[r] = None
+                continue
+              if category in categories:
+                related.add(base_category, r)
+                result_dict[r] = ob
+              elif recurse:
+                for p in categories:
+                  if p.startswith(category + '/'):
+                    try:
+                      o = self.unrestrictedTraverse(p)
+                      p = aq_base(o)._related_index
+                    except KeyError:
+                      continue
+                    except AttributeError:
+                      p = o._related_index = RelatedIndex()
+                    result_dict[r] = ob
+                    p.add(base_category, r)
+            tv[category] = recurse
+          # Get and check all objects referenced by local index for the base
+          # category that is currently considered.
+          check_local()
+        # Modify context only if it's worth it.
+        if related and not hasattr(aq_base(context), '_related_index'):
+          context._related_index = related
+        # In case of non-strict membership search, include all objects that
+        # are linked to a subobject of context.
+        if recurse:
+          r = [context]
+          while r:
+            for ob in r.pop().objectValues():
+              r.append(ob)
+              relative_url = ob.getRelativeUrl()
+              if include_self:
+                result_dict[relative_url] = ob
+              try:
+                related = aq_base(ob)._related_index
+              except AttributeError:
+                continue
+              for base_category, category in local_index_dict.iteritems():
+                category += relative_url
+                check_local()
+        # Filter out objects that are not of requested portal type.
+        result = [ob for ob in result_dict.itervalues() if ob is not None and (
+          not portal_type or ob.getPortalType() in portal_type)]
+        # Finish with base categories that are only indexed in catalog,
+        # making sure we don't return duplicate values.
+        if category_list:
+          for r in search(category_list=category_list,
+                          portal_type=portal_type,
+                          strict_membership=strict_membership):
+            if r.relative_url not in result_dict:
+              try:
+                result.append(self.unrestrictedTraverse(r.path))
+              except KeyError:
+                pass
 
-      result = []
-      if checked_permission is None:
-        # No permission to check
-        for b in brain_result:
-          o = b.getObject()
-          if o is not None:
-            result.append(o)
       else:
-        # Check permissions on object
-        if isinstance(checked_permission, str):
-          checked_permission = (checked_permission, )
-          checkPermission = self.portal_membership.checkPermission
-          for b in brain_result:
-            obj = b.getObject()
-            if obj is not None:
-              for permission in checked_permission:
-                if not checkPermission(permission, obj):
-                  break
-                result.append(obj)
+        # Catalog-only search.
+        result = []
+        for r in search(category_list=category_list,
+                        portal_type=portal_type,
+                        strict_membership=strict_membership):
+          try:
+            result.append(self.unrestrictedTraverse(r.path))
+          except KeyError:
+            pass
 
-      return result
-      # XXX missing filter and **kw stuff
-      #return self.search_category(category_list=category_list,
-      #                            portal_type=spec)
-      # future implementation with brains, much more efficient
+      if checked_permission is None:
+        return result
+
+      # Check permissions on object
+      if isinstance(checked_permission, str):
+        checked_permission = checked_permission,
+      checkPermission = self.portal_membership.checkPermission
+      def check(ob):
+        for permission in checked_permission:
+          if checkPermission(permission, ob):
+            return True
+      return filter(check, result)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRelatedPropertyList' )

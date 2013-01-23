@@ -544,7 +544,8 @@ class BaseTemplateItem(Implicit, Persistent):
     klass = obj.__class__
     classname = klass.__name__
 
-    attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'last_id', 'uid',
+    attr_set = set(('_dav_writelocks', '_filepath', '_owner', '_related_index',
+                    'last_id', 'uid',
                     '__ac_local_roles__', '__ac_local_roles_group_id_dict__'))
     if export:
       if not keep_workflow_history:
