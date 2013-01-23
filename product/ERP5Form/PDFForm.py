@@ -262,6 +262,9 @@ class PDFForm(File):
     * cache compiled TALES
     * set _v_errors when setting invalid TALES (setCellTALES can raise, but
       not doEditCells)
+
+  OBSOLETE : Not used any more. Such functionalities could be done with more
+  modern tools
   """
 
   meta_type = "ERP5 PDF Form"
