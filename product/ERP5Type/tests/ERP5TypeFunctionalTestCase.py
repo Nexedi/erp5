@@ -408,5 +408,5 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
-    self.assertEquals([], error_title_list)
+    self.assertEquals([], error_title_list, '\n'.join(error_title_list))
 
