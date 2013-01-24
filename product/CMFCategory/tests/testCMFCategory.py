@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import deque
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -41,6 +42,25 @@ class TestCMFCategory(ERP5TypeTestCase):
   region1 = 'europe/west/france'
   region2 = 'europe/west/germany'
   region_list = [region1, region2]
+
+  category_dict = dict(
+    region = dict(
+      acquisition_base_category_list=('subordination','parent'),
+      acquisition_portal_type_list="python: ['Address', 'Organisation', 'Person']",
+      acquisition_mask_value=1,
+      acquisition_object_id_list=['default_address'],
+      contents=('europe', ('west', ('france', 'germany'))),
+      ),
+    subordination = dict(
+      acquisition_portal_type_list="python: ['Career', 'Organisation']",
+      acquisition_object_id_list=['default_career'],
+      ),
+    gender = dict(
+      fallback_base_category_list=['subordination'],
+      ),
+    resource = dict(
+      ),
+    )
 
   def getTitle(self):
     return "CMFCategory"
@@ -74,16 +94,42 @@ class TestCMFCategory(ERP5TypeTestCase):
     portal = self.portal
     self.validateRules()
 
+    portal_categories = self.getCategoriesTool()
+    for name, kw in self.category_dict.iteritems():
+      try:
+        bc = portal_categories[name]
+      except KeyError:
+        bc = portal_categories.newContent(name)
+      edit_kw = dict(
+        acquisition_copy_value=0,
+        acquisition_append_value=0,
+        acquisition_mask_value=0,
+        acquisition_portal_type_list="python: []")
+      edit_kw.update(kw)
+      queue = deque(((bc, edit_kw.pop('contents', ())),))
+      bc.edit(**edit_kw)
+      while queue:
+        parent, contents = queue.popleft()
+        for x in contents:
+          if type(x) is str:
+            try:
+              category = parent[x]
+            except KeyError:
+              category = parent.newContent(x)
+          else:
+            queue.append((category, x))
+
     # This test creates Person inside Person and Organisation inside
-    # Organisation, so we modifiy type informations to allow anything inside
-    # Person and Organisation (we'll cleanup on teardown)
-    self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
-    organisation_ti = self.getTypesTool().getTypeInfo('Organisation')
-    organisation_ti.filter_content_types = 0
-    # we also enable 'destination' category on organisations
-    self._organisation_categories = organisation_ti.getTypeBaseCategoryList()
-    organisation_ti._setTypeBaseCategoryList(self._organisation_categories
-                                             + ['destination', 'resource'])
+    # Organisation, so we modify type informations to allow anything inside
+    # Person and Organisation (we'll cleanup on teardown).
+    self._original_categories = {}
+    for portal_type, categories in (
+        ('Person', []),
+        ('Organisation', ['destination', 'resource'])):
+      ti = self.getTypesTool().getTypeInfo(portal_type)
+      ti.filter_content_types = 0
+      self._original_categories[portal_type] = x = ti.getTypeBaseCategoryList()
+      ti._setTypeBaseCategoryList(x + categories)
 
     # Make persons.
     person_module = self.getPersonModule()
@@ -109,62 +155,14 @@ class TestCMFCategory(ERP5TypeTestCase):
     sale_packing_list_module = portal.sale_packing_list_module
     if self.id1 not in sale_packing_list_module.objectIds():
         sale_packing_list_module.newContent(id=self.id1)
-    # This set the acquisition for region
-    for bc in ('region', ):
-      if not hasattr(portal_categories, bc):
-        portal_categories.newContent(portal_type='Base Category',id=bc)
-      portal_categories[bc].setAcquisitionBaseCategoryList(('subordination','parent'))
-      portal_categories[bc].setAcquisitionPortalTypeList("python: ['Address', 'Organisation', 'Person']")
-      portal_categories[bc].setAcquisitionMaskValue(1)
-      portal_categories[bc].setAcquisitionCopyValue(0)
-      portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionObjectIdList(['default_address'])
-      if not 'europe' in portal_categories[bc].objectIds():
-        portal_categories[bc].newContent(id='europe',portal_type='Category')
-      big_region = portal_categories[bc]['europe']
-      # Now we have to include by hand no categories
-      if not 'west' in big_region.objectIds():
-        big_region.newContent(id='west',portal_type='Category')
-      region = big_region['west']
-      if not 'france' in region.objectIds():
-        region.newContent(id='france',portal_type='Category')
-      if not 'germany' in region.objectIds():
-        region.newContent(id='germany',portal_type='Category')
-    for bc in ('subordination', ):
-      if not hasattr(portal_categories, bc):
-        portal_categories.newContent(portal_type='Base Category',id=bc)
-      portal_categories[bc].setAcquisitionPortalTypeList("python: ['Career', 'Organisation']")
-      portal_categories[bc].setAcquisitionMaskValue(0)
-      portal_categories[bc].setAcquisitionCopyValue(0)
-      portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
-    for bc in ('gender', ):
-      if not hasattr(portal_categories, bc):
-        portal_categories.newContent(portal_type='Base Category',id=bc)
-      portal_categories[bc].setAcquisitionPortalTypeList("python: []")
-      portal_categories[bc].setAcquisitionMaskValue(0)
-      portal_categories[bc].setAcquisitionCopyValue(0)
-      portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setFallbackBaseCategoryList(['subordination'])
-    for bc in ('resource', ):
-      if not hasattr(portal_categories, bc):
-        portal_categories.newContent(portal_type='Base Category',id=bc)
-      portal_categories[bc].setAcquisitionPortalTypeList("python: []")
-      portal_categories[bc].setAcquisitionMaskValue(0)
-      portal_categories[bc].setAcquisitionCopyValue(0)
-      portal_categories[bc].setAcquisitionAppendValue(0)
 
   def beforeTearDown(self):
     """Clean up."""
-    # categories
-    for bc in ('region', 'subordination', 'gender', 'resource'):
-      bc_obj = self.getPortal().portal_categories[bc]
-      bc_obj.manage_delObjects()
     # type informations
-    self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
-    organisation_ti = self.getTypesTool().getTypeInfo('Organisation')
-    organisation_ti.filter_content_types = 1
-    organisation_ti = self._organisation_categories
+    for portal_type, categories in self._original_categories.iteritems():
+      ti = self.getTypesTool().getTypeInfo(portal_type)
+      ti.filter_content_types = 1
+      ti._setTypeBaseCategoryList(categories)
 
   def login(self):
     uf = self.portal.acl_users
