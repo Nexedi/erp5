@@ -77,7 +77,8 @@ class Xvfb:
     xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
     with open(os.devnull, 'w') as null:
       self.process = subprocess.Popen(
-        (xvfb_bin, '-fbdir' , self.fbdir, display),
+        (xvfb_bin, '-fbdir' , self.fbdir, display,
+        '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
       # try to check if X screen is available
       time.sleep(5)
@@ -284,6 +285,8 @@ class FunctionalTestRunner:
       while self.getStatus() is None:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
+          # TODO: here we could take a screenshot and display it in the report
+          # (maybe using data: scheme inside a <img>)
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
     except:
       print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
