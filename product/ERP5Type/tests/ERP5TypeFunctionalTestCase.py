@@ -389,7 +389,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
           expected_failure, error_title_list = self.runner.processResult()
     except TimeoutError, e:
       self._verboseErrorLog(20)
-      raise TimeoutError(e)
+      raise
 
     # In case of failure, verbose the error_log entries in order to collect
     # appropriated information to debug the system.
