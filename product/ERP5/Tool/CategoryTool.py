@@ -40,6 +40,7 @@ from Products.ERP5Type.Core.Folder import OFS_HANDLER
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import caching_instance_method
+from Products.ERP5Type.dynamic import portal_type_class
 
 from zLOG import LOG
 
@@ -84,7 +85,10 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     def hasContent(self,id):
       return id in self.objectIds()
 
-    @caching_instance_method(id='portal_categories.getBaseCategoryDict', cache_factory='erp5_content_long', cache_id_generator=lambda m, *a, **k:m)
+    @caching_instance_method(
+      id='portal_categories.getBaseCategoryDict',
+      cache_factory='erp5_content_long',
+      cache_id_generator=lambda *a: portal_type_class.last_sync)
     def getBaseCategoryDict(self):
       """
         Cached method to which resturns a dict with category names as keys, and None as values.
