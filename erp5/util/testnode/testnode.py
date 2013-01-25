@@ -404,8 +404,6 @@ branch = %(branch)s
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
-          if test_result is not None:
-            test_result.removeWatch(log_file_name)
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(
