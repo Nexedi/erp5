@@ -1812,7 +1812,9 @@ class FloatWidget(TextWidget):
         float_value = float(value)
         if percent:
           float_value *= 100
-        if precision not in (None, ''):
+        if precision not in (None, '') and (
+           # ignore precision for too big absolute numbers
+           abs(float_value) * 10**precision < 2**53):
           # if we have a precision, then use it now
           value = ('%%0.%sf' % precision) % float_value
         else:
