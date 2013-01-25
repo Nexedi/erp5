@@ -1495,13 +1495,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                      title="GreatTitle2")
     # Flush message queue
     self.tic()
+    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+      .manage_addZMySQLConnection
     # Create new connectors
-    portal.manage_addZMySQLConnection(self.new_connection_id,'',
-                                      new_connection_string)
+    addSQLConnection(self.new_connection_id,'', new_connection_string)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
-    portal.manage_addZMySQLConnection(self.new_deferred_connection_id,'',
-                                      new_connection_string)
+    addSQLConnection(self.new_deferred_connection_id,'', new_connection_string)
     new_connection = portal[self.new_deferred_connection_id]
     new_connection.manage_open_connection()
     # the transactionless connector must not be change because this one
@@ -1648,11 +1648,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0, message)
 
     # Create new connectors
-    portal.manage_addZMySQLConnection(self.new_erp5_sql_connection,'',
-                                      new_connection_string)
+    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+      .manage_addZMySQLConnection
+    addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
     new_connection.manage_open_connection()
-    portal.manage_addZMySQLConnection(self.new_erp5_deferred_sql_connection,'',
+    addSQLConnection(self.new_erp5_deferred_sql_connection,'',
                                       new_connection_string)
     new_connection = portal[self.new_erp5_deferred_sql_connection]
     new_connection.manage_open_connection()
