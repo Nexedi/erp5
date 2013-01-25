@@ -35,11 +35,6 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 
-# Quite ugly way to avoid useless expand when building lines
-# in a delivery that already have lines and a root applied rule.
-# For example, it's normally useless to expand after building
-# accounting lines in an invoice with manually created invoice lines.
-BUILDING_KEY = 'building_from_portal_simulation'
 
 class SimulatedDeliveryBuilder(BuilderMixin):
   """
@@ -145,9 +140,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       and delivery movement.
     """
     delivery = delivery_movement.getExplanationValue()
-    building = getTransactionalVariable()[BUILDING_KEY]
-    if delivery in building:
-      building.add(delivery_movement)
     simulation_movement.recursiveReindexObject(activate_kw=dict(
       activate_kw or (), tag='built:'+delivery.getPath()))
     BuilderMixin._setDeliveryMovementProperties(
@@ -379,25 +371,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       delivery.deleteContent(delete_id_list)
 
     return delivery
-
-  def _processDeliveryLineGroup(self, delivery, movement_group_node,
-                                *args, **kw):
-    building = getTransactionalVariable().setdefault(BUILDING_KEY, set())
-    if None in building:
-      super(SimulatedDeliveryBuilder, self)._processDeliveryLineGroup(
-          delivery, movement_group_node, *args, **kw)
-      return
-    building.add(None)
-    try:
-      for movement in movement_group_node.getMovementList():
-        if not movement.isTempDocument():
-          building.add(delivery)
-          break
-      super(SimulatedDeliveryBuilder, self)._processDeliveryLineGroup(
-        delivery, movement_group_node, *args, **kw)
-    finally:
-      building.remove(None)
-      building.discard(delivery)
 
   def _createDeliveryLine(self, delivery, movement_list, activate_kw):
     """

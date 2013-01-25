@@ -41,7 +41,6 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.SimulatedDeliveryBuilder import BUILDING_KEY
 
 from zLOG import LOG, WARNING
 
@@ -595,11 +594,8 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       simulation movement.
     """
     simulation_movement = self.getDeliveryRelatedValue()
-    if simulation_movement is not None and \
-       not simulation_movement.getParentValue().isRootAppliedRule():
-      return True
-    building = getTransactionalVariable().get(BUILDING_KEY, ())
-    return self in building or self.getRootDeliveryValue() in building
+    return simulation_movement is not None and \
+       not simulation_movement.getParentValue().isRootAppliedRule()
 
   # New Causality API
   security.declareProtected( Permissions.AccessContentsInformation,

@@ -76,7 +76,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -127,6 +129,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>related_locally_indexed</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>rid</string> </key>

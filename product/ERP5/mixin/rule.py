@@ -509,7 +509,9 @@ class SimulableMixin(Base):
               activity='SQLQueue',
               group_method_id='portal_rules/updateSimulation',
               tag='expand:' + path,
-              after_tag='built:'+ path, # see SimulatedDeliveryBuilder
+              # Now that we don't rely on catalog anymore, this after_tag could
+              # moved to _localBuild, which currently only depends on 'expand:'.
+              after_tag='built:'+ path,
               priority=3,
               )._updateSimulation(**kw)
         del tv[key]

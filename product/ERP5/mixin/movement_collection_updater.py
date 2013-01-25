@@ -192,4 +192,8 @@ class MovementCollectionUpdaterMixin:
       del movement.__dict__
       movement = newMovement()
       d.update(movement.__dict__)
+      categories = d.pop('categories')
       movement.__dict__ = d
+      # Force update of local indexes on linked objects
+      # (important for 'delivery').
+      movement._setCategoryList(categories)
