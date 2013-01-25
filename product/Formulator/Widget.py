@@ -1807,38 +1807,30 @@ class FloatWidget(TextWidget):
     if value not in (None,''):
       precision = field.get_value('precision')
       input_style = field.get_value('input_style')
-      percent = 0
-      original_value = value
-      if input_style.find('%')>=0:
-        percent=1
-        try:
-          value = float(value) * 100
-        except ValueError:
-          return value
-      try :
+      percent = '%' in input_style
+      try:
         float_value = float(value)
+        if percent:
+          float_value *= 100
         if precision not in (None, ''):
           # if we have a precision, then use it now
           value = ('%%0.%sf' % precision) % float_value
         else:
           value = str(float_value)
+        # if this number is displayed in scientific notification,
+        # just return it as is
+        if 'e' in value:
+          return value
+        value, fpart = value.split('.')
       except ValueError:
         return value
-      # if this number displayed in scientific notification, just return it as
-      # is
-      if 'e' in value:
-        return value
-      value_list = value.split('.')
-      integer = value_list[0]
-      
+
       decimal_separator = ''
       decimal_point = '.'
-      
       if input_style == "-1234.5":
-        decimal_point = '.'
+        pass
       elif input_style == '-1 234.5':
         decimal_separator = ' '
-        decimal_point = '.'
       elif input_style == '-1 234,5':
         decimal_separator = ' '
         decimal_point = ','
@@ -1847,37 +1839,28 @@ class FloatWidget(TextWidget):
         decimal_point = ','
       elif input_style == '-1,234.5':
         decimal_separator = ','
-        decimal_point = '.'
 
-      if input_style.find(decimal_separator) >= 0:
-        integer = value_list[0]
-        sign = ''
-        if integer.startswith('-'):
+      if decimal_separator in input_style:
+        if value.startswith('-'):
           sign = '-'
-          integer = integer[1:]
-        i = len(integer) % 3
-        value = integer[:i]
-        while i != len(integer):
-          value += decimal_separator + integer[i:i+3]
-          i += 3
-        if value[0] == decimal_separator:
           value = value[1:]
-        value = '%s%s' % (sign, value)
-      else:
-        value = value_list[0]
+        else:
+          sign = ''
+        i = len(value) % 3 or 3
+        integer = value[:i]
+        while i < len(value):
+          integer += decimal_separator + value[i:i+3]
+          i += 3
+        value = sign + integer
       if precision != 0:
         value += decimal_point
-      if precision not in (None, ''):
-        for i in range(0, precision):
-          if i < len(value_list[1]):
-            value += value_list[1][i]
-          else:
-            value += '0'
-      else:
-        value += value_list[1]
+        if precision:
+          value += fpart[:precision].ljust(precision, '0')
+        else:
+          value += fpart
       if percent:
         value += '%'
-      return value.strip()
+      return value
     return ''
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
