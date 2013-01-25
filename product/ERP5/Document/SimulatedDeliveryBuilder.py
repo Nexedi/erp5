@@ -335,7 +335,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
   solveDivergence = UnrestrictedMethod(_solveDivergence)
 
-  def _createDelivery(self, delivery_module, movement_list, activate_kw):
+  def _createDelivery(self, delivery_module, movement_list, activate_kw,
+                            temp_object):
     """
       Refer to the docstring in GeneratedDeliveryBuilder.
       Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
@@ -350,7 +351,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     if old_delivery is None:
       # from scratch
       delivery = super(SimulatedDeliveryBuilder, self)._createDelivery(
-        delivery_module, movement_list, activate_kw)
+        delivery_module, movement_list, activate_kw, temp_object)
       # Interactions will usually trigger reindexing of related SM when
       # simulation state changes. Disable them for this transaction
       # because we already do this in _setDeliveryMovementProperties
@@ -371,7 +372,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
     return delivery
 
-  def _createDeliveryLine(self, delivery, movement_list, activate_kw):
+  def _createDeliveryLine(self, delivery, movement_list, activate_kw,
+                                temp_object):
     """
       Refer to the docstring in GeneratedDeliveryBuilder.
       Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
@@ -388,6 +390,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       delivery_line = delivery.newContent(
         portal_type=self.getDeliveryLinePortalType(),
         variation_category_list=[],
+        temp_object=temp_object,
         activate_kw=activate_kw)
     else:
       # from duplicated original line
@@ -408,7 +411,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     return delivery_line
 
   def _createDeliveryCell(self, delivery_line, movement, activate_kw,
-                          base_id, cell_key):
+                          base_id, cell_key, temp_object):
     """
       Refer to the docstring in GeneratedDeliveryBuilder.
       Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
@@ -422,7 +425,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       # from scratch
       cell = delivery_line.newCell(base_id=base_id, \
                portal_type=self.getDeliveryCellPortalType(),
-               activate_kw=activate_kw,*cell_key)
+               activate_kw=activate_kw,temp_object=temp_object, *cell_key)
     else:
       # from duplicated original line
       cp = tryMethodCallWithTemporaryPermission(

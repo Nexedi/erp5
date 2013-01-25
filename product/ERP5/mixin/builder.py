@@ -100,7 +100,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
-                  explanation=None, business_link=None, activate_kw=None, **kw):
+                  explanation=None, business_link=None, activate_kw=None,
+                  temp_object=0, **kw):
     """
       Build deliveries from a list of movements
 
@@ -141,7 +142,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list, activate_kw=activate_kw,
-                       **kw)
+                       temp_object=temp_object, **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
@@ -333,7 +334,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   @UnrestrictedMethod
   def buildDeliveryList(self, movement_group_node,
                         delivery_relative_url_list=None,
-                        movement_list=None, update=True, **kw):
+                        movement_list=None, update=True, 
+                        temp_object=0, **kw):
     """
       Build deliveries from a list of movements
     """
@@ -366,10 +368,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                           movement_group_node,
                           self.getDeliveryMovementGroupList(),
                           delivery_to_update_list=delivery_to_update_list,
+                          temp_object=temp_object,
                           **kw)
     return delivery_list
 
-  def _createDelivery(self, delivery_module, movement_list, activate_kw):
+  def _createDelivery(self, delivery_module, movement_list, activate_kw, 
+                            temp_object):
     """
       Create a new delivery in case where a builder may not update
       an existing one.
@@ -377,13 +381,15 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     return delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
       created_by_builder=1,
-      activate_kw=activate_kw)
+      activate_kw=activate_kw, 
+      temp_object=temp_object)
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
                             delivery_to_update_list=None,
                             divergence_list=None,
-                            activate_kw=None, force_update=0, **kw):
+                            activate_kw=None, force_update=0, 
+                            temp_object=0, **kw):
     """
       Build delivery from a list of movement
     """
@@ -409,7 +415,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                               delivery_to_update_list=delivery_to_update_list,
                               divergence_list=divergence_list,
                               activate_kw=activate_kw,
-                              force_update=force_update)
+                              force_update=force_update, 
+                              temp_object=temp_object)
         delivery_list.extend(new_delivery_list)
         force_update = 0
     else:
@@ -435,7 +442,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
-                                        activate_kw)
+                                        activate_kw, temp_object)
       # Put properties on delivery
       self._setUpdated(delivery, 'delivery')
       if property_dict:
@@ -450,11 +457,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                 self.getDeliveryLineMovementGroupList()[1:],
                                 divergence_list=divergence_list,
                                 activate_kw=activate_kw,
-                                force_update=force_update)
+                                force_update=force_update, 
+                                temp_object=temp_object)
       delivery_list.append(delivery)
     return delivery_list
 
-  def _createDeliveryLine(self, delivery, movement_list, activate_kw):
+  def _createDeliveryLine(self, delivery, movement_list, activate_kw, 
+                                temp_object):
     """
       Create a new delivery line in case where a builder may not update
       an existing one.
@@ -462,12 +471,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     return delivery.newContent(
       portal_type=self.getDeliveryLinePortalType(),
       created_by_builder=1,
-      activate_kw=activate_kw)
+      activate_kw=activate_kw, 
+      temp_object=temp_object)
 
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
                                 divergence_list=None,
-                                activate_kw=None, force_update=0, **kw):
+                                activate_kw=None, force_update=0, 
+                                temp_object=0, **kw):
     """
       Build delivery line from a list of movement on a delivery
     """
@@ -488,7 +499,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           movement_group_node_list=movement_group_node_list,
           divergence_list=divergence_list,
           activate_kw=activate_kw,
-          force_update=force_update)
+          force_update=force_update, 
+          temp_object=temp_object)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
@@ -506,7 +518,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         delivery_line = self._createDeliveryLine(
                 delivery,
                 movement_group_node.getMovementList(),
-                activate_kw)
+                activate_kw,
+                temp_object)
       # Put properties on delivery line
       self._setUpdated(delivery_line, 'line')
       if property_dict:
@@ -522,7 +535,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
             movement_group_node_list=movement_group_node_list,
             divergence_list=divergence_list,
             activate_kw=activate_kw,
-            force_update=force_update)
+            force_update=force_update, 
+            temp_object=temp_object)
         return
 
       # Update variation category list on line
@@ -544,7 +558,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                     update_existing_line=update_existing_line,
                                     divergence_list=divergence_list,
                                     activate_kw=activate_kw,
-                                    force_update=force_update)
+                                    force_update=force_update, 
+                                    temp_object=temp_object)
       else:
         self._processDeliveryCellGroup(
                                   delivery_line,
@@ -553,10 +568,11 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                   update_existing_line=update_existing_line,
                                   divergence_list=divergence_list,
                                   activate_kw=activate_kw,
-                                  force_update=force_update)
+                                  force_update=force_update, 
+                                  temp_object=temp_object)
 
   def _createDeliveryCell(self, delivery_line, movement, activate_kw,
-                          base_id, cell_key):
+                          base_id, cell_key, temp_object):
     """
       Create a new delivery cell in case where a builder may not update
       an existing one.
@@ -564,6 +580,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     cell = delivery_line.newCell(base_id=base_id,
                                  portal_type=self.getDeliveryCellPortalType(),
                                  activate_kw=activate_kw,
+                                 temp_object=temp_object,
                                  *cell_key)
     return cell
 
@@ -571,7 +588,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                 collect_order_list, movement_group_node_list=None,
                                 update_existing_line=0,
                                 divergence_list=None,
-                                activate_kw=None, force_update=0):
+                                activate_kw=None, force_update=0,
+                                temp_object=0):
     """
       Build delivery cell from a list of movement on a delivery line
       or complete delivery line
@@ -594,7 +612,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           update_existing_line=update_existing_line,
           divergence_list=divergence_list,
           activate_kw=activate_kw,
-          force_update=force_update)
+          force_update=force_update, 
+          temp_object=temp_object)
     else:
       movement_list = movement_group_node.getMovementList()
       if len(movement_list) != 1:
@@ -648,7 +667,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
               omit_optional_variation=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = self._createDeliveryCell(delivery_line, movement,
-                                            activate_kw, base_id, cell_key)
+                                            activate_kw, base_id, cell_key,
+                                            temp_object)
             vcl = movement.getVariationCategoryList()
             cell._edit(category_list=vcl,
                        # XXX hardcoded value
