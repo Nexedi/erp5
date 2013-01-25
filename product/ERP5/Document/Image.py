@@ -299,7 +299,9 @@ class Image(TextConvertableMixin, File, OFSImage):
       image_data = image.data
       # as image will always be requested through a display not by passing exact
       # pixels we need to restore this way in cache
-      kw['display'] = display
+      if display is not None:
+        # only set if we have a real value
+        kw['display'] = display
       image_size = kw.pop('image_size', None)
       self.setConversion(image_data, mime, **kw)
     return mime, image_data
