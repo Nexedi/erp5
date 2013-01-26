@@ -58,15 +58,11 @@ order_by_expression</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-SELECT DISTINCT catalog.uid, catalog.path, portal_type\n
+SELECT DISTINCT catalog.uid, path, relative_url, portal_type\n
 FROM catalog, category\n
 WHERE catalog.uid = category.uid\n
   <dtml-if portal_type>\n
-    AND\n
-    (<dtml-in portal_type>\n
-      <dtml-unless sequence-start> OR </dtml-unless>\n
-        catalog.portal_type=\'<dtml-var sequence-item>\'\n
-    </dtml-in>)\n
+    AND <dtml-sqltest portal_type type="string" multiple>\n
   </dtml-if>\n
   AND (<dtml-var "portal_categories.buildSQLSelector(category_list)">)\n
   <dtml-if strict_membership>\n
