@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts57908553.78</string> </value>
+            <value> <string>ts59369034.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>79623</int> </value>
+            <value> <int>80196</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,20 +54,20 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /** vim: et:ts=4:sw=4:sts=4\n
- * @license RequireJS 2.1.2 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.\n
+ * @license RequireJS 2.1.4 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.\n
  * Available via the MIT or new BSD license.\n
  * see: http://github.com/jrburke/requirejs for details\n
  */\n
 //Not using strict: uneven strict support in browsers, #392, and causes\n
 //problems with requirejs.exec()/transpiler plugins that may not be strict.\n
 /*jslint regexp: true, nomen: true, sloppy: true */\n
-/*global window, navigator, document, importScripts, jQuery, setTimeout, opera */\n
+/*global window, navigator, document, importScripts, setTimeout, opera */\n
 \n
 var requirejs, require, define;\n
 (function (global) {\n
     var req, s, head, baseElement, dataMain, src,\n
         interactiveScript, currentlyAddingScript, mainScript, subPath,\n
-        version = \'2.1.2\',\n
+        version = \'2.1.4\',\n
         commentRegExp = /(\\/\\*([\\s\\S]*?)\\*\\/|([^:]|^)\\/\\/(.*)$)/mg,\n
         cjsRequireRegExp = /[^.]\\s*require\\s*\\(\\s*["\']([^\'"\\s]+)["\']\\s*\\)/g,\n
         jsSuffixRegExp = /\\.js$/,\n
@@ -76,7 +76,6 @@ var requirejs, require, define;\n
         ostring = op.toString,\n
         hasOwn = op.hasOwnProperty,\n
         ap = Array.prototype,\n
-        aps = ap.slice,\n
         apsp = ap.splice,\n
         isBrowser = !!(typeof window !== \'undefined\' && navigator && document),\n
         isWebWorker = !isBrowser && typeof importScripts !== \'undefined\',\n
@@ -973,8 +972,7 @@ var requirejs, require, define;\n
                         name = this.map.name,\n
                         parentName = this.map.parentMap ? this.map.parentMap.name : null,\n
                         localRequire = context.makeRequire(map.parentMap, {\n
-                            enableBuildCallback: true,\n
-                            skipMap: true\n
+                            enableBuildCallback: true\n
                         });\n
 \n
                     //If current map is not normalized, wait for that\n
@@ -1072,8 +1070,11 @@ var requirejs, require, define;\n
                         try {\n
                             req.exec(text);\n
                         } catch (e) {\n
-                            throw new Error(\'fromText eval for \' + moduleName +\n
-                                            \' failed: \' + e);\n
+                            return onError(makeError(\'fromtexteval\',\n
+                                             \'fromText eval for \' + id +\n
+                                            \' failed: \' + e,\n
+                                             e,\n
+                                             [id]));\n
                         }\n
 \n
                         if (hasInteractive) {\n
@@ -1450,16 +1451,21 @@ var requirejs, require, define;\n
                      * plain URLs like nameToUrl.\n
                      */\n
                     toUrl: function (moduleNamePlusExt) {\n
-                        var index = moduleNamePlusExt.lastIndexOf(\'.\'),\n
-                            ext = null;\n
+                        var ext, url,\n
+                            index = moduleNamePlusExt.lastIndexOf(\'.\'),\n
+                            segment = moduleNamePlusExt.split(\'/\')[0],\n
+                            isRelative = segment === \'.\' || segment === \'..\';\n
 \n
-                        if (index !== -1) {\n
+                        //Have a file extension alias, and it is not the\n
+                        //dots from a relative path.\n
+                        if (index !== -1 && (!isRelative || index > 1)) {\n
                             ext = moduleNamePlusExt.substring(index, moduleNamePlusExt.length);\n
                             moduleNamePlusExt = moduleNamePlusExt.substring(0, index);\n
                         }\n
 \n
-                        return context.nameToUrl(normalize(moduleNamePlusExt,\n
-                                                relMap && relMap.id, true), ext);\n
+                        url = context.nameToUrl(normalize(moduleNamePlusExt,\n
+                                                relMap && relMap.id, true), ext || \'.fake\');\n
+                        return ext ? url : url.substring(0, url.length - 5);\n
                     },\n
 \n
                     defined: function (id) {\n
@@ -1504,10 +1510,11 @@ var requirejs, require, define;\n
 \n
             /**\n
              * Called to enable a module if it is still in the registry\n
-             * awaiting enablement. parent module is passed in for context,\n
-             * used by the optimizer.\n
+             * awaiting enablement. A second arg, parent, the parent module,\n
+             * is passed in for context, when this method is overriden by\n
+             * the optimizer. Not shown here to keep code compact.\n
              */\n
-            enable: function (depMap, parent) {\n
+            enable: function (depMap) {\n
                 var mod = getOwn(registry, depMap.id);\n
                 if (mod) {\n
                     getModule(depMap).enable();\n
