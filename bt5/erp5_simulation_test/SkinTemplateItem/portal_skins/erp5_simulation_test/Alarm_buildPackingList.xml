@@ -77,6 +77,7 @@ for builder_id in builder_id_list:\n
                           \'_updateSimulation\')\n
   activate_kw          = dict(tag=index_tag)\n
   builder.activate(\n
+    limit=100,\n
     tag=\'packing_list_builder_alarm\',\n
     serialization_tag=serialization_tag,\n
     after_tag=after_tag,\n
