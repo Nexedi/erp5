@@ -66,7 +66,7 @@ jump_reference_list = getattr(context, accessor_name)(portal_type=portal_type, f
 \n
 if len(jump_reference_list)==1:\n
   jump_reference = jump_reference_list[0]\n
-  return jump_reference.Base_redirect(\'view\')\n
+  return jump_reference.Base_redirect()\n
 else:\n
   selection_uid_list = map(lambda x:x.getUid(),jump_reference_list) or None\n
   kw = {\'uid\': selection_uid_list}\n
