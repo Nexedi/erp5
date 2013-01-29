@@ -294,20 +294,23 @@ class Image(TextConvertableMixin, File, OFSImage):
       # pixel (number of it = 128x128)
       kw['image_size'] = image_size    
       display = kw.pop('display', None)
-      mime, image = self._makeDisplayPhoto(**kw)
+      crop = kw.pop('crop', None)
+      mime, image = self._makeDisplayPhoto(crop=crop, **kw)
       image_data = image.data
       # as image will always be requested through a display not by passing exact
       # pixels we need to restore this way in cache
       if display is not None:
         # only set if we have a real value
         kw['display'] = display
+      if crop:
+        kw['crop'] = crop
       image_size = kw.pop('image_size', None)
       self.setConversion(image_data, mime, **kw)
     return mime, image_data
 
   # Display
   security.declareProtected(Permissions.View, 'index_html')
-  @fill_args_from_request('display', 'quality', 'resolution', 'frame')
+  @fill_args_from_request('display', 'quality', 'resolution', 'frame', 'crop')
   def index_html(self, REQUEST, *args, **kw):
     """Return the image data."""
     self._upgradeImage()
@@ -317,11 +320,16 @@ class Image(TextConvertableMixin, File, OFSImage):
   # Photo processing
   #
 
-  def _resize(self, quality, width, height, format, resolution, frame):
+  def _resize(self, quality, width, height, format, resolution, frame, crop=False):
     """Resize and resample photo."""
-    parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
-                                 '-quality', str(quality),
-                                 '-geometry', '%sx%s' % (width, height)]
+    parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8']
+    if crop :
+      parameter_list += '-thumbnail', '%sx%s^' % (width, height),\
+                        '-gravity', 'center',\
+                        '-extent','%sx%s' % (width, height)
+    else:
+      parameter_list += '-geometry', '%sx%s' % (width, height)
+    parameter_list += '-quality', str(quality)
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
       # ImageMagick way to remove transparent that works with multiple
       # images. http://www.imagemagick.org/Usage/masking/#remove
@@ -357,18 +365,22 @@ class Image(TextConvertableMixin, File, OFSImage):
       return StringIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)
 
-  def _getDisplayData(self, format, quality, resolution, frame, image_size):
+  def _getDisplayData(self, format, quality, resolution, frame, image_size, crop):
     """Return raw photo data for given display."""
-    width, height = self._getAspectRatioSize(*image_size)
+    if crop:
+      width, height = image_size
+    else:
+      width, height = self._getAspectRatioSize(*image_size)
     if ((width, height) == image_size or (width, height) == (0, 0))\
        and quality == self.getDefaultImageQuality(format) and resolution is None and frame is None\
        and not format:
       # No resizing, no conversion, return raw image
       return self.getData()
-    return self._resize(quality, width, height, format, resolution, frame)
+    return self._resize(quality, width, height, format, resolution, frame, crop)
 
   def _makeDisplayPhoto(self, format=None, quality=_MARKER,
-                                 resolution=None, frame=None, image_size=None):
+                                 resolution=None, frame=None, image_size=None,
+                                 crop=False):
     """Create given display."""
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
@@ -377,7 +389,8 @@ class Image(TextConvertableMixin, File, OFSImage):
     id = '%s_%s_%s.%s'% (base, width, height, ext,)
     image = OFSImage(id, self.getTitle(), 
                      self._getDisplayData(format, quality, resolution,
-                                                            frame, image_size))
+                                                            frame, image_size,
+                                                            crop))
     return image.content_type, aq_base(image)
 
   def _getAspectRatioSize(self, width, height):
