@@ -86,7 +86,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
+                        <string>your_line_portal_type</string>
                         <string>your_line_count</string>
                       </list>
                     </value>
