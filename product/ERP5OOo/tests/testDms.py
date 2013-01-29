@@ -175,6 +175,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   conversion_format_permission_script_id_list = [
       'Document_checkConversionFormatPermission',
+      'Image_checkConversionFormatPermission',
       'PDF_checkConversionFormatPermission']
   def clearRestrictedSecurityHelperScript(self):
     for script_id in self.conversion_format_permission_script_id_list:
