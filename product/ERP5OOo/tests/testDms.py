@@ -74,6 +74,7 @@ import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from DateTime import DateTime
+from ZTUtils import make_query
 
 QUIET = 0
 
@@ -241,7 +242,7 @@ class TestDocument(TestDocumentMixin):
 
   def getURLSizeList(self, uri, **kw):
     # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-    url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+    url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
     format=kw.get('format', 'jpeg')
     infile = urllib.urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
@@ -2255,6 +2256,12 @@ return 1
         # Image
         image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+        self.assertTrue(abs(min(preffered_size_for_display) - min(image_document_image_size)) >= max_tollerance_px)
+
+        cropped_image_document_image_size, cropped_image_document_file_size = \
+            self.getURLSizeList(image_document_url, crop = 1, **convert_kw)
+        self.assertEqual(max(preffered_size_for_display), max(cropped_image_document_image_size))
+        self.assertEqual(min(preffered_size_for_display), min(cropped_image_document_image_size))
 
         # Web Page
         web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
