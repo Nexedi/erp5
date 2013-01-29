@@ -30,6 +30,8 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
+from AccessControl.ZopeGuards import guarded_getattr
+
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
@@ -60,9 +62,8 @@ class PreferenceMethod(Method):
   func_code.co_argcount = 1
   func_defaults = ()
 
-  def __init__(self, attribute, default):
+  def __init__(self, attribute):
     self.__name__ = self._preference_getter = attribute
-    self._preference_default = default
     self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
 
   def __call__(self, instance, default=_marker, *args, **kw):
@@ -72,19 +73,24 @@ class PreferenceMethod(Method):
       # there is a design problem in current archive API.
       sql_catalog_id = kw.pop('sql_catalog_id', None)
       for pref in instance._getSortedPreferenceList(sql_catalog_id=sql_catalog_id):
-        value = getattr(pref, self._preference_getter)(_marker, *args, **kw)
+        value = guarded_getattr(pref, self._preference_getter)(_marker, *args, **kw)
         # XXX Due to UI limitation, null value is treated as if the property
         #     was not defined. The drawback is that it is not possible for a
         #     user to mask a non-null global value with a null value.
         if value not in (_marker, None, '', (), []):
           return value
       if default is _marker:
-        return self._preference_default
+        from Products.ERP5Type.Document import newTempPreference
+        return CachingMethod(getattr(newTempPreference(instance, ''),
+                                     self._preference_getter),
+                             id=id+"_default",
+                             cache_factory='erp5_ui_short')()
       return default
+    id = '%s.%s' % (self._preference_cache_id,
+                   getSecurityManager().getUser().getId())
     _getPreference = CachingMethod(_getPreference,
-            id='%s.%s' % (self._preference_cache_id,
-                          getSecurityManager().getUser().getId()),
-            cache_factory='erp5_ui_short')
+                                   id=id,
+                                   cache_factory='erp5_ui_short')
     return _getPreference(default, *args, **kw)
 
 class PreferenceTool(BaseTool):

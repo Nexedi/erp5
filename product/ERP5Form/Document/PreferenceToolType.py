@@ -58,28 +58,15 @@ def _generatePreferenceToolAccessorHolder(portal_type_name,
 
   preference_tool_accessor_holder = AccessorHolderType('PreferenceTool')
 
-  for accessor_holder in accessor_holder_list:
-    for prop in accessor_holder._properties:
-      if not prop.get('preference'):
-        continue
-      # XXX read_permission and write_permissions defined at
-      # property sheet are not respected by this.
-      # only properties marked as preference are used
+  preferred_accessor = ("isPreferred", "hasPreferred", "getPreferred",
+                        "getDefaultPreferred", "hasDefaultPreferred")
 
-      # properties have already been 'converted' and _list is appended
-      # to list_types properties
-      attribute = prop['id']
-      if attribute.endswith('_list'):
-        attribute = prop['base_id']
-      attr_list = [ 'get%s' % convertToUpperCase(attribute)]
-      if prop['type'] == 'boolean':
-        attr_list.append('is%s' % convertToUpperCase(attribute))
-      if prop['type'] in list_types :
-        attr_list.append('get%sList' % convertToUpperCase(attribute))
-      read_permission = prop.get('read_permission')
-      for attribute_name in attr_list:
-        method = PreferenceMethod(attribute_name, prop.get('default'))
-        preference_tool_accessor_holder.registerAccessor(method, read_permission)
+  for accessor_holder in accessor_holder_list:
+    for accessor in accessor_holder.__dict__:
+      if accessor.startswith(preferred_accessor) and not accessor.endswith("__roles__"):
+        method = PreferenceMethod(accessor)
+        preference_tool_accessor_holder.registerAccessor(method,
+                                                         'Access contents information')
 
   accessor_holder_module.registerAccessorHolder(preference_tool_accessor_holder)
 

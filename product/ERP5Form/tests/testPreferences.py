@@ -36,7 +36,7 @@ from zExceptions import Unauthorized
 from AccessControl.ZopeGuards import guarded_hasattr
 from DateTime import DateTime
 
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Form.PreferenceTool import Priority
@@ -425,13 +425,13 @@ class TestPreferences(PropertySheetTestCase):
 
     method = pref_tool.getPreferredAccountingTransactionSimulationState
     state = method()
-    self.assertEquals(state, [])
-    state = method('default')
+    self.assertEquals(state, None)
+    state = method('default') 
     self.assertEquals(state, 'default')
 
     method = lambda *args: pref_tool.getPreference('preferred_accounting_transaction_simulation_state', *args)
     state = method()
-    self.assertEquals(state, [])
+    self.assertEquals(state, None)
     state = method('default')
     self.assertEquals(state, 'default')
 
@@ -558,20 +558,20 @@ class TestPreferences(PropertySheetTestCase):
     self._addProperty('Preference',
         'test_boolean_accessor Preference',
         portal_type='Standard Property',
-        property_id='dummy',
+        property_id='preferred_dummy',
         preference=True,
         elementary_type='boolean')
     portal_preferences = self.portal.portal_preferences
-    self.assertFalse(portal_preferences.getDummy())
-    self.assertFalse(portal_preferences.isDummy())
+    self.assertFalse(portal_preferences.getPreferredDummy())
+    self.assertFalse(portal_preferences.isPreferredDummy())
 
     preference = portal_preferences.newContent(portal_type='Preference',
-                                               dummy=True)
+                                               preferred_dummy=True)
     preference.enable()
     self.tic()
 
-    self.assertTrue(portal_preferences.getDummy())
-    self.assertTrue(portal_preferences.isDummy())
+    self.assertTrue(portal_preferences.getPreferredDummy())
+    self.assertTrue(portal_preferences.isPreferredDummy())
 
   def test_property_sheet_security_on_permission(self):
     """ Added a test to make sure permissions are used into portal
@@ -592,9 +592,8 @@ class TestPreferences(PropertySheetTestCase):
     obj.enable()
     self.tic()
     
-    self.assertTrue(guarded_hasattr(obj, 'setPreferredToto'))
     obj.setPreferredToto("A TEST")
-    self.assertTrue(guarded_hasattr(obj, 'getPreferredToto'))
+    self.assertEquals("A TEST", obj.getPreferredToto())
 
     obj.manage_permission(write_permission, [], 0)
     self.assertFalse(guarded_hasattr(obj, 'setPreferredToto'))
@@ -619,8 +618,12 @@ class TestPreferences(PropertySheetTestCase):
     preference_tool.manage_permission(write_permission, ['Manager'], 1)
     preference_tool.manage_permission(read_permission, [], 0)
     obj.manage_permission(read_permission, [], 0)
-    self.assertFalse(guarded_hasattr(preference_tool, 'getPreferredToto'))
 
+    self.logout()
+    self.assertEqual(None, preference_tool.getPreferredToto())
+
+    self.login('manager')
+    self.assertEquals("A TEST", preference_tool.getPreferredToto())
     preference_tool.manage_permission(read_permission, ['Manager'], 1)
 
   def test_system_preference_value_prefererred(self):
@@ -630,30 +633,30 @@ class TestPreferences(PropertySheetTestCase):
     self._addProperty('Preference',
         'test_system_preference_value_prefererred Preference',
         portal_type='Standard Property',
-        property_id='dummystring',
+        property_id='preferred_dummy_string',
         property_default='python: "%s"' % default_preference_string,
         preference=True,
         elementary_type='string')
     portal_preferences = self.portal.portal_preferences
     self.assertEqual(default_preference_string,
-        portal_preferences.getDummystring())
+        portal_preferences.getPreferredDummyString())
 
     preference = portal_preferences.newContent(portal_type='Preference',
-                                               dummystring=normal_preference_string,
+                                               preferred_dummy_string=normal_preference_string,
                                                priority=Priority.SITE)
     preference.enable()
     self.tic()
 
     self.assertEqual(normal_preference_string,
-        portal_preferences.getDummystring())
+        portal_preferences.getPreferredDummyString())
 
     system_preference = portal_preferences.newContent(portal_type='System Preference',
-                                               dummystring=system_preference_string)
+                                               preferred_dummy_string=system_preference_string)
     system_preference.enable()
     self.tic()
 
     self.assertEqual(system_preference_string,
-        portal_preferences.getDummystring())
+        portal_preferences.getPreferredDummyString())
 
   @expectedFailure
   def test_system_preference_value_prefererred_clear_cache_disabled(self):
