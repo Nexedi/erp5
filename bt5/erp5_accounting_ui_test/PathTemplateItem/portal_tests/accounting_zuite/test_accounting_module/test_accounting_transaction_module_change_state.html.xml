@@ -86,7 +86,7 @@ Test changing state in accounting module (with custom search)\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>\n
-  <td>2 records</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
