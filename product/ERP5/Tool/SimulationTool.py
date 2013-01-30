@@ -572,13 +572,15 @@ class SimulationTool(BaseTool):
         # instances
         resource=None, node=None, payment=None,
         section=None, mirror_section=None, item=None,
-        function=None, project=None, funding=None, transformed_resource=None,
+        function=None, project=None, funding=None, payment_request=None,
+        transformed_resource=None,
         # used for tracking
         input=0, output=0,
         # categories
         resource_category=None, node_category=None, payment_category=None,
         section_category=None, mirror_section_category=None,
         function_category=None, project_category=None, funding_category=None,
+        payment_request_category=None,
         # categories with strict membership
         resource_category_strict_membership=None,
         node_category_strict_membership=None,
@@ -588,6 +590,7 @@ class SimulationTool(BaseTool):
         function_category_strict_membership=None,
         project_category_strict_membership=None,
         funding_category_strict_membership=None,
+        payment_request_category_strict_membership=None,
         # simulation_state
         strict_simulation_state=0,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
@@ -600,7 +603,7 @@ class SimulationTool(BaseTool):
         # uids
         resource_uid=None, node_uid=None, section_uid=None, payment_uid=None,
         mirror_node_uid=None, mirror_section_uid=None, function_uid=None,
-        project_uid=None, funding_uid=None,
+        project_uid=None, funding_uid=None, payment_request_uid=None,
         # omit input and output
         omit_input=0,
         omit_output=0,
@@ -632,6 +635,9 @@ class SimulationTool(BaseTool):
         group_by_funding=0,
         group_by_funding_category=0,
         group_by_funding_category_strict_membership=0,
+        group_by_payment_request=0,
+        group_by_payment_request_category=0,
+        group_by_payment_request_category_strict_membership=0,
         group_by_function=0,
         group_by_function_category=0,
         group_by_function_category_strict_membership=0,
@@ -696,6 +702,7 @@ class SimulationTool(BaseTool):
       column_value_dict.set('payment_uid', payment_uid)
       column_value_dict.set('project_uid', project_uid)
       column_value_dict.set('funding_uid', funding_uid)
+      column_value_dict.set('payment_request_uid', payment_request_uid)
       column_value_dict.set('function_uid', function_uid)
       if column_value_dict.set('section_uid', section_uid):
         sql_kw['section_filtered'] = 1
@@ -708,6 +715,7 @@ class SimulationTool(BaseTool):
       column_value_dict.setUIDList('payment_uid', payment)
       column_value_dict.setUIDList('project_uid', project)
       column_value_dict.setUIDList('funding_uid', funding)
+      column_value_dict.setUIDList('payment_request_uid', payment_request)
       column_value_dict.setUIDList('function_uid', function)
 
       sql_kw['transformed_uid'] = self._generatePropertyUidList(transformed_resource)
@@ -727,6 +735,7 @@ class SimulationTool(BaseTool):
       related_key_dict.setUIDList('node_category_uid', node_category)
       related_key_dict.setUIDList('project_category_uid', project_category)
       related_key_dict.setUIDList('funding_category_uid', funding_category)
+      related_key_dict.setUIDList('payment_request_category_uid', payment_request_category)
       related_key_dict.setUIDList('function_category_uid', function_category)
       related_key_dict.setUIDList('payment_category_uid', payment_category)
       if related_key_dict.setUIDList('section_category_uid',
@@ -743,6 +752,8 @@ class SimulationTool(BaseTool):
                                   project_category_strict_membership)
       related_key_dict.setUIDList('funding_category_strict_membership_uid',
                                   funding_category_strict_membership)
+      related_key_dict.setUIDList('payment_request_category_strict_membership_uid',
+                                  payment_request_category_strict_membership)
       related_key_dict.setUIDList('function_category_strict_membership_uid',
                                   function_category_strict_membership)
       related_key_dict.setUIDList('payment_category_strict_membership_uid',
@@ -847,6 +858,8 @@ class SimulationTool(BaseTool):
         column_group_by_expression_list.append('project_uid')
       if group_by_funding:
         column_group_by_expression_list.append('funding_uid')
+      if group_by_payment_request:
+        column_group_by_expression_list.append('payment_request_uid')
       if group_by_function:
         column_group_by_expression_list.append('function_uid')
       if group_by_date:
@@ -918,6 +931,14 @@ class SimulationTool(BaseTool):
             'funding_category_strict_membership_uid')
         related_key_select_expression_list.append(
             'funding_category_strict_membership_uid')
+      if group_by_payment_category:
+        related_key_group_by_expression_list.append('payment_request_category_uid')
+        related_key_select_expression_list.append('payment_request_category_uid')
+      if group_by_payment_request_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'payment_request_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'payment_request_category_strict_membership_uid')
 
       if related_key_group_by_expression_list:
         new_kw['related_key_group_by'] = related_key_group_by_expression_list

@@ -29,6 +29,7 @@
   `function_uid` BIGINT UNSIGNED,\n
   `project_uid` BIGINT UNSIGNED,\n
   `funding_uid` BIGINT UNSIGNED,\n
+  `payment_request_uid` BIGINT UNSIGNED,\n
   `mirror_section_uid` BIGINT UNSIGNED,\n
   `mirror_node_uid` BIGINT UNSIGNED,\n
   `resource_uid` BIGINT UNSIGNED,\n

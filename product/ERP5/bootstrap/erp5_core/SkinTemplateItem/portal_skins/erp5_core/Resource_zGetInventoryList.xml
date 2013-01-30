@@ -136,6 +136,7 @@ SELECT\n
   <dtml-var stock_table_id>.function_uid as function_uid,\n
   <dtml-var stock_table_id>.project_uid as project_uid,\n
   <dtml-var stock_table_id>.funding_uid as funding_uid,\n
+  <dtml-var stock_table_id>.payment_request_uid as payment_request_uid,\n
   catalog.path as path\n
 </dtml-if>\n
 <dtml-if statistic>\n

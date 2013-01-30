@@ -439,6 +439,39 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(100,
             funding_category_strict_membership='function/function1/function2')
 
+  def test_PaymentRequest(self):
+    """Tests inventory on payment_request"""
+    self._makeMovement(quantity=30, destination_payment_request='function/function1')
+    self._makeMovement(quantity=-70, source_payment_request='function/function1')
+
+    self.assertInventoryEquals(100, payment_request='function/function1')
+    self.assertInventoryEquals(0, payment_request='function/function1/function2')
+
+  def test_PaymentRequestUid(self):
+    """Tests inventory on payment_request uid"""
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100, destination_payment_request='function/function1')
+
+    self.assertInventoryEquals(100, payment_request_uid=function.function1.getUid())
+    self.assertInventoryEquals(0,
+                            payment_request_uid=function.function1.function2.getUid())
+
+  def test_PaymentRequestCategory(self):
+    """Tests inventory on payment_request category"""
+    self._makeMovement(quantity=100,
+                       destination_payment_request='function/function1/function2')
+    self.assertInventoryEquals(100, payment_request_category='function/function1')
+    self.assertInventoryEquals(100, payment_request='function/function1/function2')
+
+  def test_PaymentRequestCategoryStrictMembership(self):
+    """Tests inventory on payment_request category strict membership"""
+    self._makeMovement(quantity=100,
+                       destination_payment_request='function/function1/function2')
+    self.assertInventoryEquals(0,
+            payment_request_category_strict_membership='function/function1')
+    self.assertInventoryEquals(100,
+            payment_request_category_strict_membership='function/function1/function2')
+
   def test_Project(self):
     """Tests inventory on project"""
     self._makeMovement(quantity=100, destination_project_value=self.project)
@@ -870,6 +903,25 @@ class TestInventoryList(InventoryAPITestCase):
       funding1.getUid()][0].inventory, 2)
     self.assertEquals([r for r in inventory_list if r.funding_uid ==
       funding2.getUid()][0].inventory, 3)
+
+  def test_GroupByPaymentRequest(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    payment_request1 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1')
+    payment_request2 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1/function2')
+    self._makeMovement(quantity=2,
+                       destination_payment_request_value=payment_request1,)
+    self._makeMovement(quantity=3,
+                       destination_payment_request_value=payment_request2,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_payment_request=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+      payment_request1.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+      payment_request2.getUid()][0].inventory, 3)
 
   def test_GroupByProject(self):
     getInventoryList = self.getSimulationTool().getInventoryList

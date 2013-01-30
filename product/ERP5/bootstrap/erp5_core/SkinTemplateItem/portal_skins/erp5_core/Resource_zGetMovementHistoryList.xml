@@ -508,6 +508,7 @@ SELECT\n
   stock.function_uid AS function_uid,\n
   stock.project_uid AS project_uid,\n
   stock.funding_uid AS funding_uid,\n
+  stock.payment_request_uid AS payment_request_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
