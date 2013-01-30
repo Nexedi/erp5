@@ -90,6 +90,13 @@ def makeFileUpload(name, as_name=None):
   path = makeFilePath(name)
   return FileUpload(path, as_name)
 
+def getFileSize(name):
+  path = makeFilePath(name)
+  f = open(path, "r")
+  file_size = len(f.read())
+  f.close()
+  return file_size
+
 class TestDocumentMixin(ERP5TypeTestCase):
   
   business_template_list = ['erp5_core_proxy_field_legacy',
@@ -2157,6 +2164,49 @@ return 1
                         image_document_image_size_no_quality)
                       )
 
+  def test_getOriginalContentOnTraversal(self):
+    """
+      Return original content on traversal.  
+    """
+    def getURL(uri, **kw):
+      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      return urllib.urlopen(url)
+
+    ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    ooo_document.edit(file=upload_file)
+
+    pdf_document = self.portal.document_module.newContent(portal_type='PDF')
+    upload_file = makeFileUpload('TEST-en-002.pdf')
+    pdf_document.edit(file=upload_file)
+
+    image_document = self.portal.image_module.newContent(portal_type='Image')
+    upload_file = makeFileUpload('TEST-en-002.png')
+    image_document.edit(file=upload_file)
+
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page_document.setTextContent('<b> test </b> $website_url $website_url')
+    # a Web Page can generate dynamic text so test is as well
+    web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')
+    self.tic()
+
+    response = getURL(image_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: image/png\r\n'  in response.info().headers)
+    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png') in response.info().headers)
+   
+    response = getURL(ooo_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: application/vnd.oasis.opendocument.presentation\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n' in response.info().headers)
+    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp') in response.info().headers)
+
+    response = getURL(pdf_document.absolute_url(), **{'format':''})  
+    self.assertTrue('Content-Type: application/octet-stream\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
+
+    response = getURL(web_page_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: text/html; charset=utf-8\r\n'  in response.info().headers)
+
   def test_checkConversionFormatPermission(self):
     """
      Test various use cases when conversion can be not allowed
@@ -2168,7 +2218,14 @@ return 1
 
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
-  
+
+    # raster -> svg image should deny conversion if image width or height > 128 px
+    portal_type = 'Image'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST-en-002.jpg')
+    image = module.newContent(portal_type=portal_type, file=upload_file)
+    self.assertRaises(Unauthorized, image.convert, format='svg')
+ 
   def test_preConversionOnly(self):
     """
       Test usage of pre_converted_only argument - i.e. return a conversion only form cache otherwise
