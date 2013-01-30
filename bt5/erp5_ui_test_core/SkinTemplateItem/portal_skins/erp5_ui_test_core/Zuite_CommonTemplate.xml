@@ -61,6 +61,11 @@
       <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
       <td>base_url</td>\n
     </tr>\n
+    <tr> <!-- reset language to en, in case previous test failed and left the language changed -->\n
+      <td>open</td>\n
+      <td>${base_url}/Base_doLanguage?select_language=en</td>\n
+      <td></td>\n
+    </tr>\n
   </tal:block>\n
 \n
 <tal:block metal:define-macro="wait_for_activities">\n
