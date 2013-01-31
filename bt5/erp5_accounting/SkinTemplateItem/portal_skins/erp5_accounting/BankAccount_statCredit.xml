@@ -50,12 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'omit_output\'] = 1\n
-credit = context.BankAccount_statSourceBalance(**kw)\n
-if credit :\n
-  return float(\'%.02f\' % - credit)\n
-return 0.0\n
-# vim: syntax=python\n
+            <value> <string>"""Total credit (in local currency) of all accounting transactions having this\n
+bank account as payment\n
+"""\n
+kw[\'payment_uid\'] = context.getUid()\n
+kw[\'omit_asset_increase\'] = 1\n
+kw[\'asset_price\'] = False\n
+kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
+kw.update(kw[\'selection\'].getParams())\n
+\n
+# here, or 0 is to prevent displaying "- 0"\n
+return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +69,7 @@ return 0.0\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccount_statSourceCredit</string> </value>
+            <value> <string>BankAccount_statCredit</string> </value>
         </item>
       </dictionary>
     </pickle>

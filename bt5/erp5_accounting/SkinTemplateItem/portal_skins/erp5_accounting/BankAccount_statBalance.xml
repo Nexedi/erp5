@@ -50,10 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'omit_input\'] = 1\n
-debit = context.BankAccount_statSourceBalance(**kw)\n
-return float(\'%.02f\' % debit)\n
-# vim: syntax=python\n
+            <value> <string>"""Total balance (in local currency) of all accounting transactions having this\n
+bank account as payment node\n
+"""\n
+kw[\'payment_uid\'] = context.getUid()\n
+kw[\'asset_price\'] = False\n
+kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
+return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -62,7 +65,7 @@ return float(\'%.02f\' % debit)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankAccount_statSourceDebit</string> </value>
+            <value> <string>BankAccount_statBalance</string> </value>
         </item>
       </dictionary>
     </pickle>
