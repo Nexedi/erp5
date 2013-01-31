@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getObject().InvoiceTransactionLine_getSourceItemList()</string> </value>
+            <value> <string>python:cell.getObject().AccountingTransactionLine_getNodeItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>
