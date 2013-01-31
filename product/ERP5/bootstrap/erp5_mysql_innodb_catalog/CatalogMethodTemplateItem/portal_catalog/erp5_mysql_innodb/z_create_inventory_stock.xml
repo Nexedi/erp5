@@ -34,6 +34,7 @@
   `mirror_node_uid` BIGINT UNSIGNED,\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real ,\n
+  `is_accountable` BOOLEAN,\n
   `date` datetime,\n
   `mirror_date` datetime,\n
   `total_price` real ,\n

@@ -32,6 +32,7 @@ selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n
+only_accountable\r\n
 section_filtered\r\n
 omit_input\r\n
 omit_output\r\n
@@ -197,7 +198,9 @@ WHERE\n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
-\n
+<dtml-if only_accountable>\n
+  AND <dtml-var stock_table_id>.is_accountable\n
+</dtml-if>\n
 <dtml-if selection_domain>\n
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=stock_table_id, join_column=\'node_uid\')">\n
 </dtml-if>\n

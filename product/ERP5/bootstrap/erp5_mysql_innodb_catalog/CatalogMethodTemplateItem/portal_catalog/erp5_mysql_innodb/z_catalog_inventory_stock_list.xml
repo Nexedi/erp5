@@ -128,8 +128,9 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[9]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="int" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="int">, \n
+  <dtml-sqlvar expr="row_item[11]" type="int">,\n
   <dtml-sqlvar expr="row_item[12]" type="float" optional>,\n
+  1, <dtml-comment>only accountable</dtml-comment>\n
   <dtml-sqlvar expr="row_item[13]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[15]" type="float" optional>,\n

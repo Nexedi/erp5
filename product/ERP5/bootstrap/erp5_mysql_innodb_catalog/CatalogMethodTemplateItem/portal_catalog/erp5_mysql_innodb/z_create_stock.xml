@@ -71,6 +71,7 @@ CREATE TABLE `stock` (\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real,\n
   `is_cancellation` BOOLEAN,\n
+  `is_accountable` BOOLEAN,\n
   `date` datetime,\n
   `mirror_date` datetime,\n
   `total_price` real ,\n

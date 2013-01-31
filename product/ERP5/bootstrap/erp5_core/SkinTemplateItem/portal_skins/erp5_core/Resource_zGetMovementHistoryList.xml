@@ -427,6 +427,7 @@ selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n
+only_accountable\r\n
 omit_input\r\n
 omit_output\r\n
 omit_asset_increase\r\n
@@ -539,6 +540,9 @@ WHERE\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
+</dtml-if>\n
+<dtml-if only_accountable>\n
+  AND stock.is_accountable\n
 </dtml-if>\n
 \n
 <dtml-if omit_input>\n

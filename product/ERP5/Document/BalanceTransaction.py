@@ -395,8 +395,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     from Products.ERP5Type.Document import newTempAccountingTransactionLine
     # When have to reindex temp objects with quantity 0 in
     # order to update stock if delta become 0, but but redefining
-    # isAccountable we do not insert 0 lines in stock
-    def isAccountable(self):
+    # isMovement we do not insert 0 lines in stock
+    def isMovement(self):
       return self.getProperty('total_price', 0) != 0 or \
              self.getProperty('quantity', 0) != 0
     def factory(*args, **kw):
@@ -408,7 +408,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       if destination_total_asset_price is not None:
         kw['destination_total_asset_price'] = destination_total_asset_price
       doc._edit(*args, **kw)
-      doc.isAccountable = types.MethodType(isAccountable, doc)
+      doc.isMovement = types.MethodType(isMovement, doc)
 
       if relative_url:
         
