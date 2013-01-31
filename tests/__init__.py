@@ -69,8 +69,6 @@ class ERP5(_ERP5):
                           'testFunctionalRunMyDocSample',
                           'testFunctionalConfigurator',
                           'testFunctionalConfiguratorConsulting',
-                          # temporarily remove a test until it pass
-                          'testSafeImage',
                           # not maintained
                           'testERP5eGov',
                           'testAccounting_l10n_fr_m9'):
