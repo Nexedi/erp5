@@ -59,6 +59,7 @@
 CREATE TABLE `stock` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `order_id` TINYINT UNSIGNED NOT NULL,\n
+  `explanation_uid` BIGINT UNSIGNED,\n
   `node_uid` BIGINT UNSIGNED,\n
   `section_uid` BIGINT UNSIGNED,\n
   `payment_uid` BIGINT UNSIGNED,\n
