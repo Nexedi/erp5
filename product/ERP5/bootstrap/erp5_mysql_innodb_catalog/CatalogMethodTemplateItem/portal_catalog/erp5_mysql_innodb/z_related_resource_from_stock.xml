@@ -41,7 +41,7 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_resource_from_movement</string> </value>
+            <value> <string>z_related_resource_from_stock</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
