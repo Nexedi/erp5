@@ -5,7 +5,6 @@ delivery
 inventory
 inventory_stock
 item
-movement
 predicate
 predicate_category
 roles_and_users

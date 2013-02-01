@@ -21,8 +21,6 @@
  <key>item.date</key>
  <key>mirror_date</key>
  <key>modification_date</key>
- <key>movement.start_date</key>
- <key>movement.stop_date</key>
  <key>predicate.start_date</key>
  <key>predicate.start_date_range_max</key>
  <key>predicate.start_date_range_min</key>

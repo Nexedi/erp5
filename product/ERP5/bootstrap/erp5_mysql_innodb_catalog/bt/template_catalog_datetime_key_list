@@ -18,8 +18,6 @@ inventory_stock.mirror_date
 item.date
 mirror_date
 modification_date
-movement.start_date
-movement.stop_date
 predicate.start_date
 predicate.start_date_range_max
 predicate.start_date_range_min
