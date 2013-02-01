@@ -71,9 +71,6 @@ request = context.REQUEST\n
 gap_base = request.get("gap_base", "gap/fr/pcg/")\n
 getURL   = lambda gap_id: context.GAPCategory_getURLFromId(gap_id, gap_base)\n
 \n
-precision = context.Base_getPreferredPrecision()\n
-r_ = lambda x: context.Base_getRoundValue(x, precision)\n
-\n
 section        = context.restrictedTraverse(request.get("organisation"))\n
 section_region = section.getRegion()\n
 \n
@@ -81,8 +78,8 @@ section_region = section.getRegion()\n
 params = { \'omit_simulation\' : True\n
          , \'simulation_state\': request.get("simulation_state", [\'stopped\', \'delivered\'])\n
          , \'section_uid\'     : section.getUid()\n
+         , \'precision\'       : 2\n
          , \'at_date\'         : request[\'at_date\']\n
-         , \'where_expression\': " section.portal_type = \'Organisation\' "\n
          }\n
 params.update(kw)\n
 \n
@@ -134,12 +131,12 @@ for gap_id in gap_id_list:\n
 \n
         # Get the transaction\'s balance\n
         if not region.startswith(section_region):\n
-          new_balance = r_(r_(new_balance) + r_(transaction.total_price)) or 0.0\n
+          new_balance = new_balance + transaction.total_price\n
 \n
     # Update the general balance\n
-    net_balance = r_(r_(net_balance) + r_(new_balance))\n
+    net_balance = net_balance + new_balance\n
 \n
-return r_(net_balance)\n
+return net_balance\n
 </string> </value>
         </item>
         <item>
