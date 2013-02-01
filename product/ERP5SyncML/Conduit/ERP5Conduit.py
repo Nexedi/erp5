@@ -436,12 +436,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = new_data
       if isinstance(data, unicode):
         data = data.encode(self.getEncoding())
-      if keyword == 'binary_data':
-        #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
-        msg = MIMEBase('application','octet-stream')
-        encoders.encode_base64(msg)
-        msg.set_payload(data)
-        data = msg.get_payload(decode=True)
       new_args[keyword] = data
     return new_args
 

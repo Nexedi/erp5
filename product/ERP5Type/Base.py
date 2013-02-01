@@ -2846,40 +2846,6 @@ class Base( CopyContainer,
     """
     return []
 
-  security.declareProtected(Permissions.View, 'getBinaryData')
-  def getBinaryData(self):
-    """
-      Return the binary data
-    """
-    bin = None
-    if hasattr(self,'_original'):
-      bin = self._original._data()
-    elif hasattr(self,'_data'):
-      bin = self._data
-    elif hasattr(self,'data'):
-      bin = self.data
-    if bin is not None:
-      return StringIO(str(bin))
-    return None
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBinaryData')
-  def setBinaryData(self, data):
-    """
-      Set the binary data, data must be a cStringIO
-    """
-    self.edit(file=data)
-    #LOG('Base.setBinaryData',0,'data: %s' % str(data))
-    #obj=''
-    #if hasattr(self,'_original'):
-    #  LOG('Base.setBinaryData',0,'_original for : %s' % str(self))
-    #  self._original.data = data
-    #elif hasattr(self,'_data'):
-    #  LOG('Base.setBinaryData',0,'_data for : %s' % str(self))
-    #  self._data = data
-    #elif hasattr(self,'data'):
-    #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
-    #  self.data = data
-
   security.declareProtected(Permissions.AccessContentsInformation,
           'getRedirectParameterDictAfterAdd')
   def getRedirectParameterDictAfterAdd(self, container, **kw):
