@@ -819,6 +819,15 @@ class TestInventoryList(InventoryAPITestCase):
     # default is an empty list
     self.assertEquals(0, len(inventory_list))
 
+  def testDefault0(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement()
+    inventory_list = getInventoryList(section_uid=self.section.getUid(),)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(0, inventory_list[0].total_quantity)
+    # The total price of grouped movements without price is 0
+    self.assertEquals(0, inventory_list[0].total_price)
+
   def test_GroupByNode(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=100)
@@ -1394,7 +1403,17 @@ class TestMovementHistoryList(InventoryAPITestCase):
                     'Shared.DC.ZRDB.Results.Results')
     # default is an empty list
     self.assertEquals(0, len(mvt_history_list))
-  
+
+  def testDefault0(self):
+    self._makeMovement()
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList(
+      section_uid=self.section.getUid(),)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(0, mvt_history_list[0].total_quantity)
+    # If a movement have no price, None is returned
+    self.assertEquals(None, mvt_history_list[0].total_price)
+
   def testMovementBothSides(self):
     """Movement History List returns movement from both sides""" 
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
