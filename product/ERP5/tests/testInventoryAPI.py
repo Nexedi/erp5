@@ -525,6 +525,23 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(100,
                 resource_category_strict_membership=['product_line/level1'])
 
+  def test_ResourcePortalType(self):
+    """Tests inventory on resource_portal_type """
+    self._makeMovement(quantity=2, source_value=None)
+    self._makeMovement(quantity=3,
+      source_value=None,
+      resource_value=self.portal.portal_categories.product_line.level1)
+    assert self.resource.portal_type != 'Category'
+    self.assertInventoryEquals(2,
+      resource_portal_type=self.resource.portal_type)
+    self.assertInventoryEquals(3,
+      resource_portal_type='Category')
+    # FIXME: resource_portal_type is an automatically generated related key,
+    # but as movements categories are not cataloged with acquisition, it does
+    # not work for movements acquiring resource from their parents.
+    # One way is to make an explicit resource_portal_type related key that
+    # would use stock.resource_uid (replacing the ugly 'resourceType')
+
   def test_PaymentCategory(self):
     """Tests inventory on payment_category """
     # for now, BankAccount have a product_line category, so we can use this for
