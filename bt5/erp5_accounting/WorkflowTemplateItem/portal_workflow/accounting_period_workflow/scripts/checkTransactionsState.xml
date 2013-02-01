@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import translateString\n
 \n
 period = state_change[\'object\']\n
@@ -63,6 +65,18 @@ all_state_list = [x[1] for x in\n
   portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
 invalid_simulation_state_list = [state for state in all_state_list\n
                                  if state not in valid_simulation_state_list]\n
+\n
+if period.getParentValue().getPortalType() == \'Organisation\':\n
+  # if this is a "main" accounting period, we refuse to close if the previous\n
+  # period is not already closed.\n
+  for other_period in period.getParentValue().contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if other_period != period and \\\n
+       other_period.getSimulationState() not in (\'delivered\', \'cancelled\') and\\\n
+       other_period.getStartDate() < period.getStartDate():\n
+      raise ValidationFailed(translateString(\n
+        "Previous accounting periods has to be closed first."))\n
 \n
 section = period.getParentValue()\n
 while section.getPortalType() == period.getPortalType():\n
@@ -115,7 +129,9 @@ movement_list = portal.portal_simulation.getMovementHistoryList(\n
 if movement_list:\n
   raise ValidationFailed, translateString(\n
     "All Accounting Transactions for this organisation during the period have to be closed first.")\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
