@@ -75,6 +75,11 @@ while real_context.isTempObject():\n
   real_context = real_context.getParentValue()\n
 real_context_url = real_context.getRelativeUrl()\n
 \n
+real_context_url_list = real_context_url.split("/")\n
+current_language = context.Localizer.get_selected_language()\n
+if current_language in real_context_url_list:\n
+  real_context_url = "/".join(filter(lambda x: x != current_language, real_context_url_list))\n
+\n
 # first filter if we have a custom Pad for the context\n
 for knowledge_pad in knowledge_pads:\n
   pad_state = knowledge_pad.getValidationState()\n
@@ -88,7 +93,7 @@ for knowledge_pad in knowledge_pads:\n
       return knowledge_pad, knowledge_pads\n
   elif len(publication_section_list) == 0 and default_pad_group in MARKER and pad_state in visible_state_list:\n
     # ERP5 Site front gadget \n
-    return knowledge_pad, knowledge_pads    \n
+    return knowledge_pad, knowledge_pads\n
 \n
 # no customized version found for this context so\n
 # try finding pad by group\n
