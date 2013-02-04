@@ -51,16 +51,22 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Simulation Rule\'\n
-kw[\'explanation_portal_type\']       = \'Sale Order\', \'Sale Invoice\', \'Sale Packing List\'\n
+kw[\'explanation_portal_type\'] = \'Sale Order\', \'Sale Invoice\', \'Sale Packing List\'\n
+kw[\'portal_type\'] = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\'] = \'started\'\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-return context.InvoiceTransaction_zSelectMovement(**kw)\n
+kw[\'delivery_uid\'] = None\n
+kw[\'left_join_list\'] = [\'delivery_uid\']\n
+kw[\'select_dict\'] = dict(delivery_uid=None)\n
+kw[\'group_by\'] = (\'uid\',)\n
+\n
+kw[\'src__\'] = src__ \n
+return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

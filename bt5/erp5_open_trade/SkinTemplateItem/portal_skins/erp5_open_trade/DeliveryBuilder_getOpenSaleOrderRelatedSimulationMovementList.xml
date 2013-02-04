@@ -52,12 +52,14 @@
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\'] = [\'Open Order Rule\']\n
 kw[\'explanation_portal_type\'] = \'Open Sale Order\'\n
-kw[\'portal_type\']             = \'Simulation Movement\'\n
-kw[\'sort_on\'] = \'movement.start_date\'\n
+kw[\'portal_type\'] = \'Simulation Movement\'\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+kw[\'delivery_uid\'] = None\n
+kw[\'left_join_list\'] = [\'delivery_uid\']\n
+kw[\'select_dict\'] = dict(delivery_uid=None)\n
+kw[\'group_by\'] = (\'uid\',)\n
 \n
-return [brain.getObject() for brain in context.DeliveryBuilder_zSelectOpenSaleOrderSimulationMovementList(**kw)]\n
+return context.portal_catalog(**kw)\n
 </string> </value>
         </item>
         <item>

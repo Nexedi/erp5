@@ -52,8 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>kw[\'explanation_portal_type\'] = \'Production Order\'\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-result = context.ProductionOrder_zSelectMovement(src__=src__, **kw)\n
+kw[\'delivery_uid\'] = None\n
+kw[\'left_join_list\'] = [\'delivery_uid\']\n
+kw[\'select_dict\'] = dict(delivery_uid=None)\n
+kw[\'group_by\'] = (\'uid\',)\n
+\n
+kw[\'src__\'] = src__ \n
+result = context.portal_catalog(**kw)\n
 if src__:\n
   result\n
 \n
