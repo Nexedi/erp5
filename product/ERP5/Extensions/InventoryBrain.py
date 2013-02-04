@@ -133,25 +133,6 @@ class InventoryListBrain(ZSQLBrain):
                              variation_text=self.variation_text,
                              resource=self.resource_relative_url, **kw)
 
-  def getQuantity(self, **kw):
-    """
-    Return the quantity of the current delivery for a resource
-    """
-    total_kw = {
-      'movement.explanation_uid': self.getExplanationUid(),
-      'movement.resource_uid': self.resource_uid,
-      'movement.variation_text': self.variation_text,
-    }
-    total_kw.update(self.portal_catalog.buildSQLQuery(**total_kw))
-    result = self.Delivery_zGetTotal(**total_kw)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
-
   def getQuantityUnit(self, **kw):
     try:
       resource = self.portal_categories.unrestrictedTraverse(
