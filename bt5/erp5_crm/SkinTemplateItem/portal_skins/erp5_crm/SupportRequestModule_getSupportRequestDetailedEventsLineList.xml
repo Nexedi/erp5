@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX uses movement table\n
 from Products.PythonScripts.standard import Object\n
 request = container.REQUEST\n
 portal = context.getPortalObject()\n
@@ -70,14 +69,14 @@ line_list = []\n
 # Prepare the parameters to filter\n
 query_dict = dict()\n
 if request_start_date:\n
-  query_dict[\'movement.start_date\'] = dict(range=\'min\', query=request_start_date)\n
+  query_dict[\'delivery.start_date\'] = dict(range=\'min\', query=request_start_date)\n
 if request_stop_date:\n
-  query_dict[\'movement.stop_date\'] = dict(range=\'ngt\', \n
+  query_dict[\'delivery.stop_date\'] = dict(range=\'ngt\', \n
                                      query=request_stop_date.latestTime())\n
 if request_validation_state:\n
   query_dict[\'simulation_state\'] = request_validation_state\n
 if request_ticket_type:\n
-  query_dict[\'movement.resource_uid\'] =  [portal.portal_categories.restrictedTraverse(x).getUid() \n
+  query_dict[\'default_resource_uid\'] =  [portal.portal_categories.restrictedTraverse(x).getUid() \n
                                  for x in request_ticket_type]\n
 section_uid = context.Base_getSectionUidListForSectionCategory(request.get(\'section_category\',None))\n
 \n
