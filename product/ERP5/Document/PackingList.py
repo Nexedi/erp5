@@ -86,25 +86,40 @@ class PackingList(Delivery):
                               'isPacked')
     def isPacked(self):
       """
-        Returns 0 if all quantity resource on packing list line
-        are not in container.
-        It works only if a Resource is not on 2 PackingListLine.
+        Returns true if all quantities for all variations of resources are in
+        containers.
+
+        FIXME: this method does not support packing list with 2 movements of
+        same resource.
       """
+      # build a mapping of
+      # (resource, variation_text) -> quantity
+      container_dict = dict()
+      for container in self.contentValues(
+          portal_type=self.getPortalContainerTypeList()):
+        for container_line in container.contentValues(
+          portal_type=self.getPortalContainerLineTypeList(),):
+          if container_line.hasCellContent(base_id='movement'):
+            for container_cell in container_line.contentValues(
+                portal_type=self.getPortalContainerLineTypeList(),):
+              key = (container_cell.getResource(),
+                container_cell.getVariationText())
+              container_dict[key] = container_dict.get(key, 0) +\
+                container_cell.getQuantity()
+          else:
+            key = (container_line.getResource(),
+              container_line.getVariationText())
+            container_dict[key] = container_dict.get(key, 0) +\
+              container_line.getQuantity()
+
+      if not container_dict:
+        return False
+
+      # Check that all movements are packed.
       for movement in self.getMovementList():
+        key = (movement.getResource(),
+               movement.getVariationText())
+        if container_dict.get(key, None) != movement.getQuantity():
+          return False
+      return True
 
-        quantity = movement.getQuantity()
-        query_kw = {
-          'portal_type': self.getPortalContainerLineTypeList(),
-          'movement.explanation_uid': self.getUid(),
-          'movement.resource_uid': movement.getResourceUid(),
-          'movement.variation_text': movement.getVariationText(),
-          'has_cell_content': 0,
-        }
-        container_mvt_list = self.portal_catalog(**query_kw)
-        packed_quantity = sum([x.getQuantity() for x in container_mvt_list \
-                               if x.getQuantity() is not None])
-
-        if quantity != packed_quantity:
-          return 0
-
-      return 1
