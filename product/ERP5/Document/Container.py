@@ -103,14 +103,10 @@ class Container(Movement, XMLObject):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
+      """Return True if this movement diverges from the its simulation.
+      Containers are never divergent.
       """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
-      """
-      return 0
+      return False
 
     def getContainerText(self):
       """

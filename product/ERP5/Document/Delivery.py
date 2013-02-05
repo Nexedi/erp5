@@ -334,7 +334,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
         Returns 0 if the target is not met
       """
-      return int(not self.isDivergent(**kw))
+      return bool(not self.isDivergent(**kw))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
     def isSimulated(self):
@@ -349,20 +349,15 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self, fast=0, **kw):
-      """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
+      """Return True if this movement diverges from the its simulation.
       """
       ## Note that fast option was removed. Now, fast=1 is ignored.
-      
+
       # Check if the total quantity equals the total of each simulation movement quantity
       for simulation_movement in self._getAllRelatedSimulationMovementList():
         if simulation_movement.isDivergent():
-          return 1
-      return 0
+          return True
+      return False
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self, **kw):
