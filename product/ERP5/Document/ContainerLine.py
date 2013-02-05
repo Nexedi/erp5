@@ -94,7 +94,5 @@ class ContainerLine(DeliveryLine):
       base_id = 'movement'
       if not self.hasCellContent(base_id=base_id):
         return self.getQuantity()
-      else:
-        # Use MySQL
-        aggregate = self.ContainerLine_zGetTotal()[0]
-        return aggregate.total_quantity or 0.0
+      return sum(cell.getQuantity() for cell in
+        self.getCellValueList(base_id=base_id))
