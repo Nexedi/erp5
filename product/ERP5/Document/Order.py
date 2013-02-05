@@ -72,6 +72,8 @@ class Order(Delivery):
       If base_contribution is passed, the trade model lines will be used to
       include movements that will be generated.
       """
+      if kw.get('fast'):
+        kw['only_accountable'] = False
       rounding = kw.get('rounding')
       if kw.get('base_contribution') is None:
         kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
@@ -118,6 +120,8 @@ class Order(Delivery):
     def getTotalQuantity(self, **kw) :
       """Returns the total quantity for this Order. """
       kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
+      if kw.get('fast'):
+        kw['only_accountable'] = False
       return Delivery.getTotalQuantity(self, **kw)
 
     @deprecated
