@@ -276,7 +276,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
   def _getTestNodeFromTitle(self, node_title):
     test_node_list = self._getTestNodeModule().searchFolder(
-                       portal_type='Test Node', title="=%s" % node_title)
+                       portal_type='Test Node', title="='%s'" % node_title)
     assert len(test_node_list) == 1, "We found %i test nodes for %s" % (
                                       len(test_node_list), node_title)
     test_node = test_node_list[0].getObject()
@@ -284,7 +284,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
 
   def _getTestSuiteFromTitle(self, suite_title):
     test_suite_list = self._getTestSuiteModule().searchFolder(
-                       portal_type='Test Suite', title="=%s" % suit_tile, validation_state="validated")
+                       portal_type='Test Suite', title="='%s'" % suit_tile, validation_state="validated")
     assert len(test_suite_list) == 1, "We found %i test suite for %s" % (
                                       len(test_suite_list), name)
     test_suite = test_suite_list[0].getObject()
