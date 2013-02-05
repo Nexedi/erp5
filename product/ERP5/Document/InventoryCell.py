@@ -66,14 +66,9 @@ class InventoryCell(DeliveryCell):
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
     def getTotalInventory(self):
       """
-        Returns the inventory if no cell or the total inventory if cells
+        Returns the inventory, as cells are not supposed to contain more cells.
       """
-      if not self.hasCellContent():
-        return self.getInventory()
-      else:
-        # Use MySQL
-        aggregate = self.InventoryLine_zGetTotal()[0]
-        return aggregate.total_inventory or 0.0
+      return self.getInventory()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
     def getQuantity(self):
