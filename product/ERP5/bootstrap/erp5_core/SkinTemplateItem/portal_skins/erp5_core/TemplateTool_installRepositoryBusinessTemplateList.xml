@@ -71,7 +71,8 @@ if len(uids) == 0:\n
 id_list = []\n
 portal_status_message = \'\'\n
 current_uid_list=[]\n
-installed_business_template_title_list = context.getInstalledBusinessTemplateTitleList()\n
+installed_business_template_title_list = [\'%s.bt5\' % bt for bt in context.getInstalledBusinessTemplateTitleList()]\n
+\n
 for uid in uids:\n
   current_uid_list.append(uid)\n
   repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n

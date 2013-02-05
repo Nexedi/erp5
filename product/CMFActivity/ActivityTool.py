@@ -1297,17 +1297,45 @@ class ActivityTool (Folder, UniqueObject):
         return REQUEST.RESPONSE.redirect('%s/%s' %
                 (self.absolute_url(), 'manageActivities'))
 
+    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageRestart')
+    def manageRestart(self, message_uid_list, activity, REQUEST=None):
+      """
+        Restart one or several messages
+      """
+      if not(isinstance(message_uid_list, list)):
+        message_uid_list = [message_uid_list]
+      self.SQLBase_makeMessageListAvailable(table=activity_dict[activity].sql_table,
+                              uid=message_uid_list)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' % (
+          self.absolute_url(), 'view'))
+
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageCancel' )
     def manageCancel(self, object_path, method_id, REQUEST=None):
       """
         Cancel all methods for object "object_path"
       """
+      LOG('ActivityTool', WARNING,
+          '"manageCancel" method is deprecated, use "manageDelete" instead.')
       if type(object_path) is type(''):
         object_path = tuple(object_path.split('/'))
       self.flush(object_path,method_id=method_id,invoke=0)
       if REQUEST is not None:
-        return REQUEST.RESPONSE.redirect('%s/%s' %
-                (self.absolute_url(), 'manageActivities'))
+        return REQUEST.RESPONSE.redirect('%s/%s' % (
+          self.absolute_url(), 'view'))
+
+    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageDelete' )
+    def manageDelete(self, message_uid_list, activity, REQUEST=None):
+      """
+        Delete one or several messages
+      """
+      if not(isinstance(message_uid_list, list)):
+        message_uid_list = [message_uid_list]
+      self.SQLBase_delMessage(table=activity_dict[activity].sql_table,
+                              uid=message_uid_list)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' % (
+          self.absolute_url(), 'view'))
 
     security.declareProtected( CMFCorePermissions.ManagePortal,
                                'manageClearActivities' )
@@ -1374,6 +1402,19 @@ class ActivityTool (Folder, UniqueObject):
             '%s/manageActivitiesAdvanced?manage_tabs_message=%s' % (
               self.absolute_url(), message))
 
+    security.declarePublic('getMessageTempObjectList')
+    def getMessageTempObjectList(self, **kw):
+      """
+        Get object list of messages waiting in queues
+      """
+      message_list = self.getMessageList(**kw)
+      object_list = []
+      for sql_message in message_list:
+        message = self.newContent(temp_object=1)
+        message.edit (**sql_message.__dict__)
+        object_list.append(message)
+      return object_list
+
     security.declarePublic('getMessageList')
     def getMessageList(self, activity=None, **kw):
       """
@@ -1384,6 +1425,7 @@ class ActivityTool (Folder, UniqueObject):
         self.initialize()
       if activity:
         return activity_dict[activity].getMessageList(aq_inner(self), **kw)
+
       message_list = []
       for activity in activity_dict.itervalues():
         try:

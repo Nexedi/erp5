@@ -50,26 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX currently we create a Solver Process and build Solver Decision in it if missing.\n
-# But for better performance, Solver Process and Solver Decision should be created beforehand\n
-# by causality workflow when a delivery becomes divergent.\n
-solver_process = None\n
-solver_list = context.getSolverValueList()\n
-for i in solver_list:\n
-  if i.getValidationState() == \'draft\':\n
-    solver_process = i\n
-    break\n
-\n
-\n
-if solver_process is None:\n
-  solver_process = context.getPortalObject().portal_solver_processes.newSolverProcess(context)\n
-else:\n
-  # update existing solver process\n
-  solver_process.buildSolverDecisionList(context)\n
-\n
+            <value> <string>solver_process = context.Delivery_getSolverProcess()\n
 # XXX should omit \'solved\' decision?\n
-solver_decision_list = solver_process.objectValues(portal_type=\'Solver Decision\')\n
-return solver_decision_list\n
+return solver_process.SolverProcess_getSolverDecisionList()\n
 </string> </value>
         </item>
         <item>

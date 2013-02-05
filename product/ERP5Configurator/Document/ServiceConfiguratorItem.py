@@ -26,10 +26,12 @@
 #
 ##############################################################################
 
+from warnings import warn
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -57,12 +59,17 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    for service_id, service_title in iter(self.getConfigurationListList()):
+    for service_id, service_dict in iter(self.getConfigurationListList()):
+      if isinstance(service_dict, basestring):
+        warn(DeprecationWarning,
+          "ServiceConfiguratorItem now use (service_id, service_dict) as configuration list")
+        service_dict = dict(title=service_dict)
+
       document = getattr(portal.service_module, service_id, None)
       if document is None:
         document = portal.service_module.newContent(portal_type='Service',
-                                   id=service_id, title=service_title)
-        document.validate("Validated by Configurator")
+                                   id=service_id, **service_dict)
+        document.validate(comment=translateString("Validated by Configurator"))
 
       ## add to customer template
       self.install(document, business_configuration)

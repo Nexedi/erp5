@@ -31,7 +31,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Tool.MemcachedTool import memcached_dict_pool
+from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict
+from Products.ERP5Type.Globals import InitializeClass
 
 class MemcachedPlugin(XMLObject):
   """Memcached Plugin authorise Memcached Tool to connect several backends.
@@ -57,16 +58,25 @@ class MemcachedPlugin(XMLObject):
                     , PropertySheet.Url
                     )
 
-  def manage_beforeDelete(self, *args, **kw):
+  security.declarePublic('getConnection')
+  def getConnection(self):
     try:
-      del(memcached_dict_pool.memcached_dict)
+      key, connection = self._v_connection
     except AttributeError:
-      pass
-    XMLObject.manage_beforeDelete(self, *args, **kw)
+      key = None
+    url = self.getUrlString()
+    expiration = self.getExpirationTime()
+    max_key_length = self.getServerMaxKeyLength()
+    max_value_length = self.getServerMaxValueLength()
+    my_key = (url, expiration, max_key_length, max_value_length)
+    if key != my_key:
+      connection = MemcachedDict(
+        (url, ),
+        expiration_time=expiration,
+        server_max_key_length=max_key_length,
+        server_max_value_length=max_value_length,
+      )
+      self._v_connection = my_key, connection
+    return connection
 
-  def manage_afterAdd(self, *args, **kw):
-    try:
-      del(memcached_dict_pool.memcached_dict)
-    except AttributeError:
-      pass
-    XMLObject.manage_afterAdd(self, *args, **kw)
+InitializeClass(MemcachedPlugin)

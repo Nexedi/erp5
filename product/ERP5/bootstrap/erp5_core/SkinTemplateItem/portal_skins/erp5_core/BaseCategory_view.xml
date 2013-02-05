@@ -105,6 +105,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_related_locally_indexed</string>
                         <string>my_acquisition_copy_value</string>
                         <string>my_acquisition_mask_value</string>
                         <string>my_acquisition_append_value</string>

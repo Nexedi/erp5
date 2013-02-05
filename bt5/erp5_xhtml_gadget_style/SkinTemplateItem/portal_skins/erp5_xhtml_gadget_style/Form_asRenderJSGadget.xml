@@ -61,7 +61,7 @@
                     <div data-gadget-cacheable="1"\n
                          tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name};\n
                                          id string:${form_id}_${field_name};\n
-                                         data-gadget-cache-id string: ${form_id}_${field_name};"></div>\n
+                                         data-gadget-cache-id string:${form_id}_${field_name};"></div>\n
 \n
                   </div>\n
                 </div>\n

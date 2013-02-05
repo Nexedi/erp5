@@ -65,8 +65,6 @@ from zLOG import LOG, DEBUG
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
 
-# Quiet messages when installing products
-install_product_quiet = 1
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
 
@@ -79,37 +77,11 @@ if getattr(config, 'product_config', None) is None:
   config.product_config = {}
 config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
 
-import OFS.Application
-OFS.Application.import_products()
-
-# Std Zope Products
-ZopeTestCase.installProduct('Photo', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Formulator', quiet=install_product_quiet)
-ZopeTestCase.installProduct('FCKeditor', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZSQLMethods', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMySQLDA', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZSQLCatalog', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMailIn', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZGDChart', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZCTextIndex', quiet=install_product_quiet)
-ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZODBMountPoint', quiet=install_product_quiet)
-
 from Testing.ZopeTestCase.layer import onsetup
-# installProduct() is a delayed call, so imports that depend on products being
-# "initialize"d should only be called "on setup". The decorator above delays
-# calls to the decorated function until after Product initialization.
-# Also, we need Five to wire all our CMF dependencies.
-ZopeTestCase.installProduct('Five', quiet=install_product_quiet)
 
 try:
   # Workaround iHotFix patch that doesn't work with
   # ZopeTestCase REQUESTs
-  ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
   from Products import iHotfix
   from types import UnicodeType
   # revert monkey patchs from iHotfix
@@ -126,7 +98,6 @@ try:
   iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
-ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
 try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
   # ZopeTestCase REQUESTs (it's the same as iHotFix
@@ -137,74 +108,9 @@ try:
 except ImportError:
   pass
 
-try:
-  from Products.Localizer import patches
-  # originalStringIO has been removed from recent Localizer versions
-  from Products.Localizer.patches import originalStringIO
-  class UnicodeSafeStringIO(patches.originalStringIO):
-    """StringIO like class which never fails with unicode."""
-    def write(self, s):
-      if isinstance(s, unicode):
-        s = s.encode('utf8', 'repr')
-      patches.originalStringIO.write(self, s)
-  # Localizer will patch PageTemplate StringIO with
-  patches.LocalizerStringIO = UnicodeSafeStringIO
-except ImportError:
-  pass
-
 from Products.ERP5Type.tests.ProcessingNodeTestCase import \
   ProcessingNodeTestCase, patchActivityTool
 onsetup(patchActivityTool)()
-
-ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
-
-# CMF
-ZopeTestCase.installProduct('CMFCore', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFDefault', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFTopic', quiet=install_product_quiet)
-ZopeTestCase.installProduct('DCWorkflow', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFCalendar', quiet=install_product_quiet)
-
-# Based on CMF
-ZopeTestCase.installProduct('CMFPhoto', quiet=install_product_quiet)
-ZopeTestCase.installProduct('BTreeFolder2', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFReportTool', quiet=install_product_quiet) # Not required by ERP5Type but required by ERP5Form
-ZopeTestCase.installProduct('TranslationService', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PortalTransforms', quiet=install_product_quiet)
-ZopeTestCase.installProduct('MimetypesRegistry', quiet=install_product_quiet)
-
-# Security Stuff
-ZopeTestCase.installProduct('PluggableAuthService', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Security', quiet=install_product_quiet)
-
-# Debugging
-ZopeTestCase.installProduct('VerboseSecurity', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Zelenium', quiet=install_product_quiet)
-
-# ERP5 - ERP5Type product is installed last so that
-#        initializeProductDocumentRegistry is only called
-#        after all products which need to register their Document 
-#        classes can register them by invoking updateGlobals in __init__
-ZopeTestCase.installProduct('CMFActivity', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Catalog', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Form', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5SyncML', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Type', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMySQLDDA', quiet=install_product_quiet)
-
-ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
-
-# Install everything else which looks like related to ERP5
-from OFS.Application import get_products
-for priority, product_name, index, product_dir in get_products():
-  # XXX very heuristic
-  if os.path.isdir(os.path.join(product_dir, product_name, 'Document')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'PropertySheet')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'Constraint')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'Tool')):
-    ZopeTestCase.installProduct(product_name, quiet=install_product_quiet)
 
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 

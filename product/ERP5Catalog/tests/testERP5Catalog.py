@@ -463,6 +463,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                      title="GreatTitle2")
     # Flush message queue
     self.tic()
+    original_path_list = self.getSQLPathList()
     # Clear catalog
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
@@ -482,10 +483,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
     self.assertEquals(0, message_count)
-    # Check if object are catalogued
-    self.checkRelativeUrlInSQLPathList([
-                organisation.getRelativeUrl(),
-                'portal_categories/%s' % base_category.getRelativeUrl()])
+    # Check if all objects are catalogued as before
+    new_path_list = self.getSQLPathList()
+    self.assertEquals(set(original_path_list) - set(new_path_list), set())
 
   def test_14_ReindexWithBrokenCategory(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -1495,13 +1495,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                      title="GreatTitle2")
     # Flush message queue
     self.tic()
+    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+      .manage_addZMySQLConnection
     # Create new connectors
-    portal.manage_addZMySQLConnection(self.new_connection_id,'',
-                                      new_connection_string)
+    addSQLConnection(self.new_connection_id,'', new_connection_string)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
-    portal.manage_addZMySQLConnection(self.new_deferred_connection_id,'',
-                                      new_connection_string)
+    addSQLConnection(self.new_deferred_connection_id,'', new_connection_string)
     new_connection = portal[self.new_deferred_connection_id]
     new_connection.manage_open_connection()
     # the transactionless connector must not be change because this one
@@ -1531,6 +1531,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Flush message queue
     self.tic()
+    original_path_list = self.getSQLPathList(self.original_connection_id)
+    new_path_list = self.getSQLPathList(self.new_connection_id)
+    self.assertEquals(set(original_path_list) - set(new_path_list), set())
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
@@ -1645,11 +1648,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0, message)
 
     # Create new connectors
-    portal.manage_addZMySQLConnection(self.new_erp5_sql_connection,'',
-                                      new_connection_string)
+    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+      .manage_addZMySQLConnection
+    addSQLConnection(self.new_erp5_sql_connection,'', new_connection_string)
     new_connection = portal[self.new_erp5_sql_connection]
     new_connection.manage_open_connection()
-    portal.manage_addZMySQLConnection(self.new_erp5_deferred_sql_connection,'',
+    addSQLConnection(self.new_erp5_deferred_sql_connection,'',
                                       new_connection_string)
     new_connection = portal[self.new_erp5_deferred_sql_connection]
     new_connection.manage_open_connection()

@@ -31,6 +31,7 @@
 import gc
 import unittest
 
+import transaction
 from persistent import Persistent
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -1062,7 +1063,8 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     # Open new connection and add a new constraint.
     db = self.app._p_jar.db()
-    con = db.open()
+    tm = transaction.TransactionManager()
+    con = db.open(transaction_manager=tm)
     app = con.root()['Application'].__of__(self.app.aq_parent)
     portal = app[self.getPortalName()]
     from Products.ERP5.ERP5Site import getSite, setSite
@@ -1077,15 +1079,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                expression='python: object.getTitle() == "my_tales_constraint_title"')
     dummy.Predicate_view()
 
-    self.commit()
+    tm.commit()
 
     # Recreate class with a newly added constraint
     synchronizeDynamicModules(portal, force=True)
     # Load test_module
-    test_module = getattr(portal, 'Test Migration')
-    test_module.objectValues()
+    getattr(portal, 'Test Migration').objectValues()
     # Then close this new connection.
-    self.abort()
+    tm.abort()
     con.close()
     # This code depends on ZODB implementation.
     for i in db.pool.available[:]:

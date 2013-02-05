@@ -30,6 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -78,7 +79,7 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     business_configuration.setGlobalConfigurationAttr(organisation_id=organisation.getId())
 
     if self.portal_workflow.isTransitionPossible(organisation, 'validate'):
-      organisation.validate(comment="Validated by Configurator")
+      organisation.validate(comment=translateString("Validated by Configurator"))
 
     ## add to customer template
     self.install(organisation, business_configuration)

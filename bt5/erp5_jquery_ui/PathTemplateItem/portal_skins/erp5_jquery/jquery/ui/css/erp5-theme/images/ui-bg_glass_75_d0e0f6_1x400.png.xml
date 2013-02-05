@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts43624907.99</string> </value>
+            <value> <string>ts58256052.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,9 +24,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQCAYAAAEYXzpNAAAAZElEQVQ4y+3UOw6AIBgD4N7/dGqM
-McYHiBjxsQK61MUr6D/g8u1Nm6JzkZAiU55ol0jY4/oa0eSl8cS4n+klF6XQnqhtIIZVZnVSpNt5
-uuTKP5OvpkA0cyB6Fwm9RcIIvc/Pi9yoJuFbfrTHoAAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQCAYAAABvWArbAAAAQ0lEQVQ4je3PoQ2AQABD0f+7/4oM
+gEZwCjAcigEIqXlJm1SUZR1nAEopv2XbDyIQnV0CiZLIJDP6dOq9jX7hTCnljQtFvQnqrH32ZgAA
+AABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -38,7 +38,7 @@ uuTKP5OvpkA0cyB6Fwm9RcIIvc/Pi9yoJuFbfrTHoAAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>157</int> </value>
+            <value> <int>124</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

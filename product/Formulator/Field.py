@@ -449,6 +449,8 @@ class Field:
           return obj.method_name
         elif obj_type is TALESField.TALESMethod:
           return obj._text
+        elif obj_type is unicode:
+          return obj.encode('utf-8')
         return str(obj)
       return ''.join(map(getSearchSource,
                          (self.values.values()+self.tales.values()+

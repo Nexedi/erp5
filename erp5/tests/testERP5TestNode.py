@@ -5,6 +5,7 @@ from erp5.util.testnode.testnode import SlapOSInstance
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 
 from erp5.util.testnode.SlapOSControler import SlapOSControler
+from erp5.util.testnode.SlapOSControler import createFolder
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TaskDistributionTool
 from erp5.util.taskdistribution import TestResultProxy
@@ -159,6 +160,8 @@ class ERP5TestNode(TestCase):
     node_test_suite.edit(working_directory=self.working_directory)
     self.assertEquals("%s/foo" % self.working_directory,
                       node_test_suite.working_directory)
+    self.assertEquals("%s/foo/test_suite" % self.working_directory,
+                      node_test_suite.test_suite_directory)
 
   def test_03_NodeTestSuiteCheckDataAfterEdit(self):
     """
@@ -463,7 +466,9 @@ branch = foo
       self.assertEqual(result['status_code'], expected_status)
     process_manager = ProcessManager(log=self.log, max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
-    _checkCorrectStatus(-15, *['sleep','2'])
+    # We must make sure that if the command is too long that
+    # it will be automatically killed
+    self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
 
   def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()
@@ -476,3 +481,18 @@ branch = foo
     self.assertEquals([file_name], os.listdir(controler.software_root))
     controler._resetSoftware()
     self.assertEquals([], os.listdir(controler.software_root))
+
+  def test_14_createFolder(self):
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    node_test_suite.edit(working_directory=self.working_directory)
+    folder = node_test_suite.test_suite_directory
+    self.assertEquals(False, os.path.exists(folder))
+    createFolder(folder)
+    self.assertEquals(True, os.path.exists(folder))
+    to_drop_path = os.path.join(folder, 'drop')
+    to_drop = open(to_drop_path, 'w')
+    to_drop.close()
+    self.assertEquals(True, os.path.exists(to_drop_path))
+    createFolder(folder, clean=True)
+    self.assertEquals(False, os.path.exists(to_drop_path))

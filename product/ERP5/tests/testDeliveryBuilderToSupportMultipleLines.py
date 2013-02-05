@@ -27,8 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
-
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -338,15 +336,13 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
         return False
     self.tic(stop_condition=stop_condition)
     update_causality_message_uid, = prioritize_uid_list
-    # make all other messages have less priority:
     for table in 'message', 'message_queue':
       self.portal.cmf_activity_sql_connection.manage_test("""
         update %s
-          set priority=200
-        where uid <> %s
+          set priority=-200
+        where uid = %s
       """ % (table, update_causality_message_uid))
-    transaction.commit()
-    self.stepTic(sequence)
+    self.tic()
 
   @newSimulationExpectedFailure
   @expectedFailure

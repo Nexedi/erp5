@@ -40,6 +40,7 @@ from Products.ERP5Type.Core.Folder import OFS_HANDLER
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import caching_instance_method
+from Products.ERP5Type.dynamic import portal_type_class
 
 from zLOG import LOG
 
@@ -84,54 +85,10 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     def hasContent(self,id):
       return id in self.objectIds()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
-    def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
-      """
-        Returns the uids of all categories provided in categorie. This
-        method can support relative_url such as site/group/a/b/c which
-        base category is site yet use categories defined in group.
-
-        It is also able to use acquisition to create complex categories
-        such as site/group/a/b/c/b1/c1 where b and b1 are both children
-        categories of a.
-
-        relative_url -- a single relative url of a list of
-                        relative urls
-
-        strict       -- if set to 1, only return uids of parents, not
-                        relative_url
-      """
-      uid_dict = {}
-      if type(relative_url) is type('a'): relative_url = (relative_url,)
-      for path in relative_url:
-        try:
-          o = self.getCategoryValue(path, base_category=base_category)
-          if o is not None:
-            if base_category is None:
-              my_base_category = self.getBaseCategoryId(path)
-            else:
-              my_base_category = base_category
-            bo = getattr(self, my_base_category, None)
-            if bo is not None:
-              bo_uid = bo.getUid()
-              uid_dict[(o.getUid(), bo_uid, 1)] = 1 # Strict membership
-              if o.meta_type == 'ERP5 Category' or o.meta_type == 'ERP5 Base Category' or \
-                o.meta_type == 'CMF Category' or o.meta_type == 'CMF Base Category':
-                # This goes up in the category tree
-                # XXX we should also go up in some other cases....
-                # ie. when some documents act as categories
-                if not strict:
-                  while o.meta_type == 'ERP5 Category' or o.meta_type == 'CMF Category':
-                    o = o.aq_parent # We want acquisition here without aq_inner
-                    uid_dict[(o.getUid(), bo_uid, 0)] = 1 # Non strict
-        except (TypeError, KeyError):
-          LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
-      return uid_dict.keys()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getUids')
-    getUids = getCategoryParentUidList
-
-    @caching_instance_method(id='portal_categories.getBaseCategoryDict', cache_factory='erp5_content_long', cache_id_generator=lambda m, *a, **k:m)
+    @caching_instance_method(
+      id='portal_categories.getBaseCategoryDict',
+      cache_factory='erp5_content_long',
+      cache_id_generator=lambda *a: portal_type_class.last_sync)
     def getBaseCategoryDict(self):
       """
         Cached method to which resturns a dict with category names as keys, and None as values.

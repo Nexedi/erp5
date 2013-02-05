@@ -22,6 +22,7 @@ from App.special_dtml import DTMLFile
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
+from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
 from BTrees.Length import Length
@@ -239,6 +240,54 @@ class UidBuffer(TM):
     self._register()
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
+
+class DummyDict(dict):
+  def __setitem__(self, key, value):
+    pass
+
+class LazyIndexationParameterList(tuple):
+  def __new__(cls, document_list, attribute, global_cache):
+    self = super(LazyIndexationParameterList, cls).__new__(cls)
+    self._document_list = document_list
+    self._attribute = attribute
+    self._global_cache = global_cache
+    return self
+
+  def __getitem__(self, index):
+    document = self._document_list[index]
+    attribute = self._attribute
+    global_cache_key = (document.uid, attribute)
+    global_cache = self._global_cache
+    if global_cache_key in global_cache:
+      value = global_cache[global_cache_key]
+    else:
+      value = getattr(document, attribute, None)
+      if callable(value):
+        try:
+          value = value()
+        except ConflictError:
+          raise
+        except Exception:
+          LOG('SQLCatalog', WARNING,
+            'Failed to call method %s on %r' % (attribute, document),
+            error=True,
+          )
+          value = None
+      global_cache[global_cache_key] = value
+    return value
+
+  def __iter__(self):
+    for index in xrange(len(self)):
+      yield self[index]
+
+  def __len__(self):
+    return len(self._document_list)
+
+  def __repr__(self):
+    return '<%s(%i documents, %r) at %x>' % (self.__class__.__name__,
+      len(self), self._attribute, id(self))
+
+ContainerAssertions[LazyIndexationParameterList] = 1
 
 related_key_definition_cache = {}
 related_key_warned_column_set = set()
@@ -1503,6 +1552,23 @@ class Catalog(Folder,
                   pass
             finally:
               lock.release()
+          elif catalog_path == 'deleted':
+            # Two possible cases:
+            # - Reindexed object's path changed (ie, it or at least one of its
+            #   parents was renamed) but unindexObject was not called yet.
+            #   Reindexing is harmelss: unindexObject and then an
+            #   immediateReindexObject will be called.
+            # - Reindexed object was deleted by a concurrent transaction, which
+            #   committed after we got our ZODB snapshot of this object.
+            #   Reindexing is harmless: unindexObject will be called, and
+            #   cannot be executed in parallel thanks to activity's
+            #   serialisation_tag (so we cannot end up with a fantom object in
+            #   catalog).
+            # So we index object.
+            # We could also not index it to save the time needed to index, but
+            # this would slow down all regular case to slightly improve an
+            # exceptional case.
+            pass
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             # can be due to path length
@@ -1528,7 +1594,10 @@ class Catalog(Folder,
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
     econtext = getEngine().getContext()
-    argument_cache = {}
+    if disable_cache:
+      argument_cache = DummyDict()
+    else:
+      argument_cache = {}
 
     with (noReadOnlyTransactionCache if disable_cache else
           readOnlyTransactionCache)():
@@ -1610,29 +1679,12 @@ class Catalog(Folder,
             method.func_code.co_varnames[:method.func_code.co_argcount]
         else:
           arguments = []
-        kw = {}
-        for arg in arguments:
-          value_list = []
-          append = value_list.append
-          for object in catalogged_object_list:
-            argument_cache_key = (object.uid, arg)
-            try:
-              value = argument_cache[argument_cache_key]
-            except KeyError:
-              try:
-                value = getattr(object, arg, None)
-                if callable(value):
-                  value = value()
-              except ConflictError:
-                raise
-              except:
-                LOG('SQLCatalog', WARNING, 'Failed to call method %s on %r' %
-                    (arg, object), error=sys.exc_info())
-                value = None
-              if not disable_cache:
-                argument_cache[argument_cache_key] = value
-            append(value)
-          kw[arg] = value_list
+        kw = dict(
+          (x, LazyIndexationParameterList(
+            catalogged_object_list,
+            x,
+            argument_cache,
+          )) for x in arguments)
 
         # Alter/Create row
         try:

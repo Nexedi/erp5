@@ -1,3 +1,6 @@
+2013-01-15 Kazuhiko
+* add jquery-1.8.js as jquery core 1.8.3 and jquery-1.9.js as jquery core 1.9.0, still keeping jquery.js as jquery-1.7.2.js for compatibility.
+
 2012-07-30 Kazuhiko
 * jQuery Core 1.7.2.
 

@@ -3574,13 +3574,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     c = [category_tool.newContent()]
     for i in xrange(5):
       c.append(c[i//2].newContent())
-    transaction.commit()
     self.tic()
     def activate(i, priority=1, **kw):
       kw.setdefault('merge_parent', c[0].getPath())
       c[i].activate(priority=priority, **kw).doSomething()
     def check(*expected):
-      transaction.commit()
       self.tic()
       self.assertEquals(tuple(invoked), expected)
       del invoked[:]
@@ -3609,10 +3607,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                     merge_parent=c[(i-1)//2 or i].getPath(),
                     priority=priority, **kw).doSomething()
     def invokeGroup(self, message_list):
-      invoked.append([c.index(m[0]) for m in message_list])
+      invoked.append(sorted(c.index(m[0]) for m in message_list))
     category_tool.__class__.invokeGroup = invokeGroup
     try:
-      activate(5, 0); activate(1, 1); check([5, 1])
+      activate(5, 0); activate(1, 1); check([1, 5])
       activate(4, 0); activate(1, 1); activate(2, 0); check([1, 2])
       activate(1, 0); activate(5, 0); activate(3, 1); check([1, 5])
       for p, i in enumerate((5, 3, 2, 1, 4)):
@@ -3621,11 +3619,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       for cost in 0.3, 0.1:
         activate(2, 0, group_method_cost=cost)
         activate(3, 1);  activate(4, 2); activate(1, 3)
-        check([2, 1])
+        check([1, 2])
     finally:
       del category_tool.__class__.invokeGroup
     category_tool._delObject(c[0].getId())
-    transaction.commit()
     self.tic()
 
 def test_suite():

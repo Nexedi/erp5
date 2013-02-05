@@ -70,28 +70,30 @@ class TestInvalidationBug(ERP5TypeTestCase):
          len(manage_test(query)))
     result_list = [map(apply, test_list)]
     Transaction_commitResources = transaction.Transaction._commitResources
+    connection = module._p_jar
     def _commitResources(self):
-      orig_tpc_finish_dict = dict((rm.__class__, rm.__class__.tpc_finish)
-                                  for rm in self._resources)
-      def tpc_finish(self, txn):
-        orig_tpc_finish_dict[self.__class__](self, txn)
-        result_list.append(map(apply, test_list))
+      def tpc_finish(rm, txn):
+        rm.__class__.tpc_finish(rm, txn)
+        result_list.append(None if rm is connection else map(apply, test_list))
       try:
-        for cls in orig_tpc_finish_dict:
-          cls.tpc_finish = tpc_finish
+        for rm in self._resources:
+          rm.tpc_finish = lambda txn, rm=rm: tpc_finish(rm, txn)
         return Transaction_commitResources(self)
       finally:
-        for cls, tpc_finish in orig_tpc_finish_dict.iteritems():
-          cls.tpc_finish = tpc_finish
+        for rm in self._resources:
+          del rm.tpc_finish
     try:
       transaction.Transaction._commitResources = _commitResources
       self.commit()
     finally:
       transaction.Transaction._commitResources = Transaction_commitResources
     self.tic()
+    # Whether ZODB should be committed before or after catalog is not obvious.
+    # Current behaviour is required to avoid creating duplicated applied rules.
     self.assertEqual(result_list[0], [0,0])
     self.assertEqual(result_list[1], [0,0])  # activity buffer first
-    self.assertEqual(result_list[-2], [1,0]) # catalog
+    self.assertEqual(result_list[-3], [1,0]) # catalog
+    self.assertEqual(result_list[-2], None)  # ZODB
     self.assertEqual(result_list[-1], [1,1]) # activity tables last
 
   def testLateInvalidationFromZEO(self):

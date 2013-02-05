@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Image Tile</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image Tile Group</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image Tile Transformed</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+</workflow_chain>

@@ -93,6 +93,8 @@ class NodeTestSuite(SlapOSInstance):
         self.working_directory = os.path.join(self.working_directory,
                                              self.reference)
       SlapOSControler.createFolder(self.working_directory)
+      self.test_suite_directory = os.path.join(
+                                   self.working_directory, "test_suite")
       self.custom_profile_path = os.path.join(self.working_directory,
                                  'software.cfg')
     if getattr(self, "vcs_repository_list", None) is not None:
@@ -325,8 +327,10 @@ branch = %(branch)s
     # From this point, test runner becomes responsible for updating test
     # result. We only do cleanup if the test runner itself is not able
     # to run.
+    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
+                                 clean=True)
     self.process_manager.spawn(*invocation_list,
-                          cwd=config['test_suite_directory'],
+                          cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 
   def cleanUp(self,test_result):
@@ -400,8 +404,6 @@ branch = %(branch)s
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError) as e:
           log("SubprocessError", exc_info=sys.exc_info())
-          if test_result is not None:
-            test_result.removeWatch(log_file_name)
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(

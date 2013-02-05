@@ -67,7 +67,8 @@ else:\n
 # We copy contents in place if possible\n
 directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
 allowed_type_list = directory.getVisibleAllowedContentTypeList()\n
-if portal_type not in allowed_type_list:\n
+is_user_allowed_copy_or_move = context.Base_checkPermission(context.getRelativeUrl(), \'Copy or Move\')\n
+if portal_type not in allowed_type_list or not is_user_allowed_copy_or_move:\n
   if batch_mode:\n
     return None\n
   else:\n

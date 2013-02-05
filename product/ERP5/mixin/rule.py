@@ -509,7 +509,9 @@ class SimulableMixin(Base):
               activity='SQLQueue',
               group_method_id='portal_rules/updateSimulation',
               tag='expand:' + path,
-              after_tag='built:'+ path, # see SimulatedDeliveryBuilder
+              # Now that we don't rely on catalog anymore, this after_tag could
+              # moved to _localBuild, which currently only depends on 'expand:'.
+              after_tag='built:'+ path,
               priority=3,
               )._updateSimulation(**kw)
         del tv[key]
@@ -595,6 +597,10 @@ class SimulableMixin(Base):
           portal.portal_simulation, is_indexable=False)
         applied_rule._setCausalityValue(self)
         del applied_rule.isIndexable
+        # To prevent duplicate root Applied Rule, we reindex immediately and
+        # lock ZODB, and we rely on the fact that ZODB is committed after
+        # catalog. This way, we guarantee the catalog is up-to-date as soon as
+        # ZODB is unlocked.
         applied_rule.immediateReindexObject()
         self.serialize() # prevent duplicate root Applied Rule
         return applied_rule

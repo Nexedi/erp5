@@ -50,19 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = context\n
-\n
-if kw.get(\'created_by_builder\', 0): \n
+            <value> <string>if kw.get(\'created_by_builder\', 0): \n
   return\n
 \n
-transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                       id=\'income\',)\n
-transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                       id=\'receivable\', )\n
-transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-                       id=\'collected_vat\',)\n
+preference_tool = context.getPortalObject().portal_preferences\n
+context.setSourceSection(preference_tool.getPreferredAccountingTransactionSourceSection())\n
+context.setResource(preference_tool.getPreferredAccountingTransactionCurrency())\n
+    \n
+if \'Invoice Line\' in context.getVisibleAllowedContentTypeList():\n
+  return\n
 \n
-context.AccountingTransaction_initFromPreferences()\n
+context.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                   id=\'income\',)\n
+context.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                   id=\'receivable\', )\n
+context.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
+                   id=\'collected_vat\',)\n
 </string> </value>
         </item>
         <item>

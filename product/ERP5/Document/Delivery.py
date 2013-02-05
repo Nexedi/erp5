@@ -394,6 +394,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       if calculate:
         path = self.getPath()
         self.activate(
+          # after_tag to built: could be removed
           after_tag=('built:'+path, 'expand:'+path),
           after_path_and_method_id=(path, '_localBuild'),
           ).updateCausalityState()
@@ -713,6 +714,10 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         after_tag = [after_tag]
       else:
         after_tag = list(after_tag) if after_tag else []
+      # Now that 'delivery' category relation are indexed in ZODB, this is the
+      # only method that depends on built: tag (via _updateSimulation), which
+      # is still required because builders only use catalog to find buildable
+      # movements and we don't want to miss any for local building.
       after_tag.append('expand:' + self.getPath())
       sm = getSecurityManager()
       newSecurityManager(None, nobody)
@@ -857,12 +862,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
       return disconnected_simulation_movement_list
 
-    def _getAllRelatedSimulationMovementList(self, **kw):
-      movement_uid_list = [x.getUid() for x in self.getMovementList()]
-      return movement_uid_list and \
-        self.getPortalObject().portal_catalog.unrestrictedSearchResults(
-          portal_type='Simulation Movement',
-          delivery_uid=movement_uid_list, **kw)
+    def _getAllRelatedSimulationMovementList(self):
+      result = []
+      for movement in self.getMovementList():
+        result += movement.getDeliveryRelatedValueList()
+      return result
 
     def getDivergentTesterAndSimulationMovementList(self):
       """

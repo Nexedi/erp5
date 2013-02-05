@@ -24,7 +24,8 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>from_table_list:list\r\n
 where_expression\r\n
-order_by_expression</string> </value>
+order_by_expression\r\n
+limit_expression</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -52,11 +53,11 @@ order_by_expression</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>100</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -92,8 +93,9 @@ WHERE\n
 <dtml-if order_by_expression>\n
 ORDER BY <dtml-var order_by_expression>\n
 </dtml-if>\n
-\n
-
+<dtml-if limit_expression>\n
+LIMIT <dtml-var limit_expression>\n
+</dtml-if>
 
 ]]></string> </value>
         </item>

@@ -55,35 +55,21 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore )
 
   def _getPreferenceNameList(self):
-    """Returns all existing preference names.
-
-    TODO: this should be done by introspecting property sheet.
+    """Return names of preference properties.
     """
-    return ( 'preferred_category_child_item_list_method_id',
-             'preferred_accounting_transaction_from_date',
-             'preferred_accounting_transaction_at_date',
-             'preferred_section_category',
-             'preferred_section',
-             'preferred_accounting_transaction_section_category',
-             'preferred_accounting_transaction_source_section',
-             'preferred_accounting_transaction_currency',
-             'preferred_accounting_transaction_gap',
-             'preferred_accounting_transaction_simulation_state_list',
-             'preferred_text_format',
-             'preferred_text_editor',
-             'preferred_date_order',
-             'preferred_listbox_view_mode_line_count',
-             'preferred_listbox_list_mode_line_count',
-             'preferred_string_field_width',
-             'preferred_textarea_width',
-             'preferred_textarea_height',
-             'preferred_money_quantity_field_width',
-             'preferred_quantity_field_width',
-             'preferred_report_style',
-             'preferred_report_format',
-             'preferred_html_style_access_tab',
-             )
-
+    property_id_list = []
+    portal = self.getPortalObject()
+    for property_sheet_id in portal.portal_types.Preference.getTypePropertySheetList():
+      property_sheet = portal.portal_property_sheets[property_sheet_id]
+      for prop in property_sheet.contentValues():
+        if prop.getProperty('preference'):
+          list_prefix = ''
+          if prop.getProperty('multivalued') or (
+               prop.getProperty('elementary_type') in (
+                 'lines', 'multiple_selection', 'tokens')):
+            list_prefix = '_list'
+          property_id_list.append('%s%s' % (prop.getReference(), list_prefix))
+    return property_id_list
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
@@ -96,14 +82,13 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                               description = self.description,
                               priority = 1)
 
-    # XXX this have to be translated in user language.
     preference_dict = {}
 
     marker = []
     for preference_name in self._getPreferenceNameList():
       preference_value = getattr(self, preference_name,
                      preference.getProperty(preference_name, marker))
-      if preference_value is not marker:
+      if preference_value is not marker and preference_value is not None:
         preference_dict[preference_name] = preference_value
 
     if self.portal_workflow.isTransitionPossible(preference, 'enable'):

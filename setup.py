@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.19'
+version = '0.4.22'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -49,9 +49,10 @@ setup(name=name,
       namespace_packages=['erp5', 'erp5.util'],
       install_requires=[
         'setuptools', # namespaces
+        'psutil >= 0.5.0',
       ],
       extras_require={
-        'testnode': ['slapos.core', 'xml_marshaller'],
+        'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0'],
         'testbrowser': ['zope.testbrowser >= 3.11.1', 'z3c.etestbrowser'],
         'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
@@ -76,6 +77,7 @@ setup(name=name,
       tests_require=[
         'slapos.core',
         'xml_marshaller',
+        'psutil >= 0.5.0',
       ],
     )
 

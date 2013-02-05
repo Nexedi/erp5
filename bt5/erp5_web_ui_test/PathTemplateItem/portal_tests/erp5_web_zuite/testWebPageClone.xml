@@ -123,7 +123,7 @@
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+\\?portal_status_message=Created%20Clone%20Web%20Page.&amp;editable_mode:int=1</td>\n
+  <td>regexp:${base_url}/web_site_module/test_web_site/web_page_module/[^/]+(/view)+\\?portal_status_message=Created%20Clone%20Web%20Page.&amp;editable_mode:int=1</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n

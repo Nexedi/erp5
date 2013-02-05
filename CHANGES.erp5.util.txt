@@ -1,6 +1,31 @@
 Changes
 =======
 
+0.4.22 (2013-01-08)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - fix regression when used on Python < 2.7
+
+0.4.21 (2013-01-07)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - really fix lock to avoid errors with concurrent RPC calls
+
+ * erp5.util.testnode:
+
+  - do not run test suites on deleted branches
+
+0.4.20 (2012-12-19)
+------------------
+
+ * erp5.util.testnode:
+
+  - Make sure to kill grandchilds when killing a process [Sebastien Robin]
+
 0.4.19 (2012-12-17)
 ------------------
 

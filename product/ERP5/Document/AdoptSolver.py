@@ -27,47 +27,21 @@
 #
 ##############################################################################
 
-import zope.interface
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.solver import SolverMixin
-from Products.ERP5.mixin.configurable import ConfigurableMixin
+from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
 
-class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
+class AdoptSolver(ConfigurablePropertySolverMixin):
   """Target solver that adopts the values from the prevision on the decision.
   """
   meta_type = 'ERP5 Adopt Solver'
   portal_type = 'Adopt Solver'
-  add_permission = Permissions.AddPortalContent
-  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.TargetSolver
-                    )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ISolver,
-                            interfaces.IConfigurable,
-                           )
 
   # ISolver Implementation
+  # XXX-Leo: Needs security declaration! It's currently public.
   def solve(self, activate_kw=None):
     """
     Adopt new property to movements or deliveries.
     """
-    configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-    solved_property_list = configuration_dict.get('tested_property_list',
-                                                  portal_type.getTestedPropertyList())
+    solved_property_list = self.getTestedPropertyList()
     delivery_dict = {}
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),

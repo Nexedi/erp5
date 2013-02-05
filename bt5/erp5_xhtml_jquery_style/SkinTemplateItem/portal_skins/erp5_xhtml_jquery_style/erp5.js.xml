@@ -126,22 +126,18 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
     if ((row_list.length > 1) ||\n
         (row_list.length == 1 && row_list[0].length > 1)) {\n
       var first_element = row_list[0][0];\n
-      var container = first_element.parentNode;\n
-      var fake_table = document.createElement("table");\n
-      var i;\n
-      var j;\n
-      fake_table.className = tableClassName;\n
-      container.insertBefore(fake_table, first_element);\n
-      for (i = 0; i < row_list.length; i++) {\n
-        var fake_row = document.createElement("tr");\n
-        var row_element_list = row_list[i];\n
-        for (j = 0; j < row_element_list.length; j++) {\n
-          var fake_cell = document.createElement("td");\n
-          fake_cell.appendChild(row_element_list[j]);\n
-          fake_row.appendChild(fake_cell);\n
-        }\n
-        fake_table.appendChild(fake_row);\n
-      }\n
+      var fake_table = $("<table>");\n
+      fake_table.addClass(tableClassName);\n
+      fake_table.insertbefore(first_element);\n
+      $.each(row_list, function() {\n
+        var fake_row = $("<tr>");\n
+        $.each(this, function() {\n
+          var fake_cell = $("<td>");\n
+          fake_cell.append(this);\n
+          fake_row.append(fake_cell[0]);\n
+        });\n
+        fake_table.append(fake_row[0]);\n
+      });\n
     }\n
   }\n
 }\n
@@ -168,18 +164,8 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
     for (element_index = 0; element_index < matched_left_element_list.snapshotLength; element_index++) {\n
       var element = matched_left_element_list.snapshotItem(element_index);\n
       var right = document.evaluate(right_xpath, element, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n
-      var cell;\n
-      var row = document.createElement("tr");\n
-      var table = document.createElement("table");\n
-      table.className = "fake";\n
-      element.parentNode.insertBefore(table, element);\n
-      cell = document.createElement("td");\n
-      cell.appendChild(element);\n
-      row.appendChild(cell);\n
-      cell = document.createElement("td");\n
-      cell.appendChild(right);\n
-      row.appendChild(cell);\n
-      table.appendChild(row);\n
+      var table = $(\'<table class="fake">\').insertBefore(element);\n
+      table.append($("<tr>").append($("<td>").append(element)).append($("<td>").append(right)));\n
     }\n
   }\n
   autoFocus();\n
@@ -237,13 +223,12 @@ var indexAllCheckBoxesAtBTInstallationOnLoad = function() {\n
 \n
 var resizeIFrameOnLoad = function() {\n
   /* Resize all frames in document in order to remove sliders  */\n
-  var object_list = $("object.auto_height");\n
-  for( var i=0; i<object_list.length; i++) {\n
-    var object_document = object_list[i];\n
-    var inner_frame = object_document.contentDocument;\n
+  $("object.auto_height").each(function(){\n
+    var inner_frame = this.contentDocument;\n
     if (inner_frame){\n
-      object_document.style.height = inner_frame.documentElement.offsetHeight + \'px\';}\n
-  }\n
+      $(this).css("height", inner_frame.documentElement.offsetHeight + \'px\');\n
+    }\n
+  });\n
 }\n
 \n
 var changed = false;\n
@@ -264,68 +249,55 @@ var addOnChangeEventHandler = function() {\n
       - clicking a relation field wheel\n
       - clicking on a input with type submit\n
   */\n
-  //var master = document.getElementById("master");\n
-  var master = $("#master");\n
-  if (master) {\n
-    //divs = master.getElementsByTagName("div");\n
-    divs = master.find("div");\n
-    for (i=0; i<divs.length; i++) {\n
-      if (divs[i].getAttribute("class") == "input") {\n
-        nodes = divs[i].childNodes;\n
-\n
-        for (j=0; j<nodes.length; j++) {\n
-          if (nodes[j].nodeName == "INPUT" ||\n
-              nodes[j].nodeName == "SELECT" ||\n
-              nodes[j].nodeName == "TEXTAREA") {\n
-              if (nodes[j].value == "update..." ||\n
-                  (nodes[j].nodeName == "INPUT" &&\n
-                  nodes[j].type == \'submit\')) {\n
+  $("#master div").each(function(i) {\n
+    if ($(this).attr("class") == "input") {\n
+        $(this).children().each(function() {\n
+          if ($(this).prop("tagName") == "INPUT" ||\n
+              $(this).prop("tagName") == "SELECT" ||\n
+              $(this).prop("tagName") == "TEXTAREA") {\n
+              if ($(this).val() == "update..." ||\n
+                  ($(this).prop("tagName") == "INPUT" &&\n
+                  $(this).attr("type") == \'submit\')) {\n
                // this is a relation field wheel or a submit form button\n
-             nodes[j].onclick = function() { changed = false;};\n
+             this.onclick = function() { changed = false;};\n
             } else {\n
-              if (!nodes[j].onchange) {\n
-                nodes[j].onchange = function() { changed = true; };\n
+              if (!this.onchange) {\n
+                this.onchange = function() { changed = true; };\n
               }\n
             }\n
           } \n
           /* Listbox or MatrixBox */\n
-          if (nodes[j].nodeName == "DIV" && (\n
-              nodes[j].getAttribute("class") == "listbox-container" ||\n
-              nodes[j].getAttribute("class") == "MatrixContent")) {\n
-            trs = nodes[j].getElementsByTagName(\'td\');\n
-            for (k=0; k<trs.length; k++){\n
-              if (trs[k].getAttribute("class") == "listbox-search-line") {\n
-                continue;\n
+          if ($(this).prop("tagName") == "DIV" && (\n
+              $(this).attr("class") == "listbox-container" ||\n
+              $(this).attr("class") == "MatrixContent")) {\n
+            $(this).find(\'td\').each(function(){\n
+              if ($(this).attr("class") == "listbox-search-line") {\n
+                return non-false;\n
               }\n
-              inputs = trs[k].getElementsByTagName(\'input\');\n
-              for (l=0; l<inputs.length; l++){\n
-                if (inputs[l].getAttribute("type") != "hidden" &&\n
-                    !inputs[l].onchange) {\n
-                  inputs[l].onchange = function() { changed = true; };\n
+              $(this).find(\'input\').each(function(){\n
+                if ($(this).attr("type") != "hidden" &&\n
+                    !this.onchange) {\n
+                  this.onchange = function() { changed = true; };\n
                 }\n
-              }\n
-            }\n
+              });\n
+            });\n
           }\n
-        }\n
-      }\n
+        });\n
     }\n
-  }\n
+  });\n
 }\n
 \n
 var rewriteIndentedSelect = function() {\n
   /*\n
    Under firefox, rewrite indented title categories using style definition.\n
    This way we can select items by pressing the first letter of their name. */\n
-  var master = $("#master");\n
-  if (master){\n
-    selects = master.find("select");\n
-    for (i=0; i<selects.length; i++) {\n
-      options = selects[i].childNodes;\n
-      for (j=0; j<options.length; j++) {\n
-        if (options[j].nodeName != "OPTION") {\n
-          continue;\n
+\n
+    $("#master select").each(function() {\n
+      $(this).children().each(function() {\n
+        if ($(this).prop("tagName") != "OPTION") {\n
+          return non-false;\n
         }\n
-        text = options[j].innerHTML;\n
+        text = $(this).html();\n
         if (text.substring(0, 1) == \'\\n\') {\n
           text = text.substring(1, text.length);\n
         }\n
@@ -341,12 +313,11 @@ var rewriteIndentedSelect = function() {\n
         }\n
         if (level >= 1) {\n
           level = level / 4.;\n
-          options[j].innerHTML = text.replace(/^(&nbsp;)+/, "");\n
-          options[j].style.paddingLeft = level+"em";\n
+          $(this).html(text.replace(/^(&nbsp;)+/, ""));\n
+          $(this).css("paddingLeft", level+"em");\n
         }\n
-      }\n
-    }\n
-  }\n
+      });\n
+    });\n
 }\n
 \n
 function queryStringToArray(query_string){\n
@@ -355,7 +326,7 @@ function queryStringToArray(query_string){\n
   */\n
   var final ={};\n
   var b = query_string.split(\'&\');\n
-  $.each(b, function(x,y){\n
+  $.each(b, function(x, y){\n
     var temp = y.split(\'=\');\n
     final[temp[0]] = temp[1];});\n
   return final  \n
@@ -398,8 +369,7 @@ if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
-
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
 
 ]]></string> </value>
         </item>

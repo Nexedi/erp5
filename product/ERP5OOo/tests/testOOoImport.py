@@ -30,33 +30,21 @@
 import unittest
 import os
 
-from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
 from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
-
-ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
-
-class FileUploadTest(file):
-
-  __allow_access_to_unprotected_subobjects__=1
-
-  def __init__(self, path, name):
-    self.filename = name
-    file.__init__(self, path, 'rb')
-    self.headers = {}
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)
-  return FileUploadTest(path, name)
+  return FileUpload(path, name)
 
 class TestOOoImportMixin(ERP5TypeTestCase):
   gender_base_cat_id    = 'gender'
@@ -769,62 +757,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEquals(['europe'], list(region.europe.france.objectIds()))
     self.assertEquals(['france'], list(region.europe.france.europe.objectIds()))
     self.assertEquals([], list(region.europe.france.europe.france.objectIds()))
-
-
-  # OOoParser tests
-  def test_getSpreadSheetMapping(self):
-    parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
-    mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Person'], mapping.keys())
-    person_mapping = mapping['Person']
-    self.assertTrue(isinstance(person_mapping, list))
-    self.assertTrue(102, len(person_mapping))
-    self.assertEquals(person_mapping[0],
-       ['Title', 'First Name', 'Last Name', 'Default Email Text'])
-    self.assertEquals(person_mapping[1],
-       ['John Doe 0', 'John', 'Doe 0', 'john.doe0@foo.com'])
-
-  def test_openFromString(self):
-    parser = OOoParser()
-    parser.openFromString(
-        open(makeFilePath('import_data_list.ods'), 'rb').read())
-    mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Person'], mapping.keys())
-
-  def test_getSpreadSheetMappingStyle(self):
-    parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_data_list_with_style.ods'), 'rb'))
-    mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'][1],
-                      ['a line with style'])
-    self.assertEquals(mapping['Feuille1'][2],
-                      ['a line with multiple styles'])
-    self.assertEquals(mapping['Feuille1'][3],
-                      ['http://www.erp5.org'])
-    self.assertEquals(mapping['Feuille1'][4],
-                      ['john.doe@example.com'])
-
-  def test_getSpreadSheetMappingDataTypes(self):
-    parser = OOoParser()
-    parser.openFile(open(makeFilePath('import_data_list_data_type.ods'), 'rb'))
-    mapping = parser.getSpreadsheetsMapping()
-    self.assertEquals(['Feuille1'], mapping.keys())
-    self.assertEquals(mapping['Feuille1'][0],
-                      ['1234.5678'])
-    self.assertEquals(mapping['Feuille1'][1],
-                      ['1234.5678'])
-    self.assertEquals(mapping['Feuille1'][2],
-                      ['0.1'])
-    self.assertEquals(mapping['Feuille1'][3],
-                      ['2008-11-14'])
-    self.assertEquals(mapping['Feuille1'][4],
-                      ['2008-11-14T10:20:30']) # supported by DateTime
-    self.assertEquals(mapping['Feuille1'][5],
-                      ['PT12H34M56S']) # maybe not good, this is raw format
-    self.assertEquals(mapping['Feuille1'][6],
-                      ['With note'])
 
   # Base_getCategoriesSpreadSheetMapping tests
   def test_Base_getCategoriesSpreadSheetMapping(self):

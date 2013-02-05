@@ -131,7 +131,7 @@ class Updater(object):
         else:
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
-          self.deletePycFiles('.')
+          self.deletePycFiles(self.repository_path)
           # For performance reasons, 'reset --merge' only looks at mtime & ctime
           # to check is the index is correct and conflicts immediately if
           # contents or metadata changed. Even hardlinking a file changes its
@@ -140,11 +140,11 @@ class Updater(object):
           self._git('update-index', '--refresh')
           self._git('reset', '--merge', h)
       else:
-        self.deletePycFiles('.')
+        self.deletePycFiles(self.repository_path)
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('fetch')
+          self._git('fetch', '--prune')
           self._git('update-index', '--refresh') # see note above
           self._git('reset', '--merge', '@{u}')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))

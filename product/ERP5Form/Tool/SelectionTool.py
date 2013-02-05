@@ -328,7 +328,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         try:
-          return selection.getDomain().asDomainDict
+          return selection.getDomain().asDomainDict()
         except AttributeError:
           return {}
 
@@ -340,7 +340,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         try:
-          return selection.getReport().asDomainDict
+          return selection.getReport().asDomainDict()
         except AttributeError:
           return {}
 

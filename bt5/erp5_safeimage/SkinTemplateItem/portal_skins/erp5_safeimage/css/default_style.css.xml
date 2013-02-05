@@ -1,0 +1,593 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts54117191.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>default_style.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>div.olMap\n
+{\n
+\tz-index:0;\n
+\tcursor:default;\n
+\tmargin:0!important;\n
+\tpadding:0!important;\n
+}\n
+\n
+div.olMapViewport\n
+{\n
+\ttext-align:left;\n
+}\n
+\n
+.olLayerGoogleCopyright\n
+{\n
+\tleft:2px;\n
+\tbottom:2px;\n
+}\n
+\n
+.olLayerGoogleV3.olLayerGoogleCopyright\n
+{\n
+\tright:auto!important;\n
+}\n
+\n
+.olLayerGooglePoweredBy\n
+{\n
+\tleft:2px;\n
+\tbottom:15px;\n
+}\n
+\n
+.olLayerGoogleV3.olLayerGooglePoweredBy\n
+{\n
+\tbottom:15px!important;\n
+}\n
+\n
+.olControlAttribution\n
+{\n
+\tfont-size:smaller;\n
+\tright:3px;\n
+\tbottom:4.5em;\n
+\tposition:absolute;\n
+\tdisplay:block;\n
+}\n
+\n
+.olControlScale\n
+{\n
+\tright:3px;\n
+\tbottom:3em;\n
+\tdisplay:block;\n
+\tposition:absolute;\n
+\tfont-size:smaller;\n
+}\n
+\n
+.olControlScaleLine\n
+{\n
+\tdisplay:block;\n
+\tposition:absolute;\n
+\tleft:10px;\n
+\tbottom:15px;\n
+\tfont-size:xx-small;\n
+}\n
+\n
+.olControlScaleLineBottom\n
+{\n
+\tborder:solid 2px #000;\n
+\tborder-bottom:none;\n
+\tmargin-top:-2px;\n
+\ttext-align:center;\n
+}\n
+\n
+.olControlScaleLineTop\n
+{\n
+\tborder:solid 2px #000;\n
+\tborder-top:none;\n
+\ttext-align:center;\n
+}\n
+\n
+.olControlPermalink\n
+{\n
+\tright:3px;\n
+\tbottom:1.5em;\n
+\tdisplay:block;\n
+\tposition:absolute;\n
+\tfont-size:smaller;\n
+}\n
+\n
+div.olControlMousePosition\n
+{\n
+\tbottom:0;\n
+\tright:3px;\n
+\tdisplay:block;\n
+\tposition:absolute;\n
+\tfont-family:Arial;\n
+\tfont-size:smaller;\n
+}\n
+\n
+.olControlOverviewMapContainer\n
+{\n
+\tposition:absolute;\n
+\tbottom:0;\n
+\tright:0;\n
+}\n
+\n
+.olControlOverviewMapElement\n
+{\n
+\tbackground-color:#00008B;\n
+\t-moz-border-radius:1em 0 0;\n
+\tpadding:10px 18px 10px 10px;\n
+}\n
+\n
+.olControlOverviewMapMinimizeButton,.olControlOverviewMapMaximizeButton\n
+{\n
+\theight:18px;\n
+\twidth:18px;\n
+\tright:0;\n
+\tbottom:80px;\n
+\tcursor:pointer;\n
+}\n
+\n
+.olControlOverviewMapExtentRectangle\n
+{\n
+\toverflow:hidden;\n
+\tbackground-image:url(img/blank.gif);\n
+\tcursor:move;\n
+\tborder:2px dotted red;\n
+}\n
+\n
+.olControlOverviewMapRectReplacement\n
+{\n
+\toverflow:hidden;\n
+\tcursor:move;\n
+\tbackground-image:url(img/overview_replacement.gif);\n
+\tbackground-repeat:no-repeat;\n
+\tbackground-position:center;\n
+}\n
+\n
+.olLayerGeoRSSDescription\n
+{\n
+\tfloat:left;\n
+\twidth:100%;\n
+\toverflow:auto;\n
+\tfont-size:1em;\n
+}\n
+\n
+.olLayerGeoRSSClose\n
+{\n
+\tfloat:right;\n
+\tcolor:gray;\n
+\tfont-size:1.2em;\n
+\tmargin-right:6px;\n
+\tfont-family:sans-serif;\n
+}\n
+\n
+.olLayerGeoRSSTitle\n
+{\n
+\tfloat:left;\n
+\tfont-size:1.2em;\n
+}\n
+\n
+.olControlNavigationHistory\n
+{\n
+\tbackground-image:url(img/navigation_history.png);\n
+\tbackground-repeat:no-repeat;\n
+\twidth:24px;\n
+\theight:24px;\n
+}\n
+\n
+.olControlNavigationHistoryPreviousItemActive\n
+{\n
+\tbackground-position:0 0;\n
+}\n
+\n
+.olControlNavigationHistoryPreviousItemInactive\n
+{\n
+\tbackground-position:0 -24px;\n
+}\n
+\n
+.olControlNavigationHistoryNextItemActive\n
+{\n
+\tbackground-position:-24px 0;\n
+}\n
+\n
+.olControlNavigationHistoryNextItemInactive\n
+{\n
+\tbackground-position:-24px -24px;\n
+}\n
+\n
+div.olControlSaveFeaturesItemActive\n
+{\n
+\tbackground-image:url(img/save_features_on.png);\n
+\tbackground-repeat:no-repeat;\n
+\tbackground-position:0 1px;\n
+}\n
+\n
+div.olControlSaveFeaturesItemInactive\n
+{\n
+\tbackground-image:url(img/save_features_off.png);\n
+\tbackground-repeat:no-repeat;\n
+\tbackground-position:0 1px;\n
+}\n
+\n
+.olHandlerBoxZoomBox\n
+{\n
+\tborder:2px solid red;\n
+\tposition:absolute;\n
+\tbackground-color:#FFF;\n
+\topacity:.5;\n
+\tfont-size:1px;\n
+\tfilter:alpha(opacity=50);\n
+}\n
+\n
+.olHandlerBoxSelectFeature\n
+{\n
+\tborder:2px solid blue;\n
+\tposition:absolute;\n
+\tbackground-color:#FFF;\n
+\topacity:.5;\n
+\tfont-size:1px;\n
+\tfilter:alpha(opacity=50);\n
+}\n
+\n
+.olControlPanPanel\n
+{\n
+\ttop:10px;\n
+\tleft:5px;\n
+}\n
+\n
+.olControlPanPanel div\n
+{\n
+\tbackground-image:url(img/pan-panel.png);\n
+\theight:18px;\n
+\twidth:18px;\n
+\tcursor:pointer;\n
+\tposition:absolute;\n
+}\n
+\n
+.olControlPanPanel .olControlPanNorthItemInactive\n
+{\n
+\ttop:0;\n
+\tleft:9px;\n
+\tbackground-position:0 0;\n
+}\n
+\n
+.olControlPanPanel .olControlPanSouthItemInactive\n
+{\n
+\ttop:36px;\n
+\tleft:9px;\n
+\tbackground-position:18px 0;\n
+}\n
+\n
+.olControlPanPanel .olControlPanWestItemInactive\n
+{\n
+\tposition:absolute;\n
+\ttop:18px;\n
+\tleft:0;\n
+\tbackground-position:0 18px;\n
+}\n
+\n
+.olControlPanPanel .olControlPanEastItemInactive\n
+{\n
+\ttop:18px;\n
+\tleft:18px;\n
+\tbackground-position:18px 18px;\n
+}\n
+\n
+.olControlZoomPanel\n
+{\n
+\ttop:71px;\n
+\tleft:14px;\n
+}\n
+\n
+.olControlZoomPanel div\n
+{\n
+\tbackground-image:url(img/zoom-panel.png);\n
+\tposition:absolute;\n
+\theight:18px;\n
+\twidth:18px;\n
+\tcursor:pointer;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomInItemInactive\n
+{\n
+\ttop:0;\n
+\tleft:0;\n
+\tbackground-position:0 0;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomToMaxExtentItemInactive\n
+{\n
+\ttop:18px;\n
+\tleft:0;\n
+\tbackground-position:0 -18px;\n
+}\n
+\n
+.olControlZoomPanel .olControlZoomOutItemInactive\n
+{\n
+\ttop:36px;\n
+\tleft:0;\n
+\tbackground-position:0 18px;\n
+}\n
+\n
+.olControlPanZoomBar div\n
+{\n
+\tfont-size:1px;\n
+}\n
+\n
+.olPopupCloseBox\n
+{\n
+\tbackground:url(img/close.gif) no-repeat;\n
+\tcursor:pointer;\n
+}\n
+\n
+.olImageLoadError\n
+{\n
+\tbackground-color:#FFC0CB;\n
+\topacity:.5;\n
+\tfilter:alpha(opacity=50);\n
+}\n
+\n
+.olCursorWait\n
+{\n
+\tcursor:wait;\n
+}\n
+\n
+.olDrawBox\n
+{\n
+\tcursor:crosshair;\n
+}\n
+\n
+.olControlDragFeatureActive.olControlDragFeatureOver.olDragDown\n
+{\n
+\tcursor:0;\n
+}\n
+\n
+.olControlLayerSwitcher\n
+{\n
+\tposition:absolute;\n
+\ttop:25px;\n
+\tright:0;\n
+\twidth:20em;\n
+\tfont-family:sans-serif;\n
+\tfont-weight:700;\n
+\tmargin-top:3px;\n
+\tmargin-left:3px;\n
+\tmargin-bottom:3px;\n
+\tfont-size:smaller;\n
+\tcolor:#FFF;\n
+\tbackground-color:transparent;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv\n
+{\n
+\tbackground-color:#00008B;\n
+\tpadding:5px 10px;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv .baseLbl,.olControlLayerSwitcher .layersDiv .dataLbl\n
+{\n
+\tmargin-top:3px;\n
+\tmargin-left:3px;\n
+\tmargin-bottom:3px;\n
+}\n
+\n
+.olControlLayerSwitcher .layersDiv .baseLayersDiv,.olControlLayerSwitcher .layersDiv .dataLayersDiv\n
+{\n
+\tpadding-left:10px;\n
+}\n
+\n
+.olControlLayerSwitcher .maximizeDiv,.olControlLayerSwitcher .minimizeDiv\n
+{\n
+\twidth:18px;\n
+\theight:18px;\n
+\ttop:5px;\n
+\tright:0;\n
+\tcursor:pointer;\n
+}\n
+\n
+.olBingAttribution\n
+{\n
+\tcolor:#DDD;\n
+}\n
+\n
+span.olGoogleAttribution a\n
+{\n
+\tcolor:#77C;\n
+}\n
+\n
+.olControlNavToolbar,.olControlEditingToolbar\n
+{\n
+\tmargin:5px 5px 0 0;\n
+}\n
+\n
+.olControlNavToolbar div,.olControlEditingToolbar div\n
+{\n
+\tbackground-image:url(img/editing_tool_bar.png);\n
+\tbackground-repeat:no-repeat;\n
+\twidth:24px;\n
+\theight:22px;\n
+\tcursor:pointer;\n
+\tmargin:0 0 5px 5px;\n
+}\n
+\n
+.olControlEditingToolbar\n
+{\n
+\tright:0;\n
+\ttop:0;\n
+}\n
+\n
+.olControlNavToolbar\n
+{\n
+\ttop:295px;\n
+\tleft:9px;\n
+}\n
+\n
+.olControlEditingToolbar div\n
+{\n
+\tfloat:right;\n
+}\n
+\n
+.olControlNavToolbar .olControlNavigationItemInactive,.olControlEditingToolbar .olControlNavigationItemInactive\n
+{\n
+\tbackground-position:-103px -1px;\n
+}\n
+\n
+.olControlNavToolbar .olControlNavigationItemActive,.olControlEditingToolbar .olControlNavigationItemActive\n
+{\n
+\tbackground-position:-103px -24px;\n
+}\n
+\n
+.olControlNavToolbar .olControlZoomBoxItemInactive\n
+{\n
+\tbackground-position:-128px -1px;\n
+}\n
+\n
+.olControlNavToolbar .olControlZoomBoxItemActive\n
+{\n
+\tbackground-position:-128px -24px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePointItemInactive\n
+{\n
+\tbackground-position:-77px -1px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePointItemActive\n
+{\n
+\tbackground-position:-77px -24px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePathItemInactive\n
+{\n
+\tbackground-position:-51px -1px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePathItemActive\n
+{\n
+\tbackground-position:-51px -24px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePolygonItemInactive\n
+{\n
+\tbackground-position:-26px -1px;\n
+}\n
+\n
+.olControlEditingToolbar .olControlDrawFeaturePolygonItemActive\n
+{\n
+\tbackground-position:-26px -24px;\n
+}\n
+\n
+div.olControlZoom\n
+{\n
+\tposition:absolute;\n
+\ttop:8px;\n
+\tleft:8px;\n
+\tbackground:rgba(255,255,255,0.4);\n
+\tborder-radius:4px;\n
+\tpadding:2px;\n
+}\n
+\n
+div.olControlZoom a\n
+{\n
+\tdisplay:block;\n
+\tcolor:#FFF;\n
+\tfont-size:18px;\n
+\tfont-family:\'Lucida Grande\', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;\n
+\tfont-weight:700;\n
+\ttext-decoration:none;\n
+\ttext-align:center;\n
+\theight:22px;\n
+\twidth:22px;\n
+\tline-height:19px;\n
+\tbackground:rgba(0,60,136,0.5);\n
+\tfilter:alpha(opacity=80);\n
+\tmargin:1px;\n
+\tpadding:0;\n
+}\n
+\n
+div.olControlZoom a:hover\n
+{\n
+\tbackground:rgba(0,60,136,0.7);\n
+\tfilter:alpha(opacity=100);\n
+}\n
+\n
+a.olControlZoomIn\n
+{\n
+\tborder-radius:4px 4px 0 0;\n
+}\n
+\n
+a.olControlZoomOut\n
+{\n
+\tborder-radius:0 0 4px 4px;\n
+}\n
+\n
+.olLayerGrid .olTileImage\n
+{\n
+\t-webkit-transition:opacity .2s linear;\n
+\t-moz-transition:opacity .2s linear;\n
+\t-o-transition:opacity .2s linear;\n
+\ttransition:opacity .2s linear;\n
+}\n
+\n
+div.olLayerDiv,.olControlNoSelect\n
+{\n
+\t-khtml-user-select:none;\n
+\t-moz-user-select:none;\n
+}\n
+\n
+.olPopupContent,.olFramedCloudPopupContent\n
+{\n
+\toverflow:auto;\n
+\tpadding:5px;\n
+}\n
+\n
+.olDragDown,.olControlDragFeatureOver\n
+{\n
+\tcursor:move;\n
+}\n
+\n
+.olBingAttribution.road,.olGoogleAttribution\n
+{\n
+\tcolor:#333;\n
+}\n
+\n
+.olGoogleAttribution.hybrid,.olGoogleAttribution.satellite,span.olGoogleAttribution.hybrid a,span.olGoogleAttribution.satellite a\n
+{\n
+\tcolor:#EEE;\n
+}\n
+\n
+@media only screen and max-width 600px {\n
+\tdiv.olControlZoom a:hover\n
+\t{\n
+\t\tbackground:rgba(0,60,136,0.5);\n
+\t}\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8334</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>default_style.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

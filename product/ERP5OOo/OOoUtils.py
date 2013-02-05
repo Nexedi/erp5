@@ -428,10 +428,43 @@ class OOoParser(Implicit):
               xpath = '@*[local-name()="%s"]' % attribute_type_mapping[value_type]
               cell_data = str(cell.xpath(xpath)[0])
             else: # read text nodes
-              text_tags = cell.findall('./{%s}p' % cell.nsmap['text'])
-              if len(text_tags):
-                cell_data = ''.join([text.xpath('string(.)')
-                                     for text in text_tags])
+              # Text nodes can contain multiple <text:p> tags, one for each
+              # line. There are also some tags for special entities, for
+              # instance <text:s/> for a space (or using <text:s text:c="3"/>
+              # for multiple spaces) <text:tab/> for a tab and <text:line-break/>
+              # for new line
+              text_ns = cell.nsmap['text']
+              def format_node(node):
+                if node.tag == '{%s}table-cell' % node.nsmap['table']:
+                  return "\n".join(part for part in
+                    [format_node(child) for child in node.iterchildren()]
+                    if part is not None)
+                elif node.tag == '{%s}p' % node.nsmap['text']:
+                  part_list = [node.text]
+                  part_list.extend(format_node(child)
+                    for child in node.iterchildren())
+                  return ''.join(part for part in part_list if part)
+                elif node.tag == '{%s}s' % node.nsmap['text']:
+                  count = int(node.get('{%s}c' % node.nsmap['text'], 1))
+                  return ''.join(part for part in
+                    [node.text, ' ' * count, node.tail] if part)
+                elif node.tag == '{%s}span' % node.nsmap['text']:
+                  part_list = [node.text]
+                  part_list.extend(format_node(child)
+                    for child in node.iterchildren())
+                  part_list.append(node.tail)
+                  return ''.join(part for part in part_list if part)
+                elif node.tag == '{%s}tab' % node.nsmap['text']:
+                  return ''.join(part for part in
+                    [node.text, '\t', node.tail] if part)
+                elif node.tag == '{%s}line-break' % node.nsmap['text']:
+                  return ''.join(part for part in
+                    [node.text, '\n', node.tail] if part)
+                elif node.tag == '{%s}a' % node.nsmap['text']:
+                  return ''.join(part for part in
+                    [node.text, node.tail] if part)
+                # we can also have table:annotation, and they are ignored
+              cell_data = format_node(cell) or None
 
             # Add the cell to the line
             table_line.append(cell_data)

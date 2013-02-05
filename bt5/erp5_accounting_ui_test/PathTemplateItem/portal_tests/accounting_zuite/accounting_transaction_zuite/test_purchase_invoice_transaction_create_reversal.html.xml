@@ -78,6 +78,21 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction\n
   <td>Add Purchase Invoice Transaction</td>\n
 </tr>\n
 <tr>\n
+  <td>selectAndWait</td>\n
+  <td>name=select_action</td>\n
+  <td>label=Add Accounting Transaction Lines</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>name=field_your_line_count</td>\n
+  <td>3</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>link=Accounting View</td>\n
   <td/>\n

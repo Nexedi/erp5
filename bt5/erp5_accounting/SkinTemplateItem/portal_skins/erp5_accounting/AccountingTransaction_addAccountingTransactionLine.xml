@@ -58,7 +58,7 @@ from Products.ERP5Type.Message import translateString\n
 request = container.REQUEST\n
 \n
 for i in range(line_count):\n
-  context.newContent(portal_type=portal_type)\n
+  context.newContent(portal_type=line_portal_type)\n
 \n
 request.set(\'portal_status_message\',\n
     translateString(\'Accounting Transaction Lines added.\'),)\n
@@ -67,7 +67,7 @@ return getattr(context, form_id)()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', portal_type=\'Accounting Transaction Line\', line_count=1</string> </value>
+            <value> <string>form_id=\'view\', line_portal_type=\'Accounting Transaction Line\', line_count=1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

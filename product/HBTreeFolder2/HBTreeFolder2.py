@@ -33,6 +33,7 @@ from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.Permissions import access_contents_information, \
      view_management_screens
 from zLOG import LOG, INFO, ERROR, WARNING
+from AccessControl.SimpleObjectPolicies import ContainerAssertions
 
 
 manage_addHBTreeFolder2Form = DTMLFile('folderAdd', globals())
@@ -109,6 +110,7 @@ class HBTreeObjectIds(object):
         except StopIteration:
             del self._index, self._ikeys
             raise IndexError
+ContainerAssertions[HBTreeObjectIds] = 1
 
 class HBTreeObjectItems(HBTreeObjectIds):
 
@@ -119,6 +121,7 @@ class HBTreeObjectItems(HBTreeObjectIds):
     def __getitem__(self, item):
         object_id = HBTreeObjectIds.__getitem__(self, item)
         return object_id, self._tree._getOb(object_id)
+ContainerAssertions[HBTreeObjectItems] = 1
 
 class HBTreeObjectValues(HBTreeObjectIds):
 
@@ -128,6 +131,7 @@ class HBTreeObjectValues(HBTreeObjectIds):
 
     def __getitem__(self, item):
         return self._tree._getOb(HBTreeObjectIds.__getitem__(self, item))
+ContainerAssertions[HBTreeObjectValues] = 1
 
 
 class HBTreeFolder2Base (Persistent):
@@ -161,10 +165,6 @@ class HBTreeFolder2Base (Persistent):
         self._htree = OOBTree()
         self._count = Length()
         self._tree_list = PersistentMapping()
-        
-    def initBTrees(self):
-        """ """
-        return self._initBTrees()
 
     def _populateFromFolder(self, source):
         """Fill this folder with the contents of another folder.
