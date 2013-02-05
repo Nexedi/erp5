@@ -143,6 +143,10 @@ class Transform(SimpleItem):
 
     def _load_transform(self):
         try:
+            return self._v_transform
+        except AttributeError:
+            pass
+        try:
             m = import_from_name(self.module)
         except ImportError, err:
             transform = BrokenTransform(self.id, self.module, err)
@@ -179,16 +183,12 @@ class Transform(SimpleItem):
     security.declarePublic('get_documentation')
     def get_documentation(self):
         """ return transform documentation """
-        if not hasattr(self, '_v_transform'):
-            self._load_transform()
-        return self._v_transform.__doc__
+        return self._load_transform().__doc__
 
     security.declarePrivate('convert')
     def convert(self, *args, **kwargs):
         """ return apply the transform and return the result """
-        if not hasattr(self, '_v_transform'):
-            self._load_transform()
-        return self._v_transform.convert(*args, **kwargs)
+        return self._load_transform().convert(*args, **kwargs)
 
     security.declarePublic('name')
     def name(self):
@@ -198,11 +198,7 @@ class Transform(SimpleItem):
     security.declareProtected(ManagePortal, 'get_parameters')
     def get_parameters(self):
         """ get transform's parameters names """
-        if not hasattr(self, '_v_transform'):
-            self._load_transform()
-        keys = self._v_transform.config.keys()
-        keys.sort()
-        return keys
+        return sorted(self._load_transform().config.keys())
 
     security.declareProtected(ManagePortal, 'get_parameter_value')
     def get_parameter_value(self, key):
@@ -253,10 +249,9 @@ class Transform(SimpleItem):
         # need to remap transform if necessary (i.e. configurable inputs / output)
         if kwargs.has_key('inputs') or kwargs.has_key('output'):
             tr_tool._unmapTransform(self)
-            if not hasattr(self, '_v_transform'):
-                self._load_transform()
-            self.inputs = kwargs.get('inputs', self._v_transform.inputs)
-            self.output = kwargs.get('output', self._v_transform.output)
+            transform = self._load_transform()
+            self.inputs = kwargs.get('inputs', transform.inputs)
+            self.output = kwargs.get('output', transform.output)
             tr_tool._mapTransform(self)
         # track output encoding
         if kwargs.has_key('output_encoding'):

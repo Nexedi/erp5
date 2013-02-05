@@ -33,9 +33,11 @@ class Cache:
             return
         obj = self.obj
         key = self._genCacheKey(key)
-        if getattr(aq_base(obj), self._id, None) is None:
-            setattr(obj, self._id, {})
-        getattr(obj, self._id)[key] = (time(), value)
+        entry = getattr(aq_base(obj), self._id, None)
+        if entry is None:
+            entry = {}
+            setattr(obj, self._id, entry)
+        entry[key] = (time(), value)
         return key
 
     def getCache(self, key):
