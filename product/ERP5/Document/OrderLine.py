@@ -77,13 +77,3 @@ class OrderLine(DeliveryLine):
           # And apply
           getattr(my_simulation_movement, method_id)()
 
-    # Simulation Consistency Check
-    def getSimulationQuantity(self):
-      """
-          Computes the target quantities in the simulation
-      """
-      result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
-      if len(result) > 0:
-        return result[0].quantity
-      return None
-
