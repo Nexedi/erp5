@@ -791,22 +791,27 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     sql_connection.manage_test("DROP TABLE IF EXISTS movement")
     # Delete also all ZSQL Methods related to movement table
     catalog = self.portal.portal_catalog.getSQLCatalog()
-    catalog.manage_delObjects(ids=["z0_drop_movement",
-                                   "z0_uncatalog_movement",
-                                   "z_catalog_movement_list",
-                                   "z_create_movement",
-                                   ])
+    for zsql in ["z0_drop_movement", "z0_uncatalog_movement",
+                 "z_catalog_movement_list", "z_create_movement", ]:
+      if catalog._getOb(zsql, None) is not None:
+        catalog.manage_delObjects(ids=[zsql])
+
     # Update properties of catalog
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
     sql_search_tables = list(catalog.sql_search_tables)
 
-    sql_catalog_object_list.remove("z_catalog_movement_list")
-    sql_uncatalog_object.remove("z0_uncatalog_movement")
-    sql_clear_catalog.remove("z0_drop_movement")
-    sql_clear_catalog.remove("z_create_movement")
-    sql_search_tables.remove("movement")
+    if "z_catalog_movement_list" in sql_catalog_object_list:
+      sql_catalog_object_list.remove("z_catalog_movement_list")
+    if "z0_uncatalog_movement" in sql_uncatalog_object:
+      sql_uncatalog_object.remove("z0_uncatalog_movement")
+    if "z0_drop_movement" in sql_clear_catalog:
+      sql_clear_catalog.remove("z0_drop_movement")
+    if "z_create_movement" in sql_clear_catalog:
+      sql_clear_catalog.remove("z_create_movement")
+    if "movement" in sql_search_tables:
+      sql_search_tables.remove("movement")
 
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
