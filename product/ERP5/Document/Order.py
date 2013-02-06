@@ -65,9 +65,13 @@ class Order(Delivery):
         Whenever delivery is there, delivery has priority
       """
       return 0
-    
+
     def getTotalPrice(self, **kw) :
-      """Returns the total price for this Order. """
+      """Returns the total price for this Order.
+
+      If base_contribution is passed, the trade model lines will be used to
+      include movements that will be generated.
+      """
       rounding = kw.get('rounding')
       if kw.get('base_contribution') is None:
         kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
