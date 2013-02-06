@@ -242,8 +242,8 @@ class FunctionalTestRunner:
 
   remote_code_url_list = None
 
-  # There is no test that can take more them 2 hours
-  timeout = 2.0 * 60 * 60
+  # There is no test that can take more than 6 hours
+  timeout = 6.0 * 3600
 
   def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']
