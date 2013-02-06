@@ -72,7 +72,7 @@ if budget_cell is None:\n
 kw = budget_model.getInventoryQueryDict(budget_cell)\n
 \n
 if engaged_budget:\n
-  kw.setdefault(\'explanation_simulation_state\',\n
+  kw.setdefault(\'stock_explanation_simulation_state\',\n
                   portal.getPortalReservedInventoryStateList() +\n
                   portal.getPortalCurrentInventoryStateList() +\n
                   portal.getPortalTransitInventoryStateList())\n
