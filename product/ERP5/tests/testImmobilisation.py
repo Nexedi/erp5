@@ -92,6 +92,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
             'erp5_configurator_standard_accounting_template',
             'erp5_configurator_standard_invoicing_template',
             "erp5_simulation_test",
+            "erp5_movement_table_catalog" # ImmobilisationItem.py uses movement table
             )
 
   def getRuleTool(self):
