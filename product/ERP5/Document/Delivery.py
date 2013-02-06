@@ -181,7 +181,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                               'getTotalNetPrice')
     def getTotalNetPrice(self, fast=0, src__=0, **kw):
       """
-        Same as getTotalPrice, but including Tax and Discount.
+        Same as getTotalPrice, but including Tax and Discount (from legacy
+        simulation).
+
+        This method is deprecated because it uses deprecated Tax & Discount
+        portal types. You should use getTotalPrice(base_contribution=) instead.
       """
       total_price = self.getTotalPrice(fast=fast, src__=src__, **kw)
       kw['portal_type'] = self.getPortalTaxMovementTypeList()
