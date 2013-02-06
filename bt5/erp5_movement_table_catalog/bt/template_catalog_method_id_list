@@ -1,0 +1,4 @@
+erp5_mysql_innodb/z0_drop_movement
+erp5_mysql_innodb/z0_uncatalog_movement
+erp5_mysql_innodb/z_catalog_movement_list
+erp5_mysql_innodb/z_create_movement
