@@ -87,37 +87,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
       return 1
 
-    # Pricing methods
-    def _getTotalPrice(self, context):
-      return 2.0
-
-    def _getDefaultTotalPrice(self, context):
-      return 3.0
-
-    def _getSourceTotalPrice(self, context):
-      return 4.0
-
-    def _getDestinationTotalPrice(self, context):
-      return 5.0
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalPrice')
-    def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDefaultTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalPrice')
-    def getSourceTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getSourceTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalPrice')
-    def getDestinationTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDestinationTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getTotalPrice')
     def getTotalPrice(self, fast=0, src__=0, base_contribution=None, rounding=False, **kw):

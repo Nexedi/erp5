@@ -92,13 +92,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
     def _getPrice(self, context):
        return 0.0
 
-    def _getDefaultPrice(self, context):
-       return 0.0
-
     def _getTotalPrice(self, context):
-      return 0.0
-
-    def _getDefaultTotalPrice(self, context):
       return 0.0
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -107,22 +101,6 @@ class SupplyLine(Path, Amount, XMLMatrix):
       """Supply Line are not accounted.
       """
       return 0
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultPrice')
-    def getDefaultPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDefaultPrice(self.asContext(context=context,
-                                                  REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getDefaultTotalPrice')
-    def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDefaultTotalPrice(self.asContext(context=context,
-                                                       REQUEST=REQUEST, **kw))
 
     #############################################
     # Predicate method
