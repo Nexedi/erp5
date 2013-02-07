@@ -267,6 +267,9 @@ if allowClassTool():
       def objectIds(self, spec=None):
         return ('PropertySheet', 'Document', 'Constraint', 'Extensions', 'tests')
 
+      def __contains__(self, key):
+        return key in self.objectIds()
+
       def _getOb(self, key, default=_MARKER):
         from Products.ERP5Type.Utils import importLocalPropertySheet
         from Products.ERP5Type.Utils import importLocalDocument
