@@ -37,7 +37,7 @@ import string
 from zLOG import LOG,INFO,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-TEST_SUITE_MAX = 4  
+TEST_SUITE_MAX = 3
 # Depending on the test suite priority, we will affect
 # more or less cores
 PRIORITY_MAPPING =  {
