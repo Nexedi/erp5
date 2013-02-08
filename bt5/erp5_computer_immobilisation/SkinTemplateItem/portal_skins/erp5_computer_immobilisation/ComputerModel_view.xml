@@ -111,6 +111,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_region</string>
                         <string>my_storage_capacity</string>
                         <string>my_storage_interface</string>
                         <string>my_storage_redundancy</string>
