@@ -26,7 +26,7 @@ class ERP5TestNode(TestCase):
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
     self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
     self.environment = os.path.join(self._temp_dir,'environment')
-    self.log_directory = os.path.join(self._temp_dir,'var/log')
+    self.log_directory = os.path.join(self._temp_dir,'var/log/testnode')
     self.log_file = os.path.join(self.log_directory,'test.log')
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
@@ -530,9 +530,11 @@ branch = foo
       for ref, suite in test_node.node_test_suite_dict.items():
         assert(suite.suite_log is not None)
         assert(isinstance(suite.suite_log, types.MethodType))
-        assert('var/log/suite/%s' % suite.reference in suite.suite_log_path)
+        self.assertTrue('var/log/testnode/%s' % suite.reference in \
+                         suite.suite_log_path,
+                         "Incorrect suite log path : %r" % suite.suite_log_path)
         assert(suite.suite_log_path.endswith('suite.log'))
-        m = re.match('.*\/(.*)\/suite.log', suite.suite_log_path)
+        m = re.match('.*\-(.*)\/suite.log', suite.suite_log_path)
         rand_part = m.groups()[0]
         assert(len(rand_part) == 32)
         assert(rand_part not in rand_part_set)

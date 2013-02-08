@@ -110,20 +110,17 @@ class NodeTestSuite(SlapOSInstance):
         vcs_repository['repository_path'] = repository_path
 
   def createSuiteLog(self):
-    # /srv/slapgrid/slappartXX/srv/var/log/suite/az/mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
-    if getattr(self, "log_directory", None) is not None:
-      if getattr(self, "suite_log_path", None) is None:
-        alphabets = string.digits + string.letters
-        rand_part = ''.join(random.choice(alphabets) for i in xrange(32))
-        suite_log_directory = os.path.join(self.log_directory,
-                                          'suite',
-                                           self.reference,
-                                           rand_part)
-        SlapOSControler.createFolders(suite_log_directory)
-        self.suite_log_path = os.path.join(suite_log_directory,
-                                           'suite.log')
-        self._initializeSuiteLog()
-    return self.getSuiteLogPath()
+    # /srv/slapgrid/slappartXX/srv/var/log/testnode/az-mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
+    alphabets = string.digits + string.letters
+    rand_part = ''.join(random.choice(alphabets) for i in xrange(32))
+    random_suite_folder_id = '%s-%s' % (self.reference, rand_part)
+    suite_log_directory = os.path.join(self.log_directory,
+                                       random_suite_folder_id)
+    SlapOSControler.createFolders(suite_log_directory)
+    self.suite_log_path = os.path.join(suite_log_directory,
+                                       'suite.log')
+    self._initializeSuiteLog()
+    return self.getSuiteLogPath(), random_suite_folder_id
 
   def getSuiteLogPath(self):
     return getattr(self,"suite_log_path", None)
@@ -145,6 +142,7 @@ class NodeTestSuite(SlapOSInstance):
 class TestNode(object):
 
   def __init__(self, log, config):
+    self.testnode_log = log
     self.log = log
     self.config = config or {}
     self.process_manager = ProcessManager(log)
@@ -247,11 +245,15 @@ branch = %(branch)s
       Create a log dedicated for the test suite,
       and register the url to master node.
     """
-    log_file_name = node_test_suite.createSuiteLog()
+    log_file_name, folder_id = node_test_suite.createSuiteLog()
     if log_file_name is None and config.get('log_file'):
       log_file_name = config['log_file']
     # TODO make the path into url
-    test_result.reportStatus('registerSuiteLog', log_file_name, '')
+    test_result.reportStatus('LOG url', "%s/%s" % (self.config.get('httpd_url'),
+                             folder_id), '')
+    self.log("going to switch to log %r" % log_file_name)
+    log = node_test_suite.getSuiteLog()
+    self.process_manager.log = self.log = log
     return log_file_name
 
   def checkRevision(self, test_result, node_test_suite):
@@ -393,6 +395,7 @@ branch = %(branch)s
     try:
       while True:
         try:
+          self.log = self.process_manager.log = self.testnode_log
           self.cleanUp(None)
           remote_test_result_needs_cleanup = False
           begin = time.time()
