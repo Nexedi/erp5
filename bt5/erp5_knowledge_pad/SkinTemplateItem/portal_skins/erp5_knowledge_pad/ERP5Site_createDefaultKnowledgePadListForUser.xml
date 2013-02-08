@@ -102,9 +102,7 @@ if knowledge_pad is None:\n
                             activate_kw = activate_kw)\n
 if is_web_mode:\n
   # in Web Mode we can have a temporary Web Site objects created based on current language\n
-  real_context = context\n
-  if context.isTempObject():\n
-    real_context = context.getParentValue()\n
+  real_context = context.Base_getRealContext()\n
   if real_context.getPortalType() == \'Web Site\' and default_pad_group in (\'\', None,):\n
     # script is called within Front Page Gadgets view\n
     knowledge_pad.setPublicationSectionValue(real_context)\n

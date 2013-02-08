@@ -58,11 +58,8 @@ from zExceptions import Unauthorized\n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
   # in Web Mode we can have a temporary object created based on current language, document by reference\n
-  real_context = context\n
-  while real_context.isTempObject():\n
-    real_context = real_context.getParentValue()\n
+  real_context = context.Base_getRealContext()\n
   real_context_url = real_context.getRelativeUrl()\n
-\n
   if mode == \'erp5_front\':\n
     # leave only those not having a publication_section as \n
     # this means belonging to root\n

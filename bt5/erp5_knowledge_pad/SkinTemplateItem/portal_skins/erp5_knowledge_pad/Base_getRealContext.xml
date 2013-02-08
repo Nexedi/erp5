@@ -50,35 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>pad = context.knowledge_pad_module.newContent(portal_type=\'Knowledge Pad\',\n
-                                              title = pad_title)\n
-# for web mode\n
-if mode in (\'web_front\', \'web_section\',):\n
-  # in Web Mode we can have a temporary Web Site objects created based on current language\n
-  real_context = context.Base_getRealContext()\n
-  pad.setPublicationSectionValue(real_context)\n
+            <value> <string>real_context = context\n
+if real_context.isTempObject():\n
+  real_context = real_context.getParentValue()\n
 \n
-# set it as active\n
-context.ERP5Site_toggleActiveKnowledgePad(pad, mode=mode, redirect=False)\n
+web_site_value = real_context.getWebSiteValue()\n
+if web_site_value is not None and web_site_value.isTempObject():\n
+  real_web_site_value = web_site_value.getParentValue()\n
+  while real_web_site_value.isTempObject():\n
+    real_web_site_value = real_web_site_value.getParentValue()\n
+  web_site_url = web_site_value.getRelativeUrl()\n
+  web_site_url_without_language = real_web_site_value.getRelativeUrl()\n
+  real_context_url = real_context.getRelativeUrl()\n
+  real_context_url_without_language = real_context_url.replace(web_site_url, web_site_url_without_language, 1)\n
+  real_context = context.getPortalObject().restrictedTraverse(real_context_url_without_language)\n
 \n
-if redirect_url is not None:\n
-  context.REQUEST.RESPONSE.redirect(\'%s?active_pad_url=%s\' %(redirect_url, pad.getRelativeUrl()))\n
-else:\n
-  # adding is done though either AJAX call or programatically\n
-  return pad.getRelativeUrl()\n
+return real_context\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>pad_title, mode=None, redirect_url=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_addNewKnowledgePad</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Add and set as active new Knowledge Pad</string> </value>
+            <value> <string>Base_getRealContext</string> </value>
         </item>
       </dictionary>
     </pickle>
