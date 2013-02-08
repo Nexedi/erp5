@@ -112,6 +112,7 @@ class TestERP5ComputerWithComputerModel(ERP5TypeTestCase):
         'local_area_network_type2'],
       'memory_size': ['memory_size1', 'memory_size2'],
       'memory_type': ['memory_type1', 'memory_type2'],
+      'region': ['region1', 'region2'],
       'storage_capacity': ['storage_capacity1', 'storage_capacity2'],
       'storage_interface': ['storage_interface1', 'storage_interface2'],
       'storage_redundancy': ['storage_redundancy1', 'storage_redundancy2'],

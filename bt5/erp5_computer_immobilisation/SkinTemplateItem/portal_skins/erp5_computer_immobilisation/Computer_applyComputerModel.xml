@@ -71,6 +71,7 @@ else :\n
     \'memory_size\',\n
     \'memory_type\',\n
     \'role\',\n
+    \'region\',\n
     \'storage_capacity\',\n
     \'storage_interface\',\n
     \'storage_redundancy\',\n
