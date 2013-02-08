@@ -33,6 +33,7 @@
             <value>
               <tuple>
                 <string>subordination</string>
+                <string>parent</string>
               </tuple>
             </value>
         </item>
@@ -54,7 +55,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: [\'Address\', \'Organisation\', \'Person\']</string> </value>
+            <value> <string>python: [\'Address\', \'Organisation\', \'Person\', \'Computer\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -80,7 +81,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
