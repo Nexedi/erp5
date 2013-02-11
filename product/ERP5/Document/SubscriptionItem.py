@@ -221,11 +221,11 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       return None
     return open_order_line.getQuantity()
 
-  def getQuantityUnit(self):
+  def getQuantityUnit(self, checked_permission=None):
     open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
     if open_order_line is None:
       return None
-    return open_order_line.getQuantityUnit()
+    return open_order_line.getQuantityUnit(checked_permission=checked_permission)
 
   def getPrice(self):
     open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
