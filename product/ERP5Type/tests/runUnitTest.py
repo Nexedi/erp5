@@ -394,7 +394,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   else:
     products_home = os.path.join(instance_home, 'Products')
 
-  from Testing.ZopeTestCase import layer, PortalTestCase
+  from Testing.ZopeTestCase import layer, PortalTestCase, ZopeLite
   _apply_patches = layer._deferred_setup.pop(0)[0]
   assert _apply_patches.__name__ == '_apply_patches'
 
@@ -469,6 +469,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   def assertFalse():
     assert False
   layer.onsetup = assertFalse
+  ZopeLite._theApp._p_jar.close()
+  ZopeLite._theApp = None
 
   from Products.ERP5Type.tests.utils import DbFactory
   root_db_name, = cfg.dbtab.databases.keys()
