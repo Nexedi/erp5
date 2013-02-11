@@ -347,7 +347,8 @@ class TestResultProxy(RPCRetry):
         with cond:
             self._watcher_can_run = False
             cond.notify()
-        self._watcher_thread.join()
+        if self._watcher_thread is not None:
+          self._watcher_thread.join()
 
 class ServerProxy(xmlrpclib.ServerProxy):
 
