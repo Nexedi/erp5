@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.4.23 (2013-02-11)
+-------------------
+
+ * erp5.util.testnode:
+
+  - Make erp5testnode allow remote access to test suite logs instead of
+    uploading them to master [Tatuya Kamada], [Sebastien Robin]
+
+
 0.4.22 (2013-01-08)
 -------------------
 
