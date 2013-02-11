@@ -130,7 +130,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
             # use only Business Link related movements
             kw['causality_uid'] = [link_value.getUid() for link_value in business_link_value_list]
         movement_list = self.searchMovementList(
-          delivery_relative_url_list=delivery_relative_url_list,
           applied_rule_uid=applied_rule_uid,
           **kw)
         if not movement_list:
@@ -234,11 +233,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Returns a list of simulation movements (or something similar to
       simulation movements) to construct a new delivery.
     """
-    method_id = self.getSimulationSelectMethodId()
-    if method_id:
-      select_method = getattr(self.getPortalObject(), method_id)
-    else:
-      select_method = self.getPortalObject().portal_catalog
+    method_id = self.getSimulationSelectMethodId() or 'portal_catalog'
+    select_method = getattr(self.getPortalObject(), method_id)
+
     movement_list = [] # use list to preserve order
     movement_set = set()
     for movement in select_method(**kw):
