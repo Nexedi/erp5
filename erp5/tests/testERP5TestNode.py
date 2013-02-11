@@ -564,3 +564,24 @@ branch = foo
       TaskDistributionTool.createTestResult = original_createTestResult
       test_node._prepareSlapOS = original_prepareSlapOS
       test_node.runTestSuite = original_runTestSuite
+
+  def test_16_cleanupLogDirectory(self):
+    # Make sure that we are able to cleanup old log folders
+    test_node = self.getTestNode()
+    def check(file_list):
+      log_directory_dir = os.listdir(self.log_directory)
+      self.assertTrue(set(file_list).issubset(
+           set(log_directory_dir)),
+           "%r not contained by %r" % (file_list, log_directory_dir))
+    check([])
+    os.mkdir(os.path.join(self.log_directory, 'ab-llzje'))
+    a_file = open(os.path.join(self.log_directory, 'a_file'), 'w')
+    a_file.close()
+    check(set(['ab-llzje', 'a_file']))
+    # default log file time is 15 days, so nothing is going to be deleted
+    test_node._cleanupLog()
+    check(set(['ab-llzje', 'a_file']))
+    # then we set keep time to 0, folder will be deleted
+    test_node.max_log_time = 0
+    test_node._cleanupLog()
+    check(set(['a_file']))

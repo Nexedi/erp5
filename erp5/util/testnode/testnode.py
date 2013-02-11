@@ -43,6 +43,8 @@ from Updater import Updater
 from erp5.util import taskdistribution
 
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
+MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
+                  # httd
 supervisord_pid_file = None
 
 PROFILE_PATH_KEY = 'profile_path'
@@ -141,7 +143,7 @@ class NodeTestSuite(SlapOSInstance):
 
 class TestNode(object):
 
-  def __init__(self, log, config):
+  def __init__(self, log, config, max_log_time=MAX_LOG_TIME):
     self.testnode_log = log
     self.log = log
     self.config = config or {}
@@ -151,6 +153,7 @@ class TestNode(object):
     if self.config.get('working_directory', '').endswith("slapos/"):
       self.config['working_directory'] = self.config[
         'working_directory'][:-(len("slapos/"))] + "testnode"
+    self.max_log_time = max_log_time
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -378,10 +381,22 @@ branch = %(branch)s
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 
+  def _cleanupLog(self):
+    config = self.config
+    log_directory = self.config['log_directory']
+    now = time.time()
+    for log_folder in os.listdir(log_directory):
+      folder_path = os.path.join(log_directory, log_folder)
+      if os.path.isdir(folder_path):
+        if (now - os.stat(folder_path).st_mtime)/86400 > self.max_log_time:
+          self.log("deleting log directory %r" % (folder_path,))
+          shutil.rmtree(folder_path)
+
   def cleanUp(self,test_result):
     log = self.log
     log('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
+    self._cleanupLog()
 
   def run(self):
     log = self.log
