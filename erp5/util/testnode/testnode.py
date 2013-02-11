@@ -150,9 +150,9 @@ class TestNode(object):
     self.process_manager = ProcessManager(log)
     self.node_test_suite_dict = {}
     # hack until slapos.cookbook is updated
-    if self.config.get('working_directory', '').endswith("slapos/"):
+    if self.config.get('working_directory', '').endswith("slapos"):
       self.config['working_directory'] = self.config[
-        'working_directory'][:-(len("slapos/"))] + "testnode"
+        'working_directory'][:-(len("slapos"))] + "testnode"
     self.max_log_time = max_log_time
 
   def checkOldTestSuite(self,test_suite_data):

@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.24 (2013-02-11)
+-------------------
+
+ * erp5.util.testnode:
+
+  - Fixed wrong location for the construction os test suite software
+    [Sebastien Robin]
+
 0.4.23 (2013-02-11)
 -------------------
 
