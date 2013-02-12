@@ -50,26 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-Base_translateString = portal.Base_translateString\n
+            <value> <string>"""Total credit (in local currency) of all accounting transactions having this\n
+bank account as payment\n
+"""\n
+kw[\'payment_uid\'] = context.getUid()\n
+kw[\'omit_asset_increase\'] = 1\n
+kw[\'asset_price\'] = False\n
+kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
+kw.update(kw[\'selection\'].getParams())\n
 \n
-currency = context.portal_preferences.getPreferredAccountingTransactionCurrency()\n
-if currency is None:\n
-  raise ValueError, Base_translateString("Currency must be defined in preferences.")\n
-\n
-currency_value = context.restrictedTraverse(currency)\n
-precision      = currency_value.getQuantityPrecision()\n
-\n
-return precision\n
+# here, or 0 is to prevent displaying "- 0"\n
+return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getPreferredPrecision</string> </value>
+            <value> <string>BankAccount_statCredit</string> </value>
         </item>
       </dictionary>
     </pickle>

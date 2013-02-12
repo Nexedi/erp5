@@ -54,12 +54,12 @@
 \n
 if not production_order_line.hasSpecialise():\n
   portal = production_order_line.getPortalObject()\n
-  resource = production_order_line.getResourceValue()\n
-  if resource is not None:\n
+  resource_uid = production_order_line.getResourceUid()\n
+  if resource_uid:\n
     transformation_list = portal.portal_catalog(\n
       portal_type=portal.getPortalTransformationTypeList(),\n
       validation_state="!=invalidated",\n
-      resource_relative_url=resource.getRelativeUrl())\n
+      default_resource_uid=resource_uid)\n
     if len(transformation_list) == 1:\n
       transformation = transformation_list[0].getRelativeUrl()\n
       production_order_line.setSpecialise(transformation)\n

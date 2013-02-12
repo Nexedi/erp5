@@ -33,6 +33,7 @@ from pprint import pformat
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
+from AccessControl import SpecialUsers
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -128,11 +129,15 @@ class SecurityTestCase(ERP5TypeTestCase):
 
   def _loginAsUser(self, username):
     """Login as a given username. The user must exist.
+       In case Username is None, we consider test as Anonymous.
     """
-    uf = self.getPortal().acl_users
-    user = uf.getUserById(username)
-    self.assertNotEquals(user, None, 'No user %s' % username)
-    newSecurityManager(None, user.__of__(uf))
+    if username is None:
+      newSecurityManager(None, SpecialUsers.nobody)
+    else:
+      uf = self.getPortal().acl_users
+      user = uf.getUserById(username)
+      self.assertNotEquals(user, None, 'No user %s' % username)
+      newSecurityManager(None, user.__of__(uf))
   
   # Permission methods
   failIfUserCanViewDocument = AssertNoPermissionMethod(

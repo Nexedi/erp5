@@ -887,7 +887,6 @@ class TestPackingListMixin(TestOrderMixin):
     for line in packing_list.objectValues(
         portal_type=self.packing_list_line_portal_type):
       resource = line.getResourceValue()
-      tmp_kw={'movement.resource_uid':resource.getUid()}
       container_line = \
           container.newContent(portal_type=self.container_line_portal_type)
       container_line.setResourceValue(resource)

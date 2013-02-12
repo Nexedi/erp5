@@ -76,5 +76,5 @@ class SupplyCell(Path):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getQuantityUnit')
-    def getQuantityUnit(self):
-      return self.getParentValue().getQuantityUnit()
+    def getQuantityUnit(self, checked_permission=None):
+      return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)

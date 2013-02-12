@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAK9tYUAJB63McQEAAIcIAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZbBTsMw
+DIbvPEWVK2oDO6Fq3SSQeILxAF7qdpFSJ0qcaX172oltBQZiY7klkfN/v93EzXy560y2RR+0pUo8
+Fg8iQ1K21tRW4m31mj+J5eJu3gHpBgOXh0E27KNwnFYieiotBB1Kgg5Dyaq0Dqm2KnZIXH6OL0fS
+4i47CTfaYD4E+j47wbDWkHPvsBLgnNEKePApt1QXe1YxRRSMOxan3ZOsZpPlJhqTO+BNJaSQF3kY
+AXJI5LyassSjjTHgMt1pbmtN4PvzBAO9jZwrUBv8B8LXzf2PWRzWiiHqpuUJ3BsMV1Tnd9kOGa4Q
+PS+22sRuTaBNkHwYFo7aW4vfRO/FUqPb6PcfNcwkKIUGh6n1UkXvrzuLl7OSAJy3rccQ1pAI0BgL
+jKncWxfd0JNiGnm21jggNGnkR+PJ6j56TyauO2gxyGfNHbhE1+yDkUQ7MHC85sx//TuGSOPdL6Iu
+1JTxNxu37fvIPLwmjp1/Lr89JhbvUEsBAhQDFAAAAAgAr21hQAkHrcxxAQAAhwgAABUAAAAAAAAA
+AAAAAIABAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAACkAQAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<?xml version=\'1.0\' encoding=\'utf-8\'?>\n
+<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:ooo="http://openoffice.org/2004/office" xmlns:metal="http://xml.zope.org/namespaces/metal" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:tal="http://xml.zope.org/namespaces/tal" office:version="1.2" tal:attributes="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')">\n
+  <office:meta i18n:domain="ui" tal:define="user context/ERP5Site_getAuthenticatedMemberPersonValue;\n
+                                            username python:(user is None) and context.getPortalObject().portal_membership.getAuthenticatedMember() or user.getTitle()">\n
+    <meta:generator>ERP5</meta:generator>\n
+    <meta:creation-date tal:content="python:modules[\'DateTime\'].DateTime().ISO8601()">2007-07-04T15:43:50</meta:creation-date>\n
+    <meta:initial-creator tal:content="username"/>\n
+    <dc:date>2012-03-01T13:44:50</dc:date>\n
+    <meta:editing-cycles>1</meta:editing-cycles>\n
+    <meta:editing-duration>PT16H44M42S</meta:editing-duration>\n
+    <dc:title tal:content="context/title_or_id" i18n:translate=""/>\n
+    <dc:creator tal:content="username"/>\n
+    <meta:document-statistic meta:table-count="2" meta:image-count="0" meta:object-count="0" meta:page-count="2" meta:paragraph-count="33" meta:word-count="141" meta:character-count="1187"/>\n
+    <meta:user-defined meta:name="Info 1"/>\n
+    <meta:user-defined meta:name="Info 2"/>\n
+    <meta:user-defined meta:name="Info 3"/>\n
+    <meta:user-defined meta:name="Info 4"/>\n
+  </office:meta>\n
+</office:document-meta>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>object/aq_parent/title_or_id</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getODTMetaStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>Base_getODTStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>meta.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

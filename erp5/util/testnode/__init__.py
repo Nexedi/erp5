@@ -75,7 +75,7 @@ def main(*args):
               'git_binary','zip_binary','node_quantity','test_node_title',
               'ipv4_address','ipv6_address','test_suite_master_url',
               'slapgrid_partition_binary','slapgrid_software_binary',
-              'slapproxy_binary'):
+              'slapproxy_binary', 'httpd_ip', 'httpd_port'):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
@@ -85,6 +85,8 @@ def main(*args):
       raise ValueError('Directory %r does not exists.' % d)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
         CONFIG['proxy_port'])
+  CONFIG['httpd_url'] = 'https://[%s]:%s' % (CONFIG['httpd_ip'],
+        CONFIG['httpd_port'])
 
   # generate vcs_repository_list
   if 'bot_environment' in config.sections():

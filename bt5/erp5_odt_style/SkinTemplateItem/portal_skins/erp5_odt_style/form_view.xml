@@ -441,8 +441,16 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
             <value> <string>form_view</string> </value>
         </item>
         <item>
+            <key> <string>ooo_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>ooo_stylesheet</string> </key>
-            <value> <string>Base_getODTStyleSheet</string> </value>
+            <value> <string>Base_getODTMetaStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>content.xml</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

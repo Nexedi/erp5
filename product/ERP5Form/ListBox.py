@@ -2378,12 +2378,10 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
       # If a field is editable, generate an input form.
       # XXX why don't we generate an input form when a widget is not defined?
-      editable_field = None
-      if not self.isSummary():
-        editable_field = renderer.getEditableField(alias)
+      editable_field = renderer.getEditableField(alias)
 
       # Prepare link value - we now use it for both static and field rendering
-      no_link = False
+      no_link = self.isSummary()
       url_method = None
       url = None
 
@@ -2488,7 +2486,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             value=display_value,
             REQUEST=request,
             key=key,
-            editable=listbox_defines_column_as_editable and editable,
+            editable=(not self.isSummary()) \
+              and listbox_defines_column_as_editable and editable,
           )
           if isinstance(cell_html, str):
             cell_html = unicode(cell_html, encoding)

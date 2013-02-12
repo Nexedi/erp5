@@ -69,16 +69,8 @@ active_knowledge_pad, knowledge_pads = \\\n
 if active_knowledge_pad is not None:\n
   return active_knowledge_pad, knowledge_pads\n
 \n
-# in Web Mode we can have a temporary object created based on current language, document by reference\n
-real_context = context\n
-while real_context.isTempObject():\n
-  real_context = real_context.getParentValue()\n
+real_context = context.Base_getRealContext()\n
 real_context_url = real_context.getRelativeUrl()\n
-\n
-real_context_url_list = real_context_url.split("/")\n
-current_language = context.Localizer.get_selected_language()\n
-if current_language in real_context_url_list:\n
-  real_context_url = "/".join(filter(lambda x: x != current_language, real_context_url_list))\n
 \n
 # first filter if we have a custom Pad for the context\n
 for knowledge_pad in knowledge_pads:\n

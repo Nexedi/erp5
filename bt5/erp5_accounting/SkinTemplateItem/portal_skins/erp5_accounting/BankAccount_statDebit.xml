@@ -50,19 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(old_method_name, \'%s is deprecated, use %s instead\'\n
-         % (old_method_name, new_method_name))\n
+            <value> <string>"""Total debit (in local currency) of all accounting transactions having this\n
+bank account as payment\n
+"""\n
+kw[\'payment_uid\'] = context.getUid()\n
+kw[\'omit_asset_decrease\'] = 1\n
+kw[\'asset_price\'] = False\n
+kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
+kw.update(kw[\'selection\'].getParams())\n
 \n
-return getattr(context, new_method_name)(*args, **kw)\n
+return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>old_method_name, new_method_name, *args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_callDeprecatedMethod</string> </value>
+            <value> <string>BankAccount_statDebit</string> </value>
         </item>
       </dictionary>
     </pickle>

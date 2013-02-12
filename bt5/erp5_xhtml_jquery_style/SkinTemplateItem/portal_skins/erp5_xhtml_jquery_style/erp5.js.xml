@@ -324,12 +324,12 @@ function queryStringToArray(query_string){\n
   /*\n
     Turn a query string into a "dictionary"\n
   */\n
-  var final ={};\n
+  var final_dict = {};\n
   var b = query_string.split(\'&\');\n
   $.each(b, function(x, y){\n
     var temp = y.split(\'=\');\n
-    final[temp[0]] = temp[1];});\n
-  return final  \n
+    final_dict[temp[0]] = temp[1];});\n
+  return final_dict;\n
 }\n
 \n
 function submitLinkAsHtmlForm(event){\n

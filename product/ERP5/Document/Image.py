@@ -128,7 +128,7 @@ class Image(TextConvertableMixin, File, OFSImage):
           width, height = header[1:]
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+    self._setContentType(content_type or 'application/unknown')
 
   def _upradeImage(self):
     """
@@ -150,9 +150,9 @@ class Image(TextConvertableMixin, File, OFSImage):
       self.data = self._data
 
     # Make sure size is defined
-    if (not hasattr(aq_base(self), 'size') or not self.size) and \
-                      hasattr(aq_base(self), 'data'):
-      self.size = len(self.data)
+    size = len(self.data)
+    if getattr(aq_base(self), 'size', None) != size:
+      self.size = size
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWidth')
   def getWidth(self):

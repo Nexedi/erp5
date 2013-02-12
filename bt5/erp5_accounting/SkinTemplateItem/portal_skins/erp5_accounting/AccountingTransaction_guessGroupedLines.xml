@@ -150,6 +150,7 @@ for (node, section, mirror_section, extra_parameter), line_info_list in lines_pe
 \n
     for line in line_info_list:\n
       line_obj = portal.restrictedTraverse(line[\'path\'])\n
+      assert not line_obj.getGroupingReference(), line\n
       line_obj.setGroupingReference(string_reference)\n
       line_obj.setGroupingDate(date)\n
       line_obj.reindexObject(activate_kw=dict(tag=\'accounting_grouping_reference\'))\n

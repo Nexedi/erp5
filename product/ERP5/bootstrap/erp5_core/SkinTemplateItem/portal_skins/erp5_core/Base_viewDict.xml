@@ -63,6 +63,8 @@ def escape(data):\n
   data = data.replace("<", "&lt;")\n
   return data\n
 \n
+from pprint import pformat\n
+\n
 ret = \'<html><body><table width=100%>\\n\'\n
 \n
 dict = context.showDict().items()\n
@@ -74,7 +76,7 @@ for k,v in dict:\n
   else:\n
     c = \'#dddd88\'\n
   i += 1\n
-  ret += \'<tr bgcolor="%s"><td >%s</td><td>%s</td></tr>\\n\' % (escape(c), escape(k), escape(repr(v)))\n
+  ret += \'<tr bgcolor="%s"><td >%s</td><td><pre>%s</pre></td></tr>\\n\' % (escape(c), escape(k), escape(pformat(v)))\n
 \n
 ret += \'</table></body></html>\\n\'\n
 \n

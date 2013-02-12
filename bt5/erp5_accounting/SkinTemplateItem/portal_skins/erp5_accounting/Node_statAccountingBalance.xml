@@ -54,8 +54,12 @@
 portal = context.getPortalObject()\n
 \n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
-getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor\n
+\n
+if asset_price:\n
+  getInventory = portal.portal_simulation.getInventoryAssetPrice\n
+else:\n
+  getInventory = portal.portal_simulation.getInventory\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -138,26 +142,26 @@ if period_start_date and params.get(\'node_uid\'):\n
     # balance at the beginning of the period, plus debit or credit from this\n
     # beginning of period to the from_date\n
     at_date = params.pop(\'at_date\', None)\n
-    period_openning_balance = getInventoryAssetPrice(\n
+    period_openning_balance = getInventory(\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
               to_date=period_start_date,\n
               **params)\n
     if omit_asset_decrease:\n
-      return getInventoryAssetPrice(omit_asset_decrease=1,\n
+      return getInventory(omit_asset_decrease=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) + max(period_openning_balance, 0)\n
     elif omit_asset_increase:\n
-      return getInventoryAssetPrice(omit_asset_increase=1,\n
+      return getInventory(omit_asset_increase=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) - max(-period_openning_balance, 0)\n
-    return getInventoryAssetPrice(\n
+    return getInventory(\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) + period_openning_balance\n
 \n
-return getInventoryAssetPrice(\n
+return getInventory(\n
               omit_asset_increase=omit_asset_increase,\n
               omit_asset_decrease=omit_asset_decrease,\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
@@ -166,7 +170,7 @@ return getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
+            <value> <string>selection=None, omit_asset_increase=0, omit_asset_decrease=0, asset_price=True, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
