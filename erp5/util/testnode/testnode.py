@@ -408,14 +408,18 @@ branch = %(branch)s
       folder_path = os.path.join(temp_directory, temp_folder)
       if (temp_folder.startswith("tmp") or
           temp_folder.startswith("buildout")):
-        stat = os.stat(folder_path)
-        if stat.st_uid == user_id and \
-            (now - stat.st_mtime)/86400 > self.max_temp_time:
-          self.log("deleting temp directory %r" % (folder_path,))
-          if os.path.isdir(folder_path):
-            shutil.rmtree(folder_path)
-          else:
-            os.remove(folder_path)
+        try:
+          stat = os.stat(folder_path)
+          if stat.st_uid == user_id and \
+              (now - stat.st_mtime)/86400 > self.max_temp_time:
+            self.log("deleting temp directory %r" % (folder_path,))
+            if os.path.isdir(folder_path):
+              shutil.rmtree(folder_path)
+            else:
+              os.remove(folder_path)
+        except OSError:
+            log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
+            raise
 
   def cleanUp(self,test_result):
     log = self.log
