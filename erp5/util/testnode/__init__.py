@@ -27,6 +27,7 @@
 import ConfigParser
 import argparse
 import logging
+import logging.handlers
 import os
 import pkg_resources
 
@@ -58,7 +59,9 @@ def main(*args):
       logger.addHandler(logging.StreamHandler())
       logger.info('Activated console output.')
     if parsed_argument.logfile:
-      file_handler = logging.FileHandler(filename=parsed_argument.logfile)
+      file_handler = logging.handlers.RotatingFileHandler(
+        filename=parsed_argument.logfile,
+        maxBytes=20000000, backupCount=4)
       file_handler.setFormatter(formatter)
       logger.addHandler(file_handler)
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
@@ -87,6 +90,7 @@ def main(*args):
         CONFIG['proxy_port'])
   CONFIG['httpd_url'] = 'https://[%s]:%s' % (CONFIG['httpd_ip'],
         CONFIG['httpd_port'])
+  CONFIG['system_temp_folder'] = "/tmp"
 
   # generate vcs_repository_list
   if 'bot_environment' in config.sections():

@@ -31,10 +31,12 @@ class ERP5TestNode(TestCase):
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
     self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
+    self.system_temp_folder = os.path.join(self._temp_dir,'tmp')
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
     os.mkdir(self.test_suite_directory)
     os.mkdir(self.environment)
+    os.mkdir(self.system_temp_folder)
     os.makedirs(self.log_directory)
     os.close(os.open(self.log_file,os.O_CREAT))
     os.mkdir(self.remote_repository0)
@@ -60,6 +62,7 @@ class ERP5TestNode(TestCase):
     config["log_file"] = self.log_file
     config["test_suite_master_url"] = None
     config["test_node_title"] = "Foo-Test-Node"
+    config["system_temp_folder"] = self.system_temp_folder
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
@@ -585,3 +588,25 @@ branch = foo
     test_node.max_log_time = 0
     test_node._cleanupLog()
     check(set(['a_file']))
+
+  def test_17_cleanupLogDirectory(self):
+    # Make sure that we are able to cleanup old temp folders
+    test_node = self.getTestNode()
+    temp_directory = self.system_temp_folder
+    def check(file_list):
+      directory_dir = os.listdir(temp_directory)
+      self.assertTrue(set(file_list).issubset(
+           set(directory_dir)),
+           "%r not contained by %r" % (file_list, directory_dir))
+    check([])
+    os.mkdir(os.path.join(temp_directory, 'buildoutA'))
+    os.mkdir(os.path.join(temp_directory, 'something'))
+    os.mkdir(os.path.join(temp_directory, 'tmpC'))
+    check(set(['buildoutA', 'something', 'tmpC']))
+    # default log file time is 15 days, so nothing is going to be deleted
+    test_node._cleanupTemporaryFiles()
+    check(set(['buildoutA', 'something', 'tmpC']))
+    # then we set keep time to 0, folder will be deleted
+    test_node.max_temp_time = 0
+    test_node._cleanupLog()
+    check(set(['something']))

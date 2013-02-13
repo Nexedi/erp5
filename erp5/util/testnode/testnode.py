@@ -45,6 +45,7 @@ from erp5.util import taskdistribution
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
                   # httd
+MAX_TEMP_TIME = 5 # time in days we should keep temp files
 supervisord_pid_file = None
 
 PROFILE_PATH_KEY = 'profile_path'
@@ -88,6 +89,7 @@ class NodeTestSuite(SlapOSInstance):
   def __init__(self, reference):
     super(NodeTestSuite, self).__init__()
     self.reference = reference
+    self.file_handler = None
 
   def edit(self, **kw):
     super(NodeTestSuite, self).edit(**kw)
@@ -131,29 +133,31 @@ class NodeTestSuite(SlapOSInstance):
     return getattr(self, "suite_log", None)
 
   def _initializeSuiteLog(self):
+    # remove previous handlers
+    logger = logging.getLogger('testsuite')
+    if self.file_handler is not None:
+      logger.removeHandler(self.file_handler)
+    # and replace it with new handler
     logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
     formatter = logging.Formatter(logger_format)
     logging.basicConfig(level=logging.INFO, format=logger_format)
-    logger = logging.getLogger('testsuite')
-    file_handler = logging.FileHandler(filename=self.suite_log_path)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    self.file_handler = logging.FileHandler(filename=self.suite_log_path)
+    self.file_handler.setFormatter(formatter)
+    logger.addHandler(self.file_handler)
     logger.info('Activated logfile %r output' % self.suite_log_path)
     self.suite_log = logger.info
 
 class TestNode(object):
 
-  def __init__(self, log, config, max_log_time=MAX_LOG_TIME):
+  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
+               max_temp_time=MAX_TEMP_TIME):
     self.testnode_log = log
     self.log = log
     self.config = config or {}
     self.process_manager = ProcessManager(log)
     self.node_test_suite_dict = {}
-    # hack until slapos.cookbook is updated
-    if self.config.get('working_directory', '').endswith("slapos"):
-      self.config['working_directory'] = self.config[
-        'working_directory'][:-(len("slapos"))] + "testnode"
     self.max_log_time = max_log_time
+    self.max_temp_time = max_temp_time
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -392,11 +396,33 @@ branch = %(branch)s
           self.log("deleting log directory %r" % (folder_path,))
           shutil.rmtree(folder_path)
 
+  def _cleanupTemporaryFiles(self):
+    """
+    buildout seems letting files under /tmp. To avoid regular error of
+    missing disk space, remove old logs
+    """
+    temp_directory = self.config["system_temp_folder"]
+    now = time.time()
+    user_id = os.geteuid()
+    for temp_folder in os.listdir(temp_directory):
+      folder_path = os.path.join(temp_directory, temp_folder)
+      if (temp_folder.startswith("tmp") or
+          temp_folder.startswith("buildout")):
+        stat = os.stat(folder_path)
+        if stat.st_uid == user_id and \
+            (now - stat.st_mtime)/86400 > self.max_temp_time:
+          self.log("deleting temp directory %r" % (folder_path,))
+          if os.path.isdir(folder_path):
+            shutil.rmtree(folder_path)
+          else:
+            os.remove(folder_path)
+
   def cleanUp(self,test_result):
     log = self.log
     log('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
     self._cleanupLog()
+    self._cleanupTemporaryFiles()
 
   def run(self):
     log = self.log
@@ -494,3 +520,4 @@ branch = %(branch)s
       # Exceptions are swallowed during cleanup phas
       log("GENERAL EXCEPTION, QUITING")
       self.cleanUp(test_result)
+      log("GENERAL EXCEPTION, QUITING, cleanup finished")
