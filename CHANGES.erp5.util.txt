@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.26 (2013-02-14)
+-------------------
+
+ * erp5.util.testnode:
+
+  - do not reraise OSError when cleaning temp files
+
 0.4.25 (2013-02-11)
 -------------------
 
