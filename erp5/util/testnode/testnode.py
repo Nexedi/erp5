@@ -419,7 +419,6 @@ branch = %(branch)s
               os.remove(folder_path)
         except OSError:
           self.log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
-          raise
 
   def cleanUp(self,test_result):
     log = self.log
