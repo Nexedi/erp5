@@ -120,8 +120,9 @@ for party in context.Account_zDistinctSectionList(\n
   if role_filter_list:\n
     keep_this_one = False\n
     for role in role_filter_list:\n
-      if o.isMemberOf(role):\n
+      if role and o.isMemberOf(role):\n
         keep_this_one = True\n
+        break\n
 \n
   if not keep_this_one:\n
     continue\n
