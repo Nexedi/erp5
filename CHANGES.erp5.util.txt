@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.27 (2013-02-15)
+-------------------
+
+ * erp5.util.testnode:
+
+  - testnode was still sometimes logging at several files at a time
+    [Sebastien Robin]
+
 0.4.26 (2013-02-14)
 -------------------
 
