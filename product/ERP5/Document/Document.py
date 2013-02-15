@@ -75,8 +75,8 @@ VALID_TRANSPARENT_IMAGE_FORMAT_LIST = ('png', 'gif', 'tiff', 'svg')
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'xlarge',)
-# default image quality
-DEFAULT_IMAGE_QUALITY = 75
+# default image qualitay (obsoleted use getPreferredImageQuality on a portal_preferences tool)
+DEFAULT_IMAGE_QUALITY = 75.0
 
 DEFAULT_CONTENT_TYPE = 'text/html'
 

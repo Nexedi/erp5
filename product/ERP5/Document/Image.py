@@ -45,7 +45,7 @@ from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
-                     DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
+                     DEFAULT_DISPLAY_ID_LIST, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -58,7 +58,7 @@ from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 
 def getDefaultImageQuality(portal, format=None):
   preference_tool = portal.portal_preferences
-  return preference_tool.getPreference('preferred_image_quality', DEFAULT_IMAGE_QUALITY)
+  return preference_tool.getPreferredImageQuality()
 
 class Image(TextConvertableMixin, File, OFSImage):
   """
