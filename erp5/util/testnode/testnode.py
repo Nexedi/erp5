@@ -89,7 +89,6 @@ class NodeTestSuite(SlapOSInstance):
   def __init__(self, reference):
     super(NodeTestSuite, self).__init__()
     self.reference = reference
-    self.file_handler = None
 
   def edit(self, **kw):
     super(NodeTestSuite, self).edit(**kw)
@@ -123,29 +122,10 @@ class NodeTestSuite(SlapOSInstance):
     SlapOSControler.createFolders(suite_log_directory)
     self.suite_log_path = os.path.join(suite_log_directory,
                                        'suite.log')
-    self._initializeSuiteLog()
     return self.getSuiteLogPath(), random_suite_folder_id
 
   def getSuiteLogPath(self):
     return getattr(self,"suite_log_path", None)
-
-  def getSuiteLog(self):
-    return getattr(self, "suite_log", None)
-
-  def _initializeSuiteLog(self):
-    # remove previous handlers
-    logger = logging.getLogger('testsuite')
-    if self.file_handler is not None:
-      logger.removeHandler(self.file_handler)
-    # and replace it with new handler
-    logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
-    formatter = logging.Formatter(logger_format)
-    logging.basicConfig(level=logging.INFO, format=logger_format)
-    self.file_handler = logging.FileHandler(filename=self.suite_log_path)
-    self.file_handler.setFormatter(formatter)
-    logger.addHandler(self.file_handler)
-    logger.info('Activated logfile %r output' % self.suite_log_path)
-    self.suite_log = logger.info
 
 class TestNode(object):
 
@@ -158,6 +138,7 @@ class TestNode(object):
     self.node_test_suite_dict = {}
     self.max_log_time = max_log_time
     self.max_temp_time = max_temp_time
+    self.file_handler = None
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -252,20 +233,36 @@ branch = %(branch)s
       Create a log dedicated for the test suite,
       and register the url to master node.
     """
-    log_file_name, folder_id = node_test_suite.createSuiteLog()
-    if log_file_name is None and config.get('log_file'):
-      log_file_name = config['log_file']
+    suite_log_path, folder_id = node_test_suite.createSuiteLog()
+    self._initializeSuiteLog(suite_log_path)
     # TODO make the path into url
     test_result.reportStatus('LOG url', "%s/%s" % (self.config.get('httpd_url'),
                              folder_id), '')
-    self.log("going to switch to log %r" % log_file_name)
-    log = node_test_suite.getSuiteLog()
-    self.process_manager.log = self.log = log
-    return log_file_name
+    self.log("going to switch to log %r" % suite_log_path)
+    self.process_manager.log = self.log = self.getSuiteLog()
+    return suite_log_path
+
+  def getSuiteLog(self):
+    return self.suite_log
+
+  def _initializeSuiteLog(self, suite_log_path):
+    # remove previous handlers
+    logger = logging.getLogger('testsuite')
+    if self.file_handler is not None:
+      logger.removeHandler(self.file_handler)
+    # and replace it with new handler
+    logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
+    formatter = logging.Formatter(logger_format)
+    logging.basicConfig(level=logging.INFO, format=logger_format)
+    self.file_handler = logging.FileHandler(filename=suite_log_path)
+    self.file_handler.setFormatter(formatter)
+    logger.addHandler(self.file_handler)
+    logger.info('Activated logfile %r output' % suite_log_path)
+    self.suite_log = logger.info
 
   def checkRevision(self, test_result, node_test_suite):
     config = self.config
-    log = node_test_suite.getSuiteLog()
+    log = self.log
     if log is None:
       log = self.log
     if node_test_suite.revision != test_result.revision:
@@ -328,7 +325,7 @@ branch = %(branch)s
               software_path_list=self.config.get("software_list"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
-    log = node_test_suite.getSuiteLog()
+    log = self.log
     if log is None:
       log = self.log
     return self._prepareSlapOS(node_test_suite.working_directory,

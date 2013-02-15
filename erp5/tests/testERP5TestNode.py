@@ -454,16 +454,13 @@ branch = foo
     original_runTestSuite = test_node.runTestSuite
     test_node.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    try:
-      test_node.run()
-    except Exception as e:
-      self.assertEqual(type(e),StopIteration)
-    finally:
-      time.sleep = original_sleep
-      TaskDistributor.startTestSuite = original_startTestSuite
-      TaskDistributionTool.createTestResult = original_createTestResult
-      test_node._prepareSlapOS = original_prepareSlapOS
-      test_node.runTestSuite = original_runTestSuite
+    test_node.run()
+    self.assertEquals(5, counter)
+    time.sleep = original_sleep
+    TaskDistributor.startTestSuite = original_startTestSuite
+    TaskDistributionTool.createTestResult = original_createTestResult
+    test_node._prepareSlapOS = original_prepareSlapOS
+    test_node.runTestSuite = original_runTestSuite
 
   def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
@@ -512,12 +509,11 @@ branch = foo
     counter = 0
     def patch_startTestSuite(self,test_node_title):
       global counter
-      config_list = []
-      if counter == 0:
-        config_list.append(test_self.getTestSuiteData(reference='aa')[0])
-      if counter == 1:
-        config_list.append(test_self.getTestSuiteData(reference='bb')[0])
-      elif counter == 2:
+      config_list = [test_self.getTestSuiteData(reference='aa')[0],
+                     test_self.getTestSuiteData(reference='bb')[0]]
+      if counter in (1, 2):
+        config_list.reverse()
+      elif counter == 3:
         raise StopIteration
       counter += 1
       return json.dumps(config_list)
@@ -530,9 +526,10 @@ branch = foo
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
+      self.assertEquals(2, len(test_node.node_test_suite_dict))
+      assert(test_node.suite_log is not None)
+      assert(isinstance(test_node.suite_log, types.MethodType))
       for ref, suite in test_node.node_test_suite_dict.items():
-        assert(suite.suite_log is not None)
-        assert(isinstance(suite.suite_log, types.MethodType))
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
@@ -542,6 +539,9 @@ branch = foo
         assert(len(rand_part) == 32)
         assert(rand_part not in rand_part_set)
         rand_part_set.add(rand_part)
+        suite_log = open(suite.suite_log_path, 'r')
+        self.assertEquals(1, len([x for x in suite_log.readlines() \
+                              if x.find("Activated logfile")>=0]))
 
     original_sleep = time.sleep
     time.sleep = doNothing
@@ -556,17 +556,14 @@ branch = foo
     original_runTestSuite = test_node.runTestSuite
     test_node.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    try:
-      test_node.run()
-    except Exception as e:
-      checkTestSuite(test_node)
-      self.assertEqual(type(e),StopIteration)
-    finally:
-      time.sleep = original_sleep
-      TaskDistributor.startTestSuite = original_startTestSuite
-      TaskDistributionTool.createTestResult = original_createTestResult
-      test_node._prepareSlapOS = original_prepareSlapOS
-      test_node.runTestSuite = original_runTestSuite
+    test_node.run()
+    self.assertEquals(counter, 3)
+    checkTestSuite(test_node)
+    time.sleep = original_sleep
+    TaskDistributor.startTestSuite = original_startTestSuite
+    TaskDistributionTool.createTestResult = original_createTestResult
+    test_node._prepareSlapOS = original_prepareSlapOS
+    test_node.runTestSuite = original_runTestSuite
 
   def test_16_cleanupLogDirectory(self):
     # Make sure that we are able to cleanup old log folders
