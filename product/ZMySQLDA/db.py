@@ -184,6 +184,8 @@ class ThreadedDB:
     conv[FIELD_TYPE.BIT] = ord_or_None
     del conv[FIELD_TYPE.TIME]
 
+    _sort_key = TM._sort_key
+
     def __init__(self,connection):
         """
           Parse the connection string.
@@ -290,6 +292,7 @@ class ThreadedDB:
             db = DB(kw_args=self._kw_args, use_TM=self._use_TM,
                     mysql_lock=self._mysql_lock,
                     transactions=self._transactions)
+            db.setSortKey(self._sort_key)
             self._pool_set(ident, db)
         return getattr(db, method_id)(*args, **kw)
 
@@ -304,9 +307,6 @@ class ThreadedDB:
 
     def string_literal(self, *args, **kw):
         return self._access_db(method_id='string_literal', args=args, kw=kw)
-
-    def setSortKey(self, *args, **kw):
-        return self._access_db(method_id='setSortKey', args=args, kw=kw)
 
 
 class DB(TM):

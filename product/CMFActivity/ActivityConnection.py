@@ -26,13 +26,13 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.DA import Connection
+from Products.ZMySQLDA.DA import Connection, ThreadedDB
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
 from Acquisition import aq_parent
 
-# If the sort order below doesn't work, we cannot guarantee the setSortKey()
-# call below will actually result in the activity connection being committed
+# If the sort order below doesn't work, we cannot guarantee the sort key
+# used below will actually result in the activity connection being committed
 # after the ZODB and Catalog data.
 assert None < 0 < '' < (), "Cannot guarantee commit of activities comes after the appropriate data"
 
@@ -58,15 +58,12 @@ class ActivityConnection(Connection):
     # reuse the permission from ZMySQLDA
     permission_type = 'Add Z MySQL Database Connections'
 
-    def connect(self, s):
-        result = Connection.connect(self, s)
-        if aq_parent(self) is None:
-            # Connection.connect() doesn't set _v_database_connection if there
-            # are no acquisition wrappers
-            return result
-        # the call above will set self._v_database_connection, and it won't
-        # have disappeared by now.
-        self._v_database_connection.setSortKey( (0,) )
-        return result
+    def factory(self):
+        return ActivityThreadedDB
 
 InitializeClass(ActivityConnection)
+
+
+class ActivityThreadedDB(ThreadedDB):
+
+    _sort_key = (0,)
