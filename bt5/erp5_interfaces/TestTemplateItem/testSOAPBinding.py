@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import urllib
 import SOAPpy
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
