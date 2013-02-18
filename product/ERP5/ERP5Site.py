@@ -1901,8 +1901,8 @@ class ERP5Generator(PortalGenerator):
     # Add Activity SQL Connections
     if p.cmf_activity_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('cmf_activity_sql_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
-                                     manage_addZMySQLConnection
+        addSQLConnection = p.manage_addProduct['CMFActivity'].\
+                                     manage_addActivityConnection
         addSQLConnection('cmf_activity_sql_connection',
                          'CMF Activity SQL Server Connection',
                          p.cmf_activity_sql_connection_string)
