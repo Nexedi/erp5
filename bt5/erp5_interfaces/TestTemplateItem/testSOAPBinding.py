@@ -29,6 +29,7 @@
 import unittest
 import urllib
 import SOAPpy
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Document.SOAPBinding import SOAPBinding
 from spyne.service import ServiceBase
@@ -67,6 +68,7 @@ class TestSoapBinding(ERP5TypeTestCase):
       service_class='%s.%s' % (service_class.__module__,
                                service_class.__name__))
 
+  @expectedFailure
   def testSpyneHelloExample(self):
     tns = 'spyne.examples.hello.soap'
     binding = self.createBinding(tns, HelloWorldService)
