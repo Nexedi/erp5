@@ -91,15 +91,14 @@ __version__='$Revision: 1.4 $'[11:-2]
 import os
 from collections import defaultdict
 from weakref import WeakKeyDictionary
-from db import DB
 import transaction
 import Shared.DC.ZRDB
-import DABase
 from App.Dialogs import MessageDialog
 from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
-from ExtensionClass import Base
 from DateTime import DateTime
+from . import DABase
+from .db import DB
 
 SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
@@ -164,8 +163,6 @@ class Connection(DABase.Connection):
             connection = self._v_database_connection
         return connection.string_literal(v)
 
-
-classes=('DA.Connection',)
 
 meta_types=(
     {'name':'Z %s Database Connection' % database_type,

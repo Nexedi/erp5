@@ -105,7 +105,6 @@ from zLOG import LOG, ERROR
 from ZODB.POSException import ConflictError
 
 import sys
-from string import strip, split, upper, rfind
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -150,19 +149,14 @@ type_xlate = {
     }
     
 def _mysql_timestamp_converter(s):
-        if len(s) < 14:
-                s = s + "0"*(14-len(s))
+        s = s.ljust(14, '0')
         parts = map(int, (s[:4],s[4:6],s[6:8],
                           s[8:10],s[10:12],s[12:14]))
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 def DateTime_or_None(s):
     try: return DateTime('%s UTC' % s)
-    except: return None
-
-def int_or_long(s):
-    try: return int(s)
-    except: return long(s)
+    except Exception: return None
 
 def ord_or_None(s):
     if s is not None:
@@ -171,7 +165,7 @@ def ord_or_None(s):
 class DB(TM):
 
     conv=conversions.copy()
-    conv[FIELD_TYPE.LONG] = int_or_long
+    conv[FIELD_TYPE.LONG] = int
     conv[FIELD_TYPE.DATETIME] = DateTime_or_None
     conv[FIELD_TYPE.DATE] = DateTime_or_None
     conv[FIELD_TYPE.DECIMAL] = float
@@ -187,7 +181,7 @@ class DB(TM):
           transactionality once instead of once per DB instance.
         """
         self._connection = connection
-        self._kw_args = self._parse_connection_string(connection)
+        self._parse_connection_string()
         self._forceReconnection()
         transactional = self.db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
@@ -197,50 +191,40 @@ class DB(TM):
         self._transactions = transactional
         self._use_TM = transactional or self._mysql_lock
 
-    def _parse_connection_string(self, connection):
-        kwargs = {'conv': self.conv}
-        items = split(connection)
-        self._use_TM = None
-        if not items: return kwargs
-        compress = items[0]
-        if compress == "~":
+    def _parse_connection_string(self):
+        self._mysql_lock = self._try_transactions = None
+        self._kw_args = kwargs = {'conv': self.conv}
+        items = self._connection.split()
+        if not items:
+            return
+        if items[0] == "~":
             kwargs['compress'] = True
-            items = items[1:]
-        lockreq, items = items[0], items[1:]
-        if lockreq[0] == "*":
-            self._mysql_lock = lockreq[1:]
-            db_host, items = items[0], items[1:]
-            self._use_TM = 1
-        else:
-            self._mysql_lock = None
-            db_host = lockreq
-        if '@' in db_host:
-            db, host = split(db_host,'@',1)
-            kwargs['db'] = db
+            del items[0]
+        if items[0][0] == "*":
+            self._mysql_lock = items.pop(0)[1:]
+        db = items.pop(0)
+        if '@' in db:
+            db, host = db.split('@', 1)
             if host.startswith('['):
-                host, port = split(host[1:], ']', 1)
+                host, port = host[1:].split(']', 1)
                 if port.startswith(':'):
                   kwargs['port'] = int(port[1:])
             elif ':' in host:
-                host, port = split(host,':',1)
+                host, port = host.split(':', 1)
                 kwargs['port'] = int(port)
             kwargs['host'] = host
-        else:
-            kwargs['db'] = db_host
-        if kwargs['db'] and kwargs['db'][0] in ('+', '-'):
-            self._try_transactions = kwargs['db'][0]
-            kwargs['db'] = kwargs['db'][1:]
-        else:
-            self._try_transactions = None
-        if not kwargs['db']:
-            del kwargs['db']
-        if not items: return kwargs
-        kwargs['user'], items = items[0], items[1:]
-        if not items: return kwargs
-        kwargs['passwd'], items = items[0], items[1:]
-        if not items: return kwargs
-        kwargs['unix_socket'], items = items[0], items[1:]
-        return kwargs
+        if db:
+            if db[0] in '+-':
+                self._try_transactions = db[0]
+                db = db[1:]
+            if db:
+                kwargs['db'] = db
+        if items:
+            kwargs['user'] = items.pop(0)
+            if items:
+                kwargs['passwd'] = items.pop(0)
+                if items:
+                    kwargs['unix_socket'] = items.pop(0)
 
     defs={
         FIELD_TYPE.CHAR: "i", FIELD_TYPE.DATE: "d",
@@ -271,23 +255,23 @@ class DB(TM):
         return r
 
     def columns(self, table_name):
-        from string import join
         try:
             c = self._query('SHOW COLUMNS FROM %s' % table_name)
-        except:
+        except Exception:
             return ()
+        join = str.join
         r=[]
         for Field, Type, Null, Key, Default, Extra in c.fetch_row(0):
             info = {}
             field_default = Default and "DEFAULT %s"%Default or ''
             if Default: info['Default'] = Default
             if '(' in Type:
-                end = rfind(Type,')')
-                short_type, size = split(Type[:end],'(',1)
+                end = Type.rfind(')')
+                short_type, size = Type[:end].split('(', 1)
                 if short_type not in ('set','enum'):
                     if ',' in size:
                         info['Scale'], info['Precision'] = \
-                                       map(int, split(size,',',1))
+                                       map(int, size.split(',', 1))
                     else:
                         info['Scale'] = int(size)
             else:
@@ -302,7 +286,7 @@ class DB(TM):
             info['Description'] = join([Type, field_default, Extra or '',
                                         key_types.get(Key, Key or ''),
                                         Null != 'YES' and 'NOT NULL' or '']),
-            info['Nullable'] = (Null == 'YES') and 1 or 0
+            info['Nullable'] = Null == 'YES'
             if Key:
                 info['Index'] = 1
             if Key == 'PRI':
@@ -331,8 +315,7 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
               raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
-            if ((not force_reconnect) and \
-                (self._mysql_lock or self._transactions)) or \
+            if not force_reconnect and self._use_TM or \
               m[0] not in hosed_connection:
                 LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
                 raise
@@ -370,39 +353,33 @@ class DB(TM):
 
     def query(self, query_string, max_rows=1000):
         self._use_TM and self._register()
-        desc=None
-        result=()
+        desc = None
         # XXX deal with a typical mistake that the user appends
         # an unnecessary and rather harmful semicolon at the end.
         # Unfortunately, MySQLdb does not want to be graceful.
         if query_string[-1:] == ';':
           query_string = query_string[:-1]
-        for qs in filter(None, map(strip,split(query_string, '\0'))):
-            qtype = upper(split(qs, None, 1)[0])
-            if qtype == "SELECT" and max_rows:
-                qs = "%s LIMIT %d" % (qs,max_rows)
-                r=0
-            c = self._query(qs)
-            if c:
-                if desc is not None is not c.describe():
-                    raise 'Query Error', (
-                        'Multiple select schema are not allowed'
-                        )
-                desc=c.describe()
-                result=c.fetch_row(max_rows)
-
-        if desc is None: return (),()
-
-        items=[]
-        func=items.append
-        defs=self.defs
-        for d in desc:
-            item={'name': d[0],
-                  'type': defs.get(d[1],"t"),
+        for qs in query_string.split('\0'):
+            qs = qs.strip()
+            if qs:
+                if qs[:6].upper() == "SELECT" and max_rows:
+                    qs = "%s LIMIT %d" % (qs, max_rows)
+                c = self._query(qs)
+                if c:
+                    if desc is not None is not c.describe():
+                        raise Exception(
+                            'Multiple select schema are not allowed'
+                            )
+                    desc = c.describe()
+                    result = c.fetch_row(max_rows)
+        if desc is None:
+            return (), ()
+        get_def = self.defs.get
+        items = [{'name': d[0],
+                  'type': get_def(d[1], "t"),
                   'width': d[2],
                   'null': d[6]
-                 }
-            func(item)
+                 } for d in desc]
         return items, result
 
     def string_literal(self, s):

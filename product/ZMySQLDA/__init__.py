@@ -87,8 +87,7 @@ __doc__='''Generic Database Adapter Package Registration
 $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
-import sys, string
-import DA
+from . import DA
 
 methods=DA.folder_methods
 misc_=DA.misc_
