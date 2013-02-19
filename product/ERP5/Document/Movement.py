@@ -591,6 +591,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return simulation_movement is not None and \
        not simulation_movement.getParentValue().isRootAppliedRule()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSimulationQuantity')
+  def getSimulationQuantity(self):
+    """Computes the quantities in the simulation.
+    """
+    return sum(m.getQuantity() for m in self.getDeliveryRelatedValueList())
+
   # Debit and credit methods
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceDebit')
