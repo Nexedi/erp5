@@ -31,6 +31,7 @@ import subprocess
 import time
 import xml_marshaller
 import shutil
+import sys
 import glob
 
 MAX_PARTIONS = 10
@@ -170,9 +171,15 @@ class SlapOSControler(object):
     config['instance_dict']['report-project'] = config.get("report-project", "")
     config['instance_dict']['suite-url'] = config.get("suite-url", "")
     for path in self.software_path_list:
-      self.slap.registerOpenOrder().request(path,
-        partition_reference='testing partition %s' % self.software_path_list.index(path),
-        partition_parameter_kw=config['instance_dict'])
+      try:
+        self.slap.registerOpenOrder().request(path,
+          partition_reference='testing partition %s' % \
+            self.software_path_list.index(path),
+          partition_parameter_kw=config['instance_dict'])
+      except:
+        self.log("SlapOSControler.runComputerPartition, \
+                 exception in registerOpenOrder", exc_info=sys.exc_info())
+        raise ValueError("Unable to registerOpenOrder")
 
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
