@@ -383,16 +383,13 @@ class DB(TM):
                 qs = "%s LIMIT %d" % (qs,max_rows)
                 r=0
             c = self._query(qs)
-            if desc is not None:
-                if c and (c.describe() != desc):
+            if c:
+                if desc is not None is not c.describe():
                     raise 'Query Error', (
                         'Multiple select schema are not allowed'
                         )
-            if c:
                 desc=c.describe()
                 result=c.fetch_row(max_rows)
-            else:
-                desc=None
 
         if desc is None: return (),()
 
