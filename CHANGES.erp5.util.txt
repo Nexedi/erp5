@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.29 (2013-02-20)
+-------------------
+
+ * erp5.util.testnode:
+
+  - make it able to resist to problems with slapos proxy when building
+    software [Sebastien Robin]
+
 0.4.28 (2013-02-19)
 -------------------
 
