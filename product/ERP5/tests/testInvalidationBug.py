@@ -61,13 +61,10 @@ class TestInvalidationBug(ERP5TypeTestCase):
     test_list = []
     for connection_id, table in (('erp5_sql_connection', 'catalog'),
                                  ('cmf_activity_sql_connection', 'message')):
-      conn_class = self.portal[connection_id].__class__
-      conn_string = self.portal[connection_id].connection_string
-      connection = conn_class('_' + connection_id, '',
-                              '-' + conn_string).__of__(self.portal)
-      query = "rollback\0select * from %s where path='%s'" % (table, path)
-      test_list.append(lambda manage_test=connection.manage_test, query=query:
-         len(manage_test(query)))
+      connection = self.portal[connection_id]
+      query = connection.factory()('-' + connection.connection_string).query
+      sql = "rollback\0select * from %s where path='%s'" % (table, path)
+      test_list.append(lambda query=query, sql=sql: len(query(sql)[1]))
     result_list = [map(apply, test_list)]
     Transaction_commitResources = transaction.Transaction._commitResources
     connection = module._p_jar

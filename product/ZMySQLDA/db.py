@@ -106,7 +106,6 @@ from ZODB.POSException import ConflictError
 
 import sys
 from string import strip, split, upper, rfind
-from thread import get_ident, allocate_lock
 
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
@@ -169,12 +168,7 @@ def ord_or_None(s):
     if s is not None:
         return ord(s)
 
-class ThreadedDB:
-    """
-      This class is an interface to DB.
-      Its characteristic is that an instance of this class interfaces multiple
-      instances of DB class, each one being bound to a specific thread.
-    """
+class DB(TM):
 
     conv=conversions.copy()
     conv[FIELD_TYPE.LONG] = int_or_long
@@ -194,18 +188,14 @@ class ThreadedDB:
         """
         self._connection = connection
         self._kw_args = self._parse_connection_string(connection)
-        self._db_pool = {}
-        self._db_lock = allocate_lock()
-        connection = MySQLdb.connect(**self._kw_args)
-        transactional = connection.server_capabilities & CLIENT.TRANSACTIONS
-        connection.close()
+        self._forceReconnection()
+        transactional = self.db.server_capabilities & CLIENT.TRANSACTIONS
         if self._try_transactions == '-':
             transactional = 0
         elif not transactional and self._try_transactions == '+':
             raise NotSupportedError, "transactions not supported by this server"
-        self._use_TM = self._transactions = transactional
-        if self._mysql_lock:
-            self._use_TM = 1
+        self._transactions = transactional
+        self._use_TM = transactional or self._mysql_lock
 
     def _parse_connection_string(self, connection):
         kwargs = {'conv': self.conv}
@@ -252,65 +242,6 @@ class ThreadedDB:
         kwargs['unix_socket'], items = items[0], items[1:]
         return kwargs
 
-    def _pool_set(self, key, value):
-      self._db_lock.acquire()
-      try:
-        self._db_pool[key] = value
-      finally:
-        self._db_lock.release()
-
-    def _pool_get(self, key):
-      self._db_lock.acquire()
-      try:
-        return self._db_pool.get(key)
-      finally:
-        self._db_lock.release()
-
-    def _pool_del(self, key):
-      self._db_lock.acquire()
-      try:
-        del self._db_pool[key]
-      finally:
-        self._db_lock.release()
-
-    def closeConnection(self):
-      ident = get_ident()
-      try:
-        self._pool_del(ident)
-      except KeyError:
-        pass
-
-    def _access_db(self, method_id, args, kw):
-        """
-          Generic method to call pooled objects' methods.
-          When the current thread had never issued any call, create a DB
-          instance.
-        """
-        ident = get_ident()
-        db = self._pool_get(ident)
-        if db is None:
-            db = DB(kw_args=self._kw_args, use_TM=self._use_TM,
-                    mysql_lock=self._mysql_lock,
-                    transactions=self._transactions)
-            db.setSortKey(self._sort_key)
-            self._pool_set(ident, db)
-        return getattr(db, method_id)(*args, **kw)
-
-    def tables(self, *args, **kw):
-        return self._access_db(method_id='tables', args=args, kw=kw)
-
-    def columns(self, *args, **kw):
-        return self._access_db(method_id='columns', args=args, kw=kw)
-
-    def query(self, *args, **kw):
-        return self._access_db(method_id='query', args=args, kw=kw)
-
-    def string_literal(self, *args, **kw):
-        return self._access_db(method_id='string_literal', args=args, kw=kw)
-
-
-class DB(TM):
-
     defs={
         FIELD_TYPE.CHAR: "i", FIELD_TYPE.DATE: "d",
         FIELD_TYPE.DATETIME: "d", FIELD_TYPE.DECIMAL: "n",
@@ -322,19 +253,11 @@ class DB(TM):
 
     _p_oid=_p_changed=_registered=None
 
-    def __init__(self, kw_args, use_TM, mysql_lock, transactions):
-        self._kw_args = kw_args
-        self._mysql_lock = mysql_lock
-        self._use_TM = use_TM
-        self._transactions = transactions
-        self._forceReconnection()
-
     def __del__(self):
       self.db.close()
 
     def _forceReconnection(self):
-      db = MySQLdb.connect(**self._kw_args)
-      self.db = db
+      self.db = MySQLdb.connect(**self._kw_args)
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):

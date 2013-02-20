@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ZMySQLDA.DA import Connection, ThreadedDB
+from Products.ZMySQLDA.DA import Connection, DB
 from Products.ERP5Type.Globals import InitializeClass
 from App.special_dtml import HTMLFile
 from Acquisition import aq_parent
@@ -59,11 +59,11 @@ class ActivityConnection(Connection):
     permission_type = 'Add Z MySQL Database Connections'
 
     def factory(self):
-        return ActivityThreadedDB
+        return ActivityDB
 
 InitializeClass(ActivityConnection)
 
 
-class ActivityThreadedDB(ThreadedDB):
+class ActivityDB(DB):
 
     _sort_key = (0,)

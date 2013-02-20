@@ -2226,11 +2226,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.flushAllActivities(silent=1, loop_size=100)
       self.commit()
       # Check that cmf_activity SQL connection still works
-      connection_da_pool = self.getPortalObject().cmf_activity_sql_connection()
-      import thread
-      connection_da = connection_da_pool._db_pool[thread.get_ident()]
+      connection_da = self.getPortalObject().cmf_activity_sql_connection()
       self.assertFalse(connection_da._registered)
-      connection_da_pool.query('select 1')
+      connection_da.query('select 1')
       self.assertTrue(connection_da._registered)
       self.commit()
       self.assertFalse(connection_da._registered)
@@ -3513,7 +3511,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       app = ZopeTestCase.app()
       try:
         c = app[self.getPortalName()].cmf_activity_sql_connection()
-        return app._p_jar, c._access_db('sortKey', (), {})
+        return app._p_jar, c.sortKey()
       finally:
         ZopeTestCase.close(app)
     jar, sort_key = sortKey()
