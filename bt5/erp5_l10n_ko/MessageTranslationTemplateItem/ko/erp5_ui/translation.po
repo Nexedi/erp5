@@ -3735,7 +3735,7 @@ msgstr "공식 중단 날짜"
 msgid "Old Value"
 msgstr "옛 값"
 
-msgid "Omit Grouped References"
+msgid "Omit Transactions with Grouping References"
 msgstr "그룹지어진 참조를 생략"
 
 msgid "Only consider transactions in those states."
