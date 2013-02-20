@@ -86,8 +86,10 @@
 '''$Id: db.py,v 1.20 2002/03/14 20:24:54 adustman Exp $'''
 __version__='$Revision: 1.20 $'[11:-2]
 
+import os
 import _mysql
 import MySQLdb
+import warnings
 from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
 MySQLdb_version_required = (0,9,2)
 
@@ -205,14 +207,17 @@ class DB(TM):
         db = items.pop(0)
         if '@' in db:
             db, host = db.split('@', 1)
-            if host.startswith('['):
-                host, port = host[1:].split(']', 1)
-                if port.startswith(':'):
-                  kwargs['port'] = int(port[1:])
-            elif ':' in host:
-                host, port = host.split(':', 1)
-                kwargs['port'] = int(port)
-            kwargs['host'] = host
+            if os.path.isabs(host):
+                kwargs['unix_socket'] = host
+            else:
+                if host.startswith('['):
+                    host, port = host[1:].split(']', 1)
+                    if port.startswith(':'):
+                      kwargs['port'] = int(port[1:])
+                elif ':' in host:
+                    host, port = host.split(':', 1)
+                    kwargs['port'] = int(port)
+                kwargs['host'] = host
         if db:
             if db[0] in '+-':
                 self._try_transactions = db[0]
@@ -223,7 +228,10 @@ class DB(TM):
             kwargs['user'] = items.pop(0)
             if items:
                 kwargs['passwd'] = items.pop(0)
-                if items:
+                if items: # BBB
+                    assert 'unix_socket' not in kwargs
+                    warnings.warn("use '<db>@<unix_socket> ...' syntax instead",
+                                  DeprecationWarning)
                     kwargs['unix_socket'] = items.pop(0)
 
     defs={
