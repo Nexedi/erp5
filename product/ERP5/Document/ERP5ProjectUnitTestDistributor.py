@@ -105,7 +105,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         except ValueError:
           test_suite_list_to_remove.append(test_suite_title)
     return test_suite_list_to_remove
-  
+
   security.declareProtected(Permissions.ManagePortal, "optimizeConfiguration")
   def optimizeConfiguration(self):
     """
@@ -118,7 +118,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         x.getObject() for x in test_node_module.searchFolder(
         portal_type="Test Node", validation_state="validated",
         specialise_uid=self.getUid(), sort_on=[('title','ascending')])]
-      
+
     test_node_list_len = len(test_node_list)
     def _optimizeConfiguration(test_suite_list_to_add, level=0):
       if test_suite_list_to_add:
@@ -256,7 +256,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     if batch_mode:
       return config_list
     return json.dumps(config_list)
-          
+
   security.declarePublic("createTestResult")
   def createTestResult(self, name, revision, test_name_list, allow_restart,
                        test_title=None, node_title=None, project_title=None):
@@ -271,7 +271,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite.setPingDate()
     return portal.portal_task_distribution_tool.createTestResult(name,
            revision, test_name_list, allow_restart,
-           test_title=title_title, node_title=node_title, 
+           test_title=title_title, node_title=node_title,
            project_title=project_title)
 
   def _getTestNodeFromTitle(self, node_title):

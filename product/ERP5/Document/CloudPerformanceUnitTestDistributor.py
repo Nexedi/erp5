@@ -60,8 +60,8 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
         x.getObject() for x in test_node_module.searchFolder(
         portal_type="Test Node", validation_state="validated",
         specialise_uid=self.getUid())]
-      
-    test_suite_list = [x.getRelativeUrl() 
+
+    test_suite_list = [x.getRelativeUrl()
                              for x in test_suite_module.searchFolder(
                              validation_state="validated",
                              specialise_uid=self.getUid())]
