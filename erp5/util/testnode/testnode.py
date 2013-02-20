@@ -436,6 +436,7 @@ branch = %(branch)s
     try:
       while True:
         try:
+          node_test_suite = None
           self.log = self.process_manager.log = self.testnode_log
           self.cleanUp(None)
           remote_test_result_needs_cleanup = False
@@ -497,7 +498,8 @@ branch = %(branch)s
         except ValueError as e:
           # This could at least happens if runTestSuite is not found
           log("ValueError", exc_info=sys.exc_info())
-          node_test_suite.retry_software_count += 1
+          if node_test_suite is not None:
+            node_test_suite.retry_software_count += 1
         except CancellationError, e:
           log("CancellationError", exc_info=sys.exc_info())
           self.process_manager.under_cancellation = False

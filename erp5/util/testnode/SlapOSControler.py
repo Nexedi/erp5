@@ -96,15 +96,20 @@ class SlapOSControler(object):
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
     time.sleep(10)
-    slap = slapos.slap.slap()
-    self.slap = slap
-    self.slap.initializeConnection(config['master_url'])
-    # register software profile
-    for path in self.software_path_list:
-      slap.registerSupply().supply(
-          path,
-          computer_guid=config['computer_id'])
-    computer = slap.registerComputer(config['computer_id'])
+    try:
+      slap = slapos.slap.slap()
+      self.slap = slap
+      self.slap.initializeConnection(config['master_url'])
+      # register software profile
+      for path in self.software_path_list:
+        slap.registerSupply().supply(
+            path,
+            computer_guid=config['computer_id'])
+      computer = slap.registerComputer(config['computer_id'])
+    except:
+        self.log("SlapOSControler.initializeSlapOSControler, \
+                 exception in registerSupply", exc_info=sys.exc_info())
+        raise ValueError("Unable to initializeSlapOSControler")
     # Reset all previously generated software if needed
     if reset_software:
       self._resetSoftware()
