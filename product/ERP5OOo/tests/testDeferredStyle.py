@@ -107,7 +107,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
           self.fail(''.join(error_list))
         break
     else:
-      self.fail('Attachment not found in email')
+      self.fail('Attachment not found in email\n%s' % message_text)
 
   def test_normal_form(self):
     self.loginAsUser('bob')
@@ -141,7 +141,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
           self.fail(''.join(error_list))
         break
     else:
-      self.fail('Attachment not found in email')
+      self.fail('Attachment not found in email\n%s' % message_text)
 
 
 class TestODSDeferredStyle(TestDeferredStyle):
