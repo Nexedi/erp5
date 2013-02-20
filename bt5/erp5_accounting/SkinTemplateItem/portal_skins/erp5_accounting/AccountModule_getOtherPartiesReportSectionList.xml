@@ -83,7 +83,7 @@ params =  {\n
   , \'simulation_state\': simulation_state\n
 }\n
 \n
-params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
+params[\'hide_grouping\'] = request[\'omit_grouping_reference\']\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 else :\n

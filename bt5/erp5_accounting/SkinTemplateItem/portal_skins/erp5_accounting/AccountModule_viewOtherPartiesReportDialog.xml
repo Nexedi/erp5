@@ -75,7 +75,7 @@
                         <string>your_section_category_strict</string>
                         <string>your_at_date</string>
                         <string>your_omit_balanced_accounts</string>
-                        <string>your_omit_grouped_references</string>
+                        <string>your_omit_grouping_reference</string>
                         <string>your_portal_skin</string>
                         <string>your_format</string>
                         <string>your_deferred_style</string>

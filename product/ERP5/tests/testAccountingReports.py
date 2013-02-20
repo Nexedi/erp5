@@ -3894,7 +3894,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['omit_balanced_accounts'] = False
-    request_form['omit_grouped_references'] = True
+    request_form['omit_grouping_reference'] = True
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
