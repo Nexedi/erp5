@@ -45,7 +45,7 @@ from erp5.util import taskdistribution
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
                   # httd
-MAX_TEMP_TIME = 5 # time in days we should keep temp files
+MAX_TEMP_TIME = 0.01 # time in days we should keep temp files
 supervisord_pid_file = None
 
 PROFILE_PATH_KEY = 'profile_path'

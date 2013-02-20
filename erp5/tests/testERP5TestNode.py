@@ -586,7 +586,7 @@ branch = foo
     test_node._cleanupLog()
     check(set(['a_file']))
 
-  def test_17_cleanupLogDirectory(self):
+  def test_17_cleanupTempDirectory(self):
     # Make sure that we are able to cleanup old temp folders
     test_node = self.getTestNode()
     temp_directory = self.system_temp_folder
@@ -605,5 +605,5 @@ branch = foo
     check(set(['buildoutA', 'something', 'tmpC']))
     # then we set keep time to 0, folder will be deleted
     test_node.max_temp_time = 0
-    test_node._cleanupLog()
+    test_node._cleanupTemporaryFiles()
     check(set(['something']))
