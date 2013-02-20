@@ -331,6 +331,7 @@ class EngineMixin(object):
                          syncml_request.credentials['data'])
         if decoded and ':' in decoded:
           login, password = decoded.split(':')
+          # TODO: make it work for users existing anywhere
           user_folder = publication.getPortalObject().acl_users
           for plugin_name, plugin in user_folder._getOb('plugins')\
               .listPlugins(IAuthenticationPlugin):

@@ -226,6 +226,7 @@ class SyncMLSubscription(XMLObject):
     if not user_id:
       user_id = self.getProperty('authenticated_user')
     if user_id:
+      # TODO: make it work for users existing anywhere
       user_folder = self.getPortalObject().acl_users
       user = user_folder.getUserById(user_id).__of__(user_folder) # __of__ might got AttributeError
       if user is None:
