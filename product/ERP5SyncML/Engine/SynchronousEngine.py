@@ -79,7 +79,6 @@ class SyncMLSynchronousEngine(EngineMixin):
       else:
         finished = subscription._getSyncMLData(
           syncml_response=syncml_response,
-          subscriber_gid_list=gid_list
           )
         syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
       if finished:
@@ -195,8 +194,7 @@ class SyncMLSynchronousEngine(EngineMixin):
           finished = True
         else:
           finished = subscriber._getSyncMLData(
-            syncml_response=syncml_response,
-            subscriber_gid_list=gid_list)
+            syncml_response=syncml_response)
         syncml_logger.info("-> Server sendind data, finished %s" % (finished,))
         if finished:
           syncml_response.addFinal()
