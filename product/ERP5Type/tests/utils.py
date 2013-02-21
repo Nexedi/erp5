@@ -244,37 +244,22 @@ def _recreateMemcachedTool(portal):
   portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 
 # test runner shared functions
-def getMySQLArguments():
+
+from Products.ZMySQLDA.db import DB
+class getMySQLArguments(object):
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
   """
-  connection_string = os.environ.get('erp5_sql_connection_string')
-  if not connection_string:
-    return '-u test test'
-
-  password = ''
-  host = ''
-  db, user = connection_string.split(' ', 1)
-
-  sock = ''
-  if ' ' in user: # look for user password
-    sp = user.split()
-    if len(sp) == 2:
-      user, password = sp
-    elif len(sp) == 3:
-      user, password, sock = sp
-      sock = '--socket=%s' % sock
-    password = '-p%s' % password
-
-  if "@" in db: # look for hostname
-    db, host = db.split('@')
-    if ":" in host: # look for port
-      host, port = host.split(':')
-      host = '-h %s -P %s' % (host, port)
-    else:
-      host = '-h %s' % host
-
-  return '-u %s %s %s %s %s' % (user, password, host, db, sock)
+  args_dict = dict(host='h', port='P', unix_socket='S', user='u', passwd='p')
+  def __new__(cls):
+    self = object.__new__(cls)
+    self._connection = os.getenv('erp5_sql_connection_string') or 'test test'
+    self.conv = None
+    DB._parse_connection_string.im_func(self)
+    return ''.join('-%s%s ' % (self.args_dict[k], v)
+                   for k, v in self._kw_args.iteritems()
+                   if k in self.args_dict
+                   ) + self._kw_args['db']
 
 def getExtraSqlConnectionStringList():
   """Return list of extra available SQL connection string
