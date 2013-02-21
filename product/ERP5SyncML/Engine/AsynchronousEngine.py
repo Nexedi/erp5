@@ -257,7 +257,6 @@ class SyncMLAsynchronousEngine(EngineMixin):
       }
     method_kw = {
       'subscription_path' : subscription.getRelativeUrl(),
-      'gid_list' : subscription.getGidList(),
       }
     pref = getSite().portal_preferences
     return subscription.getAndActivate(

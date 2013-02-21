@@ -498,7 +498,7 @@ class SyncMLSubscription(XMLObject):
     for signature in deleted_signature_list:
       syncml_response.addDeleteCommand(gid=signature.getId(),)
 
-  def _getSyncMLData(self, syncml_response, subscriber_gid_list, id_list=None):
+  def _getSyncMLData(self, syncml_response, id_list=None):
     """
     XXX Comment to be fixed
     if object is not None, this usually means we want to set the

@@ -424,7 +424,7 @@ class SynchronizationTool(BaseTool):
 
 
 
-  def sendSyncCommand(self, id_list, message_id, subscription_path, gid_list,
+  def sendSyncCommand(self, id_list, message_id, subscription_path,
                       activate_kw, is_final_message=False):
     """
     This methods is intented to be called by asynchronous engine in activity to
@@ -447,7 +447,6 @@ class SynchronizationTool(BaseTool):
 
     subscription._getSyncMLData(
       syncml_response=syncml_response,
-      subscriber_gid_list=gid_list,
       id_list=id_list,
       )
 
