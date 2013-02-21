@@ -112,7 +112,7 @@ Test Transactions related to an account, with at date parameter\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[11]</td>\n
-  <td>2200.0</td>\n
+  <td>2200.0</td>\n <!-- this might fail randomly, because 1st and 2nd lines are for the same date, so ordering is not guaranteed. -->
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
