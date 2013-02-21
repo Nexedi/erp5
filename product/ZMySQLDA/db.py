@@ -165,6 +165,7 @@ def ord_or_None(s):
         return ord(s)
 
 class DB(TM):
+    """This is the ZMySQLDA Database Connection Object."""
 
     conv=conversions.copy()
     conv[FIELD_TYPE.LONG] = int
@@ -253,6 +254,7 @@ class DB(TM):
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
+        """Returns a list of tables in the current database."""
         r=[]
         a=r.append
         result = self._query("SHOW TABLES")
@@ -263,6 +265,7 @@ class DB(TM):
         return r
 
     def columns(self, table_name):
+        """Returns a list of column descriptions for 'table_name'."""
         try:
             c = self._query('SHOW COLUMNS FROM %s' % table_name)
         except Exception:
@@ -360,6 +363,7 @@ class DB(TM):
         return self.db.store_result()
 
     def query(self, query_string, max_rows=1000):
+        """Execute 'query_string' and return at most 'max_rows'."""
         self._use_TM and self._register()
         desc = None
         # XXX deal with a typical mistake that the user appends
@@ -394,6 +398,7 @@ class DB(TM):
         return self.db.string_literal(s)
 
     def _begin(self, *ignored):
+        """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
             # Ping the database to reconnect if connection was closed.
@@ -408,6 +413,7 @@ class DB(TM):
             raise
 
     def _finish(self, *ignored):
+        """Commit a transaction (when TM is enabled)."""
         if not self._transaction_begun:
             return
         self._transaction_begun = False
@@ -417,6 +423,7 @@ class DB(TM):
             self._query("COMMIT")
 
     def _abort(self, *ignored):
+        """Rollback a transaction (when TM is enabled)."""
         if not self._transaction_begun:
             return
         self._transaction_begun = False
@@ -427,3 +434,44 @@ class DB(TM):
         else:
             LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
 
+
+class DeferredDB(DB):
+    """
+        An experimental MySQL DA which implements deferred execution
+        of SQL code in order to reduce locks and provide better behaviour
+        with MyISAM non transactional tables
+    """
+    def __init__(self, *args, **kw):
+        DB.__init__(self, *args, **kw)
+        assert self._use_TM
+        self._sql_string_list = []
+
+    def query(self,query_string, max_rows=1000):
+        self._register()
+        for qs in query_string.split('\0'):
+            qs = qs.strip()
+            if qs:
+                if qs[:6].upper() == "SELECT":
+                    raise NotSupportedError(
+                        "can not SELECT in deferred connections")
+                self._sql_string_list.append(qs)
+        return (),()
+
+    def _begin(self, *ignored):
+        # The Deferred DB instance is sometimes used for several
+        # transactions, so it is required to clear the sql_string_list
+        # each time a transaction starts
+        del self._sql_string_list[:]
+
+    def _finish(self, *ignored):
+        # BUG: It's wrong to execute queries here because tpc_finish must not
+        #      fail. Consider moving them to commit, tpc_vote or in an
+        #      after-commit hook.
+        if self._sql_string_list:
+            DB._begin(self)
+            for qs in self._sql_string_list:
+                self._query(qs)
+            del self._sql_string_list[:]
+            DB._finish(self)
+
+    _abort = _begin

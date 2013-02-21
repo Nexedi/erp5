@@ -11,8 +11,7 @@ class _ERP5(ERP5TypeTestSuite):
                           'ERP5VCS', 'ERP5Wizard', 'Formulator', 'ERP5Workflow',
                           'ERP5Configurator','HBTreeFolder2', 'MailTemplates', 
                           'PortalTransforms', 'TimerService', 'ZLDAPConnection', 
-                          'ZLDAPMethods', 'ZMySQLDA', 'ZMySQLDDA', 'ZSQLCatalog', 
-                          'Zelenium')
+                          'ZLDAPMethods', 'ZMySQLDA', 'ZSQLCatalog', 'Zelenium')
 
   def enableProducts(self):
     product_set = set(self.enabled_product_list)

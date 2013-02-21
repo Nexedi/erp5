@@ -98,17 +98,24 @@ from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
 from DateTime import DateTime
 from . import DABase
-from .db import DB
+from .db import DB, DeferredDB
 
 SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
 manage_addZMySQLConnectionForm=HTMLFile('connectionAdd',globals())
 
-def manage_addZMySQLConnection(self, id, title,
-                                connection_string,
-                                check=None, REQUEST=None):
-    """Add a DB connection to a folder"""
-    connection = Connection(id, title, connection_string)
+def manage_addZMySQLConnection(self, id, title, connection_string,
+                               check=None, deferred=False, REQUEST=None):
+    """Add a MySQL connection to a folder.
+
+    Arguments:
+        REQUEST -- The current request
+        title -- The title of the ZMySQLDA Connection (string)
+        id -- The id of the ZMySQLDA Connection (string)
+        connection_string -- see connectionAdd.dtml
+    """
+    cls = DeferredConnection if deferred else Connection
+    connection = cls(id, title, connection_string)
     self._setObject(id, connection)
     if check:
         connection.connect(connection_string)
@@ -119,7 +126,8 @@ def manage_addZMySQLConnection(self, id, title,
 database_connection_pool = defaultdict(WeakKeyDictionary)
 
 class Connection(DABase.Connection):
-    " "
+    """MySQL Connection Object
+    """
     database_type=database_type
     id='%s_database_connection' % database_type
     meta_type=title='Z %s Database Connection' % database_type
@@ -162,6 +170,28 @@ class Connection(DABase.Connection):
             self.connect(self.connection_string)
             connection = self._v_database_connection
         return connection.string_literal(v)
+
+
+class DeferredConnection(Connection):
+    """
+        Experimental MySQL DA which implements
+        deferred SQL code execution to reduce locking issues
+    """
+    meta_type=title='Z %s Deferred Database Connection' % database_type
+
+    def factory(self): return DeferredDB
+
+
+# BBB: Allow loading of deferred connections that were created
+#      before the merge of ZMySQLDDA into ZMySQLDA.
+import sys, imp
+m = 'Products.ZMySQLDDA'
+assert m not in sys.modules, "please remove obsolete ZMySQLDDA product"
+sys.modules[m] = imp.new_module(m)
+m += '.DA'
+sys.modules[m] = m = imp.new_module(m)
+m.DeferredConnection = DeferredConnection
+del m
 
 
 meta_types=(

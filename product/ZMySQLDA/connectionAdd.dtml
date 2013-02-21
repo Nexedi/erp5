@@ -28,6 +28,12 @@
             <input type="TEXT" name="connection_string" size="40">
           </td>
 	</tr>
+        <tr>
+          <th align="LEFT" valign="TOP">Create Deferred Connection</th>
+          <td align="LEFT" valign="TOP">
+            <input name="deferred:int" type="CHECKBOX" value="1">
+          </td>
+        </tr>
 	<tr>
 	  <th align="LEFT" valign="TOP">Connect immediately</th>
 	  <td align="LEFT" valign="TOP">

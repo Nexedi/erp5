@@ -30,7 +30,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from _mysql_exceptions import OperationalError
 from Products.ZMySQLDA.db import hosed_connection
-from thread import get_ident
 from zLOG import LOG
 
 UNCONNECTED_STATE = 0
@@ -97,22 +96,16 @@ class TestDeferredConnection(ERP5TypeTestCase):
       Revert monkeypatching done on db.
     """
     connection.__class__._forceReconnection = connection.__class__.original_forceReconnection
-    delattr(connection.__class__, 'original_forceReconnection')
+    del connection.__class__.original_forceReconnection
     mysql_class = connection.db.__class__
     mysql_class.query = mysql_class.original_query
-    delattr(mysql_class, 'original_query')
+    del mysql_class.original_query
 
   def getDeferredConnection(self):
     """
       Return site's deferred connection object.
     """
-    deferred = self.getPortal().erp5_sql_deferred_connection
-    deferred_connection = getattr(deferred, '_v_database_connection', None)
-    if deferred_connection is None:
-      deferred.connect(deferred.connection_string)
-      deferred_connection = getattr(deferred, '_v_database_connection')
-    deferred_connection.tables() # Dummy access to force actual connection.
-    return deferred_connection._pool_get(get_ident())
+    return self.portal.erp5_sql_deferred_connection()
 
   def test_00_basicReplaceQuery(self):
     """
@@ -151,7 +144,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
         self.fail()
     finally:
       self.abort()
-      delattr(connection, '_query')
+      del connection._query
       self.unmonkeypatchConnection(connection)
 
   def test_02_disconnectionRobustness(self):

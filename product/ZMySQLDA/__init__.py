@@ -100,7 +100,3 @@ def initialize(context):
         constructors=(DA.manage_addZMySQLConnectionForm,
                       DA.manage_addZMySQLConnection),
     )
-
-    context.registerHelp()
-    context.registerHelpTitle('ZMySQLDA')
-
