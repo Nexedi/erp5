@@ -59,8 +59,6 @@ class SyncMLSynchronousEngine(EngineMixin):
     # Read & apply status about databases & synchronizations
     self._readStatusList(syncml_request, subscription, syncml_response)
 
-    gid_list = subscription.getGidList()
-
     if syncml_request.isFinal and \
       subscription.getSynchronizationState() == "initializing":
       # Client sends its modifications first
@@ -160,8 +158,6 @@ class SyncMLSynchronousEngine(EngineMixin):
       # clients, which is not the case here
       # XXX To avoid issue with multiple message, this must be stored
       # in memcached instead of this variable
-      gid_list = subscriber.getGidList()
-
       if subscriber.getSynchronizationState() == "initializing":
         raise ValueError("Subscription still initializing, must not get here")
       if subscriber.getSynchronizationState() == "processing_sync_requests":

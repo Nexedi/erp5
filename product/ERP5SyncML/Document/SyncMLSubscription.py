@@ -912,14 +912,6 @@ class SyncMLSubscription(XMLObject):
     return self._getOb(gid, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getGidList')
-  def getGidList(self):
-    """
-    Returns the list of gids from signature
-    """
-    return list(self.getObjectIds())
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureList')
   @deprecated
   def getSignatureList(self):

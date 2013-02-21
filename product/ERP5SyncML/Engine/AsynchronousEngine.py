@@ -191,8 +191,6 @@ class SyncMLAsynchronousEngine(EngineMixin):
       # clients, which is not the case here
       # XXX To avoid issue with multiple message, this must be stored
       # in memcached instead of this variable
-      # gid_list = subscriber.getGidList()
-
       if subscriber.getSynchronizationState() == "initializing":
         raise ValueError("Subscription still initializing, must not get here")
       if subscriber.getSynchronizationState() == "processing_sync_requests":
