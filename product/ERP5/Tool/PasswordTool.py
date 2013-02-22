@@ -192,9 +192,11 @@ class PasswordTool(BaseTool):
                 mapping=message_dict)
       message = message.translate()
       event_keyword_argument_dict={}
+      message_text_format = 'text/plain'
     else:
+      message_text_format = notification_message.getContentType()
       subject = notification_message.getTitle()
-      if notification_message.getContentType() == "text/html":
+      if message_text_format == "text/html":
         message = notification_message.asEntireHTML(substitution_method_parameter_dict=message_dict)
       else:
         message = notification_message.asText(substitution_method_parameter_dict=message_dict)
@@ -206,6 +208,7 @@ class PasswordTool(BaseTool):
     self.getPortalObject().portal_notifications.sendMessage(sender=sender, recipient=[user,],
                                                             subject=subject, message=message,
                                                             store_as_event=store_as_event,
+                                                            message_text_format=message_text_format,
                                                             event_keyword_argument_dict=event_keyword_argument_dict)
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
