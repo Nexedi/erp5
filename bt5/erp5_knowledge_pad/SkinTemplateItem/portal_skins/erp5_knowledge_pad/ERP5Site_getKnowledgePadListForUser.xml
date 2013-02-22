@@ -53,7 +53,6 @@
             <value> <string>request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
-from zExceptions import Unauthorized\n
 \n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
@@ -79,15 +78,19 @@ def filterKnowledgePadListForContext(results, mode, \n
 kw = {\'portal_type\': \'Knowledge Pad\',\n
       \'sort_on\': ((\'creation_date\', \'ascending\',),),\n
       \'limit\': 50,}\n
-if isAnon or isAnonymousKnowledgePadUsed:\n
-  results = context.knowledge_pad_module.searchFolder(\n
-                                validation_state = (\'public\',),\n
-                                **kw)\n
-else:\n
-  results = context.knowledge_pad_module.searchFolder(\n
+\n
+# first for context\n
+results = context.knowledge_pad_module.searchFolder(\n
                                 validation_state = (\'visible\', \'invisible\',),\n
                                 local_roles = \'Owner\',\n
                                 **kw)\n
+\n
+if len(results)==0 and (isAnon and isAnonymousKnowledgePadUsed):\n
+  # try to get default pads for anonymous users if allowed on site\n
+  results = context.knowledge_pad_module.searchFolder(\n
+                                validation_state = (\'public\',),\n
+                                **kw)\n
+\n
 # use REQUEST to show immediately newly created pad\n
 # without waiting for reindex to be over\n
 active_pad, results = \\\n
