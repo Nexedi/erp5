@@ -2201,8 +2201,12 @@ return 1
     self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp') in response.info().headers)
 
     response = getURL(pdf_document.absolute_url(), **{'format':''})  
-    self.assertTrue('Content-Type: application/octet-stream\r\n'  in response.info().headers)
+    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
     self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
+
+    response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
+    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)   
 
     response = getURL(web_page_document.absolute_url(), **{'format':''})
     self.assertTrue('Content-Type: text/html; charset=utf-8\r\n'  in response.info().headers)

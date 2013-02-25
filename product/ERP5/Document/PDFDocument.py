@@ -95,7 +95,8 @@ class PDFDocument(Image):
         data = self._convertToDJVU()
         self.setConversion(data, mime=mime, format='djvu')
         return (mime, data)
-    elif format is None:
+    elif format in ('', None,) or format=='pdf':
+      # return original content
       return self.getContentType(), self.getData()
     else:
       if kw.get('frame', None) is None:
