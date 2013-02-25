@@ -76,6 +76,8 @@ reversal = accounting_module.newContent (\n
     destination_function=context.getDestinationFunction(),\n
     source_funding=context.getProperty(\'source_funding\'),\n
     destination_funding=context.getProperty(\'destination_funding\'),\n
+    source_payment_request=context.getProperty(\'source_payment_request\'),\n
+    destination_payment_request=context.getProperty(\'destination_payment_request\'),\n
     source_administration=context.getSourceAdministration(),\n
     destination_administration=context.getDestinationAdministration(),\n
     title = Base_translateString("Reversal Transaction for ${title}",\n
@@ -138,6 +140,7 @@ for line in line_list:\n
                 \'source_project\', \'destination_project\',\n
                 \'source_function\', \'destination_function\',\n
                 \'source_funding\', \'destination_funding\',\n
+                \'source_payment_request\', \'destination_payment_request\',\n
                 \'resource\', \'product_line\' ]:\n
     if line.getProperty(prop) != context.getProperty(prop):\n
       new_line.setProperty(prop, line.getProperty(prop))\n
