@@ -2,8 +2,6 @@ catalog
 category
 alarm
 delivery
-inventory
-inventory_stock
 item
 predicate
 predicate_category

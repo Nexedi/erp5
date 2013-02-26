@@ -16,13 +16,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_uncatalog_inventory</string> </value>
+            <value> <string>SimulationTool_zTrimInventoryCacheFromDateOnUncatalog</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-DELETE FROM inventory WHERE <dtml-sqltest uid op=eq type=int>
+DELETE FROM inventory_cache WHERE date > (SELECT min(date) from stock where <dtml-sqltest uid op=eq type=int>)
 
 ]]></string> </value>
         </item>

@@ -6,7 +6,7 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: context.providesIMovement() and context.isInventoryMovement()</value>
+  <value>python: context.providesIMovement() and not context.isInventoryMovement()</value>
  </item>
  <item key="_filter_expression_cache_key_archive" type="tuple">
   <value>portal_type</value>

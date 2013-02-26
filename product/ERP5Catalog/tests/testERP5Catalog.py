@@ -1554,8 +1554,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Do a hot reindex in the reverse way, but this time a more
     # complicated hot reindex
-    portal_catalog.manage_hotReindexAll(self.new_catalog_id,
-                                 self.original_catalog_id)
+    portal_catalog.manage_hotReindexAll(
+      source_sql_catalog_id=self.new_catalog_id,
+      destination_sql_catalog_id=self.original_catalog_id,
+      source_sql_connection_id_list=destination_sql_connection_id_list,
+      destination_sql_connection_id_list=source_sql_connection_id_list,
+      update_destination_sql_catalog=True)
     self.commit()
     self.assertEquals(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_RECORDING_STATE)
@@ -1735,6 +1739,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check more cached methods of SQLCatalog by building SQLQuery
     query = portal_catalog.getSQLCatalog().buildQuery(kw={'dummy.dummy_title': 'Foo'})
     self.assertTrue(query.query_list)
+    # We need to reset SQL connections in skin folder's zsql methods
+    sql_connection_id_dict = {}
+    for destination_sql_connection_id, source_sql_connection_id in \
+          zip(destination_sql_connection_id_list,
+              source_sql_connection_id_list):
+        if source_sql_connection_id != destination_sql_connection_id:
+          sql_connection_id_dict[destination_sql_connection_id] = \
+              source_sql_connection_id
+    portal_catalog.changeSQLConnectionIds(
+      folder=portal.portal_skins,
+      sql_connection_id_dict = sql_connection_id_dict)
 
   def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
     """test unrestricted search/count results.

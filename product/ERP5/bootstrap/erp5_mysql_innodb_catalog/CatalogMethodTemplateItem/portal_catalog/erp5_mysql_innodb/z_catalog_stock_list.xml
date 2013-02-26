@@ -92,7 +92,6 @@ WHERE\n
 ;\n
 \n
 <dtml-var "\'\\0\'">\n
-\n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">\n
@@ -152,7 +151,6 @@ WHERE\n
       </dtml-if>\n
     </dtml-if>\n
   </dtml-in>  \n
-  \n
   <dtml-if "row_list">\n
 INSERT INTO\n
   stock\n

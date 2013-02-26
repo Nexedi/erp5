@@ -74,7 +74,7 @@ class Inventory(Delivery):
 
   def appendToCategoryList(self, category_list, value, base_category):
     category_list.append("%s/%s" %(base_category, value))
-  
+
   def splitAndExtendToCategoryList(self, category_list, value, *args, **kw):
     if value is not None:
       value_list = value.split('\n')
@@ -101,16 +101,16 @@ class Inventory(Delivery):
       # with not all properties defined and thus making
       # request with no condition in mysql
       object_list = [self]
-      immediate_reindex_archive = sql_catalog_id is not None    
+      immediate_reindex_archive = sql_catalog_id is not None
       self.portal_catalog.catalogObjectList(object_list,
                                             sql_catalog_id = sql_catalog_id,
                                             disable_archive=disable_archive,
-                                            immediate_reindex_archive=immediate_reindex_archive)      
+                                            immediate_reindex_archive=immediate_reindex_archive)
       return
-    
+
     connection_id = None
     if sql_catalog_id is not None:
-      # try to get connection used in the catalog 
+      # try to get connection used in the catalog
       catalog = self.portal_catalog[sql_catalog_id]
       for method in catalog.objectValues():
         if method.meta_type == "Z SQL Method":
@@ -139,10 +139,10 @@ class Inventory(Delivery):
                                             },
                                           )
 
-    method = self._getTypeBasedMethod('getDefaultInventoryCalculationList')    
+    method = self._getTypeBasedMethod('getDefaultInventoryCalculationList')
     if method is not None:
       default_inventory_calculation_list = method()
-      
+
 
     if temp_constructor is None:
       from Products.ERP5Type.Document import newTempMovement
@@ -165,13 +165,11 @@ class Inventory(Delivery):
       current_inventory_dict = {}
       current_inventory_key_id_list = [x["key"] for x in inventory_calculation_dict['first_level']]
       for line in current_inventory_list:
-
-
         current_inventory_key = [line[x] for x in current_inventory_key_id_list]
         for x in xrange(len(current_inventory_key)):
           if current_inventory_key[x] is None:
             current_inventory_key[x] = ""
-        current_inventory_key = tuple(current_inventory_key)        
+        current_inventory_key = tuple(current_inventory_key)
 
         if inventory_calculation_dict.has_key("second_level"):
           # two level of variation
@@ -189,10 +187,13 @@ class Inventory(Delivery):
           current_inventory_dict[current_inventory_key] = line['total_quantity']
 
       # Browse all movements on inventory and create diff line when necessary
-      not_used_inventory_dict = {}
+      if self.isFullInventory():
+        not_used_inventory_dict = current_inventory_dict
+      else:
+        not_used_inventory_dict = {}
       inventory_id = self.getId()
-      list_method = inventory_calculation_dict['list_method']      
-      method = getattr(self, list_method)      
+      list_method = inventory_calculation_dict['list_method']
+      method = getattr(self, list_method)
       for movement in method():
         if movement.getResourceValue() is not None and \
             movement.getInventoriatedQuantity() not in (None, ''):
@@ -219,26 +220,26 @@ class Inventory(Delivery):
               second_key_list = tuple(second_key_list)
               if inventory_value.has_key(second_key_list):
                 total_quantity = inventory_value.pop(second_key_list)
-                # Put remaining subvariation in a dict to know which one 
+                # Put remaining subvariation in a dict to know which one
                 # to removed at end
                 not_used_inventory_dict[tuple(key_list)] = inventory_value
                 diff_quantity = movement_quantity - total_quantity
               else:
                 # Inventory for new resource/variation/sub_variation
                 diff_quantity = movement_quantity
-                # Put remaining subvariation in a dict to know which one 
+                # Put remaining subvariation in a dict to know which one
                 # to removed at end
                 not_used_inventory_dict[tuple(key_list)] = inventory_value
           else:
             # we got the quantity from first level key
             diff_quantity = movement_quantity - inventory_value
-              
+
           # Create tmp movement
           kwd = {'uid': movement.getUid(),
                  'start_date': stop_date}
           temp_delivery_line = temp_constructor(self,
                                                 inventory_id)
-          
+
           # set category on it only if quantity not null
           # thus line with same uid will be deleted but we
           # don't insert line with null quantity as we test
@@ -246,7 +247,7 @@ class Inventory(Delivery):
           # before insert but not before delete
           if diff_quantity != 0:
             kwd['quantity'] = diff_quantity
-            category_list = self.getCategoryList()            
+            category_list = self.getCategoryList()
 
             setter_list = [x['setter'] for x in inventory_calculation_dict['first_level']]
             if inventory_calculation_dict.has_key("second_level"):
@@ -267,13 +268,14 @@ class Inventory(Delivery):
           temp_delivery_line.edit(**kwd)
           stock_append(temp_delivery_line)
 
-      # Now create line to remove some subvariation text not present 
+      # Now create line to remove some subvariation text not present
       # in new inventory
       if len(not_used_inventory_dict):
         inventory_uid = self.getUid()
         for first_level_key in not_used_inventory_dict.keys():
           inventory_value = \
               not_used_inventory_dict[tuple(first_level_key)]
+          # XXX-Aurel : this code does not work with only one level of variation
           for second_level_key in inventory_value.keys():
             diff_quantity = - inventory_value[tuple(second_level_key)]
 
@@ -284,7 +286,7 @@ class Inventory(Delivery):
             temp_delivery_line = temp_constructor(self,
                                                   inventory_id)
             kwd['quantity'] = diff_quantity
-            category_list = self.getCategoryList()            
+            category_list = self.getCategoryList()
 
             setter_list = [x['setter'] for x in inventory_calculation_dict['first_level']]
             if inventory_calculation_dict.has_key("second_level"):
@@ -307,7 +309,7 @@ class Inventory(Delivery):
 
     # Reindex objects
     object_list = [self]
-    immediate_reindex_archive = sql_catalog_id is not None    
+    immediate_reindex_archive = sql_catalog_id is not None
     self.portal_catalog.catalogObjectList(object_list,
                                           sql_catalog_id = sql_catalog_id,
                                           disable_archive=disable_archive,

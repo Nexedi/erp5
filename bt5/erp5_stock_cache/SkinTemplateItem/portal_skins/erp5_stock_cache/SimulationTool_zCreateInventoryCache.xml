@@ -16,11 +16,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_drop_inventory</string> </value>
+            <value> <string>SimulationTool_zCreateInventoryCache</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS inventory</string> </value>
+            <value> <string>Create table `inventory_cache` (\n
+      `query` BINARY(16) NOT NULL,\n
+      `date` datetime NOT NULL,\n
+      `result` LONGBLOB NOT NULL,\n
+   PRIMARY KEY (`query`, `date`),\n
+   KEY (`date`)\n
+) Engine=InnoDB</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

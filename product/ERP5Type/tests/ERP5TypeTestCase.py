@@ -14,7 +14,6 @@ import os
 import random
 import re
 import socket
-import shutil
 import sys
 import time
 import traceback
@@ -26,7 +25,6 @@ from glob import glob
 from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
-from ZTUtils import make_query
 from DateTime import DateTime
 
 # XXX make sure that get_request works.
@@ -148,17 +146,17 @@ def _getConnectionStringDict():
 def _getConversionServerDict():
   """ Returns a dict with hostname and port for Conversion Server (Oood)
   """
-  conversion_server_hostname = os.environ.get('conversion_server_hostname', 
+  conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                               'localhost')
   conversion_server_port = os.environ.get('conversion_server_port',
                                           '8008')
-  return dict(hostname=conversion_server_hostname, 
+  return dict(hostname=conversion_server_hostname,
               port=int(conversion_server_port))
 
 def _getVolatileMemcachedServerDict():
   """Returns a dict with hostname and port for volatile memcached Server
   """
-  hostname = os.environ.get('volatile_memcached_server_hostname', 
+  hostname = os.environ.get('volatile_memcached_server_hostname',
                             'localhost')
   port = os.environ.get('volatile_memcached_server_port', '11211')
   return dict(hostname=hostname, port=port)
@@ -166,7 +164,7 @@ def _getVolatileMemcachedServerDict():
 def _getPersistentMemcachedServerDict():
   """Returns a dict with hostname and port for persistent memcached Server
   """
-  hostname = os.environ.get('persistent_memcached_server_hostname', 
+  hostname = os.environ.get('persistent_memcached_server_hostname',
                             'localhost')
   port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
@@ -478,7 +476,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
      if searchable_business_template_list is None:
        searchable_business_template_list = ["erp5_base"]
 
-     # Assume that the public official repository is a valid repository     
+     # Assume that the public official repository is a valid repository
      public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
 
      template_list = []
@@ -620,7 +618,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
-        
+
         # Save current security manager
         sm = getSecurityManager()
 
@@ -703,7 +701,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def _app(self):
       '''Opens a ZODB connection and returns the app object.
-      
+
       We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
       unicode conflict resolver to work properly'''
       app = PortalTestCase._app(self)
@@ -818,7 +816,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
         template_list = (erp5_catalog_storage, 'erp5_property_sheets',
-                         'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
+                         'erp5_core', 'erp5_xhtml_style') \
+                         + tuple(template_list)
         # Update only specified business templates, regular expression
         # can be used.
         if update_only is not None:
@@ -837,6 +836,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
+      # We want to always have optimisation available
+      if "erp5_stock_cache" not in template_list:
+        template_list = list(template_list)
+        template_list.append("erp5_stock_cache")
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,

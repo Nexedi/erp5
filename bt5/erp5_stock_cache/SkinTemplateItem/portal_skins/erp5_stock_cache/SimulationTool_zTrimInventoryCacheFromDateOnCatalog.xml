@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid</string> </value>
+            <value> <string>date</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -16,13 +16,16 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_uncatalog_inventory_stock</string> </value>
+            <value> <string>SimulationTool_zTrimInventoryCacheFromDateOnCatalog</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-DELETE FROM inventory_stock WHERE <dtml-sqltest uid op=eq type=int>
+DELETE FROM \n
+  inventory_cache \n
+WHERE \n
+  date > <dtml-sqlvar expr="date" type="datetime">
 
 ]]></string> </value>
         </item>

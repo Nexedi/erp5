@@ -15,9 +15,6 @@
  <key>effective_date</key>
  <key>expiration_date</key>
  <key>grouping_date</key>
- <key>inventory.date</key>
- <key>inventory_stock.date</key>
- <key>inventory_stock.mirror_date</key>
  <key>item.date</key>
  <key>mirror_date</key>
  <key>modification_date</key>

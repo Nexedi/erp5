@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string></string> </value>
         </item>
@@ -16,11 +22,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z0_drop_inventory_stock</string> </value>
+            <value> <string>SimulationTool_zDropInventoryCache</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>DROP TABLE IF EXISTS inventory_stock</string> </value>
+            <value> <string>DROP TABLE IF EXISTS inventory_cache</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

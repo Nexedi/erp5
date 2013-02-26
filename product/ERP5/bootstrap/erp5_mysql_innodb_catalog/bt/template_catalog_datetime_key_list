@@ -12,9 +12,6 @@ delivery.start_date_range_min
 delivery.stop_date
 delivery.stop_date_range_max
 delivery.stop_date_range_min
-inventory.date
-inventory_stock.date
-inventory_stock.mirror_date
 item.date
 mirror_date
 modification_date
