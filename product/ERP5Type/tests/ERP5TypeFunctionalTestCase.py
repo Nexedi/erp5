@@ -35,6 +35,7 @@ import re
 import subprocess
 import shutil
 import transaction
+from ZPublished.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
@@ -410,3 +411,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.assertEquals([], error_title_list, '\n'.join(error_title_list))
 
+# monkey patch HTTPResponse._unauthorized so that we will not have HTTP
+# authentication dialog in case of Unauthorized exception to prevent
+# blocking in functional tests.
+def _unauthorized(self):
+  raise RuntimeError, 'Unauthorized exception happens.'
+
+HTTPResponse._unauthorized = _unauthorized
