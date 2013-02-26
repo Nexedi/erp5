@@ -58,7 +58,8 @@ and make sure we get latest/most relevant version\n
 should be reimplemented in SQL some sunny day.\n
 """\n
 reference = context.getReference()\n
-if reference is None:\n
+if reference is None or not context.isSearchableReference():\n
+  # empty or not following format preference\n
   return ()\n
 \n
 return context.Base_zGetImplicitPredecessorValueList(reference=reference)\n
