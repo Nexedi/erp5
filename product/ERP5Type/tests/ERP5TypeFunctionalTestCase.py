@@ -35,7 +35,7 @@ import re
 import subprocess
 import shutil
 import transaction
-from ZPublished.HTTPResponse import HTTPResponse
+from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
