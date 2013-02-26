@@ -36,6 +36,7 @@ from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError,\
                                             VALID_TEXT_FORMAT_LIST
 from subprocess import Popen, PIPE
+from zLOG import LOG
 import errno
 
 class PDFDocument(Image):
@@ -269,16 +270,22 @@ class PDFDocument(Image):
       # Then we use pyPdf to get extra metadata
       try:
         from pyPdf import PdfFileReader
+        from pyPdf.utils import PdfReadError
       except ImportError:
         # if pyPdf not found, pass
         pass
       else:
-        pdf_file = PdfFileReader(tmp)
-        for info_key, info_value in pdf_file.getDocumentInfo().iteritems():
-          info_key = info_key.lstrip("/")
-          if isinstance(info_value, unicode):
-            info_value = info_value.encode("utf-8")
-          result.setdefault(info_key, info_value)
+        try:
+          pdf_file = PdfFileReader(tmp)
+          for info_key, info_value in pdf_file.getDocumentInfo().iteritems():
+            info_key = info_key.lstrip("/")
+            if isinstance(info_value, unicode):
+              info_value = info_value.encode("utf-8")
+            result.setdefault(info_key, info_value)
+        except PdfReadError:
+          LOG("PDFDocument.getContentInformation", 0,
+            "pyPdf is Unable to read PDF, probably corrupted PDF here : %s" % \
+            (self.getRelativeUrl(),))
     finally:
       tmp.close()
 
