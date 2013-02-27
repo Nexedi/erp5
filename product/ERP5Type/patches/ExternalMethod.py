@@ -98,6 +98,7 @@ if 1:
 
         __traceback_info__=args, kw, self._v_func_defaults
 
+        # TODO python2.7: use inspect.getcallargs instead of try..except block
         try: return f(*args, **kw)
         except TypeError, v:
             tb=sys.exc_info()[2]
