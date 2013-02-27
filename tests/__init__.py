@@ -55,7 +55,7 @@ class PERF(_ERP5):
 class CloudPERF(_ERP5):
 
   def getTestList(self):
-    return ['_testPystone']
+    return ['_testPystone', '_testSQLBench']
 
 class ERP5(_ERP5):
   mysql_db_count = 3
