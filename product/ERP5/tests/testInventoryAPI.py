@@ -2253,7 +2253,7 @@ class TestInventoryStat(InventoryAPITestCase):
     self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
 
 class TestTrackingList(InventoryAPITestCase):
-  """Tests Inventory Stat methods.
+  """Tests Item Tracking
   """
   def testNodeUid(self):
     getTrackingList = self.getSimulationTool().getTrackingList
@@ -2350,6 +2350,33 @@ class TestTrackingList(InventoryAPITestCase):
           self.assertEqual(uid_list[0], location_uid,
                            '%s=now - %i, aggregate should be at node %i but is at node %i' % \
                            (param_id, now - date, node_uid_to_node_number[location_uid], node_uid_to_node_number[uid_list[0]]))
+
+  def testFutureTrackingList(self):
+    movement = self._makeMovement(quantity=1, aggregate_value=self.item,)
+    getFutureTrackingList = self.portal.portal_simulation.getFutureTrackingList
+    node_uid = self.node.getUid()
+
+    for state in ('planned', 'ordered', 'confirmed', 'ready', 'started',
+                  'stopped', 'delivered'):
+      movement.simulation_state = state
+      movement.reindexObject()
+      self.tic()
+      tracking_node_uid_list = [brain.node_uid for brain in
+        getFutureTrackingList(item=self.item.getRelativeUrl())]
+      self.assertEquals([node_uid], tracking_node_uid_list,
+        "%s != %s (state:%s)" % ([node_uid], tracking_node_uid_list, state))
+
+    for state in ('draft', 'cancelled', 'deleted'):
+      movement.simulation_state = state
+      movement.reindexObject()
+      self.tic()
+      tracking_node_uid_list = [brain.node_uid for brain in
+        getFutureTrackingList(item=self.item.getRelativeUrl())]
+      self.assertEquals([], tracking_node_uid_list,
+        "%s != %s (state:%s)" % ([], tracking_node_uid_list, state))
+
+    # TODO: missing tests for input=1 and output=1
+
 
 class TestInventoryCacheTable(InventoryAPITestCase):
   """ Test impact of creating cache entries into inventory_cache table

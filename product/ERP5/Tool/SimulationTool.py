@@ -2162,8 +2162,11 @@ class SimulationTool(BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['item.simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      kw['item.simulation_state'] = tuple(
+                 list(self.getPortalFutureInventoryStateList()) + \
+                 list(self.getPortalTransitInventoryStateList()) + \
+                 list(self.getPortalReservedInventoryStateList()) + \
+                 list(self.getPortalCurrentInventoryStateList()))
       return self.getTrackingList(**kw)
 
     #######################################################
