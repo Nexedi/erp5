@@ -21,6 +21,8 @@ if 1:
         Patch2: do not use hasattr.
         """
         if f is None:
+            # XXX: should probably use __import__ instead, as in __call__
+            # below.
             import erp5.component.extension
             try:
                 f = getattr(getattr(erp5.component.extension, self._module),
