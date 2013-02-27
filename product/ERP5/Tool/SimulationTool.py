@@ -1731,7 +1731,7 @@ class SimulationTool(BaseTool):
       """
       kw['group_by_variation'] = 0
       method = getattr(self,'get%sInventoryList' % simulation_period)
-      return method(statistic=1, inventory_list=0,
+      return method(statistic=1, inventory_list=0, optimisation__=False,
                                    ignore_group_by=1, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
