@@ -29,6 +29,7 @@ import ERP5KeyAuthPlugin
 import ERP5ExternalAuthenticationPlugin
 import ERP5BearerExtractionPlugin
 import ERP5ExternalOauth2ExtractionPlugin
+import ERP5CacheCookieCredentialExtractionPlugin
 
 def mergedLocalRoles(object):
   """Returns a merging of object and its ancestors'
@@ -67,6 +68,7 @@ registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationP
 registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
+registerMultiPlugin(ERP5CacheCookieCredentialExtractionPlugin.ERP5CacheCookieCredentialExtractionPlugin.meta_type)
 
 def initialize(context):
 
@@ -147,6 +149,15 @@ def initialize(context):
                          , constructors=(
                             ERP5ExternalOauth2ExtractionPlugin.manage_addERP5GoogleExtractionPluginForm,
                             ERP5ExternalOauth2ExtractionPlugin.addERP5GoogleExtractionPlugin, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+
+    context.registerClass( ERP5CacheCookieCredentialExtractionPlugin.ERP5CacheCookieCredentialExtractionPlugin
+                         , permission=ManageUsers
+                         , constructors=(
+                            ERP5CacheCookieCredentialExtractionPlugin.manage_addERP5CacheCookieCredentialExtractionPluginForm,
+                            ERP5CacheCookieCredentialExtractionPlugin.addERP5CacheCookieCredentialExtractionPlugin, )
                          , visibility=None
                          , icon='www/portal.gif'
                          )
