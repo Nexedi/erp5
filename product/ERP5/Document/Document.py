@@ -326,7 +326,9 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       certain defined at system level preferences format.
     """
     reference = self.getReference()
-    return len(self._getSearchableReferenceList(reference))
+    if reference is not None:
+      return len(self._getSearchableReferenceList(reference))
+    return False
 
   def _getSearchableReferenceList(self, text):
     """

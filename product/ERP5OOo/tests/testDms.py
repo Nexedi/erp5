@@ -596,6 +596,13 @@ class TestDocument(TestDocumentMixin):
       [document3],
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
+    # with empty reference no implicit relation should exists even though some documents
+    # used to reference us with previous reference
+    document1.setReference(None)
+    self.tic()
+    self.assertSameSet([],
+      sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
+
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
     doc = self.portal.document_module.newContent(portal_type='Spreadsheet')
