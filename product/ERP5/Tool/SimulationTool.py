@@ -1681,10 +1681,11 @@ class SimulationTool(BaseTool):
       """
         Returns list of current inventory grouped by section or site
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
-                               self.getPortalTransitInventoryStateList()
+      portal = self.getPortalObject()
+      kw['simulation_state'] = portal.getPortalCurrentInventoryStateList() + \
+                               portal.getPortalTransitInventoryStateList()
       if transit_simulation_state is None:
-        transit_simulation_state = self.getPortalTransitInventoryStateList()
+        transit_simulation_state = portal.getPortalTransitInventoryStateList()
 
       return self.getInventoryList(
                             omit_transit=omit_transit,
@@ -1697,11 +1698,12 @@ class SimulationTool(BaseTool):
       """
         Returns list of current inventory grouped by section or site
       """
+      portal = self.getPortalObject()
       if transit_simulation_state is None:
-        transit_simulation_state = self.getPortalTransitInventoryStateList()
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList() + \
-                               self.getPortalTransitInventoryStateList()
-      reserved_kw = {'simulation_state': self.getPortalReservedInventoryStateList(),
+        transit_simulation_state = portal.getPortalTransitInventoryStateList()
+      kw['simulation_state'] = portal.getPortalCurrentInventoryStateList() + \
+                               portal.getPortalTransitInventoryStateList()
+      reserved_kw = {'simulation_state': portal.getPortalReservedInventoryStateList(),
                      'transit_simulation_state': transit_simulation_state,
                      'omit_input': 1}
       return self.getInventoryList(reserved_kw=reserved_kw, omit_transit=omit_transit,
@@ -1713,11 +1715,11 @@ class SimulationTool(BaseTool):
       """
         Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(
-                 list(self.getPortalFutureInventoryStateList()) + \
-                 list(self.getPortalTransitInventoryStateList()) + \
-                 list(self.getPortalReservedInventoryStateList()) + \
-                 list(self.getPortalCurrentInventoryStateList()))
+      portal = self.getPortalObject()
+      kw['simulation_state'] = portal.getPortalFutureInventoryStateList() + \
+                               portal.getPortalTransitInventoryStateList() + \
+                               portal.getPortalReservedInventoryStateList() + \
+                               portal.getPortalCurrentInventoryStateList()
       return self.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1781,7 +1783,8 @@ class SimulationTool(BaseTool):
       """
       Returns list of current inventory grouped by section or site
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      kw['simulation_state'] = self.getPortalObject()\
+        .getPortalCurrentInventoryStateList()
       return self.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1790,10 +1793,10 @@ class SimulationTool(BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(
-                      list(self.getPortalFutureInventoryStateList()) + \
-                      list(self.getPortalReservedInventoryStateList()) + \
-                      list(self.getPortalCurrentInventoryStateList()))
+      portal = self.getPortalObject()
+      kw['simulation_state'] = portal.getPortalFutureInventoryStateList() + \
+                               portal.getPortalReservedInventoryStateList() + \
+                               portal.getPortalCurrentInventoryStateList()
       return self.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1873,9 +1876,9 @@ class SimulationTool(BaseTool):
       Returns list of available inventory grouped by section or site
       (current inventory - deliverable)
       """
-      kw['simulation_state'] = tuple(
-                    list(self.getPortalReservedInventoryStateList()) + \
-                    list(self.getPortalCurrentInventoryStateList()))
+      portal = self.getPortalObject()
+      kw['simulation_state'] = portal.getPortalReservedInventoryStateList() + \
+                               portal.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1884,10 +1887,10 @@ class SimulationTool(BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(
-               list(self.getPortalFutureInventoryStateList()) + \
-               list(self.getPortalReservedInventoryStateList()) + \
-               list(self.getPortalCurrentInventoryStateList()))
+      portal = self.getPortalObject()
+      kw['simulation_state'] = portal.getPortalFutureInventoryStateList() + \
+                               portal.getPortalReservedInventoryStateList() + \
+                               portal.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -2138,7 +2141,8 @@ class SimulationTool(BaseTool):
       """
       Returns list of current inventory grouped by section or site
       """
-      kw['item.simulation_state'] = self.getPortalCurrentInventoryStateList()
+      kw['item.simulation_state'] = self.getPortalObject()\
+        .getPortalCurrentInventoryStateList()
       return self.getTrackingList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingHistoryList')
@@ -2146,7 +2150,8 @@ class SimulationTool(BaseTool):
       """
       Returns list of current inventory grouped by section or site
       """
-      kw['item.simulation_state'] = self.getPortalCurrentInventoryStateList()
+      kw['item.simulation_state'] = self.getPortalObject()\
+        .getPortalCurrentInventoryStateList()
       return self.getTrackingHistoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingHistoryList')
@@ -2162,11 +2167,11 @@ class SimulationTool(BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['item.simulation_state'] = tuple(
-                 list(self.getPortalFutureInventoryStateList()) + \
-                 list(self.getPortalTransitInventoryStateList()) + \
-                 list(self.getPortalReservedInventoryStateList()) + \
-                 list(self.getPortalCurrentInventoryStateList()))
+      portal = self.getPortalObject()
+      kw['item.simulation_state'] = portal.getPortalFutureInventoryStateList() + \
+                                    portal.getPortalTransitInventoryStateList() + \
+                                    portal.getPortalReservedInventoryStateList() + \
+                                    portal.getPortalCurrentInventoryStateList()
       return self.getTrackingList(**kw)
 
     #######################################################
@@ -2858,15 +2863,16 @@ class SimulationTool(BaseTool):
       if (from_date is None) or (to_date is None):
         raise NotImplementedError, \
               "getAvailableTime does not managed yet None values"
+      portal = self.getPortalObject()
       # Calculate portal_type
       if portal_type == []:
-        portal_type = self.getPortalCalendarPeriodTypeList()
+        portal_type = portal.getPortalCalendarPeriodTypeList()
 
-      simulation_state = self.getPortalCurrentInventoryStateList() + \
-                         self.getPortalTransitInventoryStateList() + \
-                         self.getPortalReservedInventoryStateList()
+      simulation_state = portal.getPortalCurrentInventoryStateList() + \
+                         portal.getPortalTransitInventoryStateList() + \
+                         portal.getPortalReservedInventoryStateList()
 
-      sql_result = self.Person_zGetAvailableTime(
+      sql_result = portal.Person_zGetAvailableTime(
                           from_date=from_date,
                           to_date=to_date,
                           portal_type=portal_type,
@@ -2910,9 +2916,10 @@ class SimulationTool(BaseTool):
       hour, day,
       month, year   - duration of each time period (cumulative)
       """
+      portal = self.getPortalObject()
       # Calculate portal_type
       if portal_type == []:
-        portal_type = self.getPortalCalendarPeriodTypeList()
+        portal_type = portal.getPortalCalendarPeriodTypeList()
 
       sequence = Sequence(from_date, to_date, **kw)
       for sequence_item in sequence:
