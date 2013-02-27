@@ -874,8 +874,29 @@ class TestResource(ERP5TypeTestCase):
                         tab=1)
       if variation:
         categories.append(variation)
-      self.assertEqual(base_price, product.getPrice(categories=categories))
-  
+
+      def sortResult(a, b):
+        def _pricingSortMethod(a, b): # XXX copied from Resource.py
+          # Simple method : the one that defines a destination section wins
+          if a.getDestinationSection():
+            return -1 # a defines a destination section and wins
+          return 1 # a defines no destination section and loses
+        if _pricingSortMethod(a, b):
+          # now sort based on resource definition
+          if a.getResourceValue():
+            if b.getResourceValue():
+              return 1
+            else:
+              return -1
+          else:
+            return 1
+        else:
+          return -1
+
+
+      self.assertEqual(base_price, product.getPrice(categories=categories,
+                                                    sort_method=sortResult))
+
 
   # The following test tests Movement.getPrice, which is based on the movement
   # context.
