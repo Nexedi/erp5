@@ -1795,6 +1795,7 @@ class SimulationTool(BaseTool):
       """
       portal = self.getPortalObject()
       kw['simulation_state'] = portal.getPortalFutureInventoryStateList() + \
+                               portal.getPortalTransitInventoryStateList() + \
                                portal.getPortalReservedInventoryStateList() + \
                                portal.getPortalCurrentInventoryStateList()
       return self.getInventoryChart(**kw)
