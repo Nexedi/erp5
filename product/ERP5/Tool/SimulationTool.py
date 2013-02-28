@@ -1307,8 +1307,8 @@ class SimulationTool(BaseTool):
       }
       # Get cached data
       if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
-              optimisation__ and 'from_date' not in kw and \
-              (('at_date' in kw) ^ ('to_date' in kw)) and \
+              optimisation__ and (not kw.get('from_date')) and \
+              (bool(kw.get("at_date")) ^ bool(kw.get("to_date"))) and \
               'transformed_resource' not in kw:
         # Here is the different kind of date
         # from_date : >=
