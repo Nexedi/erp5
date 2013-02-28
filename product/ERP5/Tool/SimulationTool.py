@@ -1568,6 +1568,10 @@ class SimulationTool(BaseTool):
           elif line_a[key] == line_b[key]:
             result[key] = line_a[key]
           elif key not in ('date', 'stock_uid', 'path'):
+            # This case happens when we got columns in result
+            # which are not part of the group by statement, MySQL
+            # used to choose randomly a value for this column, here
+            # we just do not set the key in result returned
             LOG('InventoryTool.getInventoryList.addLineValues',
               PROBLEM,
               'mismatch for %s column: %s and %s' % (
