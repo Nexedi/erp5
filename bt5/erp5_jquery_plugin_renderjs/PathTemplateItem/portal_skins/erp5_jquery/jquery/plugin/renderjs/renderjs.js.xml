@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts62057361.38</string> </value>
+            <value> <string>ts62060037.0</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -338,7 +338,7 @@ var RenderJs = (function () {\n
         },\n
 \n
         addGadget: function (dom_id, gadget_id, gadget, gadget_data_handler,\n
-                            gadget_data_source) {\n
+                            gadget_data_source, bootstrap) {\n
             /*\n
              * add new gadget and render it\n
              */\n
@@ -356,7 +356,9 @@ var RenderJs = (function () {\n
             tab_gadget = tab_container.find(\'#\' + gadget_id);\n
 \n
             // render new gadget\n
-            RenderJs.bootstrap(tab_container);\n
+            if (bootstrap !== false) {\n
+              RenderJs.bootstrap(tab_container);\n
+            }\n
 \n
             return tab_gadget;\n
         },\n
@@ -521,13 +523,13 @@ var RenderJs = (function () {\n
                 },\n
 \n
                 addNewTabGadget: function (dom_id, gadget_id, gadget, gadget_data_handler,\n
-                                          gadget_data_source) {\n
+                                          gadget_data_source, bootstrap) {\n
                     /*\n
                      * add new gadget and render it\n
                      */\n
                     var tab_gadget;\n
                     tab_gadget = RenderJs.addGadget(\n
-                        dom_id, gadget_id, gadget, gadget_data_handler, gadget_data_source\n
+                        dom_id, gadget_id, gadget, gadget_data_handler, gadget_data_source, bootstrap\n
                     );\n
 \n
                     // we should unregister all gadgets part of this TabbularGadget\n
@@ -932,7 +934,7 @@ var RenderJs = (function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>36763</int> </value>
+            <value> <int>36851</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
