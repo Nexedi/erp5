@@ -63,7 +63,14 @@
       </button>\n
 \n
       <script type="text/javascript"\n
-        tal:content="python: \'\'\'ERP5Form.setCurrentFormId(\'%s\');;\'\'\' %current_form_id">\n
+        tal:content="python:\'\'\'ERP5Form.setCurrentFormId(\'%s\');;\n
+                               RenderJs.TabbularGadget.addNewTabGadget(\n
+                                  \'form_gadget\',\n
+                                  \'gadget-%s\',\n
+                                  \'%s/Form_asRenderJSGadget\',\n
+                                  \'ERP5Form.update\',\n
+                                  \'Form_asJSON?form_id=%s\', false);;\n
+                            \'\'\' %(current_form_id, current_form_id, current_form_id, current_form_id)">\n
       </script>\n
 \n
       <!-- get all tabs from server -->\n
@@ -87,15 +94,9 @@
 \n
     <div class="content editable">\n
     \n
-      <!--Form render goes here -->\n
-      <div id="form_gadget"\n
-           tal:attributes="data-gadget string:${current_form_id}/Form_asRenderJSGadget;\n
-                           data-gadget-source string:Form_asJSON?form_id=${current_form_id};\n
-                           data-gadget-handler string:ERP5Form.update;\n
-                           data-gadget-cacheable string:1;\n
-                           data-gadget-cache-id current_form_id;">\n
-      </div>\n
-       \n
+      <!--Form rendered content goes here -->\n
+      <div id="form_gadget"></div>\n
+\n
     </div>\n
   </div>\n
         \n
