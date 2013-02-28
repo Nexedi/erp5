@@ -194,12 +194,6 @@ m.DeferredConnection = DeferredConnection
 del m
 
 
-meta_types=(
-    {'name':'Z %s Database Connection' % database_type,
-     'action':'manage_addZ%sConnectionForm' % database_type,
-     },
-    )
-
 folder_methods={
     'manage_addZMySQLConnection':
     manage_addZMySQLConnection,

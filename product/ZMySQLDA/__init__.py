@@ -96,7 +96,7 @@ def initialize(context):
 
     context.registerClass(
         DA.Connection,
-        permission='Add Z MySQL Database Connections',
         constructors=(DA.manage_addZMySQLConnectionForm,
                       DA.manage_addZMySQLConnection),
     )
+    context.registerClass(DA.DeferredConnection, visibility=None)
