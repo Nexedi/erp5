@@ -94,9 +94,15 @@ misc_=DA.misc_
 
 def initialize(context):
 
+    permission = "Add Z MySQL Database Connections"
     context.registerClass(
         DA.Connection,
+        permission=permission,
         constructors=(DA.manage_addZMySQLConnectionForm,
                       DA.manage_addZMySQLConnection),
     )
-    context.registerClass(DA.DeferredConnection, visibility=None)
+    context.registerClass(
+        DA.DeferredConnection,
+        permission=permission,
+        visibility=None,
+    )
