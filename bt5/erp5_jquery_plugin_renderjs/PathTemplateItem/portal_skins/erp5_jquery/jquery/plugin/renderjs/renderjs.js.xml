@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts58177410.64</string> </value>
+            <value> <string>ts62057361.38</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,9 +26,10 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global console, require, $, localStorage, document */\n
+/*! RenderJs v0.2  */\n
+/*global console, require, $, localStorage, document, jIO */\n
+/*jslint evil: true, white: true */\n
 "use strict";\n
-\n
 /*\n
  * RenderJs - Generic Gadget library renderer.\n
  * http://www.renderjs.org/documentation\n
@@ -39,18 +40,28 @@
 var RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING = true;\n
 \n
 // by default RenderJs will examine and bind all interaction gadgets\n
-// available \n
+// available\n
 var RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND = true;\n
 \n
+// by default RenderJs will examine and create all routes\n
+var RENDERJS_ENABLE_IMPLICIT_ROUTE_CREATE = true;\n
+\n
 // fallback for IE\n
-if (typeof console === "undefined" || typeof console.log === "undefined") {\n
-  console = {};\n
-  console.log = function () {};\n
+if (console === undefined || console.log === undefined) {\n
+    var console = {};\n
+    console.log = function () {};\n
 }\n
 \n
 var RenderJs = (function () {\n
     // a variable indicating if current gadget loading is over or not\n
-    var is_ready = false;\n
+    var is_ready = false, current_gadget;\n
+\n
+    function setSelfGadget (gadget) {\n
+      /*\n
+       * Only used internally to set current gadget being executed.\n
+       */\n
+      current_gadget = gadget;\n
+    }\n
 \n
     return {\n
 \n
@@ -61,21 +72,25 @@ var RenderJs = (function () {\n
           if (RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING) {\n
               RenderJs.bootstrap($(\'body\'));\n
           }\n
-          if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND) {\n
-            var root_gadget = RenderJs.GadgetIndex.getRootGadget();\n
+          var root_gadget = RenderJs.GadgetIndex.getRootGadget();\n
+          if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND||RENDERJS_ENABLE_IMPLICIT_ROUTE_CREATE) {\n
             // We might have a page without gadgets.\n
             // Be careful, right now we can be in this case because\n
             // asynchronous gadget loading is not finished\n
             if (root_gadget !== undefined) {\n
               RenderJs.bindReady(\n
                 function () {\n
-                  // examine all Intaction Gadgets and bind accordingly\n
-                  $("div[data-gadget-connection]").each( function (index, element) {\n
-                    RenderJs.InteractionGadget.bind($(element));\n
-                  })\n
+                  if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND) {\n
+                    // examine all Intaction Gadgets and bind accordingly\n
+                    RenderJs.InteractionGadget.init();\n
+                  }\n
+                  if (RENDERJS_ENABLE_IMPLICIT_ROUTE_CREATE) {\n
+                    // create all routes between gadgets\n
+                    RenderJs.RouteGadget.init();\n
+                  }\n
                 });\n
             }\n
-          };\n
+          }\n
         },\n
 \n
         bootstrap: function (root) {\n
@@ -122,9 +137,26 @@ var RenderJs = (function () {\n
              * Set gadget data and recursively load it in case it holds another\n
              * gadgets.\n
              */\n
+            // set current gadget as being loaded so gadget instance itself knows which gadget it is\n
+            setSelfGadget(RenderJs.GadgetIndex.getGadgetById(gadget.attr("id")));\n
             gadget.append(data);\n
+            // reset as no longer current gadget\n
+            setSelfGadget(undefined);\n
             // a gadget may contain sub gadgets\n
             RenderJs.loadRecursiveGadget(gadget);\n
+        },\n
+\n
+        getSelfGadget: function () {\n
+           /*\n
+            * Get current gadget being loaded\n
+            * This function must be used with care as it relies on Javascript nature of being a single\n
+            * threaded application. Currently current gadget is set in a global RenderJs variable\n
+            * before its HTML is inserted into DOM and if multiple threads were running (which is not the case currently)\n
+            * this could lead to reace conditions and unreliable getSelfGadget results.\n
+            * Additionally this function is available only at gadget\'s script load time - i.e.\n
+            * it can\'t be used in after that calls. In this case gagdget can save this value internally.\n
+            */\n
+           return current_gadget;\n
         },\n
 \n
         loadGadget: function (gadget) {\n
@@ -132,14 +164,23 @@ var RenderJs = (function () {\n
              * Load gadget\'s SPECs from URL\n
              */\n
             var url, gadget_id, gadget_property, cacheable, cache_id,\n
+                i, gadget_index, gadget_index_id,\n
                 app_cache, data, gadget_js, is_update_gadget_data_running;\n
+\n
             url = gadget.attr("data-gadget");\n
             gadget_id = gadget.attr("id");\n
             gadget_js = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
+            gadget_index = RenderJs.GadgetIndex.getGadgetList();\n
+\n
             if (gadget_js === undefined) {\n
               // register gadget in javascript namespace if not already registered\n
               gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
               RenderJs.GadgetIndex.registerGadget(gadget_js);\n
+            }\n
+\n
+            if (gadget_js.isReady()) {\n
+              // avoid loading again gadget which was loaded before in same page\n
+              return ;\n
             }\n
 \n
             // update Gadget\'s instance with contents of "data-gadget-property"\n
@@ -263,7 +304,7 @@ var RenderJs = (function () {\n
         updateGadgetData: function (gadget) {\n
             /*\n
              * Gadget can be updated from "data-gadget-source" (i.e. a json)\n
-             * and "data-gadget-handler" attributes (i.e. a namespace Javascript) \n
+             * and "data-gadget-handler" attributes (i.e. a namespace Javascript)\n
              */\n
             var data_source, data_handler;\n
             data_source = gadget.attr("data-gadget-source");\n
@@ -312,7 +353,7 @@ var RenderJs = (function () {\n
             ].join(\'\\n\');\n
 \n
             tab_container.append(html_string);\n
-            tab_gadget = tab_container.find(".gadget");\n
+            tab_gadget = tab_container.find(\'#\' + gadget_id);\n
 \n
             // render new gadget\n
             RenderJs.bootstrap(tab_container);\n
@@ -381,12 +422,10 @@ var RenderJs = (function () {\n
                     return {\n
                         get: function (cache_id, default_value) {\n
                             /* Get cache key value */\n
-                            if (cache_id in localStorage) {\n
+                            if (localStorage.getItem(cache_id) !== null) {\n
                               return JSON.parse(localStorage.getItem(cache_id));\n
                             }\n
-                            else {\n
-                              return default_value;\n
-                            }\n
+                            return default_value;\n
                         },\n
 \n
                         set: function (cache_id, data) {\n
@@ -417,7 +456,7 @@ var RenderJs = (function () {\n
             };\n
         }()),\n
 \n
-        Gadget: (function (gadget_id, dom) {\n
+        Gadget: function (gadget_id, dom) {\n
             /*\n
              * Javascript Gadget representation\n
              */\n
@@ -451,17 +490,25 @@ var RenderJs = (function () {\n
                 /*\n
                  * Remove gadget (including its DOM element).\n
                  */\n
-                // unregister from GadgetIndex\n
+                var gadget;\n
+                // unregister root from GadgetIndex\n
                 RenderJs.GadgetIndex.unregisterGadget(this);\n
-                // remove its DOM element\n
+                // gadget might contain sub gadgets so before remove entire\n
+                // DOM we must unregister them from GadgetIndex\n
+                this.getDom().find("[data-gadget]").each( function () {\n
+                  gadget = RenderJs.GadgetIndex.getGadgetById($(this).attr("id"));\n
+                  RenderJs.GadgetIndex.unregisterGadget(gadget);\n
+                });\n
+                // remove root\'s entire DOM element\n
                 $(this.getDom()).remove();\n
             };\n
-        }),\n
+        },\n
 \n
         TabbularGadget: (function () {\n
             /*\n
              * Generic tabular gadget\n
              */\n
+            var gadget_list = [];\n
             return {\n
                 toggleVisibility: function (visible_dom) {\n
                     /*\n
@@ -482,7 +529,18 @@ var RenderJs = (function () {\n
                     tab_gadget = RenderJs.addGadget(\n
                         dom_id, gadget_id, gadget, gadget_data_handler, gadget_data_source\n
                     );\n
-                    // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
+\n
+                    // we should unregister all gadgets part of this TabbularGadget\n
+                    $.each(gadget_list,\n
+                         function (index, gadget_id) {\n
+                           var gadget = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
+                           gadget.remove();\n
+                           // update list of root gadgets inside TabbularGadget\n
+                           gadget_list.splice($.inArray(gadget_id, gadget_list), 1);\n
+                        }\n
+                    );\n
+                    // add it as root gadget\n
+                    gadget_list.push(tab_gadget.attr("id"));\n
                 }\n
             };\n
         }()),\n
@@ -525,7 +583,10 @@ var RenderJs = (function () {\n
                     /*\n
                      * Register gadget\n
                      */\n
-                    gadget_list.push(gadget);\n
+                    if (RenderJs.GadgetIndex.getGadgetById(gadget.id) === undefined) {\n
+                      // register only if not already added\n
+                      gadget_list.push(gadget);\n
+                    }\n
                 },\n
 \n
                 unregisterGadget: function (gadget) {\n
@@ -580,16 +641,119 @@ var RenderJs = (function () {\n
             };\n
         }()),\n
 \n
+        GadgetCatalog : (function () {\n
+            /*\n
+             * Gadget catalog provides API to get list of gadgets from a repository\n
+             */\n
+            var cache_id = "setGadgetIndexUrlList";\n
+\n
+            function updateGadgetIndexFromURL(url) {\n
+              // split to base and document url\n
+              var url_list = url.split(\'/\'),\n
+                  document_url = url_list[url_list.length-1],\n
+                  d = url_list.splice($.inArray(document_url, url_list), 1),\n
+                  base_url = url_list.join(\'/\'),\n
+                  web_dav = jIO.newJio({\n
+                      "type": "dav",\n
+                      "username": "",\n
+                      "password": "",\n
+                      "url": base_url});\n
+              web_dav.get(document_url,\n
+                          function (err, response) {\n
+                            RenderJs.Cache.set(url, response);\n
+              });\n
+            }\n
+\n
+            return {\n
+                updateGadgetIndex: function () {\n
+                  /*\n
+                   * Update gadget index from all configured remote repositories.\n
+                   */\n
+                  $.each(RenderJs.GadgetCatalog.getGadgetIndexUrlList(),\n
+                         function(index, value) {\n
+                          updateGadgetIndexFromURL(value);\n
+                         });\n
+                },\n
+\n
+                setGadgetIndexUrlList: function (url_list) {\n
+                  /*\n
+                   * Set list of Gadget Index repositories.\n
+                   */\n
+                  // store in Cache (html5 storage)\n
+                  RenderJs.Cache.set(cache_id, url_list);\n
+                },\n
+\n
+                getGadgetIndexUrlList: function () {\n
+                  /*\n
+                   * Get list of Gadget Index repositories.\n
+                   */\n
+                  // get from Cache (html5 storage)\n
+                  return RenderJs.Cache.get(cache_id, undefined);\n
+                },\n
+\n
+                getGadgetListThatProvide: function (service) {\n
+                  /*\n
+                   * Return list of all gadgets that providen a given service.\n
+                   * Read this list from data structure created in HTML5 local\n
+                   * storage by updateGadgetIndexFromURL\n
+                   */\n
+                  // get from Cache stored index and itterate over it\n
+                  // to find matching ones\n
+                  var gadget_list = [];\n
+                  $.each(RenderJs.GadgetCatalog.getGadgetIndexUrlList(),\n
+                         function(index, url) {\n
+                           // get repos from cache\n
+                           var cached_repo = RenderJs.Cache.get(url);\n
+                           $.each(cached_repo.gadget_list,\n
+                                   function(index, gadget) {\n
+                                     if ($.inArray(service, gadget.service_list) > -1) {\n
+                                       // gadget provides a service, add to list\n
+                                       gadget_list.push(gadget);\n
+                                     }\n
+                                  }\n
+                                 );\n
+                         });\n
+                  return gadget_list;\n
+                },\n
+\n
+                registerServiceList: function (gadget, service_list) {\n
+                  /*\n
+                   * Register a service provided by a gadget.\n
+                   */\n
+                }\n
+            };\n
+        }()),\n
+\n
         InteractionGadget : (function () {\n
             /*\n
              * Basic gadget interaction gadget implementation.\n
              */\n
             return {\n
+\n
+                init: function (force) {\n
+                        /*\n
+                        * Inspect DOM and initialize this gadget\n
+                        */\n
+                        var dom_list, gadget_id;\n
+                        if (force===1) {\n
+                          // we explicitly want to re-init elements even if already this is done before\n
+                          dom_list = $("div[data-gadget-connection]");\n
+                        }\n
+                        else {\n
+                          // XXX: improve and save \'bound\' on javascript representation of a gadget not DOM\n
+                          dom_list = $("div[data-gadget-connection]")\n
+                                       .filter(function() { return $(this).data("bound") !== true; })\n
+                                       .data(\'bound\', true );\n
+                        }\n
+                        dom_list.each(function (index, element) {\n
+                          RenderJs.InteractionGadget.bind($(element));});\n
+                },\n
+\n
                 bind: function (gadget_dom) {\n
                     /*\n
                      * Bind event between gadgets.\n
                      */\n
-                    var gadget_id, gadget_connection_list, \n
+                    var gadget_id, gadget_connection_list,\n
                       createMethodInteraction = function (\n
                         original_source_method_id, source_gadget_id,\n
                         source_method_id, destination_gadget_id,\n
@@ -670,15 +834,95 @@ var RenderJs = (function () {\n
                     });\n
                 }\n
             };\n
+        }()),\n
+\n
+        RouteGadget : (function () {\n
+            /*\n
+             * A gadget that defines possible routes (i.e. URL changes) between gadgets.\n
+             */\n
+            var route_list = [];\n
+            return {\n
+\n
+                init: function () {\n
+                  /*\n
+                   * Inspect DOM and initialize this gadget\n
+                   */\n
+                  $("div[data-gadget-route]").each(function (index, element) {\n
+                      RenderJs.RouteGadget.route($(element));\n
+                  });\n
+                },\n
+\n
+                route: function (gadget_dom) {\n
+                    /*\n
+                     * Create routes between gadgets.\n
+                     */\n
+                  var body = $("body"),\n
+                      handler_func, priority,\n
+                      gadget_route_list = gadget_dom.attr("data-gadget-route");\n
+                  gadget_route_list = $.parseJSON(gadget_route_list);\n
+                  $.each(gadget_route_list, function (key, gadget_route) {\n
+                    handler_func = function () {\n
+                        var gadget_id = gadget_route.destination.split(\'.\')[0],\n
+                            method_id = gadget_route.destination.split(\'.\')[1],\n
+                            gadget = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
+                        // set gadget value so getSelfGadget can work\n
+                        setSelfGadget(gadget);\n
+                        gadget[method_id].apply(null, arguments);\n
+                        // reset as no longer needed\n
+                        setSelfGadget(undefined);\n
+                    };\n
+                    // add route itself\n
+                    priority = gadget_route.priority;\n
+                    if (priority === undefined) {\n
+                      // default is 1 -i.e.first level\n
+                      priority = 1;\n
+                    }\n
+                    RenderJs.RouteGadget.add(gadget_route.source, handler_func, priority);\n
+                  });\n
+                },\n
+\n
+                add: function (path, handler_func, priority) {\n
+                    /*\n
+                     * Add a route between path (hashable) and a handler function (part of Gadget\'s API).\n
+                     */\n
+                  var body = $("body");\n
+                  body\n
+                      .route("add", path, 1)\n
+                      .done(handler_func);\n
+                  // save locally\n
+                  route_list.push({"path": path,\n
+                                   "handler_func": handler_func,\n
+                                   "priority": priority});\n
+                },\n
+\n
+                go: function (path, handler_func, priority) {\n
+                    /*\n
+                     * Go a route.\n
+                     */\n
+                  var body = $("body");\n
+                  body\n
+                      .route("go", path, priority)\n
+                      .fail(handler_func);\n
+                },\n
+\n
+                remove: function (path) {\n
+                    /*\n
+                     * Remove a route.\n
+                     */\n
+\n
+                    // XXX: implement remove a route when route.js supports it\n
+                },\n
+\n
+                getRouteList: function () {\n
+                    /*\n
+                     * Get list of all router\n
+                     */\n
+                  return route_list;\n
+                }\n
+            };\n
         }())\n
     };\n
-}());\n
-\n
-// impliticly call RenderJs bootstrap\n
-//  $(document).ready(function () {\n
-//      RenderJs.init();\n
-//  });\n
-
+}());
 
 ]]></string> </value>
         </item>
@@ -688,7 +932,7 @@ var RenderJs = (function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>26111</int> </value>
+            <value> <int>36763</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
