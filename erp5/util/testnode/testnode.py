@@ -149,6 +149,7 @@ class TestNode(object):
     for y in to_remove_reference_set:
       fpath = os.path.join(config['working_directory'],y)
       self.delNodeTestSuite(y)
+      self.log("testnode.checkOldTestSuite, DELETING : %r" % (fpath,))
       if os.path.isdir(fpath):
        shutil.rmtree(fpath)
       else:
@@ -290,6 +291,8 @@ branch = %(branch)s
                                   'slapproxy.log')
     log('Configured slapproxy log to %r' % slapproxy_log)
     reset_software = slapos_instance.retry_software_count > 10
+    if reset_software:
+      slapos_instance.retry_software_count = 0
     log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
     self.slapos_controler = SlapOSControler.SlapOSControler(

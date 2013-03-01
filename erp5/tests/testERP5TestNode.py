@@ -607,3 +607,40 @@ branch = foo
     test_node.max_temp_time = 0
     test_node._cleanupTemporaryFiles()
     check(set(['something']))
+
+  def test_18_resetSoftwareAfterManyBuildFailures(self):
+    """
+    Check that after several building failures that the software is resetted
+    """
+    initial_initializeSlapOSControler = \
+      SlapOSControler.initializeSlapOSControler
+    initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    init_call_kw_list = []
+    def initializeSlapOSControler(self, **kw):
+      init_call_kw_list.append(kw)
+    def runSoftwareRelease(self, *args, **kw):
+      return {"status_code": 1}
+    SlapOSControler.initializeSlapOSControler = initializeSlapOSControler
+    SlapOSControler.runSoftwareRelease = runSoftwareRelease
+    def callPrepareSlapOS():
+      test_node._prepareSlapOS(self.working_directory, node_test_suite,
+         test_node.log, create_partition=0)
+    def callRaisingPrepareSlapos():
+      self.assertRaises(SubprocessError, callPrepareSlapOS)
+    self.assertEquals(node_test_suite.retry_software_count, 0)
+    for x in xrange(0,11):
+      callRaisingPrepareSlapos()
+    self.assertEquals(len(init_call_kw_list), 11)
+    self.assertEquals(init_call_kw_list[-1]['reset_software'], False)
+    self.assertEquals(node_test_suite.retry_software_count, 11)
+    callRaisingPrepareSlapos()
+    self.assertEquals(init_call_kw_list[-1]['reset_software'], True)
+    self.assertEquals(node_test_suite.retry_software_count, 1)
+    callRaisingPrepareSlapos()
+    self.assertEquals(init_call_kw_list[-1]['reset_software'], False)
+    self.assertEquals(node_test_suite.retry_software_count, 2)
+    SlapOSControler.initializeSlapOSControler = \
+      initial_initializeSlapOSControler
+    SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
