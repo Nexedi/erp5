@@ -81,7 +81,7 @@
               tal:attributes="id action_form;\n
                               class python: action == current_action and \'selected\' or \'not_selected\'">\n
 \n
-            <a tal:attributes="onclick python: \'\'\'javascript: RenderJs.TabbularGadget.addNewTabGadget(\'form_gadget\', \'gadget-%s\', \'%s/Form_asRenderJSGadget\', \'ERP5Form.update\', \'Form_asJSON?form_id=%s\');; RenderJs.TabbularGadget.toggleVisibility($(\'#%s\'));; ERP5Form.setCurrentFormId(\'%s\');;return false ;;\'\'\' %(action_form, action_form, action_form, action_form, action_form)">\n
+            <a tal:attributes="onclick python: \'\'\'javascript: ERP5Form.openFormInTabbularGadget(\'form_gadget\', \'%s\');; return false ;;\'\'\' %(action_form)">\n
               <span i18n:translate=""\n
                     i18n:domain="ui"\n
                     tal:content="action/name">action_name</span>\n

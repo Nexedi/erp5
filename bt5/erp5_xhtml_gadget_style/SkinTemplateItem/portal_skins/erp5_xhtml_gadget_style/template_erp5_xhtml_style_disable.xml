@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode>\074tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\076\n
+  \074tal:block tal:replace="nothing"\076\n
+\074!--\n
+IDEAS:\n
+ - Add callbacks to ERP5Form object (selection ?) to gather needed fields -\076 put them in http_parameter_list.\n
+--\076\n
+  \074/tal:block\076\n
+  \074tal:block metal:define-macro="master"\076\n
+    \074tal:block tal:define="global_definitions_macros here/global_definitions/macros;\n
+                           subject_list subject_list | python:here.getProperty(\'subject_list\', []) or []"\076\n
+      \074tal:block metal:use-macro="global_definitions_macros/header_definitions" /\076\n
+      \074!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"\076\n
+      \074html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"\076\n
+        \074head\076\n
+          \074base tal:attributes="href python: \'%s/\' % (url, )" /\076\n
+          \074meta name="generator" content="ERP5 - Copyright (C) 2001 - 2008. All rights reserved." /\076\n
+          \074meta name="description" content=""\n
+                tal:attributes="content description | title | string:ERP5 Free Open Source ERP and CRM" /\076\n
+          \074meta name="keywords" content=""\n
+                tal:attributes="content python:\', \'.join(subject_list)" /\076\n
+          \074meta name="robots" content="index, follow" /\076\n
+          \074meta http-equiv="Content-Type" content="text/html; charset=utf-8" /\076\n
+          \074meta http-equiv="Content-Script-Type" content="text/javascript" /\076\n
+          \074meta http-equiv="Content-Style-Type" content="text/css" /\076\n
+          \074title tal:define="title title | string:ERP5;\n
+                             header_title header_title | nothing"\n
+                 tal:content="python:header_title or \'%s | %s\' % (title, here.getPortalObject().title_or_id())"\076\074/title\076\n
+          \074tal:block tal:repeat="css css_list"\076\n
+            \074link tal:attributes="href css" type="text/css" rel="stylesheet" /\076\n
+          \074/tal:block\076\n
+          \074tal:block tal:replace="nothing"\076\n
+            \074!-- Render each field\'s css and javascript. --\076\n
+          \074/tal:block\076\n
+          \074tal:block tal:condition="python: form is not None"\076\n
+            \074tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != \'hidden\']"\076\n
+              \074tal:block tal:repeat="field python: form.get_fields_in_group(group)"\076\n
+                \074tal:block tal:define="css python: field.render_css(REQUEST=request)"\076\n
+                  \074style tal:condition="python: css is not None"\n
+                         tal:content="css"\n
+                         tal:attributes="type python:\'text/css\'"\076\n
+                  \074/style\076\n
+                \074/tal:block\076\n
+                \074tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" /\076\n
+              \074/tal:block\076\n
+            \074/tal:block\076\n
+          \074/tal:block\076\n
+          \074tal:block tal:repeat="js js_list"\076\n
+            \074script tal:attributes="src js" type="text/javascript"\076\074/script\076\n
+          \074/tal:block\076\n
+\n
+          \074!-- RenderJs added libraries (WIP, XXX: use requirejs) --\076\n
+          \074script src="jquery/ui/js/jquery-ui.js" type="text/javascript"\076\074/script\076\n
+          \074link rel="stylesheet" type="text/css" media="screen" href="jquery/plugin/jqgrid/ui.jqgrid.css" /\076\n
+          \074link rel="stylesheet" type="text/css" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.css" /\076\n
+          \074script type="text/javascript" src="jquery/plugin/jqgrid/i18n/grid.locale-en.js"\076\074/script\076\n
+          \074script type="text/javascript" src="jquery/plugin/jqgrid/jquery.jqGrid.src.js"\076\074/script\076\n
+          \074!--[if IE]\076\n
+              \074script type="text/javascript" src="jquery/plugin/jstorage/jquery.json-2.3.js"\076\074/script\076\n
+          \074!--\074![endif]--\076\n
+          \074script src="jquery/plugin/renderjs/renderjs.js"\076\074/script\076\n
+          \074script src="erp5_form.js"\076\074/script\076\n
+\n
+          \074script type="text/javascript" language="javascript"\076\n
+              //\074![CDATA[\n
+              $(document).ready(function() {\n
+                // we need to explicitly fire it\n
+                RenderJs.init();\n
+              });\n
+              //]]\076\n
+          \074/script\076\n
+\n
+          \074link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" /\076\n
+          \074link rel="shortcut icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" /\076\n
+          \074tal:block metal:define-slot="head"\076\n
+            \074!-- this is a placeholder for different extensions to head which could be required by web themes --\076\n
+          \074/tal:block\076\n
+        \074/head\076\n
+        \074body tal:attributes="class body_css_class|nothing"\076\n
+          \074form id="main_form"\n
+                class="main_form"\n
+                onsubmit="changed=false; return true"\n
+                tal:attributes="enctype enctype | form/Form_getEnctype | nothing;\n
+                action url;\n
+                method python:str(path(\'form/method | string:post\')).lower()"\076\n
+            \074fieldset id="hidden_fieldset" class="hidden_fieldset"\076\n
+              \074input tal:condition="form_action | nothing"\n
+                     id="hidden_button" class="hidden_button" type="submit" value="dummy"\n
+                     tal:attributes="name string:${form_action}:method" /\076\n
+              \074tal:block metal:use-macro="global_definitions_macros/http_definitions" /\076\n
+            \074/fieldset\076\n
+            \074tal:block metal:define-slot="layout"\076\n
+\n
+              \074div id="bars" class="bars"\076\n
+\n
+                \074div id="main_bar"\n
+                     data-gadget="ERP5Site_renderCachedNavigationBox"\076\074/div\076\n
+\n
+                \074!-- XXX: make a gadget --\076\n
+                \074div id="context_bar" class="context_bar"\076\n
+                  \074tal:block metal:define-slot="context_bar" /\076\n
+                \074/div\076\n
+\n
+              \074/div\076\n
+\n
+              \074div id="status"\n
+                   class="status"\n
+                   data-gadget="status_gadget"\076\074/div\076\n
+\n
+              \074div id="master" class="master"\076\n
+                \074tal:block metal:define-slot="main" /\076\n
+              \074/div\076\n
+\n
+            \074/tal:block\076\n
+          \074/form\076\n
+        \074/body\076\n
+      \074/html\076\n
+    \074/tal:block\076\n
+  \074/tal:block\076\n
+\074/tal:block\076</unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_xhtml_style_disable</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

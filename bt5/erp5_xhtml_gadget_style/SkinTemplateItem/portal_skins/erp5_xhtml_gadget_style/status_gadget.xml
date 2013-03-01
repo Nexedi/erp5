@@ -36,39 +36,38 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="master">\n
-    <tal:block\n
-              tal:define="object_uid           here/getUid | nothing;\n
-              object_path          here/getPath | nothing;\n
-              form                 nocall: form | nothing;\n
-              form_id              form/id | template/id | nothing;\n
-              portal               here/getPortalObject;\n
-              form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
-              local_parameter_list local_parameter_list | python: {};\n
-              dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
-              title                python: \'%s - %s\' % (portal.Base_translateString(template.title_or_id()), here.getTitle());">\n
+<div id="status" class="status"\n
+     tal:define="portal here/getPortalObject">\n
 \n
-      <tal:block metal:use-macro="here/main_template/macros/master">\n
-        <tal:block metal:fill-slot="context_bar">\n
+  <div id="breadcrumb" class="breadcrumb">\n
+    <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />\n
+  </div>\n
 \n
-          <div id="context_box_render"\n
-               data-gadget="context_box_render_wrapper"></div>\n
-\n
-        </tal:block>\n
-        <tal:block metal:fill-slot="main">\n
-\n
-          <div id="content"\n
-               data-gadget="gadgets/content/gadget"\n
-               tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>\n
-\n
-        </tal:block>\n
-      </tal:block>\n
+  <div id="logged_in_as" class="logged_in_as">\n
+    <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
+      <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
+      <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />\n
     </tal:block>\n
+  </div>\n
+\n
+  <p class="clear"></p>\n
+\n
+  <tal:block tal:condition="preferred_html_style_acknowledgeable_message | nothing">\n
+    <div id="acknowledgeable_message_render" class="acknowledgeable_message_render">\n
+      <div tal:content="structure here/acknowledgeable_message_render"/>\n
+    </div>\n
   </tal:block>\n
-</tal:block>
+\n
+  <div tal:content="request/portal_status_message | nothing" id="transition_message"\n
+       class="transition_message"/>\n
+\n
+  <tal:block tal:condition="request/field_errors | nothing">\n
+    <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">\n
+        Input data has errors. Please look at the error messages below.\n
+    </div>\n
+    <script type="text/javascript">changed = true;</script>\n
+  </tal:block>\n
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -82,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_main_disable</string> </value>
+            <value> <string>status_gadget</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
