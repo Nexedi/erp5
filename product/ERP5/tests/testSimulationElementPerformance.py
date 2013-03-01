@@ -83,12 +83,13 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-#     (pystone results: min: < 75757.6 - mean: ~ 77174.4 - max: > 78125)
+#     (pystone results: min: < 131578.9 - mean: ~ 139768.5 - max: > 147058.8)
 # Historical values are here to remember original values on this
 # specific testing environment. We must always try to stay below max
 # historical values.
 
-EXPECTED_MIN_MAX_TIME = {
+# Only for information
+HISTORICAL_EXPECTED_MIN_MAX_TIME = {
   'Creation Of New Applied Rules': (34.8, 36.8),
 
   'Expansion of Existing Applied Rules': (16.9, 19.5),
@@ -109,6 +110,29 @@ EXPECTED_MIN_MAX_TIME = {
   'Creation Of New Sale Invoices': (90.0, 98.5),
 
   'Addition of New Invoices Lines': (145.1, 157.6),
+}
+
+EXPECTED_MIN_MAX_TIME = {
+  'Creation Of New Applied Rules': (5, 10),
+
+  'Expansion of Existing Applied Rules': (5, 10),
+
+  'Creation of New Sale Packing Lists': (5, 10),
+
+  'Expansion of Converged Changes': (8, 12),
+
+  'Expansion of Diverged Changes': (9, 13),
+
+  'Adoption of Previsions': (20, 25),
+
+  'Acceptance of Decisions': (20, 25),
+
+  'Creation of New Applied Rules from Partially Simulated Deliveries':
+    (12, 17),
+
+  'Creation Of New Sale Invoices': (9, 14),
+
+  'Addition of New Invoices Lines': (36, 44),
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
