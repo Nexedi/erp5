@@ -39,7 +39,7 @@ import os
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-#     (pystone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+#     (pystone results: min: < 131578.9 - mean: ~ 139768.5 - max: > 147058.8)
 # Historical values are here to remember what was original values on this
 # specific testing environment. We must always try to stay below max
 # historical values.
