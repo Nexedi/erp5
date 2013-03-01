@@ -65,13 +65,13 @@ for loop_item in xrange(len(uid)):\n
                 min_date = min(min_date, getStartDate[loop_item])\n
             else:\n
                 min_date = getStartDate[loop_item]\n
-if min_date:\n
-    try:\n
-        context.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(date=min_date)\n
-    except ProgrammingError:\n
-        # Create table if it does not exits\n
-        # Then no need to flush an empty table\n
-        context.SimulationTool_zCreateInventoryCache()\n
+\n
+try:\n
+    context.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(uid_list=uid, min_date=min_date)\n
+except ProgrammingError:\n
+    # Create table if it does not exits\n
+    # Then no need to flush an empty table\n
+    context.SimulationTool_zCreateInventoryCache()\n
 </string> </value>
         </item>
         <item>

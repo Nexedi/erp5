@@ -2807,17 +2807,58 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
-    # Delete movement, so it gets unindexed
-    self.folder.manage_delObjects(ids=[movement.getId(), ])
+    self.assertEquals(
+      value + 2 * INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    # Move movement's start date in the future and check cache is flushed
+    # at former date
+    movement.edit(start_date=self.NOW - 1)
     self.tic()
     self.assertEquals(
-      value + 3 * self.INVENTORY_QUANTITY_1,
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
     self.doubleStockValue()
     # Cache hit again
     self.assertEquals(
-      value + 3 * self.INVENTORY_QUANTITY_1,
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 +  7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+
+    # Set date back in the past, cache is clear again
+    movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
+    self.tic()
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.assertEquals(
+      value + 2 * INVENTORY_QUANTITY_4 + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+
+    # Delete movement, so it gets unindexed and cache entry is flushed
+    self.folder.manage_delObjects(ids=[movement.getId(), ])
+    self.tic()
+    self.assertEquals(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + 15 * self.INVENTORY_QUANTITY_1,
       self.getInventory(**inventory_kw),
     )
 
@@ -2860,6 +2901,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Make sure it is dropped
     self.assertRaises(ProgrammingError,
              self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+             uid_list = (0,),
              date=DateTime())
     # Check that src__ call still works
     inventory_kw={
@@ -2870,6 +2912,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Table is still not created
     self.assertRaises(ProgrammingError,
              self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+             uid_list = (0,),
              date=DateTime())
     # This call should not fail
     # It will create table, fill it and check optimisation is used
@@ -2887,6 +2930,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Make sure it is dropped
     self.assertRaises(ProgrammingError,
             self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+            uid_list = (0,),
             date=DateTime())
     # Create a new movement, indexation should not fail
     INVENTORY_QUANTITY_4 = 5000
@@ -2928,12 +2972,15 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     # Make sure it is dropped
     self.assertRaises(ProgrammingError,
         self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+                      uid_list = (0,),
                       date=DateTime())
     # Delete movement
     self.folder.manage_delObjects(ids=[movement.getId(), ])
     self.tic()
     # This call must not fail as table has been created
-    self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(date=DateTime())
+    self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(
+      uid_list = (0,),
+      date=DateTime())
 
     # This call should not fail
     # It will create table, fill it and check optimisation is used

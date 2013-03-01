@@ -8,7 +8,8 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>date</string> </value>
+            <value> <string>uid_list\r\n
+min_date</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -22,10 +23,17 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-DELETE FROM \n
+DELETE \n
+FROM \n
   inventory_cache \n
 WHERE \n
-  date > <dtml-sqlvar expr="date" type="datetime">
+  date > (SELECT min(date) from stock where <dtml-sqltest uid_list column=uid type=int multiple>)\n
+<dtml-if min_date>\n
+OR\n
+  date > <dtml-sqlvar expr="min_date" type="datetime">\n
+</dtml-if>\n
+\n
+
 
 ]]></string> </value>
         </item>
