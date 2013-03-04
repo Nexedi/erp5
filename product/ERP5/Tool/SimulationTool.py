@@ -1568,10 +1568,19 @@ class SimulationTool(BaseTool):
           elif line_a[key] == line_b[key]:
             result[key] = line_a[key]
           elif key not in ('date', 'stock_uid', 'path'):
-            # This case happens when we got columns in result
-            # which are not part of the group by statement, MySQL
-            # used to choose randomly a value for this column, here
-            # we just do not set the key in result returned
+            # There are 2 possible reasons to end up here:
+            # - key corresponds to a projected column for which are neither
+            #   known aggregated columns (in which case they should be in
+            #   result_column_id_dict) nor part of grouping columns, and the
+            #   result happens to be unstable. There are cases in ERP5 where
+            #   such result is suposed to be stable, for example
+            #   group_by=('xxx_uid'), selection_list=('xxx_path') because the
+            #   relation is bijective (although the database doesn't know it).
+            #   These should result in stable results (but don't necessarily
+            #   do, ex: xxx_title when object title has been changed between
+            #   cache fill and cache lookup).
+            # - line_a and line_b are indeed mismatched, and code calling us
+            #   has a bug.
             LOG('InventoryTool.getInventoryList.addLineValues',
               PROBLEM,
               'mismatch for %s column: %s and %s' % (
