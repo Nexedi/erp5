@@ -262,6 +262,9 @@ class PDFForm(File):
     * cache compiled TALES
     * set _v_errors when setting invalid TALES (setCellTALES can raise, but
       not doEditCells)
+
+  OBSOLETE : Not used any more. Such functionalities could be done with more
+  modern tools
   """
 
   meta_type = "ERP5 PDF Form"
@@ -299,7 +302,7 @@ class PDFForm(File):
   )
 
   def __init__ (self, id, title='', pdf_file=''):
-    # holds all the cell informations, even those not related to this form
+    # holds information about all cells, even those not related to this form
     self.all_cells = PersistentMapping()
     # holds the cells related to this pdf form
     self.cells = PersistentMapping()

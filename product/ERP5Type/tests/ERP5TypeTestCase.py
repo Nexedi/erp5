@@ -14,7 +14,6 @@ import os
 import random
 import re
 import socket
-import shutil
 import sys
 import time
 import traceback
@@ -26,7 +25,6 @@ from glob import glob
 from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
-from ZTUtils import make_query
 from DateTime import DateTime
 
 # XXX make sure that get_request works.
@@ -65,8 +63,6 @@ from zLOG import LOG, DEBUG
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
 
-# Quiet messages when installing products
-install_product_quiet = 1
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
 
@@ -79,37 +75,11 @@ if getattr(config, 'product_config', None) is None:
   config.product_config = {}
 config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
 
-import OFS.Application
-OFS.Application.import_products()
-
-# Std Zope Products
-ZopeTestCase.installProduct('Photo', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Formulator', quiet=install_product_quiet)
-ZopeTestCase.installProduct('FCKeditor', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZSQLMethods', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMySQLDA', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZSQLCatalog', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMailIn', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZGDChart', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZCTextIndex', quiet=install_product_quiet)
-ZopeTestCase.installProduct('MailHost', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PageTemplates', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PythonScripts', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZODBMountPoint', quiet=install_product_quiet)
-
 from Testing.ZopeTestCase.layer import onsetup
-# installProduct() is a delayed call, so imports that depend on products being
-# "initialize"d should only be called "on setup". The decorator above delays
-# calls to the decorated function until after Product initialization.
-# Also, we need Five to wire all our CMF dependencies.
-ZopeTestCase.installProduct('Five', quiet=install_product_quiet)
 
 try:
   # Workaround iHotFix patch that doesn't work with
   # ZopeTestCase REQUESTs
-  ZopeTestCase.installProduct('iHotfix', quiet=install_product_quiet)
   from Products import iHotfix
   from types import UnicodeType
   # revert monkey patchs from iHotfix
@@ -126,7 +96,6 @@ try:
   iHotfix.iHotfixStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
-ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
 try:
   # Workaround Localizer >= 1.2 patch that doesn't work with
   # ZopeTestCase REQUESTs (it's the same as iHotFix
@@ -137,74 +106,9 @@ try:
 except ImportError:
   pass
 
-try:
-  from Products.Localizer import patches
-  # originalStringIO has been removed from recent Localizer versions
-  from Products.Localizer.patches import originalStringIO
-  class UnicodeSafeStringIO(patches.originalStringIO):
-    """StringIO like class which never fails with unicode."""
-    def write(self, s):
-      if isinstance(s, unicode):
-        s = s.encode('utf8', 'repr')
-      patches.originalStringIO.write(self, s)
-  # Localizer will patch PageTemplate StringIO with
-  patches.LocalizerStringIO = UnicodeSafeStringIO
-except ImportError:
-  pass
-
 from Products.ERP5Type.tests.ProcessingNodeTestCase import \
   ProcessingNodeTestCase, patchActivityTool
 onsetup(patchActivityTool)()
-
-ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
-
-# CMF
-ZopeTestCase.installProduct('CMFCore', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFDefault', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFTopic', quiet=install_product_quiet)
-ZopeTestCase.installProduct('DCWorkflow', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFCalendar', quiet=install_product_quiet)
-
-# Based on CMF
-ZopeTestCase.installProduct('CMFPhoto', quiet=install_product_quiet)
-ZopeTestCase.installProduct('BTreeFolder2', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFReportTool', quiet=install_product_quiet) # Not required by ERP5Type but required by ERP5Form
-ZopeTestCase.installProduct('TranslationService', quiet=install_product_quiet)
-ZopeTestCase.installProduct('PortalTransforms', quiet=install_product_quiet)
-ZopeTestCase.installProduct('MimetypesRegistry', quiet=install_product_quiet)
-
-# Security Stuff
-ZopeTestCase.installProduct('PluggableAuthService', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Security', quiet=install_product_quiet)
-
-# Debugging
-ZopeTestCase.installProduct('VerboseSecurity', quiet=install_product_quiet)
-ZopeTestCase.installProduct('Zelenium', quiet=install_product_quiet)
-
-# ERP5 - ERP5Type product is installed last so that
-#        initializeProductDocumentRegistry is only called
-#        after all products which need to register their Document 
-#        classes can register them by invoking updateGlobals in __init__
-ZopeTestCase.installProduct('CMFActivity', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Catalog', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Form', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5SyncML', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ERP5Type', quiet=install_product_quiet)
-ZopeTestCase.installProduct('CMFCategory', quiet=install_product_quiet)
-ZopeTestCase.installProduct('ZMySQLDDA', quiet=install_product_quiet)
-
-ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
-
-# Install everything else which looks like related to ERP5
-from OFS.Application import get_products
-for priority, product_name, index, product_dir in get_products():
-  # XXX very heuristic
-  if os.path.isdir(os.path.join(product_dir, product_name, 'Document')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'PropertySheet')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'Constraint')) \
-     or os.path.isdir(os.path.join(product_dir, product_name, 'Tool')):
-    ZopeTestCase.installProduct(product_name, quiet=install_product_quiet)
 
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
@@ -242,17 +146,17 @@ def _getConnectionStringDict():
 def _getConversionServerDict():
   """ Returns a dict with hostname and port for Conversion Server (Oood)
   """
-  conversion_server_hostname = os.environ.get('conversion_server_hostname', 
+  conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                               'localhost')
   conversion_server_port = os.environ.get('conversion_server_port',
                                           '8008')
-  return dict(hostname=conversion_server_hostname, 
+  return dict(hostname=conversion_server_hostname,
               port=int(conversion_server_port))
 
 def _getVolatileMemcachedServerDict():
   """Returns a dict with hostname and port for volatile memcached Server
   """
-  hostname = os.environ.get('volatile_memcached_server_hostname', 
+  hostname = os.environ.get('volatile_memcached_server_hostname',
                             'localhost')
   port = os.environ.get('volatile_memcached_server_port', '11211')
   return dict(hostname=hostname, port=port)
@@ -260,7 +164,7 @@ def _getVolatileMemcachedServerDict():
 def _getPersistentMemcachedServerDict():
   """Returns a dict with hostname and port for persistent memcached Server
   """
-  hostname = os.environ.get('persistent_memcached_server_hostname', 
+  hostname = os.environ.get('persistent_memcached_server_hostname',
                             'localhost')
   port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
@@ -381,9 +285,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
       """
       cls = self.portal.MailHost.__class__
-      assert not issubclass(cls, DummyMailHostMixin)
-      cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
-      pmc_init_of(cls)
+      if not issubclass(cls, DummyMailHostMixin):
+        cls.__bases__ = (DummyMailHostMixin,) + cls.__bases__
+        pmc_init_of(cls)
 
     def _restoreMailHost(self):
       """Restore original Mail Host
@@ -572,7 +476,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
      if searchable_business_template_list is None:
        searchable_business_template_list = ["erp5_base"]
 
-     # Assume that the public official repository is a valid repository     
+     # Assume that the public official repository is a valid repository
      public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
 
      template_list = []
@@ -714,7 +618,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
-        
+
         # Save current security manager
         sm = getSecurityManager()
 
@@ -797,7 +701,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def _app(self):
       '''Opens a ZODB connection and returns the app object.
-      
+
       We override it to patch HTTP_ACCEPT_CHARSET into REQUEST to get the zpt
       unicode conflict resolver to work properly'''
       app = PortalTestCase._app(self)
@@ -912,7 +816,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
         template_list = (erp5_catalog_storage, 'erp5_property_sheets',
-                         'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
+                         'erp5_core', 'erp5_xhtml_style') \
+                         + tuple(template_list)
         # Update only specified business templates, regular expression
         # can be used.
         if update_only is not None:
@@ -931,6 +836,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
+      # We want to always have optimisation available
+      if "erp5_stock_cache" not in template_list:
+        template_list = list(template_list)
+        template_list.append("erp5_stock_cache")
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,

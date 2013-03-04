@@ -89,34 +89,45 @@ $Id: DA.py,v 1.4 2001/08/09 20:16:36 adustman Exp $''' % database_type
 __version__='$Revision: 1.4 $'[11:-2]
 
 import os
-from db import ThreadedDB
+from collections import defaultdict
+from weakref import WeakKeyDictionary
+import transaction
 import Shared.DC.ZRDB
-import DABase
 from App.Dialogs import MessageDialog
 from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
-from ExtensionClass import Base
 from DateTime import DateTime
-from thread import allocate_lock
-from Acquisition import aq_parent
+from . import DABase
+from .db import DB, DeferredDB
 
 SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
 manage_addZMySQLConnectionForm=HTMLFile('connectionAdd',globals())
 
-def manage_addZMySQLConnection(self, id, title,
-                                connection_string,
-                                check=None, REQUEST=None):
-    """Add a DB connection to a folder"""
-    self._setObject(id, Connection(id, title, connection_string, check))
-    if REQUEST is not None: return self.manage_main(self,REQUEST)
+def manage_addZMySQLConnection(self, id, title, connection_string,
+                               check=None, deferred=False, REQUEST=None):
+    """Add a MySQL connection to a folder.
+
+    Arguments:
+        REQUEST -- The current request
+        title -- The title of the ZMySQLDA Connection (string)
+        id -- The id of the ZMySQLDA Connection (string)
+        connection_string -- see connectionAdd.dtml
+    """
+    cls = DeferredConnection if deferred else Connection
+    connection = cls(id, title, connection_string)
+    self._setObject(id, connection)
+    if check:
+        connection.connect(connection_string)
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST)
 
 # Connection Pool for connections to MySQL.
-database_connection_pool_lock = allocate_lock()
-database_connection_pool = {}
+database_connection_pool = defaultdict(WeakKeyDictionary)
 
 class Connection(DABase.Connection):
-    " "
+    """MySQL Connection Object
+    """
     database_type=database_type
     id='%s_database_connection' % database_type
     meta_type=title='Z %s Database Connection' % database_type
@@ -124,35 +135,28 @@ class Connection(DABase.Connection):
 
     manage_properties=HTMLFile('connectionEdit', globals())
 
-    def factory(self): return ThreadedDB
+    connect_on_load = False
+
+    def factory(self): return DB
+
+    def manage_beforeDelete(self, item, container):
+        database_connection_pool.get(self._p_oid, {}).pop(self._p_jar, None)
 
     def connect(self, s):
-      # if acquisition wrappers are not there, do not connect in order to prevent
-      # having 2 distinct connections for the same connector. Without this
-      # two following lines, there is in the pool for the same connector two connections,
-      # one for (connection_id,) and another one for (some, path, connection_id,)
-      if aq_parent(self) is None:
-        return self
-      try:
-        database_connection_pool_lock.acquire()
         self._v_connected = ''
-        pool_key = self.getPhysicalPath()
-        connection = database_connection_pool.get(pool_key)
-        if connection is not None and connection._connection == s:
-          self._v_database_connection = connection
-        else:
-          if connection is not None:
-            connection.closeConnection()
-          ThreadedDB = self.factory()
-          database_connection_pool[pool_key] = ThreadedDB(s)
-          self._v_database_connection = database_connection_pool[pool_key]
+        if not self._p_oid:
+            transaction.savepoint(optimistic=True)
+        pool = database_connection_pool[self._p_oid]
+        connection = pool.get(self._p_jar)
+        DB = self.factory()
+        if connection.__class__ is not DB or connection._connection != s:
+            connection = pool[self._p_jar] = DB(s)
+        self._v_database_connection = connection
         # XXX If date is used as such, it can be wrong because an existing
         # connection may be reused. But this is suposedly only used as a
         # marker to know if connection was successfull.
         self._v_connected = DateTime()
-      finally:
-        database_connection_pool_lock.release()
-      return self
+        return self
 
     def sql_quote__(self, v, escapes={}):
         try:
@@ -168,13 +172,27 @@ class Connection(DABase.Connection):
         return connection.string_literal(v)
 
 
-classes=('DA.Connection',)
+class DeferredConnection(Connection):
+    """
+        Experimental MySQL DA which implements
+        deferred SQL code execution to reduce locking issues
+    """
+    meta_type=title='Z %s Deferred Database Connection' % database_type
 
-meta_types=(
-    {'name':'Z %s Database Connection' % database_type,
-     'action':'manage_addZ%sConnectionForm' % database_type,
-     },
-    )
+    def factory(self): return DeferredDB
+
+
+# BBB: Allow loading of deferred connections that were created
+#      before the merge of ZMySQLDDA into ZMySQLDA.
+import sys, imp
+m = 'Products.ZMySQLDDA'
+assert m not in sys.modules, "please remove obsolete ZMySQLDDA product"
+sys.modules[m] = imp.new_module(m)
+m += '.DA'
+sys.modules[m] = m = imp.new_module(m)
+m.DeferredConnection = DeferredConnection
+del m
+
 
 folder_methods={
     'manage_addZMySQLConnection':

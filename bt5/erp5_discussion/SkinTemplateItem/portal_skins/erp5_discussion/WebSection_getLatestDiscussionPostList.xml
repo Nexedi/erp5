@@ -61,6 +61,10 @@ kw[\'sort_on\'] = ((\'modification_date\', \'DESC\'),)\n
 kw[\'portal_type\'] = \'Discussion Post\'\n
 kw[\'parent_uid\'] = parent_uid_list\n
 \n
+if len(parent_uid_list)==0:\n
+  # no parent discussion threads therefore no posts\n
+  return []\n
+\n
 result = [x.getObject() for x in  context.portal_catalog(**kw)]\n
 return result\n
 </string> </value>

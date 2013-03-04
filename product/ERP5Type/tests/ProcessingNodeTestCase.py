@@ -101,6 +101,9 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
   new_state = new_state.copy()
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
                      for state in old_state, saved_state, new_state]
+  # The value of these attributes don't have proper __eq__ implementation.
+  for attr in '__before_traverse__', '__before_publishing_traverse__':
+    del old_state[attr], saved_state[attr]
   if sorted(old_state.items()) != sorted(saved_state.items()):
     raise ConflictError
   new |= saved - old

@@ -45,7 +45,7 @@ from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
-                     DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
+                     DEFAULT_DISPLAY_ID_LIST, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -58,7 +58,7 @@ from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 
 def getDefaultImageQuality(portal, format=None):
   preference_tool = portal.portal_preferences
-  return preference_tool.getPreference('preferred_image_quality', DEFAULT_IMAGE_QUALITY)
+  return preference_tool.getPreferredImageQuality()
 
 class Image(TextConvertableMixin, File, OFSImage):
   """
@@ -128,7 +128,7 @@ class Image(TextConvertableMixin, File, OFSImage):
           width, height = header[1:]
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+    self._setContentType(content_type or 'application/unknown')
 
   def _upradeImage(self):
     """
@@ -150,9 +150,9 @@ class Image(TextConvertableMixin, File, OFSImage):
       self.data = self._data
 
     # Make sure size is defined
-    if (not hasattr(aq_base(self), 'size') or not self.size) and \
-                      hasattr(aq_base(self), 'data'):
-      self.size = len(self.data)
+    size = len(self.data)
+    if getattr(aq_base(self), 'size', None) != size:
+      self.size = size
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWidth')
   def getWidth(self):
@@ -299,7 +299,9 @@ class Image(TextConvertableMixin, File, OFSImage):
       image_data = image.data
       # as image will always be requested through a display not by passing exact
       # pixels we need to restore this way in cache
-      kw['display'] = display
+      if display is not None:
+        # only set if we have a real value
+        kw['display'] = display
       image_size = kw.pop('image_size', None)
       self.setConversion(image_data, mime, **kw)
     return mime, image_data
@@ -318,7 +320,7 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   def _resize(self, quality, width, height, format, resolution, frame):
     """Resize and resample photo."""
-    parameter_list = ['convert', '-colorspace', 'RGB',
+    parameter_list = ['convert', '-colorspace', 'sRGB',
                                  '-quality', str(quality),
                                  '-geometry', '%sx%s' % (width, height)]
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:

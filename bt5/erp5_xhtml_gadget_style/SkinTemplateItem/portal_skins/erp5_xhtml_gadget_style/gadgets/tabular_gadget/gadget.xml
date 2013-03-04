@@ -63,7 +63,14 @@
       </button>\n
 \n
       <script type="text/javascript"\n
-        tal:content="python: \'\'\'ERP5Form.setCurrentFormId(\'%s\');;\'\'\' %current_form_id">\n
+        tal:content="python:\'\'\'ERP5Form.setCurrentFormId(\'%s\');;\n
+                               RenderJs.TabbularGadget.addNewTabGadget(\n
+                                  \'form_gadget\',\n
+                                  \'gadget-%s\',\n
+                                  \'%s/Form_asRenderJSGadget\',\n
+                                  \'ERP5Form.update\',\n
+                                  \'Form_asJSON?form_id=%s\', false);;\n
+                            \'\'\' %(current_form_id, current_form_id, current_form_id, current_form_id)">\n
       </script>\n
 \n
       <!-- get all tabs from server -->\n
@@ -74,7 +81,7 @@
               tal:attributes="id action_form;\n
                               class python: action == current_action and \'selected\' or \'not_selected\'">\n
 \n
-            <a tal:attributes="onclick python: \'\'\'javascript: RenderJs.TabbularGadget.addNewTabGadget(\'form_gadget\', \'%s/Form_asRenderJSGadget\', \'ERP5Form.update\', \'Form_asJSON?form_id=%s\');; RenderJs.TabbularGadget.toggleVisibility($(\'#%s\'));; ERP5Form.setCurrentFormId(\'%s\');;return false ;;\'\'\' %(action_form, action_form, action_form, action_form)">\n
+            <a tal:attributes="onclick python: \'\'\'javascript: ERP5Form.openFormInTabbularGadget(\'form_gadget\', \'%s\');; return false ;;\'\'\' %(action_form)">\n
               <span i18n:translate=""\n
                     i18n:domain="ui"\n
                     tal:content="action/name">action_name</span>\n
@@ -87,14 +94,9 @@
 \n
     <div class="content editable">\n
     \n
-      <!--Form render goes here -->\n
-      <div id="form_gadget"\n
-           tal:attributes="data-gadget string:${current_form_id}/Form_asRenderJSGadget;\n
-                           data-gadget:data-source string:Form_asJSON?form_id=${current_form_id};\n
-                           data-gadget:data-handler string:ERP5Form.update;\n
-                           data-gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${current_form_id}&quot;}">\n
-      </div>\n
-       \n
+      <!--Form rendered content goes here -->\n
+      <div id="form_gadget"></div>\n
+\n
     </div>\n
   </div>\n
         \n

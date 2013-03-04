@@ -2226,11 +2226,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.flushAllActivities(silent=1, loop_size=100)
       self.commit()
       # Check that cmf_activity SQL connection still works
-      connection_da_pool = self.getPortalObject().cmf_activity_sql_connection()
-      import thread
-      connection_da = connection_da_pool._db_pool[thread.get_ident()]
+      connection_da = self.getPortalObject().cmf_activity_sql_connection()
       self.assertFalse(connection_da._registered)
-      connection_da_pool.query('select 1')
+      connection_da.query('select 1')
       self.assertTrue(connection_da._registered)
       self.commit()
       self.assertFalse(connection_da._registered)
@@ -3504,6 +3502,28 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     newconn = portal.cmf_activity_sql_connection
     self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
 
+  def test_connection_sortkey(self):
+    """
+    Check that SQL connection has properly initialized sort key,
+    even when its container (ZODB connection) is reused by another thread.
+    """
+    def sortKey():
+      app = ZopeTestCase.app()
+      try:
+        c = app[self.getPortalName()].cmf_activity_sql_connection()
+        return app._p_jar, c.sortKey()
+      finally:
+        ZopeTestCase.close(app)
+    jar, sort_key = sortKey()
+    self.assertNotEqual(1, sort_key)
+    result = []
+    t = threading.Thread(target=lambda: result.extend(sortKey()))
+    t.daemon = True
+    t.start()
+    t.join()
+    self.assertTrue(result[0] is jar)
+    self.assertEqual(result[1], sort_key)
+
   def test_onErrorCallback(self):
     activity_tool = self.portal.portal_activities
     obj = activity_tool.newActiveProcess()
@@ -3574,13 +3594,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     c = [category_tool.newContent()]
     for i in xrange(5):
       c.append(c[i//2].newContent())
-    transaction.commit()
     self.tic()
     def activate(i, priority=1, **kw):
       kw.setdefault('merge_parent', c[0].getPath())
       c[i].activate(priority=priority, **kw).doSomething()
     def check(*expected):
-      transaction.commit()
       self.tic()
       self.assertEquals(tuple(invoked), expected)
       del invoked[:]
@@ -3609,10 +3627,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                     merge_parent=c[(i-1)//2 or i].getPath(),
                     priority=priority, **kw).doSomething()
     def invokeGroup(self, message_list):
-      invoked.append([c.index(m[0]) for m in message_list])
+      invoked.append(sorted(c.index(m[0]) for m in message_list))
     category_tool.__class__.invokeGroup = invokeGroup
     try:
-      activate(5, 0); activate(1, 1); check([5, 1])
+      activate(5, 0); activate(1, 1); check([1, 5])
       activate(4, 0); activate(1, 1); activate(2, 0); check([1, 2])
       activate(1, 0); activate(5, 0); activate(3, 1); check([1, 5])
       for p, i in enumerate((5, 3, 2, 1, 4)):
@@ -3621,11 +3639,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       for cost in 0.3, 0.1:
         activate(2, 0, group_method_cost=cost)
         activate(3, 1);  activate(4, 2); activate(1, 3)
-        check([2, 1])
+        check([1, 2])
     finally:
       del category_tool.__class__.invokeGroup
     category_tool._delObject(c[0].getId())
-    transaction.commit()
     self.tic()
 
 def test_suite():

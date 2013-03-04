@@ -38,14 +38,13 @@ import unittest
 
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
-from Testing import ZopeTestCase
+from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.DCWorkflow.DCWorkflow import ValidationFailed
-from Products.ERP5Type.Base import _aq_reset
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5.Tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
+
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -98,7 +97,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
     self.folder = self.portal.testing_folder
-    
+
     self.section = self._makeOrganisation(title='Section')
     self.other_section = self._makeOrganisation(title='Other Section')
     self.node = self._makeOrganisation(title='Node')
@@ -143,7 +142,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
-  
+
   def createCategories(self):
     """Create the categories for our test. """
     # create categories
@@ -163,7 +162,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
     self.tic()
-                
+
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
     return (  'region/level1/level2',
@@ -177,15 +176,16 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'function/function1/function2',
            # we create a huge group category for consolidation tests
            ) + self.GROUP_CATEGORIES + self.VARIATION_CATEGORIES
-  
+
   def getBusinessTemplateList(self):
     """ erp5_trade is required for transit_simulation_state
         erp5_apparel is required for item
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_simulation',
+    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_pdm',
+            'erp5_dummy_movement', 'erp5_simulation',
             'erp5_trade', 'erp5_apparel', 'erp5_project',
             'erp5_configurator_standard_trade_template',
-            'erp5_simulation_test')
+            'erp5_simulation_test', 'erp5_stock_cache')
 
   # TODO: move this to a base class {{{
   @reindex
@@ -210,7 +210,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
           portal_type='Sale Packing List',
           specialise=self.business_process,
           **kw)
-  
+
   @reindex
   def _makeSaleInvoice(self, created_by_builder=0, **kw):
     """Creates a sale invoice."""
@@ -245,7 +245,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     kw.setdefault('resource_value', self.resource)
     mvt.edit(**kw)
     return mvt
-  
+
   @reindex
   def _makeSimulationMovement(self, **kw):
     """Creates a simulation movement.
@@ -288,8 +288,8 @@ class TestInventory(InventoryAPITestCase):
   def test_SimulationMovementisAccountable(self):
     """Test Simulation Movements are not accountable if related to a delivery.
     """
-    sim_mvt = self._makeSimulationMovement(quantity=100)
-    mvt = self._makeMovement(quantity=100)
+    sim_mvt = self._makeSimulationMovement(quantity=2)
+    mvt = self._makeMovement(quantity=3)
     # simulation movement are accountable,
     self.failUnless(sim_mvt.isAccountable())
     # unless connected to a delivery movement
@@ -297,8 +297,10 @@ class TestInventory(InventoryAPITestCase):
     self.failIf(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
     self.tic() # (after reindexing of course)
-    self.assertInventoryEquals(100, section_uid=self.section.getUid())
-  
+    self.assertInventoryEquals(3, section_uid=self.section.getUid())
+    # unless you pass only_accountable=False
+    self.assertInventoryEquals(5, section_uid=self.section.getUid(), only_accountable=False)
+
   def test_OmitSimulation(self):
     """Test omit_simulation argument to getInventory.
     """
@@ -314,7 +316,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(100, section_category='group/level1')
     self.assertInventoryEquals(100, section_category='group/level1/level2')
     self.assertInventoryEquals(0, section_category='group/anotherlevel')
-    
+
     # section category can be a list
     self.assertInventoryEquals(100,
             section_category=['group/anotherlevel', 'group/level1'])
@@ -327,7 +329,7 @@ class TestInventory(InventoryAPITestCase):
     self.tic()
     self.assertInventoryEquals(100,
                 section_category_strict_membership=['group/level1'])
-    
+
     # non existing values to section_category are not silently ignored, but
     # raises an exception
     self.assertRaises(ValueError,
@@ -354,7 +356,7 @@ class TestInventory(InventoryAPITestCase):
     self.tic()
     self.assertInventoryEquals(100,
               mirror_section_category_strict_membership=['group/level1'])
-    
+
     # non existing values to section_category are not silently ignored, but
     # raises an exception
     self.assertRaises(ValueError,
@@ -373,7 +375,7 @@ class TestInventory(InventoryAPITestCase):
     self.tic()
     self.assertInventoryEquals(100,
                             node_category_strict_membership=['group/level1'])
-  
+
   def test_Function(self):
     """Tests inventory on function"""
     self._makeMovement(quantity=100, destination_function='function/function1')
@@ -405,7 +407,73 @@ class TestInventory(InventoryAPITestCase):
             function_category_strict_membership='function/function1')
     self.assertInventoryEquals(100,
             function_category_strict_membership='function/function1/function2')
-  
+
+  def test_Funding(self):
+    """Tests inventory on funding"""
+    self._makeMovement(quantity=30, destination_funding='function/function1')
+    self._makeMovement(quantity=-70, source_funding='function/function1')
+
+    self.assertInventoryEquals(100, funding='function/function1')
+    self.assertInventoryEquals(0, funding='function/function1/function2')
+
+  def test_FundingUid(self):
+    """Tests inventory on funding uid"""
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100, destination_funding='function/function1')
+
+    self.assertInventoryEquals(100, funding_uid=function.function1.getUid())
+    self.assertInventoryEquals(0,
+                            funding_uid=function.function1.function2.getUid())
+
+  def test_FundingCategory(self):
+    """Tests inventory on funding category"""
+    self._makeMovement(quantity=100,
+                       destination_funding='function/function1/function2')
+    self.assertInventoryEquals(100, funding_category='function/function1')
+    self.assertInventoryEquals(100, funding='function/function1/function2')
+
+  def test_FundingCategoryStrictMembership(self):
+    """Tests inventory on funding category strict membership"""
+    self._makeMovement(quantity=100,
+                       destination_funding='function/function1/function2')
+    self.assertInventoryEquals(0,
+            funding_category_strict_membership='function/function1')
+    self.assertInventoryEquals(100,
+            funding_category_strict_membership='function/function1/function2')
+
+  def test_PaymentRequest(self):
+    """Tests inventory on payment_request"""
+    self._makeMovement(quantity=30, destination_payment_request='function/function1')
+    self._makeMovement(quantity=-70, source_payment_request='function/function1')
+
+    self.assertInventoryEquals(100, payment_request='function/function1')
+    self.assertInventoryEquals(0, payment_request='function/function1/function2')
+
+  def test_PaymentRequestUid(self):
+    """Tests inventory on payment_request uid"""
+    function = self.portal.portal_categories.function
+    self._makeMovement(quantity=100, destination_payment_request='function/function1')
+
+    self.assertInventoryEquals(100, payment_request_uid=function.function1.getUid())
+    self.assertInventoryEquals(0,
+                            payment_request_uid=function.function1.function2.getUid())
+
+  def test_PaymentRequestCategory(self):
+    """Tests inventory on payment_request category"""
+    self._makeMovement(quantity=100,
+                       destination_payment_request='function/function1/function2')
+    self.assertInventoryEquals(100, payment_request_category='function/function1')
+    self.assertInventoryEquals(100, payment_request='function/function1/function2')
+
+  def test_PaymentRequestCategoryStrictMembership(self):
+    """Tests inventory on payment_request category strict membership"""
+    self._makeMovement(quantity=100,
+                       destination_payment_request='function/function1/function2')
+    self.assertInventoryEquals(0,
+            payment_request_category_strict_membership='function/function1')
+    self.assertInventoryEquals(100,
+            payment_request_category_strict_membership='function/function1/function2')
+
   def test_Project(self):
     """Tests inventory on project"""
     self._makeMovement(quantity=100, destination_project_value=self.project)
@@ -456,6 +524,23 @@ class TestInventory(InventoryAPITestCase):
     self.tic()
     self.assertInventoryEquals(100,
                 resource_category_strict_membership=['product_line/level1'])
+
+  def test_ResourcePortalType(self):
+    """Tests inventory on resource_portal_type """
+    self._makeMovement(quantity=2, source_value=None)
+    self._makeMovement(quantity=3,
+      source_value=None,
+      resource_value=self.portal.portal_categories.product_line.level1)
+    assert self.resource.portal_type != 'Category'
+    self.assertInventoryEquals(2,
+      resource_portal_type=self.resource.portal_type)
+    self.assertInventoryEquals(3,
+      resource_portal_type='Category')
+    # FIXME: resource_portal_type is an automatically generated related key,
+    # but as movements categories are not cataloged with acquisition, it does
+    # not work for movements acquiring resource from their parents.
+    # One way is to make an explicit resource_portal_type related key that
+    # would use stock.resource_uid (replacing the ugly 'resourceType')
 
   def test_PaymentCategory(self):
     """Tests inventory on payment_category """
@@ -546,7 +631,7 @@ class TestInventory(InventoryAPITestCase):
       # ... is equivalent to node_category
       self.assertInventoryEquals(total_quantity,
                               node_category=category.getRelativeUrl())
-  
+
   @expectedFailure
   def test_DoubleCategoryMembershipSectionCategory(self):
     """Tests inventory on section category, when the section is twice member\
@@ -570,7 +655,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(100,
             section_category_strict_membership=['group/level1/level2'])
     self.assertInventoryEquals(100, section_uid=self.section.getUid())
-  
+
   def testPrecision(self):
     # getInventory supports a precision= argument to specify the precision to
     # round
@@ -585,7 +670,7 @@ class TestInventory(InventoryAPITestCase):
                             getInventoryAssetPrice(precision=3,
                                                    node_uid=self.node.getUid()),
                             places=3)
-  
+
   def testPrecisionAndFloatRoundingIssues(self):
     # sum([0.1] * 10) != 1.0 but this is not a problem here
     getInventoryAssetPrice = self.getSimulationTool().getInventoryAssetPrice
@@ -595,7 +680,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(0, precision=2, node_uid=self.node.getUid())
     self.assertEquals(0, getInventoryAssetPrice(precision=2,
                                                 node_uid=self.node.getUid()))
-    
+
   def test_OmitInputOmitOutput(self):
     self._makeMovement(quantity=1, price=1)
     self._makeMovement(quantity=-1, price=1)
@@ -614,7 +699,7 @@ class TestInventory(InventoryAPITestCase):
     self._makeMovement(quantity=2, price=1, source_section_value=None)
     self.assertInventoryEquals(-3, node_uid=self.node.getUid(), omit_input=1)
     self.assertInventoryEquals(3, node_uid=self.node.getUid(), omit_output=1)
-    
+
   def test_OmitInputOmitOutputWithDifferentSections(self):
     self._makeMovement(quantity=2, price=1)
     self._makeMovement(quantity=-3, price=1,
@@ -631,7 +716,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             section_uid=self.other_section.getUid(),
                             omit_output=1)
-    
+
   def test_OmitInputOmitOutputWithDifferentPayment(self):
     # simple case
     self._makeMovement(quantity=2, price=1,
@@ -668,7 +753,7 @@ class TestInventory(InventoryAPITestCase):
     # omit_output & omit_input return nothing in that case
     self.assertInventoryEquals(0, node_uid=self.node.getUid(),
                             omit_input=1, omit_output=1)
-    
+
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
     self._makeMovement(quantity=2, price=1,
                        source_value=self.node,
@@ -688,9 +773,22 @@ class TestInventory(InventoryAPITestCase):
                             payment_uid=self.other_payment_node.getUid(),
                             omit_input=1)
 
+  def test_OmitInputOmitOutputWithZeroQuantity(self):
+    self._makeMovement(quantity=0, destination_total_asset_price=1)
+    getInventoryAssetPrice = self.portal.portal_simulation.getInventoryAssetPrice
+    self.assertEquals(0, getInventoryAssetPrice(node_uid=self.node.getUid(),
+                                                omit_input=1))
+    self.assertEquals(1, getInventoryAssetPrice(node_uid=self.node.getUid(),
+                                                omit_output=1))
+
+  def test_OmitAssetIncreaseDecreaseWithZeroPrice(self):
+    self._makeMovement(quantity=1, destination_total_asset_price=0)
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
+
   def test_TimeZone(self):
     """
-    Check that getInventory support DateTime parameter with 
+    Check that getInventory support DateTime parameter with
     timezone
     """
     date_gmt_1 = DateTime('2005/12/01 GMT+9')
@@ -710,7 +808,7 @@ class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
   """
   def test_ReturnedTypeIsList(self):
-    """Inventory List returns a sequence object""" 
+    """Inventory List returns a sequence object"""
     getInventoryList = self.getSimulationTool().getInventoryList
     inventory_list = getInventoryList()
     self.assertEquals(str(inventory_list.__class__),
@@ -720,6 +818,15 @@ class TestInventoryList(InventoryAPITestCase):
           [c.__name__ for c in inventory_list._class.__bases__])
     # default is an empty list
     self.assertEquals(0, len(inventory_list))
+
+  def testDefault0(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement()
+    inventory_list = getInventoryList(section_uid=self.section.getUid(),)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(0, inventory_list[0].total_quantity)
+    # The total price of grouped movements without price is 0
+    self.assertEquals(0, inventory_list[0].total_price)
 
   def test_GroupByNode(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -819,6 +926,44 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals([r for r in inventory_list if r.function_uid ==
       function2.getUid()][0].inventory, 3)
 
+  def test_GroupByFunding(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    funding1 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1')
+    funding2 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1/function2')
+    self._makeMovement(quantity=2,
+                       destination_funding_value=funding1,)
+    self._makeMovement(quantity=3,
+                       destination_funding_value=funding2,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_funding=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+      funding1.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.funding_uid ==
+      funding2.getUid()][0].inventory, 3)
+
+  def test_GroupByPaymentRequest(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    payment_request1 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1')
+    payment_request2 = self.portal.portal_categories.restrictedTraverse(
+                                      'function/function1/function2')
+    self._makeMovement(quantity=2,
+                       destination_payment_request_value=payment_request1,)
+    self._makeMovement(quantity=3,
+                       destination_payment_request_value=payment_request2,)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      group_by_payment_request=1)
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+      payment_request1.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list if r.payment_request_uid ==
+      payment_request2.getUid()][0].inventory, 3)
+
   def test_GroupByProject(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=2,
@@ -888,7 +1033,7 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(quantity=7, use='use2')
     self._makeMovement(quantity=4, use='use2')
     # note that grouping by related key only make sense if you group by strict
-    # memebership related keys
+    # membership related keys
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by=('strict_use_uid', ))
@@ -897,7 +1042,7 @@ class TestInventoryList(InventoryAPITestCase):
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
     self.assertEquals([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
-    
+
     # in such case, it's interesting to pass a select expression, to be have on
     # brain the information of which category is used
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
@@ -986,7 +1131,7 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals(0, len(getInventoryList(node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
-    
+
   def test_OmitAssetIncreaseDecrease(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     m1 = self._makeMovement(quantity=1, price=1)
@@ -1096,7 +1241,7 @@ class TestInventoryList(InventoryAPITestCase):
       inventory_list = method(node_uid=node_uid)
       self.assertEquals(len(inventory_list), line)
       if quantity is not None:
-        self.assertEquals(sum([x.total_quantity for x in inventory_list]), 
+        self.assertEquals(sum([x.total_quantity for x in inventory_list]),
                           quantity)
     makeMovement(quantity=1, simulation_state='ordered')
     checkInventory(line=0, type='Current', destination=1)
@@ -1251,32 +1396,58 @@ class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
   """
   def testReturnedTypeIsList(self):
-    """Movement History List returns a sequence object""" 
+    """Movement History List returns a sequence object"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt_history_list = getMovementHistoryList()
     self.assertEquals(str(mvt_history_list.__class__),
                     'Shared.DC.ZRDB.Results.Results')
     # default is an empty list
     self.assertEquals(0, len(mvt_history_list))
-  
+
+  def testDefault0(self):
+    self._makeMovement()
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    mvt_history_list = getMovementHistoryList(
+      section_uid=self.section.getUid(),)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(0, mvt_history_list[0].total_quantity)
+    # If a movement have no price, None is returned
+    self.assertEquals(None, mvt_history_list[0].total_price)
+
   def testMovementBothSides(self):
-    """Movement History List returns movement from both sides""" 
+    """Movement History List returns movement from both sides"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
     # we don't filter, so we have the same movement from both sides.
     self.assertEquals(2, len(getMovementHistoryList()))
 
   def testBrainClass(self):
-    """Movement History List uses InventoryListBrain for brains""" 
+    """Movement History List uses InventoryListBrain for brains"""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
-    # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r) 
+    # maybe this check is too low level (Shared/DC/ZRDB//Results.py, class r)
     r_bases = getMovementHistoryList()._class.__bases__
     brain_class = r_bases[2].__name__
     self.assertEquals('MovementHistoryListBrain', brain_class,
       "unexpected brain class for getMovementHistoryList InventoryListBrain"
       " != %s (bases %s)" % (brain_class, r_bases))
-  
+
+  def testBrainAttribute(self):
+    """Test attributes exposed on brains."""
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    brain = getMovementHistoryList()[0]
+    self.assertTrue(hasattr(brain, 'node_uid'))
+    self.assertTrue(hasattr(brain, 'resource_uid'))
+    self.assertTrue(hasattr(brain, 'section_uid'))
+    self.assertTrue(hasattr(brain, 'date'))
+    self.assertTrue(hasattr(brain, 'function_uid'))
+    self.assertTrue(hasattr(brain, 'payment_uid'))
+    self.assertTrue(hasattr(brain, 'project_uid'))
+    self.assertTrue(hasattr(brain, 'funding_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_node_uid'))
+    self.assertTrue(hasattr(brain, 'mirror_section_uid'))
+
   def testSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)
@@ -1287,7 +1458,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(100, mvt_history_list[0].total_quantity)
     self.assertEquals(self.section.getRelativeUrl(),
                   mvt_history_list[0].section_relative_url)
-  
+
   def testMirrorSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)
@@ -1300,7 +1471,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                   mvt_history_list[0].section_relative_url)
     self.assertEquals(self.mirror_node.getRelativeUrl(),
                   mvt_history_list[0].node_relative_url)
-    
+
     # if we look from the other side, everything is reverted
     mvt_history_list = getMovementHistoryList(
                             section_uid = self.section.getUid())
@@ -1310,7 +1481,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                   mvt_history_list[0].section_relative_url)
     self.assertEquals(self.node.getRelativeUrl(),
                   mvt_history_list[0].node_relative_url)
-  
+
   def testDifferentDatesPerSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     start_date = DateTime(2001, 1, 1)
@@ -1324,7 +1495,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # stop_date is for destination
     self.assertEquals(stop_date, getMovementHistoryList(
                             section_uid=self.section.getUid())[0].date)
-    
+
   def testNode(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement(quantity=100)
@@ -1365,7 +1536,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     # wrong value yields an empty list
     self.assertEquals(0, len(getMovementHistoryList(
                             resource_uid = self.node.getUid())))
-  
+
   def testSectionCategory(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self.section.setGroup('level1/level2')
@@ -1382,7 +1553,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                 section_category=section_category)
       self.assertEquals(len(movement_history_list), 1)
       self.assertEquals(movement_history_list[0].total_quantity, 100)
-    
+
     # again, bad category raises an exception
     self.assertRaises(ValueError,
                       getMovementHistoryList,
@@ -1391,7 +1562,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(len(getMovementHistoryList(
                         section_category='group/level1',
                         ignored='argument')), 1)
-    
+
   @expectedFailure
   def testDoubleSectionCategory(self):
     # it is currently invalid to pass the same category twice to inventory API
@@ -1461,7 +1632,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
       self._makeMovement(quantity=100,
                          start_date=date,
                          stop_date=date+1)
-    # from_date takes all movements >= 
+    # from_date takes all movements >=
     self.assertEquals(len(getMovementHistoryList(
                         from_date=DateTime(2006, 01, 03),
                         section_uid=self.section.getUid())), 2)
@@ -1546,7 +1717,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                         from_date=DateTime(2006, 01, 02),
                         to_date=DateTime(2006, 01, 03),
                         section_uid=self.mirror_section.getUid())), 1)
-  
+
 
   def test_BrainDateTimeZone(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1594,7 +1765,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
       self._makeMovement(quantity=100,
                          start_date=date - 1,
                          stop_date=date)
-    
+
     movement_date_list = [ x.date for x in getMovementHistoryList(
                               section_uid=self.section.getUid(),
                               sort_on=(('stock.date', 'ascending'),)) ]
@@ -1616,7 +1787,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=1, title='First')
     self._makeMovement(quantity=2, title='Second')
-    
+
     self.assertEquals(['First', 'Second'], [ x.getObject().getTitle() for x in
           getMovementHistoryList(section_uid=self.section.getUid(),
                                  sort_on=(('title', 'ascending'),)) ])
@@ -1630,7 +1801,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
       self._makeMovement(quantity=1)
     self.assertEquals(3, len(getMovementHistoryList(limit=3)))
     self.assertEquals(4, len(getMovementHistoryList(limit=(1, 4))))
-  
+
   def test_SimulationState(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=2, simulation_state="confirmed")
@@ -1641,7 +1812,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                 section_uid=self.section.getUid())
       self.assertEquals(len(movement_history_list), 1)
       self.assertEquals(movement_history_list[0].total_quantity, 2)
-    
+
     movement_history_list = getMovementHistoryList(
                               simulation_state=["confirmed", "planned"],
                               section_uid=self.section.getUid())
@@ -1656,7 +1827,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     movement_history_list = getMovementHistoryList(
                                     section_uid=self.section.getUid())
     self.assertEquals(2, len(movement_history_list))
-  
+
   def test_OmitSimulation(self):
     """Test omit_simulation argument to getMovementHistoryList.
     """
@@ -1668,7 +1839,25 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                     omit_simulation=1)
     self.assertEquals(1, len(movement_history_list))
     self.assertEquals(100, movement_history_list[0].quantity)
-  
+
+  def test_OnlyAccountable(self):
+    """Test that only_accountable works with getMovementHistoryList"""
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=2)
+    self._makeMovement(quantity=3, is_accountable=False)
+    # by default, only accountable movements are returned
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid(),)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals(2, movement_history_list[0].quantity)
+    # unless only_accountable=False is passed
+    movement_history_list = getMovementHistoryList(
+                                    section_uid=self.section.getUid(),
+                                    only_accountable=False)
+    self.assertEquals(2, len(movement_history_list))
+    self.assertEquals(sorted((2,3)), sorted(
+      brain.quantity for brain in movement_history_list))
+
   def test_RunningTotalQuantity(self):
     """Test that a running_total_quantity attribute is set on brains
     """
@@ -1687,7 +1876,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
       self.assertEquals(running_total_quantity, brain.running_total_quantity)
       self.assertEquals(date, brain.date)
       self.assertEquals(quantity, brain.quantity)
-  
+
   def test_RunningTotalPrice(self):
     """Test that a running_total_price attribute is set on brains
     """
@@ -1734,7 +1923,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
       self.assertEquals(running_total_quantity, brain.running_total_quantity)
       running_total_price += quantity * quantity # we've set price=quantity
       self.assertEquals(running_total_price, brain.running_total_price)
-  
+
   def testRunningQuantityWithQuantity0(self):
     # a 0 quantity should not be a problem for running total price
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
@@ -1762,7 +1951,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               stop_date=date+1,
                               source_value=self.node,
                               destination_value=self.node )
-    
+
     mvt_history_list = getMovementHistoryList(
                             node_uid=self.node.getUid(),)
     self.assertEquals(2, len(mvt_history_list))
@@ -1778,7 +1967,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                             node_uid=self.node.getUid(),)
     self.assertEquals(2, len(mvt_history_list))
     self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
- 
+
   def testSameNodeSameDatesSameSections(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     mvt = self._makeMovement( quantity=2,
@@ -1796,7 +1985,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                             section_uid=self.section.getUid())
     self.assertEquals(2, len(mvt_history_list))
     self.assertEquals(0, sum([r.total_quantity for r in mvt_history_list]))
- 
+
   def testPrecision(self):
     # getMovementHistoryList supports a precision= argument to specify the
     # precision to round
@@ -1810,7 +1999,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(0.12, mvt_history_list[0].running_total_price)
     self.assertEquals(0.12, mvt_history_list[0].total_quantity)
     self.assertEquals(0.12, mvt_history_list[0].total_price)
-    
+
     mvt_history_list = getMovementHistoryList(
                             precision=3,
                             node_uid=self.node.getUid())
@@ -1857,7 +2046,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                               node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
-    
+
   def test_OmitAssetIncreaseDecrease(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     m1 = self._makeMovement(quantity=1, price=-1)
@@ -2064,7 +2253,7 @@ class TestInventoryStat(InventoryAPITestCase):
     self.assertEquals(getInventoryStat(node_uid=node_uid)[0].stock_uid, 3)
 
 class TestTrackingList(InventoryAPITestCase):
-  """Tests Inventory Stat methods.
+  """Tests Item Tracking
   """
   def testNodeUid(self):
     getTrackingList = self.getSimulationTool().getTrackingList
@@ -2079,7 +2268,7 @@ class TestTrackingList(InventoryAPITestCase):
     item_uid = self.item.getUid()
     other_item_uid = self.other_item.getUid()
     node_uid = self.node.getUid()
-    self.assertEquals(len(getTrackingList(node_uid=node_uid, 
+    self.assertEquals(len(getTrackingList(node_uid=node_uid,
                              at_date=start_date)),0)
     makeMovement(aggregate=self.item)
     result = getTrackingList(node_uid=node_uid,at_date=start_date)
@@ -2103,7 +2292,7 @@ class TestTrackingList(InventoryAPITestCase):
     item_uid = self.item.getUid()
     other_item_uid = self.other_item.getUid()
     node_uid = self.node.getUid()
-    self.assertEquals(len(getTrackingList(node_uid=node_uid, 
+    self.assertEquals(len(getTrackingList(node_uid=node_uid,
                              at_date=start_date)),0)
     makeMovement(aggregate_list=[self.item.getRelativeUrl(),
                                  self.other_item.getRelativeUrl()])
@@ -2162,133 +2351,89 @@ class TestTrackingList(InventoryAPITestCase):
                            '%s=now - %i, aggregate should be at node %i but is at node %i' % \
                            (param_id, now - date, node_uid_to_node_number[location_uid], node_uid_to_node_number[uid_list[0]]))
 
-class TestInventoryDocument(InventoryAPITestCase):
-  """ Test impact of creating full inventories of stock points on inventory
-  lookup. This is an optimisation to regular inventory system to avoid
-  reading all stock entries since a node/section/payment is used when
-  gathering its amounts of resources.
+  def testFutureTrackingList(self):
+    movement = self._makeMovement(quantity=1, aggregate_value=self.item,)
+    getFutureTrackingList = self.portal.portal_simulation.getFutureTrackingList
+    node_uid = self.node.getUid()
+
+    for state in ('planned', 'ordered', 'confirmed', 'ready', 'started',
+                  'stopped', 'delivered'):
+      movement.simulation_state = state
+      movement.reindexObject()
+      self.tic()
+      tracking_node_uid_list = [brain.node_uid for brain in
+        getFutureTrackingList(item=self.item.getRelativeUrl())]
+      self.assertEquals([node_uid], tracking_node_uid_list,
+        "%s != %s (state:%s)" % ([node_uid], tracking_node_uid_list, state))
+
+    for state in ('draft', 'cancelled', 'deleted'):
+      movement.simulation_state = state
+      movement.reindexObject()
+      self.tic()
+      tracking_node_uid_list = [brain.node_uid for brain in
+        getFutureTrackingList(item=self.item.getRelativeUrl())]
+      self.assertEquals([], tracking_node_uid_list,
+        "%s != %s (state:%s)" % ([], tracking_node_uid_list, state))
+
+    # TODO: missing tests for input=1 and output=1
+
+
+class TestInventoryCacheTable(InventoryAPITestCase):
+  """ Test impact of creating cache entries into inventory_cache table
+  This is an optimisation on stock results to avoid reading all stock entries
+  for the same request.
+
+  Cache description:
+  A cache entry is defined by:
+  - a request identifier (implementation detail: MD5 of query source code)
+  - the date of first possible stock row *excluded* from cache entry (even if
+    there is no row at that exact date)
+  - cache data (implementation detail: pickle of a dict containing selected
+    properties of a query result)
+  Cache filling:
+  Cache might be filled by any request with either an at_date or a to_date,
+  and without a from_date. Cache entry date is chosen as "{at,to}_date -
+  cache_lag / 2".
+  No cache entry is created if a cache entry newer than "{at,to}_date -
+  cache_lag" exists.
+  Cache flush:
+  Cache is flushed by any modification (actually triggered on indexation or
+  de-indexation) on a stock-indexed document (aka movement). Only cache
+  entries with a date greater than any modified stock line are dropped.
   """
-  def _createAutomaticInventoryAtDate(self, date, override_inventory=None,
-                                      full_inventory=False):
-    """
-      getInventoryList is tested to work in another unit test.
-      If full_inventory is false, only inventoriate the first resource
-      found.
-    """
-    self.tic() # Tic so that grabbed inventory is up to date.
-    getInventoryList = self.getSimulationTool().getInventoryList
-    portal = self.getPortal()
-    inventory_module = portal.getDefaultModule(portal_type='Inventory')
-    inventory = inventory_module.newContent(portal_type='Inventory')
-    inventory.edit(destination_value=self.node,
-                   destination_section_value=self.section,
-                   start_date=date,
-                   full_inventory=full_inventory)
-    inventory_list = getInventoryList(node_uid=self.node.getUid(),
-                                      at_date=date,
-                                      omit_output=1)
-    if full_inventory:
-      inventory_list = [inventory_list[0]]
-    # TODO: Define a second resource which will only be present in full
-    # inventories. This will allow testing getInventoryList.
-    #else:
-    #  inventory_list.append({'resource_relative_url': '','total_quantity': 50,'variation_text': ''})
-    for inventory_line in inventory_list:
-      line = inventory.newContent(portal_type='Inventory Line')
-      if override_inventory is None:
-        total_quantity = inventory_line['total_quantity']
-      else:
-        total_quantity = override_inventory
-      line.edit(resource=inventory_line['resource_relative_url'],
-                inventory=total_quantity,
-                variation_text=inventory_line['variation_text'])
-      # TODO: pass more properties through from calculated inventory to
-      # inventory lines if needed.
-    inventory.deliver()
-    return inventory
-    
-  def _populateInventoryModule(self):
-    """
-      Create 3 inventories:
-         Type     Deviation  Date (see stepCreateInitialMovements)
-       - partial  1000       
-       - full     10000      
-       - full     100000     
-    """
-    self.BASE_QUANTITY = BASE_QUANTITY = 1
-    # TODO: It would be better to strip numbers below seconds instead of below
-    # days.
-    self.MAX_DATE = MAX_DATE = DateTime(DateTime().Date()) - 1
-    self.DUPLICATE_INVENTORY_DATE = MAX_DATE - 8 # Newest
-    self.INVENTORY_DATE_3 = INVENTORY_DATE_3 = MAX_DATE - 10 # Newest
-    self.INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 = 100000
-    self.INVENTORY_DATE_2 = INVENTORY_DATE_2 = INVENTORY_DATE_3 - 10
-    self.INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 = 10000
-    self.INVENTORY_DATE_1 = INVENTORY_DATE_1 = INVENTORY_DATE_2 - 10 # Oldest
-    self.INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 = 1000
-
-    # "actual" quantities are the quantities which will end up in the stock
-    # table.
-    self.ACTUAL_INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 - \
-      BASE_QUANTITY
-    self.ACTUAL_INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 - \
-      (self.INVENTORY_QUANTITY_1 + BASE_QUANTITY)
-    self.ACTUAL_INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 - \
-      (self.INVENTORY_QUANTITY_2 + BASE_QUANTITY)
-    
-    self.movement_uid_list = movement_uid_list = []
-    # Initial movement of 1
-    movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_1 - 1,
-      simulation_state='delivered')
-    movement_uid_list.append(movement.getUid())
-    # First (partial) inventory of 1 000
-    partial_inventory = self._createAutomaticInventoryAtDate(
-      date=INVENTORY_DATE_1, override_inventory=INVENTORY_QUANTITY_1)
-    # Second movement of 1
-    movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_2 - 1,
-      simulation_state='delivered')
-    movement_uid_list.append(movement.getUid())
-    # Second (full) inventory of 10 000
-    self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_2,
-      override_inventory=INVENTORY_QUANTITY_2,
-      full_inventory=True)
-    # Third movement of 1
-    movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_3 - 1,
-      simulation_state='delivered')
-    movement_uid_list.append(movement.getUid())
-    # Third (full) inventory of 100 000
-    self._createAutomaticInventoryAtDate(date=INVENTORY_DATE_3,
-      override_inventory=INVENTORY_QUANTITY_3,
-      full_inventory=True)
-    # Fourth movement of 1
-    movement = self._makeMovement(quantity=BASE_QUANTITY,
-      start_date=INVENTORY_DATE_3 + 1,
-      simulation_state='delivered')
-    movement_uid_list.append(movement.getUid())
-    self.tic()
-    manage_test = self.getPortal().erp5_sql_transactionless_connection.manage_test
-    def executeSQL(query):
-      manage_test("BEGIN\x00%s\x00COMMIT" % (query, ))
-      
-    # Make stock table inconsistent with inventory_stock to make sure
-    # inventory_stock is actually tested.
-    executeSQL("UPDATE stock SET quantity=quantity*2 WHERE uid IN (%s)" %
-               (', '.join([str(x) for x in movement_uid_list]), ))
-    self.BASE_QUANTITY *= 2
-    # Make inventory_stock table inconsistent with stock to make sure
-    # inventory_stock is actually not used when checking that partial
-    # inventory is not taken into account.
-    executeSQL("UPDATE inventory_stock SET quantity=quantity*2 WHERE "\
-               "uid IN (%s)" % (', '.join([str(x.getUid()) for x in \
-                                           partial_inventory.objectValues()]),
-                               ))
-
   def afterSetUp(self):
     InventoryAPITestCase.afterSetUp(self)
-    self._populateInventoryModule()
+    self.CACHE_LAG = cache_lag = self.getSimulationTool().getInventoryCacheLag()
+    min_lag = cache_lag / 2
+    self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
+    self.CACHE_DATE = cache_date = now - min_lag
+    self.LAST_CACHED_MOVEMENT_DATE = last_cached_movement_date = \
+      cache_date - MYSQL_MIN_DATETIME_RESOLUTION
+    # First movement, won't be into cache
+    self.INVENTORY_DATE_3 = INVENTORY_DATE_3 = now - 10
+    self.INVENTORY_QUANTITY_3 = INVENTORY_QUANTITY_3 = 100000
+    # Second movement, won't be into cache, just at the limit of cache min_lag
+    self.INVENTORY_DATE_2 = INVENTORY_DATE_2 = cache_date
+    self.INVENTORY_QUANTITY_2 = INVENTORY_QUANTITY_2 = 10000
+    # Next will be stored as cache result after first getInventory
+    self.INVENTORY_DATE_1 = INVENTORY_DATE_1 = last_cached_movement_date
+    self.INVENTORY_QUANTITY_1 = INVENTORY_QUANTITY_1 = 1000
+    # Create movements
+    self._makeMovement(
+      quantity=INVENTORY_QUANTITY_1,
+      start_date=INVENTORY_DATE_1,
+      simulation_state='delivered',
+    )
+    self._makeMovement(
+      quantity=INVENTORY_QUANTITY_2,
+      start_date=INVENTORY_DATE_2,
+      simulation_state='delivered',
+    )
+    self._makeMovement(
+      quantity=INVENTORY_QUANTITY_3,
+      start_date=INVENTORY_DATE_3,
+      simulation_state='delivered',
+    )
     simulation_tool = self.getSimulationTool()
     self.getInventory = simulation_tool.getInventory
     self.getInventoryList = simulation_tool.getInventoryList
@@ -2348,586 +2493,505 @@ class TestInventoryDocument(InventoryAPITestCase):
       # Leads to rasing exception instead of calling self.assert[...] method.
       if not success:
         if ordered_check:
-          raise AssertionError, 'Line %r do not match %r' % \
+          raise AssertionError, 'Line %r\ndo not match\n %r' % \
                                 (inventory_list[inventory_position],
                                  criterion_dict)
         else:
-          raise AssertionError, 'No line in %r match %r' % \
+          raise AssertionError, 'No line in %r\n match\n %r' % \
                                 (inventory_list, criterion_dict)
     # Check all expected lines have been found.
     self.assertFalse(inventory_list)
+
+  def _fillCache(self, inventory_list=False):
+    """
+      Calling getInventoryXXX will fill the cache for us
+    """
+    if inventory_list:
+      result_list = self.getInventoryList(node_uid=self.node_uid, to_date=self.NOW)
+      result = 0
+      for line in result_list:
+        result += line.quantity
+    else:
+      result = self.getInventory(node_uid=self.node_uid, to_date=self.NOW)
+    self.assertEqual(result, self.INVENTORY_QUANTITY_1 + \
+      self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_3)
+    return result
+
+  def doubleStockValue(self):
+    """
+      Make stock table inconsistent so that we can check that
+      optimisation is well used
+    """
+    # in the test, this will always be the date at which an entry is put into
+    # inventory_cache
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity*2 WHERE date < '%s'\0"
+      "COMMIT" % ((self.CACHE_DATE).ISO(), ))
+    self.commit()
 
   def assertInventoryEquals(self, value, inventory_kw):
     """
       Check that optimised getInventory call is equal to given value
       and that unoptimised call is *not* equal to thi value.
     """
+    # Make stock table inconsistent to be sure it uses cache
+    self.doubleStockValue()
+    # Check it use cache
     self.assertEquals(value, self.getInventory(**inventory_kw))
     self.assertNotEquals(value,
                          self.getInventory(optimisation__=False,
                                            **inventory_kw))
 
-  def setUpDefaultInventoryCalculationList(self):
-    createZODBPythonScript(self.portal.portal_skins.custom,
-                           'Inventory_getDefaultInventoryCalculationList', '',
-'''return ({
-'inventory_params':{
- 'section_uid':context.getDestinationSectionUid(),
- 'node_uid':context.getDestinationUid(),
- 'group_by_variation':1,
- 'group_by_resource':1},
-'list_method':'getMovementList',
-'first_level':({'key':'resource_relative_url',
-                'getter':'getResource',
-                'setter':('appendToCategoryList', 'resource')},
-               {'key':'variation_text',
-                'getter':'getVariationText',
-                'setter':'splitAndExtendToCategoryList'},
-               ),
-},)
-''')
-    self.commit()
+  def test_01_CurrentInventory(self):
+    """
+      Check that optimisation is executed when querying current
+      amount
+    """
+    self.assertInventoryEquals(
+      self._fillCache(),
+      inventory_kw={
+        'node_uid': self.node_uid,
+        'to_date': self.NOW,
+      }
+    )
 
-  def clearAllInventoryAndSetUpTwoInventory(self):
-    self.portal.inventory_module.manage_delObjects(list(self.portal.inventory_module.objectIds()))
-    self.folder.manage_delObjects(list(self.folder.objectIds()))
-    self.resource.setProductLine('level1/level2')
-    self.other_resource.setProductLine('anotherlevel')
-    self.section.setGroup('level1/level2')
-    self.other_section.setGroup('anotherlevel')
-    self.node.setRegion('level1')
-    self.other_node.setGroup('anotherlevel')
-    full_inventory = self.portal.inventory_module.newContent(portal_type='Inventory')
-    full_inventory.edit(destination_section_value=self.section,
-                        destination_value=self.node,
-                        full_inventory=1,
-                        start_date=DateTime('2012/05/18 00:00:00 GMT+9'))
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.resource)
-    line.setQuantity(1)
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.other_resource)
-    line.setQuantity(10)
-    full_inventory.deliver()
+  def test_02_InventoryAtCacheDate(self):
+    """
+      Check that optimisation is executed when querying an amount
+      at the exact time of the cache of result
+    """
+    self._fillCache()
+    # We got results from cache + results from stock
+    self.assertInventoryEquals(
+      self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_1,
+      inventory_kw={
+        'node_uid': self.node_uid,
+        'at_date': self.CACHE_DATE,
+      },
+    )
 
-    full_inventory = self.portal.inventory_module.newContent(portal_type='Inventory')
-    full_inventory.edit(destination_section_value=self.other_section,
-                        destination_value=self.node,
-                        full_inventory=1,
-                        start_date=DateTime('2012/05/18 00:00:00 GMT+9'))
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.resource)
-    line.setQuantity(100)
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.other_resource)
-    line.setQuantity(1000)
-    full_inventory.deliver()
+  def test_03_InventoryToCacheDate(self):
+    """
+      Check that optimisation is executed when querying an amount
+      that will only take into account cache data.
+    """
+    self._fillCache()
+    # We got only results from cache
+    self.assertInventoryEquals(
+      self.INVENTORY_QUANTITY_1,
+      inventory_kw={
+        'node_uid': self.node_uid,
+        'to_date': self.CACHE_DATE,
+      },
+    )
 
-    full_inventory = self.portal.inventory_module.newContent(portal_type='Inventory')
-    full_inventory.edit(destination_section_value=self.section,
-                        destination_value=self.other_node,
-                        full_inventory=1,
-                        start_date=DateTime('2012/05/18 00:00:00 GMT+9'))
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.resource)
-    line.setQuantity(10000)
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.other_resource)
-    line.setQuantity(100000)
-    full_inventory.deliver()
-    full_inventory = self.portal.inventory_module.newContent(portal_type='Inventory')
-    full_inventory.edit(destination_section_value=self.other_section,
-                        destination_value=self.other_node,
-                        full_inventory=1,
-                        start_date=DateTime('2012/05/18 00:00:00 GMT+9'))
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.resource)
-    line.setQuantity(1000000)
-    line = full_inventory.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.other_resource)
-    line.setQuantity(10000000)
-    full_inventory.deliver()
+  def test_04_InventoryList(self):
+    """
+      Check that optimisation is executed when querying current
+      amount list
+    """
+    self._fillCache(True)
+    # Check we got all results
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid, to_date=self.NOW),
+      [{
+        'date': self.INVENTORY_DATE_3,
+        'inventory': self.INVENTORY_QUANTITY_3,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_2,
+        'inventory': self.INVENTORY_QUANTITY_2,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }],
+    )
 
-    self.commit()
-    self.tic()
+  def test_05_InventoryListAtCacheDate(self):
+    """
+      Check that optimisation is executed when querying an amount list
+      at the exact time of the cache of result
+    """
+    self._fillCache(True)
+    # We got results from cache + results from stock
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid, at_date=self.CACHE_DATE),
+      [{
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_2,
+        'inventory': self.INVENTORY_QUANTITY_2,
+        'node_uid': self.node_uid,
+      }],
+    )
 
-  def test_01_CurrentInventoryWithFullInventory(self):
+  def test_06_InventoryListToCacheDate(self):
     """
-      Check that inventory optimisation is executed when querying current
-      amount (there is a usable full inventory which is the latest).
+      Check that optimisation is executed when querying an amount list
+      that will only take into account cache data.
     """
-    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_3 + \
-                                  self.BASE_QUANTITY,
-                            inventory_kw={'node_uid': self.node_uid})
+    self._fillCache(True)
+    # We got only results from cache
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid, to_date=self.CACHE_DATE),
+      [{
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }],
+    )
 
-  def test_02_InventoryAtLatestFullInventoryDate(self):
+  def test_07_InventoryListGroupedByResource(self):
     """
-      Check that inventory optimisation is executed when querying an amount
-      at the exact time of latest usable full inventory.
+      Check that optimisation is executed when grouping inventory list
+      by resource explicitely
     """
-    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_3,
-                            inventory_kw={'node_uid': self.node_uid,
-                                          'at_date': self.INVENTORY_DATE_3})
+    inventory_kw = {
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+      'group_by_resource': 1,
+    }
+    # Fill cache
+    self.getInventoryList(**inventory_kw)
+    # Check we got all results
+    self._checkInventoryList(
+      self.getInventoryList(**inventory_kw),
+      [{
+        'inventory': self.INVENTORY_QUANTITY_3 + self.INVENTORY_QUANTITY_2 + \
+          self.INVENTORY_QUANTITY_1,
+        'resource_uid': self.resource.getUid(),
+        'node_uid': self.node_uid,
+      }],
+    )
 
-  def test_03_InventoryAtEarlierFullInventoryDate(self):
+  def test_08_InventoryListGroupedByResourceAtCacheDate(self):
     """
-      Check that inventory optimisation is executed when querying past
-      amount (there is a usable full inventory which is not the latest).
+      Check that optimisation is executed when grouping inventory list
+      by resource explicitely
     """
-    self.assertInventoryEquals(value=self.INVENTORY_QUANTITY_2 + \
-                                  self.BASE_QUANTITY,
-                            inventory_kw={'node_uid': self.node_uid,
-                                          'at_date': self.INVENTORY_DATE_3 - \
-                                                     1})
+    # Fill cache
+    self.getInventoryList(node_uid=self.node_uid, to_date=self.NOW,
+      group_by_resource=1)
+    # We got results from cache + results from stock
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid, at_date=self.CACHE_DATE,
+        group_by_resource=1),
+      [{
+        'inventory': self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_1,
+        'resource_uid': self.resource.getUid(),
+        'node_uid': self.node_uid,
+      }],
+    )
 
-  def test_04_InventoryBeforeFullInventoryAfterPartialInventory(self):
+  def test_09_InventoryListGroupByResourceToCacheDate(self):
     """
-      Check that optimisation is not executed when querying past amount
-      with no usable full inventory.
+      Check that optimisation is executed when grouping inventory list
+      by resource explicitely
+    """
+    self.getInventoryList(node_uid=self.node_uid, to_date=self.NOW, group_by_resource=1)
+    # We got only results from cache
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid, to_date=self.CACHE_DATE,
+        group_by_resource=1),
+      [{
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'resource_uid': self.resource.getUid(),
+        'node_uid': self.node_uid,
+      }],
+    )
 
-      If optimisation was executed,
-        self.INVENTORY_QUANTITY_1 * 2 + self.BASE_QUANTITY * 2
-      would be found.
-    """
-    self.assertEquals(self.ACTUAL_INVENTORY_QUANTITY_1 + \
-                      self.BASE_QUANTITY * 2,
-                      self.getInventory(node_uid=self.node_uid,
-                                   at_date=self.INVENTORY_DATE_2 - 1))
-
-  def test_05_InventoryListWithFullInventory(self):
-    """
-      Check that inventory optimisation is executed when querying current
-      amount list (there is a usable full inventory which is the latest).
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid)
-    reference_inventory = [
-      {'date': self.INVENTORY_DATE_3,
-       'inventory': self.INVENTORY_QUANTITY_3,
-       'node_uid': self.node_uid},
-      {'date': self.INVENTORY_DATE_3 + 1,
-       'inventory': self.BASE_QUANTITY,
-       'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_06_InventoryListAtLatestFullInventoryDate(self):
-    """
-      Check that inventory optimisation is executed when querying past
-      amount list (there is a usable full inventory which is not the latest).
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      at_date=self.INVENTORY_DATE_3)
-    reference_inventory = [
-      {'date': self.INVENTORY_DATE_3,
-       'inventory': self.INVENTORY_QUANTITY_3,
-       'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_07_InventoryListAtEarlierFullInventoryDate(self):
-    """
-      Check that inventory optimisation is executed when querying past
-      amount list (there is a usable full inventory which is not the latest).
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      at_date=self.INVENTORY_DATE_3 - 1)
-    reference_inventory = [
-      {'date': self.INVENTORY_DATE_2,
-       'inventory': self.INVENTORY_QUANTITY_2,
-       'node_uid': self.node_uid},
-      {'date': self.INVENTORY_DATE_3 - 1,
-       'inventory': self.BASE_QUANTITY,
-       'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_08_InventoryListBeforeFullInventoryAfterPartialInventory(self):
-    """
-      Check that optimisation is not executed when querying past amount list
-      with no usable full inventory.
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      at_date=self.INVENTORY_DATE_2 - 1)
-    reference_inventory = [
-      {'date': self.INVENTORY_DATE_1 - 1,
-       'inventory': self.BASE_QUANTITY,
-       'node_uid': self.node_uid},
-      {'date': self.INVENTORY_DATE_1,
-       'inventory': self.ACTUAL_INVENTORY_QUANTITY_1,
-       'node_uid': self.node_uid},
-      {'date': self.INVENTORY_DATE_2 - 1,
-       'inventory': self.BASE_QUANTITY,
-       'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_09_InventoryListGroupedByResource(self):
-    """
-      Group inventory list by resource explicitely, used inventory is the
-      latest.
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      group_by_resource=1)
-    reference_inventory = [
-    {'inventory': self.INVENTORY_QUANTITY_3 + self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_10_InventoryListGroupedByResourceBeforeLatestFullInventoryDate(self):
-    """
-      Group inventory list by resource explicitely, used inventory is not the
-      latest.
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      group_by_resource=1,
-                                      at_date=self.INVENTORY_DATE_3 - 1)
-    reference_inventory = [
-    {'inventory': self.INVENTORY_QUANTITY_2 + self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_11_InventoryListAroundLatestInventoryDate(self):
-    """
-      Test getInventoryList with a min and a max date around latest full
-      inventory. A full inventory is used and is not the latest.
-    """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      from_date=self.INVENTORY_DATE_3 - 1,
-                                      at_date=self.INVENTORY_DATE_3 + 1)
-    reference_inventory = [
-    {'inventory': self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3 - 1},
-    {'inventory': self.ACTUAL_INVENTORY_QUANTITY_3,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3},
-    {'inventory': self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3 + 1}
-    ]
-    self._checkInventoryList(inventory, reference_inventory)
-
-  def test_12_InventoryListWithOrderByDate(self):
+  def test_10_InventoryListWithOrderByDate(self):
     """
       Test order_by is preserved by optimisation on date column.
-      Also sort on total_quantity column because there are inventory lines
-      which are on the same date but with distinct quantities.
     """
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      from_date=self.INVENTORY_DATE_3 - 1,
-                                      at_date=self.INVENTORY_DATE_3 + 1,
-                                      sort_on=(('date', 'ASC'),
-                                               ('total_quantity', 'DESC')))
-    reference_inventory = [
-    {'inventory': self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3 - 1},
-    {'inventory': self.ACTUAL_INVENTORY_QUANTITY_3,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3},
-    {'inventory': self.BASE_QUANTITY,
-     'resource_uid': self.resource.getUid(),
-     'node_uid': self.node_uid,
-     'date': self.INVENTORY_DATE_3 + 1}
-    ]
-    self._checkInventoryList(inventory, reference_inventory,
-                             ordered_check=True)
-    inventory = self.getInventoryList(node_uid=self.node_uid,
-                                      from_date=self.INVENTORY_DATE_3 - 1,
-                                      at_date=self.INVENTORY_DATE_3 + 1,
-                                      sort_on=(('date', 'DESC'),
-                                               ('total_quantity', 'ASC')))
+    inventory_kw={
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+    }
+    sort_on = (('date', 'ASC'), ('total_quantity', 'DESC'))
+    reversed_sort_on = (('date', 'DESC'), ('total_quantity', 'ASC'))
+    reference_inventory = [{
+      'inventory': self.INVENTORY_QUANTITY_1,
+      'resource_uid': self.resource.getUid(),
+      'node_uid': self.node_uid,
+      'date': self.INVENTORY_DATE_1,
+    }, {
+      'inventory': self.INVENTORY_QUANTITY_2,
+      'resource_uid': self.resource.getUid(),
+      'node_uid': self.node_uid,
+      'date': self.INVENTORY_DATE_2
+    }, {
+      'inventory': self.INVENTORY_QUANTITY_3,
+      'resource_uid': self.resource.getUid(),
+      'node_uid': self.node_uid,
+      'date': self.INVENTORY_DATE_3,
+    }]
+    # Fill cache
+    self.getInventoryList(sort_on=sort_on, **inventory_kw)
+    # Check it in fist order
+    self._checkInventoryList(
+      self.getInventoryList(sort_on=sort_on, **inventory_kw),
+      reference_inventory,
+      ordered_check=True,
+    )
+    # Check it in reverse order
     reference_inventory.reverse()
-    self._checkInventoryList(inventory, reference_inventory,
-                             ordered_check=True)
+    self._checkInventoryList(
+      self.getInventoryList(sort_on=reversed_sort_on, **inventory_kw),
+      reference_inventory,
+      ordered_check=True,
+    )
 
-  def test_13_InventoryAfterModificationInPast(self):
+  def test_11_InventoryWithFromDate(self):
     """
-    Test inventory after adding a new movement in past and reindex all inventory
+    Test that getInventory called with from date does not generate cache entry
     """
-    movement = self._makeMovement(quantity=self.BASE_QUANTITY*2,
-      start_date=self.INVENTORY_DATE_3 - 2,
-      simulation_state='delivered')
-    # reindex inventory module, although we modified table by hand
-    # everything must be consistent after reindexation
-    inventory_module = self.getPortal().getDefaultModule(portal_type='Inventory')
-    inventory_module.recursiveReindexObject()
-    self.tic()
-    inventory_kw={'node_uid': self.node_uid,
-                  'at_date': self.INVENTORY_DATE_3}
-    value=self.INVENTORY_QUANTITY_3
-    # use optimisation
+    inventory_kw = {
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+      'from_date': self.NOW - self.CACHE_LAG - 10,
+    }
+    # Double stock value and check that we got same result
+    # with and without optimisation
+    value = self.INVENTORY_QUANTITY_3 + self.INVENTORY_QUANTITY_2 + \
+            2 * self.INVENTORY_QUANTITY_1
+    self.doubleStockValue()
     self.assertEquals(value, self.getInventory(**inventory_kw))
-    # without optimisation
     self.assertEquals(value,
-                      self.getInventory(optimisation__=False,
-                                        **inventory_kw))
+                         self.getInventory(optimisation__=False,
+                                           **inventory_kw))
 
-  def test_14_TwoInventoryWithSameDateAndResourceAndNode(self):
+  def test_12_CheckCacheFlush(self):
     """
-    It makes no sense to validate two inventories with same date,
-    same resource, and same node. The calculation of inventories
-    will not work in such case. So here we test that a constraint
-    does not allow such things
+    Test the cache is flushed when indexing a movement into stock
     """
-    portal = self.getPortal()
-    self._addPropertySheet('Inventory', 'InventoryConstraint')
-    try:
-      inventory_module = portal.getDefaultModule(portal_type='Inventory')
-      inventory = inventory_module.newContent(portal_type='Inventory')
-      date = self.DUPLICATE_INVENTORY_DATE
-      inventory.edit(destination_value=self.node,
-                     destination_section_value=self.section,
-                     start_date=date)
-      inventory_line = inventory.newContent(
-          resource_value = self.resource,
-          quantity = 1)
-      self.workflow_tool = portal.portal_workflow
-      workflow_id = 'inventory_workflow'
-      transition_id = 'deliver_action'
-      workflow_id= 'inventory_workflow'
-      self.workflow_tool.doActionFor(inventory, transition_id,
-              wf_id=workflow_id)
-      self.assertEquals('delivered', inventory.getSimulationState())
-      self.tic()
-      
-      # We should detect the previous inventory and fails
-      new_inventory = inventory.Base_createCloneDocument(batch_mode=1)
-      self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
-          new_inventory, transition_id, wf_id=workflow_id)
-      workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
-          name='history', wf_id=workflow_id)
-      workflow_error_message = str(workflow_history[-1]['error_message'])
-      self.assertTrue(len(workflow_error_message))
-      self.assertTrue(len([x for x in workflow_error_message \
-          if x.find('There is already an inventory')]))
+    inventory_kw = {
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+    }
+    # Fill cache and make stock inconsistent
+    value = self.getInventory(**inventory_kw)
+    self.doubleStockValue()
+    # Create a movement after CACHE DATE
+    # Cache is cleared for all entry > movement date
+    # as at a cache date D, it contains results from stock
+    # for all line < D
+    INVENTORY_QUANTITY_4 = 5000
+    INVENTORY_DATE_4 = self.CACHE_DATE
+    movement = self._makeMovement(
+      quantity=INVENTORY_QUANTITY_4,
+      start_date=INVENTORY_DATE_4,
+      simulation_state='delivered',
+    )
+    self.tic()
+    # Optimisation must still be used
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4,
+      self.getInventory(**inventory_kw),
+    )
+    # Edit start date so that cache table is cleared
+    movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
+    self.tic()
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.assertEquals(
+      value + 2 * INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
+    # Move movement's start date in the future and check cache is flushed
+    # at former date
+    movement.edit(start_date=self.NOW - 1)
+    self.tic()
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 3 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 +  7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
 
-      # Add a case in order to check a bug when the other inventory at the
-      # same date does not change stock values
-      new_inventory = inventory.Base_createCloneDocument(batch_mode=1)
-      new_inventory.setStartDate(self.DUPLICATE_INVENTORY_DATE + 1)
-      self.workflow_tool.doActionFor(new_inventory, transition_id,
-              wf_id=workflow_id)
-      self.assertEquals('delivered', new_inventory.getSimulationState())
-      self.tic()
+    # Set date back in the past, cache is clear again
+    movement.edit(start_date=self.LAST_CACHED_MOVEMENT_DATE)
+    self.tic()
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + INVENTORY_QUANTITY_4 + 7 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.assertEquals(
+      value + 2 * INVENTORY_QUANTITY_4 + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(optimisation__=False, **inventory_kw),
+    )
 
-      new_inventory = new_inventory.Base_createCloneDocument(batch_mode=1)
-      self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, 
-          new_inventory, transition_id, wf_id=workflow_id)
-      workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
-          name='history', wf_id=workflow_id)
-      workflow_error_message = str(workflow_history[-1]['error_message'])
-      self.assertTrue(len(workflow_error_message))
-      self.assertTrue(len([x for x in workflow_error_message \
-          if x.find('There is already an inventory')]))
-    finally:
-      # remove all property sheets we added to type informations
-      ttool = self.getTypesTool()
-      for ti_name, psheet_list in self._added_property_sheets.iteritems():
-        ti = ttool.getTypeInfo(ti_name)
-        property_sheet_set = set(ti.getTypePropertySheetList())
-        property_sheet_set.difference_update(psheet_list)
-        ti._setTypePropertySheetList(list(property_sheet_set))
-      self.commit()
-      _aq_reset()
+    # Delete movement, so it gets unindexed and cache entry is flushed
+    self.folder.manage_delObjects(ids=[movement.getId(), ])
+    self.tic()
+    self.assertEquals(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
+    self.doubleStockValue()
+    # Cache hit again
+    self.assertEquals(
+      value + 15 * self.INVENTORY_QUANTITY_1,
+      self.getInventory(**inventory_kw),
+    )
 
-  def test_15_InventoryAfterModificationInFuture(self):
+  def test_13_CacheCreatedFromCache(self):
     """
-    Test inventory after adding a new movement in future 
+    Test that a new cache entry is created from previous cache entry if it exists
     """
-    movement = self._makeMovement(quantity=self.BASE_QUANTITY*2,
-      start_date=self.INVENTORY_DATE_3 + 2,
-      simulation_state='delivered')
+    # Create an old movement
+    INVENTORY_QUANTITY_4 = 100
+    INVENTORY_DATE_4 = self.NOW - 3 * self.CACHE_LAG
+    movement = self._makeMovement(quantity=INVENTORY_QUANTITY_4,
+                                  start_date=INVENTORY_DATE_4,
+                                  simulation_state='delivered')
+    # Get inventory in past so that cache is filled
+    inventory_kw={'node_uid': self.node_uid,
+                  "to_date" : self.NOW - 2 * self.CACHE_LAG,}
+    value = self.getInventory(**inventory_kw)
+    self.assertInventoryEquals(value, inventory_kw)
+
+    # Now compute wanted value manually as we screwed the stock table
+    # As we double every movement < CACHE_LAG/2, inventory_1 is doubled
+    # like inventory_4, but inventory_4 must be retrieved from cache with
+    # its initial value
+    wanted_value = 2 * self.INVENTORY_QUANTITY_1 + self.INVENTORY_QUANTITY_2 + \
+            self.INVENTORY_QUANTITY_3 + INVENTORY_QUANTITY_4
+    inventory_kw={'node_uid': self.node_uid,
+                  "to_date" : self.NOW,}
+    value = self.getInventory(**inventory_kw)
+    self.assertEqual(value, wanted_value)
+    # Make sure it has filled a new cache
+    self.assertInventoryEquals(wanted_value, inventory_kw)
+
+
+  def test_14_CacheTableCreatedOnGetInventoryCall(self):
+    """
+    Check that getInventory does not fail it cache table does not exist
+    and that it create the table and add an entry in it
+    """
+    self.portal.SimulationTool_zDropInventoryCache()
+    # Make sure it is dropped
+    self.assertRaises(ProgrammingError,
+             self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+             uid_list = (0,),
+             date=DateTime())
+    # Check that src__ call still works
+    inventory_kw={
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+      }
+    self.getInventory(src__=1, **inventory_kw)
+    # Table is still not created
+    self.assertRaises(ProgrammingError,
+             self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+             uid_list = (0,),
+             date=DateTime())
+    # This call should not fail
+    # It will create table, fill it and check optimisation is used
+    self.assertInventoryEquals(
+      self._fillCache(),
+      inventory_kw=inventory_kw,
+    )
+
+  def test_15_CacheTableCreatedOnIndexation(self):
+    """
+    Check that getInventory does not fail it cache table does not exist
+    and that it create the table and add an entry in it
+    """
+    self.portal.SimulationTool_zDropInventoryCache()
+    # Make sure it is dropped
+    self.assertRaises(ProgrammingError,
+            self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+            uid_list = (0,),
+            date=DateTime())
+    # Create a new movement, indexation should not fail
+    INVENTORY_QUANTITY_4 = 5000
+    INVENTORY_DATE_4 = self.CACHE_DATE
+    movement = self._makeMovement(
+      quantity=INVENTORY_QUANTITY_4,
+      start_date=INVENTORY_DATE_4,
+      simulation_state='delivered',
+    )
     self.tic()
 
-    def getCurrentInventoryPathList(resource, **kw):
-      # the brain is not a zsqlbrain instance here, so it does not
-      # have getPath().
-      return [x.path for x in resource.getCurrentInventoryList(**kw)]
-    
-    # use optimisation
-    self.assertEquals(True,movement.getPath() in 
-                  [x.path for x in self.resource.getInventoryList(
-                                         mirror_uid=self.mirror_node.getUid())])
+    # Optimisation must then be used
+    inventory_kw={
+      'node_uid': self.node_uid,
+      'to_date': self.NOW,
+      }
+    value = self.getInventory(**inventory_kw)
+    self.assertInventoryEquals(
+      value,
+      inventory_kw=inventory_kw,
+      )
 
-    # without optimisation
-    self.assertEquals(True,movement.getPath() in 
-                  [x.path for x in self.resource.getInventoryList(
-                                         optimisation__=False,
-                                         mirror_uid=self.mirror_node.getUid())])
-
-  @expectedFailure
-  def test_MultipleSectionAndFullInventory(self):
-    """Make sure that getInventoryList works in the situation which
-    two sections use the same node and one section has full inventory for
-    the node.
+  def test_16_CacheTableCreatedOnUnindexation(self):
     """
-    # In this test we do not need doucments made by afterSetUp.
-    self.portal.inventory_module.manage_delObjects(list(self.portal.inventory_module.objectIds()))
-    self.folder.manage_delObjects(list(self.folder.objectIds()))
-
-    self.commit()
+    Check that getInventory does not fail it cache table does not exist
+    and that it create the table and add an entry in it
+    """
+    # Create a new movement
+    INVENTORY_QUANTITY_4 = 5000
+    INVENTORY_DATE_4 = self.CACHE_DATE
+    movement = self._makeMovement(
+      quantity=INVENTORY_QUANTITY_4,
+      start_date=INVENTORY_DATE_4,
+      simulation_state='delivered',
+    )
     self.tic()
-
-    createZODBPythonScript(self.portal.portal_skins.custom,
-                           'Inventory_getDefaultInventoryCalculationList', '',
-'''return ({
-'inventory_params':{
- 'section_uid':context.getDestinationSectionUid(),
- 'node_uid':context.getDestinationUid(),
- 'group_by_variation':1,
- 'group_by_resource':1},
-'list_method':'getMovementList',
-'first_level':({'key':'resource_relative_url',
-                'getter':'getResource',
-                'setter':('appendToCategoryList', 'resource')},
-               {'key':'variation_text',
-                'getter':'getVariationText',
-                'setter':'splitAndExtendToCategoryList'},
-               ),
-},)
-''')
-
-    self.commit()
-
-    getCurrentInventoryList = self.getSimulationTool().getCurrentInventoryList
-
-    # Add movements for section
-    self._makeMovement(source_section_value=None,
-                       source_value=None,
-                       destination_section_value=self.section,
-                       destination_value=self.node,
-                       start_date=DateTime('2012/07/18 00:00:00 GMT+9'),
-                       simulation_state='delivered',
-                       resource_value=self.resource,
-                       quantity=1)
-    self._makeMovement(source_section_value=None,
-                       source_value=None,
-                       destination_section_value=self.section,
-                       destination_value=self.node,
-                       start_date=DateTime('2012/07/21 00:00:00 GMT+9'),
-                       simulation_state='delivered',
-                       resource_value=self.resource,
-                       quantity=2)
-
-    # Add movemnets for other section
-    self._makeMovement(source_section_value=None,
-                       source_value=None,
-                       destination_section_value=self.other_section,
-                       destination_value=self.node,
-                       start_date=DateTime('2012/07/19 00:00:00 GMT+9'),
-                       simulation_state='delivered',
-                       resource_value=self.resource,
-                       quantity=3)
-    self._makeMovement(source_section_value=None,
-                       source_value=None,
-                       destination_section_value=self.other_section,
-                       destination_value=self.node,
-                       start_date=DateTime('2012/07/20 00:00:00 GMT+9'),
-                       simulation_state='delivered',
-                       resource_value=self.resource,
-                       quantity=4)
-
-    self.commit()
+    # Check it also works on unindexation
+    self.portal.SimulationTool_zDropInventoryCache()
+    # Make sure it is dropped
+    self.assertRaises(ProgrammingError,
+        self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog,
+                      uid_list = (0,),
+                      date=DateTime())
+    # Delete movement
+    self.folder.manage_delObjects(ids=[movement.getId(), ])
     self.tic()
+    # This call must not fail as table has been created
+    self.portal.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(
+      uid_list = (0,),
+      date=DateTime())
 
-    # Check inventory
-    result = {}
-    for brain in getCurrentInventoryList(node_uid=self.node.getUid(),
-                                         group_by_resource=1,
-                                         group_by_node=1,
-                                         group_by_section=1):
-      key = (brain.section_uid, brain.node_uid, brain.resource_uid)
-      if not key in result:
-        result[key] = 0
-      result[key] = result[key] + brain.inventory
+    # This call should not fail
+    # It will create table, fill it and check optimisation is used
+    self.assertInventoryEquals(
+      self._fillCache(),
+      inventory_kw={
+        'node_uid': self.node_uid,
+        'to_date': self.NOW,
+      }
+    )
 
-    self.assertEqual(result,
-                     {(self.section.getUid(), self.node.getUid(), self.resource.getUid()):3,
-                      (self.other_section.getUid(), self.node.getUid(), self.resource.getUid()):7})
-
-    # Add full inventory for section, not for other section
-    full_inventory1 = self.portal.inventory_module.newContent(portal_type='Inventory')
-    full_inventory1.edit(destination_section_value=self.section,
-                         destination_value=self.node,
-                         full_inventory=1,
-                         start_date=DateTime('2012/07/20 00:00:00 GMT+9'))
-    line = full_inventory1.newContent(portal_type='Inventory Line')
-    line.setResourceValue(self.resource)
-    line.setQuantity(100)
-    full_inventory1.deliver()
-
-    self.commit()
-    self.tic()
-
-    # Check inventory again. This time, full inventory should change
-    # section's inventory. It should not change other section's inventory.
-    result = {}
-    for brain in getCurrentInventoryList(node_uid=self.node.getUid(),
-                                         group_by_resource=1,
-                                         group_by_node=1,
-                                         group_by_section=1):
-      key = (brain.section_uid, brain.node_uid, brain.resource_uid)
-      if not key in result:
-        result[key] = 0
-      result[key] = result[key] + brain.inventory
-
-    self.assertEqual(result,
-                     {(self.section.getUid(), self.node.getUid(), self.resource.getUid()):102,
-                      (self.other_section.getUid(), self.node.getUid(), self.resource.getUid()):7})
-
-  @expectedFailure
-  def test_ResourceCategory(self):
-    """Make sure that resource category works when full inventory exists."""
-    # In this test we do not need doucments made by afterSetUp.
-    self.setUpDefaultInventoryCalculationList()
-    self.clearAllInventoryAndSetUpTwoInventory()
-    self.assertEquals(1,
-                      self.getInventory(section_uid=self.section.getUid(),
-                                        node_uid=self.node.getUid(),
-                                        resource_category='product_line/level1',
-                                        optimisation__=False))
-    self.assertEquals(1,
-                      self.getInventory(section_uid=self.section.getUid(),
-                                        node_uid=self.node.getUid(),
-                                        resource_category='product_line/level1',
-                                        optimisation__=True))
-
-  @expectedFailure
-  def test_SectionCategory(self):
-    """Make sure that section category works when full inventory exists."""
-    # In this test we do not need doucments made by afterSetUp.
-    self.clearAllInventoryAndSetUpTwoInventory()
-    self.assertEquals(11,
-                      self.getInventory(node_uid=self.node.getUid(),
-                                        section_category='group/level1/level2',
-                                        optimisation__=False))
-    self.assertEquals(11,
-                      self.getInventory(node_uid=self.node.getUid(),
-                                        section_category='group/level1/level2',
-                                        optimisation__=True))
-
-  @expectedFailure
-  def test_NodeCategory(self):
-    # In this test we do not need doucments made by afterSetUp.
-    self.clearAllInventoryAndSetUpTwoInventory()
-    self.assertEquals(11,
-                      self.getInventory(section_uid=self.section.getUid(),
-                                        node_category='region/level1',
-                                        optimisation__=False))
-    self.assertEquals(11,
-                      self.getInventory(section_uid=self.section.getUid(),
-                                        node_category='region/level1',
-                                        optimisation__=True))
 
 class BaseTestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_DICT = {}
@@ -3354,10 +3418,10 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestInventoryStat))
   suite.addTest(unittest.makeSuite(TestNextNegativeInventoryDate))
   suite.addTest(unittest.makeSuite(TestTrackingList))
-  suite.addTest(unittest.makeSuite(TestInventoryDocument))
+  suite.addTest(unittest.makeSuite(TestInventoryCacheTable))
   suite.addTest(unittest.makeSuite(TestUnitConversion))
   suite.addTest(unittest.makeSuite(TestUnitConversionDefinition))
   suite.addTest(unittest.makeSuite(TestUnitConversionBackwardCompatibility))
   return suite
 
-# vim: foldmethod=marker
+

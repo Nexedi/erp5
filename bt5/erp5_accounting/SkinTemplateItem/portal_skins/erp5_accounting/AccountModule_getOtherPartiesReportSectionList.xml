@@ -83,7 +83,7 @@ params =  {\n
   , \'simulation_state\': simulation_state\n
 }\n
 \n
-params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
+params[\'hide_grouping\'] = request[\'omit_grouping_reference\']\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 else :\n
@@ -120,8 +120,9 @@ for party in context.Account_zDistinctSectionList(\n
   if role_filter_list:\n
     keep_this_one = False\n
     for role in role_filter_list:\n
-      if o.isMemberOf(role):\n
+      if role and o.isMemberOf(role):\n
         keep_this_one = True\n
+        break\n
 \n
   if not keep_this_one:\n
     continue\n

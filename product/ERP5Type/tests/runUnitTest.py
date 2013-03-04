@@ -324,7 +324,8 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       return filtered_name_list
     return name_list
 
-unittest.TestLoader = ERP5TypeTestLoader
+# BBB: Python < 2.7
+getattr(unittest, 'loader', unittest).TestLoader = ERP5TypeTestLoader
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
@@ -420,8 +421,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=N
   else:
     products_home = os.path.join(instance_home, 'Products')
 
-  import OFS.Application
-  from Testing import ZopeTestCase
+  from Testing.ZopeTestCase import layer, PortalTestCase, ZopeLite
+  _apply_patches = layer._deferred_setup.pop(0)[0]
+  assert _apply_patches.__name__ == '_apply_patches'
 
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
@@ -475,12 +477,15 @@ def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=N
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
 
+  from Products.ERP5Type.patches import noZopeHelp
+  from OFS.Application import AppInitializer
+  AppInitializer.install_session_data_manager = lambda self: None
+
   # import ERP5TypeTestCase before calling layer.ZopeLite.setUp
   # XXX What if the unit test itself uses 'onsetup' ? We should be able to call
   #     remaining 'onsetup' hooks just before executing the test suite.
   from Products.ERP5Type.tests.ERP5TypeTestCase import \
       ProcessingNodeTestCase, ZEOServerTestCase, dummy_setUp, dummy_tearDown
-  from Testing.ZopeTestCase import layer
 
   # Since we're not using the zope.testing testrunner, we need to set up
   # the layer ourselves
@@ -491,6 +496,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=N
   def assertFalse():
     assert False
   layer.onsetup = assertFalse
+  ZopeLite._theApp._p_jar.close()
+  ZopeLite._theApp = None
 
   from Products.ERP5Type.tests.utils import DbFactory
   root_db_name, = cfg.dbtab.databases.keys()
@@ -537,9 +544,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=N
         # Skip all tests and monkeypatch PortalTestCase to skip
         # afterSetUp/beforeTearDown.
         ERP5TypeTestLoader._testMethodPrefix = 'dummy_test'
-        ZopeTestCase.PortalTestCase.setUp = dummy_setUp
-        ZopeTestCase.PortalTestCase.tearDown = dummy_tearDown
-      else:
+        PortalTestCase.setUp = dummy_setUp
+        PortalTestCase.tearDown = dummy_tearDown
+      elif debug:
         # Hack the profiler to run only specified test methods,
         # and wrap results when running in debug mode.
         class DebugTextTestRunner(TestRunner):

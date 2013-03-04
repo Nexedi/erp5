@@ -55,9 +55,6 @@
 Simulation Movements can come from normal Invoice Transaction Rule\n
 and same rule which is children of Trade Model Rule """\n
 \n
-buildSQLQuery = context.portal_catalog.buildSQLQuery\n
-select = context.InvoiceTransaction_zSelectMovement\n
-\n
 # search for normal movements\n
 kw[\'parent_specialise_reference\'] = [\'default_invoice_transaction_rule\']\n
 kw[\'grand_grand_parent_specialise_reference\'] = [\n
@@ -74,19 +71,21 @@ else:\n
                                          \'Returned %s Packing List\' % trade_type]\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
 \n
+kw[\'delivery_uid\'] = None\n
+kw[\'left_join_list\'] = [\'delivery_uid\']\n
+kw[\'select_dict\'] = dict(delivery_uid=None)\n
+kw[\'group_by\'] = (\'uid\',)\n
+\n
 search_kw = kw.copy()\n
 search_kw[\'grand_parent_simulation_state\'] = [\'started\']\n
-search_kw.update(buildSQLQuery(**search_kw))\n
 \n
-movement_list = list(select(**search_kw))\n
+movement_list = list(context.portal_catalog(**search_kw))\n
 \n
 # update query to search for movements which are children of Trade Model Rule\n
 kw[\'grand_grand_parent_specialise_reference\'] = \'default_trade_model_rule\'\n
 kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
 \n
-kw.update(buildSQLQuery(**kw))\n
-\n
-movement_list += select(**kw)\n
+movement_list += list(context.portal_catalog(**kw))\n
 \n
 return movement_list\n
 </string> </value>

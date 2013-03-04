@@ -31,30 +31,46 @@ import subprocess
 import time
 import xml_marshaller
 import shutil
+import sys
 import glob
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
 
-def createFolder(folder):
+def createFolder(folder, clean=False):
+  if clean and os.path.exists(folder):
+    shutil.rmtree(folder)
   if not(os.path.exists(folder)):
     os.mkdir(folder)
 
+def createFolders(folder):
+  if not(os.path.exists(folder)):
+    os.makedirs(folder)
+
 class SlapOSControler(object):
 
-  def __init__(self, working_directory, config):
+  def __init__(self, working_directory, config, log):
     self.config = config
     self.software_root = os.path.join(working_directory, 'soft')
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
-
-  def initializeSlapOSControler(self, log, slapproxy_log=None, process_manager=None,
-        reset_software=False, software_path_list=None):
     self.log = log
+
+  def _resetSoftware(self):
+    self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %
+             (self.software_root,))
+    if os.path.exists(self.software_root):
+      shutil.rmtree(self.software_root)
+    os.mkdir(self.software_root)
+    os.chmod(self.software_root, 0750)
+
+
+  def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
+        reset_software=False, software_path_list=None):
     self.process_manager = process_manager
     self.software_path_list = software_path_list
-    log('SlapOSControler, initialize, reset_software: %r' % reset_software)
+    self.log('SlapOSControler, initialize, reset_software: %r' % reset_software)
     config = self.config
     slapos_config_dict = self.config.copy()
     slapos_config_dict.update(software_root=self.software_root,
@@ -80,22 +96,23 @@ class SlapOSControler(object):
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
     time.sleep(10)
-    slap = slapos.slap.slap()
-    self.slap = slap
-    self.slap.initializeConnection(config['master_url'])
-    # register software profile
-    for path in self.software_path_list:
-      slap.registerSupply().supply(
-          path,
-          computer_guid=config['computer_id'])
-    computer = slap.registerComputer(config['computer_id'])
+    try:
+      slap = slapos.slap.slap()
+      self.slap = slap
+      self.slap.initializeConnection(config['master_url'])
+      # register software profile
+      for path in self.software_path_list:
+        slap.registerSupply().supply(
+            path,
+            computer_guid=config['computer_id'])
+      computer = slap.registerComputer(config['computer_id'])
+    except:
+        self.log("SlapOSControler.initializeSlapOSControler, \
+                 exception in registerSupply", exc_info=sys.exc_info())
+        raise ValueError("Unable to initializeSlapOSControler")
     # Reset all previously generated software if needed
     if reset_software:
-      log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' % (self.software_root,))
-      if os.path.exists(self.software_root):
-        shutil.rmtree(self.software_root)
-      os.mkdir(self.software_root)
-      os.chmod(self.software_root, 0750)
+      self._resetSoftware()
     instance_root = self.instance_root
     if os.path.exists(instance_root):
       # delete old paritions which may exists in order to not get its data
@@ -159,9 +176,15 @@ class SlapOSControler(object):
     config['instance_dict']['report-project'] = config.get("report-project", "")
     config['instance_dict']['suite-url'] = config.get("suite-url", "")
     for path in self.software_path_list:
-      self.slap.registerOpenOrder().request(path,
-        partition_reference='testing partition %s' % self.software_path_list.index(path),
-        partition_parameter_kw=config['instance_dict'])
+      try:
+        self.slap.registerOpenOrder().request(path,
+          partition_reference='testing partition %s' % \
+            self.software_path_list.index(path),
+          partition_parameter_kw=config['instance_dict'])
+      except:
+        self.log("SlapOSControler.runComputerPartition, \
+                 exception in registerOpenOrder", exc_info=sys.exc_info())
+        raise ValueError("Unable to registerOpenOrder")
 
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions

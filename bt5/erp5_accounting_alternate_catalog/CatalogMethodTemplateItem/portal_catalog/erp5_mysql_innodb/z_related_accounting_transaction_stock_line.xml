@@ -8,8 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>table_0\r\n
-table_1</string> </value>
+            <value> <string>table_0</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -23,8 +22,7 @@ table_1</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_transaction.uid = <dtml-var table_0>.explanation_uid\n
-AND <dtml-var table_0>.uid = <dtml-var table_1>.uid
+accounting_transaction.uid = <dtml-var table_0>.explanation_uid
 
 ]]></string> </value>
         </item>

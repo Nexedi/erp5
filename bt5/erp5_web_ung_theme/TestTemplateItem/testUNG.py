@@ -259,7 +259,9 @@ class TestUNG(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     portal.event_module.EventModule_createNewEvent()
     self.tic()
-    event = portal.portal_catalog.getResultValue(portal_type="Note")
+    event = portal.portal_catalog.getResultValue(
+      portal_type="Note",
+      title='Buy Phone' )
     self.assertEquals(event.getDescription(), "testUNG Sample")
     start_date = event.getStartDate()
     self.assertEquals(start_date.month(), 2)
@@ -336,7 +338,8 @@ class TestUNG(ERP5TypeTestCase):
     self.tic()
     web_message = self.portal.portal_catalog.getResultValue(portal_type="Web Message")
     self.assertEquals(web_message, None)
-    note = self.portal.portal_catalog.getResultValue(portal_type="Note")
+    note = self.portal.portal_catalog.getResultValue(portal_type="Note",
+          title="Buy Coffee")
     self.assertEquals(note.getTitle(), "Buy Coffee")
     self.portal.REQUEST.form.clear()
     form_dict = dict(title=note.getTitle(),
@@ -397,12 +400,12 @@ class TestUNG(ERP5TypeTestCase):
     self.assertTrue(response)
     self.tic()
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
-                                                       first_name="UNG")
+                                                       reference="ung_user")
+    self.assertEquals(person.getFirstName(), "UNG")
     self.assertEquals(person.getLastName(), "User")
     self.assertEquals(person.getValidationState(), "validated")
     self.assertEquals(person.getEmail().getPortalType(), "Email")
     self.assertEquals(person.getEmailText(), "g@g.com")
-    self.assertEquals(person.getReference(), "ung_user")
     self.changeSkin("UNGDoc")
     response = json.loads(self.portal.ERPSite_createUNGUser())
     self.assertEquals(response, None)

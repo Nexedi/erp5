@@ -57,24 +57,13 @@ from Products.CMFCore.WorkflowCore import WorkflowException\n
 \n
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
+REQUEST = portal.REQUEST\n
 \n
-selected_uids = portal.portal_selections.updateSelectionCheckedUidList(\n
-                            selection_name,listbox_uid,uids)\n
 uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
-\n
-error = portal.portal_selections.selectionHasChanged(md5_object_uid_list,\n
-                                                      uids)\n
-\n
-REQUEST=context.REQUEST\n
-qs = \'\'\n
-ret_url = context.absolute_url() + \'/\' + form_id\n
-if error:\n
+if portal.portal_selections.selectionHasChanged(md5_object_uid_list, uids):\n
   message = Base_translateString("Sorry, your selection has changed.")\n
-  qs = \'?portal_status_message=%s\' % message\n
-elif uids is not None:\n
+elif uids:\n
   # Check if there is some related objets.\n
-  object_used = 0\n
-\n
   object_list = [x.getObject() for x in context.Folder_getDeleteObjectList(uid=uids)]\n
   object_used = sum([x.getRelationCountForDeletion() and 1 for x in object_list])\n
 \n
@@ -84,7 +73,6 @@ elif uids is not None:\n
     else:\n
       message = Base_translateString("Sorry, ${count} items are in use.",\n
                                      mapping={\'count\': repr(object_used)})\n
-    qs = \'?portal_status_message=%s\' % message  \n
   else:\n
 \n
     # Do not delete objects which have a workflow history    \n
@@ -106,7 +94,7 @@ elif uids is not None:\n
 \n
     # Remove some objects\n
     try:\n
-      if object_to_remove_list != []:\n
+      if object_to_remove_list:\n
         if context.portal_type == \'Preference\':\n
           # Templates inside preference are not indexed, so we cannot pass\n
           # uids= to manage_delObjects and have to use ids=\n
@@ -121,7 +109,7 @@ elif uids is not None:\n
     except ConflictError:\n
       raise\n
     except Exception, message:\n
-      qs = \'?portal_status_message=%s\' % message\n
+      pass\n
     else:\n
       object_ids = [x.getId() for x in object_to_remove_list]\n
       comment = Base_translateString(\'Deleted objects: ${object_ids}\',\n
@@ -147,7 +135,6 @@ elif uids is not None:\n
           raise\n
         except:\n
           not_deleted_count += 1\n
-          pass\n
 \n
       # Generate message\n
       if not_deleted_count == 1:\n
@@ -158,20 +145,20 @@ elif uids is not None:\n
                                        mapping={\'count\': not_deleted_count})\n
       qs = \'?portal_status_message=%s\' % message\n
 \n
+    # make sure nothing is checked after\n
+    portal.portal_selections.setSelectionCheckedUidsFor(selection_name, ())\n
 else:\n
   message = Base_translateString("Please select one or more items first.")\n
-  qs = \'?portal_status_message=%s\' % message\n
 \n
-# make sure nothing is checked after\n
-portal.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
-return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
+return REQUEST.RESPONSE.redirect("%s/%s?portal_status_message=%s"\n
+  % (context.absolute_url_path(), form_id, message))\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,uids=None,cancel_url=\'\',listbox_uid=[],md5_object_uid_list=\'\'</string> </value>
+            <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,cancel_url=\'\',md5_object_uid_list=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

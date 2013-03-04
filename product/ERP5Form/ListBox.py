@@ -50,7 +50,6 @@ from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
-from hashlib import md5
 import cgi
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
@@ -2379,12 +2378,10 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
 
       # If a field is editable, generate an input form.
       # XXX why don't we generate an input form when a widget is not defined?
-      editable_field = None
-      if not self.isSummary():
-        editable_field = renderer.getEditableField(alias)
+      editable_field = renderer.getEditableField(alias)
 
       # Prepare link value - we now use it for both static and field rendering
-      no_link = False
+      no_link = self.isSummary()
       url_method = None
       url = None
 
@@ -2489,7 +2486,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             value=display_value,
             REQUEST=request,
             key=key,
-            editable=listbox_defines_column_as_editable and editable,
+            editable=(not self.isSummary()) \
+              and listbox_defines_column_as_editable and editable,
           )
           if isinstance(cell_html, str):
             cell_html = unicode(cell_html, encoding)
@@ -2560,20 +2558,14 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """Generate a MD5 checksum against checked uids. This is used to confirm
     that selected values do not change between a display of a dialog and an execution.
 
-    FIXME: this should only use getCheckedUidList, but Folder_deleteObjectList does not use
-    the feature that checked uids are used when no list method is specified.
+    FIXME: SelectionTool.getSelectionChecksum's uid_list parameter is
+    deprecated, but Folder_deleteObjectList does not use the feature that
+    checked uids are used when no list method is specified.
     """
-    checked_uid_list = self.request.get('uids')
-    if checked_uid_list is None:
-      checked_uid_list = self.getCheckedUidList()
-    if checked_uid_list is not None:
-      checked_uid_list = [str(uid) for uid in checked_uid_list]
-      checked_uid_list.sort()
-      md5_string = md5(str(checked_uid_list)).hexdigest()
-    else:
-      md5_string = None
-
-    return md5_string
+    return self.getSelectionTool().getSelectionChecksum(
+      self.getSelectionName(),
+      uid_list=self.request.get('uids'),
+    )
 
   def getPhysicalRoot(self):
     """Return the physical root (an Application object). This method is required for

@@ -55,6 +55,7 @@
 """Reset the grouping reference after a copy & paste.\n
 """\n
 context.setGroupingReference(None)\n
+context.setGroupingDate(None)\n
 
 
 ]]></string> </value>

@@ -119,24 +119,20 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getTranslatedPortalType</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>parent_title</string>
                           <string>Task Title</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Task Line Title</string>
+                          <string>getTranslatedPortalType</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
+                          <string>title</string>
+                          <string>Task Line Title</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
@@ -159,8 +155,8 @@
                           <string>Estimated Time</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Unit</string>
+                          <string>destination_title</string>
+                          <string>Location</string>
                         </tuple>
                         <tuple>
                           <string>getTranslatedSimulationStateTitle</string>
@@ -235,12 +231,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -1178,6 +1178,195 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('group/nexedi',
         self.portal.portal_preferences.getPreferredSectionCategory())
 
+  def test_default_address_acquisition(self):
+    # more complete version of test_04_SubordinationAndAddress
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getDefaultAddressStreetAddress())
+    self.assertEquals(None, organisation.getDefaultAddressCity())
+    self.assertEquals(None, organisation.getDefaultAddressZipCode())
+    self.assertEquals(None, organisation.getDefaultAddressText())
+
+    self.assertEquals(None, organisation.getDefaultAddressRegion())
+    self.assertEquals(None, organisation.getRegion())
+
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals('europe/france', organisation.getDefaultAddressRegion())
+    # region is acquired from default address
+    self.assertEquals('europe/france', organisation.getRegion())
+    self.assertEquals(None, organisation.getDefaultAddressStreetAddress())
+    self.assertEquals(None, organisation.getDefaultAddressCity())
+    self.assertEquals(None, organisation.getDefaultAddressZipCode())
+
+    organisation.setDefaultAddressStreetAddress('Street Address')
+    organisation.setDefaultAddressCity('City')
+    organisation.setDefaultAddressZipCode('Zip Code')
+
+    self.assertEquals('Street Address', organisation.getDefaultAddressStreetAddress())
+    self.assertEquals('City', organisation.getDefaultAddressCity())
+    self.assertEquals('Zip Code', organisation.getDefaultAddressZipCode())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getDefaultAddressStreetAddress())
+    self.assertEquals(None, person.getDefaultAddressCity())
+    self.assertEquals(None, person.getDefaultAddressZipCode())
+    self.assertEquals(None, person.getDefaultAddressText())
+    self.assertEquals(None, person.getDefaultAddressRegion())
+    self.assertEquals(None, person.getRegion())
+
+    # On persons, Address is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+
+    self.assertEquals('Street Address', person.getDefaultAddressStreetAddress())
+    self.assertEquals('City', person.getDefaultAddressCity())
+    self.assertEquals('Zip Code', person.getDefaultAddressZipCode())
+    self.assertEquals('europe/france', person.getDefaultAddressRegion())
+    # region is acquired from default address
+    self.assertEquals('europe/france', person.getRegion())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setDefaultAddressStreetAddress('Person Street Address')
+    person.setDefaultAddressCity('Person City')
+    person.setDefaultAddressZipCode('Person Zip Code')
+    self.assertEquals('Person Street Address', person.getDefaultAddressStreetAddress())
+    self.assertEquals('Person City', person.getDefaultAddressCity())
+    self.assertEquals('Person Zip Code', person.getDefaultAddressZipCode())
+    self.assertEquals('Street Address', organisation.getDefaultAddressStreetAddress())
+    self.assertEquals('City', organisation.getDefaultAddressCity())
+    self.assertEquals('Zip Code', organisation.getDefaultAddressZipCode())
+
+  def test_default_telephone_acquisition(self):
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    # There is no problem if this organisation has a region (this use to be a
+    # problem)
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+
+    organisation.setDefaultTelephoneText("12345")
+    self.assertEquals('12345', organisation.getDefaultTelephoneCoordinateText())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getDefaultTelephoneCoordinateText())
+
+    # On persons, Telephone is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+    self.assertEquals('12345', person.getDefaultTelephoneCoordinateText())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setDefaultTelephoneText('54321')
+    self.assertEquals('54321', person.getDefaultTelephoneCoordinateText())
+    self.assertEquals('12345', organisation.getDefaultTelephoneCoordinateText())
+
+  def test_mobile_telephone_acquisition(self):
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getMobileTelephoneCoordinateText())
+    # There is no problem if this organisation has a region (this use to be a
+    # problem)
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals(None, organisation.getMobileTelephoneCoordinateText())
+
+    organisation.setMobileTelephoneText("12345")
+    self.assertEquals('12345', organisation.getMobileTelephoneCoordinateText())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getMobileTelephoneCoordinateText())
+
+    # On persons, Telephone is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+    self.assertEquals('12345', person.getMobileTelephoneCoordinateText())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setMobileTelephoneText('54321')
+    self.assertEquals('54321', person.getMobileTelephoneCoordinateText())
+    self.assertEquals('12345', organisation.getMobileTelephoneCoordinateText())
+
+  def test_default_fax_acquisition(self):
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    # There is no problem if this organisation has a region (this use to be a
+    # problem)
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals(None, organisation.getDefaultFaxCoordinateText())
+
+    organisation.setDefaultFaxText("12345")
+    self.assertEquals('12345', organisation.getDefaultFaxCoordinateText())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getDefaultFaxCoordinateText())
+
+    # On persons, Fax is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+    self.assertEquals('12345', person.getDefaultFaxCoordinateText())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setDefaultFaxText('54321')
+    self.assertEquals('54321', person.getDefaultFaxCoordinateText())
+    self.assertEquals('12345', organisation.getDefaultFaxCoordinateText())
+
+  def test_default_email_acquisition(self):
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getDefaultTelephoneCoordinateText())
+    # There is no problem if this organisation has a region (this use to be a
+    # problem)
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals(None, organisation.getDefaultEmailCoordinateText())
+
+    organisation.setDefaultEmailText("organisation@example.com")
+    self.assertEquals('organisation@example.com',
+      organisation.getDefaultEmailCoordinateText())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getDefaultEmailCoordinateText())
+
+    # On persons, Email is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+    self.assertEquals('organisation@example.com',
+      person.getDefaultEmailCoordinateText())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setDefaultEmailText('person@example.com')
+    self.assertEquals('person@example.com', person.getDefaultEmailCoordinateText())
+    self.assertEquals('organisation@example.com',
+      organisation.getDefaultEmailCoordinateText())
+
+  def test_alternate_email_acquisition(self):
+    organisation = \
+      self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.assertEquals(None, organisation.getAlternateEmailCoordinateText())
+    # There is no problem if this organisation has a region (this use to be a
+    # problem)
+    organisation.setDefaultAddressRegion('europe/france')
+    self.assertEquals(None, organisation.getAlternateEmailCoordinateText())
+
+    organisation.setAlternateEmailText("organisation@example.com")
+    self.assertEquals('organisation@example.com',
+      organisation.getAlternateEmailCoordinateText())
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertEquals(None, person.getAlternateEmailCoordinateText())
+
+    # On persons, Email is acquired from the default carreer
+    person.setDefaultCareerSubordinationValue(organisation)
+    self.assertEquals('organisation@example.com',
+      person.getAlternateEmailCoordinateText())
+
+    # we can set different values on the person address without modifying
+    # organisation address
+    person.setAlternateEmailText('person@example.com')
+    self.assertEquals('person@example.com', person.getAlternateEmailCoordinateText())
+    self.assertEquals('organisation@example.com',
+      organisation.getAlternateEmailCoordinateText())
+
   # Marked as expectedFailure as it shall be never possible to use edit method to set
   # local property which would override existing method
   @expectedFailure

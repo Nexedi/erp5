@@ -72,7 +72,7 @@
                          website here/getWebSiteValue">\n
 \n
     <p class="article">\n
-    <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle"/></span>\n
+    <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle | string:Unknown User"/></span>\n
     </p>\n
     <a class="articlelink" \n
       tal:attributes="href python: \'%s/sale_order_module/SaleOrderModule_viewAsWebSaleOrderList\' % website.absolute_url()">\n
@@ -89,8 +89,7 @@
     <br/>\n
   </tal:block>\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

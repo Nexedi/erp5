@@ -41,7 +41,6 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.SimulatedDeliveryBuilder import BUILDING_KEY
 
 from zLOG import LOG, WARNING
 
@@ -489,13 +488,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDivergent')
   def isDivergent(self):
-    """
-      XXX documentation out of sync with actual use
-      Returns 1 if the target is not met according to the current information
-      After and edit, the isOutOfTarget will be checked. If it is 1,
-      a message is emitted
-
-      emit targetUnreachable !
+    """Return True if this movement diverges from the its simulation.
     """
     for simulation_movement in self.getDeliveryRelatedValueList():
       if simulation_movement.isDivergent():
@@ -595,187 +588,15 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       simulation movement.
     """
     simulation_movement = self.getDeliveryRelatedValue()
-    if simulation_movement is not None and \
-       not simulation_movement.getParentValue().isRootAppliedRule():
-      return True
-    building = getTransactionalVariable().get(BUILDING_KEY, ())
-    return self in building or self.getRootDeliveryValue() in building
+    return simulation_movement is not None and \
+       not simulation_movement.getParentValue().isRootAppliedRule()
 
-  # New Causality API
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderQuantity')
-  def getOrderQuantity(self):
-    """
-      Returns the quantity of related order(s)
-    """
-    # XXX deprecated
-    return self.getQuantity()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryQuantity')
-  def getDeliveryQuantity(self):
-    """
-      Returns the quantity of related delivery(s)
-    """
-    return self.getQuantity()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationQuantity')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSimulationQuantity')
   def getSimulationQuantity(self):
+    """Computes the quantities in the simulation.
     """
-      Returns the sum of quantities in related simulation movements
-    """
-    return self.getQuantity()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderStartDateList')
-  def getOrderStartDateList(self):
-    """
-      Returns the list of start date of related order(s)
-    """
-    # XXX deprecated
-    return [self.getStartDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryStartDateList')
-  def getDeliveryStartDateList(self):
-    """
-      Returns the list of start date of related delivery(s)
-    """
-    return [self.getStartDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationStartDateList')
-  def getSimulationStartDateList(self):
-    """
-      Returns the list of start date related simulation movements
-    """
-    return [self.getStartDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderStopDateList')
-  def getOrderStopDateList(self):
-    """
-      Returns the list of stop date of related order(s)
-    """
-    # XXX deprecated
-    return [self.getStopDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryStopDateList')
-  def getDeliveryStopDateList(self):
-    """
-      Returns the list of stop date of related delivery(s)
-    """
-    return [self.getStopDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationStopDateList')
-  def getSimulationStopDateList(self):
-    """
-      Returns the list of stop date related simulation movements
-    """
-    return [self.getStopDate()]
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderSourceList')
-  def getOrderSourceList(self):
-    """
-      Returns the source of related orders
-    """
-    # XXX deprecated
-    return self.getSourceList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliverySourceList')
-  def getDeliverySourceList(self):
-    """
-      Returns the source of related deliveries
-    """
-    return self.getSourceList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationSourceList')
-  def getSimulationSourceList(self):
-    """
-      Returns the source of related simulation movements
-    """
-    return self.getSourceList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderDestinationList')
-  def getOrderDestinationList(self):
-    """
-      Returns the destination of related orders
-    """
-    # XXX deprecated
-    return self.getDestinationList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryDestinationList')
-  def getDeliveryDestinationList(self):
-    """
-      Returns the destination of related deliveries
-    """
-    return self.getDestinationList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationDestinationList')
-  def getSimulationDestinationList(self):
-    """
-      Returns the destination of related simulation movements
-    """
-    return self.getDestinationList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderSourceSectionList')
-  def getOrderSourceSectionList(self):
-    """
-      Returns the source_section of related orders
-    """
-    # XXX deprecated
-    return self.getSourceSectionList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliverySourceSectionList')
-  def getDeliverySourceSectionList(self):
-    """
-      Returns the source_section of related deliveries
-    """
-    return self.getSourceSectionList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationSourceSectionList')
-  def getSimulationSourceSectionList(self):
-    """
-      Returns the source_section of related simulation movements
-    """
-    return self.getSourceSectionList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getOrderDestinationSectionList')
-  def getOrderDestinationSectionList(self):
-    """
-      Returns the destination_section of related orders
-    """
-    # XXX deprecated
-    return self.getDestinationSectionList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDeliveryDestinationSectionList')
-  def getDeliveryDestinationSectionList(self):
-    """
-      Returns the destination_section of related deliveries
-    """
-    return self.getDestinationSectionList()
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getSimulationDestinationSectionList')
-  def getSimulationDestinationSectionList(self):
-    """
-      Returns the destination_section of related simulation movements
-    """
-    return self.getDestinationSectionList()
+    return sum(m.getQuantity() for m in self.getDeliveryRelatedValueList())
 
   # Debit and credit methods
   security.declareProtected( Permissions.AccessContentsInformation,

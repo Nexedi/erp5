@@ -30,6 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -79,7 +80,7 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
        # Update existing account
        if (self.getAccountType() != account.getAccountType()) and \
            (self.getFinancialSection() != account.getFinancialSection()):
-         raise ValueError("The Configurator is trying to overwritte previous configuration information (%s)" % account.getRelativeUrl())
+         raise ValueError("The Configurator is trying to overwrite previous configuration information (%s)" % account.getRelativeUrl())
 
        account.edit(title=self.getTitle(), description=self.getDescription())
        gap_list = account.getGapList()
@@ -90,7 +91,7 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
        account.setCreditAccount(self.isCreditAccount())
 
     if self.portal_workflow.isTransitionPossible(account, 'validate'):
-      account.validate(comment="Validated by Configurator")
+      account.validate(comment=translateString("Validated by Configurator"))
 
     ## add to customer template
     self.install(account, business_configuration)

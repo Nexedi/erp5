@@ -316,6 +316,7 @@ class TemplateTool (BaseTool):
         # XXX: should really check for a magic and offer a falback if it
         # doens't correspond to anything handled.
         tar = tarfile.open(path, 'r:gz')
+        dir_name = tar.members[0].name.split(posixpath.sep, 1)[0]
         try:
           # create bt object
           bt = self.newContent(portal_type='Business Template', id=id)
@@ -323,7 +324,7 @@ class TemplateTool (BaseTool):
           for prop in bt.propertyMap():
             prop_type = prop['type']
             pid = prop['id']
-            prop_path = posixpath.join(tar.members[0].name, 'bt', pid)
+            prop_path = posixpath.join(dir_name, 'bt', pid)
             try:
               info = tar.getmember(prop_path)
               value = tar.extractfile(info).read()
@@ -1298,25 +1299,29 @@ class TemplateTool (BaseTool):
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
       # possible to reuse by external callers
-
+      
       operation_log = []
       resolved_template_list = self.resolveBusinessTemplateListDependency(
                    template_list)
 
-      if not install_dependency:
-        installed_bt5_set = set([x.title
-                        for x in self.getInstalledBusinessTemplatesList()])
-        def checkAvailability(bt_title):
-          return bt_title in template_list or bt_title in installed_bt5_set
-        missing_dependency_list = [i[1] for i in resolved_template_list
-                             if not checkAvailability(i[1].replace(".bt5", ""))]
-        if len(missing_dependency_list) > 0:
-          raise BusinessTemplateMissingDependency,\
-           "Impossible to install, please install the following dependencies before: %s" \
-              % missing_dependency_list
+      installed_bt5_set = set([x.title
+                               for x in self.getInstalledBusinessTemplatesList()])
+
+      def checkAvailability(bt_title):
+        return bt_title in template_list or bt_title in installed_bt5_set
+      missing_dependency_list = [i for i in resolved_template_list
+                                 if not checkAvailability(i[1].replace(".bt5", ""))]
+
+      if not install_dependency and len(missing_dependency_list) > 0:
+        raise BusinessTemplateMissingDependency,\
+            "Impossible to install, please install the following dependencies before: %s" \
+            % [x[1] for x in missing_dependency_list]
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
-      for repository, bt_id in resolved_template_list:
+
+      missing_dependency_list.extend([x for x in resolved_template_list if 
+                                      x[1] in template_list])
+      for repository, bt_id in missing_dependency_list:
         bt_url = '%s/%s' % (repository, bt_id)
         param_dict = dict(download_url=bt_url, only_newer=only_newer)
         if update_catalog is not _MARKER:
@@ -1504,7 +1509,7 @@ class TemplateTool (BaseTool):
                                 It list all business templates who needs
                                 reinstall
       """
-      # make sure that we updated informations on repository
+      # make sure that we updated information on repository
       self.updateRepositoryBusinessTemplateList(self.getRepositoryList())
       # do upgrade
       message_list = []

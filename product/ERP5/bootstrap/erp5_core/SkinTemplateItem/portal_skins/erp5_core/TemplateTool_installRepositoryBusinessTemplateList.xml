@@ -68,45 +68,56 @@ if len(uids) == 0:\n
                                url_quote(\'No Business Template Selected.\')))\n
 \n
 # Initilization\n
-id_list = []\n
+title_list = []\n
 portal_status_message = \'\'\n
-current_uid_list=[]\n
+current_uid_list = []\n
 installed_business_template_title_list = context.getInstalledBusinessTemplateTitleList()\n
+\n
 for uid in uids:\n
   current_uid_list.append(uid)\n
-  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
-  id_list.append(id)\n
+  repository, bt5_id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  title_list.append(bt5_id.replace(".bt5", ""))\n
+\n
+available_bt5_list = context.getRepositoryBusinessTemplateList()\n
 \n
 # Check for missing dependencies\n
 for uid in uids:\n
-  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
-  dependency_list = context.getDependencyList((repository, id))\n
+  repository, bt5_id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  bt5_title = bt5_id.replace(".bt5", "")\n
+  dependency_list = context.getDependencyList((repository, bt5_id))\n
   for dep_repository, dep_id in dependency_list:\n
-    if dep_id != id and \\\n
-        dep_id in installed_business_template_title_list:\n
+    dep_title = dep_id.replace(".bt5", "")\n
+    if dep_title != bt5_title and \\\n
+        dep_title in installed_business_template_title_list:\n
       continue\n
-    if dep_id not in id_list:\n
-      id_list.append(dep_id)\n
+    if dep_title not in title_list:\n
+      title_list.append(dep_title)\n
       if dep_repository != \'meta\':\n
-        portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.\'%(dep_id.replace(\'.bt5\', \'\'), id.replace(\'.bt5\', \'\'))\n
+        portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.\'%(dep_title, bt5_title)\n
         current_uid_list.append(context.encodeRepositoryBusinessTemplateUid(dep_repository, dep_id))\n
       else:\n
         provider_list = context.getProviderList(dep_id)\n
-        provider_installed = False\n
-        for provider in provider_list:\n
-          if provider+\'.bt5\' in id_list or provider in id_list:\n
-            provider_installed = True\n
-            break\n
-        if not provider_installed:\n
-          portal_status_message+=\'\\\'%s\\\' requires you to select one of the following business templates: %s\'%(id.replace(\'.bt5\', \'\'), provider_list)\n
+        if len([x for x in provider_list if x in title_list]) == 0:\n
+          # No provider installed\n
+          if len(provider_list) == 1:\n
+              # When only one provider is possible, use it\n
+              provider = provider_list[0]\n
+              for candidate in available_bt5_list:\n
+                if candidate.title == provider:\n
+                  current_uid_list.append(candidate.uid)\n
+                  break\n
+              portal_status_message+=\'\\\'%s\\\' added because \\\'%s\\\' depends on it.\'%(provider, bt5_title)\n
+          else:\n
+            portal_status_message+=\'\\\'%s\\\' requires you to select one of the following business templates: %s\'%(bt5_title, provider_list)\n
 \n
 # If somes dependencies were missing\n
 # we call the dialog again with the\n
 # new bts selected\n
 if portal_status_message != \'\' :\n
-  #context.portal_selections.setSelectionCheckedUidsFor(REQUEST.get(\'selection_name\'), current_uid_list)\n
   context.portal_selections.setSelectionCheckedUidsFor(\'template_tool_install_selection\', current_uid_list)\n
-  return context.REQUEST.RESPONSE.redirect(\'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'%(context.absolute_url(), url_quote(portal_status_message)))\n
+  return context.REQUEST.RESPONSE.redirect(\n
+    \'%s/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog?portal_status_message=%s\'\n
+    % (context.absolute_url(), url_quote(portal_status_message)))\n
 \n
 # order uids according to dependencies before processing\n
 tuple_list = []\n
@@ -120,8 +131,9 @@ for repository, id in tuple_list:\n
   bt = context.download(\'/\'.join([repository, id]))\n
   bt_list.append(bt.getId())\n
 \n
-RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice\' %(context.absolute_url(), make_query({\'bt_list\' : bt_list})))\n
-#return context.ERP5Site_redirect(\'%s/TemplateTool_viewMultiInstallationDialog\' % (context.absolute_url(), ), {\'bt_list\' : bt_list})\n
+RESPONSE.redirect(\n
+  \'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice\'\n
+  % (context.absolute_url(), make_query({\'bt_list\' : bt_list})))\n
 
 
 ]]></string> </value>

@@ -77,7 +77,7 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
     """Returns all the engagements in a dict where the keys are the cells, and
     the value is the engaged budget.
     """
-    kw.setdefault('explanation_simulation_state',
+    kw.setdefault('stock_explanation_simulation_state',
                   self.getPortalReservedInventoryStateList() +
                   self.getPortalCurrentInventoryStateList() +
                   self.getPortalTransitInventoryStateList())

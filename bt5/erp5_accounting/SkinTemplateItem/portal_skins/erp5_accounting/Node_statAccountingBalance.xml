@@ -52,9 +52,14 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
 portal = context.getPortalObject()\n
+\n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
-getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor\n
+\n
+if asset_price:\n
+  getInventory = portal.portal_simulation.getInventoryAssetPrice\n
+else:\n
+  getInventory = portal.portal_simulation.getInventory\n
 \n
 if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
@@ -116,7 +121,9 @@ if kw.get(\'where_expression\'):\n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
 \n
-if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
+period_start_date = params.pop(\'period_start_date\', None)\n
+\n
+if period_start_date and params.get(\'node_uid\'):\n
   # find the node for this node_uid\n
   if context.getUid() == params[\'node_uid\']: # I bet it\'s context\n
     node = context\n
@@ -129,33 +136,32 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
     # beginning is passed explicitly.\n
     # if we are in the regular user interface, we only limit\n
     if \'from_date\' in kw:\n
-      params[\'from_date\'] = min(kw[\'from_date\'], params[\'period_start_date\'])\n
+      params[\'from_date\'] = min(kw[\'from_date\'], period_start_date)\n
   else:\n
     # for other account, we calculate the initial balance as the "absolute"\n
     # balance at the beginning of the period, plus debit or credit from this\n
     # beginning of period to the from_date\n
-    period_start_date = params[\'period_start_date\']\n
     at_date = params.pop(\'at_date\', None)\n
-    period_openning_balance = getInventoryAssetPrice(\n
+    period_openning_balance = getInventory(\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
               to_date=period_start_date,\n
               **params)\n
     if omit_asset_decrease:\n
-      return getInventoryAssetPrice(omit_asset_decrease=1,\n
+      return getInventory(omit_asset_decrease=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) + max(period_openning_balance, 0)\n
     elif omit_asset_increase:\n
-      return getInventoryAssetPrice(omit_asset_increase=1,\n
+      return getInventory(omit_asset_increase=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) - max(-period_openning_balance, 0)\n
-    return getInventoryAssetPrice(\n
+    return getInventory(\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) + period_openning_balance\n
 \n
-return getInventoryAssetPrice(\n
+return getInventory(\n
               omit_asset_increase=omit_asset_increase,\n
               omit_asset_decrease=omit_asset_decrease,\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
@@ -164,7 +170,7 @@ return getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
+            <value> <string>selection=None, omit_asset_increase=0, omit_asset_decrease=0, asset_price=True, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

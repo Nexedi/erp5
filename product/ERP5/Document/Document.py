@@ -75,8 +75,8 @@ VALID_TRANSPARENT_IMAGE_FORMAT_LIST = ('png', 'gif', 'tiff', 'svg')
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'xlarge',)
-# default image quality
-DEFAULT_IMAGE_QUALITY = 75
+# default image qualitay (obsoleted use getPreferredImageQuality on a portal_preferences tool)
+DEFAULT_IMAGE_QUALITY = 75.0
 
 DEFAULT_CONTENT_TYPE = 'text/html'
 
@@ -317,6 +317,24 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       preferences.
     """
     text = self.getSearchableText() # XXX getSearchableText or asText ?
+    return self._getSearchableReferenceList(text)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSearchableReferenceList')
+  def isSearchableReference(self):
+    """
+      Determine if current document's reference can be used for searching - i.e. follows
+      certain defined at system level preferences format.
+    """
+    reference = self.getReference()
+    if reference is not None:
+      return len(self._getSearchableReferenceList(reference))
+    return False
+
+  def _getSearchableReferenceList(self, text):
+    """
+      Extract all reference alike strings from text using for that a 
+      regular expression defined at system level preferences.
+    """
     regexp = self.portal_preferences.getPreferredDocumentReferenceRegularExpression()
     try:
       rx_search = re.compile(regexp)
@@ -334,7 +352,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       tmp[key] = None
     for group, group_item_tuple in tmp.keys():
       result.append((group, dict(group_item_tuple)))
-    return result
+    return result    
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
   def getImplicitSuccessorValueList(self):

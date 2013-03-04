@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">\n
+    <title>SafeImage</title>\n
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>\n
+    <link rel="stylesheet" href="css/default_style.css" type="text/css">\n
+    <link rel="stylesheet" href="css/style.css" type="text/css">\n
+  </head>\n
+  <body>\n
+  <div class="navbar">\n
+    <div class="navbar-inner">\n
+      <div class="container-fluid">\n
+        <div class="row-fluid">\n
+          <div class="span10">\n
+            <ul class="nav">\n
+              <li><a href="#">Dashboard</a></li>\n
+              <li><a href="#about">About</a></li>\n
+              <li><a href="#contact">Contact</a></li>\n
+            </ul>\n
+          </div>\n
+        </div>\n
+      </div>\n
+    </div>\n
+  </div>\n
+  <div class="container-fluid">\n
+    <div class="row-fluid">\n
+      <div class="span3">\n
+        <div class="well">\n
+          <ul class="nav nav-list">\n
+            <li class="nav-header">Images</li>\n
+          </ul>\n
+        </div>\n
+      </div>\n
+      <section class="span9" id="main">\n
+        <!--Body content-->\n
+      </section>\n
+    </div>\n
+  </div>\n
+  <tal:block tal:define="portal_url python:here.getPortalObject().absolute_url()">\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/template.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'jquery/core/jquery.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'urlHandler.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'ICanHaz.min.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'openlayers/OpenLayers.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/CanvasImage.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/ERP5_OpenLayers.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/form.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/safeimage.js\')"></script>\n
+    <script type="text/javascript" \n
+    tal:attributes="src python: \'%s/%s\' % (portal_url,\'js/pixastic.js\')"></script>\n
+  </tal:block>\n
+  </body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5SafeImage_view</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <unicode>utf-8</unicode> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

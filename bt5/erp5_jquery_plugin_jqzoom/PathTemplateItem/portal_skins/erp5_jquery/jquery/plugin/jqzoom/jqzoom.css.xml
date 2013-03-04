@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts48590418.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jqzoom.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.zoomPad{\r\n
+\tposition:relative;\r\n
+\tfloat:left;\r\n
+\tz-index:99;\r\n
+\tcursor:crosshair;\r\n
+}\r\n
+\r\n
+\r\n
+.zoomPreload{\r\n
+   -moz-opacity:0.8;\r\n
+   opacity: 0.8;\r\n
+   filter: alpha(opacity = 80);\r\n
+   color: #333;\r\n
+   font-size: 12px;\r\n
+   font-family: Tahoma;\r\n
+   text-decoration: none;\r\n
+   border: 1px solid #CCC;\r\n
+   background-color: white;\r\n
+   padding: 8px;\r\n
+   text-align:center;\r\n
+   background-image: url(../images/zoomloader.gif);\r\n
+   background-repeat: no-repeat;\r\n
+   background-position: 43px 30px;\r\n
+   z-index:110;\r\n
+   width:90px;\r\n
+   height:43px;\r\n
+   position:absolute;\r\n
+   top:0px;\r\n
+   left:0px;\r\n
+    * width:100px;\r\n
+    * height:49px;\r\n
+}\r\n
+\r\n
+\r\n
+.zoomPup{\r\n
+\toverflow:hidden;\r\n
+\tbackground-color: #FFF;\r\n
+\t-moz-opacity:0.6;\r\n
+\topacity: 0.6;\r\n
+\tfilter: alpha(opacity = 60);\r\n
+\tz-index:120;\r\n
+\tposition:absolute;\r\n
+\tborder:1px solid #CCC;\r\n
+  z-index:101;\r\n
+  cursor:crosshair;\r\n
+}\r\n
+\r\n
+.zoomOverlay{\r\n
+\tposition:absolute;\r\n
+\tleft:0px;\r\n
+\ttop:0px;\r\n
+\tbackground:#FFF;\r\n
+\t/*opacity:0.5;*/\r\n
+\tz-index:5000;\r\n
+\twidth:100%;\r\n
+\theight:100%;\r\n
+\tdisplay:none;\r\n
+  z-index:101;\r\n
+}\r\n
+\r\n
+.zoomWindow{\r\n
+\tposition:absolute;\r\n
+\tleft:110%;\r\n
+\ttop:40px;\r\n
+\tbackground:#FFF;\r\n
+\tz-index:6000;\r\n
+\theight:auto;\r\n
+  z-index:10000;\r\n
+  z-index:110;\r\n
+}\r\n
+.zoomWrapper{\r\n
+\tposition:relative;\r\n
+\tborder:1px solid #999;\r\n
+  z-index:110;\r\n
+}\r\n
+.zoomWrapperTitle{\r\n
+\tdisplay:block;\r\n
+\tbackground:#999;\r\n
+\tcolor:#FFF;\r\n
+\theight:18px;\r\n
+\tline-height:18px;\r\n
+\twidth:100%;\r\n
+  overflow:hidden;\r\n
+\ttext-align:center;\r\n
+\tfont-size:10px;\r\n
+  position:absolute;\r\n
+  top:0px;\r\n
+  left:0px;\r\n
+  z-index:120;\r\n
+  -moz-opacity:0.6;\r\n
+  opacity: 0.6;\r\n
+  filter: alpha(opacity = 60);\r\n
+}\r\n
+.zoomWrapperImage{\r\n
+\tdisplay:block;\r\n
+  position:relative;\r\n
+  overflow:hidden;\r\n
+  z-index:110;\r\n
+\r\n
+}\r\n
+.zoomWrapperImage img{\r\n
+  border:0px;\r\n
+  display:block;\r\n
+  position:absolute;\r\n
+  z-index:101;\r\n
+}\r\n
+\r\n
+.zoomIframe{\r\n
+  z-index: -1;\r\n
+  filter:alpha(opacity=0);\r\n
+  -moz-opacity: 0.80;\r\n
+  opacity: 0.80;\r\n
+  position:absolute;\r\n
+  display:block;\r\n
+}\r\n
+\r\n
+/*********************************************************\r\n
+/ When clicking on thumbs jqzoom will add the class\r\n
+/ "zoomThumbActive" on the anchor selected\r\n
+/*********************************************************/</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2139</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.jqzoom.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

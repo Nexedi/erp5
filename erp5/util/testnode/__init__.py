@@ -27,6 +27,7 @@
 import ConfigParser
 import argparse
 import logging
+import logging.handlers
 import os
 import pkg_resources
 
@@ -58,7 +59,9 @@ def main(*args):
       logger.addHandler(logging.StreamHandler())
       logger.info('Activated console output.')
     if parsed_argument.logfile:
-      file_handler = logging.FileHandler(filename=parsed_argument.logfile)
+      file_handler = logging.handlers.RotatingFileHandler(
+        filename=parsed_argument.logfile,
+        maxBytes=20000000, backupCount=4)
       file_handler.setFormatter(formatter)
       logger.addHandler(file_handler)
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
@@ -75,7 +78,7 @@ def main(*args):
               'git_binary','zip_binary','node_quantity','test_node_title',
               'ipv4_address','ipv6_address','test_suite_master_url',
               'slapgrid_partition_binary','slapgrid_software_binary',
-              'slapproxy_binary'):
+              'slapproxy_binary', 'httpd_ip', 'httpd_port'):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
@@ -85,6 +88,9 @@ def main(*args):
       raise ValueError('Directory %r does not exists.' % d)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
         CONFIG['proxy_port'])
+  CONFIG['httpd_url'] = 'https://[%s]:%s' % (CONFIG['httpd_ip'],
+        CONFIG['httpd_port'])
+  CONFIG['system_temp_folder'] = "/tmp"
 
   # generate vcs_repository_list
   if 'bot_environment' in config.sections():

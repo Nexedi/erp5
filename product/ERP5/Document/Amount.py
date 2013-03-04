@@ -729,11 +729,11 @@ class Amount(Base, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getQuantityUnit')
-  def getQuantityUnit(self):
-    result = self._getDefaultCategoryMembership('quantity_unit')
+  def getQuantityUnit(self, checked_permission=None):
+    result = self._getDefaultCategoryMembership('quantity_unit', checked_permission=checked_permission)
     if result is None:
       resource = self.getResourceValue()
       if resource is not None:
-        result = resource.getQuantityUnit()
+        result = resource.getQuantityUnit(checked_permission=checked_permission)
     return result
 

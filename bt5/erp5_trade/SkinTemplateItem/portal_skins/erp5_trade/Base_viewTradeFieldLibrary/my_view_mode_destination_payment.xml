@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')] + (here.getDestinationSection() and [(x.Title(), x.getRelativeUrl()) for x in here.getDestinationSectionValue().objectValues(portal_type = here.getPortalPaymentNodeTypeList())] or [])</string> </value>
+            <value> <string>python:[(\'\', \'\')] + (here.getDestinationSection() and [(x.getTitle(), x.getRelativeUrl()) for x in here.getDestinationSectionValue().contentValues(portal_type=here.getPortalPaymentNodeTypeList(), checked_permission="Access contents information")] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>

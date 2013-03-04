@@ -862,21 +862,41 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     # Test the cases
     for product, variation, node, base_price in test_case_list:
+      categories = []
       if node is not None:
         self.logMessage("Check product %s with destination section %s" % \
                         (product.getTitle(), node.getTitle()),
                         tab=1)
-        self.assertEquals(base_price,
-             product.getPrice(
-               categories=['destination_section/%s' % node.getRelativeUrl(),
-                           variation]))
+        categories.append('destination_section/' + node.getRelativeUrl())
       else:
         self.logMessage("Check product %s without destination section" % \
                         product.getTitle(),
                         tab=1)
-        self.assertEquals(base_price,
-                          product.getPrice(categories=[variation]))
-  
+      if variation:
+        categories.append(variation)
+
+      def sortResult(a, b):
+        def _pricingSortMethod(a, b): # XXX copied from Resource.py
+          # Simple method : the one that defines a destination section wins
+          if a.getDestinationSection():
+            return -1 # a defines a destination section and wins
+          return 1 # a defines no destination section and loses
+        if _pricingSortMethod(a, b):
+          # now sort based on resource definition
+          if a.getResourceValue():
+            if b.getResourceValue():
+              return 1
+            else:
+              return -1
+          else:
+            return 1
+        else:
+          return -1
+
+
+      self.assertEqual(base_price, product.getPrice(categories=categories,
+                                                    sort_method=sortResult))
+
 
   # The following test tests Movement.getPrice, which is based on the movement
   # context.

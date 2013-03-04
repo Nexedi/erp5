@@ -70,13 +70,6 @@ class InventoryLine(DeliveryLine):
       if not self.hasCellContent():
         return self.getInventory()
       else:
-        # Use MySQL
-        # There is no inventory column in mysql any more,
-        # is it required to add it again. It is only
-        # usefull for the user interface
-        # aggregate = self.InventoryLine_zGetTotal()[0]
-        # return aggregate.total_inventory or 0.0
-
         total_quantity = 0.0
         for cell in self.getCellValueList(base_id='movement'):
           if cell.getInventory() is not None:

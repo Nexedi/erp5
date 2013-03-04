@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>var xinha_plugins = [];\n
+            <value> <string>var xinha_plugins = ["UnsavedChanges"];\n
 \n
 var xinha_editors =\n
 [\n

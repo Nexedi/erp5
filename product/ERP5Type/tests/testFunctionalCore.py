@@ -42,12 +42,14 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
         return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_xhtml_jquery_style', 'erp5_jquery', 'erp5_jquery_ui',
+                'erp5_jquery', 'erp5_jquery_ui', 'erp5_xhtml_jquery_style',
                 'erp5_knowledge_pad',
-                'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
+                'erp5_pdm',
+                'erp5_simulation',
+                'erp5_trade',
+                'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
-                'erp5_simulation',
                 'erp5_configurator_standard_solver',
                 'erp5_configurator_standard_trade_template',
                 'erp5_configurator_standard_accounting_template',
@@ -57,17 +59,22 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_pdm_ui_test',
                 'erp5_trade_ui_test',
                 'erp5_project_ui_test',
-                'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+                'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
                 'erp5_knowledge_pad_ui_test',
-                'erp5_credential',
+                'erp5_crm', 'erp5_credential',
                 'erp5_rss_style', 'erp5_discussion',
                 'erp5_l10n_fr',
-                'erp5_crm',
                 # erp5_web_ui_test must run at the last, because it logs out
                 # manager user and continue other tests as a user created in
                 # that test.
                 'erp5_web_ui_test',
+
+                # Accounting Module list from erp5_accounting still uses movement table
+                # TODO: merge erp5_accounting_alternate_catalog in
+                # erp5_accounting and update those tests
+                # (erp5_accounting_alternate_catalog does not provide stat columns)
+                'erp5_movement_table_catalog',
                 )
 
 def test_suite():

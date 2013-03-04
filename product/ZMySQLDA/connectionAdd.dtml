@@ -28,10 +28,16 @@
             <input type="TEXT" name="connection_string" size="40">
           </td>
 	</tr>
+        <tr>
+          <th align="LEFT" valign="TOP">Create Deferred Connection</th>
+          <td align="LEFT" valign="TOP">
+            <input name="deferred:int" type="CHECKBOX" value="1">
+          </td>
+        </tr>
 	<tr>
 	  <th align="LEFT" valign="TOP">Connect immediately</th>
 	  <td align="LEFT" valign="TOP">
-            <input name="check" type="CHECKBOX" value="YES" CHECKED>
+            <input name="check:int" type="CHECKBOX" value="1" CHECKED>
           </td>
 	</tr>
 	<tr>
@@ -49,7 +55,7 @@
     The connection string used for Z MySQL Database Connection
     is of the form:
 <pre>
-    [~] [*lock] [+/-][database][@host[:port]] [user [password [unix_socket]]]
+    [~] [*lock] [+|-][database][@unix_socket|@host[:port]] [user [password]]
 </pre>
     or typically:
 <pre>
@@ -61,10 +67,8 @@
     port on the local system, use 127.0.0.1 for the host instead of
     localhost.
 <p>
-    Either a database or a host or both must be specified.
-<p>
-    If the UNIX socket is in a non-standard location, you can specify
-    the full path to it after the password.
+    IPv6 are supported and must be surrounded with brackets.
+    A UNIX socket absolute path can be specified in place of a TCP address.
 <p>
     A '-' in front of the database tells ZMySQLDA to not use Zope's
     Transaction Manager, even if the server supports transactions. A

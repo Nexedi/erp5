@@ -30,11 +30,10 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5.Document.Node import Node
 from Products.ERP5.Document.Coordinate import Coordinate
-from Products.ERP5.Document.MetaNode import MetaNode
 
-class BankAccount(Folder, Coordinate, MetaNode):
+class BankAccount(Node, Coordinate):
     """
       A bank account number holds a collection of numbers and codes
         (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
@@ -42,8 +41,6 @@ class BankAccount(Folder, Coordinate, MetaNode):
       A Bank Account is owned by a Person or an Organisation. A Bank Account
         contain Agents with Agent Privileges used by the owner to delegate the
         management of the bank account to trusted third-party Persons.
-
-      BankAccount inherits from Base and from the mix-in Coordinate.
     """
 
     meta_type = 'ERP5 Bank Account'
@@ -55,9 +52,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
+    property_sheets = ( PropertySheet.CategoryCore
                       , PropertySheet.Task
                       , PropertySheet.Resource
                       , PropertySheet.Reference

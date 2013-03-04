@@ -2,6 +2,7 @@
  <key>alarm.alarm_date</key>
  <key>alarm_date</key>
  <key>catalog.creation_date</key>
+ <key>catalog.grouping_date</key>
  <key>catalog.modification_date</key>
  <key>creation_date</key>
  <key>date</key>
@@ -13,14 +14,10 @@
  <key>delivery.stop_date_range_min</key>
  <key>effective_date</key>
  <key>expiration_date</key>
- <key>inventory.date</key>
- <key>inventory_stock.date</key>
- <key>inventory_stock.mirror_date</key>
+ <key>grouping_date</key>
  <key>item.date</key>
  <key>mirror_date</key>
  <key>modification_date</key>
- <key>movement.start_date</key>
- <key>movement.stop_date</key>
  <key>predicate.start_date</key>
  <key>predicate.start_date_range_max</key>
  <key>predicate.start_date_range_min</key>

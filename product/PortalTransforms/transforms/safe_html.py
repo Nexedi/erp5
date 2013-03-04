@@ -283,6 +283,13 @@ class StrippingParser(HTMLParser):
     def getResult(self):
         return ''.join(self.result)
 
+    def feed(self, html):
+      # BBB: Python 2.7 is more tolerant to broken HTML.
+      #      For the moment, be strict to behave like Python 2.6.
+      HTMLParser.feed(self, html)
+      if self.rawdata:
+        raise HTMLParseError("unknown error", self.getpos())
+
 def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
               remove_javascript=True, raise_error=True,
               default_encoding=None):

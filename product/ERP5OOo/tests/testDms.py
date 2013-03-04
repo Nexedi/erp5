@@ -90,6 +90,13 @@ def makeFileUpload(name, as_name=None):
   path = makeFilePath(name)
   return FileUpload(path, as_name)
 
+def getFileSize(name):
+  path = makeFilePath(name)
+  f = open(path, "r")
+  file_size = len(f.read())
+  f.close()
+  return file_size
+
 class TestDocumentMixin(ERP5TypeTestCase):
   
   business_template_list = ['erp5_core_proxy_field_legacy',
@@ -175,6 +182,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   conversion_format_permission_script_id_list = [
       'Document_checkConversionFormatPermission',
+      'Image_checkConversionFormatPermission',
       'PDF_checkConversionFormatPermission']
   def clearRestrictedSecurityHelperScript(self):
     for script_id in self.conversion_format_permission_script_id_list:
@@ -587,6 +595,13 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet(
       [document3],
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
+
+    # with empty reference no implicit relation should exists even though some documents
+    # used to reference us with previous reference
+    document1.setReference(None)
+    self.tic()
+    self.assertSameSet([],
+      sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
   def testOOoDocument_get_size(self):
     # test get_size on OOoDocument
@@ -1650,7 +1665,7 @@ class TestDocument(TestDocumentMixin):
     self.assertFalse(web_page.hasConversion(format=format))
 
     # test with not well-formed html document
-    html_content = """
+    html_content = r"""
     <HTML dir=3Dltr><HEAD>=0A=
 <META http-equiv=3DContent-Type content=3D"text/html; charset=3Dunicode">=0A=
 <META content=3D"DIRTYHTML 6.00.2900.2722" name=3DGENERATOR></HEAD>=0A=
@@ -1663,19 +1678,19 @@ class TestDocument(TestDocumentMixin):
 <DIV>&nbsp;</DIV>=0A=
 <DIV>&nbsp;</DIV>=0A=
 <br>=
-<!DOCTYPE html PUBLIC \\\"-//W3C//DTD XHTML 1.0 Transitional//EN\\\\=
-" \\\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\\\">=
-=0A<html xmlns=3D\\\"http://www.w3.org/1999/xhtml\\\">=0A<head>=0A<m=
-eta http-equiv=3D\\\"Content-Type\\\" content=3D\\\"text/html; c=
-harset=3Diso-8859-1\\\" />=0A<style type=3D\\\"text/css\\\">=0A<=
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\\=
+" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">=
+=0A<html xmlns=3D\"http://www.w3.org/1999/xhtml\">=0A<head>=0A<m=
+eta http-equiv=3D\"Content-Type\" content=3D\"text/html; c=
+harset=3Diso-8859-1\" />=0A<style type=3D\"text/css\">=0A<=
 !--=0A.style1 {font-size: 8px}=0A.style2 {font-family: Arial, Helvetica, san=
 s-serif}=0A.style3 {font-size: 8px; font-family: Arial, Helvetica, sans-seri=
-f; }=0A-->=0A</style>=0A</head>=0A=0A<body>=0A<div>=0A  <p><span class=3D\\=
-\\"style1\\\"><span class=3D\\\"style2\\\"><strong>I'm inside very broken HTML code</strong><br />=0A    ERP5<br />=0A
+f; }=0A-->=0A</style>=0A</head>=0A=0A<body>=0A<div>=0A  <p><span class=3D\=
+\"style1\"><span class=3D\"style2\"><strong>I'm inside very broken HTML code</strong><br />=0A    ERP5<br />=0A
 ERP5
 <br />=0A    =
-</span></span></p>=0A  <p class=3D\\\"sty=
-le3\\\">ERP5:<br />=0A   </p>=0A  <p class=3D\\\"style3\\\"><strong>ERP5</strong>=
+</span></span></p>=0A  <p class=3D\"sty=
+le3\">ERP5:<br />=0A   </p>=0A  <p class=3D\"style3\"><strong>ERP5</strong>=
 
 <br />=0A    ERP5</p>=0A</di=
 v>=0A</body>=0A</html>=0A
@@ -2156,6 +2171,53 @@ return 1
                         image_document_image_size_no_quality)
                       )
 
+  def test_getOriginalContentOnTraversal(self):
+    """
+      Return original content on traversal.  
+    """
+    def getURL(uri, **kw):
+      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      return urllib.urlopen(url)
+
+    ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    ooo_document.edit(file=upload_file)
+
+    pdf_document = self.portal.document_module.newContent(portal_type='PDF')
+    upload_file = makeFileUpload('TEST-en-002.pdf')
+    pdf_document.edit(file=upload_file)
+
+    image_document = self.portal.image_module.newContent(portal_type='Image')
+    upload_file = makeFileUpload('TEST-en-002.png')
+    image_document.edit(file=upload_file)
+
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page_document.setTextContent('<b> test </b> $website_url $website_url')
+    # a Web Page can generate dynamic text so test is as well
+    web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')
+    self.tic()
+
+    response = getURL(image_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: image/png\r\n'  in response.info().headers)
+    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-002.png') in response.info().headers)
+   
+    response = getURL(ooo_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: application/vnd.oasis.opendocument.presentation\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-003.odp"\r\n' in response.info().headers)
+    self.assertTrue('Content-Length: %s\r\n' %getFileSize('TEST-en-003.odp') in response.info().headers)
+
+    response = getURL(pdf_document.absolute_url(), **{'format':''})  
+    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)
+
+    response = getURL(pdf_document.absolute_url(), **{'format':'pdf'})
+    self.assertTrue('Content-Type: application/pdf\r\n'  in response.info().headers)
+    self.assertTrue('Content-Disposition: attachment; filename="TEST-en-002.pdf"\r\n' in response.info().headers)   
+
+    response = getURL(web_page_document.absolute_url(), **{'format':''})
+    self.assertTrue('Content-Type: text/html; charset=utf-8\r\n'  in response.info().headers)
+
   def test_checkConversionFormatPermission(self):
     """
      Test various use cases when conversion can be not allowed
@@ -2167,7 +2229,14 @@ return 1
 
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
-  
+
+    # raster -> svg image should deny conversion if image width or height > 128 px
+    portal_type = 'Image'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST-en-002.jpg')
+    image = module.newContent(portal_type=portal_type, file=upload_file)
+    self.assertRaises(Unauthorized, image.convert, format='svg')
+ 
   def test_preConversionOnly(self):
     """
       Test usage of pre_converted_only argument - i.e. return a conversion only form cache otherwise

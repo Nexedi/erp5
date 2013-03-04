@@ -60,6 +60,11 @@ for reference in reference_list:\n
 portal = context.getPortalObject()\n
 reference = editor\n
 \n
+# check this is a not a reference from acl_user\n
+if portal.acl_users.getUserById(reference) is not None or  \\\n
+  portal.aq_parent.acl_users.getUserById(reference) is not None:\n
+    return 0\n
+\n
 # ... then check already created accounts\n
 if portal.portal_catalog.getResultValue(\n
       reference = reference, \n
@@ -93,6 +98,14 @@ return 1\n
             <key> <string>_params</string> </key>
             <value> <string>editor, REQUEST</string> </value>
         </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+	      </tuple>
+	    </value>
+	</item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_validateCustomerUsername</string> </value>

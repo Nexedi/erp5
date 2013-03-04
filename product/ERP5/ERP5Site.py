@@ -1890,19 +1890,20 @@ class ERP5Generator(PortalGenerator):
     if p.erp5_sql_deferred_connection_type == \
         'Z MySQL Deferred Database Connection':
       if not p.hasObject('erp5_sql_deferred_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDDA'].\
-            manage_addZMySQLDeferredConnection
+        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
+            manage_addZMySQLConnection
         addSQLConnection('erp5_sql_deferred_connection',
                          'ERP5 SQL Server Deferred Connection',
-                         p.erp5_sql_deferred_connection_string)
+                         p.erp5_sql_deferred_connection_string,
+                         deferred=True)
     elif p.erp5_sql_deferred_connection_type == 'Z Gadfly':
       pass
 
     # Add Activity SQL Connections
     if p.cmf_activity_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('cmf_activity_sql_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
-                                     manage_addZMySQLConnection
+        addSQLConnection = p.manage_addProduct['CMFActivity'].\
+                                     manage_addActivityConnection
         addSQLConnection('cmf_activity_sql_connection',
                          'CMF Activity SQL Server Connection',
                          p.cmf_activity_sql_connection_string)

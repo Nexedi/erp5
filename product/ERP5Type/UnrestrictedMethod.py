@@ -30,7 +30,6 @@ from AccessControl.User import UnrestrictedUser
 from AccessControl.SpecialUsers import system
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
-from Zope2 import app
 from Products.ERP5Type.Utils import simple_decorator
 
 class PrivilegedUser(UnrestrictedUser):
@@ -86,7 +85,9 @@ def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
         # XXX is it better to get roles from the parent (i.e. portal)?
         uf = user.aq_inner.aq_parent
       except AttributeError:
-        uf = app().acl_users
+        # XXX: local imports are bad, getSite should be moved to ERP5Type.
+        from Products.ERP5.ERP5Site import getSite
+        uf = getSite().acl_users
       role_list = uf.valid_roles()
       if anonymous:
         # If the user is anonymous, use the id of the system user,

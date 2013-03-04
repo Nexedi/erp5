@@ -1,6 +1,129 @@
 Changes
 =======
 
+0.4.31 (2013-03-01)
+-------------------
+
+ * erp5.util.testnode:
+
+  - after resetting software, retry_software_count was not resetted correctly
+    [Sebastien Robin]
+
+0.4.30 (2013-02-20)
+-------------------
+
+ * erp5.util.testnode:
+
+  - keep almost no tmp files, sometimes there is many Gb in /tmp after
+    one day [Sebastien Robin]
+
+0.4.29 (2013-02-20)
+-------------------
+
+ * erp5.util.testnode:
+
+  - make it able to resist to problems with slapos proxy when building
+    software [Sebastien Robin]
+
+0.4.28 (2013-02-19)
+-------------------
+
+ * erp5.util.testnode:
+
+  - make it able to resist to problems with slapos proxy [Sebastien Robin]
+
+0.4.27 (2013-02-15)
+-------------------
+
+ * erp5.util.testnode:
+
+  - testnode was still sometimes logging at several files at a time
+    [Sebastien Robin]
+
+0.4.26 (2013-02-14)
+-------------------
+
+ * erp5.util.testnode:
+
+  - do not reraise OSError when cleaning temp files
+
+0.4.25 (2013-02-11)
+-------------------
+
+ * erp5.util.testnode:
+
+  - close all timers when quitting, this makes stopping an erp5tetsnode
+    much faster [Sebastien Robin]
+  - remove hack on slapos/testnode after fix of slapos.cookbook [Sebastien Robin]
+  - remove old tmp files left by buildout (buildout has te bo fixed too)
+    [Sebastien Robin]
+  - remove logging handlers where the are not needed any more [Sebastien Robin]
+  - fixed the kill command, it was not able to kill properly childs [Sebastien Robin]
+
+0.4.24 (2013-02-11)
+-------------------
+
+ * erp5.util.testnode:
+
+  - Fixed wrong location for the construction os test suite software
+    [Sebastien Robin]
+
+0.4.23 (2013-02-11)
+-------------------
+
+ * erp5.util.testnode:
+
+  - Make erp5testnode allow remote access to test suite logs instead of
+    uploading them to master [Tatuya Kamada], [Sebastien Robin]
+
+
+0.4.22 (2013-01-08)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - fix regression when used on Python < 2.7
+
+0.4.21 (2013-01-07)
+-------------------
+
+ * erp5.util.taskdistribution:
+
+  - really fix lock to avoid errors with concurrent RPC calls
+
+ * erp5.util.testnode:
+
+  - do not run test suites on deleted branches
+
+0.4.20 (2012-12-19)
+------------------
+
+ * erp5.util.testnode:
+
+  - Make sure to kill grandchilds when killing a process [Sebastien Robin]
+
+0.4.19 (2012-12-17)
+------------------
+
+ * erp5.util.testnode:
+
+  - Fixed undefined variable [Sebastien Robin]
+
+0.4.18 (2012-12-14)
+------------------
+
+ * erp5.util.testnode:
+
+  - Solve ascii issues when deleting software [Sebastien Robin]
+
+0.4.17 (2012-12-10)
+------------------
+
+ * erp5.util.testnode:
+
+  - Add thread Timer to terminate locked processes [Sebastien Robin]
+  - Add more unit tests [Pere Cortes]
+
 0.4.16 (2012-11-14)
 ------------------
 

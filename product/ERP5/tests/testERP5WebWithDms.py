@@ -722,6 +722,9 @@ return True
     self.assertEquals(response.getHeader('content-type'), 'image/jpeg')
 
     # testing Image conversions, svg
+    # disable Image permissiions checks format checks
+    createZODBPythonScript(portal.portal_skins.custom, 'Image_checkConversionFormatPermission',
+                           '**kw', 'return 1')    
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=svg', credential)
     self.assertEquals(response.getHeader('content-type'), 'image/svg+xml')

@@ -186,9 +186,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -215,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden</string> </value>
+                    <value> <string>hidden hiddenLabel</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -225,54 +223,34 @@
 $(function (){\n
 function toggleNatureField() {\n
 if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Support Request\') {\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").removeClass("hidden").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
 }\n
 else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Campaign\'){\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").removeClass("hidden").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
 }\n
 else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Meeting\'){\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").removeClass("hidden").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
 }\n
 else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Sale Opportunity\'){\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().removeClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").removeClass("hidden").parent().parent().removeClass("hidden");\n
 }\n
 else {\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
-$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden").parent().parent().addClass("hidden");\n
 }\n
 }\n
 $("select[name=\'field_your_follow_up_ticket_type\']").change(function(){toggleNatureField()});\n
@@ -332,7 +310,7 @@ toggleNatureField();\n
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>show</string> </value>
+                    <value> <string>Additional Javascript</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -348,19 +326,6 @@ toggleNatureField();\n
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>

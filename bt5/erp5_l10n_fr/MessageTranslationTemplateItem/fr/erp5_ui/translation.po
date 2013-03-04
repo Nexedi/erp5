@@ -6623,19 +6623,13 @@ msgstr "Document Office"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
-msgid "Omit \"Grouped References\""
-msgstr "Sans écritures lettrées"
-
-msgid "Omit \"grouped references\""
-msgstr "Sans écritures lettrées"
-
 msgid "Omit Balanced Account"
 msgstr "Sans comptes soldés"
 
 msgid "Omit Empty Accounts"
 msgstr "Sans comptes non mouvementés"
 
-msgid "Omit Grouped References"
+msgid "Omit Transactions with Grouping References"
 msgstr "Sans écritures lettrées"
 
 msgid "Omit balanced accounts"
@@ -11481,9 +11475,6 @@ msgstr "État de la transaction"
 msgid "Transaction Type"
 msgstr "Type d'écriture"
 
-msgid "Transaction With Grouping Reference"
-msgstr "Écritures lettrées"
-
 msgid "Transaction is not balanced for ${section_title}"
 msgstr "L'écriture n'est pas équilibrée pour ${section_title}"
 
@@ -11510,6 +11501,9 @@ msgstr "Écritures liées à ce tiers"
 
 msgid "Transactions Simulation State"
 msgstr "État de l'écriture"
+
+msgid "Transactions with Grouping References"
+msgstr "Écritures lettrées"
 
 msgid "Transformation"
 msgstr "Transformation"

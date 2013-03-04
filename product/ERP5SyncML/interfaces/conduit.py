@@ -119,7 +119,7 @@ class IConduit(Interface):
 
   def getGidFromObject(object, configurable_gid_dictionary=None):
     """
-    return the Gid composed with the object informations
+    return the Gid composed with the object information
      - object is the document on which for we are building the gid.
        It is usefull to interogate properties of this document itself.
      - configurable_gid_dictionary optional argument which is supposed to be a dictionary
@@ -133,7 +133,7 @@ class IConduit(Interface):
 
   def getGidFromXML(xml, namespace, gid_from_xml_list):
     """
-    return the Gid composed with xml informations
+    return the Gid composed with xml information
     """ 
 
   def applyDiff(original_data, diff):

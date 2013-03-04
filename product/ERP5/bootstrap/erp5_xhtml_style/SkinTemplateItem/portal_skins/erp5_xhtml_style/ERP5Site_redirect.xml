@@ -50,35 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from ZTUtils import make_query\n
-request_form = context.REQUEST.form\n
-request_form.update(kw)\n
-request_form = context.ERP5Site_filterParameterList(request_form)\n
-request_form.update(keep_items)\n
-\n
-# JPS-XXX Why ERP5Site ? not Base ? \n
-\n
-if redirect_url is None:\n
-  redirect_url = context.getPortalObject().absolute_url()\n
-\n
-parameters = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))\n
-if len(parameters):\n
-  if \'?\' in redirect_url:\n
-    separator = \'&\'\n
-  else:\n
-    separator = \'?\'\n
-  redirect_url = \'%s%s%s\' % (redirect_url, separator, parameters)\n
-\n
-return context.REQUEST.RESPONSE.redirect( redirect_url )\n
-
-
-]]></string> </value>
+            <value> <string>return context.getPortalObject().Base_redirect(redirect_url, keep_items, **kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>redirect_url=None, keep_items={}, **kw</string> </value>
+            <value> <string>redirect_url=None, keep_items=(), **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

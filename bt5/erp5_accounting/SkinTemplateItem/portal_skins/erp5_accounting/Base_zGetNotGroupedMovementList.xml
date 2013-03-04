@@ -75,6 +75,9 @@ Here, a group of movement means:\n
  mirror_section_uid is the same\n
  node_uid is the same\n
  grouping_reference is the same\n
+\n
+XXX now that grouping_date exists, this script will become useless.\n
+\n
 </dtml-comment>\n
 \n
 ( SELECT catalog.path as path,\n

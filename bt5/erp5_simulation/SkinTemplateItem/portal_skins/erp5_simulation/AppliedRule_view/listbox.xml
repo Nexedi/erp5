@@ -475,11 +475,11 @@
                           <string>Price</string>
                         </tuple>
                         <tuple>
-                          <string>movement.start_date</string>
+                          <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>
                         <tuple>
-                          <string>movement.stop_date</string>
+                          <string>stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
                         <tuple>

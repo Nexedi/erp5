@@ -17,7 +17,6 @@
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -356,17 +355,6 @@ Role & Region
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>person_module_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Usual Name</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>

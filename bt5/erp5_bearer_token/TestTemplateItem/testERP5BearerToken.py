@@ -1,7 +1,6 @@
 # Copyright (c) 2002-2012 Nexedi SA and Contributors. All Rights Reserved.
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 from DateTime import DateTime
 
 class TestERP5BearerToken(ERP5TypeTestCase):
@@ -29,7 +28,6 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     person = person_module.newContent(portal_type='Person',
       reference='P' + reference)
     person.newContent(portal_type = 'Assignment').open()
-    transaction.commit()
     self.tic()
     return person
 
@@ -39,7 +37,6 @@ class TestERP5BearerToken(ERP5TypeTestCase):
       priority=1,
       preferred_bearer_token_key=self.test_id)
     self.preference.enable()
-    transaction.commit()
     self.tic()
 
   def setupBearerExtraction(self):
@@ -53,7 +50,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
         ('IExtractionPlugin',))
     elif len(bearer_extraction_list) > 1:
       raise ValueError
-    transaction.commit()
+    self.commit()
 
   def afterSetUp(self):
     """
@@ -64,12 +61,10 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     self.person = self.createPerson(self.test_id)
     self.setUpBearerTokenKey()
     self.setupBearerExtraction()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     self.portal.portal_preferences.deleteContent(self.preference.getId())
-    transaction.commit()
     self.tic()
 
   def test_working_token(self):
@@ -94,16 +89,13 @@ class TestERP5BearerToken(ERP5TypeTestCase):
 
   def test_no_bearer_token_key(self):
     self.preference.edit(preferred_bearer_token_key='')
-    transaction.commit()
     self.tic()
-    transaction.commit()
     self.assertRaises(ValueError, self.person.Person_getBearerToken)
 
   def test_changed_bearer_token_key(self):
     token, expiration_time = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     self.preference.edit(preferred_bearer_token_key='changed')
-    transaction.commit()
     self.tic()
     reference = self.getTokenCredential(self.portal.REQUEST)
     self.assertEqual(reference, None)

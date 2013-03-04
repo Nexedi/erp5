@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

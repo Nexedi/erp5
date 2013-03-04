@@ -1,0 +1,523 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts54116980.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ERP5_OpenLayers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+function overwrite(C, o) {\n
+        if(typeof o.initialize === "function" &&\n
+            C === C.prototype.initialize) {\n
+            // OL 2.11\n
+\n
+            var proto = C.prototype;\n
+            var staticProps = OpenLayers.Util.extend({}, C);\n
+\n
+            C = o.initialize;\n
+\n
+            C.prototype = proto;\n
+            OpenLayers.Util.extend(C, staticProps);\n
+        }\n
+        OpenLayers.Util.extend(C.prototype, o);\n
+        return C;\n
+    }\n
+\n
+\n
+OpenLayers.Layer.Grid = overwrite(OpenLayers.Layer.Grid, {\n
+    \n
+    tileClass: OpenLayers.Tile.CanvasImage,\n
+    \n
+    useCanvas: null,\n
+\n
+    canvas: null,\n
+\n
+    canvasImageData: null,\n
+\n
+    backBufferCanvas: null,\n
+\n
+    lastResolution: null,\n
+\n
+    lastCanvasPosition: null,\n
+\n
+    redrawCanvas: false,\n
+\n
+    /**\n
+     * APIProperty: canvasFilter\n
+     * {OpenLayers.Tile.CanvasFilter} Only used for ONECANVASPERLAYER and ONECANVASPERTILE. Can be\n
+     *          used to manipulate the pixel data of an image (for example to adjust the\n
+     *          brightness of a tile).\n
+     */\n
+    canvasFilter: null,\n
+\n
+    /**\n
+     * APIProperty: canvasAsync\n
+     * {Boolean} If set to true, the canvas filter and the reprojection (for WMS layers)\n
+     *          will be executed in a web worker. Only supported in Chrome 6+.\n
+     */\n
+    canvasAsync: false,\n
+\n
+    initialize: function(name, url, params, options) {\n
+        OpenLayers.Layer.HTTPRequest.prototype.initialize.apply(this, \n
+                                                                 arguments);\n
+        this.grid = [];\n
+        this.tileQueue = [];\n
+      if(!this.useCanvas){\n
+        if (this.removeBackBufferDelay === null) {\n
+            this.removeBackBufferDelay = this.singleTile ? 0 : 2500;\n
+        }\n
+        \n
+        if (this.className === null) {\n
+            this.className = this.singleTile ? \'olLayerGridSingleTile\' :\n
+                                               \'olLayerGrid\';\n
+        }\n
+\n
+        if (!OpenLayers.Animation.isNative) {\n
+            this.deferMoveGriddedTiles = OpenLayers.Function.bind(function() {\n
+                this.moveGriddedTiles(true);\n
+                this.moveTimerId = null;\n
+            }, this);\n
+        }\n
+      }else{\n
+            if (this.usesOneCanvasPerLayer()) {\n
+              this.canvas = document.createElement("canvas");\n
+              this.canvas.id = "Canvas_" + this.id;\n
+              this.canvas.style.top = 0;\n
+              this.canvas.style.left = 0;\n
+              this.canvas.style.position = "absolute";\n
+              this.div.appendChild(this.canvas);\n
+             }\n
+      }\n
+    },\n
+\n
+    moveTo:function(bounds, zoomChanged, dragging) {\n
+\n
+        OpenLayers.Layer.HTTPRequest.prototype.moveTo.apply(this, arguments);\n
+\n
+        bounds = bounds || this.map.getExtent();\n
+    \n
+          if(this.useCanvas){\n
+              var forceReTile = !this.grid.length || zoomChanged ||\n
+                                (this.usesOneCanvasPerLayer() && !dragging);\n
+\n
+              // total bounds of the tiles\n
+              var tilesBounds = this.getTilesBounds();\n
+          }\n
+\n
+          if (bounds != null) {\n
+             \n
+              // if grid is empty or zoom has changed, we *must* re-tile\n
+              if(!this.usesCanvas){ \n
+                   var forceReTile = !this.grid.length || zoomChanged;\n
+              }else{\n
+                  var forceReTile = !this.grid.length || zoomChanged ||\n
+                                (this.usesOneCanvasPerLayer() && !dragging);\n
+              }\n
+            // total bounds of the tiles\n
+            var tilesBounds = this.getTilesBounds();\n
+\n
+\n
+              // total bounds of the tiles\n
+              var tilesBounds = this.getTilesBounds();            \n
+\n
+              // the new map resolution\n
+             var resolution = this.map.getResolution();\n
+\n
+             // the server-supported resolution for the new map resolution\n
+             var serverResolution = this.getServerResolution(resolution);\n
+\n
+             if (this.singleTile) {\n
+                \n
+                  // We want to redraw whenever even the slightest part of the \n
+                  //  current bounds is not contained by our tile.\n
+                  //  (thus, we do not specify partial -- its default is false)\n
+\n
+                 if ( forceReTile ||\n
+                       (!dragging && !tilesBounds.containsBounds(bounds))) {\n
+\n
+                     // In single tile mode with no transition effect, we insert\n
+                      // a non-scaled backbuffer when the layer is moved. But if\n
+                     // a zoom occurs right after a move, i.e. before the new\n
+                     // image is received, we need to remove the backbuffer, or\n
+                     // an ill-positioned image will be visible during the zoom\n
+                     // transition.\n
+\n
+                     if(zoomChanged && this.transitionEffect !== \'resize\') {\n
+                          this.removeBackBuffer();\n
+                     }\n
+\n
+                     if(!zoomChanged || this.transitionEffect === \'resize\') {\n
+                          this.applyBackBuffer(serverResolution);\n
+                    }\n
+\n
+                    this.initSingleTile(bounds);\n
+                }\n
+            } else {\n
+\n
+                // if the bounds have changed such that they are not even \n
+                // *partially* contained by our tiles (e.g. when user has \n
+                // programmatically panned to the other side of the earth on\n
+                // zoom level 18), then moveGriddedTiles could potentially have\n
+                // to run through thousands of cycles, so we want to reTile\n
+                // instead (thus, partial true).  \n
+                forceReTile = forceReTile ||\n
+                    !tilesBounds.intersectsBounds(bounds, {\n
+                        worldBounds: this.map.baseLayer.wrapDateLine &&\n
+                            this.map.getMaxExtent()\n
+                    });\n
+\n
+                if(resolution !== serverResolution) {\n
+                    bounds = this.map.calculateBounds(null, serverResolution);\n
+                    if(forceReTile) {\n
+                        // stretch the layer div\n
+                        var scale = serverResolution / resolution;\n
+                        this.transformDiv(scale);\n
+                    }\n
+                } else {\n
+                    // reset the layer width, height, left, top, to deal with\n
+                    // the case where the layer was previously transformed\n
+                    this.div.style.width = \'100%\';\n
+                    this.div.style.height = \'100%\';\n
+                    this.div.style.left = \'0%\';\n
+                    this.div.style.top = \'0%\';\n
+                }\n
+\n
+                if(forceReTile) {\n
+                    if(zoomChanged && this.transitionEffect === \'resize\') {\n
+                        this.applyBackBuffer(serverResolution);\n
+                    }\n
+                    this.initGriddedTiles(bounds);\n
+                } else {\n
+                    this.moveGriddedTiles();\n
+                }\n
+           }\n
+        }\n
+      },\n
+    \n
+\n
+    /**** Specific functions for Canvas ****/\n
+\n
+      /**\n
+     * Method: drawCanvasTile\n
+     * Called when a image finished loading, draws the image\n
+     * on the canvas element.\n
+     * \n
+     * Parameters:\n
+     * image - {<Image>} The tile to draw\n
+     * bounds - {<OpenLayers.Bounds>} The bounds of the tile.\n
+     */\n
+    drawCanvasTile: function(image, bounds) {\n
+        if (this.dragging) {\n
+            return;\n
+        }\n
+\n
+        // if this is the first tile of a render request, move canvas back to \n
+        // original position and reset background\n
+        this.resetCanvas();\n
+\n
+        var upperLeft = new OpenLayers.LonLat(bounds.left, bounds.top);\n
+        var px = this.getLayerPxFromLonLat(upperLeft);\n
+\n
+        var ctx = this.canvas.getContext(\'2d\');\n
+        try {\n
+            ctx.drawImage(image, px.x, px.y);\n
+            this.canvasImageData = null;\n
+        } catch (exc) {\n
+            console.log(\'drawImage failed: \' + image.src); // todo\n
+        }\n
+    },\n
+\n
+     /**\n
+     * Method: resetCanvas\n
+     * Moves the canvas element back to its original position and \n
+     * resets the drawing surface.\n
+     */\n
+    resetCanvas: function() {\n
+        if (this.redrawCanvas) {\n
+            this.redrawCanvas = false;\n
+\n
+            // because the layerContainerDiv has shifted position (for non canvas layers), reposition the canvas.\n
+            this.canvas.style.left = -parseInt(this.map.layerContainerDiv.style.left) + "px";\n
+            this.canvas.style.top = -parseInt(this.map.layerContainerDiv.style.top) + "px";\n
+\n
+            // clear canvas by reseting the size\n
+            // broken in Chrome 6.0.458.1:\n
+            // http://code.google.com/p/chromium/issues/detail?id=49151\n
+            this.canvas.width = this.map.viewPortDiv.clientWidth;\n
+            this.canvas.height = this.map.viewPortDiv.clientHeight;\n
+\n
+            if (this.usesTransition() && this.usesOneCanvasPerLayer()) {\n
+                // store the current resolution and canvas position for transition\n
+                this.lastResolution = this.map.getResolution();\n
+                var canvasPosition = new OpenLayers.Pixel(this.canvas.style.left, this.canvas.style.top);\n
+                this.lastCanvasPosition = this.map.getLonLatFromLayerPx(canvasPosition);\n
+            }\n
+        }\n
+    },\n
+\n
+   /**\n
+     * Method: startTransition\n
+     * Start the transition: create a copy of the \n
+     * canvas element, scale the copy and then draw the copy \n
+     * back on the original canvas.\n
+     * \n
+     * Parameters:\n
+     * zoomChanged - {<Boolean>}\n
+     * dragging - {<Boolean>}\n
+     */\n
+    startTransition: function(zoomChanged, dragging) {\n
+        if (!zoomChanged || dragging ||\n
+            (this.lastResolution === null) || (this.lastCanvasPosition === null)) {\n
+            return;\n
+        }\n
+\n
+        var ratio = this.lastResolution / this.map.getResolution();\n
+        var px = this.getLayerPxFromLonLat(this.lastCanvasPosition);\n
+\n
+        // create a scaled copy of the canvas\n
+        if (this.backBufferCanvas == null) {\n
+            this.backBufferCanvas = document.createElement(\'canvas\');\n
+            this.backBufferCanvas.style.display = \'none\';\n
+        }\n
+\n
+        this.backBufferCanvas.width = this.canvas.width * ratio;\n
+        this.backBufferCanvas.height = this.canvas.height * ratio;\n
+\n
+        var zoomcontext = this.backBufferCanvas.getContext(\'2d\');\n
+        zoomcontext.scale(ratio, ratio);\n
+        zoomcontext.drawImage(this.canvas, 0, 0);\n
+\n
+        // and then draw this copy on the original canvas \n
+        this.resetCanvas();\n
+\n
+        var ctx = this.canvas.getContext(\'2d\');\n
+        ctx.drawImage(this.backBufferCanvas, px.x, px.y);\n
+    },\n
+\n
+ /**\n
+     * Method: getLayerPxFromLonLat\n
+     * A wrapper for the <OpenLayers.Map.getLayerPxFromLonLat()> method,\n
+     * which takes into account that the canvas element has a fixed size and \n
+     * it always moved back to the original position.\n
+     * \n
+     * Parameters:\n
+     * lonlat - {<OpenLayers.LonLat>}\n
+     *\n
+     * Returns:\n
+     * {<OpenLayers.Pixel>} \n
+     */\n
+    getLayerPxFromLonLat: function(lonlat) {\n
+        if (this.usesOneCanvasPerLayer()) {\n
+           var viewPortPx = this.map.getPixelFromLonLat(lonlat);\n
+           return viewPortPx;\n
+        } else {\n
+            return this.map.getLayerPxFromLonLat(lonlat);\n
+        }\n
+    },\n
+\n
+    /**\n
+     * Method: getLayerPxFromLonLat\n
+     * A wrapper for the <OpenLayers.Map.getViewPortPxFromLayerPx()> method.\n
+     * \n
+     * Parameters:\n
+     * layerPx - {<OpenLayers.Pixel>}\n
+     * \n
+     * Returns:\n
+     * {<OpenLayers.Pixel>}\n
+     */\n
+    getViewPortPxFromLayerPx: function(layerPx) {\n
+        if (this.usesOneCanvasPerLayer()) {\n
+            return layerPx;\n
+        } else {\n
+            return this.map.getViewPortPxFromLayerPx(layerPx);\n
+        }\n
+    },\n
+\n
+   /**\n
+     * Method: usesTransition\n
+     * \n
+     * Returns:\n
+     * {<Boolean>} True, if the layer uses a supported transition effect.\n
+     */\n
+    usesTransition: function() {\n
+        return true;\n
+        //return (OpenLayers.Util.indexOf(this.SUPPORTED_TRANSITIONS, this.transitionEffect) != -1);\n
+    },\n
+\n
+    /**\n
+     * Method: usesOneCanvasPerLayer\n
+     * \n
+     * Returns:\n
+     * {<Boolean>} True, if the layer renders its tile on a single canvas element.\n
+     */\n
+    usesOneCanvasPerLayer: function() {\n
+        return (this.useCanvas === OpenLayers.Layer.Grid.ONECANVASPERLAYER);\n
+    },\n
+\n
+  /**\n
+     * Method: getPixelDataForViewPortPx\n
+     * Returns the ARGB values of the pixel at the given view-port position. \n
+     * The returned object has the attributes \'a\', \'r\', \'g\' and \'b\'.\n
+     * \n
+     * Parameters:\n
+     * viewPortPx - {<OpenLayers.Pixel>}\n
+     * \n
+     * Returns:\n
+     * {Object}\n
+     */\n
+    getPixelDataForViewPortPx: function(viewPortPx) {\n
+        if (!this.grid.length || this.grid.length === 0) {\n
+            return null;\n
+        }\n
+        if (this.usesOneCanvasPerLayer()) {\n
+            // for ONECANVASPERLAYER we can directly use the view-port pixels\n
+            var x = viewPortPx.x;\n
+            var y = viewPortPx.y;\n
+\n
+            if (this.cancas === null ||\n
+                x < 0 || x >= this.canvas.width ||\n
+                y < 0 || y >= this.canvas.height) {\n
+                return null;\n
+            }\n
+\n
+            if (this.canvasImageData === null) {\n
+                var canvasContext = this.canvas.getContext(\'2d\');\n
+                this.canvasImageData = canvasContext.getImageData(0, 0,\n
+                                            this.canvas.width, this.canvas.height);\n
+            }\n
+\n
+            return OpenLayers.Tile.CanvasImage.getPixelDataFromImageData(this.canvasImageData, x, y);\n
+     /* for ONECANVASPERTILE we first have to find out the tile\n
+             * which contains the view-port pixel\n
+             */\n
+\n
+            // translate the viewPort coordinates to layer coordinates\n
+            var layerPx = this.map.getLayerPxFromViewPortPx(viewPortPx);\n
+\n
+            // and then calculate the grid position relative to the layer container\n
+            var upperLeftTile = this.grid[0][0];\n
+            var gridPx = new OpenLayers.Pixel(layerPx.x - upperLeftTile.position.x, layerPx.y - upperLeftTile.position.y);\n
+\n
+            // get the tile which covers the pixel\n
+            var tileX = Math.floor(gridPx.x / this.tileSize.w);\n
+            var tileY = Math.floor(gridPx.y / this.tileSize.h);\n
+\n
+            if (tileX >= 0 && tileX < this.grid[0].length &&\n
+            tileY >= 0 &&\n
+            tileY < this.grid.length) {\n
+\n
+                var tile = this.grid[tileY][tileX];\n
+\n
+                // calculate the position of the pixel on the canvas\n
+                var canvasX = gridPx.x - (tileX * this.tileSize.w);\n
+                var canvasY = gridPx.y - (tileY * this.tileSize.h);\n
+\n
+                return tile.getPixelData(canvasX, canvasY);\n
+            }\n
+        }\n
+\n
+        return null;\n
+    },\n
+\n
+});\n
+\n
+/**\n
+ * Constant: NOCANVAS\n
+ * {Integer} Constant used to mark that a layer should not be rendered\n
+ *      on a canvas element.\n
+ */\n
+OpenLayers.Layer.Grid.NOCANVAS = 1;\n
+/**\n
+ * Constant: ONECANVASPERLAYER\n
+ * {Integer} Constant used to render the layer on a single canvas element.\n
+ */\n
+OpenLayers.Layer.Grid.ONECANVASPERLAYER = 2;\n
+/**\n
+ * Constant: ONECANVASPERTILE\n
+ * {Integer} Constant used to render every tile in its own canvas element.\n
+ */\n
+OpenLayers.Layer.Grid.ONECANVASPERTILE = 4;\n
+\n
+OpenLayers.Layer.Zoomify = overwrite(OpenLayers.Layer.Zoomify,{\n
+    initialize: function(name, url,transforms, size, options) {\n
+        // initilize the Zoomify pyramid for given size\n
+        this.initializeZoomify(size);\n
+        this.transforms = transforms;\n
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, [\n
+            name, url, size, {}, options\n
+        ]);\n
+    },\n
+\n
+    getURL: function (bounds) {\n
+        bounds = this.adjustBounds(bounds);\n
+        var res = this.map.getResolution();\n
+        var x = Math.round((bounds.left - this.tileOrigin.lon) / (res * this.tileSize.w));\n
+        var y = Math.round((this.tileOrigin.lat - bounds.top) / (res * this.tileSize.h));\n
+        var z = this.map.getZoom();\n
+        var tileIndex = x + y * this.tierSizeInTiles[z].w + this.tileCountUpToTier[z];\n
+        var path = "TileGroup" + Math.floor( (tileIndex) / 256 ) +\n
+            "/" + z + "-" + x + "-" + y + "/Base_download";\n
+        var url = this.url;\n
+        if (OpenLayers.Util.isArray(url)) {\n
+            url = this.selectUrl(path, url);\n
+        }\n
+        return url + path;\n
+    },\n
+\n
+\n
+    addTile: function(bounds,position) {\n
+         return new OpenLayers.Tile.CanvasImage(this,position,bounds,null,this.tileSize,this.transforms,OpenLayers.Tile.CanvasImage.ONECANVASPERTILE);\n
+      }\n
+\n
+});\n
+\n
+OpenLayers.Tile = overwrite(OpenLayers.Tile,{\n
+    clone: function (obj) {\n
+      if (obj == null) {\n
+        obj = new OpenLayers.Tile(this.layer,\n
+        this.position,\n
+        this.bounds,\n
+        this.url,\n
+        this.size);\n
+      }\n
+      // catch any randomly tagged-on properties\n
+      OpenLayers.Util.applyDefaults(obj, this);\n
+      return obj;\n
+   }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16835</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ERP5_OpenLayers.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

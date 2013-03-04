@@ -119,6 +119,8 @@ class TestERP5(ERP5TypeTestCase):
     active_process = self.portal.portal_activities.newActiveProcess()
     self.commit()
     remote = self.other_node
+    remote.getId() # force storage sync of remote ZODB connection
+                   # (see also Products.ERP5Type.patches.ZODBConnection)
     for id in active_process.getRelativeUrl().split('/'):
       remote = getattr(remote, id)
     for x in xrange(100):

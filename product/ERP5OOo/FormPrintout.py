@@ -364,7 +364,7 @@ class ODFStrategy(Implicit):
     # meta.xml is not supported yet
     # ooo_builder = self._replaceMetaXml(ooo_builder=ooo_builder, extra_context=extra_context)
 
-    # Update the META informations
+    # Update the META information
     ooo_builder.updateManifest()
 
     ooo = ooo_builder.render()

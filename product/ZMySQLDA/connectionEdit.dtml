@@ -32,7 +32,7 @@
 	<tr>
 	  <th align="LEFT" valign="TOP">Connect immediately</th>
 	  <td align="LEFT" valign="TOP">
-            <input name="check" type="CHECKBOX" value="YES" CHECKED>
+            <input name="check:int" type="CHECKBOX" value="1" CHECKED>
           </td>
 	</tr>
 

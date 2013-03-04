@@ -135,12 +135,10 @@ class Event(EmailDocument, Movement, AcknowledgeableMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getQuantity')
-  def getQuantity(self):
+  def getQuantity(self, default=1.):
+    """Quantity is by default 1.0 on events.
     """
-      Quantity is set automatically on Events.
-    """
-    # Provide opportunity to script this
-    return 1.
+    return self._baseGetQuantity(default)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                              'getExplanationValue')

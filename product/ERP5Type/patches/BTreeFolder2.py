@@ -101,3 +101,10 @@ BTreeFolder2Base._cleanup = _cleanup
 # Otherwise, we use superclass' __contains__ implementation, which uses
 # objectIds, which is inefficient in HBTreeFolder2 to lookup a single key.
 BTreeFolder2Base.__contains__ = BTreeFolder2Base.has_key
+
+# BBB: Remove workaround on recent BTreeFolder2Base
+#      OFS.ObjectManager really needs to be fixed properly.
+try:
+  del BTreeFolder2Base.__getitem__
+except AttributeError:
+  pass

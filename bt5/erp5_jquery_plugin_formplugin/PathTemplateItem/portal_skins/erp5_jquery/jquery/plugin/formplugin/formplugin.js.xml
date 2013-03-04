@@ -1,0 +1,719 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts54097163.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>formplugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * jQuery Form Plugin\n
+ * version: 2.43 (12-MAR-2010)\n
+ * @requires jQuery v1.3.2 or later\n
+ *\n
+ * Examples and documentation at: http://malsup.com/jquery/form/\n
+ * Dual licensed under the MIT and GPL licenses:\n
+ *   http://www.opensource.org/licenses/mit-license.php\n
+ *   http://www.gnu.org/licenses/gpl.html\n
+ */\n
+;(function($) {\n
+\n
+/*\n
+\tUsage Note:\n
+\t-----------\n
+\tDo not use both ajaxSubmit and ajaxForm on the same form.  These\n
+\tfunctions are intended to be exclusive.  Use ajaxSubmit if you want\n
+\tto bind your own submit handler to the form.  For example,\n
+\n
+\t$(document).ready(function() {\n
+\t\t$(\'#myForm\').bind(\'submit\', function() {\n
+\t\t\t$(this).ajaxSubmit({\n
+\t\t\t\ttarget: \'#output\'\n
+\t\t\t});\n
+\t\t\treturn false; // <-- important!\n
+\t\t});\n
+\t});\n
+\n
+\tUse ajaxForm when you want the plugin to manage all the event binding\n
+\tfor you.  For example,\n
+\n
+\t$(document).ready(function() {\n
+\t\t$(\'#myForm\').ajaxForm({\n
+\t\t\ttarget: \'#output\'\n
+\t\t});\n
+\t});\n
+\n
+\tWhen using ajaxForm, the ajaxSubmit function will be invoked for you\n
+\tat the appropriate time.\n
+*/\n
+\n
+/**\n
+ * ajaxSubmit() provides a mechanism for immediately submitting\n
+ * an HTML form using AJAX.\n
+ */\n
+$.fn.ajaxSubmit = function(options) {\n
+\t// fast fail if nothing selected (http://dev.jquery.com/ticket/2752)\n
+\tif (!this.length) {\n
+\t\tlog(\'ajaxSubmit: skipping submit process - no element selected\');\n
+\t\treturn this;\n
+\t}\n
+\n
+\tif (typeof options == \'function\')\n
+\t\toptions = { success: options };\n
+\n
+\tvar url = $.trim(this.attr(\'action\'));\n
+\tif (url) {\n
+\t\t// clean url (don\'t include hash vaue)\n
+\t\turl = (url.match(/^([^#]+)/)||[])[1];\n
+   \t}\n
+   \turl = url || window.location.href || \'\';\n
+\n
+\toptions = $.extend({\n
+\t\turl:  url,\n
+\t\ttype: this.attr(\'method\') || \'GET\',\n
+\t\tiframeSrc: /^https/i.test(window.location.href || \'\') ? \'javascript:false\' : \'about:blank\'\n
+\t}, options || {});\n
+\n
+\t// hook for manipulating the form data before it is extracted;\n
+\t// convenient for use with rich editors like tinyMCE or FCKEditor\n
+\tvar veto = {};\n
+\tthis.trigger(\'form-pre-serialize\', [this, options, veto]);\n
+\tif (veto.veto) {\n
+\t\tlog(\'ajaxSubmit: submit vetoed via form-pre-serialize trigger\');\n
+\t\treturn this;\n
+\t}\n
+\n
+\t// provide opportunity to alter form data before it is serialized\n
+\tif (options.beforeSerialize && options.beforeSerialize(this, options) === false) {\n
+\t\tlog(\'ajaxSubmit: submit aborted via beforeSerialize callback\');\n
+\t\treturn this;\n
+\t}\n
+\n
+\tvar a = this.formToArray(options.semantic);\n
+\tif (options.data) {\n
+\t\toptions.extraData = options.data;\n
+\t\tfor (var n in options.data) {\n
+\t\t  if(options.data[n] instanceof Array) {\n
+\t\t\tfor (var k in options.data[n])\n
+\t\t\t  a.push( { name: n, value: options.data[n][k] } );\n
+\t\t  }\n
+\t\t  else\n
+\t\t\t a.push( { name: n, value: options.data[n] } );\n
+\t\t}\n
+\t}\n
+\n
+\t// give pre-submit callback an opportunity to abort the submit\n
+\tif (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {\n
+\t\tlog(\'ajaxSubmit: submit aborted via beforeSubmit callback\');\n
+\t\treturn this;\n
+\t}\n
+\n
+\t// fire vetoable \'validate\' event\n
+\tthis.trigger(\'form-submit-validate\', [a, this, options, veto]);\n
+\tif (veto.veto) {\n
+\t\tlog(\'ajaxSubmit: submit vetoed via form-submit-validate trigger\');\n
+\t\treturn this;\n
+\t}\n
+\n
+\tvar q = $.param(a);\n
+\n
+\tif (options.type.toUpperCase() == \'GET\') {\n
+\t\toptions.url += (options.url.indexOf(\'?\') >= 0 ? \'&\' : \'?\') + q;\n
+\t\toptions.data = null;  // data is null for \'get\'\n
+\t}\n
+\telse\n
+\t\toptions.data = q; // data is the query string for \'post\'\n
+\n
+\tvar $form = this, callbacks = [];\n
+\tif (options.resetForm) callbacks.push(function() { $form.resetForm(); });\n
+\tif (options.clearForm) callbacks.push(function() { $form.clearForm(); });\n
+\n
+\t// perform a load on the target only if dataType is not provided\n
+\tif (!options.dataType && options.target) {\n
+\t\tvar oldSuccess = options.success || function(){};\n
+\t\tcallbacks.push(function(data) {\n
+\t\t\tvar fn = options.replaceTarget ? \'replaceWith\' : \'html\';\n
+\t\t\t$(options.target)[fn](data).each(oldSuccess, arguments);\n
+\t\t});\n
+\t}\n
+\telse if (options.success)\n
+\t\tcallbacks.push(options.success);\n
+\n
+\toptions.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg\n
+\t\tfor (var i=0, max=callbacks.length; i < max; i++)\n
+\t\t\tcallbacks[i].apply(options, [data, status, xhr || $form, $form]);\n
+\t};\n
+\n
+\t// are there files to upload?\n
+\tvar files = $(\'input:file\', this).fieldValue();\n
+\tvar found = false;\n
+\tfor (var j=0; j < files.length; j++)\n
+\t\tif (files[j])\n
+\t\t\tfound = true;\n
+\n
+\tvar multipart = false;\n
+//\tvar mp = \'multipart/form-data\';\n
+//\tmultipart = ($form.attr(\'enctype\') == mp || $form.attr(\'encoding\') == mp);\n
+\n
+\t// options.iframe allows user to force iframe mode\n
+\t// 06-NOV-09: now defaulting to iframe mode if file input is detected\n
+   if ((files.length && options.iframe !== false) || options.iframe || found || multipart) {\n
+\t   // hack to fix Safari hang (thanks to Tim Molendijk for this)\n
+\t   // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d\n
+\t   if (options.closeKeepAlive)\n
+\t\t   $.get(options.closeKeepAlive, fileUpload);\n
+\t   else\n
+\t\t   fileUpload();\n
+\t   }\n
+   else\n
+\t   $.ajax(options);\n
+\n
+\t// fire \'notify\' event\n
+\tthis.trigger(\'form-submit-notify\', [this, options]);\n
+\treturn this;\n
+\n
+\n
+\t// private function for handling file uploads (hat tip to YAHOO!)\n
+\tfunction fileUpload() {\n
+\t\tvar form = $form[0];\n
+\n
+\t\tif ($(\':input[name=submit]\', form).length) {\n
+\t\t\talert(\'Error: Form elements must not be named "submit".\');\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tvar opts = $.extend({}, $.ajaxSettings, options);\n
+\t\tvar s = $.extend(true, {}, $.extend(true, {}, $.ajaxSettings), opts);\n
+\n
+\t\tvar id = \'jqFormIO\' + (new Date().getTime());\n
+\t\tvar $io = $(\'<iframe id="\' + id + \'" name="\' + id + \'" src="\'+ opts.iframeSrc +\'" onload="(jQuery(this).data(\\\'form-plugin-onload\\\'))()" />\');\n
+\t\tvar io = $io[0];\n
+\n
+\t\t$io.css({ position: \'absolute\', top: \'-1000px\', left: \'-1000px\' });\n
+\n
+\t\tvar xhr = { // mock object\n
+\t\t\taborted: 0,\n
+\t\t\tresponseText: null,\n
+\t\t\tresponseXML: null,\n
+\t\t\tstatus: 0,\n
+\t\t\tstatusText: \'n/a\',\n
+\t\t\tgetAllResponseHeaders: function() {},\n
+\t\t\tgetResponseHeader: function() {},\n
+\t\t\tsetRequestHeader: function() {},\n
+\t\t\tabort: function() {\n
+\t\t\t\tthis.aborted = 1;\n
+\t\t\t\t$io.attr(\'src\', opts.iframeSrc); // abort op in progress\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tvar g = opts.global;\n
+\t\t// trigger ajax global events so that activity/block indicators work like normal\n
+\t\tif (g && ! $.active++) $.event.trigger("ajaxStart");\n
+\t\tif (g) $.event.trigger("ajaxSend", [xhr, opts]);\n
+\n
+\t\tif (s.beforeSend && s.beforeSend(xhr, s) === false) {\n
+\t\t\ts.global && $.active--;\n
+\t\t\treturn;\n
+\t\t}\n
+\t\tif (xhr.aborted)\n
+\t\t\treturn;\n
+\n
+\t\tvar cbInvoked = false;\n
+\t\tvar timedOut = 0;\n
+\n
+\t\t// add submitting element to data if we know it\n
+\t\tvar sub = form.clk;\n
+\t\tif (sub) {\n
+\t\t\tvar n = sub.name;\n
+\t\t\tif (n && !sub.disabled) {\n
+\t\t\t\topts.extraData = opts.extraData || {};\n
+\t\t\t\topts.extraData[n] = sub.value;\n
+\t\t\t\tif (sub.type == "image") {\n
+\t\t\t\t\topts.extraData[n+\'.x\'] = form.clk_x;\n
+\t\t\t\t\topts.extraData[n+\'.y\'] = form.clk_y;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// take a breath so that pending repaints get some cpu time before the upload starts\n
+\t\tfunction doSubmit() {\n
+\t\t\t// make sure form attrs are set\n
+\t\t\tvar t = $form.attr(\'target\'), a = $form.attr(\'action\');\n
+\n
+\t\t\t// update form attrs in IE friendly way\n
+\t\t\tform.setAttribute(\'target\',id);\n
+\t\t\tif (form.getAttribute(\'method\') != \'POST\')\n
+\t\t\t\tform.setAttribute(\'method\', \'POST\');\n
+\t\t\tif (form.getAttribute(\'action\') != opts.url)\n
+\t\t\t\tform.setAttribute(\'action\', opts.url);\n
+\n
+\t\t\t// ie borks in some cases when setting encoding\n
+\t\t\tif (! opts.skipEncodingOverride) {\n
+\t\t\t\t$form.attr({\n
+\t\t\t\t\tencoding: \'multipart/form-data\',\n
+\t\t\t\t\tenctype:  \'multipart/form-data\'\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// support timout\n
+\t\t\tif (opts.timeout)\n
+\t\t\t\tsetTimeout(function() { timedOut = true; cb(); }, opts.timeout);\n
+\n
+\t\t\t// add "extra" data to form if provided in options\n
+\t\t\tvar extraInputs = [];\n
+\t\t\ttry {\n
+\t\t\t\tif (opts.extraData)\n
+\t\t\t\t\tfor (var n in opts.extraData)\n
+\t\t\t\t\t\textraInputs.push(\n
+\t\t\t\t\t\t\t$(\'<input type="hidden" name="\'+n+\'" value="\'+opts.extraData[n]+\'" />\')\n
+\t\t\t\t\t\t\t\t.appendTo(form)[0]);\n
+\n
+\t\t\t\t// add iframe to doc and submit the form\n
+\t\t\t\t$io.appendTo(\'body\');\n
+\t\t\t\t$io.data(\'form-plugin-onload\', cb);\n
+\t\t\t\tform.submit();\n
+\t\t\t}\n
+\t\t\tfinally {\n
+\t\t\t\t// reset attrs and remove "extra" input elements\n
+\t\t\t\tform.setAttribute(\'action\',a);\n
+\t\t\t\tt ? form.setAttribute(\'target\', t) : $form.removeAttr(\'target\');\n
+\t\t\t\t$(extraInputs).remove();\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tif (opts.forceSync)\n
+\t\t\tdoSubmit();\n
+\t\telse\n
+\t\t\tsetTimeout(doSubmit, 10); // this lets dom updates render\n
+\t\n
+\t\tvar domCheckCount = 100;\n
+\n
+\t\tfunction cb() {\n
+\t\t\tif (cbInvoked) \n
+\t\t\t\treturn;\n
+\n
+\t\t\tvar ok = true;\n
+\t\t\ttry {\n
+\t\t\t\tif (timedOut) throw \'timeout\';\n
+\t\t\t\t// extract the server response from the iframe\n
+\t\t\t\tvar data, doc;\n
+\n
+\t\t\t\tdoc = io.contentWindow ? io.contentWindow.document : io.contentDocument ? io.contentDocument : io.document;\n
+\t\t\t\t\n
+\t\t\t\tvar isXml = opts.dataType == \'xml\' || doc.XMLDocument || $.isXMLDoc(doc);\n
+\t\t\t\tlog(\'isXml=\'+isXml);\n
+\t\t\t\tif (!isXml && (doc.body == null || doc.body.innerHTML == \'\')) {\n
+\t\t\t\t \tif (--domCheckCount) {\n
+\t\t\t\t\t\t// in some browsers (Opera) the iframe DOM is not always traversable when\n
+\t\t\t\t\t\t// the onload callback fires, so we loop a bit to accommodate\n
+\t\t\t\t \t\tlog(\'requeing onLoad callback, DOM not available\');\n
+\t\t\t\t\t\tsetTimeout(cb, 250);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t\tlog(\'Could not access iframe DOM after 100 tries.\');\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlog(\'response detected\');\n
+\t\t\t\tcbInvoked = true;\n
+\t\t\t\txhr.responseText = doc.body ? doc.body.innerHTML : null;\n
+\t\t\t\txhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;\n
+\t\t\t\txhr.getResponseHeader = function(header){\n
+\t\t\t\t\tvar headers = {\'content-type\': opts.dataType};\n
+\t\t\t\t\treturn headers[header];\n
+\t\t\t\t};\n
+\n
+\t\t\t\tif (opts.dataType == \'json\' || opts.dataType == \'script\') {\n
+\t\t\t\t\t// see if user embedded response in textarea\n
+\t\t\t\t\tvar ta = doc.getElementsByTagName(\'textarea\')[0];\n
+\t\t\t\t\tif (ta)\n
+\t\t\t\t\t\txhr.responseText = ta.value;\n
+\t\t\t\t\telse {\n
+\t\t\t\t\t\t// account for browsers injecting pre around json response\n
+\t\t\t\t\t\tvar pre = doc.getElementsByTagName(\'pre\')[0];\n
+\t\t\t\t\t\tif (pre)\n
+\t\t\t\t\t\t\txhr.responseText = pre.innerHTML;\n
+\t\t\t\t\t}\t\t\t  \n
+\t\t\t\t}\n
+\t\t\t\telse if (opts.dataType == \'xml\' && !xhr.responseXML && xhr.responseText != null) {\n
+\t\t\t\t\txhr.responseXML = toXml(xhr.responseText);\n
+\t\t\t\t}\n
+\t\t\t\tdata = $.httpData(xhr, opts.dataType);\n
+\t\t\t}\n
+\t\t\tcatch(e){\n
+\t\t\t\tlog(\'error caught:\',e);\n
+\t\t\t\tok = false;\n
+\t\t\t\txhr.error = e;\n
+\t\t\t\t$.handleError(opts, xhr, \'error\', e);\n
+\t\t\t}\n
+\n
+\t\t\t// ordering of these callbacks/triggers is odd, but that\'s how $.ajax does it\n
+\t\t\tif (ok) {\n
+\t\t\t\topts.success(data, \'success\');\n
+\t\t\t\tif (g) $.event.trigger("ajaxSuccess", [xhr, opts]);\n
+\t\t\t}\n
+\t\t\tif (g) $.event.trigger("ajaxComplete", [xhr, opts]);\n
+\t\t\tif (g && ! --$.active) $.event.trigger("ajaxStop");\n
+\t\t\tif (opts.complete) opts.complete(xhr, ok ? \'success\' : \'error\');\n
+\n
+\t\t\t// clean up\n
+\t\t\tsetTimeout(function() {\n
+\t\t\t\t$io.removeData(\'form-plugin-onload\');\n
+\t\t\t\t$io.remove();\n
+\t\t\t\txhr.responseXML = null;\n
+\t\t\t}, 100);\n
+\t\t};\n
+\n
+\t\tfunction toXml(s, doc) {\n
+\t\t\tif (window.ActiveXObject) {\n
+\t\t\t\tdoc = new ActiveXObject(\'Microsoft.XMLDOM\');\n
+\t\t\t\tdoc.async = \'false\';\n
+\t\t\t\tdoc.loadXML(s);\n
+\t\t\t}\n
+\t\t\telse\n
+\t\t\t\tdoc = (new DOMParser()).parseFromString(s, \'text/xml\');\n
+\t\t\treturn (doc && doc.documentElement && doc.documentElement.tagName != \'parsererror\') ? doc : null;\n
+\t\t};\n
+\t};\n
+};\n
+\n
+/**\n
+ * ajaxForm() provides a mechanism for fully automating form submission.\n
+ *\n
+ * The advantages of using this method instead of ajaxSubmit() are:\n
+ *\n
+ * 1: This method will include coordinates for <input type="image" /> elements (if the element\n
+ *\tis used to submit the form).\n
+ * 2. This method will include the submit element\'s name/value data (for the element that was\n
+ *\tused to submit the form).\n
+ * 3. This method binds the submit() method to the form for you.\n
+ *\n
+ * The options argument for ajaxForm works exactly as it does for ajaxSubmit.  ajaxForm merely\n
+ * passes the options argument along after properly binding events for submit elements and\n
+ * the form itself.\n
+ */\n
+$.fn.ajaxForm = function(options) {\n
+\treturn this.ajaxFormUnbind().bind(\'submit.form-plugin\', function(e) {\n
+\t\te.preventDefault();\n
+\t\t$(this).ajaxSubmit(options);\n
+\t}).bind(\'click.form-plugin\', function(e) {\n
+\t\tvar target = e.target;\n
+\t\tvar $el = $(target);\n
+\t\tif (!($el.is(":submit,input:image"))) {\n
+\t\t\t// is this a child element of the submit el?  (ex: a span within a button)\n
+\t\t\tvar t = $el.closest(\':submit\');\n
+\t\t\tif (t.length == 0)\n
+\t\t\t\treturn;\n
+\t\t\ttarget = t[0];\n
+\t\t}\n
+\t\tvar form = this;\n
+\t\tform.clk = target;\n
+\t\tif (target.type == \'image\') {\n
+\t\t\tif (e.offsetX != undefined) {\n
+\t\t\t\tform.clk_x = e.offsetX;\n
+\t\t\t\tform.clk_y = e.offsetY;\n
+\t\t\t} else if (typeof $.fn.offset == \'function\') { // try to use dimensions plugin\n
+\t\t\t\tvar offset = $el.offset();\n
+\t\t\t\tform.clk_x = e.pageX - offset.left;\n
+\t\t\t\tform.clk_y = e.pageY - offset.top;\n
+\t\t\t} else {\n
+\t\t\t\tform.clk_x = e.pageX - target.offsetLeft;\n
+\t\t\t\tform.clk_y = e.pageY - target.offsetTop;\n
+\t\t\t}\n
+\t\t}\n
+\t\t// clear form vars\n
+\t\tsetTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);\n
+\t});\n
+};\n
+\n
+// ajaxFormUnbind unbinds the event handlers that were bound by ajaxForm\n
+$.fn.ajaxFormUnbind = function() {\n
+\treturn this.unbind(\'submit.form-plugin click.form-plugin\');\n
+};\n
+\n
+/**\n
+ * formToArray() gathers form element data into an array of objects that can\n
+ * be passed to any of the following ajax functions: $.get, $.post, or load.\n
+ * Each object in the array has both a \'name\' and \'value\' property.  An example of\n
+ * an array for a simple login form might be:\n
+ *\n
+ * [ { name: \'username\', value: \'jresig\' }, { name: \'password\', value: \'secret\' } ]\n
+ *\n
+ * It is this array that is passed to pre-submit callback functions provided to the\n
+ * ajaxSubmit() and ajaxForm() methods.\n
+ */\n
+$.fn.formToArray = function(semantic) {\n
+\tvar a = [];\n
+\tif (this.length == 0) return a;\n
+\n
+\tvar form = this[0];\n
+\tvar els = semantic ? form.getElementsByTagName(\'*\') : form.elements;\n
+\tif (!els) return a;\n
+\tfor(var i=0, max=els.length; i < max; i++) {\n
+\t\tvar el = els[i];\n
+\t\tvar n = el.name;\n
+\t\tif (!n) continue;\n
+\n
+\t\tif (semantic && form.clk && el.type == "image") {\n
+\t\t\t// handle image inputs on the fly when semantic == true\n
+\t\t\tif(!el.disabled && form.clk == el) {\n
+\t\t\t\ta.push({name: n, value: $(el).val()});\n
+\t\t\t\ta.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
+\t\t\t}\n
+\t\t\tcontinue;\n
+\t\t}\n
+\n
+\t\tvar v = $.fieldValue(el, true);\n
+\t\tif (v && v.constructor == Array) {\n
+\t\t\tfor(var j=0, jmax=v.length; j < jmax; j++)\n
+\t\t\t\ta.push({name: n, value: v[j]});\n
+\t\t}\n
+\t\telse if (v !== null && typeof v != \'undefined\')\n
+\t\t\ta.push({name: n, value: v});\n
+\t}\n
+\n
+\tif (!semantic && form.clk) {\n
+\t\t// input type==\'image\' are not found in elements array! handle it here\n
+\t\tvar $input = $(form.clk), input = $input[0], n = input.name;\n
+\t\tif (n && !input.disabled && input.type == \'image\') {\n
+\t\t\ta.push({name: n, value: $input.val()});\n
+\t\t\ta.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
+\t\t}\n
+\t}\n
+\treturn a;\n
+};\n
+\n
+/**\n
+ * Serializes form data into a \'submittable\' string. This method will return a string\n
+ * in the format: name1=value1&amp;name2=value2\n
+ */\n
+$.fn.formSerialize = function(semantic) {\n
+\t//hand off to jQuery.param for proper encoding\n
+\treturn $.param(this.formToArray(semantic));\n
+};\n
+\n
+/**\n
+ * Serializes all field elements in the jQuery object into a query string.\n
+ * This method will return a string in the format: name1=value1&amp;name2=value2\n
+ */\n
+$.fn.fieldSerialize = function(successful) {\n
+\tvar a = [];\n
+\tthis.each(function() {\n
+\t\tvar n = this.name;\n
+\t\tif (!n) return;\n
+\t\tvar v = $.fieldValue(this, successful);\n
+\t\tif (v && v.constructor == Array) {\n
+\t\t\tfor (var i=0,max=v.length; i < max; i++)\n
+\t\t\t\ta.push({name: n, value: v[i]});\n
+\t\t}\n
+\t\telse if (v !== null && typeof v != \'undefined\')\n
+\t\t\ta.push({name: this.name, value: v});\n
+\t});\n
+\t//hand off to jQuery.param for proper encoding\n
+\treturn $.param(a);\n
+};\n
+\n
+/**\n
+ * Returns the value(s) of the element in the matched set.  For example, consider the following form:\n
+ *\n
+ *  <form><fieldset>\n
+ *\t  <input name="A" type="text" />\n
+ *\t  <input name="A" type="text" />\n
+ *\t  <input name="B" type="checkbox" value="B1" />\n
+ *\t  <input name="B" type="checkbox" value="B2"/>\n
+ *\t  <input name="C" type="radio" value="C1" />\n
+ *\t  <input name="C" type="radio" value="C2" />\n
+ *  </fieldset></form>\n
+ *\n
+ *  var v = $(\':text\').fieldValue();\n
+ *  // if no values are entered into the text inputs\n
+ *  v == [\'\',\'\']\n
+ *  // if values entered into the text inputs are \'foo\' and \'bar\'\n
+ *  v == [\'foo\',\'bar\']\n
+ *\n
+ *  var v = $(\':checkbox\').fieldValue();\n
+ *  // if neither checkbox is checked\n
+ *  v === undefined\n
+ *  // if both checkboxes are checked\n
+ *  v == [\'B1\', \'B2\']\n
+ *\n
+ *  var v = $(\':radio\').fieldValue();\n
+ *  // if neither radio is checked\n
+ *  v === undefined\n
+ *  // if first radio is checked\n
+ *  v == [\'C1\']\n
+ *\n
+ * The successful argument controls whether or not the field element must be \'successful\'\n
+ * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).\n
+ * The default value of the successful argument is true.  If this value is false the value(s)\n
+ * for each element is returned.\n
+ *\n
+ * Note: This method *always* returns an array.  If no valid value can be determined the\n
+ *\t   array will be empty, otherwise it will contain one or more values.\n
+ */\n
+$.fn.fieldValue = function(successful) {\n
+\tfor (var val=[], i=0, max=this.length; i < max; i++) {\n
+\t\tvar el = this[i];\n
+\t\tvar v = $.fieldValue(el, successful);\n
+\t\tif (v === null || typeof v == \'undefined\' || (v.constructor == Array && !v.length))\n
+\t\t\tcontinue;\n
+\t\tv.constructor == Array ? $.merge(val, v) : val.push(v);\n
+\t}\n
+\treturn val;\n
+};\n
+\n
+/**\n
+ * Returns the value of the field element.\n
+ */\n
+$.fieldValue = function(el, successful) {\n
+\tvar n = el.name, t = el.type, tag = el.tagName.toLowerCase();\n
+\tif (typeof successful == \'undefined\') successful = true;\n
+\n
+\tif (successful && (!n || el.disabled || t == \'reset\' || t == \'button\' ||\n
+\t\t(t == \'checkbox\' || t == \'radio\') && !el.checked ||\n
+\t\t(t == \'submit\' || t == \'image\') && el.form && el.form.clk != el ||\n
+\t\ttag == \'select\' && el.selectedIndex == -1))\n
+\t\t\treturn null;\n
+\n
+\tif (tag == \'select\') {\n
+\t\tvar index = el.selectedIndex;\n
+\t\tif (index < 0) return null;\n
+\t\tvar a = [], ops = el.options;\n
+\t\tvar one = (t == \'select-one\');\n
+\t\tvar max = (one ? index+1 : ops.length);\n
+\t\tfor(var i=(one ? index : 0); i < max; i++) {\n
+\t\t\tvar op = ops[i];\n
+\t\t\tif (op.selected) {\n
+\t\t\t\tvar v = op.value;\n
+\t\t\t\tif (!v) // extra pain for IE...\n
+\t\t\t\t\tv = (op.attributes && op.attributes[\'value\'] && !(op.attributes[\'value\'].specified)) ? op.text : op.value;\n
+\t\t\t\tif (one) return v;\n
+\t\t\t\ta.push(v);\n
+\t\t\t}\n
+\t\t}\n
+\t\treturn a;\n
+\t}\n
+\treturn el.value;\n
+};\n
+\n
+/**\n
+ * Clears the form data.  Takes the following actions on the form\'s input fields:\n
+ *  - input text fields will have their \'value\' property set to the empty string\n
+ *  - select elements will have their \'selectedIndex\' property set to -1\n
+ *  - checkbox and radio inputs will have their \'checked\' property set to false\n
+ *  - inputs of type submit, button, reset, and hidden will *not* be effected\n
+ *  - button elements will *not* be effected\n
+ */\n
+$.fn.clearForm = function() {\n
+\treturn this.each(function() {\n
+\t\t$(\'input,select,textarea\', this).clearFields();\n
+\t});\n
+};\n
+\n
+/**\n
+ * Clears the selected form elements.\n
+ */\n
+$.fn.clearFields = $.fn.clearInputs = function() {\n
+\treturn this.each(function() {\n
+\t\tvar t = this.type, tag = this.tagName.toLowerCase();\n
+\t\tif (t == \'text\' || t == \'password\' || tag == \'textarea\')\n
+\t\t\tthis.value = \'\';\n
+\t\telse if (t == \'checkbox\' || t == \'radio\')\n
+\t\t\tthis.checked = false;\n
+\t\telse if (tag == \'select\')\n
+\t\t\tthis.selectedIndex = -1;\n
+\t});\n
+};\n
+\n
+/**\n
+ * Resets the form data.  Causes all form elements to be reset to their original value.\n
+ */\n
+$.fn.resetForm = function() {\n
+\treturn this.each(function() {\n
+\t\t// guard against an input with the name of \'reset\'\n
+\t\t// note that IE reports the reset function as an \'object\'\n
+\t\tif (typeof this.reset == \'function\' || (typeof this.reset == \'object\' && !this.reset.nodeType))\n
+\t\t\tthis.reset();\n
+\t});\n
+};\n
+\n
+/**\n
+ * Enables or disables any matching elements.\n
+ */\n
+$.fn.enable = function(b) {\n
+\tif (b == undefined) b = true;\n
+\treturn this.each(function() {\n
+\t\tthis.disabled = !b;\n
+\t});\n
+};\n
+\n
+/**\n
+ * Checks/unchecks any matching checkboxes or radio buttons and\n
+ * selects/deselects and matching option elements.\n
+ */\n
+$.fn.selected = function(select) {\n
+\tif (select == undefined) select = true;\n
+\treturn this.each(function() {\n
+\t\tvar t = this.type;\n
+\t\tif (t == \'checkbox\' || t == \'radio\')\n
+\t\t\tthis.checked = select;\n
+\t\telse if (this.tagName.toLowerCase() == \'option\') {\n
+\t\t\tvar $sel = $(this).parent(\'select\');\n
+\t\t\tif (select && $sel[0] && $sel[0].type == \'select-one\') {\n
+\t\t\t\t// deselect all other options\n
+\t\t\t\t$sel.find(\'option\').selected(false);\n
+\t\t\t}\n
+\t\t\tthis.selected = select;\n
+\t\t}\n
+\t});\n
+};\n
+\n
+// helper fn for console logging\n
+// set $.fn.ajaxSubmit.debug to true to enable debug logging\n
+function log() {\n
+\tif ($.fn.ajaxSubmit.debug) {\n
+\t\tvar msg = \'[jquery.form] \' + Array.prototype.join.call(arguments,\'\');\n
+\t\tif (window.console && window.console.log)\n
+\t\t\twindow.console.log(msg);\n
+\t\telse if (window.opera && window.opera.postError)\n
+\t\t\twindow.opera.postError(msg);\n
+\t}\n
+};\n
+\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>20805</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>formplugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -30,10 +30,9 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Project import Project
 
-class Ticket(Movement, Project):
+class Ticket(Project):
     """
     A Ticket allows to track a sales process involving
     multilple Person and Organisations. It is a placeholder for
@@ -78,6 +77,6 @@ class Ticket(Movement, Project):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
-      """ Tickets are accountable.
+      """Tickets are accountable.
       """
       return 1

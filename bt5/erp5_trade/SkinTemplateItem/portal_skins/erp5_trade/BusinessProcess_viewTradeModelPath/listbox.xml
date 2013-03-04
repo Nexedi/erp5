@@ -10,8 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>editable_columns</string>
+                <string>lines</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
                 <string>sort</string>
@@ -77,6 +79,137 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_phase_title</string>
+                          <string>Trade Phase</string>
+                        </tuple>
+                        <tuple>
+                          <string>test_tales_expression</string>
+                          <string>Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_method_id</string>
+                          <string>Source Method Id</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Source Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Source Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_administration_title</string>
+                          <string>Source Administration</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_payment_title</string>
+                          <string>Source Payment</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Source Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Source Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_carrier_title</string>
+                          <string>Source Carrier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_function_title</string>
+                          <string>Source Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_funding_title</string>
+                          <string>Source Funding</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_method_id</string>
+                          <string>Destination Method Id</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Destination Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Destination Decision</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_administration_title</string>
+                          <string>Destination Administration</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_payment_title</string>
+                          <string>Destination Payment</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Destination Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Destination Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_carrier_title</string>
+                          <string>Destination Carrier</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_function_title</string>
+                          <string>Destination Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_funding_title</string>
+                          <string>Destination Funding</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Efficiency</string>
+                        </tuple>
+                        <tuple>
+                          <string>test_tales_expression</string>
+                          <string>Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -89,8 +222,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>trade_phase_title</string>
                           <string>Trade Phase</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>Efficiency</string>
                         </tuple>
                       </list>
                     </value>
@@ -113,6 +254,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>200</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

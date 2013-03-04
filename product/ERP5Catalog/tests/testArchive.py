@@ -167,29 +167,27 @@ class TestArchive(InventoryAPITestCase):
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
     
     # Create new connectors for destination
+    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
+      .manage_addZMySQLConnection
     self.new_connection_id = 'erp5_sql_connection1'
     db1, db2 = getExtraSqlConnectionStringList()[:2]
-    portal.manage_addZMySQLConnection(self.new_connection_id,'',
-                                      db1)
+    addSQLConnection(self.new_connection_id,'', db1)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
     # the deferred one
     self.new_deferred_connection_id = 'erp5_sql_connection2'
-    portal.manage_addZMySQLConnection(self.new_deferred_connection_id,'',
-                                      db1)
+    addSQLConnection(self.new_deferred_connection_id,'', db1)
     new_deferred_connection = portal[self.new_deferred_connection_id]
     new_deferred_connection.manage_open_connection()
 
     # Create new connectors for archive
     self.archive_connection_id = 'erp5_sql_connection3'
-    portal.manage_addZMySQLConnection(self.archive_connection_id,'',
-                                      db2)
+    addSQLConnection(self.archive_connection_id,'', db2)
     archive_connection = portal[self.archive_connection_id]
     archive_connection.manage_open_connection()
     # the deferred one
     self.archive_deferred_connection_id = 'erp5_sql_connection4'
-    portal.manage_addZMySQLConnection(self.archive_deferred_connection_id,'',
-                                      db2)
+    addSQLConnection(self.archive_deferred_connection_id,'', db2)
     archive_deferred_connection = portal[self.archive_deferred_connection_id]
     archive_deferred_connection.manage_open_connection()
 

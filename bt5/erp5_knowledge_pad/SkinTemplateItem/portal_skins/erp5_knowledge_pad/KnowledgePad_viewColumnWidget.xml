@@ -84,7 +84,7 @@
 \n
       <h3 class="handle">\n
         <span class="handle">\n
-        <tal:block tal:condition="python: not (is_anonymous_user or is_anonymous_knowledge_pad_used)">\n
+        <tal:block tal:condition="python: not (is_anonymous_user and is_anonymous_knowledge_pad_used)">\n
           <a class="clickable-block block-remove" \n
              i18n:translate="" \n
              i18n:domain="ui"\n

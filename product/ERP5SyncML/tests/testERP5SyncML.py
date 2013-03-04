@@ -100,7 +100,6 @@ class TestERP5SyncMLMixin(TestMixin):
 
   def beforeTearDown(self):
     """Clean up."""
-    # type informations
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
     self.clearFiles()
     self.getSynchronizationTool().manage_delObjects(

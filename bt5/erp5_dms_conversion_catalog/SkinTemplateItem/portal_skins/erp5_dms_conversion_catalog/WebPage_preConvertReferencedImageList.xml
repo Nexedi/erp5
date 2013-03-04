@@ -85,11 +85,11 @@ for image_url in image_url_list:\n
       convert_string = part_list[1]\n
 \n
       # check we have locally such a reference so we can convert it\n
-      kw = {\'portal_type\': portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList(),\n
-            \'reference\': reference,\n
-            \'validation_state\': validation_state}\n
+      catalog_kw = {\'portal_type\': portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList(),\n
+                    \'reference\': reference,\n
+                    \'validation_state\': validation_state}\n
 \n
-      document = portal.portal_catalog.getResultValue(**kw)\n
+      document = portal.portal_catalog.getResultValue(**catalog_kw)\n
       if document is not None:\n
         # try to pre convert it based on extracted URL\'s arguments\n
         convert_kw = convertUrlArgumentsToDict(convert_string)\n
@@ -107,9 +107,14 @@ for image_url in image_url_list:\n
             if key not in API_ARGUMENT_LIST:\n
               convert_kw.pop(key)\n
 \n
+          # due to API we need certain arguments\n
+          if convert_kw.get(\'quality\') is None:\n
+            convert_kw[\'quality\'] = kw.get(\'quality\')\n
+\n
           # do real conversion\n
           format = convert_kw.get(\'format\')\n
-          if format not in MARKER:\n
+          quality = convert_kw.get(\'quality\')\n
+          if format not in MARKER and quality not in MARKER:\n
             # format is mandatory if it\'s missing then anyway URL request will fail so\n
             # don\'t bother create an activity\n
             document.activate(priority=4, tag="conversion").Base_callPreConvert(**convert_kw)\n

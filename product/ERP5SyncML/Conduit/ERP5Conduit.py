@@ -437,12 +437,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = new_data
       if isinstance(data, unicode):
         data = data.encode(self.getEncoding())
-      if keyword == 'binary_data':
-        #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
-        msg = MIMEBase('application','octet-stream')
-        encoders.encode_base64(msg)
-        msg.set_payload(data)
-        data = msg.get_payload(decode=True)
       new_args[keyword] = data
     return new_args
 
@@ -941,7 +935,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
   def addWorkflowNode(self, object, xml, simulate):
     """
-    This allows to specify how to handle the workflow informations.
+    This allows to specify how to handle the workflow information.
     This is really usefull if you want to write your own Conduit.
     """
     conflict_list = []
@@ -975,7 +969,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
   def addLocalRoleNode(self, object, xml):
     """
-    This allows to specify how to handle the local role informations.
+    This allows to specify how to handle the local role information.
     This is really usefull if you want to write your own Conduit.
     """
     # We want to add a local role

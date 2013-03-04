@@ -108,22 +108,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       """
       return self.getParentValue().getRootDeliveryValue()
 
-    # Simulation Consistency Check
-    def getSimulationQuantity(self):
-      """
-          Computes the quantities in the simulation
-      """
-      if isinstance(self, OrderLine):
-        result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].quantity
-        return None
-      else:
-        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].quantity
-        return None
-
     security.declareProtected( Permissions.ModifyPortalContent,
                                'notifyAfterUpdateRelatedContent' )
     def notifyAfterUpdateRelatedContent(self, previous_category_url,
@@ -186,5 +170,5 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getQuantityUnit')
-    def getQuantityUnit(self):
-      return self.getParentValue().getQuantityUnit()
+    def getQuantityUnit(self, checked_permission=None):
+      return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)

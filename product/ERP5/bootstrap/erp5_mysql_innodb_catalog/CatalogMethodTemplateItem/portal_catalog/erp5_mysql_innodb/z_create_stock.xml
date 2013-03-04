@@ -59,16 +59,20 @@
 CREATE TABLE `stock` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `order_id` TINYINT UNSIGNED NOT NULL,\n
+  `explanation_uid` BIGINT UNSIGNED,\n
   `node_uid` BIGINT UNSIGNED,\n
   `section_uid` BIGINT UNSIGNED,\n
   `payment_uid` BIGINT UNSIGNED,\n
   `function_uid` BIGINT UNSIGNED,\n
   `project_uid` BIGINT UNSIGNED,\n
+  `funding_uid` BIGINT UNSIGNED,\n
+  `payment_request_uid` BIGINT UNSIGNED,\n
   `mirror_section_uid` BIGINT UNSIGNED,\n
   `mirror_node_uid` BIGINT UNSIGNED,\n
   `resource_uid` BIGINT UNSIGNED,\n
   `quantity` real,\n
   `is_cancellation` BOOLEAN,\n
+  `is_accountable` BOOLEAN,\n
   `date` datetime,\n
   `mirror_date` datetime,\n
   `total_price` real ,\n
@@ -85,6 +89,7 @@ CREATE TABLE `stock` (\n
   KEY `payment_uid` (`payment_uid`),\n
   KEY `function_uid` (`function_uid`),\n
   KEY `project_uid` (`project_uid`),\n
+  KEY `funding_uid` (`funding_uid`),\n
   KEY `simulation_state` (`simulation_state`),\n
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n

@@ -91,12 +91,20 @@ if function:\n
   if function == \'None\':\n
     inventory_params[\'function_uid\'] = Query(function_uid=None)\n
   else:\n
-    inventory_params[\'function_category\'] = function\n
+    function_value = portal.restrictedTraverse(function, None)\n
+    if function_value is not None and function_value.getPortalType() != \'Category\':\n
+      inventory_params[\'function_uid\'] = function_value.getUid()\n
+    else:\n
+      inventory_params[\'function_category\'] = function\n
 if funding:\n
   if funding == \'None\':\n
     inventory_params[\'funding_uid\'] = Query(funding_uid=None)\n
   else:\n
-    inventory_params[\'funding_category\'] = funding\n
+    funding_value = portal.restrictedTraverse(funding, None)\n
+    if funding_value is not None and funding_value.getPortalType() != \'Category\':\n
+      inventory_params[\'funding_uid\'] = funding_value.getUid()\n
+    else:\n
+      inventory_params[\'funding_category\'] = funding\n
 if project:\n
   if project == \'None\':\n
     inventory_params[\'project_uid\'] = Query(project_uid=None)\n

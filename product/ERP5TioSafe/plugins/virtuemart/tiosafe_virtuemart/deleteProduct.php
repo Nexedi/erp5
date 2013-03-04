@@ -17,7 +17,7 @@
   // Generate the query
   if ($product_id != "") {
 
-    // Delete the customer informations
+    // Delete the customer information
     $req_delete = "DELETE FROM ".constant('_VM_TABLE_PREFIX_')."_product WHERE product_id=".$product_id."";
     executeSQL($req_delete);
     // Delete the relationship with #_vm_price

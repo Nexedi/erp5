@@ -3,6 +3,8 @@ alarm_date
 catalog.creation_date
 catalog.modification_date
 creation_date
+grouping_date
+catalog.grouping_date
 date
 delivery.start_date
 delivery.start_date_range_max
@@ -10,14 +12,9 @@ delivery.start_date_range_min
 delivery.stop_date
 delivery.stop_date_range_max
 delivery.stop_date_range_min
-inventory.date
-inventory_stock.date
-inventory_stock.mirror_date
 item.date
 mirror_date
 modification_date
-movement.start_date
-movement.stop_date
 predicate.start_date
 predicate.start_date_range_max
 predicate.start_date_range_min

@@ -29,6 +29,7 @@
 
 import unittest
 from lxml import etree
+import textwrap
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -162,12 +163,12 @@ class TestListBox(ERP5TypeTestCase):
         portal.portal_skins.custom,
         list_method_id,
         'selection=None, sort_on=None, **kw',
-r"""
-if sort_on != [('title', 'ASC'), ('uid', 'ASC')]:
-  raise AssertionError('sort_on is %r' % sort_on)
-return []
-""")
- 
+        textwrap.dedent(r"""
+        if sort_on != [('title', 'ASC'), ('uid', 'ASC')]:
+          raise AssertionError('sort_on is %r' % sort_on)
+        return []
+        """))
+
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
@@ -175,7 +176,7 @@ return []
       field_count_method = '',
       field_sort = 'title | ASC\n'
                    'uid | ASC',)
-    
+
     # render the listbox, checks are done by list method itself
     request = get_request()
     request['here'] = portal.foo_module
@@ -194,31 +195,32 @@ return []
         portal.portal_skins.custom,
         list_method_id,
         'selection=None, dummy_default_param=None, **kw',
-"""
-if dummy_default_param != 'dummy value':
-  raise AssertionError('recieved wrong arguments: %s instead of "dummy value"'
-                        % dummy_default_param )
-return []
-""")
- 
+        textwrap.dedent(
+        """
+        if dummy_default_param != 'dummy value':
+          raise AssertionError('recieved wrong arguments: %s instead of "dummy value"'
+                                % dummy_default_param )
+        return []
+        """))
+
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
       field_count_method = '',
       field_default_params = 'dummy_default_param | dummy value',)
-    
+
     # render the listbox, checks are done by list method itself
     request = get_request()
     request['here'] = portal.foo_module
     listbox.get_value('default', render_format='list', REQUEST=request)
 
   def test_04_UnicodeParameters(self, quiet=0, run=run_all_test):
-    """Unicode properties are handled. 
+    """Unicode properties are handled.
     """
     portal = self.getPortal()
     portal.ListBoxZuite_reset()
-    
+
     # We create a script to use as a list method
     list_method_id = 'ListBox_ParametersListMethod'
     createZODBPythonScript(
@@ -226,14 +228,14 @@ return []
         list_method_id,
         'selection=None, **kw',
         """return [context.asContext(alternate_title = u'\xe9lisa')]""")
- 
+
     # set the listbox to use this as list method
     listbox = portal.FooModule_viewFooList.listbox
     listbox.ListBox_setPropertyList(
       field_list_method = list_method_id,
       field_count_method = '',
       field_columns = ['alternate_title | Alternate Title',],)
-    
+
     request = get_request()
     request['here'] = portal.foo_module
     try:
@@ -503,14 +505,14 @@ return []
       field_editable_columns = ['title | title'],
       field_columns = ['title | Title',],)
     form.manage_addField('listbox_title', 'Title', 'StringField')
-    
+
     createZODBPythonScript(
         portal.portal_skins.custom,
         list_method_id,
         'selection=None, **kw',
         "from Products.PythonScripts.standard import Object\n"
         "return [Object(uid='new_', title='Object Title')]")
-    
+
     request = get_request()
     request['here'] = portal.foo_module
     line_list = [l for l in listbox.get_value('default',
@@ -531,7 +533,7 @@ return []
     listbox.ListBox_setPropertyList(
       field_list_method='contentValues',
       field_columns=['listbox_value | Title',],)
-    
+
     # create a form, to store our proxy field inside
     portal._setObject('Test_view',
                       ERP5Form('Test_view', 'View'))
@@ -544,7 +546,7 @@ return []
     # this proxy field will not delegate its "columns" value
     proxy_field._surcharged_edit(dict(columns=[('proxy_value', 'Proxy')]),
                                 ['columns'])
-    
+
     request = get_request()
     request['here'] = portal.foo_module
     line_list = proxy_field.get_value('default',
@@ -584,7 +586,8 @@ return []
                        renderer.getSelectedColumnList())
 
     # default(no list_style)
-    self.assertEqual(getListBoxRenderer(listbox).getDefaultDisplayStyle(), getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertEqual(getListBoxRenderer(listbox).getDefaultDisplayStyle(),
+      getListBoxRenderer(listbox).getListboxDisplayStyle())
     self.assertSameSet([('id', u'ID'), ('title', u'Title'), ('getQuantity', u'Quantity')],
                          getListBoxRenderer(listbox).getSelectedColumnList())
 
@@ -620,7 +623,7 @@ return []
     request.set('list_style', 'table')
     self.assertSameSet([('id', u'ID'), ('title', u'Title'), ('getQuantity', u'Quantity')],
                          getListBoxRenderer(listbox).getSelectedColumnList())
-  
+
   def test_ListboxRequestParameterPropagandation(self):
     """
       Test that rendering a listbox field will set respective form & field_id of current form

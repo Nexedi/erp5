@@ -163,7 +163,7 @@ properties_structure[\'base\'][\'planning_box\']  = planning_dict\n
 \n
 \n
 \n
-# recovering axis CSS class informations\n
+# recovering axis CSS class information\n
 for axis in (planning.Y, planning.X):\n
   axis_depth = None\n
   axis_dict= {\n
@@ -173,7 +173,7 @@ for axis in (planning.Y, planning.X):\n
     \'border-width\': 0,\n
     \'background\': \'inherit\',\n
   }\n
-  # adding cursors position informations\n
+  # adding cursors position information\n
   axis_previous = {\n
     \'position\': \'absolute\',\n
     \'border-width\': 0,\n

@@ -50,17 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Guess a grouping references for lines whose uids are passed as\n
+            <value> <string>"""Guess a grouping references for lines whose uids are passed as\n
 accounting_transaction_line_uid_list.\n
 If accounting_transaction_line_uid_list is not passed, this script assumes that\n
-it\'s called on the context of an accounting transaction and it guess the group\n
-of accounting transaction using causality relations.\n
+it\'s called on the context of an accounting transaction and it guess the grouping\n
+of related accounting transactions using causality.\n
 """\n
 \n
-# this dict associates (node, section, mirror_section) to a list of\n
-# accounting lines info (ie total_price and path).\n
+from Products.ERP5Type.Utils import int2letter\n
+\n
+# this dict associates (node, section, mirror_section,\n
+# extra_grouping_parameter) to a list of\n
+# accounting lines info (total_price, date and path).\n
 lines_per_node = {}\n
 \n
 portal = context.getPortalObject()\n
@@ -68,15 +69,6 @@ ctool = portal.portal_catalog\n
 \n
 allow_grouping_with_different_quantity = portal.portal_preferences.getPreference(\n
                                          \'preferred_grouping_with_different_quantities\', 0)\n
-\n
-def int2letter(i):\n
-  """Convert an integer to letters, to use as a grouping reference code.\n
-  A, B, C ..., Z, AA, AB, ..., AZ, BA, ..., ZZ, AAA ...\n
-  """\n
-  if i < 26:\n
-    return (chr(i + ord(\'A\')))\n
-  d, m = divmod(i, 26)\n
-  return int2letter(d - 1) + int2letter(m)\n
 \n
 \n
 accounting_transaction_line_value_list = []\n
@@ -107,8 +99,11 @@ for line in accounting_transaction_line_value_list:\n
     lines_per_node.setdefault(\n
                   (line.getSource(portal_type=\'Account\'),\n
                    section_relative_url,\n
-                   line.getDestinationSection(), ), []).append(\n
+                   line.getDestinationSection(),\n
+                   line.AccountingTransactionLine_getGroupingExtraParameterList(source=True),\n
+                   ), []).append(\n
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,\n
+           date=line.getStartDate(),\n
            path=line.getRelativeUrl()))\n
   else:\n
     section_relative_url = None\n
@@ -121,12 +116,15 @@ for line in accounting_transaction_line_value_list:\n
     lines_per_node.setdefault(\n
               (line.getDestination(portal_type=\'Account\'),\n
                section_relative_url,\n
-               line.getSourceSection(), ), []).append(\n
+               line.getSourceSection(),\n
+                   line.AccountingTransactionLine_getGroupingExtraParameterList(source=False),\n
+               ), []).append(\n
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,\n
+         date=line.getStopDate(),\n
          path=line.getRelativeUrl()))\n
 \n
-changed_lines = []\n
-for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
+changed_line_list = []\n
+for (node, section, mirror_section, extra_parameter), line_info_list in lines_per_node.items():\n
   if node is None:\n
     continue\n
   total_price = sum([l[\'total_price\'] for l in line_info_list])\n
@@ -143,20 +141,23 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
     grouping_reference = portal.portal_ids.generateNewId(id_generator=\'uid\',\n
                                                   id_group=id_group,\n
                                                   default=previous_default + 1)\n
-    \n
+\n
     # convert from int to letters\n
     string_reference = int2letter(grouping_reference)\n
 \n
+    # get the grouping date\n
+    date = max([line[\'date\'] for line in line_info_list])\n
+\n
     for line in line_info_list:\n
       line_obj = portal.restrictedTraverse(line[\'path\'])\n
+      assert not line_obj.getGroupingReference(), line\n
       line_obj.setGroupingReference(string_reference)\n
+      line_obj.setGroupingDate(date)\n
       line_obj.reindexObject(activate_kw=dict(tag=\'accounting_grouping_reference\'))\n
-      changed_lines.append(line[\'path\'])\n
+      changed_line_list.append(line[\'path\'])\n
 \n
-return changed_lines\n
-
-
-]]></string> </value>
+return changed_line_list\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

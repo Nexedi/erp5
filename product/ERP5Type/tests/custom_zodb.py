@@ -1,5 +1,6 @@
 import errno
 import os
+import subprocess
 import shutil
 import signal
 import socket
@@ -46,9 +47,8 @@ if save_mysql:
     # faster, so this produce somewhat not nice to read sql
     command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
-      _print('Dumping MySQL database with %s...' % command)
-    ret = os.system(command)
-    assert not ret
+      _print('Dumping MySQL database with %s ...' % command)
+    subprocess.check_call(command, shell=True)
 
 _print("Cleaning static files ... ")
 for static_dir in static_dir_list:
@@ -61,9 +61,9 @@ for static_dir in static_dir_list:
 if load:
   if save_mysql:
     if os.path.exists(dump_sql_path):
-      _print("Restoring MySQL database ... ")
-      ret = os.system("mysql %s < %s" % (getMySQLArguments(), dump_sql_path))
-      assert not ret
+      command = "mysql %s < %s" % (getMySQLArguments(), dump_sql_path)
+      _print("Restoring MySQL database with %s ... " % command)
+      subprocess.check_call(command, shell=True)
     else:
       _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'

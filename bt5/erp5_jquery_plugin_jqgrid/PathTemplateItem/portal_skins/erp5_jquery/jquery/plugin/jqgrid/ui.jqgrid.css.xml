@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts30690424.51</string> </value>
+            <value> <string>ts58176310.37</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -25,8 +25,8 @@
         <item>
             <key> <string>data</string> </key>
             <value> <string>/*Grid*/\r\n
-.ui-jqgrid {position: relative; font-size:11px;}\r\n
-.ui-jqgrid .ui-jqgrid-view {position: relative;left:0px; top: 0px; padding: .0em;}\r\n
+.ui-jqgrid {position: relative;}\r\n
+.ui-jqgrid .ui-jqgrid-view {position: relative;left:0px; top: 0px; padding: .0em; font-size:11px;}\r\n
 /* caption*/\r\n
 .ui-jqgrid .ui-jqgrid-titlebar {padding: .3em .2em .2em .3em; position: relative; border-left: 0px none;border-right: 0px none; border-top: 0px none;}\r\n
 .ui-jqgrid .ui-jqgrid-title { float: left; margin: .1em 0 .2em; }\r\n
@@ -66,7 +66,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqgrid tr.ui-row-ltr td {text-align:left;border-right-width: 1px; border-right-color: inherit; border-right-style: solid;}\r\n
 .ui-jqgrid tr.ui-row-rtl td {text-align:right;border-left-width: 1px; border-left-color: inherit; border-left-style: solid;}\r\n
 .ui-jqgrid td.jqgrid-rownum { padding: 0 2px 0 2px; margin: 0px; border: 0px none;}\r\n
-.ui-jqgrid .ui-jqgrid-resize-mark { width:2px; left:0; background-color:#777; cursor: e-resize; cursor: col-resize; position:absolute; top:0; height:100px; overflow:hidden; display:none;\tborder:0 none;}\r\n
+.ui-jqgrid .ui-jqgrid-resize-mark { width:2px; left:0; background-color:#777; cursor: e-resize; cursor: col-resize; position:absolute; top:0; height:100px; overflow:hidden; display:none; border:0 none; z-index: 99999;}\r\n
 /* footer */\r\n
 .ui-jqgrid .ui-jqgrid-sdiv {position: relative; margin: 0em;padding: 0em; overflow: hidden; border-left: 0px none !important; border-top : 0px none !important; border-right : 0px none !important;}\r\n
 .ui-jqgrid .ui-jqgrid-ftable {table-layout:fixed; margin-bottom:0em;}\r\n
@@ -74,7 +74,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqgrid tr.footrow-ltr td {text-align:left;border-right-width: 1px; border-right-color: inherit; border-right-style: solid;}\r\n
 .ui-jqgrid tr.footrow-rtl td {text-align:right;border-left-width: 1px; border-left-color: inherit; border-left-style: solid;}\r\n
 /* Pager*/\r\n
-.ui-jqgrid .ui-jqgrid-pager { border-left: 0px none !important;border-right: 0px none !important; border-bottom: 0px none !important; margin: 0px !important; padding: 0px !important; position: relative; height: 25px;white-space: nowrap;overflow: hidden;}\r\n
+.ui-jqgrid .ui-jqgrid-pager { border-left: 0px none !important;border-right: 0px none !important; border-bottom: 0px none !important; margin: 0px !important; padding: 0px !important; position: relative; height: 25px;white-space: nowrap;overflow: hidden;font-size:11px;}\r\n
 .ui-jqgrid .ui-pager-control {position: relative;}\r\n
 .ui-jqgrid .ui-pg-table {position: relative; padding-bottom:2px; width:auto; margin: 0em;}\r\n
 .ui-jqgrid .ui-pg-table td {font-weight:normal; vertical-align:middle; padding:1px;}\r\n
@@ -86,12 +86,15 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqgrid .ui-pg-selbox {font-size:.8em; line-height:18px; display:block; height:18px; margin: 0em;}\r\n
 .ui-jqgrid .ui-separator {height: 18px; border-left: 1px solid #ccc ; border-right: 1px solid #ccc ; margin: 1px; float: right;}\r\n
 .ui-jqgrid .ui-paging-info {font-weight: normal;height:19px; margin-top:3px;margin-right:4px;}\r\n
-.ui-jqgrid .ui-jqgrid-pager .ui-pg-div {padding:1px 0;float:left;list-style-image:none;list-style-position:outside;list-style-type:none;position:relative;}\r\n
+.ui-jqgrid .ui-jqgrid-pager .ui-pg-div {padding:1px 0;float:left;position:relative;}\r\n
 .ui-jqgrid .ui-jqgrid-pager .ui-pg-button { cursor:pointer; }\r\n
 .ui-jqgrid .ui-jqgrid-pager .ui-pg-div  span.ui-icon {float:left;margin:0 2px;}\r\n
 .ui-jqgrid td input, .ui-jqgrid td select .ui-jqgrid td textarea { margin: 0em;}\r\n
 .ui-jqgrid td textarea {width:auto;height:auto;}\r\n
 .ui-jqgrid .ui-jqgrid-toppager {border-left: 0px none !important;border-right: 0px none !important; border-top: 0px none !important; margin: 0px !important; padding: 0px !important; position: relative; height: 25px !important;white-space: nowrap;overflow: hidden;}\r\n
+.ui-jqgrid .ui-jqgrid-toppager .ui-pg-div {padding:1px 0;float:left;position:relative;}\r\n
+.ui-jqgrid .ui-jqgrid-toppager .ui-pg-button { cursor:pointer; }\r\n
+.ui-jqgrid .ui-jqgrid-toppager .ui-pg-div  span.ui-icon {float:left;margin:0 2px;}\r\n
 /*subgrid*/\r\n
 .ui-jqgrid .ui-jqgrid-btable .ui-sgcollapsed span {display: block;}\r\n
 .ui-jqgrid .ui-subgrid {margin:0em;padding:0em; width:100%;}\r\n
@@ -101,7 +104,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqgrid .ui-subgrid td.subgrid-cell {border-width: 0px 0px 1px 0px;}\r\n
 .ui-jqgrid .ui-th-subgrid {height:20px;}\r\n
 /* loading */\r\n
-.ui-jqgrid .loading {position: absolute; top: 45%;left: 45%;width: auto;z-index:101;padding: 6px; margin: 5px;text-align: center;font-weight: bold;display: none;border-width: 2px !important;}\r\n
+.ui-jqgrid .loading {position: absolute; top: 45%;left: 45%;width: auto;z-index:101;padding: 6px; margin: 5px;text-align: center;font-weight: bold;display: none;border-width: 2px !important; font-size:11px;}\r\n
 .ui-jqgrid .jqgrid-overlay {display:none;z-index:100;}\r\n
 * html .jqgrid-overlay {width: expression(this.parentNode.offsetWidth+\'px\');height: expression(this.parentNode.offsetHeight+\'px\');}\r\n
 * .jqgrid-overlay iframe {position:absolute;top:0;left:0;z-index:-1;width: expression(this.parentNode.offsetWidth+\'px\');height: expression(this.parentNode.offsetHeight+\'px\');}\r\n
@@ -130,7 +133,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqdialog-content input.FormElement {padding:.3em}\r\n
 .ui-jqdialog-content .data-line {padding-top:.1em;border: 0px none;}\r\n
 \r\n
-.ui-jqdialog-content .CaptionTD {text-align: left; vertical-align: middle;border: 0px none; padding: 2px;white-space: nowrap;}\r\n
+.ui-jqdialog-content .CaptionTD {vertical-align: middle;border: 0px none; padding: 2px;white-space: nowrap;}\r\n
 .ui-jqdialog-content .DataTD {padding: 2px; border: 0px none; vertical-align: top;}\r\n
 .ui-jqdialog-content .form-view-data {white-space:pre}\r\n
 .fm-button { display: inline-block; margin:0 4px 0 0; padding: .4em .5em; text-decoration:none !important; cursor:pointer; position: relative; text-align: center; zoom: 1; }\r\n
@@ -142,6 +145,11 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 /* End Eorm edit */\r\n
 /*.ui-jqgrid .edit-cell {}*/\r\n
 .ui-jqgrid .selected-row, div.ui-jqgrid .selected-row td {font-style : normal;border-left: 0px none;}\r\n
+/* inline edit actions button*/\r\n
+.ui-inline-del.ui-state-hover span, .ui-inline-edit.ui-state-hover span,\r\n
+.ui-inline-save.ui-state-hover span, .ui-inline-cancel.ui-state-hover span {\r\n
+    margin: -1px;\r\n
+}\r\n
 /* Tree Grid */\r\n
 .ui-jqgrid .tree-wrap {float: left; position: relative;height: 18px;white-space: nowrap;overflow: hidden;}\r\n
 .ui-jqgrid .tree-minus {position: absolute; height: 18px; width: 18px; overflow: hidden;}\r\n
@@ -159,7 +167,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
 .ui-jqgrid .ui-sort-rtl {left:0px;}\r\n
 .ui-jqgrid .tree-wrap-ltr {float: left;}\r\n
 .ui-jqgrid .tree-wrap-rtl {float: right;}\r\n
-.ui-jqgrid .ui-ellipsis {text-overflow:ellipsis; -moz-binding:url(\'ellipsis-xbl.xml#ellipsis\');}\r\n
+.ui-jqgrid .ui-ellipsis {text-overflow:ellipsis;}\r\n
 </string> </value>
         </item>
         <item>
@@ -168,7 +176,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>11841</int> </value>
+            <value> <int>12198</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

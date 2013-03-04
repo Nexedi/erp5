@@ -214,6 +214,8 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
 # Logging
 #####################################################
 
+warnings.simplefilter("default")
+
 def _showwarning(message, category, filename, lineno, file=None, line=None):
   if file is None:
     LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),

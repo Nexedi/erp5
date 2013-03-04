@@ -81,15 +81,10 @@ class ContainerLine(DeliveryLine):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
+      """Return True if this movement diverges from the its simulation.
+      Container Lines are never divergent.
       """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
-      """
-      # Never divergent
-      return 0
+      return False
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self):
@@ -99,7 +94,5 @@ class ContainerLine(DeliveryLine):
       base_id = 'movement'
       if not self.hasCellContent(base_id=base_id):
         return self.getQuantity()
-      else:
-        # Use MySQL
-        aggregate = self.ContainerLine_zGetTotal()[0]
-        return aggregate.total_quantity or 0.0
+      return sum(cell.getQuantity() for cell in
+        self.getCellValueList(base_id=base_id))

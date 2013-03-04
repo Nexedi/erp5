@@ -791,8 +791,8 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=300.0)))
 
   @todo_erp5
-  def test_Resource_zGetInventoryList(self):
-    # TODO: Fix Resource_zGetInventoryList so that we don't need to workaround
+  def test_Resource_zGetMovementHistoryList(self):
+    # TODO: Fix Resource_zGetMovementHistoryList so that we don't need to workaround
     #       new behaviour of MariaDB.
     #       Indeed, https://bugs.launchpad.net/maria/+bug/985828 has been marked
     #       as WONTFIX.
@@ -1011,6 +1011,170 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertNotEquals('Previous Balance',
           data_line_list[0].getColumnProperty('Movement_getSpecificReference'))
+
+
+  def createHideGroupingDataSet(self):
+    account_module = self.account_module
+    # before the date
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              simulation_state='delivered',
+              start_date=DateTime(2006, 1, 1),
+              lines=(dict(source_value=account_module.equity,
+                          source_debit=100),
+                     dict(source_value=account_module.stocks,
+                          source_credit=100)))
+
+    first = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Grouped during period',
+              simulation_state='delivered',
+              reference='1',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          grouping_reference='A',
+                          grouping_date=DateTime(2006, 2, 2),
+                          source_debit=119.60),
+                     dict(source_value=account_module.collected_vat,
+                          source_credit=19.60),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=100.00)))
+
+    second = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Grouped after period',
+              simulation_state='delivered',
+              reference='ref2',
+              source_reference='2',
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2006, 2, 3),
+              lines=(dict(source_value=account_module.receivable,
+                          grouping_reference='B',
+                          grouping_date=DateTime(2006, 3, 2),
+                          source_debit=239.20),
+                     dict(source_value=account_module.collected_vat,
+                          source_credit=39.20),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=200.00)))
+
+  def testAccountStatementHideGrouping(self):
+    """Simple test for hide grouping on account statement.
+    """
+    self.createHideGroupingDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['at_date'] = DateTime(2006, 3, 1)
+    request_form['section_category'] = 'group/demo_group/sub1'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['omit_grouping_reference'] = True
+
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 1 transactions, because 1st is grouped during the period.
+    self.assertEquals(1, len(data_line_list))
+
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['Movement_getSpecificReference', 'date',
+         'Movement_getExplanationTitle', 'Movement_getMirrorSectionTitle',
+         'Movement_getExplanationReference',
+         'debit_price', 'credit_price', 'running_total_price'])
+
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='2',
+                             Movement_getExplanationReference='ref2',
+                             date=DateTime(2006, 2, 3),
+                             Movement_getExplanationTitle='Grouped after period',
+                             Movement_getMirrorSectionTitle='Client 2',
+                             debit_price=239.20,
+                             credit_price=0,
+                             running_total_price=239.20)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+                             Movement_getSpecificReference=None,
+                             date=None,
+                             Movement_getExplanationTitle=None,
+                             Movement_getMirrorSectionTitle=None,
+                             # The bottom line remain the same as when showing
+                             # grouped lines
+                             debit_price=358.80,
+                             credit_price=0,
+                             running_total_price=None)
+
+  def testGeneralLedgerHideGrouping(self):
+    # similar to testAccountStatementHideGrouping, but in general ledger.
+    self.createHideGroupingDataSet()
+
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 3, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['gap_list'] = ['my_country/my_accounting_standards/4/41']
+    request_form['omit_grouping_reference'] = True
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    # Except the stat, we only have one report section, because Client 1 is
+    # grouped in the period.
+    self.assertEquals(2, len(report_section_list))
+
+    self.assertEquals('41 - Receivable (Client 2)',
+                      report_section_list[0].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+
+    # report layout
+    self.assertEquals(['Movement_getSpecificReference',
+        'Movement_getExplanationTitle', 'date',
+        'Movement_getExplanationTranslatedPortalType',
+        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
+        'debit_price', 'credit_price', 'running_total_price'],
+        data_line_list[0].column_id_list)
+
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='2',
+          Movement_getExplanationTitle='Grouped after period',
+          date=DateTime(2006, 2, 3),
+          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
+          Movement_getExplanationReference='ref2',
+          Movement_getMirrorSectionTitle='Client 2',
+          debit_price=239.20, credit_price=0, running_total_price=239.20, )
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          Movement_getSpecificReference=None,
+          Movement_getExplanationTitle=None,
+          date=None,
+          Movement_getExplanationTranslatedPortalType=None,
+          Movement_getExplanationReference=None,
+          Movement_getMirrorSectionTitle=None,
+          debit_price=239.20, credit_price=0, )
+
+    self.assertEquals('Total', report_section_list[1].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # report layout
+    self.assertEquals(['debit_price', 'credit_price'], data_line_list[0].column_id_list)
+    self.assertEquals(1, len(data_line_list))
+
+    # The bottom line remain the same as when showing grouped lines
+    self.checkLineProperties(data_line_list[0], debit_price=358.80, credit_price=0)
 
 
   def testAccountStatementFromDateDetailedSummary(self):
@@ -3730,7 +3894,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['omit_balanced_accounts'] = False
-    request_form['omit_grouped_references'] = True
+    request_form['omit_grouping_reference'] = True
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,

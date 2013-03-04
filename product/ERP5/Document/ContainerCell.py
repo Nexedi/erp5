@@ -72,12 +72,7 @@ class ContainerCell(DeliveryCell):
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
+      """Return True if this movement diverges from the its simulation.
+      Container Cells are never divergent.
       """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
-      """
-      # Never divergent
-      return 0
+      return False

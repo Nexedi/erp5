@@ -46,14 +46,6 @@ class TaskDistributionTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, *args, **kw):
-    BaseTool.__init__(self, *args, **kw)
-    # XXX Cache information about running test results, because the protocol
-    #     is synchronous and we can't rely on the catalog.
-    #     This is a hack until a better (and asynchronous) protocol is
-    #     implemented.
-    self.test_result_dict = {}
-
   security.declarePublic('getProtocolRevision')
   def getProtocolRevision(self):
     """
@@ -86,13 +78,9 @@ class TaskDistributionTool(BaseTool):
       -> (test_result_path, revision) or None if already completed
     """
     LOG('createTestResult', 0, (name, revision, test_title, project_title))
-    self._p_changed = 1
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
-    test_result_path, line_dict = self.test_result_dict.get(
-         test_title, ('', {}))
-    duration_dict = {}
     def createNode(test_result, node_title):
       if node_title is not None:
         node = self._getTestResultNode(test_result, node_title)
@@ -100,9 +88,10 @@ class TaskDistributionTool(BaseTool):
           node = test_result.newContent(portal_type='Test Result Node',
                                  title=node_title)
           node.start()
-    def createTestResultLineList(test_result, test_name_list, line_dict):
+    def createTestResultLineList(test_result, test_name_list):
+      duration_list = []
       previous_test_result_list = portal.test_result_module.searchFolder(
-             title='=%s' % test_result.getTitle(),
+             title='="%s"' % test_result.getTitle(),
              sort_on=[('creation_date','descending')],
              simulation_state='stopped',
              limit=1)
@@ -110,11 +99,19 @@ class TaskDistributionTool(BaseTool):
         previous_test_result = previous_test_result_list[0].getObject()
         for line in previous_test_result.objectValues():
           if line.getSimulationState() == 'stopped':
-            duration_dict[line.getTitle()] = line.getProperty('duration')
+            duration_list.append((line.getTitle(),line.getProperty('duration')))
+      duration_list.sort(key=lambda x: -x[1])
+      sorted_test_list = [x[0] for x in duration_list]
       for test_name in test_name_list:
+        index = 0
+        if sorted_test_list:
+          try:
+            index = sorted_test_list.index(test_name)
+          except ValueError:
+            pass
         line = test_result.newContent(portal_type='Test Result Line',
-                                      title=test_name)
-        line_dict[line.getId()] = duration_dict.get(test_name)
+                                      title=test_name,
+                                      int_index=index)
     reference_list_string = None
     if type(revision) is str and '=' in revision:
       reference_list_string = revision
@@ -125,14 +122,14 @@ class TaskDistributionTool(BaseTool):
     else:
       # backward compatibility
       int_index, reference = revision
-    test_result = None
-    if test_result_path:
-      test_result = portal.unrestrictedTraverse(test_result_path, None)
-      if test_result is None or test_result.getSimulationState() in \
-               ('cancelled', 'failed'):
-        del self.test_result_dict[test_title]
-        line_dict = {}
-      else:
+    result_list = portal.test_result_module.searchFolder(
+                         portal_type="Test Result",
+                         title='="%s"' % test_title,
+                         sort_on=(("creation_date","descending"),),
+                         limit=1)
+    if result_list:
+      test_result = result_list[0].getObject()
+      if test_result is not None:
         last_state = test_result.getSimulationState()
         last_revision = str(test_result.getIntIndex())
         if last_state == 'started':
@@ -142,12 +139,15 @@ class TaskDistributionTool(BaseTool):
             last_revision = reference
           elif reference:
             last_revision = last_revision, reference
-          if len(line_dict) == 0 and len(test_name_list):
-            createTestResultLineList(test_result, test_name_list, line_dict)
-          return test_result_path, last_revision
-        if last_state == 'stopped':
+          if len(test_result.objectValues(portal_type="Test Result Line")) == 0 \
+              and len(test_name_list):
+            test_result.serialize() # prevent duplicate test result lines
+            createTestResultLineList(test_result, test_name_list)
+          return test_result.getRelativeUrl(), last_revision
+        if last_state in ('stopped',):
           if reference_list_string is not None:
-            if reference_list_string == test_result.getReference():
+            if reference_list_string == test_result.getReference() \
+                and not allow_restart:
               return
           elif last_revision == int_index and not allow_restart:
             return
@@ -155,24 +155,25 @@ class TaskDistributionTool(BaseTool):
       portal_type='Test Result',
       title=test_title,
       reference=reference,
-      predecessor=test_result_path)
+      is_indexable=False)
     if int_index is not None:
-      test_result.setIntIndex(int_index)
+      test_result._setIntIndex(int_index)
     if project_title is not None:
       project_list = portal.portal_catalog(portal_type='Project',
                                            title='="%s"' % project_title)
-      if len(project_list) == 1:
-        test_result.setSourceProjectValue(project_list[0].getObject())
-      else:
+      if len(project_list) != 1:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))
+      test_result._setSourceProjectValue(project_list[0].getObject())
     test_result.updateLocalRolesOnSecurityGroups() # XXX
-    test_result_path = test_result.getRelativeUrl()
-    self.test_result_dict[test_title] = test_result_path, line_dict
     test_result.start()
-    createTestResultLineList(test_result, test_name_list, line_dict)
+    del test_result.isIndexable
+    test_result.immediateReindexObject()
+    self.serialize() # prevent duplicate test result
+    # following 2 functions only call 'newContent' on test_result
+    createTestResultLineList(test_result, test_name_list)
     createNode(test_result, node_title)
-    return test_result_path, revision
+    return test_result.getRelativeUrl(), revision
 
   security.declarePublic('startUnitTest')
   def startUnitTest(self, test_result_path, exclude_list=()):
@@ -187,12 +188,9 @@ class TaskDistributionTool(BaseTool):
     test_result = portal.restrictedTraverse(test_result_path)
     if test_result.getSimulationState() != 'started':
       return
-    path, line_dict = self.test_result_dict[test_result.getTitle()]
-    assert path == test_result_path
     started_list = []
-    for line_id, duration in sorted(line_dict.iteritems(),
-                                    key=lambda x: x[1], reverse=1):
-      line = test_result[line_id]
+    for line in test_result.objectValues(portal_type="Test Result Line",
+                                         sort_on=[("int_index","ascending")]):
       test = line.getTitle()
       if test not in exclude_list:
         state = line.getSimulationState()
@@ -217,16 +215,12 @@ class TaskDistributionTool(BaseTool):
     portal = self.getPortalObject()
     line = portal.restrictedTraverse(test_path)
     test_result = line.getParentValue()
-    path, line_dict = self.test_result_dict[test_result.getTitle()]
     if test_result.getSimulationState() == 'started':
-      assert path == test_result.getRelativeUrl()
-      line_id = line.getId()
-      if line_id in line_dict:
+      if line.getSimulationState() == "started":
         line.stop(**status_dict)
-        del line_dict[line_id]
-        self._p_changed = 1
-        if not line_dict:
-          test_result.stop()
+      if set([x.getSimulationState() for x in test_result.objectValues(
+                portal_type="Test Result Line")]) == set(["stopped"]):
+        test_result.stop()
 
   def _extractXMLRPCDict(self, xmlrpc_dict):
     """
@@ -251,7 +245,8 @@ class TaskDistributionTool(BaseTool):
       if node.getSimulationState() != 'failed':
         break
     else:
-      test_result.fail()
+      if test_result.getSimulationState() not in ('failed', 'cancelled'):
+        test_result.fail()
 
   security.declarePublic('reportTaskStatus')
   def reportTaskStatus(self, test_result_path, status_dict, node_title):

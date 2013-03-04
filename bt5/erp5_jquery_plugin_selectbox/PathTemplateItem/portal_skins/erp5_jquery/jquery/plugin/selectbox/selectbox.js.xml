@@ -1,0 +1,460 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts55758072.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>selectbox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * jQuery Selectbox plugin 0.1.3\n
+ *\n
+ * Copyright 2011, Dimitar Ivanov (http://www.bulgaria-web-developers.com/projects/javascript/selectbox/)\n
+ * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.\n
+ * \n
+ * Date: Wed Jul 29 23:20:57 2011 +0200\n
+ */\n
+(function ($, undefined) {\n
+\tvar PROP_NAME = \'selectbox\',\n
+\t\tFALSE = false,\n
+\t\tTRUE = true;\n
+\t/**\n
+\t * Selectbox manager.\n
+\t * Use the singleton instance of this class, $.selectbox, to interact with the select box.\n
+\t * Settings for (groups of) select boxes are maintained in an instance object,\n
+\t * allowing multiple different settings on the same page\n
+\t */\n
+\tfunction Selectbox() {\n
+\t\tthis._state = [];\n
+\t\tthis._defaults = { // Global defaults for all the select box instances\n
+\t\t\tclassHolder: "sbHolder",\n
+\t\t\tclassHolderDisabled: "sbHolderDisabled",\n
+\t\t\tclassSelector: "sbSelector",\n
+\t\t\tclassOptions: "sbOptions",\n
+\t\t\tclassGroup: "sbGroup",\n
+\t\t\tclassSub: "sbSub",\n
+\t\t\tclassDisabled: "sbDisabled",\n
+\t\t\tclassToggleOpen: "sbToggleOpen",\n
+\t\t\tclassToggle: "sbToggle",\n
+\t\t\tspeed: 200,\n
+\t\t\teffect: "slide", // "slide" or "fade"\n
+\t\t\tonChange: null, //Define a callback function when the selectbox is changed\n
+\t\t\tonOpen: null, //Define a callback function when the selectbox is open\n
+\t\t\tonClose: null //Define a callback function when the selectbox is closed\n
+\t\t};\n
+\t}\n
+\t\n
+\t$.extend(Selectbox.prototype, {\n
+\t\t/**\n
+\t\t * Is the first field in a jQuery collection open as a selectbox\n
+\t\t * \n
+\t\t * @param {Object} target\n
+\t\t * @return {Boolean}\n
+\t\t */\n
+\t\t_isOpenSelectbox: function (target) {\n
+\t\t\tif (!target) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\treturn inst.isOpen;\n
+\t\t},\n
+\t\t/**\n
+\t\t * Is the first field in a jQuery collection disabled as a selectbox\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @return {Boolean}\n
+\t\t */\n
+\t\t_isDisabledSelectbox: function (target) {\n
+\t\t\tif (!target) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\treturn inst.isDisabled;\n
+\t\t},\n
+\t\t/**\n
+\t\t * Attach the select box to a jQuery selection.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @param {Object} settings\n
+\t\t */\n
+\t\t_attachSelectbox: function (target, settings) {\n
+\t\t\tif (this._getInst(target)) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\tvar $target = $(target),\n
+\t\t\t\tself = this,\n
+\t\t\t\tinst = self._newInst($target),\n
+\t\t\t\tsbHolder, sbSelector, sbToggle, sbOptions,\n
+\t\t\t\ts = FALSE, optGroup = $target.find("optgroup"), opts = $target.find("option"), olen = opts.length;\n
+\t\t\t\t\n
+\t\t\t$target.attr("sb", inst.uid);\n
+\t\t\t\t\n
+\t\t\t$.extend(inst.settings, self._defaults, settings);\n
+\t\t\tself._state[inst.uid] = FALSE;\n
+\t\t\t$target.hide();\n
+\t\t\t\n
+\t\t\tfunction closeOthers() {\n
+\t\t\t\tvar key, uid = this.attr("id").split("_")[1];\n
+\t\t\t\tfor (key in self._state) {\n
+\t\t\t\t\tif (key !== uid) {\n
+\t\t\t\t\t\tif (self._state.hasOwnProperty(key)) {\n
+\t\t\t\t\t\t\tif ($(":input[sb=\'" + key + "\']")[0]) {\n
+\t\t\t\t\t\t\t\tself._closeSelectbox($(":input[sb=\'" + key + "\']")[0]);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tsbHolder = $("<div>", {\n
+\t\t\t\t"id": "sbHolder_" + inst.uid,\n
+\t\t\t\t"class": inst.settings.classHolder\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tsbSelector = $("<a>", {\n
+\t\t\t\t"id": "sbSelector_" + inst.uid,\n
+\t\t\t\t"href": "#",\n
+\t\t\t\t"class": inst.settings.classSelector,\n
+\t\t\t\t"click": function (e) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\tcloseOthers.apply($(this), []);\n
+\t\t\t\t\tvar uid = $(this).attr("id").split("_")[1];\n
+\t\t\t\t\tif (self._state[uid]) {\n
+\t\t\t\t\t\tself._closeSelectbox(target);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself._openSelectbox(target);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tsbToggle = $("<a>", {\n
+\t\t\t\t"id": "sbToggle_" + inst.uid,\n
+\t\t\t\t"href": "#",\n
+\t\t\t\t"class": inst.settings.classToggle,\n
+\t\t\t\t"click": function (e) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\tcloseOthers.apply($(this), []);\n
+\t\t\t\t\tvar uid = $(this).attr("id").split("_")[1];\n
+\t\t\t\t\tif (self._state[uid]) {\n
+\t\t\t\t\t\tself._closeSelectbox(target);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself._openSelectbox(target);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\tsbToggle.appendTo(sbHolder);\n
+\n
+\t\t\tsbOptions = $("<ul>", {\n
+\t\t\t\t"id": "sbOptions_" + inst.uid,\n
+\t\t\t\t"class": inst.settings.classOptions,\n
+\t\t\t\t"css": {\n
+\t\t\t\t\t"display": "none"\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\t$target.children().each(function(i) {\n
+\t\t\t\tvar that = $(this), li, config = {};\n
+\t\t\t\tif (that.is("option")) {\n
+\t\t\t\t\tgetOptions(that);\n
+\t\t\t\t} else if (that.is("optgroup")) {\n
+\t\t\t\t\tli = $("<li>");\n
+\t\t\t\t\t$("<span>", {\n
+\t\t\t\t\t\t"text": that.attr("label")\n
+\t\t\t\t\t}).addClass(inst.settings.classGroup).appendTo(li);\n
+\t\t\t\t\tli.appendTo(sbOptions);\n
+\t\t\t\t\tif (that.is(":disabled")) {\n
+\t\t\t\t\t\tconfig.disabled = true;\n
+\t\t\t\t\t}\n
+\t\t\t\t\tconfig.sub = true;\n
+\t\t\t\t\tgetOptions(that.find("option"), config);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tfunction getOptions () {\n
+\t\t\t\tvar sub = arguments[1] && arguments[1].sub ? true : false,\n
+\t\t\t\t\tdisabled = arguments[1] && arguments[1].disabled ? true : false;\n
+\t\t\t\targuments[0].each(function (i) {\n
+\t\t\t\t\tvar that = $(this),\n
+\t\t\t\t\t\tli = $("<li>"),\n
+\t\t\t\t\t\tchild;\n
+\t\t\t\t\tif (that.is(":selected")) {\n
+\t\t\t\t\t\tsbSelector.text(that.text());\n
+\t\t\t\t\t\ts = TRUE;\n
+\t\t\t\t\t}\n
+\t\t\t\t\tif (i === olen - 1) {\n
+\t\t\t\t\t\tli.addClass("last");\n
+\t\t\t\t\t}\n
+\t\t\t\t\tif (!that.is(":disabled") && !disabled) {\n
+\t\t\t\t\t\tchild = $("<a>", {\n
+\t\t\t\t\t\t\t"href": "#" + that.val(),\n
+\t\t\t\t\t\t\t"rel": that.val(), \n
+\t\t\t\t\t\t\t"text": that.text(),\n
+\t\t\t\t\t\t\t"click": function (e) {\n
+\t\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\t\tvar t = sbToggle,\n
+\t\t\t\t\t\t\t\t\tuid = t.attr("id").split("_")[1];\n
+\t\t\t\t\t\t\t\tself._changeSelectbox(target, $(this).attr("rel"), $(this).text());\n
+\t\t\t\t\t\t\t\tself._closeSelectbox(target);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tif (sub) {\n
+\t\t\t\t\t\t\tchild.addClass(inst.settings.classSub);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tchild.appendTo(li);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tchild = $("<span>", {\n
+\t\t\t\t\t\t\t"text": that.text()\n
+\t\t\t\t\t\t}).addClass(inst.settings.classDisabled);\n
+\t\t\t\t\t\tif (sub) {\n
+\t\t\t\t\t\t\tchild.addClass(inst.settings.classSub);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tchild.appendTo(li);\n
+\t\t\t\t\t}\n
+\t\t\t\t\tli.appendTo(sbOptions);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif (!s) {\n
+\t\t\t\tsbSelector.text(opts.first().text());\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t\t\n
+\t\t\tsbSelector.appendTo(sbHolder);\n
+\t\t\tsbOptions.appendTo(sbHolder);\t\t\t\n
+\t\t\tsbHolder.insertAfter($target);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Remove the selectbox functionality completely. This will return the element back to its pre-init state.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t */\n
+\t\t_detachSelectbox: function (target) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\tif (!inst) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\t$("#sbHolder_" + inst.uid).remove();\n
+\t\t\t$.data(target, PROP_NAME, null);\n
+\t\t\t$(target).show();\t\t\t\n
+\t\t},\n
+\t\t/**\n
+\t\t * Change selected attribute of the selectbox.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @param {String} value\n
+\t\t * @param {String} text\n
+\t\t */\n
+\t\t_changeSelectbox: function (target, value, text) {\n
+\t\t\tvar inst = this._getInst(target),\n
+\t\t\t\tonChange = this._get(inst, \'onChange\');\n
+\t\t\t$("#sbSelector_" + inst.uid).text(text);\n
+\t\t\t$(target).find("option[value=\'" + value + "\']").attr("selected", TRUE);\n
+\t\t\tif (onChange) {\n
+\t\t\t\tonChange.apply((inst.input ? inst.input[0] : null), [value, inst]);\n
+\t\t\t} else if (inst.input) {\n
+\t\t\t\tinst.input.trigger(\'change\');\n
+\t\t\t}\n
+\t\t},\n
+\t\t/**\n
+\t\t * Enable the selectbox.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t */\n
+\t\t_enableSelectbox: function (target) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\tif (!inst || !inst.isDisabled) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\t$("#sbHolder_" + inst.uid).removeClass(inst.settings.classHolderDisabled);\n
+\t\t\tinst.isDisabled = FALSE;\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Disable the selectbox.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t */\n
+\t\t_disableSelectbox: function (target) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\tif (!inst || inst.isDisabled) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\t$("#sbHolder_" + inst.uid).addClass(inst.settings.classHolderDisabled);\n
+\t\t\tinst.isDisabled = TRUE;\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Get or set any selectbox option. If no value is specified, will act as a getter.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @param {String} name\n
+\t\t * @param {Object} value\n
+\t\t */\n
+\t\t_optionSelectbox: function (target, name, value) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\tif (!inst) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\t\t\t//TODO check name\n
+\t\t\tinst[name] = value;\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Call up attached selectbox\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t */\n
+\t\t_openSelectbox: function (target) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\t//if (!inst || this._state[inst.uid] || inst.isDisabled) {\n
+\t\t\tif (!inst || inst.isOpen || inst.isDisabled) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\tvar\tel = $("#sbOptions_" + inst.uid),\n
+\t\t\t\tviewportHeight = parseInt($(window).height(), 10),\n
+\t\t\t\toffset = $("#sbHolder_" + inst.uid).offset(),\n
+\t\t\t\tscrollTop = $(window).scrollTop(),\n
+\t\t\t\theight = el.prev().height(),\n
+\t\t\t\tdiff = viewportHeight - (offset.top - scrollTop) - height / 2,\n
+\t\t\t\tonOpen = this._get(inst, \'onOpen\');\n
+\t\t\tel.css({\n
+\t\t\t\t"top": height + "px",\n
+\t\t\t\t"maxHeight": (diff - height) + "px"\n
+\t\t\t});\n
+\t\t\tinst.settings.effect === "fade" ? el.fadeIn(inst.settings.speed) : el.slideDown(inst.settings.speed);\n
+\t\t\t$("#sbToggle_" + inst.uid).addClass(inst.settings.classToggleOpen);\n
+\t\t\tthis._state[inst.uid] = TRUE;\n
+\t\t\tinst.isOpen = TRUE;\n
+\t\t\tif (onOpen) {\n
+\t\t\t\tonOpen.apply((inst.input ? inst.input[0] : null), [inst]);\n
+\t\t\t}\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Close opened selectbox\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t */\n
+\t\t_closeSelectbox: function (target) {\n
+\t\t\tvar inst = this._getInst(target);\n
+\t\t\t//if (!inst || !this._state[inst.uid]) {\n
+\t\t\tif (!inst || !inst.isOpen) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\tvar onClose = this._get(inst, \'onClose\');\n
+\t\t\tinst.settings.effect === "fade" ? $("#sbOptions_" + inst.uid).fadeOut(inst.settings.speed) : $("#sbOptions_" + inst.uid).slideUp(inst.settings.speed);\n
+\t\t\t$("#sbToggle_" + inst.uid).removeClass(inst.settings.classToggleOpen);\n
+\t\t\tthis._state[inst.uid] = FALSE;\n
+\t\t\tinst.isOpen = FALSE;\n
+\t\t\tif (onClose) {\n
+\t\t\t\tonClose.apply((inst.input ? inst.input[0] : null), [inst]);\n
+\t\t\t}\n
+\t\t\t$.data(target, PROP_NAME, inst);\n
+\t\t},\n
+\t\t/**\n
+\t\t * Create a new instance object\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @return {Object}\n
+\t\t */\n
+\t\t_newInst: function(target) {\n
+\t\t\tvar id = target[0].id.replace(/([^A-Za-z0-9_-])/g, \'\\\\\\\\$1\');\n
+\t\t\treturn {\n
+\t\t\t\tid: id, \n
+\t\t\t\tinput: target, \n
+\t\t\t\tuid: Math.floor(Math.random() * 99999999),\n
+\t\t\t\tisOpen: FALSE,\n
+\t\t\t\tisDisabled: FALSE,\n
+\t\t\t\tsettings: {}\n
+\t\t\t}; \n
+\t\t},\n
+\t\t/**\n
+\t\t * Retrieve the instance data for the target control.\n
+\t\t * \n
+\t\t * @param {HTMLElement} target\n
+\t\t * @return {Object} - the associated instance data\n
+\t\t * @throws error if a jQuery problem getting data\n
+\t\t */\n
+\t\t_getInst: function(target) {\n
+\t\t\ttry {\n
+\t\t\t\treturn $.data(target, PROP_NAME);\n
+\t\t\t}\n
+\t\t\tcatch (err) {\n
+\t\t\t\tthrow \'Missing instance data for this selectbox\';\n
+\t\t\t}\n
+\t\t},\n
+\t\t/**\n
+\t\t * Get a setting value, defaulting if necessary\n
+\t\t * \n
+\t\t * @param {Object} inst\n
+\t\t * @param {String} name\n
+\t\t * @return {Mixed}\n
+\t\t */\n
+\t\t_get: function(inst, name) {\n
+\t\t\treturn inst.settings[name] !== undefined ? inst.settings[name] : this._defaults[name];\n
+\t\t}\n
+\t});\n
+\n
+\t/**\n
+\t * Invoke the selectbox functionality.\n
+\t * \n
+\t * @param {Object|String} options\n
+\t * @return {Object}\n
+\t */\n
+\t$.fn.selectbox = function (options) {\n
+\t\t\n
+\t\tvar otherArgs = Array.prototype.slice.call(arguments, 1);\n
+\t\tif (typeof options == \'string\' && options == \'isDisabled\') {\n
+\t\t\treturn $.selectbox[\'_\' + options + \'Selectbox\'].apply($.selectbox, [this[0]].concat(otherArgs));\n
+\t\t}\n
+\t\t\n
+\t\tif (options == \'option\' && arguments.length == 2 && typeof arguments[1] == \'string\') {\n
+\t\t\treturn $.selectbox[\'_\' + options + \'Selectbox\'].apply($.selectbox, [this[0]].concat(otherArgs));\n
+\t\t}\n
+\t\t\n
+\t\treturn this.each(function() {\n
+\t\t\ttypeof options == \'string\' ?\n
+\t\t\t\t$.selectbox[\'_\' + options + \'Selectbox\'].apply($.selectbox, [this].concat(otherArgs)) :\n
+\t\t\t\t$.selectbox._attachSelectbox(this, options);\n
+\t\t});\n
+\t};\n
+\t\n
+\t$.selectbox = new Selectbox(); // singleton instance\n
+\t$.selectbox.version = "0.1.3";\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11612</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>selectbox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

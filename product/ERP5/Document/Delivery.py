@@ -87,41 +87,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
       return 1
 
-    # Pricing methods
-    def _getTotalPrice(self, context):
-      return 2.0
-
-    def _getDefaultTotalPrice(self, context):
-      return 3.0
-
-    def _getSourceTotalPrice(self, context):
-      return 4.0
-
-    def _getDestinationTotalPrice(self, context):
-      return 5.0
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalPrice')
-    def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDefaultTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalPrice')
-    def getSourceTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getSourceTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalPrice')
-    def getDestinationTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDestinationTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getTotalPrice')
     def getTotalPrice(self, fast=0, src__=0, base_contribution=None, rounding=False, **kw):
       """ Returns the total price for this order
+
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the price, otherwise it sums the total
         price of objects one by one.
@@ -129,49 +99,51 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         So if the order is not in the catalog, getTotalPrice(fast=1)
         will return 0, this is not a bug.
 
-        base_contribution must be a relative url of a category.
+        base_contribution must be a relative url of a category. If passed, then
+        fast parameter is ignored.
       """
       result = None
-      if not fast:
-        kw.setdefault( 'portal_type',
-                       self.getPortalDeliveryMovementTypeList())
-        if base_contribution is None:
-          result = sum([ line.getTotalPrice(fast=0) for line in
-                         self.objectValues(**kw) ])
-        else:
-          # Find amounts from movements in the delivery.
-          if isinstance(base_contribution, (tuple, list)):
-            base_contribution_list = base_contribution
-          else:
-            base_contribution_list = (base_contribution,)
-          base_contribution_value_list = []
-          portal_categories = self.portal_categories
-          for relative_url in base_contribution_list:
-            base_contribution_value = portal_categories.getCategoryValue(relative_url)
-            if base_contribution_value is not None:
-              base_contribution_value_list.append(base_contribution_value)
-          if not base_contribution_value_list:
-            # We cannot find any amount so that the result is 0.
-            result = 0
-          else:
-            matched_movement_list = [
-                movement
-                for movement in self.getMovementList()
-                if set(movement.getBaseContributionValueList()).intersection(base_contribution_value_list)]
-            if rounding:
-              portal_roundings = self.portal_roundings
-              matched_movement_list = [
-                  portal_roundings.getRoundingProxy(movement)
-                  for movement in matched_movement_list]
-            result = sum([movement.getTotalPrice()
-                          for movement in matched_movement_list])
+      kw.setdefault( 'portal_type',
+                     self.getPortalDeliveryMovementTypeList())
+      if base_contribution is None:
+        if fast:
+          # XXX fast ignores base_contribution for now, but it should be possible
+          # to use a related key
+          kw['section_uid'] = self.getDestinationSectionUid()
+          kw['stock.explanation_uid'] = self.getUid()
+          return self.getPortalObject()\
+            .portal_simulation.getInventoryAssetPrice(**kw)
+
+        result = sum([ line.getTotalPrice(fast=0) for line in
+                       self.objectValues(**kw) ])
       else:
-        kw['explanation_uid'] = self.getUid()
-        kw.update(self.portal_catalog.buildSQLQuery(**kw))
-        if src__:
-          return self.Delivery_zGetTotal(src__=1, **kw)
-        aggregate = self.Delivery_zGetTotal(**kw)[0]
-        result = aggregate.total_price or 0
+        # Find amounts from movements in the delivery.
+        if isinstance(base_contribution, (tuple, list)):
+          base_contribution_list = base_contribution
+        else:
+          base_contribution_list = (base_contribution,)
+        base_contribution_value_list = []
+        portal_categories = self.portal_categories
+        for relative_url in base_contribution_list:
+          base_contribution_value = portal_categories.getCategoryValue(relative_url)
+          if base_contribution_value is not None:
+            base_contribution_value_list.append(base_contribution_value)
+        if not base_contribution_value_list:
+          # We cannot find any amount so that the result is 0.
+          result = 0
+        else:
+          matched_movement_list = [
+              movement
+              for movement in self.getMovementList()
+              if set(movement.getBaseContributionValueList()).intersection(base_contribution_value_list)]
+          if rounding:
+            portal_roundings = self.portal_roundings
+            matched_movement_list = [
+                portal_roundings.getRoundingProxy(movement)
+                for movement in matched_movement_list]
+          result = sum([movement.getTotalPrice()
+                        for movement in matched_movement_list])
+
       method = self._getTypeBasedMethod('convertTotalPrice')
       if method is not None:
         return method(result)
@@ -181,7 +153,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                               'getTotalNetPrice')
     def getTotalNetPrice(self, fast=0, src__=0, **kw):
       """
-        Same as getTotalPrice, but including Tax and Discount.
+        Same as getTotalPrice, but including Tax and Discount (from legacy
+        simulation).
+
+        This method is deprecated because it uses deprecated Tax & Discount
+        portal types. You should use getTotalPrice(base_contribution=) instead.
       """
       total_price = self.getTotalPrice(fast=fast, src__=src__, **kw)
       kw['portal_type'] = self.getPortalTaxMovementTypeList()
@@ -191,6 +167,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                               'getTotalQuantity')
     def getTotalQuantity(self, fast=0, src__=0, **kw):
       """ Returns the total quantity of this order.
+
         if the `fast` argument is set to a true value, then it use
         SQLCatalog to compute the quantity, otherwise it sums the total
         quantity of objects one by one.
@@ -198,17 +175,14 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         So if the order is not in the catalog, getTotalQuantity(fast=1)
         will return 0, this is not a bug.
       """
-      if not fast :
-        kw.setdefault('portal_type',
-                      self.getPortalDeliveryMovementTypeList())
-        return sum([ line.getTotalQuantity(fast=0) for line in
-                        self.objectValues(**kw) ])
-      kw['explanation_uid'] = self.getUid()
-      kw.update(self.portal_catalog.buildSQLQuery(**kw))
-      if src__:
-        return self.Delivery_zGetTotal(src__=1, **kw)
-      aggregate = self.Delivery_zGetTotal(**kw)[0]
-      return aggregate.total_quantity or 0
+      kw.setdefault('portal_type',
+                    self.getPortalDeliveryMovementTypeList())
+      if fast:
+        kw['section_uid'] = self.getDestinationSectionUid()
+        kw['stock.explanation_uid'] = self.getUid()
+        return self.getPortalObject().portal_simulation.getInventory(**kw)
+      return sum([ line.getTotalQuantity(fast=0) for line in
+                      self.objectValues(**kw) ])
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDeliveryUid')
@@ -330,7 +304,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """
         Returns 0 if the target is not met
       """
-      return int(not self.isDivergent(**kw))
+      return bool(not self.isDivergent(**kw))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
     def isSimulated(self):
@@ -345,20 +319,15 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self, fast=0, **kw):
-      """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
+      """Return True if this movement diverges from the its simulation.
       """
       ## Note that fast option was removed. Now, fast=1 is ignored.
-      
+
       # Check if the total quantity equals the total of each simulation movement quantity
       for simulation_movement in self._getAllRelatedSimulationMovementList():
         if simulation_movement.isDivergent():
-          return 1
-      return 0
+          return True
+      return False
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self, **kw):
@@ -394,6 +363,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       if calculate:
         path = self.getPath()
         self.activate(
+          # after_tag to built: could be removed
           after_tag=('built:'+path, 'expand:'+path),
           after_path_and_method_id=(path, '_localBuild'),
           ).updateCausalityState()
@@ -713,6 +683,10 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         after_tag = [after_tag]
       else:
         after_tag = list(after_tag) if after_tag else []
+      # Now that 'delivery' category relation are indexed in ZODB, this is the
+      # only method that depends on built: tag (via _updateSimulation), which
+      # is still required because builders only use catalog to find buildable
+      # movements and we don't want to miss any for local building.
       after_tag.append('expand:' + self.getPath())
       sm = getSecurityManager()
       newSecurityManager(None, nobody)
@@ -857,12 +831,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
       return disconnected_simulation_movement_list
 
-    def _getAllRelatedSimulationMovementList(self, **kw):
-      movement_uid_list = [x.getUid() for x in self.getMovementList()]
-      return movement_uid_list and \
-        self.getPortalObject().portal_catalog.unrestrictedSearchResults(
-          portal_type='Simulation Movement',
-          delivery_uid=movement_uid_list, **kw)
+    def _getAllRelatedSimulationMovementList(self):
+      result = []
+      for movement in self.getMovementList():
+        result += movement.getDeliveryRelatedValueList()
+      return result
 
     def getDivergentTesterAndSimulationMovementList(self):
       """

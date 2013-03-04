@@ -149,17 +149,17 @@ class MovementGroupNode:
       property_list = []
       if len(divergence_list):
         divergence_scope = self._movement_group.getDivergenceScope()
-        if divergence_scope is None:
-          # Update anyway (eg. CausalityAssignmentMovementGroup etc.)
-          pass
-        else:
-          related_divergence_list = [
-            x for x in divergence_list \
-            if divergence_scope == x.divergence_scope and \
-            self.hasSimulationMovement(x.simulation_movement)]
-          if not len(related_divergence_list):
+        if divergence_scope is not None:
+          for divergence in divergence_list:
+            if (divergence_scope == getattr(divergence, 'divergence_scope',
+                                            # assume match if missing
+                                            # (e.g. for new simulation)
+                                            divergence_scope) and
+                self.hasSimulationMovement(divergence.simulation_movement)):
+              property_list.append(divergence.tested_property)
+          if not property_list:
             return True, {}
-          property_list = [x.tested_property for x in related_divergence_list]
+        # else update anyway (eg. CausalityAssignmentMovementGroup etc.)
       return self._movement_group.test(movement, self._property_dict,
                                                property_list=property_list)
     else:

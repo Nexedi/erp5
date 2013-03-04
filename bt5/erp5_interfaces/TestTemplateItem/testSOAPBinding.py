@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import urllib
 import SOAPpy
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Document.SOAPBinding import SOAPBinding

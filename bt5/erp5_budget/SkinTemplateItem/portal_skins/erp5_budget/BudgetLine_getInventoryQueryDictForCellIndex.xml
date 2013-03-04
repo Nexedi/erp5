@@ -72,12 +72,15 @@ if budget_cell is None:\n
 kw = budget_model.getInventoryQueryDict(budget_cell)\n
 \n
 if engaged_budget:\n
-  kw.setdefault(\'explanation_simulation_state\',\n
+  kw.setdefault(\'stock_explanation_simulation_state\',\n
                   portal.getPortalReservedInventoryStateList() +\n
                   portal.getPortalCurrentInventoryStateList() +\n
                   portal.getPortalTransitInventoryStateList())\n
 \n
-kw.setdefault(\'simulation_state\', portal.getPortalCurrentInventoryStateList())\n
+# those are simulation state parameters equivalent to getCurrentInventoryQuery that can be passed to getMovementHistoryList\n
+kw.setdefault(\'simulation_state\', portal.getPortalCurrentInventoryStateList() + portal.getPortalTransitInventoryStateList())\n
+kw.setdefault(\'transit_simulation_state\', portal.getPortalTransitInventoryStateList())\n
+kw.setdefault(\'omit_transit\', False)\n
 \n
 return kw\n
 </string> </value>

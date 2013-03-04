@@ -427,6 +427,7 @@ selection_report\r\n
 ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n
+only_accountable\r\n
 omit_input\r\n
 omit_output\r\n
 omit_asset_increase\r\n
@@ -501,10 +502,14 @@ SELECT\n
 </dtml-if>\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
+  stock.resource_uid AS resource_uid,\n
+  stock.payment_uid AS payment_uid,\n
   stock.mirror_section_uid AS mirror_section_uid,\n
   stock.mirror_node_uid AS mirror_node_uid,\n
   stock.function_uid AS function_uid,\n
   stock.project_uid AS project_uid,\n
+  stock.funding_uid AS funding_uid,\n
+  stock.payment_request_uid AS payment_request_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
@@ -535,6 +540,9 @@ WHERE\n
 \n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != \'Simulation Movement\'\n
+</dtml-if>\n
+<dtml-if only_accountable>\n
+  AND stock.is_accountable\n
 </dtml-if>\n
 \n
 <dtml-if omit_input>\n

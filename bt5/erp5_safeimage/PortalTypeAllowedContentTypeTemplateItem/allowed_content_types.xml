@@ -1,0 +1,17 @@
+<allowed_content_type_list>
+ <portal_type id="Image Module">
+  <item>Image Tile</item>
+  <item>Image Tile Transformed</item>
+ </portal_type>
+ <portal_type id="Image Tile">
+  <item>Embedded File</item>
+  <item>Image Tile Group</item>
+ </portal_type>
+ <portal_type id="Image Tile Group">
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Image Tile Transformed">
+  <item>Embedded File</item>
+  <item>Image Tile Group</item>
+ </portal_type>
+</allowed_content_type_list>

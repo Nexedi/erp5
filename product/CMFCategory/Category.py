@@ -796,6 +796,13 @@ class BaseCategory(Category):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+    # BBB: Required to start instance with old
+    #      version of erp5_property_sheets BT.
+    related_locally_indexed = False
+    def isRelatedLocallyIndexed(self):
+      """Determines if related values should be indexed on target documents"""
+      return self.related_locally_indexed
+
     def asSQLExpression(self, strict_membership=0, table='category', base_category=None):
       """
         A Predicate can be rendered as an sql expression. This

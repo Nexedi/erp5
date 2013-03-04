@@ -267,6 +267,9 @@ if allowClassTool():
       def objectIds(self, spec=None):
         return ('PropertySheet', 'Document', 'Constraint', 'Extensions', 'tests')
 
+      def __contains__(self, key):
+        return key in self.objectIds()
+
       def _getOb(self, key, default=_MARKER):
         from Products.ERP5Type.Utils import importLocalPropertySheet
         from Products.ERP5Type.Utils import importLocalDocument
@@ -1208,7 +1211,7 @@ def initialize( context ):
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
         debug=boolean        Invoke debugger on errors / failures.
-        verbose=boolean      Display more informations when running tests
+        verbose=boolean      Display more information when running tests
         """
         # Allow having strings for verbose and debug
         verbose = int(verbose) and True or False

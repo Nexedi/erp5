@@ -887,7 +887,6 @@ class TestPackingListMixin(TestOrderMixin):
     for line in packing_list.objectValues(
         portal_type=self.packing_list_line_portal_type):
       resource = line.getResourceValue()
-      tmp_kw={'movement.resource_uid':resource.getUid()}
       container_line = \
           container.newContent(portal_type=self.container_line_portal_type)
       container_line.setResourceValue(resource)
@@ -933,8 +932,8 @@ class TestPackingListMixin(TestOrderMixin):
       not equals to the quantity of the packing list
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals(0,packing_list.isPacked())
-    self.assertEquals('missing',packing_list.getContainerState())
+    self.assertFalse(packing_list.isPacked())
+    self.assertEquals('missing', packing_list.getContainerState())
 
   def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None,
                                    packing_list=None,**kw):
@@ -945,8 +944,8 @@ class TestPackingListMixin(TestOrderMixin):
     if packing_list is None:
       packing_list = sequence.get('packing_list')
     self.commit()
-    self.assertEquals(1,packing_list.isPacked())
-    self.assertEquals('packed',packing_list.getContainerState())
+    self.assertTrue(packing_list.isPacked())
+    self.assertEquals('packed', packing_list.getContainerState())
 
   def stepCheckNewPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
     """

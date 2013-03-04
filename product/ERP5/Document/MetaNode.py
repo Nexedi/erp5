@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Organisation import Organisation as Node
+from Products.ERP5.Document.Node import Node
 from Products.CMFCore.utils import getToolByName
 
 class MetaNode(Node):

@@ -3,10 +3,7 @@
  <key>catalog</key>
  <key>category</key>
  <key>delivery</key>
- <key>inventory</key>
- <key>inventory_stock</key>
  <key>item</key>
- <key>movement</key>
  <key>predicate</key>
  <key>predicate_category</key>
  <key>roles_and_users</key>

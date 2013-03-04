@@ -238,7 +238,7 @@ class Test(ERP5TypeTestCase):
                          commas (e.g. testFoo,testBar). This can be regular
                          expressions.
     debug=boolean        Invoke debugger on errors / failures.
-    verbose=boolean      Display more informations when running tests
+    verbose=boolean      Display more information when running tests
     """
     test_list = self._getCommaSeparatedParameterList(test_list)
     if not test_list:

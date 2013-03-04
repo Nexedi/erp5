@@ -94,7 +94,7 @@
                         <string>your_at_date</string>
                         <string>your_omit_balanced_accounts</string>
                         <string>your_omit_empty_accounts</string>
-                        <string>your_omit_grouped_references</string>
+                        <string>your_omit_grouping_reference</string>
                         <string>your_mirror_section_category_list</string>
                         <string>your_gap_root</string>
                         <string>your_simulation_state</string>

@@ -2013,11 +2013,8 @@ class Base( CopyContainer,
                                        checked_permission=None):
     # We must do an ordered list so we can not use the previous method
     # self._setValue(id, self.portal_catalog.getObjectList(uids), spec=spec)
-    references = []
-    if type(uids) not in (type(()), type([])):
-      uids = [uids]
-    for uid in uids:
-      references.append(self.portal_catalog.getObject(uid))
+    references = map(self.getPortalObject().portal_catalog.getObject,
+                     (uids,) if isinstance(uids, (int, long)) else uids)
     self._setValue(id, references, spec=spec, filter=filter, portal_type=portal_type,
                                    keep_default=keep_default, checked_permission=checked_permission)
 
@@ -2177,9 +2174,6 @@ class Base( CopyContainer,
       Returns the list of acquired categories
     """
     return self._getCategoryTool().getAcquiredCategoryList(self)
-
-  def _getAcquiredCategoryList(self):
-    return self._getCategoryTool()._getAcquiredCategoryList(self)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
   def setCategoryList(self, path_list):
@@ -2851,40 +2845,6 @@ class Base( CopyContainer,
     List portal_types which can be added in this folder / object.
     """
     return []
-
-  security.declareProtected(Permissions.View, 'getBinaryData')
-  def getBinaryData(self):
-    """
-      Return the binary data
-    """
-    bin = None
-    if hasattr(self,'_original'):
-      bin = self._original._data()
-    elif hasattr(self,'_data'):
-      bin = self._data
-    elif hasattr(self,'data'):
-      bin = self.data
-    if bin is not None:
-      return StringIO(str(bin))
-    return None
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setBinaryData')
-  def setBinaryData(self, data):
-    """
-      Set the binary data, data must be a cStringIO
-    """
-    self.edit(file=data)
-    #LOG('Base.setBinaryData',0,'data: %s' % str(data))
-    #obj=''
-    #if hasattr(self,'_original'):
-    #  LOG('Base.setBinaryData',0,'_original for : %s' % str(self))
-    #  self._original.data = data
-    #elif hasattr(self,'_data'):
-    #  LOG('Base.setBinaryData',0,'_data for : %s' % str(self))
-    #  self._data = data
-    #elif hasattr(self,'data'):
-    #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
-    #  self.data = data
 
   security.declareProtected(Permissions.AccessContentsInformation,
           'getRedirectParameterDictAfterAdd')

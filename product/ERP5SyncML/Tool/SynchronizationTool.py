@@ -303,7 +303,6 @@ class SynchronizationTool(BaseTool):
       # Read message from file
       msg = self.readResponse(from_url=publication.getUrlString(),
                                      sync_id=publication.getSourceReference())
-
     if msg is not None:
       syncml_request = SyncMLRequest(msg)
       #syncml_logger.info("\tXML received from client %s" %(str(syncml_request)))

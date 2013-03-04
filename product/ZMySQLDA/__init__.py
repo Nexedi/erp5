@@ -87,21 +87,22 @@ __doc__='''Generic Database Adapter Package Registration
 $Id: __init__.py,v 1.4 2001/08/17 02:17:38 adustman Exp $'''
 __version__='$Revision: 1.4 $'[11:-2]
 
-import sys, string
-import DA
+from . import DA
 
 methods=DA.folder_methods
 misc_=DA.misc_
 
 def initialize(context):
 
+    permission = "Add Z MySQL Database Connections"
     context.registerClass(
         DA.Connection,
-        permission='Add Z MySQL Database Connections',
+        permission=permission,
         constructors=(DA.manage_addZMySQLConnectionForm,
                       DA.manage_addZMySQLConnection),
     )
-
-    context.registerHelp()
-    context.registerHelpTitle('ZMySQLDA')
-
+    context.registerClass(
+        DA.DeferredConnection,
+        permission=permission,
+        visibility=None,
+    )

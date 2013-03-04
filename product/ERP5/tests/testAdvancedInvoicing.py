@@ -311,7 +311,6 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     self.assertEquals([], packing_list.getDivergenceList())
     self.assertEquals('solved', packing_list.getCausalityState())
 
-  @newSimulationExpectedFailure
   def test_AdoptQuantityDivergenceOnInvoiceLineWithStoppedPackingList(self, quiet=quiet,
                                                                       run=RUN_ALL_TESTS):
     """Adopt quantity with stopped packing list"""
@@ -1040,7 +1039,6 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       """)
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_13_acceptQuantityDivergenceOnInvoiceWithStartedPackingList(
     self, quiet=quiet, run=RUN_ALL_TESTS):
     if not run: return

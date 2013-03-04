@@ -14,6 +14,7 @@
 
 import sys
 from cgi import escape
+from itertools import chain, islice
 from urllib import quote
 from random import randint
 from types import StringType
@@ -32,7 +33,7 @@ from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.Permissions import access_contents_information, \
      view_management_screens
 from zLOG import LOG, INFO, ERROR, WARNING
-from Products.ZCatalog.Lazy import LazyMap, LazyFilter, LazyCat, LazyValues
+from AccessControl.SimpleObjectPolicies import ContainerAssertions
 
 
 manage_addHBTreeFolder2Form = DTMLFile('folderAdd', globals())
@@ -67,6 +68,72 @@ class ExhaustedUniqueIdsError (Exception):
     pass
 
 
+class HBTreeObjectIds(object):
+
+    _index = float('inf')
+
+    def __init__(self, tree, base_id=_marker):
+        self._tree = tree
+        if base_id is _marker:
+            tree_id_list = tree.getTreeIdList()
+            self._count = tree._count
+        else:
+            tree_id_list = base_id,
+        check = tree._checkObjectId
+        self._keys = lambda: (x for base_id in tree_id_list
+                                for x in (tree._htree if base_id is None else
+                                          tree._getTree(base_id)).keys()
+                                if check((base_id, x)))
+
+    def _count(self):
+        count = sum(1 for x in self._keys())
+        self._count = lambda: count
+        return count
+
+    def __len__(self):
+        return self._count()
+
+    def __iter__(self):
+        return self._keys()
+
+    def __getitem__(self, item):
+        if item < 0:
+            item += self._count()
+        i = self._index
+        self._index = item + 1
+        i = item - i
+        try:
+            if i < 0:
+                self._ikeys = keys = self._keys()
+                return islice(keys, item, None).next()
+            return (islice(self._ikeys, i, None) if i else self._ikeys).next()
+        except StopIteration:
+            del self._index, self._ikeys
+            raise IndexError
+ContainerAssertions[HBTreeObjectIds] = 1
+
+class HBTreeObjectItems(HBTreeObjectIds):
+
+    def __iter__(self):
+        getOb = self._tree._getOb
+        return ((x, getOb(x)) for x in self._keys())
+
+    def __getitem__(self, item):
+        object_id = HBTreeObjectIds.__getitem__(self, item)
+        return object_id, self._tree._getOb(object_id)
+ContainerAssertions[HBTreeObjectItems] = 1
+
+class HBTreeObjectValues(HBTreeObjectIds):
+
+    def __iter__(self):
+        getOb = self._tree._getOb
+        return (getOb(x) for x in self._keys())
+
+    def __getitem__(self, item):
+        return self._tree._getOb(HBTreeObjectIds.__getitem__(self, item))
+ContainerAssertions[HBTreeObjectValues] = 1
+
+
 class HBTreeFolder2Base (Persistent):
     """Base for BTree-based folders.
     """
@@ -98,10 +165,6 @@ class HBTreeFolder2Base (Persistent):
         self._htree = OOBTree()
         self._count = Length()
         self._tree_list = PersistentMapping()
-        
-    def initBTrees(self):
-        """ """
-        return self._initBTrees()
 
     def _populateFromFolder(self, source):
         """Fill this folder with the contents of another folder.
@@ -198,6 +261,7 @@ class HBTreeFolder2Base (Persistent):
     def hashId(self, id):
         """Return a tuple of ids
         """
+        # XXX: why tolerate non-string ids ?
         id_list = str(id).split(H_SEPARATOR)     # We use '-' as the separator by default
         if len(id_list) > 1:
           return tuple(id_list)
@@ -288,7 +352,6 @@ class HBTreeFolder2Base (Persistent):
         b_count = int(REQUEST.get('b_count', 1000))
         b_end = b_start + b_count - 1
         url = self.absolute_url() + '/manage_main'
-        idlist = self.objectIds()  # Pre-sorted.
         count = self.objectCount()
 
         if b_end < count:
@@ -302,10 +365,9 @@ class HBTreeFolder2Base (Persistent):
         else:
             prev_url = ''
 
-        formatted = []
-        formatted.append(listtext0 % pref_rows)
-        for i in range(b_start - 1, b_end):
-            optID = escape(idlist[i])
+        formatted = [listtext0 % pref_rows]
+        for optID in islice(self.objectIds(), b_start - 1, b_end):
+            optID = escape(optID)
             formatted.append(listtext1 % (escape(optID, quote=1), optID))
         formatted.append(listtext2)
         return {'b_start': b_start, 'b_end': b_end,
@@ -404,7 +466,7 @@ class HBTreeFolder2Base (Persistent):
         """ Return a list of subtree ids
         """
         tree = self._getTree(base_id=base_id)
-        return [x for x in self._htree.keys() if isinstance(self._htree[x], OOBTree)]
+        return [k for k, v in self._htree.items() if isinstance(v, OOBTree)]
 
 
     def _getTree(self, base_id):
@@ -448,31 +510,6 @@ class HBTreeFolder2Base (Persistent):
                 self._tree_list[tree] = None
         return sorted(self._tree_list.keys())
 
-
-    def _treeObjectValues(self, base_id=None):
-        """ return object values for a given btree
-        """
-        if base_id is not None:
-            return LazyFilter(self._isNotBTree, self._getTree("%s" %base_id).values())
-        else:
-            return LazyFilter(self._isNotBTree, self._htree.values())
-
-    def _treeObjectIds(self, base_id=None):
-        """ return object ids for a given btree
-        """
-        if base_id is not None:
-          return LazyValues(LazyFilter(self._checkObjectId, [(base_id, x) for x in self._getTree("%s" %base_id).keys()]))
-        else:
-          return LazyValues(LazyFilter(self._checkObjectId, [(base_id, x) for x in self._htree.keys()]))
-
-    def _isNotBTree(self, obj):
-        """ test object is not a btree
-        """
-        if isinstance(obj, OOBTree):
-            return False
-        else:
-            return True
-
     def _checkObjectId(self, ids):
         """ test id is not in btree id list
         """
@@ -483,36 +520,21 @@ class HBTreeFolder2Base (Persistent):
         
     security.declareProtected(access_contents_information,
                               'objectValues')
-    def objectValues(self, base_id=_marker, spec=None):
-        return LazyMap(self._getOb, self.objectIds(base_id=base_id))
-
+    def objectValues(self, base_id=_marker):
+        return HBTreeObjectValues(self, base_id)
 
     security.declareProtected(access_contents_information,
                               'objectIds')
-    def objectIds(self, base_id=_marker, spec=None):
-        if base_id is _marker:
-            return LazyCat(LazyMap(self._treeObjectIds, self.getTreeIdList()))
-        else:
-            return self._treeObjectIds(base_id=base_id)
+    def objectIds(self, base_id=_marker):
+        return HBTreeObjectIds(self, base_id)
 
-    
     security.declareProtected(access_contents_information,
                               'objectItems')
-    def objectItems(self, base_id=_marker, spec=None):
+    def objectItems(self, base_id=_marker):
         # Returns a list of (id, subobject) tuples of the current object.
         # If 'spec' is specified, returns only objects whose meta_type match
         # 'spec'
-        return LazyMap(lambda id, _getOb=self._getOb: (id, _getOb(id)),
-                       self.objectIds(base_id=base_id))
-
-
-    security.declareProtected(access_contents_information,
-                              'objectMap')
-    def objectMap(self):
-        # Returns a tuple of mappings containing subobject meta-data.
-        return LazyMap(lambda (k, v):
-                       {'id': k, 'meta_type': getattr(v, 'meta_type', None)},
-                       self._htree.items(), self._count())
+        return HBTreeObjectItems(self, base_id)
 
     # superValues() looks for the _objects attribute, but the implementation
     # would be inefficient, so superValues() support is disabled.
@@ -522,18 +544,7 @@ class HBTreeFolder2Base (Persistent):
     security.declareProtected(access_contents_information,
                               'objectIds_d')
     def objectIds_d(self, t=None):
-        ids = self.objectIds(t)
-        res = {}
-        for id in ids:
-            res[id] = 1
-        return res
-
-
-    security.declareProtected(access_contents_information,
-                              'objectMap_d')
-    def objectMap_d(self, t=None):
-        return self.objectMap()
-
+        return dict.fromkeys(self.objectIds(t), 1)
 
     def _checkId(self, id, allow_dup=0):
         if not allow_dup and self.has_key(id):

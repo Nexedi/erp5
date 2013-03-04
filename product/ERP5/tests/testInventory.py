@@ -184,7 +184,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
 
-  def createInventory(self, sequence=None):
+  def createInventory(self, sequence=None, full=False):
     """
     """
     portal = self.getPortal()
@@ -193,7 +193,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
     inventory.edit(destination_value = sequence.get('node'),
                    destination_section_value = sequence.get('section'),
-                   start_date = DateTime() + 1
+                   start_date = DateTime() + 1,
+                   full_inventory=full,
                   )
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -213,6 +214,66 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
 
+  def stepCreateFullInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a full Inventory object for Inventory Module testing
+    """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=True)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = 101)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepCreatePartialInventoryMultipleResource(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a partial inventory object for one resource
+    """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=False)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = 101)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepTestPartialInventoryMultipleResource(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test partial inventory behavior with multiple resource
+    """
+    inventory_list = sequence.get('inventory_list')
+    simulation = self.getPortal().portal_simulation
+
+    # First resource, must not have changed
+    inventory = simulation.getCurrentInventory(
+      resource = sequence.get("resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      )
+    self.assertEquals(inventory, 100.,
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
+    # second resource, must be 101
+    inventory = simulation.getCurrentInventory(
+      resource = sequence.get("second_resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      )
+    self.assertEquals(inventory, 101.,
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
+
+
+
   def stepCreateSingleVariatedInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Create a single Inventory object for Inventory Module testing
@@ -231,19 +292,32 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         variation_category_list = category_list,
         mapped_value_property_list = ['quantity'],
         )
-    category_list = sequence.get('variation_2')
+    # When checking the not full inventory function, quantity must remain the same if
+    # no inventory line defined for a variation
+    inventory.deliver()
+
+
+  def stepCreateFullVariatedInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a single full Inventory object for Inventory Module testing
+    """
+    inventory = self.createInventory(sequence=sequence, full=True)
     inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
+    category_list = sequence.get('variation_1')
     inventory_line.edit(resource_value = sequence.get('resource'),
                         variation_category_list=category_list
                        )
     cell = inventory_line.newCell(base_id='movement',*category_list)
-    quantity=0
     cell.edit(
-        quantity = quantity,
+        quantity = 55,
         predicate_category_list = category_list,
         variation_category_list = category_list,
         mapped_value_property_list = ['quantity'],
         )
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = 101)
     inventory.deliver()
 
   def stepCreatePackingListForModule(self, sequence=None,
@@ -1762,10 +1836,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     variation_category_list.sort()
     variation_text = '\n'.join(variation_category_list)
     inventory = simulation.getCurrentInventory(
-                    section=sequence.get('section').getRelativeUrl(),
-                    node=sequence.get('node').getRelativeUrl(),
-                    variation_text=variation_text
-                )
+      resource = sequence.get("resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      variation_text = variation_text
+      )
     self.assertEquals(inventory, quantity)
 
   def stepTestInitialVariatedInventory(self, sequence=None, sequence_list=None, **kw):
@@ -1806,9 +1881,50 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.checkVariatedInventory(variation_category_list=variation_category_list,
                                 quantity=quantity,sequence=sequence)
     variation_category_list = sequence.get('variation_2')
+    quantity = 3
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+
+  def stepTestVariatedInventoryNonDefaultQuantityUnitAfterInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Inventory Module behavior
+    """
+    resource = sequence.get('resource')
+    variation_category_list = sequence.get('variation_1')
+    quantity = 5
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+    variation_category_list = sequence.get('variation_2')
+    quantity = 300
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+
+  def stepTestFullVariatedInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test full inventory with variated resource
+    """
+    resource = sequence.get('resource')
+    variation_category_list = sequence.get('variation_1')
+    # Test first resource
+    quantity = 55
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+    variation_category_list = sequence.get('variation_2')
     quantity = 0
     self.checkVariatedInventory(variation_category_list=variation_category_list,
                                 quantity=quantity,sequence=sequence)
+
+    # second resource, must be 101
+    simulation = self.getPortal().portal_simulation
+    inventory = simulation.getCurrentInventory(
+      resource = sequence.get("second_resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      )
+    self.assertEquals(inventory, 101.,
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
 
   def stepTestInventoryModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1832,6 +1948,36 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     step += 1
     sequence.edit(step=step)
 
+  def stepTestFullInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Full inventory behavior
+    """
+    inventory_list = sequence.get('inventory_list')
+    simulation = self.getPortal().portal_simulation
+
+    # First resource, must be zero
+    inventory = simulation.getCurrentInventory(
+      resource = sequence.get("resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      )
+    self.assertEquals(inventory, 0.,
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
+    # second resource, must be 101
+    inventory = simulation.getCurrentInventory(
+      resource = sequence.get("second_resource").getRelativeUrl(),
+      section = sequence.get('section').getRelativeUrl(),
+      node = sequence.get('node').getRelativeUrl(),
+      )
+    self.assertEquals(inventory, 101.,
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
+
+
+
   def stepModifyFirstInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Modify the first entered Inventory, to test the quantity change
@@ -1843,6 +1989,27 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_line.edit(
         aggregate_value_list=aggregate_value_list,
         quantity=sum([x.getQuantity() for x in aggregate_value_list]))
+
+
+  def stepCreateNotVariatedSecondResource(self,sequence=None,
+                                          sequence_list=None,
+                                          **kw):
+    """
+      Create a second resource with no variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "NotVariatedSecondResource%s" % resource.getId(),
+      industrial_phase_list=["phase1", "phase2"],
+      product_line = 'apparel'
+    )
+
+    sequence.edit( second_resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
 
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
@@ -1966,7 +2133,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        stepTestInitialVariatedNonDefaultQuantityUnitInventory \
                        stepCreateSingleVariatedInventory \
                        stepTic \
-                       stepTestVariatedInventoryAfterInventory \
+                       stepTestVariatedInventoryNonDefaultQuantityUnitAfterInventory \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -2016,6 +2183,83 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         node_uid=organisation.getUid(),
         resource_uid=product.getUid()),
       0)
+
+  def test_06_FullInventory(self, quiet=0, run=run_all_test):
+    """
+      Test the full inventory behavior
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateNotVariatedResource \
+                       stepCreateNotVariatedSecondResource \
+                       stepCreateItemList \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreatePackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateFullInventory \
+                       stepTic \
+                       stepTestFullInventory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_07_FullVariatedInventory(self, quiet=0, run=run_all_test):
+    """
+      Test the full inventory behavior with variated resource
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateVariatedResource \
+                       stepCreateNotVariatedSecondResource \
+                       stepCreateItemList \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreateVariatedPackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateFullVariatedInventory \
+                       stepTic \
+                       stepTestFullVariatedInventory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_08_PartialInventoryMultipleResource(self, quiet=0, run=run_all_test):
+    """
+      Test behaviour of partial inventory with multiple resource
+      defining inventory of resource B must not modify inventory of resource A
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateNotVariatedResource \
+                       stepCreateNotVariatedSecondResource \
+                       stepCreateItemList \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreatePackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreatePartialInventoryMultipleResource \
+                       stepTic \
+                       stepTestPartialInventoryMultipleResource \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -93,6 +93,7 @@
                       <list>
                         <string>listbox_role_name</string>
                         <string>listbox_role_category_list</string>
+                        <string>listbox_role_base_category_list</string>
                       </list>
                     </value>
                 </item>

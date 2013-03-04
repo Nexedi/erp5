@@ -50,19 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+portal = context.getPortalObject()\n
 \n
+assert key\n
 mail_message = portal.portal_catalog.getResultValue(portal_type="Mail Message", reference=key)\n
 \n
 credential_request = mail_message.getFollowUpValue()\n
 if credential_request.getValidationState() in (\'submitted\', \'accepted\'):\n
-  message = "Your account is already active."\n
+  message = translateString("Your account is already active.")\n
 else:\n
-  credential_request.submit(comment=\'Create by subscription form\')\n
+  credential_request.submit(comment=translateString(\'Created by subscription form\'))\n
   mail_message.deliver()\n
-  message = "Your account is being activated. You will receive an e-mail when activation is complete."\n
+  message = translateString("Your account is being activated. You will receive an e-mail when activation is complete.")\n
 \n
-return context.Base_redirect("login_form?portal_status_message=%s" % message)\n
+return portal.Base_redirect("login_form", keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>

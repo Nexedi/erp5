@@ -29,38 +29,30 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-
-#from Products.ERP5.Core.MetaNode import MetaNode
+from Products.ERP5.Document.Node import Node
 
 
-#class Account(MetaNode, XMLObject):
-class Account(XMLObject):
-    """
-      An account is an abstract metanode which holds
-      currencies. Accounting is implemented through
-      categories. For example, a sales movement may be
-      written:
+class Account(Node):
+    """An account is an abstract node which holds currencies and is used in
+    accounting.
 
-        Resource: EUR
-        Amount: 200
-        source/compte/produit
-        destination/compte/client
-        client/auchan
-        section/coramy
-
-      A purchase movement is written:
-
-        Resource: EUR
-        Amount: 200
-        source/compte/charge
-        destination/compte/fournisseur
-        fournisseur/coramy
-        section/auchan
-
-      Sections allow to implement simple analytical accounting.
-      (at the present stage, category membership is boolean logics.
-      at some point, category membership should become fuzzy logics)
+    Accounts are member of categories that are used to do aggregated reporting
+    of accounting movements. Typically, the following categories are used::
+      * GAP: This category represents the classification as defined by the
+        legislations that the organisatation have to comply to. Accounts can be
+        associated to multiple GAP category trees at the same time, and
+        therefore it allows to generate reports for multiple legislations from
+        the same accounting data.
+      * Financial Section: This category is the representation of the financial
+        structure as seen by the company, regardless of the fiscal
+        requirements.  Balance Sheets and Profit & Loss reports can be
+        generated using those categories.
+      * Account Type: This category is used to describe what is the type of
+        this account, and usually has impact on the behaviour of the
+        application and reportings. For instance, when using a "payable"
+        account in an accounting transaction, we set the supplier organisation
+        as mirror section, and reports such as trial balance can display a
+        breakdown of this account for each supplier.
     """
 
     meta_type = 'ERP5 Account'

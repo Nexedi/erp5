@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45811421.8</string> </value>
+            <value> <string>ts62123078.31</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -315,7 +315,24 @@ var ERP5Form = ( function () {\n
                                   window.setTimeout(\'$("#portal_status_message").toggle();\', 4000);\n
                                 }\n
                               }});\n
+          },\n
+\n
+        openFormInTabbularGadget: function (container_id, form_id) {\n
+          /*\n
+          * Open a new tab containing an ERP5 form using RenderJs\'s TabbularGadget API.\n
+          */\n
+          if (RenderJs.GadgetIndex.getGadgetById(\'gadget-\' + form_id) === undefined) {\n
+            // do not load already existing tab gadget\n
+            RenderJs.TabbularGadget.addNewTabGadget(\n
+              container_id,\n
+              \'gadget-\' + form_id,\n
+              form_id + \'/Form_asRenderJSGadget\',\n
+              \'ERP5Form.update\',\n
+              \'Form_asJSON?form_id=\' + form_id);;\n
+            RenderJs.TabbularGadget.toggleVisibility($(\'#\' + form_id));\n
+            ERP5Form.setCurrentFormId(form_id);\n
           }\n
+        }\n
 \n
   }} ());\n
 
@@ -328,7 +345,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14143</int> </value>
+            <value> <int>14861</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

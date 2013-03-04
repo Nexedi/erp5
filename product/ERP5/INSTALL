@@ -38,7 +38,6 @@ From ERP5 subversion repository:
 * ERP5SyncML
 * ERP5Type
 * ZSQLCatalog
-* ZMySQLDDA
 
 Installation
 ============

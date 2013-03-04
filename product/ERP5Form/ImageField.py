@@ -166,7 +166,7 @@ class ImageFieldWidget(Widget.TextWidget):
         return draw_frame_node
 
       # Big images are cut into smaller chunks, so it's required to cast to
-      # str. See OFS/Image -> _read_data method for more informations
+      # str. See OFS/Image -> _read_data method for more information
       image_data = str(image_data)
 
       format = content_type.split('/')[-1]

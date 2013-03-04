@@ -3,14 +3,9 @@
  <key>career_skill_id | category,catalog,catalog/id/z_related_career_skill</key>
  <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>
  <key>children_reference | catalog/reference/z_related_children</key>
- <key>deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</key>
- <key>explanation_portal_type | movement,catalog/portal_type/z_related_explanation</key>
- <key>explanation_simulation_state | movement,catalog/simulation_state/z_related_explanation</key>
- <key>grand_grand_grand_grand_grand_parent_simulation_state | catalog,catalog,catalog,catalog,catalog,catalog/simulation_state/z_related_grand_grand_grand_grand_grand_parent</key>
- <key>grand_grand_grand_grand_parent_specialise_portal_type | category,catalog,catalog,catalog,catalog,catalog/portal_type/z_related_grand_grand_grand_grand_parent_specialise</key>
- <key>grand_grand_grand_grand_parent_specialise_reference | category,catalog,catalog,catalog,catalog,catalog/reference/z_related_grand_grand_grand_grand_parent_specialise</key>
- <key>grand_grand_grand_parent_delivery_portal_type | category,catalog,catalog,catalog,catalog/portal_type/z_related_grand_grand_grand_parent_delivery</key>
- <key>grand_parent_delivery_portal_type | category,catalog,catalog/portal_type/z_related_grand_parent_delivery</key>
+ <key>deliveryLineType | stock,catalog/portal_type/z_related_uid_or_parent_uid</key>
+ <key>explanation_portal_type | stock,catalog/portal_type/z_related_explanation</key>
+ <key>explanation_simulation_state | stock,catalog/simulation_state/z_related_explanation</key>
  <key>grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent</key>
  <key>grand_parent_simulation_state | catalog,catalog/simulation_state/z_related_grand_parent</key>
  <key>item_node_category_uid | category/category_uid/z_related_node_uid_from_item</key>
@@ -33,15 +28,21 @@
  <key>predicate_category_category_uid | predicate_category/category_uid/z_related_predicate_category</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>related_resource_from_use_category_uid | category,category/category_uid/z_related_resource_from_use</key>
- <key>resourceType | movement,catalog/portal_type/z_related_resource_from_movement</key>
+ <key>resourceType | stock,catalog/portal_type/z_related_resource_from_stock</key>
+ <key>stock_explanation_portal_type | catalog/portal_type/z_related_explanation_from_stock</key>
+ <key>stock_explanation_simulation_state | catalog/simulation_state/z_related_explanation_from_stock</key>
  <key>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</key>
  <key>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</key>
+ <key>stock_funding_category_strict_membership_uid | category/category_uid/z_related_strict_membership_funding_uid_from_stock</key>
+ <key>stock_funding_category_uid | category/category_uid/z_related_funding_uid_from_stock</key>
  <key>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</key>
  <key>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</key>
  <key>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</key>
  <key>stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</key>
  <key>stock_payment_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_uid_from_stock</key>
  <key>stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</key>
+ <key>stock_payment_request_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_request_uid_from_stock</key>
+ <key>stock_payment_request_category_uid | category/category_uid/z_related_payment_request_uid_from_stock</key>
  <key>stock_project_category_strict_membership_uid | category/category_uid/z_related_strict_membership_project_uid_from_stock</key>
  <key>stock_project_category_uid | category/category_uid/z_related_project_uid_from_stock</key>
  <key>stock_resource_category_strict_membership_uid | category/category_uid/z_related_strict_membership_resource_uid_from_stock</key>

@@ -39,27 +39,29 @@ import os
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-#     (pystone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+#     (pystone results: min: < 131578.9 - mean: ~ 139768.5 - max: > 147058.8)
 # Historical values are here to remember what was original values on this
 # specific testing environment. We must always try to stay below max
 # historical values.
                                     # Historical values
-MIN_OBJECT_VIEW=0.144               # 0.112
-MAX_OBJECT_VIEW=0.147               # 0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.280    # 0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.286    # 0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.213    # 0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.217    # 0.220
+MIN_OBJECT_VIEW=0.020               # 0.112
+MAX_OBJECT_VIEW=0.050               # 0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.040    # 0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.090    # 0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.020    # 0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.090    # 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.148               # 0.125
-MAX_MODULE_VIEW=0.153               # 0.175
-MIN_TIC=0.0323                      # 0.260
-MAX_TIC=0.0344                      # 0.343
-MIN_OBJECT_CREATION=0.0068          # 0.0070
-MAX_OBJECT_CREATION=0.0073          # 0.0082
+MIN_MODULE_VIEW=0.020               # 0.125
+MAX_MODULE_VIEW=0.070               # 0.175
+MIN_TIC=0.0020                      # 0.260
+MAX_TIC=0.0090                      # 0.343
+MIN_OBJECT_CREATION=0.0010          # 0.0070
+MAX_OBJECT_CREATION=0.0040          # 0.0082
 LISTBOX_COEF=0.00173                # 0.02472
 # Change history
+# 2013-03-01
+#   Adapt values with new hardware and last improvements
 # 2010-02-09
 #  the bot is slightly slower since 2009-11-29
 #   MIN_OBJECT_VIEW : 0.142 -> 0.144

@@ -269,7 +269,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
                 creds['login'] = login
                 creds['password'] = password
 
-      #Complete credential with some informations
+      #Complete credential with some information
       if creds:
         creds['remote_host'] = request.get('REMOTE_HOST', '')
         try:

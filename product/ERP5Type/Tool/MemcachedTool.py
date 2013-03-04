@@ -26,16 +26,24 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
 import time
-from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile, InitializeClass
 from quopri import encodestring
 
 MEMCACHED_TOOL_MODIFIED_FLAG_PROPERTY_ID = '_v_memcached_edited'
+class _MemcacheTool(BaseTool):
+  id = "portal_memcached"
+  meta_type = "ERP5 Memcached Tool"
+  portal_type = "Memcached Tool"
+  manage_options = (
+    {
+      'label': 'Configure',
+      'action': 'memcached_tool_configure',
+    },
+  ) + BaseTool.manage_options
 
 try:
   import memcache
@@ -50,19 +58,15 @@ def encodeKey(key):
   # control characters and white spaces.
   return encodestring(key, True).replace('\n', '').replace('\r', '')
 
-memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
-  import memcache
-  import traceback
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
   from zLOG import LOG
   
-  MARKER = tuple()
-  UPDATE_ACTION = 'update'
-  DELETE_ACTION = 'delete'
-  MEMCACHED_MINIMUM_KEY_CHAR_ORD = ord(' ')
+  MARKER = object()
+  DELETE_ACTION = 0
+  UPDATE_ACTION = 1
 
   class MemcachedDict(TM):
     """
@@ -70,56 +74,48 @@ if memcache is not None:
       available).
       Uses transactions to only update memcached at commit time.
       No conflict generation/resolution : last edit wins.
-
-      TODO:
-        - prove that concurency handling in event queuing is not needed
-        - make picklable ?
     """
-
-    def __init__(self, server_list=('127.0.0.1:11211',), expiration_time=0,
-                 server_max_key_length=MARKER, server_max_value_length=MARKER):
+    def __init__(self, server_list, expiration_time=0,
+          server_max_key_length=memcache.SERVER_MAX_KEY_LENGTH,
+          server_max_value_length=memcache.SERVER_MAX_VALUE_LENGTH,
+        ):
       """
-        Initialise properties :
-        memcached_connection
-          Connection to memcached.
-        local_cache
-          Dictionnary used as a connection cache with duration limited to
-          transaction length.
-        scheduled_action_dict
-          Each key in this dictionary must be handled at transaction commit.
-          Value gives the action to take :
-            UPDATE_ACTION 
-              Take value from local cache and send it to memcached.
-            DELETE_ACTION
-              Send a delete order to memcached.
+        server_list (tuple of strings)
+          Servers to connect to, in 'host:port' format.
+        expiration_time (int)
+          Entry expiration time. See "Expiration times" in memcache protocol
+          spec. Summary:
+          0 = never
+          less than 60*60*24*30 = time starting at entry creation/update
+          more = absolute unix timestamp
+        server_max_key_length (int)
+          Maximum key length. Storing larger keys will cause an exception to be
+          raised.
+        server_max_value_length (int)
+          Maximum value length. Storing larger values will cause an exception to
+          be raised.
       """
+      # connection cache with duration limited to transaction length.
       self.local_cache = {}
+      # Each key in scheduled_action_dict must be handled at commit.
+      # UPDATE_ACTION: send local_cache value to server
+      # DELETE_ACTION: delete on server
       self.scheduled_action_dict = {}
       self.server_list = server_list
       # see "Expiration times" from memcached protocol docs
-      self.expiration_time_since_epoch = expiration_time > (60*60*24*30)
+      # (this simulates relative expiration time greater than 30 days)
+      self.expiration_time_since_epoch = expiration_time >= 2592000
       self.expiration_time = expiration_time
       self.server_max_key_length = server_max_key_length
       self.server_max_value_length = server_max_value_length
       self._initialiseConnection()
 
     def _initialiseConnection(self):
-      try:
-        self.memcached_connection.disconnect_all()
-      except AttributeError:
-        pass
-      init_dict = {}
-      if self.server_max_key_length is not MARKER:
-        init_dict['server_max_key_length'] = self.server_max_key_length
-      if self.server_max_value_length is not MARKER:
-        init_dict['server_max_value_length'] = self.server_max_value_length
-      self.memcached_connection = memcache.Client(self.server_list, **init_dict)
-
-    def __del__(self):
-      """
-        Close connection before deleting object.
-      """
-      self.memcached_connection.disconnect_all()
+      self.memcached_connection = memcache.Client(
+        self.server_list,
+        server_max_key_length=self.server_max_key_length,
+        server_max_value_length=self.server_max_value_length,
+      )
 
     def _finish(self, *ignored):
       """
@@ -157,14 +153,13 @@ if memcache is not None:
               if not succeed:
                 LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
-        LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
-      self.scheduled_action_dict.clear()
-      self.local_cache.clear()
+        LOG('MemcachedDict', 0, 'An exception occured during _finish', error=True)
+      self.__cleanup()
 
     def _abort(self, *ignored):
-      """
-        Cleanup the action dict and invalidate local cache.
-      """
+      self.__cleanup()
+
+    def __cleanup(self):
       self.local_cache.clear()
       self.scheduled_action_dict.clear()
 
@@ -215,28 +210,19 @@ if memcache is not None:
       self.local_cache[key] = None
 
     def set(self, key, value):
-      """
-        Set an item to local cache and schedule update of memcached.
-      """
       return self.__setitem__(key, value)
 
     def get(self, key, default=None):
-      """
-        Get an item from local cache, otherwise from memcached.
-      """
       try:
         return self.__getitem__(key)
       except KeyError:
         return default
 
-  class SharedDict:
+  class SharedDict(object):
     """
       Class to make possible for multiple "users" to store data in the same
       dictionary without risking to overwrite other's data.
       Each "user" of the dictionary must get an instance of this class.
-
-      TODO:
-        - handle persistence ?
     """
 
     def __init__(self, dictionary, prefix):
@@ -250,29 +236,17 @@ if memcache is not None:
       self.prefix = prefix
 
     def _prefixKey(self, key):
-      """
-        Prefix key with self.prefix .
-      """
       if not isinstance(key, basestring):
         raise TypeError, 'Key %s is not a string. Only strings are supported as key in SharedDict' % (repr(key), )
       return '%s_%s' % (self.prefix, key)
 
     def __getitem__(self, key):
-      """
-        Get item from memcached.
-      """
       return self._dictionary.__getitem__(self._prefixKey(key))
 
     def __setitem__(self, key, value):
-      """
-        Put item in memcached.
-      """
       self._dictionary.__setitem__(self._prefixKey(key), value)
 
     def __delitem__(self, key):
-      """
-        Delete item from memcached.
-      """
       self._dictionary.__delitem__(self._prefixKey(key))
 
     # These are the method names called by zope
@@ -281,55 +255,20 @@ if memcache is not None:
     __guarded_delitem__ = __delitem__
 
     def get(self, key, default=None):
-      """
-        Get item from memcached.
-      """
       return self._dictionary.get(self._prefixKey(key), default)
 
     def set(self, key, value):
-      """
-        Put item in memcached.
-      """
       self._dictionary.set(self._prefixKey(key), value)
 
   allow_class(SharedDict)
 
-  class MemcachedTool(BaseTool):
+  class MemcachedTool(_MemcacheTool):
     """
       Memcached interface available as a tool.
     """
-    id = "portal_memcached"
-    meta_type = "ERP5 Memcached Tool"
-    portal_type = "Memcached Tool"
-
     security = ClassSecurityInfo()
-    manage_options = ({'label': 'Configure',
-                       'action': 'memcached_tool_configure',
-                      },) + BaseTool.manage_options
-
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
-
-    def _getMemcachedDict(self, plugin_path):
-      """
-        Return used memcached dict.
-        Create it if does not exist.
-      """
-      try:
-        local_dict = memcached_dict_pool.local_dict
-      except AttributeError:
-        local_dict = memcached_dict_pool.local_dict = {}
-      try:
-        dictionary = local_dict[plugin_path]
-      except KeyError:
-        memcached_plugin = self.restrictedTraverse(plugin_path, None)
-        if memcached_plugin is None:
-          raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
-        dictionary = MemcachedDict((memcached_plugin.getUrlString(''),),
-                   expiration_time=memcached_plugin.getExpirationTime(),
-                   server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
-                   server_max_value_length=memcached_plugin.getServerMaxValueLength())
-        local_dict[plugin_path] = dictionary
-      return dictionary
+    erp5_site_global_id = ''
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
     def getMemcachedDict(self, key_prefix, plugin_path):
@@ -344,26 +283,25 @@ if memcache is not None:
         plugin_path
           relative_url of dedicated Memcached Plugin
       """
-      global_prefix = getattr(self, 'erp5_site_global_id', '')
+      memcached_plugin = self.restrictedTraverse(plugin_path, None)
+      if memcached_plugin is None:
+        raise ValueError('Memcached Plugin does not exists: %r' % (
+          plugin_path, ))
+      global_prefix = self.erp5_site_global_id
       if global_prefix:
-        key_prefix = '%s_%s' % (global_prefix, key_prefix)
-      return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
+        key_prefix = global_prefix + '_' + key_prefix
+      return SharedDict(memcached_plugin.getConnection(), prefix=key_prefix)
 
+  InitializeClass(MemcachedTool)
 else:
   # Placeholder memcache tool
-  class MemcachedTool(BaseTool):
+  class MemcachedTool(_MemcachedTool):
     """
       Dummy MemcachedTool placeholder.
     """
-    id = "portal_memcached"
-    meta_type = "ERP5 Memcached Tool"
-    portal_type = "Memcached Tool"
     title = "DISABLED"
 
     security = ClassSecurityInfo()
-    manage_options = ({'label': 'Configure',
-                       'action': 'memcached_tool_configure',
-                      },) + BaseTool.manage_options
 
     def failingMethod(self, *args, **kw):
       """
@@ -373,6 +311,5 @@ else:
       raise RuntimeError, 'MemcachedTool is disabled. You should ask the'\
         ' server administrator to enable it by installing python-memcached.'
 
-    manage_beforeDelete = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod

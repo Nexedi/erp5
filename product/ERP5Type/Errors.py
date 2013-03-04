@@ -6,7 +6,9 @@
 
 from Products.PythonScripts.Utility import allow_class
 from Products.CMFCore.WorkflowCore import WorkflowException
+from MySQLdb import ProgrammingError
 
+allow_class(ProgrammingError)
 
 class DeferredCatalogError(Exception):
 
@@ -53,3 +55,4 @@ allow_class(WorkflowException)
 allow_class(UnsupportedWorkflowMethod)
 allow_class(TransformationRuleError)
 allow_class(SimulationError)
+

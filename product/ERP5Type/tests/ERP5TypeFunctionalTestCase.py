@@ -35,6 +35,7 @@ import re
 import subprocess
 import shutil
 import transaction
+from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
@@ -77,7 +78,8 @@ class Xvfb:
     xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
     with open(os.devnull, 'w') as null:
       self.process = subprocess.Popen(
-        (xvfb_bin, '-fbdir' , self.fbdir, display),
+        (xvfb_bin, '-fbdir' , self.fbdir, display,
+        '-screen', '0', '1280x1024x24'),
         stdout=null, stderr=null, close_fds=True)
       # try to check if X screen is available
       time.sleep(5)
@@ -246,7 +248,7 @@ class FunctionalTestRunner:
   def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']
 
-    # Such informations should be automatically loaded
+    # Such information should be automatically loaded
     self.user = 'ERP5TypeTestCase'
     self.password = ''
     self.run_only = run_only
@@ -284,6 +286,8 @@ class FunctionalTestRunner:
       while self.getStatus() is None:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
+          # TODO: here we could take a screenshot and display it in the report
+          # (maybe using data: scheme inside a <img>)
           raise TimeoutError("Test took more than %s seconds" % self.timeout)
     except:
       print("ERP5TypeFunctionalTestCase.test Exception: %r" % (sys.exc_info(),))
@@ -386,7 +390,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
           expected_failure, error_title_list = self.runner.processResult()
     except TimeoutError, e:
       self._verboseErrorLog(20)
-      raise TimeoutError(e)
+      raise
 
     # In case of failure, verbose the error_log entries in order to collect
     # appropriated information to debug the system.
@@ -405,5 +409,12 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
-    self.assertEquals([], error_title_list)
+    self.assertEquals([], error_title_list, '\n'.join(error_title_list))
 
+# monkey patch HTTPResponse._unauthorized so that we will not have HTTP
+# authentication dialog in case of Unauthorized exception to prevent
+# blocking in functional tests.
+def _unauthorized(self):
+  raise RuntimeError, 'Unauthorized exception happens.'
+
+HTTPResponse._unauthorized = _unauthorized

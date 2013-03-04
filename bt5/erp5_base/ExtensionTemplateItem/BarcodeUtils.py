@@ -1,4 +1,4 @@
-def generateBarcodeImage(self, barcode_type, data):
+def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
   # huBarcode's DataMatrix support has limitation for data size.
   # huBarcode's QRCode support is broken.
   # more 1-D barcode types can be added by pyBarcode library.
@@ -30,7 +30,6 @@ def generateBarcodeImage(self, barcode_type, data):
     output = fp.read()
   else:
     raise NotImplementedError, 'barcode_type=%s is not supported' % barcode_type
-  RESPONSE = self.REQUEST.RESPONSE
-  RESPONSE.setHeader('Content-Type', 'image/png')
-  RESPONSE.setHeader('Content-Length', len(output))
+  if REQUEST is not None:
+    REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
   return output

@@ -35,7 +35,7 @@ def PreferredCharsetResolver_resolve(context, text, expression):
     except UnicodeDecodeError, e:
       tb_info = ''.join(traceback.format_stack())
       logger.warn('UnicodeDecodeError: %s\ntext: %r\nat:\n%s' %
-                  (e, text, tb_info))
+                  (e, repr(text), tb_info))
       result = unicode(text, 'utf-8', 'replace')
     return result
 PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve

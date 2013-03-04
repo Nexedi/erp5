@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -71,9 +72,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     trade_condition = portal.purchase_trade_condition_module.newContent(
                                            portal_type="Purchase Trade Condition",
                                            reference=self.getReference(),
-                                           title=self.getTitle(),
-                                           effective_date=DateTime() - 1,
-                                           expiration_date=DateTime() + 10 * 365)
+                                           title=self.getTitle(), )
 
     trade_condition.setSpecialise("business_process_module/%s" %\
                       business_process_id)
@@ -82,6 +81,6 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     trade_condition.setDestinationSection("organisation_module/%s" % organisation_id)
     trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
-    trade_condition.validate(comment="Validated by Configurator")
+    trade_condition.validate(comment=translateString("Validated by Configurator"))
 
     self.install(trade_condition, business_configuration)

@@ -35,27 +35,20 @@ class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
   """
   def __init__(self, timeout=None, scheme='http'):
-    self._timeout = timeout
-    self._scheme = scheme
     SafeTransport.__init__(self)
+    transport_class = Transport if scheme == 'http' else SafeTransport
+    def make_connection(*args, **kw):
+      connection = transport_class.make_connection(self, *args, **kw)
+      if timeout is not None:
+        # BBB: On Python < 2.7, HTTP connection is wrapped
+        getattr(connection, '_conn', connection).timeout = timeout
+      return connection
+    self.make_connection = make_connection
 
   def send_content(self, connection, request_body):
     try:
-      connection.putheader("Content-Type", "text/xml")
-      connection.putheader("Content-Length", str(len(request_body)))
-      connection.endheaders()
-      if self._timeout:
-        connection._conn.sock.settimeout(self._timeout)
-      if request_body:
-        connection.send(request_body)
+      return SafeTransport.send_content(self, connection, request_body)
     except socket.error, e:
-      raise ProtocolError(connection._conn.host, -1,
+      # BBB: On Python < 2.7, HTTP connection is wrapped
+      raise ProtocolError(getattr(connection, '_conn', connection).host, -1,
                           "Could not connect to server", None)
-
-  def make_connection(self, host):
-    try:
-      if self._scheme == 'http':
-        return Transport.make_connection(self, host)
-      return SafeTransport.make_connection(self, host)
-    except socket.error, e:
-      raise ProtocolError(host, -1, "Could not connect to server", None)

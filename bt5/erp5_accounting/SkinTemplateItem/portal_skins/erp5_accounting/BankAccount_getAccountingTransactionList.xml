@@ -50,110 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>src__ = 0\n
-if kw.has_key(\'src__\'): src__ = kw[\'src__\']\n
-precision = context.Base_getPreferredPrecision()\n
-r_ = lambda x: context.Base_getRoundValue(x, precision)\n
+            <value> <string>"""Returns Accounting Transactions where this bank account is payment.\n
+"""\n
+kw[\'payment_uid\'] = context.getUid()\n
+kw[\'node_category\'] = \'account_type/asset/cash/bank\'\n
+transaction_list = context.Node_getAccountingTransactionList(**kw)\n
 \n
-# read settings from user preference\n
-preference       = context.getPortalObject().portal_preferences\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-from_date        = preference.getPreferredAccountingTransactionFromDate()\n
-at_date          = preference.getPreferredAccountingTransactionAtDate()\n
+# As we are showing quantities and not asset prices, we use the precision\n
+# from this bank account currency\n
+if context.getPriceCurrency():\n
+  container.REQUEST.set(\'precision\',\n
+    context.getQuantityPrecisionFromResource(context.getPriceCurrency()))\n
 \n
-# Build the common inventory dict\n
-params = {}\n
-\n
-if kw.get(\'no_from_date\', False): from_date = None\n
-\n
-if simulation_state: params[\'simulation_state\'] = simulation_state\n
-params[\'section_uid\'] = context.Base_getSectionUidListForSectionCategory(section_category)\n
-\n
-\n
-if kw.has_key(\'node_uid\')   : params[\'node_uid\']    = kw[\'node_uid\']\n
-if kw.has_key(\'portal_type\'): params[\'portal_type\'] = kw[\'portal_type\']\n
-\n
-# Create the related accouting line list\n
-new_result  = []\n
-net_balance = 0.0\n
-\n
-if from_date is not None:\n
-  # Create a new parameter list to get the previous balance\n
-  get_inventory_kw = params.copy()\n
-  get_inventory_kw.update({ \'omit_simulation\' : True\n
-                          , \'payment_uid\'     : context.getUid()\n
-                          , \'to_date\'         : from_date\n
-                       #   , \'where_expression\': " section.portal_type = \'Organisation\' "\n
-                          , \'stat\'            : True\n
-                          })\n
-\n
-  getInventory = context.getPortalObject().portal_simulation.getInventory\n
-  # Get previous debit and credit\n
-  previous_total_debit  = r_(getInventory(omit_output=True, **get_inventory_kw))\n
-  previous_total_credit = r_(getInventory(omit_input =True, **get_inventory_kw))\n
-  if previous_total_credit != 0:\n
-    previous_total_credit = - previous_total_credit\n
-\n
-  # Show the previous balance if not empty\n
-  if previous_total_credit != 0 or previous_total_debit != 0:\n
-    from Products.ERP5Type.Document import newTempAccountingTransaction\n
-\n
-    net_balance = r_(previous_total_debit - previous_total_credit)\n
-    previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
-                                                   , "temp_%s" % context.getUid()\n
-                                                   )\n
-    previous_balance.setUid(\'new_000\')\n
-\n
-    previous_balance.edit( \\\n
-        title                   = context.Base_translateString("Previous Balance")\n
-      , date                    = from_date - 1\n
-      , portal_type             = ""\n
-      , simulation_state_title  = ""\n
-      , debit                   = previous_total_debit\n
-      , credit                  = previous_total_credit\n
-      , balance                 = net_balance\n
-      , net_balance             = net_balance\n
-      , is_previous_balance     = True\n
-      )\n
-    new_result.append(previous_balance)\n
-\n
-\n
-# Show / Hide grouping if needed\n
-if kw.has_key(\'hide_grouping\'): params[\'hide_grouping\'] = kw[\'hide_grouping\']\n
-\n
-# FIXME:\n
-# using listbox current page number * number of line per listbox page, you can call a\n
-# ZSQL Method to initialize net_balance and calculate this only for this page.\n
-#\n
-# But this is just temporary because some day, erp5_accounting will be rewritten using\n
-# only portal_catalog and getInventory. The Iventory API should provide a way to implement\n
-# such a net_balance column (in one instruction, so that we do not need to write a wrapping\n
-# list method like this one)\n
-result = context.BankAccount_zGetAccountingTransactionList( from_date = from_date\n
-                                                          , at_date   = at_date\n
-                                                          , src__     = src__\n
-                                                          , **params\n
-                                                          )\n
-if src__:\n
-  return result\n
-\n
-# Add related accounting lines one by one in order to calculate intermediate balance\n
-for l in result:\n
-  o = l.getObject()\n
-  net_balance += l.balance or 0.0\n
-  if o is not None:\n
-    c = o.asContext( net_balance        = net_balance\n
-                   , balance            = l.balance\n
-                   , credit             = l.credit\n
-                   , debit              = l.debit\n
-                   , date               = l.date.toZone(l.getObject().getStartDate().timezone())\n
-                   , section_title      = l.section_title\n
-                   , specific_reference = l.specific_reference\n
-                   )\n
-    new_result.append(c)\n
-\n
-return new_result\n
+return transaction_list\n
 </string> </value>
         </item>
         <item>

@@ -75,10 +75,10 @@ while date < context.getStopDate():\n
 \n
   if frequency == \'quarterly\':\n
     period.setShortTitle(\'%s-%s\' % (\n
-      date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
+      start_date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
   else:\n
-    period.setShortTitle(date.strftime(\'%Y-%m\'))\n
-    period.setTitle(str(translateString(date.strftime(\'%B\'))))\n
+    period.setShortTitle(start_date.strftime(\'%Y-%m\'))\n
+    period.setTitle(str(translateString(start_date.strftime(\'%B\'))))\n
 \n
   if open_periods:\n
     period.start()\n

@@ -297,7 +297,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference=reference)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_request)
+        default_follow_up_uid=credential_request.getUid())
     self.tic()
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
@@ -415,7 +415,7 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepCreateCredentialUpdate(self, sequence=None, sequence_list=None, **kw):
     '''
     Create a credential update object an fill it with some modified
-    informations
+    information
     '''
     self.login()
     # get the 'homie' person object
@@ -824,7 +824,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_reference = portal_catalog.getResultValue(
         portal_type="Credential Request", reference=credential_reference_str)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_reference)
+                        default_follow_up_uid=credential_reference.getUid())
     self.assertEquals(mail_message.getSimulationState(), "started")
     self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
 
@@ -1056,7 +1056,8 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Request", reference="vifibtest", 
         first_name="Vifib", last_name="Test")
     mail_message = portal_catalog.getResultValue(
-        portal_type="Mail Message", follow_up=credential_request)
+        portal_type="Mail Message",
+        default_follow_up_uid=credential_request.getUid())
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, message_text = last_message
@@ -1105,7 +1106,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference="barney")
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_request)
+        default_follow_up_uid=credential_request.getUid())
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")

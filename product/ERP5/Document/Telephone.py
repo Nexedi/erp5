@@ -29,13 +29,12 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 import re
 
-class Telephone(Coordinate, Base):
+class Telephone(Coordinate):
   """
     A telephone is a coordinate which stores a telephone number
     The telephone class may be used by multiple content types (ex. Fax,
@@ -43,9 +42,6 @@ class Telephone(Coordinate, Base):
 
     A telephone is a terminating leaf
     in the OFS. It can not contain anything.
-
-    Telephone inherits from Base and
-    from the mix-in Coordinate
 
     A list of I18N telephone codes can be found here::
       http://kropla.com/dialcode.htm
@@ -60,11 +56,8 @@ class Telephone(Coordinate, Base):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
-                    , PropertySheet.CategoryCore
+  property_sheets = ( PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
-                    , PropertySheet.Coordinate
                     , PropertySheet.Telephone
                     )
   # This is a list of regex.

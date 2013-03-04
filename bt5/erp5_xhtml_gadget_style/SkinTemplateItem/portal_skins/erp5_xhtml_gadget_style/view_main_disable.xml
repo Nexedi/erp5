@@ -53,28 +53,16 @@
 \n
       <tal:block metal:use-macro="here/main_template/macros/master">\n
         <tal:block metal:fill-slot="context_bar">\n
-          <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+\n
+          <div id="context_box_render"\n
+               data-gadget="context_box_render_wrapper"></div>\n
+\n
         </tal:block>\n
         <tal:block metal:fill-slot="main">\n
 \n
-            <!-- Experimental gadget form rendering -->\n
-            <!-- XXX: move to listbox gadget asap -->\n
-            <script src="jquery/ui/js/jquery-ui.js" type="text/javascript"></script>\n
-\n
-            <link rel="stylesheet" type="text/css" media="screen" href="jquery/plugin/jqgrid/ui.jqgrid.css" />\n
-            <link rel="stylesheet" type="text/css" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.css" />\n
-            <script type="text/javascript" src="jquery/plugin/jqgrid/grid.locale-en.js"></script>\n
-            <script type="text/javascript" src="jquery/plugin/jqgrid/jquery.jqGrid.src.js"></script>\n
-            <!--[if IE]>\n
-              <script type="text/javascript" src="jquery/plugin/jstorage/jquery.json-2.3.js"></script>\n
-            <!--<![endif]-->\n
-            <script src="jquery/plugin/jstorage/jstorage.js" type="text/javascript"></script>\n
-            <script src="jquery/plugin/renderjs/renderjs.js"></script>\n
-            <script src="erp5_form.js"></script>\n
-\n
-            <div id="content"\n
-                data-gadget="gadgets/content/gadget"\n
-                tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>\n
+          <div id="content"\n
+               data-gadget="gadgets/content/gadget"\n
+               tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>\n
 \n
         </tal:block>\n
       </tal:block>\n

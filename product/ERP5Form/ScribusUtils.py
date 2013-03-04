@@ -909,7 +909,7 @@ class ManageCSS:
                         , space_between_pages):
     """
     recover all CSS data relative to the current page_object (field)
-    and save these informations in the output dict
+    and save this information in the output dict
     """
     (field_name, properties_field) = field
     LOG('ManageCSS', INFO, 
@@ -1430,10 +1430,10 @@ class ScribusParser:
               LOG('ScribusParser', INFO, 
                   '    > PAGEOBJECT = ' + str(field_name))
 
-          #after having scanned all 'PAGEOBJECT' from a 'PAGE', adding the
-          #relative informations to the list of 'PAGE' before going to 
+          # after having scanned all 'PAGEOBJECT' from a 'PAGE', adding the
+          # relative information to the list of 'PAGE' before going to 
           # the next one
-          #in case the page is not empty
+          # in case the page is not empty
           if len(returned_page_object_list) != 0: 
             returned_page_dict[page_number] = returned_page_object_list
 
@@ -1524,7 +1524,7 @@ class ScribusParser:
     takes a dict generated from 'getXmlObjectsProperties' method
     and returns a dict of PAGE including a list with usefull
     'PAGEOBJECT' attributes updated with standard attributes
-    and special informations contained in the
+    and special information contained in the
     'ANTOOLTIP' attribute.
 
     usefull attributes are
@@ -1886,7 +1886,7 @@ class ScribusParser:
                                             '',
                                             object_name,
                                             tooltipfield_properties_dict)
-        # object is datetimefield and need several informations
+        # object is DateTimeField
         if str(object_properties['type']) == 'DateTimeField':
           # has been tested successfully
           object_properties['rendering'] = 'multiple'

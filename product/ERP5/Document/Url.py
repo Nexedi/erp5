@@ -30,7 +30,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
@@ -39,7 +38,7 @@ from zLOG import LOG
 
 _marker = object()
 
-class Url(Coordinate, Base, UrlMixin):
+class Url(Coordinate, UrlMixin):
   """
   A Url is allows to represent in a standard way coordinates
   such as web sites, emails, ftp sites, etc.
@@ -54,10 +53,7 @@ class Url(Coordinate, Base, UrlMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Default Properties
-  property_sheets = (   PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Coordinate
-                      , PropertySheet.Url
+  property_sheets = (   PropertySheet.Url
                       , PropertySheet.SortIndex
                       )
 
