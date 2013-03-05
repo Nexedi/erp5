@@ -933,7 +933,10 @@ class SyncMLSubscription(XMLObject):
                             'resetSignatureList')
   def resetSignatureList(self):
     """
-      Reset all signatures in activities
+    XXX Method must be renamed as it delete signature and do no
+    reset them
+    Delete signature in acticities
+    XXX Must also be splitted in activity like the real reset
     """
     object_id_list = list(self.getObjectIds())
     object_list_len = len(object_id_list)
@@ -975,18 +978,59 @@ class SyncMLSubscription(XMLObject):
                             'initialiseSynchronization')
   def initialiseSynchronization(self):
     """
-    Set the status of every object as not_synchronized
-    XXX Improve method to not fetch many objects in unique transaction
+    Set the status of every signature as not_synchronized
     """
-    #LOG('Subscription.initialiseSynchronization()', 0, self.getPath())
-    for signature in self.contentValues(portal_type='SyncML Signature'):
-      # Change the status only if we are not in a conflict mode
-      if signature.getValidationState() not in ('conflict',
-                              'conflict_resolved_with_merge',
-                              'conflict_resolved_with_client_command_winning'):
-        if self.getIsActivityEnabled():
-          signature.activate(activity='SQLQueue',
-                             priority=ACTIVITY_PRIORITY).reset()
-        else:
+    if self.getIsActivityEnabled():
+      self.getAndActivateResetSignature()
+    else:
+      for signature in self.contentValues(portal_type='SyncML Signature'):
+        # Change the status only if we are not in a conflict mode
+        if signature.getValidationState() not in (
+          'conflict',
+          'conflict_resolved_with_merge',
+          'conflict_resolved_with_client_command_winning'):
           signature.reset()
-#    self._edit(remaining_object_path_list=None)
+
+
+  def _resetSignatureIDList(self, signature_id_list):
+    """
+    Reset a list of signature given by their ids
+    """
+    for signature_id in signature_id_list:
+      signature = self[signature_id]
+      if signature.getValidationState() not in (
+        'conflict',
+        'conflict_resolved_with_merge',
+        'conflict_resolved_with_client_command_winning'):
+        signature.reset()
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getAndActivateResetSignature')
+  def getAndActivateResetSignature(self, min_packet_id=0):
+    """
+    Reset signature by packet (i.e. getAndActivate)
+    """
+    activate_kw = {"activity" : "SQLQueue",
+                   "priority" : ACTIVITY_PRIORITY}
+    packet_size = 30
+    limit = packet_size * 100
+    activate = self.activate
+    callback_method = getattr(activate(**activate_kw), "_resetSignatureIDList")
+
+    signature_id_list = self.objectIds()
+    id_length = len(self)
+    # Either there will be remaining id, either this is the end
+    max_packet = min(min_packet_id+limit, len(self))
+
+    for i in xrange(min_packet_id, max_packet, packet_size):
+      # syncml_logger.info("getAndActivateResetSignature : call callback method")
+      callback_method(
+        signature_id_list=list(signature_id_list[i:i+packet_size]))
+
+    min_packet_id += limit # Next point to start to read the id_list
+    if id_length > min_packet_id:
+      # syncml_logger.info("getAndActivateResetSignature : calling itself recursively %s"
+      #                    % (min_packet_id))
+      activate(activity="SQLQueue",
+               priority=ACTIVITY_PRIORITY+1).getAndActivateResetSignature(
+        min_packet_id=min_packet_id)
