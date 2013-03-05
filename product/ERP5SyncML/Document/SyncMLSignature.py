@@ -290,6 +290,7 @@ class SyncMLSignature(XMLObject):
     no_conflict : prevent the reset of signature for which conflict
                   has not been marked resolved, this is usefull when
                   resetting all signature at the beginning of a sync process
+                  XXX Use a better name and a positive value by default
     """
     if no_conflict and self.getValidationState() in (
       'conflict',
