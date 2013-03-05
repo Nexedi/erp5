@@ -998,7 +998,7 @@ class SyncMLSubscription(XMLObject):
     Reset signature by packet (i.e. getAndActivate)
     """
     self.recurseCallMethod(method_id="reset",
-                           method_kw = {"no_conflict" : True},
+                           method_kw={"no_conflict": True},
                            min_depth=1,
                            max_depth=1,
                            activate_kw={'priority': ACTIVITY_PRIORITY})
