@@ -61,7 +61,10 @@ The same for apply for payment / payment_reference.\n
 section_dict = {None: 1}\n
 payment_dict = {None: 1}\n
 payment_request_dict = {None: 1}\n
+resource_dict = {context.getResource(): 1}\n
+\n
 for line in context.getMovementList():\n
+  resource_dict[line.getResource()] = 1\n
   if source:\n
     section_dict[line.getDestinationSection()] = 1\n
     payment_dict[line.getSourcePayment()] = 1\n
@@ -110,6 +113,9 @@ if multiple_payment:\n
       a((\'getDestinationPaymentTitle\', \'Bank Account\'))\n
     else:\n
       a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+if len(resource_dict) > 1:\n
+  a((\'getResourceReference\', \'Currency\'))\n
+\n
 if len(payment_request_dict) > 1:\n
   if source:\n
     a((\'getSourcePaymentRequestTitle\', \'Payment Request\'))\n
