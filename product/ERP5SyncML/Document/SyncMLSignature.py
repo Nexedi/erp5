@@ -284,9 +284,18 @@ class SyncMLSignature(XMLObject):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'reset')
-  def reset(self):
-    """Clear Signature and change validation_state to not_synchronized
+  def reset(self, no_conflict=False):
     """
+    Clear Signature and change validation_state to not_synchronized
+    no_conflict : prevent the reset of signature for which conflict
+                  has not been marked resolved, this is usefull when
+                  resetting all signature at the beginning of a sync process
+    """
+    if no_conflict and self.getValidationState() in (
+      'conflict',
+      'conflict_resolved_with_merge',
+      'conflict_resolved_with_client_command_winning'):
+      return
     if self.getValidationState() != 'not_synchronized':
       self.drift()
     self.setPartialData(None)

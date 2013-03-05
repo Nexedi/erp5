@@ -991,46 +991,14 @@ class SyncMLSubscription(XMLObject):
           'conflict_resolved_with_client_command_winning'):
           signature.reset()
 
-
-  def _resetSignatureIDList(self, signature_id_list):
-    """
-    Reset a list of signature given by their ids
-    """
-    for signature_id in signature_id_list:
-      signature = self[signature_id]
-      if signature.getValidationState() not in (
-        'conflict',
-        'conflict_resolved_with_merge',
-        'conflict_resolved_with_client_command_winning'):
-        signature.reset()
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getAndActivateResetSignature')
   def getAndActivateResetSignature(self, min_packet_id=0):
     """
     Reset signature by packet (i.e. getAndActivate)
     """
-    activate_kw = {"activity" : "SQLQueue",
-                   "priority" : ACTIVITY_PRIORITY}
-    packet_size = 30
-    limit = packet_size * 100
-    activate = self.activate
-    callback_method = getattr(activate(**activate_kw), "_resetSignatureIDList")
-
-    signature_id_list = self.objectIds()
-    id_length = len(self)
-    # Either there will be remaining id, either this is the end
-    max_packet = min(min_packet_id+limit, len(self))
-
-    for i in xrange(min_packet_id, max_packet, packet_size):
-      # syncml_logger.info("getAndActivateResetSignature : call callback method")
-      callback_method(
-        signature_id_list=list(signature_id_list[i:i+packet_size]))
-
-    min_packet_id += limit # Next point to start to read the id_list
-    if id_length > min_packet_id:
-      # syncml_logger.info("getAndActivateResetSignature : calling itself recursively %s"
-      #                    % (min_packet_id))
-      activate(activity="SQLQueue",
-               priority=ACTIVITY_PRIORITY+1).getAndActivateResetSignature(
-        min_packet_id=min_packet_id)
+    self.recurseCallMethod(method_id="reset",
+                           method_kw = {"no_conflict" : True},
+                           min_depth=1,
+                           max_depth=1,
+                           activate_kw={'priority': ACTIVITY_PRIORITY})

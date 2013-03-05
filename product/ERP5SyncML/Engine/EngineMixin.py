@@ -454,8 +454,7 @@ class EngineMixin(object):
       subscriber.activate(
         activity="SQLQueue",
         after_method_id_list=("reset",
-                              "getAndActivateResetSignature",
-                              "_resetSignatureIDList"),
+                              "_recurseCallMethod"),
         # Wait for all reset to be done
         # before starting sync
         priority=ACTIVITY_PRIORITY,
