@@ -17,7 +17,6 @@ try:
   from coverage import coverage
 except ImportError:
   coverage = None
-import xunit
 
 WIN = os.name == 'nt'
 
@@ -145,7 +144,6 @@ Options:
   --sys_path=path,path       Comma-separated list of paths which will be used to
                              extend sys.path
   --instance_home=PATH       Create/use test instance in given path
-  --xunit_file=PATH          File for xunit xml report
 
 When no unit test is specified, only activities are processed.
 """
@@ -330,16 +328,10 @@ getattr(unittest, 'loader', unittest).TestLoader = ERP5TypeTestLoader
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
   """
-  xunit = None
-  def __init__(self, result, debug, xunit_file):
+  def __init__(self, result):
     self.result = result
-    if xunit_file:
-      self.xunit = xunit.Xunit(xunit_file)
-    self._debug = debug
 
   def _start_debugger(self, tb):
-    if not self._debug:
-      return
     import Lifetime
     if Lifetime._shutdown_phase:
       return
@@ -362,36 +354,17 @@ class DebugTestResult:
   def addError(self, test, err):
     self._start_debugger(err[2])
     self.result.addError(test, err)
-    if self.xunit:
-      self.xunit.addError(test, err)
 
   def addFailure(self, test, err):
     self._start_debugger(err[2])
     self.result.addFailure(test, err)
-    if self.xunit:
-      self.xunit.addFailure(test, err)
-
-  def addSuccess(self, test):
-    self.result.addSuccess(test)
-    if self.xunit:
-      self.xunit.addSuccess(test)
-
-  def startTest(self, test):
-    self.result.startTest(test)
-    if self.xunit:
-      self.xunit.startTest(test)
-
-  def printErrors(self):
-    self.result.printErrors()
-    if self.xunit:
-      self.xunit.report(unittest._WritelnDecorator(sys.stdout))
 
   def __getattr__(self, attr):
     return getattr(self.result, attr)
 
 _print = sys.stderr.write
 
-def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=None):
+def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   if "zeo_client" in os.environ and "zeo_server" in os.environ:
     _print("conflicting options: --zeo_client and --zeo_server")
     sys.exit(1)
@@ -552,7 +525,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, xunit_file=None, run_only=N
         class DebugTextTestRunner(TestRunner):
           def _makeResult(self):
             result = super(DebugTextTestRunner, self)._makeResult()
-            return DebugTestResult(result, debug, xunit_file)
+            return DebugTestResult(result)
         TestRunner = DebugTextTestRunner
       loader = ERP5TypeTestLoader()
       if run_only:
@@ -673,7 +646,6 @@ def main(argument_list=None):
         "products_path=",
         "sys_path=",
         "instance_home=",
-        "xunit_file=",
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -686,7 +658,6 @@ def main(argument_list=None):
   verbosity = 1
   debug = 0
   run_only = None
-  xunit_file = None
   instance_home = os.path.join(real_instance_home, 'unit_test')
 
   for opt, arg in opts:
@@ -792,8 +763,6 @@ def main(argument_list=None):
       sys.path.extend(arg.split(','))
     elif opt == "--instance_home":
       instance_home = os.path.abspath(arg)
-    elif opt == "--xunit_file":
-      xunit_file = os.path.abspath(arg)
 
   global tests_home
   os.environ['INSTANCE_HOME'] = instance_home
@@ -805,7 +774,6 @@ def main(argument_list=None):
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
                            debug=debug,
-                           xunit_file=xunit_file,
                            run_only=run_only,
                            )
   return result and not result.wasSuccessful()
