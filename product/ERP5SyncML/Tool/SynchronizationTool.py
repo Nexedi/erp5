@@ -125,6 +125,8 @@ class SynchronizationTool(BaseTool):
     new synchronization new data is compared with the one stored in signature
     to detect changes.
   """
+  id = "portal_synchronizations"
+
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.AccessContentsInformation,
