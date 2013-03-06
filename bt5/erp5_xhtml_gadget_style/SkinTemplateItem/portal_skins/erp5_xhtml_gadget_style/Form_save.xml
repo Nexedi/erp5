@@ -67,7 +67,6 @@ request = context.REQUEST\n
 # Get the form\n
 form = getattr(context,form_id)\n
 edit_order = form.edit_order\n
-\n
 try:\n
   # Validate\n
   form.validate_all_to_request(request, key_prefix=key_prefix)\n
@@ -81,8 +80,8 @@ except FormValidationError, validation_errors:\n
   return dumps(result)\n
 \n
 (kw, encapsulated_editor_list), action = context.Base_edit(form_id, silent_mode=1)\n
-context.log(\'%s %s\' %(kw, encapsulated_editor_list))\n
 \n
+context.log(kw)\n
 context.edit(REQUEST=request, edit_order=edit_order, **kw)\n
 for encapsulated_editor in encapsulated_editor_list:\n
   encapsulated_editor.edit(context)\n

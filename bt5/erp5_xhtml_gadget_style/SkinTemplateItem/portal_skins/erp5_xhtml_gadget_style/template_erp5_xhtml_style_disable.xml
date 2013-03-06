@@ -88,6 +88,7 @@ IDEAS:\n
 \n
           \074!-- RenderJs added libraries (WIP, XXX: use requirejs) --\076\n
           \074script src="jquery/ui/js/jquery-ui.js" type="text/javascript"\076\074/script\076\n
+          \074link rel="stylesheet" type="text/css" media="screen" href="gadget-style.css" /\076\n
           \074link rel="stylesheet" type="text/css" media="screen" href="jquery/plugin/jqgrid/ui.jqgrid.css" /\076\n
           \074link rel="stylesheet" type="text/css" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.css" /\076\n
           \074script type="text/javascript" src="jquery/plugin/jqgrid/i18n/grid.locale-en.js"\076\074/script\076\n

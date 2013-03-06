@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts62123078.31</string> </value>
+            <value> <string>ts62582297.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -107,12 +107,31 @@ var ERP5Form = ( function () {\n
 \n
           ParallelListField: function (field_id, field_dict) {\n
                       /* mutiple select fields */\n
-                      var field_value, select_dom;\n
-                      // XXX: we render only first value but it can be many how to get them ?\n
-                      field_value = field_dict.value[0];\n
-                      select_dom = $("select[name=subfield_field_" + field_id + "]");\n
-                      this.addOptionTagList(select_dom, field_dict.items, field_value);\n
-                      return select_dom;\n
+                      var tag_name = "subfield_field_" + field_id + "_default",\n
+                          initial_select_dom = $("select[name="+ tag_name + "\\\\:list]"),\n
+                          gadget = initial_select_dom.parent("div[data-gadget]"),\n
+                          new_select_id;\n
+                      // render first value in initial select box\n
+                      ERP5Form.addOptionTagList(initial_select_dom, field_dict.items, field_dict.value[0]);\n
+\n
+                      // render all other elements\n
+                      $.each(field_dict.value, function (index, index_value) {\n
+                        if (index !== 0) {\n
+                          // we need to create dynamically a select box for all element except first\n
+                          new_select_id = \'parallel_\' + field_id + index;\n
+                          gadget.append(\'<br/><select class="serialize-able" name=\' + tag_name + \':list \' + \'id=\' + new_select_id + \'></select>\');\n
+                          ERP5Form.addOptionTagList($("#"+new_select_id), field_dict.items, index_value);\n
+                        }\n
+                      });\n
+\n
+                      // add a new select with all values under main one with already selected \n
+                      if (field_dict.value.length > 0) {\n
+                        // we need to add another select if initial one is empty\n
+                        new_select_id = \'parallel_last\' + field_id;\n
+                        gadget.append(\'<br/><select class="dynamic serialize-able" name=\' + tag_name + \':list \' + \'id=\' + new_select_id + \'></select>\');\n
+                        ERP5Form.addOptionTagList($("#"+new_select_id), field_dict.items, \'\');\n
+                      }\n
+                      return initial_select_dom;\n
           },\n
 \n
           CheckBoxField: function (field_id, field_dict) {\n
@@ -159,6 +178,11 @@ var ERP5Form = ( function () {\n
 \n
           EmailField: function (field_id, field_dict) {\n
                       /* Email field */\n
+                      return this.BaseInputField(field_id, field_dict);\n
+          },\n
+\n
+          FloatField: function (field_id, field_dict) {\n
+                      /* Float field */\n
                       return this.BaseInputField(field_id, field_dict);\n
           },\n
 \n
@@ -229,9 +253,8 @@ var ERP5Form = ( function () {\n
                       /* Update form values */\n
                       $.each(data.form_data,\n
                             function(field_id, field_dict){\n
-                                var type, dom;\n
-                                type = field_dict.type;\n
-                                dom = undefined;\n
+                                var type=field_dict.type,\n
+                                    dom;\n
                                 if(ERP5Form.hasOwnProperty(type)){\n
                                   dom = ERP5Form[type](field_id, field_dict);\n
                                 }\n
@@ -244,7 +267,9 @@ var ERP5Form = ( function () {\n
 \n
                                 // mark required fields visually\n
                                 if (field_dict.required){\n
-                                  dom.parent().parent().children("label").css("font-weight", "bold");}\n
+                                  //dom.parent().parent().parent().children("label").css("font-weight", "bold");}\n
+                                  dom.parent().parent().parent().addClass("required-field");\n
+                                }\n
 \n
                               });\n
           },\n
@@ -255,11 +280,12 @@ var ERP5Form = ( function () {\n
                       form_value_dict = {};\n
                       $("." + ERP5Form.SERIALIZE_ABLE_CLASS_NAME).each(function(index){\n
                         // DOM can change values, i.e. alter checkbox (on / off)\n
-                        var element,name, value, type;\n
-                        element = $(this);\n
-                        name = element.attr("name");\n
-                        value = element.val();\n
-                        type = element.attr("type");\n
+                        var element = $(this),\n
+                            name = element.attr("name"),\n
+                            value = element.val(),\n
+                            type = element.attr("type"),\n
+                            element_class = element.attr("class");\n
+\n
                         if (type==="checkbox") {\n
                           value = element.is(":checked");\n
                           if (value===true) {\n
@@ -269,9 +295,27 @@ var ERP5Form = ( function () {\n
                             converted_value=0;\n
                           }\n
                           value = converted_value;\n
-                          }\n
+                        }\n
+                        // XXX: save DateTimeField values\n
+\n
+                        if (element_class.indexOf("hasDatepicker") !== -1) {\n
+                            console.log(name, element_class, value);\n
+                        }\n
                         // XXX: how to handle file uploads ?\n
-                        form_value_dict[name] = value;\n
+                        // some values end with :list and we need to collect them all\n
+                        if (/:list$/.test(name)) {\n
+                          if (form_value_dict[name] === undefined) {\n
+                            // init it\n
+                            form_value_dict[name] = [];\n
+                            //console.log("init", name);\n
+                          }\n
+                          form_value_dict[name].push(value);\n
+                          //console.log("set", name, form_value_dict[name]);\n
+                        }\n
+                        else {\n
+                          // single value\n
+                          form_value_dict[name] = value;\n
+                        }\n
                       });\n
                       //console.log(form_value_dict);\n
 \n
@@ -282,6 +326,8 @@ var ERP5Form = ( function () {\n
                       $.ajax({url:\'Form_save\',\n
                               data: form_value_dict,\n
                               dataType: "json",\n
+                              // it\'s important for Zope to have traditional way of encoding an URL\n
+                              traditional: 1,\n
                               success: function (data) {\n
                                 var field_errors;\n
                                 field_errors = data.field_errors;\n
@@ -290,7 +336,8 @@ var ERP5Form = ( function () {\n
                                   $.each(field_errors, function(index, value){\n
                                       var dom, field;\n
                                       dom = $("[name=" + ERP5Form.getFieldId(index) + "]");\n
-                                      dom.css("border", "1px solid red"); // XXX: use class / css\n
+                                      //dom.css("border", "1px solid red"); // XXX: use class / css\n
+                                      dom.addClass("validation-failed");\n
                                       field = dom.parent().parent();\n
                                       if (field.children("span.error").length > 0){\n
                                         // just update message\n
@@ -306,8 +353,12 @@ var ERP5Form = ( function () {\n
                                     // delete validation messages\n
                                     var element;\n
                                     element = $(this);\n
-                                    element.parent().children("div.input").children("." +ERP5Form.SERIALIZE_ABLE_CLASS_NAME).css("border", "none");\n
+                                    //element.parent().children("div.input").children("." +ERP5Form.SERIALIZE_ABLE_CLASS_NAME).css("border", "none");\n
                                     element.remove();\n
+                                    // XXX: remove all rendered in red input classes\n
+                                    $(".validation-failed").each(function () {\n
+                                      $(this).removeClass("validation-failed");\n
+                                    });\n
                                   });\n
                                   // show a fading portal_status_message\n
                                   $("#portal_status_message").toggle();\n
@@ -345,7 +396,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14861</int> </value>
+            <value> <int>17871</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

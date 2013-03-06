@@ -36,8 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div id="status" class="status"\n
-     tal:define="portal here/getPortalObject">\n
+<div tal:define="portal here/getPortalObject">\n
 \n
   <div id="breadcrumb" class="breadcrumb">\n
     <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />\n

@@ -37,9 +37,14 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="field_name request/field_name | options/field_name">\n
-  <select tal:attributes="name string:subfield_${field_name}"\n
+  <select tal:attributes="name string:subfield_${field_name}_default:list"\n
           size="1">\n
   </select>\n
+\n
+  <input type="hidden"\n
+         value="0"\n
+         class="serialize-able"\n
+         tal:attributes="name string:default_subfield_${field_name}_default:list:int">\n
 </tal:block>
 
 ]]></unicode> </value>
