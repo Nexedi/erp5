@@ -299,8 +299,6 @@ class SyncMLSignature(XMLObject):
       return
     if self.getValidationState() != 'not_synchronized':
       self.drift()
-    self.setPartialData(None)
-    self.setTemporaryData(None)
 
   def getConflictList(self):
     """
