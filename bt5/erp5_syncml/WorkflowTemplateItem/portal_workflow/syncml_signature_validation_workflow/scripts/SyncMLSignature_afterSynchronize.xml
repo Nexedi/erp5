@@ -52,16 +52,26 @@
             <key> <string>_body</string> </key>
             <value> <string>signature = state_change[\'object\']\n
 \n
+edit_kw = {}\n
+\n
 temporary_data = signature.getTemporaryData()\n
 if temporary_data is not None:\n
   # This happens when we have sent the xml\n
   # and we just get the confirmation\n
   signature.setData(temporary_data)\n
-signature.edit(force=False,\n
-               temporary_data=None,\n
-               partial_data=None,\n
-               subscriber_xupdate=None,\n
-               publisher_xupdate=None)\n
+  edit_kw["temporary_data"] = None\n
+\n
+if signature.isForce():\n
+  edit_kw["force"] = False\n
+if signature.hasPartialData():\n
+  edit_kw["partial_data"] = None\n
+if signature.hasSubscriberXupdate():\n
+  edit_kw["subscriber_xupdate"] = None\n
+if signature.hasPublisherXupdate():\n
+  edit_kw["publisher_xupdate"] = None\n
+\n
+if len(edit_kw):\n
+  signature.edit(**edit_kw)\n
 \n
 context.SyncMLSignature_resetConflictList(state_change)\n
 </string> </value>
