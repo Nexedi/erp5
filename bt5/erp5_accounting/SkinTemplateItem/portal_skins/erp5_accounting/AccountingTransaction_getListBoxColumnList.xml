@@ -56,17 +56,23 @@
 \n
 If there is more than one mirror_section on lines, the listbox will have an\n
 extra column showing mirror_section_title.\n
-The same for apply for payment / payment_reference.\n
+The same for apply for most line categories.\n
 """\n
-section_dict = {None: 1}\n
-payment_dict = {None: 1}\n
+section_set = set((None,))\n
+payment_set = set((None,))\n
+payment_request_set = set((None,))\n
+resource_set = set((context.getResource(),))\n
+\n
 for line in context.getMovementList():\n
+  resource_set.add(line.getResource())\n
   if source:\n
-    section_dict[line.getDestinationSection()] = 1\n
-    payment_dict[line.getSourcePayment()] = 1\n
+    section_set.add(line.getDestinationSection())\n
+    payment_set.add(line.getSourcePayment())\n
+    payment_request_set.add(line.getSourcePaymentRequest())\n
   else:\n
-    section_dict[line.getSourceSection()] = 1\n
-    payment_dict[line.getDestinationPayment()] = 1\n
+    section_set.add(line.getSourceSection())\n
+    payment_set.add(line.getDestinationPayment())\n
+    payment_request_set.add(line.getDestinationPaymentRequest())\n
 \n
 if context.getSourcePayment() or context.getDestinationSection():\n
   min_payment_count = 2\n
@@ -80,8 +86,8 @@ else:\n
   # a line, we have to show the column\n
   min_section_count = 1\n
 \n
-multiple_sections = len(section_dict) > min_section_count\n
-multiple_payment = len(payment_dict) > min_payment_count\n
+multiple_sections = len(section_set) > min_section_count\n
+multiple_payment = len(payment_set) > min_payment_count\n
 \n
 column_item_list = [(\'translated_id\', \'ID\')]\n
 a = column_item_list.append\n
@@ -107,6 +113,14 @@ if multiple_payment:\n
       a((\'getDestinationPaymentTitle\', \'Bank Account\'))\n
     else:\n
       a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+if len(resource_set) > 1:\n
+  a((\'getResourceReference\', \'Currency\'))\n
+\n
+if len(payment_request_set) > 1:\n
+  if source:\n
+    a((\'getSourcePaymentRequestTitle\', \'Payment Request\'))\n
+  else:\n
+    a((\'getDestinationPaymentRequestTitle\', \'Payment Request\'))\n
 if source:\n
   a((\'source_debit\', \'Debit\'))\n
   a((\'source_credit\', \'Credit\'))\n
