@@ -749,7 +749,8 @@ class SyncMLSubscription(XMLObject):
                             'getXmlBindingGeneratorMethodId')
   def getXmlBindingGeneratorMethodId(self, default=_MARKER, force=False):
     """
-      return the xml mapping
+    XXX force parameter must be removed
+    Return the xml mapping
     """
     if default is _MARKER:
       return self._baseGetXmlBindingGeneratorMethodId()
