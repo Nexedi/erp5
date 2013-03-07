@@ -452,7 +452,7 @@ class Field:
         elif obj_type is unicode:
           return obj.encode('utf-8')
         return str(obj)
-      return ''.join(map(getSearchSource,
+      return ' '.join(map(getSearchSource,
                          (self.values.values()+self.tales.values()+
                           self.overrides.values())))
 
