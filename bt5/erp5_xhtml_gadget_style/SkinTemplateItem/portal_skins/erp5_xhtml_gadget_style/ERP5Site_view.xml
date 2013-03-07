@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+           tal:define="tab here/ERP5Site_getSelectedTab;\n
+                               preferred_access_tab python:here.portal_preferences.getPreferredHtmlStyleAccessTab()">\n
+  <tal:block tal:condition="python:tab is not None and preferred_access_tab">\n
+    <tal:block tal:define="tab_renderer_form_object python: getattr(here, tab[\'renderer\'], None)">\n
+      <metal:block use-macro="here/erp5_site_main_template/macros/master">\n
+<!--\n
+        <metal:block fill-slot="tabs">\n
+          <tal:block tal:replace="structure python:here.ERP5Site_renderTabList(selected_tab=tab[\'id\'])" />\n
+        </metal:block>\n
+        <metal:block fill-slot="content">\n
+          <tal:block tal:condition="tab_renderer_form_object"\n
+                     tal:replace="structure python: tab_renderer_form_object()" />\n
+          <tal:block tal:condition="not: tab_renderer_form_object">\n
+            Server side error.\n
+          </tal:block>\n
+        </metal:block>\n
+-->\n
+\n
+      </metal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+  <tal:block tal:condition="python:tab is None or not preferred_access_tab">\n
+    <tal:block tal:replace="structure here/ERP5Site_viewClassicFrontPage" />\n
+  </tal:block>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_view</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

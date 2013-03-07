@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts62578737.97</string> </value>
+            <value> <string>ts62667459.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,7 +28,16 @@
 .validation-failed {\n
   border: 1px solid red;\n
 }\n
-</string> </value>
+\n
+.center_left {\n
+  float:left;\n
+  width: 50%;\n
+}\n
+\n
+.center_right {\n
+  float:right;\n
+  width: 49%;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -36,7 +45,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>96</int> </value>
+            <value> <int>189</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
