@@ -35,17 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,15 +64,15 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_gpg_public_key</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -94,37 +84,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_source_reference</string>
-                        <string>my_subscription_url_string</string>
-                        <string>my_destination_reference</string>
-                        <string>my_url_string</string>
-                        <string>my_source_title</string>
-                        <string>my_list_method_id</string>
-                        <string>my_conduit_module_id</string>
-                        <string>my_xml_binding_generator_method_id</string>
-                        <string>my_gid_generator_method_id</string>
-                        <string>my_synchronization_id_generator_method_id</string>
-                        <string>my_user_id</string>
-                        <string>my_password</string>
-                        <string>my_content_type</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_syncml_alert_code</string>
-                        <string>my_is_synchronized_with_erp5_portal</string>
-                        <string>my_is_activity_enabled</string>
-                        <string>my_last_anchor</string>
-                        <string>my_next_anchor</string>
-                        <string>my_translated_portal_type</string>
-                        <string>my_translated_validation_state_title</string>
-                        <string>my_synchronization_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -132,7 +98,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SyncMLSubscription_view</string> </value>
+            <value> <string>SyncMLSubscription_viewSignatureList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -140,11 +106,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SyncMLSubscription_view</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>SyncMLSubscription_viewSignatureList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -156,19 +118,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Signatures</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -9,6 +9,7 @@ SyncML Subscription | start_synchronization
 SyncML Subscription | update_url
 SyncML Subscription | vew
 SyncML Subscription | view_conflict
+SyncML Subscription | view_signatures
 Synchronization Tool | point_fixe
 Synchronization Tool | view
 System Preference | syncml
