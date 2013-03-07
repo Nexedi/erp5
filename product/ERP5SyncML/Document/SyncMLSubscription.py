@@ -275,7 +275,6 @@ class SyncMLSubscription(XMLObject):
         signature = self.newContent(
           portal_type='SyncML Signature',
           id=gid,
-          content_type=conduit.getContentType()
           )
         syncml_logger.debug("Created a signature for %s - document : %s"
                             % (signature.getPath(), document))
