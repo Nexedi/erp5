@@ -125,9 +125,14 @@ def countDelimiters(value):
     value = ' '.join(split_value[:-1])
   # Count delimiters
   delimiter_count = 0
+  last_delimiter = None
   for char in value:
     if char in delimiter_list:
-      delimiter_count += 1
+      if char != last_delimiter:
+        delimiter_count += 1
+        last_delimiter = char
+    else:
+      last_delimiter = None
   return delimiter_count
 
 @profiler_decorator
