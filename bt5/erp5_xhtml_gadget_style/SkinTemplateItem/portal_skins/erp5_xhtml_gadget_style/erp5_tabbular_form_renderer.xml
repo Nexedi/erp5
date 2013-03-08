@@ -34,42 +34,40 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<div tal:define="portal here/getPortalObject">\n
+            <value> <unicode>\074html\076\n
+  \074head\076\n
+    \074title tal:content="template/title"\076The title\074/title\076\n
+    \074meta http-equiv="content-type" content="text/html;charset=utf-8"\076\n
+  \074/head\076\n
+  \074body\076\n
 \n
-  <div id="breadcrumb" class="breadcrumb">\n
-    <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />\n
-  </div>\n
+    \074script type="text/javascript" language="javascript"\076\n
+      //\074![CDATA[\n
+        $(document).ready(function() {\n
+            gadget = RenderJs.getSelfGadget();\n
 \n
-  <div id="logged_in_as" class="logged_in_as">\n
-    <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
-      <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
-      <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />\n
-    </tal:block>\n
-  </div>\n
+            // default tab should be openned fist\n
+            gadget.redirect = function () {\n
+              $.url.redirect(\'/\' + gadget.default_tab_url + \'/\');\n
+            };\n
 \n
-  <p class="clear"></p>\n
+            // default route\n
+            RenderJs.RouteGadget.add(\'\', gadget.redirect, 1);\n
 \n
-  <tal:block tal:condition="preferred_html_style_acknowledgeable_message | nothing">\n
-    <div id="acknowledgeable_message_render" class="acknowledgeable_message_render">\n
-      <div tal:content="structure here/acknowledgeable_message_render"/>\n
-    </div>\n
-  </tal:block>\n
+            $.each(gadget.action_id_list, function(index, value) {\n
+              // add dynamic function to gadget that will take care to render tab using gadgets\n
+              gadget[value] = function () {\n
+                 ERP5Form.openFormInTabbularGadget(gadget.tab_container_id, value);\n
+              };\n
+              //add dynamic route\n
+              RenderJs.RouteGadget.add(\'/\' + value + \'/\', gadget[value], 1);\n
+            });\n
+        });\n
+      //]]\076\n
+    \074/script\076\n
 \n
-  <!-- XXX add portal_status_message gadget -->\n
-  <div tal:content="request/portal_status_message | nothing" id="transition_message"\n
-       class="transition_message"/>\n
-\n
-  <tal:block tal:condition="request/field_errors | nothing">\n
-    <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">\n
-        Input data has errors. Please look at the error messages below.\n
-    </div>\n
-    <script type="text/javascript">changed = true;</script>\n
-  </tal:block>\n
-</div>
-
-]]></unicode> </value>
+  \074/body\076\n
+\074/html\076</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -81,11 +79,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>status_gadget</string> </value>
+            <value> <string>erp5_tabbular_form_renderer</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>iso-8859-15</string> </value>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
