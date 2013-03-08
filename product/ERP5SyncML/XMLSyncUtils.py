@@ -160,18 +160,18 @@ def resolveSyncmlAlertCode(category_id):
             base_category='syncml_alert_code').getReference()
 
 
-def setRidWithMap(xml, subscriber):
-  """
-    get all the local objects of the given target id and set them the rid with
-    the given source id (in the Map section)
-  """
-  item_list = xml.xpath('/syncml:SyncML/syncml:SyncBody/syncml:Map/syncml:MapItem',
-                        namespaces=xml.nsmap)
-  for map_item in item_list:
-    gid = '%s' % map_item.xpath('string(.//syncml:Target/syncml:LocURI)', namespaces=xml.nsmap)
-    signature = subscriber.getSignatureFromGid(gid)
-    rid = '%s' % map_item.xpath('string(.//syncml:Source/syncml:LocURI)', namespaces=xml.nsmap)
-    signature.setRid(rid)
+# def setRidWithMap(xml, subscriber):
+#   """
+#     get all the local objects of the given target id and set them the rid with
+#     the given source id (in the Map section)
+#   """
+#   item_list = xml.xpath('/syncml:SyncML/syncml:SyncBody/syncml:Map/syncml:MapItem',
+#                         namespaces=xml.nsmap)
+#   for map_item in item_list:
+#     gid = '%s' % map_item.xpath('string(.//syncml:Target/syncml:LocURI)', namespaces=xml.nsmap)
+#     signature = subscriber.getSignatureFromGid(gid)
+#     rid = '%s' % map_item.xpath('string(.//syncml:Source/syncml:LocURI)', namespaces=xml.nsmap)
+#     signature.setRid(rid)
 
 
 def getXupdateObject(object_xml=None, old_xml=None):
