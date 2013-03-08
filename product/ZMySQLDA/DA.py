@@ -194,13 +194,6 @@ m.DeferredConnection = DeferredConnection
 del m
 
 
-folder_methods={
-    'manage_addZMySQLConnection':
-    manage_addZMySQLConnection,
-    'manage_addZMySQLConnectionForm':
-    manage_addZMySQLConnectionForm,
-    }
-
 __ac_permissions__=(
     ('Add Z MySQL Database Connections',
      ('manage_addZMySQLConnectionForm',
