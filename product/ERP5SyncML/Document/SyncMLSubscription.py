@@ -1001,4 +1001,5 @@ class SyncMLSubscription(XMLObject):
                            method_kw={"no_conflict": True},
                            min_depth=1,
                            max_depth=1,
-                           activate_kw={'priority': ACTIVITY_PRIORITY})
+                           activate_kw={'priority': ACTIVITY_PRIORITY,
+                                        'tag' : "%s_reset" % self.getPath()})

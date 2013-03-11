@@ -379,8 +379,7 @@ class SynchronizationTool(BaseTool):
     # XXX This must depends on activity enables property, maybe use engine
     if subscription.getIsActivityEnabled():
       subscription.activate(
-        after_method_id_list=("reset",
-                              "_recurseCallMethod"),
+        after_tag="%s_reset" %(subscription.getPath(),),
         activity="SQLQueue",
         priority=ACTIVITY_PRIORITY,
         tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))

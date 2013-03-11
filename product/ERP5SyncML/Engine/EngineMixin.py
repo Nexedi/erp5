@@ -453,8 +453,7 @@ class EngineMixin(object):
     if subscriber.getIsActivityEnabled():
       subscriber.activate(
         activity="SQLQueue",
-        after_method_id_list=("reset",
-                              "_recurseCallMethod"),
+        after_tag = "%s_reset" % subscriber.getPath(),
         # Wait for all reset to be done
         # before starting sync
         priority=ACTIVITY_PRIORITY,
