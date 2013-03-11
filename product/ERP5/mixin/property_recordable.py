@@ -125,7 +125,7 @@ class PropertyRecordableMixin:
     which recorded properties in its context.
     """
     context = self.asContext()
-    context.edit(**self._getRecordedPropertyDict(()))
+    context.edit(**self._getRecordedPropertyDict({}))
     return context
 
   def _getRecordedPropertyDict(self, *args):
