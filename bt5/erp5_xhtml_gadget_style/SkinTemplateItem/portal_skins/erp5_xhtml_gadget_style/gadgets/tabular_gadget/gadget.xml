@@ -53,10 +53,11 @@
                                                \'action_id_list\': action_id_list}">\n
 \n
 \n
-  <!--   XXX: use portal_status_message gadget -->\n
-  <div id="portal_status_message" style="height:20px; display:none;">\n
-    <p style="color:red; font-weight: bold;"></p>\n
-  </div>\n
+  <div data-gadget="gadgets/portal_status_message/gadget"\n
+       data-gadget-cache-id="portal_status_message"\n
+       data-gadget-cacheable="1"\n
+       id="portal_status_message"></div>\n
+\n
 \n
   <div class="document">\n
 \n
@@ -79,7 +80,7 @@
               tal:define="action_form python: action[\'url\'].split(\'/\')[-1]"\n
               tal:attributes="id action_form;\n
                               class python: action == current_action and \'selected\' or \'not_selected\'">\n
-            <a tal:attributes="href python: \'view#/%s/\' %action_form">\n
+            <a tal:attributes="onclick python: \'\'\'javascript: return ERP5Form.onTabClickHandler(\'%s\')\'\'\' %action_form">\n
               <span i18n:translate=""\n
                     i18n:domain="ui"\n
                     tal:content="action/name">action_name</span>\n

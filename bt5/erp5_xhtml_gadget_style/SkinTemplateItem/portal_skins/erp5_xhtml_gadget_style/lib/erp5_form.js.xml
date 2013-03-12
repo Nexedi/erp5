@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts62582297.01</string> </value>
+            <value> <string>ts63100043.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -215,38 +215,41 @@ var ERP5Form = ( function () {\n
 \n
                       listbox_dict = field_dict.listbox;\n
                       listbox_data_url = listbox_dict.listbox_data_url;\n
-                      colModel = [];\n
-                      column_title_list = [];\n
-                      $.each(listbox_dict.columns,\n
-                              function(i, value){\n
-                                var index, title, column;\n
-                                index = value[0];\n
-                                title = value[1];\n
-                                column_title_list.push(title);\n
-                                column = {\'name\': index,\n
-                                          \'index\': index,\n
-                                          \'width\': 185,\n
-                                          \'align\': \'left\'};\n
-                                colModel.push(column);\n
-                      });\n
-\n
-                      listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
-                                    datatype: "json",\n
-                                    colNames:  column_title_list,\n
-                                    colModel: colModel,\n
-                                    rowNum: listbox_dict.lines,\n
-                                    pager: \'#\'+navigation_id,\n
-                                    sortname: \'id\',\n
-                                    viewrecords: true,\n
-                                    sortorder: "desc",\n
-                                    loadError : function(xhr, textStatus, errorThrown)  {\n
-                                                  // XXX: handle better than just alert.\n
-                                                  alert("Error occurred during getting data from server.");\n
-                                                  },\n
-                                    cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
-                                    caption: field_dict.title});\n
-                      listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
-                      return listbox_table;\n
+                      $("#" + listbox_id).html(listbox_dict["listbox_html"]);\n
+                      return;\n
+//                       Uncomment below to use jqgrid plugin to render listbox\n
+//                       colModel = [];\n
+//                       column_title_list = [];\n
+//                       $.each(listbox_dict.columns,\n
+//                               function(i, value){\n
+//                                 var index, title, column;\n
+//                                 index = value[0];\n
+//                                 title = value[1];\n
+//                                 column_title_list.push(title);\n
+//                                 column = {\'name\': index,\n
+//                                           \'index\': index,\n
+//                                           \'width\': 185,\n
+//                                           \'align\': \'left\'};\n
+//                                 colModel.push(column);\n
+//                       });\n
+// \n
+//                       listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
+//                                     datatype: "json",\n
+//                                     colNames:  column_title_list,\n
+//                                     colModel: colModel,\n
+//                                     rowNum: listbox_dict.lines,\n
+//                                     pager: \'#\'+navigation_id,\n
+//                                     sortname: \'id\',\n
+//                                     viewrecords: true,\n
+//                                     sortorder: "desc",\n
+//                                     loadError : function(xhr, textStatus, errorThrown)  {\n
+//                                                   // XXX: handle better than just alert.\n
+//                                                   alert("Error occurred during getting data from server.");\n
+//                                                   },\n
+//                                     cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
+//                                     caption: field_dict.title});\n
+//                       listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
+//                       return listbox_table;\n
           },\n
 \n
           update: function(data) {\n
@@ -353,7 +356,6 @@ var ERP5Form = ( function () {\n
                                     // delete validation messages\n
                                     var element;\n
                                     element = $(this);\n
-                                    //element.parent().children("div.input").children("." +ERP5Form.SERIALIZE_ABLE_CLASS_NAME).css("border", "none");\n
                                     element.remove();\n
                                     // XXX: remove all rendered in red input classes\n
                                     $(".validation-failed").each(function () {\n
@@ -361,12 +363,20 @@ var ERP5Form = ( function () {\n
                                     });\n
                                   });\n
                                   // show a fading portal_status_message\n
-                                  $("#portal_status_message").toggle();\n
-                                  $("#portal_status_message p").html("Saved");\n
-                                  window.setTimeout(\'$("#portal_status_message").toggle();\', 4000);\n
+                                  RenderJs.GadgetIndex.getGadgetById(\'portal_status_message\').showMessage("Saved", 1000);\n
                                 }\n
                               }});\n
           },\n
+\n
+        onTabClickHandler: function (form_id) {\n
+          /*\n
+           * When a tab gets clicked change url (part after \'#\') so router can detect\n
+            change and load proper gadget.\n
+            This function preserves all URL arguments.\n
+          */\n
+          window.location = window.location.toString().split(\'#\')[0] + \'#/\'+form_id + \'/\';\n
+          return false;\n
+        },\n
 \n
         openFormInTabbularGadget: function (container_id, form_id) {\n
           /*\n
@@ -382,6 +392,19 @@ var ERP5Form = ( function () {\n
               \'Form_asJSON?form_id=\' + form_id);;\n
             RenderJs.TabbularGadget.toggleVisibility($(\'#\' + form_id));\n
             ERP5Form.setCurrentFormId(form_id);\n
+            // when all gadgets are loaded adjust left and right side of forms to have same height\n
+            RenderJs.bindReady(function () {\n
+              setTimeout(function() {\n
+                var left_height = $(\'fieldset.left\').height(),\n
+                    right_height = $(\'fieldset.right\').height();\n
+                  if (right_height <= left_height) {\n
+                    $(\'fieldset.right\').height(left_height);\n
+                  }\n
+                  else {\n
+                    $(\'fieldset.left\').height(right_height);\n
+                  }\n
+                }, 500);\n
+            });\n
           }\n
         }\n
 \n
@@ -396,7 +419,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17871</int> </value>
+            <value> <int>18852</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
