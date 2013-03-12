@@ -354,7 +354,7 @@
                         </tuple>
                         <tuple>
                           <string>reaction_description</string>
-                          <string>Reaction description</string>
+                          <string>Reaction Description</string>
                         </tuple>
                         <tuple>
                           <string>source_section</string>
@@ -413,7 +413,7 @@
                         </tuple>
                         <tuple>
                           <string>reaction_description</string>
-                          <string>Reaction description</string>
+                          <string>Reaction Description</string>
                         </tuple>
                         <tuple>
                           <string>source_section</string>

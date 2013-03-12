@@ -115,7 +115,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Action to be triggered on the Response Event</string> </value>
+                    <value> <string>Action to be Triggered on the Response Event</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>vads_site_id</string> </value>
+                    <value> <string>VADS Site ID</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

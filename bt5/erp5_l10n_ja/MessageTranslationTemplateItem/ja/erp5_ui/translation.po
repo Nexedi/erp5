@@ -261,7 +261,7 @@ msgstr "追加価格"
 msgid "Additional Price Quantity Step"
 msgstr "数量にともなう追加価格"
 
-msgid "Additional Term (days)"
+msgid "Additional Term (Days)"
 msgstr "追加期間 (日数)"
 
 msgid "Address"
@@ -978,7 +978,7 @@ msgstr "パスワードを変更する"
 msgid "Change State"
 msgstr "状態を変更する"
 
-msgid "ChangeLog"
+msgid "Change Log"
 msgstr "変更履歴"
 
 msgid "Changelog"
@@ -1560,10 +1560,10 @@ msgstr "日/月/年"
 msgid "Days"
 msgstr "日"
 
-msgid "Days Of Month"
+msgid "Days of Month"
 msgstr "何日"
 
-msgid "Days Of Week"
+msgid "Days of Week"
 msgstr "何曜日"
 
 msgid "Debit"
@@ -1602,7 +1602,7 @@ msgstr "標準エクスポート"
 msgid "Default Export of Each Document (One sheet per view)"
 msgstr "標準エクスポート (シート別)"
 
-msgid "Default Fax"
+msgid "Default FAX"
 msgstr "標準のFAX番号"
 
 msgid "Default Image"
@@ -2292,14 +2292,8 @@ msgstr "外部フォルダー"
 msgid "External Sources"
 msgstr "外部参照元"
 
-msgid "FAX"
-msgstr "FAX"
-
 msgid "Fast Input"
 msgstr "一括入力"
-
-msgid "Fax"
-msgstr "FAX"
 
 msgid "Fax Message"
 msgstr "FAXメッセージ"
@@ -2379,7 +2373,7 @@ msgstr "フォルダー"
 msgid "Folder Contents"
 msgstr "フォルダーの内容"
 
-msgid "Follow Up"
+msgid "Follow-up"
 msgstr "対応するチケット"
 
 msgid "Follow Up Ticket"
@@ -2391,23 +2385,20 @@ msgstr "イベントに応答するにはチケットの設定が必要です。
 msgid "Format"
 msgstr "形式"
 
-msgid "Frequency (weeks)"
+msgid "Frequency in Weeks"
 msgstr "周期 (週)"
 
-msgid "Frequency In Days"
+msgid "Frequency in Days"
 msgstr "周期 (日数)"
 
-msgid "Frequency In Hours"
+msgid "Frequency in Hours"
 msgstr "周期 (時間)"
 
-msgid "Frequency In Minutes"
+msgid "Frequency in Minutes"
 msgstr "周期 (分)"
 
-msgid "Frequency In Months"
+msgid "Frequency in Months"
 msgstr "周期 (月)"
-
-msgid "Frequency In Weeks"
-msgstr "周期 (週)"
 
 msgid "Friday"
 msgstr "金曜"
@@ -4944,13 +4935,13 @@ msgstr "分割して延期する"
 msgid "Spreadsheet"
 msgstr "表計算文書"
 
-msgid "Start After"
+msgid "Start after"
 msgstr "指定日より後に開始"
 
 msgid "Start Assignment"
 msgstr "割当を開始する"
 
-msgid "Start Before"
+msgid "Start before"
 msgstr "指定日より前に開始"
 
 msgid "Start Building"
@@ -4992,13 +4983,13 @@ msgstr "バリエーション毎の在庫"
 msgid "Stock per Variation"
 msgstr "バリエーション毎の在庫"
 
-msgid "Stop After"
+msgid "Stop after"
 msgstr "指定日より後に終了"
 
 msgid "Stop Assignment"
 msgstr "割当を停止する"
 
-msgid "Stop Before"
+msgid "Stop before"
 msgstr "指定日より前に終了"
 
 msgid "Stop Career Step"
@@ -5190,7 +5181,7 @@ msgstr "電話番号は必須です"
 msgid "Telephone must be defined"
 msgstr "電話は必須です"
 
-msgid "Term (days)"
+msgid "Term (Days)"
 msgstr "期間 (日数)"
 
 msgid "Terminate the Current Career Step"
@@ -5367,13 +5358,13 @@ msgstr "取引タイプ"
 msgid "Transactions"
 msgstr "取引"
 
-msgid "Transactions Related to This Account"
+msgid "Transactions Related to this Account"
 msgstr "関連する取引"
 
-msgid "Transactions Related to This Bank Account"
+msgid "Transactions Related to this Bank Account"
 msgstr "関連する取引"
 
-msgid "Transactions Related to This Entity"
+msgid "Transactions Related to this Entity"
 msgstr "関連する取引"
 
 msgid "Transformation"
@@ -5454,7 +5445,7 @@ msgstr "ログイン名"
 msgid "User Password"
 msgstr "パスワード"
 
-msgid "User name"
+msgid "User Name"
 msgstr "ユーザ名"
 
 msgid "Using category for section is invalid."
@@ -5469,10 +5460,10 @@ msgstr "VATコード"
 msgid "VAT ID"
 msgstr "VAT ID"
 
-msgid "Valid From"
+msgid "Valid from"
 msgstr "有効期間の開始日"
 
-msgid "Valid Until"
+msgid "Valid until"
 msgstr "有効期間の終了日"
 
 msgid "Validate"

@@ -10,12 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>base_category</string>
+                <string>catalog_index</string>
+                <string>columns</string>
+                <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
                 <string>title</string>
-                <string>catalog_index</string>
-                <string>portal_type</string>
-                <string>base_category</string>
-                <string>columns</string>
               </list>
             </value>
         </item>

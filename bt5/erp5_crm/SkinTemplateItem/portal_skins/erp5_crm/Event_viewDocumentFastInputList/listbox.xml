@@ -317,7 +317,7 @@
                       <list>
                         <tuple>
                           <string>file_name</string>
-                          <string>FileName</string>
+                          <string>Filename</string>
                         </tuple>
                         <tuple>
                           <string>content_type</string>
@@ -368,7 +368,7 @@
                       <list>
                         <tuple>
                           <string>file_name</string>
-                          <string>FileName</string>
+                          <string>Filename</string>
                         </tuple>
                         <tuple>
                           <string>content_type</string>

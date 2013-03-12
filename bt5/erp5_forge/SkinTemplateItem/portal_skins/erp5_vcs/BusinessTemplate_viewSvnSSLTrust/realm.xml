@@ -239,11 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<b>Realm Server</b>
-
-]]></string> </value>
+                    <value> <string>Realm Server</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

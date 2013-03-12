@@ -104,7 +104,7 @@
                         </tuple>
                         <tuple>
                           <string>source_method_id</string>
-                          <string>Source Method Id</string>
+                          <string>Source Method ID</string>
                         </tuple>
                         <tuple>
                           <string>source_title</string>
@@ -148,7 +148,7 @@
                         </tuple>
                         <tuple>
                           <string>destination_method_id</string>
-                          <string>Destination Method Id</string>
+                          <string>Destination Method ID</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>

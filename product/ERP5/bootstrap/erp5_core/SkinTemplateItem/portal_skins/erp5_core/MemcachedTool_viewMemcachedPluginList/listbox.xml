@@ -89,7 +89,7 @@
                         </tuple>
                         <tuple>
                           <string>url_string</string>
-                          <string>Url</string>
+                          <string>URL</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>

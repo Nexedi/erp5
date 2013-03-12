@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Deprecated, use Base_viewFieldLibrary instead</string> </value>
+            <value> <string>Deprecated (Use Default Field Library instead)</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

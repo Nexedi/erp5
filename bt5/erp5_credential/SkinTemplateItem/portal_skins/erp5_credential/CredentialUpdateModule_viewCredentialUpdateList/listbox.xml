@@ -118,7 +118,7 @@
                         </tuple>
                         <tuple>
                           <string>default_fax_text</string>
-                          <string>Fax</string>
+                          <string>FAX</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -262,7 +262,7 @@ Role & Function
                         </tuple>
                         <tuple>
                           <string>default_fax_text</string>
-                          <string>Fax</string>
+                          <string>FAX</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -356,7 +356,7 @@ Role & Function
                         </tuple>
                         <tuple>
                           <string>default_fax_text</string>
-                          <string>Fax</string>
+                          <string>FAX</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>

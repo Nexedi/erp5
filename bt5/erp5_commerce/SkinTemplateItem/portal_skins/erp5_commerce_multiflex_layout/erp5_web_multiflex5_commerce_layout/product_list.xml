@@ -539,7 +539,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>product_list</string> </value>
+                    <value> <string>Products</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>

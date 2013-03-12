@@ -92,10 +92,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The title of the document</string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -113,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference lookup regular expression</string> </value>
+                    <value> <string>Reference Lookup Regular Expression</string> </value>
                 </item>
               </dictionary>
             </value>

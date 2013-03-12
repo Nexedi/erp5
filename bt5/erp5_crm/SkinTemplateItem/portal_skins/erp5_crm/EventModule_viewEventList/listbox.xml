@@ -367,7 +367,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up Ticket</string>
+                          <string>Follow-up Ticket</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -434,7 +434,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up Ticket</string>
+                          <string>Follow-up Ticket</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -614,7 +614,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up Ticket</string>
+                          <string>Follow-up Ticket</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>

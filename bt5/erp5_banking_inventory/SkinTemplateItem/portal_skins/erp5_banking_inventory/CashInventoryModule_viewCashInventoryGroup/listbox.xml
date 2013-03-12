@@ -84,7 +84,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>Id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>title</string>

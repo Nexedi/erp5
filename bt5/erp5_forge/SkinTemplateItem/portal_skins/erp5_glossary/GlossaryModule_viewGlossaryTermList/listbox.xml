@@ -133,7 +133,7 @@
                         </tuple>
                         <tuple>
                           <string>GlossaryTerm_getDuplicateGlossaryTermCount</string>
-                          <string>Num of duplicates</string>
+                          <string>Number of Duplicates</string>
                         </tuple>
                       </list>
                     </value>

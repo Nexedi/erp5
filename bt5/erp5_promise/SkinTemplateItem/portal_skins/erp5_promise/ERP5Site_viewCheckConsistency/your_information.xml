@@ -271,11 +271,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<b>WARNNING!</b>
-
-]]></string> </value>
+                    <value> <string>Warning</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

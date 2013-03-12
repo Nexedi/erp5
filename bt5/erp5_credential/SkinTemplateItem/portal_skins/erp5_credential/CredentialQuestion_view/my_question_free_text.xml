@@ -241,7 +241,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Security Question (free text)</string> </value>
+                    <value> <string>Security Question (Free Text)</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

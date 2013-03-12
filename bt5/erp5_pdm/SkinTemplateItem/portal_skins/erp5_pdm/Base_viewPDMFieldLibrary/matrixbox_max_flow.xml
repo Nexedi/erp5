@@ -101,7 +101,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox_max_flow</string> </value>
+                    <value> <string>Maximum Flow</string> </value>
                 </item>
               </dictionary>
             </value>

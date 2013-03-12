@@ -164,9 +164,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -193,7 +191,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -241,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>your_title</string> </value>
+                    <value> <string>Fast Input Title</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -273,22 +271,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: request.get(\'fast_input_title\', None) is not None</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

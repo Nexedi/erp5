@@ -10,10 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
                 <string>items</string>
-                <string>hash_script_id</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -120,7 +119,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variation Base Category List</string> </value>
+                    <value> <string>Variation Base Categories</string> </value>
                 </item>
               </dictionary>
             </value>

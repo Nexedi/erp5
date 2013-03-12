@@ -237,11 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<b>Orphan Objects (objects not included in a business template)</b>
-
-]]></string> </value>
+                    <value> <string>Orphan Objects (Objects not Included in a Business Template)</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

@@ -17,7 +17,6 @@
                 <string>enabled</string>
                 <string>getter_method</string>
                 <string>global_attributes</string>
-                <string>title</string>
                 <string>update_cell_range</string>
               </list>
             </value>
@@ -146,10 +145,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
                 </item>
                 <item>
                     <key> <string>update_cell_range</string> </key>

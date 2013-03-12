@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2009-03-10 11:15+0000\n"
-"PO-Revision-Date: 2012-02-15 10:02+CET\n"
+"PO-Revision-Date: 2013-02-26 17:55+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -156,7 +156,7 @@ msgstr "-- Workflows --"
 msgid "1 day ago"
 msgstr "hier"
 
-msgid "10 newest items"
+msgid "10 Newest Items"
 msgstr "10 derniers documents"
 
 msgid "A Query about the current ${portal_type} was posted with ID ${query_id}."
@@ -609,7 +609,7 @@ msgstr "Échéancier"
 msgid "Additional Price"
 msgstr "Prix additionnel"
 
-msgid "Additional Term (days)"
+msgid "Additional Term (Days)"
 msgstr "Délai additionnel (jours)"
 
 msgid "Address"
@@ -1335,7 +1335,7 @@ msgstr "Date de début"
 msgid "Beginning of this career step"
 msgstr "Début de carrière"
 
-msgid "Bill Of Material Description"
+msgid "Bill of Material Description"
 msgstr "Description de la liste des produits"
 
 msgid "Bill of Materials and Operations"
@@ -1579,9 +1579,6 @@ msgid "Cache Duration"
 msgstr "Durée du cache"
 
 msgid "Cache Factories"
-msgstr "Fabrication des caches"
-
-msgid "Cache Factories List"
 msgstr "Liste des fabriques de cache"
 
 msgid "Cache Factory"
@@ -1932,10 +1929,10 @@ msgstr "Caisse"
 msgid "Cash Status"
 msgstr "État de valeur"
 
-msgid "Cash To Currency Purchase"
+msgid "Cash to Currency Purchase"
 msgstr "Achat de devises contre espèces"
 
-msgid "Cash To Currency Sale"
+msgid "Cash to Currency Sale"
 msgstr "Vente de devises contre espèces"
 
 msgid "Cash Transfer"
@@ -2073,7 +2070,7 @@ msgstr "Choix"
 msgid "Choose Solve Actions"
 msgstr "Solutionner la divergence"
 
-msgid "Choose a password"
+msgid "Choose a Password"
 msgstr "Choisissez un mot de passe"
 
 msgid "Citation of a related action or document."
@@ -2706,7 +2703,7 @@ msgstr "Créer un document"
 msgid "Create Follow Up Ticket"
 msgstr "Créer un ticket de suivi"
 
-msgid "Create Follow Up Ticket Action"
+msgid "Create Follow-up Ticket Action"
 msgstr "Créer un ticket de suivi (action)"
 
 msgid "Create Initial Balance Transaction"
@@ -2784,7 +2781,7 @@ msgstr "Créer un utilisateur"
 msgid "Create User [transition in user_account_workflow]"
 msgstr "Créer un compte utilisateur"
 
-msgid "Create Your New Account"
+msgid "Create your New Account"
 msgstr "Créez votre compte"
 
 msgid "Create a New Event for Reply"
@@ -2793,10 +2790,10 @@ msgstr "Créer un nouvel évènement pour la réponse"
 msgid "Create a Task"
 msgstr "Créer une tâche"
 
-msgid "Created After"
+msgid "Created after"
 msgstr "Crée après"
 
-msgid "Created Before"
+msgid "Created before"
 msgstr "Crée avant"
 
 msgid "Created Clone ${portal_type}."
@@ -3090,10 +3087,10 @@ msgstr "Jour / Mois / Année"
 msgid "Days"
 msgstr "Jours"
 
-msgid "Days Of Month"
+msgid "Days of Month"
 msgstr "Jours du mois"
 
-msgid "Days Of Week"
+msgid "Days of Week"
 msgstr "Jours de la semaine"
 
 msgid "Debit"
@@ -3784,7 +3781,7 @@ msgstr "Méthode d'affichage"
 msgid "Distributed Ram Cache"
 msgstr "Cache de ram distribué"
 
-msgid "Distributed Ram Cache Plugin"
+msgid "Distributed RAM Cache Plugin"
 msgstr "Greffon de cache de ram distribué"
 
 msgid "Diverged"
@@ -3846,9 +3843,6 @@ msgstr "Module d'ingestion des documents"
 
 msgid "Document Interactions"
 msgstr "Interactions des documents"
-
-msgid "Document List"
-msgstr "Liste des documents"
 
 msgid "Document Module"
 msgstr "Module des documents"
@@ -4165,7 +4159,7 @@ msgstr "Confirmation email"
 msgid "Email Ingestion Address"
 msgstr "Adresse email pour l'ingestion"
 
-msgid "Email notification about document ingestion"
+msgid "Email Notification about Document Ingestion"
 msgstr "Notification par email de l'ingestion du document"
 
 msgid "Embed Category Action [transition in category_publication_workflow]"
@@ -4531,11 +4525,8 @@ msgstr "Format de l'export"
 msgid "Export Mode"
 msgstr "Mode d'export"
 
-msgid "Export Terms As PO File"
-msgstr "Exporter les conditions au format PO"
-
 msgid "Export Terms as PO File"
-msgstr "Exporter les messages dans un fichier PO"
+msgstr "Exporter les conditions au format PO"
 
 msgid "Export to Spreadsheet"
 msgstr "Exporter"
@@ -4555,9 +4546,6 @@ msgstr "Workflow des processus externes"
 msgid "External Source Content"
 msgstr "Contenu de source externe"
 
-msgid "External Source List"
-msgstr "Liste des sources externes"
-
 msgid "External Source Module"
 msgstr "Module des sources externes"
 
@@ -4569,9 +4557,6 @@ msgstr "Sources externes"
 
 msgid "Extract [transition in document_publication_workflow]"
 msgstr "Extraire"
-
-msgid "FAX"
-msgstr "Fax"
 
 msgid "Fabric Brand"
 msgstr "Marque du tissu"
@@ -4588,9 +4573,6 @@ msgstr "Saisie rapide"
 msgid "Favorite"
 msgstr "Favori"
 
-msgid "Fax"
-msgstr "Fax"
-
 msgid "Fax Message"
 msgstr "Fax"
 
@@ -4600,7 +4582,7 @@ msgstr "Particularité"
 msgid "February"
 msgstr "Février"
 
-msgid "Field List"
+msgid "Fields"
 msgstr "Liste des champs"
 
 msgid "Field Path"
@@ -4639,7 +4621,7 @@ msgstr "Fichier committé."
 msgid "File format:"
 msgstr "Format du fichier:"
 
-msgid "File to upload"
+msgid "File to Upload"
 msgstr "Fichier à charger"
 
 msgid "File uploaded."
@@ -4651,7 +4633,7 @@ msgstr "Nom du fichier"
 msgid "Filename"
 msgstr "Nom du fichier"
 
-msgid "Filename parsing regular expression"
+msgid "Filename Parsing Regular Expression"
 msgstr "Expression régulière pour le nom de fichier"
 
 msgid "Files and Images"
@@ -4744,14 +4726,11 @@ msgstr "Dossier"
 msgid "Folder Contents"
 msgstr "Liste"
 
-msgid "Follow Up"
+msgid "Follow-up"
 msgstr "Suivi"
 
-msgid "Follow Up Ticket"
+msgid "Follow-up Ticket"
 msgstr "Ticket de suivi"
-
-msgid "Follow up"
-msgstr "Suivi"
 
 msgid "Follow up must be set to acknowledge an Event."
 msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
@@ -4789,23 +4768,20 @@ msgstr "Français"
 msgid "Frequency"
 msgstr "Fréquence"
 
-msgid "Frequency (weeks)"
+msgid "Frequency in Weeks"
 msgstr "Fréquence (semaines)"
 
-msgid "Frequency In Days"
+msgid "Frequency in Days"
 msgstr "Fréquence (jours)"
 
-msgid "Frequency In Hours"
+msgid "Frequency in Hours"
 msgstr "Fréquence (heures)"
 
-msgid "Frequency In Minutes"
+msgid "Frequency in Minutes"
 msgstr "Fréquence (minutes)"
 
-msgid "Frequency In Months"
+msgid "Frequency in Months"
 msgstr "Fréquence (mois)"
-
-msgid "Frequency In Weeks"
-msgstr "Fréquence en semaines"
 
 msgid "Friday"
 msgstr "Vendredi"
@@ -4900,8 +4876,8 @@ msgstr "Émettre (action)"
 msgid "Generate POT File"
 msgstr "Générer un fichier POT"
 
-msgid "Generate Prevision Script Id"
-msgstr "Id du script de générateur de prévision"
+msgid "Generate Prevision Script ID"
+msgstr "ID du script de générateur de prévision"
 
 msgid "Generate References"
 msgstr "Générer les références"
@@ -5083,6 +5059,9 @@ msgstr "Nom d'hôte"
 msgid "Hostname of the oood server."
 msgstr "Nom de l'hébergeur du serveur oood."
 
+msgid "Host Name"
+msgstr "Nom d'hôte"
+
 msgid "Hours"
 msgstr "Heures"
 
@@ -5155,9 +5134,6 @@ msgstr "Si vous n'avez pas encore créé de compte, veuillez remplir les champs 
 
 msgid "Image"
 msgstr "Image"
-
-msgid "Image List"
-msgstr "Liste des images"
 
 msgid "Image Module"
 msgstr "Module des images"
@@ -5623,7 +5599,7 @@ msgstr "Objet"
 msgid "Item Tracking"
 msgstr "Traçabilité"
 
-msgid "Item Type List"
+msgid "Item Types"
 msgstr "Types d'objets"
 
 msgid "Items copied."
@@ -5707,7 +5683,7 @@ msgstr "Mot clé"
 msgid "Keywords"
 msgstr "Mots-clés"
 
-msgid "Kind of report"
+msgid "Kind of Report"
 msgstr "Type de rapport"
 
 msgid "Landscape"
@@ -5767,7 +5743,7 @@ msgstr "Le plus récent"
 msgid "Latest Additions"
 msgstr "Derniers ajouts"
 
-msgid "Latest Content List"
+msgid "Latest Contents"
 msgstr "Documents récents"
 
 msgid "Latest Documents"
@@ -5984,15 +5960,18 @@ msgid "Materials"
 msgstr "Produits"
 
 msgid "Max Amount"
-msgstr "Montant Max."
+msgstr "Montant max."
 
 msgid "Max Criterion"
 msgstr "Critère max"
 
 msgid "Max. Delay (Day)"
-msgstr "Délai Max. (Jour)"
+msgstr "Délai max. (jours)"
 
-msgid "Maximum user inactivity duration"
+msgid "Maximum Delay (Day)"
+msgstr "Délai maximum (jours)"
+
+msgid "Maximum User Inactivity Duration"
 msgstr "Durée maximale d'inactivité"
 
 msgid "May"
@@ -6095,16 +6074,19 @@ msgid "Mime type of the file, defined which kind of document it is"
 msgstr "Le type de contenu MIME d'un fichier qui définit le format du contenu du document."
 
 msgid "Min Amount"
-msgstr "Montant Min."
+msgstr "Montant min."
 
 msgid "Min Criterion"
 msgstr "Critère min"
 
 msgid "Min. Delay (Day)"
-msgstr "Délai Min. (Jour)"
+msgstr "Délai min. (jours)"
 
-msgid "Min. Flow"
-msgstr "Débit Minimum"
+msgid "Minimum Delay (Day)"
+msgstr "Délai minimum (jours)"
+
+msgid "Minimum Flow"
+msgstr "Débit minimum"
 
 msgid "Min. flow"
 msgstr "Minimum de commande"
@@ -6226,7 +6208,7 @@ msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${docume
 msgid "My Contacts"
 msgstr "Mes contacts"
 
-msgid "My Content List"
+msgid "My Contents"
 msgstr "Liste de mon contenu"
 
 msgid "My Contributed Content"
@@ -6515,7 +6497,7 @@ msgstr "Notification"
 msgid "Notification Message"
 msgstr "Message de notification"
 
-msgid "Notification Message Content List"
+msgid "Notification Message Contents"
 msgstr "Liste de contenu des messages de notification"
 
 msgid "Notification Message Module"
@@ -6542,10 +6524,10 @@ msgstr "Numéro"
 msgid "Number of Children"
 msgstr "Nombre d'enfants"
 
-msgid "Number of Lines Displayed in List Mode ListBoxes"
+msgid "Number of Lines Displayed in List Mode Listboxes"
 msgstr "Nombre de lignes affichées en mode liste"
 
-msgid "Number of Lines Displayed in View Mode ListBoxes"
+msgid "Number of Lines Displayed in View Mode Listboxes"
 msgstr "Nombre de lignes affichées en mode vue"
 
 msgid "Number of Lines to Add"
@@ -6623,7 +6605,7 @@ msgstr "Document Office"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
-msgid "Omit Balanced Account"
+msgid "Omit Balanced Accounts"
 msgstr "Sans comptes soldés"
 
 msgid "Omit Empty Accounts"
@@ -6631,12 +6613,6 @@ msgstr "Sans comptes non mouvementés"
 
 msgid "Omit Transactions with Grouping References"
 msgstr "Sans écritures lettrées"
-
-msgid "Omit balanced accounts"
-msgstr "Sans comptes soldés"
-
-msgid "Omit empty accounts"
-msgstr "Sans comptes non mouvementés"
 
 msgid "Open"
 msgstr "Ouvert"
@@ -6743,7 +6719,7 @@ msgstr "Opérateurs"
 msgid "Optional Resources"
 msgstr "Produits optionels"
 
-msgid "Or write your own question"
+msgid "Or Write your own Question"
 msgstr "Ou écrivez votre propre question"
 
 msgid "Order"
@@ -6911,7 +6887,7 @@ msgstr "Provision de tri tiers"
 msgid "Outsourcing Sort Line Out"
 msgstr "Résultat de tri tiers"
 
-msgid "OverTime Duration Unit"
+msgid "Overtime Duration Unit"
 msgstr "Unité de durée des heures supplémentaires"
 
 msgid "Overdraft Facility"
@@ -7466,7 +7442,7 @@ msgstr "Préférence"
 msgid "Preference Tool"
 msgstr "Outil des préférences"
 
-msgid "Preference priority"
+msgid "Preference Priority"
 msgstr "Priorité"
 
 msgid "Preferences"
@@ -7646,7 +7622,7 @@ msgstr "Produits à valider"
 msgid "Profile"
 msgstr "Profil"
 
-msgid "Profit And Loss Account"
+msgid "Profit and Loss Account"
 msgstr "Compte de résultat"
 
 msgid "Profit and Loss"
@@ -8120,7 +8096,7 @@ msgstr "Flux RSS"
 msgid "Ram Cache"
 msgstr "Cache RAM"
 
-msgid "Ram Cache Plugin"
+msgid "RAM Cache Plugin"
 msgstr "Greffon de Cache RAM"
 
 msgid "Ratio"
@@ -8144,7 +8120,7 @@ msgstr "Réassigner le bogue"
 msgid "Re Assign Bug [transition in bug_workflow]"
 msgstr "Réassigner le bogue"
 
-msgid "Re-enter password"
+msgid "Re-enter Password"
 msgstr "Confirmez le mot de passe"
 
 msgid "Re-install Business Template"
@@ -8276,7 +8252,7 @@ msgstr "Références générées pour toutes les lignes."
 msgid "Reference generated for all requirements."
 msgstr "Une référence a été générée pour chaque besoin."
 
-msgid "Reference lookup regular expression"
+msgid "Reference Lookup Regular Expression"
 msgstr "Expression régulière de recherche des documents référencés"
 
 msgid "Reference of the Payment chosen by the accountant or the person in charge of accounting in ERP5. The payment reference can be a check number for example. Payment Reference only appears in Payment transactions"
@@ -9146,9 +9122,6 @@ msgstr "Écritures"
 msgid "Search Type:"
 msgstr "Sélectionner une Action:"
 
-msgid "Search results"
-msgstr "Résultats de la recherche"
-
 msgid "Section"
 msgstr "Entité"
 
@@ -9179,7 +9152,7 @@ msgstr "Code de sécurité"
 msgid "Security Question"
 msgstr "Question secrète"
 
-msgid "See Tales"
+msgid "See TALES"
 msgstr "Voir TALES"
 
 msgid "Segment"
@@ -9449,7 +9422,7 @@ msgstr "Le court titre est affiché dans les outils de navigation avec une prior
 msgid "Short titles are a precision of Titles in ERP5"
 msgstr "Un titre court est un précision du titre d'un document."
 
-msgid "Show Accounts Without Transactions"
+msgid "Show Accounts without Transactions"
 msgstr "Inclure les comptes non mouvementés"
 
 msgid "Show All"
@@ -9728,7 +9701,7 @@ msgstr "La conversion n'a pas lieu d'être définie pour la source."
 msgid "Source decision"
 msgstr "Représentant"
 
-msgid "Source file path"
+msgid "Source File Path"
 msgstr "Chemin du fichier source"
 
 msgid "Source payment"
@@ -10444,7 +10417,7 @@ msgstr "Clôturé temporairement"
 msgid "Term"
 msgstr "Terme"
 
-msgid "Term (days)"
+msgid "Term (Days)"
 msgstr "Délai (jours)"
 
 msgid "Terminate the Current Career Step"
@@ -10474,10 +10447,10 @@ msgstr "Éditeur de texte"
 msgid "Text Format"
 msgstr "Format de texte"
 
-msgid "TextArea Field Height"
+msgid "Text Area Field Height"
 msgstr "Longueur des champs de type TextArea"
 
-msgid "TextArea Field Width"
+msgid "Text Area Field Width"
 msgstr "Largeur des champs de type TextArea"
 
 msgid "The Account in the third party's accounting"
@@ -11481,22 +11454,13 @@ msgstr "L'écriture n'est pas équilibrée pour ${section_title}"
 msgid "Transactions"
 msgstr "Transactions"
 
-msgid "Transactions Related To This Account"
+msgid "Transactions Related to this Account"
 msgstr "Écritures liées à ce compte"
 
-msgid "Transactions Related To This Bank Account"
+msgid "Transactions Related to this Bank Account"
 msgstr "Écritures liées à ce compte en banque"
 
-msgid "Transactions Related To This Entity"
-msgstr "Écritures liées à ce tiers"
-
-msgid "Transactions Related to This Account"
-msgstr "Écritures liées à ce compte"
-
-msgid "Transactions Related to This Bank Account"
-msgstr "Écritures liées à ce compte en banque"
-
-msgid "Transactions Related to This Entity"
+msgid "Transactions Related to this Entity"
 msgstr "Écritures liées à ce tiers"
 
 msgid "Transactions Simulation State"
@@ -11697,7 +11661,7 @@ msgstr "Mettre à jour les méta données"
 msgid "Update Lines"
 msgstr "Mettre à jour des lignes"
 
-msgid "Update My Credentials"
+msgid "Update my Credentials"
 msgstr "Mettre à jour mon compte utilisateur"
 
 msgid "Update Quantity from Container"
@@ -11853,10 +11817,10 @@ msgstr "N° TVA"
 msgid "VAT code"
 msgstr "N° TVA"
 
-msgid "Valid From"
+msgid "Valid from"
 msgstr "Valide à partir du"
 
-msgid "Valid Until"
+msgid "Valid until"
 msgstr "Valide jusqu'au"
 
 msgid "Validate"
@@ -12450,7 +12414,7 @@ msgstr "Instructions qui expliquent comment utiliser une ressource."
 msgid "language of the web page"
 msgstr "langue de la page web."
 
-msgid "listbox"
+msgid "Listbox"
 msgstr "Liste"
 
 msgid "logged_in"

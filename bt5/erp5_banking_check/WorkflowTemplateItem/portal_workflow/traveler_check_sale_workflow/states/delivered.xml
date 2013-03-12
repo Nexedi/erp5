@@ -22,15 +22,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>Delivered</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>cancel</string>
-                <string>deliver_to_cancel_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

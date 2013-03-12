@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -105,11 +105,11 @@
                         </tuple>
                         <tuple>
                           <string>min_delay</string>
-                          <string>Min. delay</string>
+                          <string>Min. Delay</string>
                         </tuple>
                         <tuple>
                           <string>max_delay</string>
-                          <string>Max. delay</string>
+                          <string>Max. Delay</string>
                         </tuple>
                         <tuple>
                           <string>deliverable</string>

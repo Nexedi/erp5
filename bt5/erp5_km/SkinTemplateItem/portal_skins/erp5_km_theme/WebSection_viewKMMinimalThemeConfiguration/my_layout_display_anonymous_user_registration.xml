@@ -114,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Allow anonymous user to register</string> </value>
+                    <value> <string>Allow Anonymous User to Register</string> </value>
                 </item>
               </dictionary>
             </value>

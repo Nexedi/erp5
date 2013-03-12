@@ -239,11 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<b>Valid from</b>
-
-]]></string> </value>
+                    <value> <string>Valid from</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

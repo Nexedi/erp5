@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Error message when the measure doesn\'t have a valid quantity_unit</string> </value>
+                    <value> <string>Error Message when the Measure doesn\'t have a Valid Quantity Unit</string> </value>
                 </item>
               </dictionary>
             </value>

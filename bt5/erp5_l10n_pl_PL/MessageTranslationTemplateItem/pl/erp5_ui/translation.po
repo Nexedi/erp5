@@ -345,9 +345,6 @@ msgstr "Kod banku"
 msgid "Bank Country Code"
 msgstr "Kod kraju banku"
 
-msgid "Bank accounts"
-msgstr "Rachunki bankowe"
-
 msgid "Base Categories"
 msgstr "Kategorie bazowe"
 
@@ -536,9 +533,6 @@ msgstr "Zmień stronę"
 
 msgid "Change Password"
 msgstr "Zmień hasło"
-
-msgid "ChangeLog"
-msgstr "DziennikZm"
 
 msgid "Changelog"
 msgstr "Rejestr zmian"
@@ -753,10 +747,10 @@ msgstr "Stwórz nowy moduł"
 msgid "Create Sale Opportunity"
 msgstr "Stwórz możliwość sprzedaży"
 
-msgid "Created After"
+msgid "Created after"
 msgstr "Stworzone po"
 
-msgid "Created Before"
+msgid "Created before"
 msgstr "Stworzone przed"
 
 msgid "Created Clone ${portal_type}."
@@ -843,10 +837,10 @@ msgstr "Data, kiedy konto bankowe zostało otwarte"
 msgid "Day / Month / Year"
 msgstr "Dzień / Miesiąc / Rok"
 
-msgid "Days Of Month"
+msgid "Days of Month"
 msgstr "Dni miesiąca"
 
-msgid "Days Of Week"
+msgid "Days of Week"
 msgstr "Dni tygodnia"
 
 msgid "Debit"
@@ -1203,16 +1197,16 @@ msgstr "Zawartość foldera"
 msgid "Format"
 msgstr "Format"
 
-msgid "Frequency In Days"
+msgid "Frequency in Days"
 msgstr "Częstotliwość w dniach"
 
-msgid "Frequency In Hours"
+msgid "Frequency in Hours"
 msgstr "Częstotliwość w godzinach"
 
-msgid "Frequency In Months"
+msgid "Frequency in Months"
 msgstr "Częstotliwość w miesiącach"
 
-msgid "Frequency In Weeks"
+msgid "Frequency in Weeks"
 msgstr "Częstotliwość w tygodniach"
 
 msgid "From"
@@ -1734,7 +1728,7 @@ msgstr "Miesiące"
 msgid "Movement List"
 msgstr "Lista przesunięć"
 
-msgid "Multiple Installation Of Business Templates"
+msgid "Multiple Installation of Business Templates"
 msgstr "Instalowanie wielu Business Template'ów"
 
 msgid "Multivalue Keys"
@@ -2835,7 +2829,7 @@ msgstr "Status+zmieniony."
 msgid "Stock"
 msgstr "Skład"
 
-msgid "Stock By Variation"
+msgid "Stock by Variation"
 msgstr "Skład wg. wariantu"
 
 msgid "Stop"
@@ -3143,9 +3137,6 @@ msgstr "Nazwa użytkownika"
 
 msgid "User Password"
 msgstr "Hasło użytkownika"
-
-msgid "User name"
-msgstr "Nazwa użytkownika"
 
 msgid "Usual Name"
 msgstr "Nazwa skrócona"

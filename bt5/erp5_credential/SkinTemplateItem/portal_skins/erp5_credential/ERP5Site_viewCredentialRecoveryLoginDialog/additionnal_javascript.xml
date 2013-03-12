@@ -186,9 +186,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -294,7 +292,7 @@ toggleRecoveryField();\n
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>show</string> </value>
+                    <value> <string>Show</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -310,19 +308,6 @@ toggleRecoveryField();\n
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>

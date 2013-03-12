@@ -132,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Field Library For Order Reports</string> </value>
+            <value> <string>Default Field Library for Order Reports</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -140,6 +140,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

@@ -157,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Show Accounts Without Transactions</string> </value>
+                    <value> <string>Show Accounts without Transactions</string> </value>
                 </item>
               </dictionary>
             </value>

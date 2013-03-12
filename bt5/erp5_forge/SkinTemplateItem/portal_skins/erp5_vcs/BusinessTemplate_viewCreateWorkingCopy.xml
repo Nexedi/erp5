@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Select a repository</string> </value>
+            <value> <string>Select a Repository</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

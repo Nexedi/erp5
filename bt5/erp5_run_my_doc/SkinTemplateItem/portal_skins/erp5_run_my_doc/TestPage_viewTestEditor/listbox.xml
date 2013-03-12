@@ -100,11 +100,11 @@
                         </tuple>
                         <tuple>
                           <string>arg0</string>
-                          <string>First argument</string>
+                          <string>First Argument</string>
                         </tuple>
                         <tuple>
                           <string>arg1</string>
-                          <string>Second argument</string>
+                          <string>Second Argument</string>
                         </tuple>
                       </list>
                     </value>

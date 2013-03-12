@@ -154,7 +154,7 @@ PurchaseTradeCondition<-PurchaseOrder<-PurchasePackingList
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OBSOLETE! Do not use (see description)</string> </value>
+            <value> <string>Obsolete (See Description)</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

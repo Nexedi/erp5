@@ -233,7 +233,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Absolute Tolerance (max)</string> </value>
+                    <value> <string>Absolute Tolerance (Max)</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
