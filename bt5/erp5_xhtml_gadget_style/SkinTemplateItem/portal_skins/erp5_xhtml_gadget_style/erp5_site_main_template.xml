@@ -36,46 +36,33 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
-                        form_id here/getId;">\n
-\n
-  <tal:block tal:repeat="group group_list">\n
-\n
-        <tal:block tal:define="gid group/gid;">\n
-\n
-          <fieldset tal:attributes="class python:gid +\' editable\';">\n
-\n
-            <tal:block tal:repeat="field python: here.get_fields_in_group(group[\'goid\'])">\n
-\n
-              <tal:block tal:define="title field/title;\n
-                                     field_name python: \'field_%s\' %field.getId();\n
-                                     proxied_field python: test(field.meta_type==\'ProxyField\', field.getRecursiveTemplateField(), field);\n
-                                     field_type python: proxied_field.meta_type;\n
-                                     is_listbox python: field_type==\'ListBox\'">\n
-\n
-                <div class="field">\n
-                  <label tal:content="title" tal:condition="not:is_listbox"/>\n
-                  <div class="input">\n
-\n
-                    <!-- render gadget asynchronously -->\n
-                    <div data-gadget-cacheable="1"\n
-                         tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
-                                         id string:${form_id}_${field_name};\n
-                                         data-gadget-cache-id string:${form_id}_${field_name};"></div>\n
-\n
-                  </div>\n
-                </div>\n
-\n
-              </tal:block>\n
-\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <metal:block define-macro="master">\n
+    <tal:block tal:define="title here/Title;\n
+                           enctype string:multipart/form-data;\n
+                           portal context/portal_url/getPortalObject;">\n
+      <tal:block metal:use-macro="here/main_template/macros/master">\n
+        <tal:block metal:fill-slot="main">\n
+          <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+            <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s/login_form\' % portal.absolute_url())" />\n
+          </tal:block>\n
+          <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
+            <div class="index_html">\n
+             <div class="document">\n
+              <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse(\'portal_gadgets\', None) is not None">\n
+                  <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
+                            tal:replace="structure python: here.ERP5Site_viewHomeAreaRenderer(create_default_pad=True, \n
+                                                                                              make_security_check=True)" />\n
             </tal:block>\n
-\n
-           </fieldset>\n
-\n
+            </div>\n
+            </div>\n
+          </tal:block>\n
         </tal:block>\n
-\n
-  </tal:block>\n
-\n
+      </tal:block>\n
+    </tal:block>\n
+  </metal:block>\n
 </tal:block>
 
 ]]></unicode> </value>
@@ -90,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Form_asRenderJSGadget</string> </value>
+            <value> <string>erp5_site_main_template</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

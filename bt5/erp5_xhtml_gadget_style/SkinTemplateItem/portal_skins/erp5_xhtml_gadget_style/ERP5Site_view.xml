@@ -36,46 +36,33 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
-                        form_id here/getId;">\n
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+           tal:define="tab here/ERP5Site_getSelectedTab;\n
+                               preferred_access_tab python:here.portal_preferences.getPreferredHtmlStyleAccessTab()">\n
+  <tal:block tal:condition="python:tab is not None and preferred_access_tab">\n
+    <tal:block tal:define="tab_renderer_form_object python: getattr(here, tab[\'renderer\'], None)">\n
+      <metal:block use-macro="here/erp5_site_main_template/macros/master">\n
+<!--\n
+        <metal:block fill-slot="tabs">\n
+          <tal:block tal:replace="structure python:here.ERP5Site_renderTabList(selected_tab=tab[\'id\'])" />\n
+        </metal:block>\n
+        <metal:block fill-slot="content">\n
+          <tal:block tal:condition="tab_renderer_form_object"\n
+                     tal:replace="structure python: tab_renderer_form_object()" />\n
+          <tal:block tal:condition="not: tab_renderer_form_object">\n
+            Server side error.\n
+          </tal:block>\n
+        </metal:block>\n
+-->\n
 \n
-  <tal:block tal:repeat="group group_list">\n
-\n
-        <tal:block tal:define="gid group/gid;">\n
-\n
-          <fieldset tal:attributes="class python:gid +\' editable\';">\n
-\n
-            <tal:block tal:repeat="field python: here.get_fields_in_group(group[\'goid\'])">\n
-\n
-              <tal:block tal:define="title field/title;\n
-                                     field_name python: \'field_%s\' %field.getId();\n
-                                     proxied_field python: test(field.meta_type==\'ProxyField\', field.getRecursiveTemplateField(), field);\n
-                                     field_type python: proxied_field.meta_type;\n
-                                     is_listbox python: field_type==\'ListBox\'">\n
-\n
-                <div class="field">\n
-                  <label tal:content="title" tal:condition="not:is_listbox"/>\n
-                  <div class="input">\n
-\n
-                    <!-- render gadget asynchronously -->\n
-                    <div data-gadget-cacheable="1"\n
-                         tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
-                                         id string:${form_id}_${field_name};\n
-                                         data-gadget-cache-id string:${form_id}_${field_name};"></div>\n
-\n
-                  </div>\n
-                </div>\n
-\n
-              </tal:block>\n
-\n
-            </tal:block>\n
-\n
-           </fieldset>\n
-\n
-        </tal:block>\n
-\n
+      </metal:block>\n
+    </tal:block>\n
   </tal:block>\n
-\n
+  <tal:block tal:condition="python:tab is None or not preferred_access_tab">\n
+    <tal:block tal:replace="structure here/ERP5Site_viewClassicFrontPage" />\n
+  </tal:block>\n
 </tal:block>
 
 ]]></unicode> </value>
@@ -90,11 +77,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Form_asRenderJSGadget</string> </value>
+            <value> <string>ERP5Site_view</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>iso-8859-15</string> </value>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

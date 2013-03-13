@@ -37,9 +37,9 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="field_name request/field_name | options/field_name">\n
-  <table tal:attributes="id field_name">\n
+  <div tal:attributes="id field_name">\n
   <!-- Listbox content -->\n
-  </table>\n
+  </div>\n
   <div tal:attributes="id string:${field_name}_pager">\n
   <!-- Listbox navigation -->\n
   </div>\n

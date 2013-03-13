@@ -46,13 +46,19 @@
                  current_form_id python: request.get(\'current_form_id\', \'view\');\n
                  current_url      python: \'%s/%s\' % (url, current_form_id);\n
                  current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);\n
-                 actions actions/object_view | python: [];">\n
+                 actions actions/object_view | python: [];\n
+                 action_id_list python:[x[\'url\'].split(\'/\')[-1] for x in actions];\n
+                 data_gadget_property python: {\'tab_container_id\': \'form_gadget\',\n
+                                               \'default_tab_url\': action_id_list[0],\n
+                                               \'action_id_list\': action_id_list}">\n
 \n
 \n
-  <div id="portal_status_message" style="height:20px; display:none;">\n
-    <p style="color:red; font-weight: bold;"></p>\n
-  </div>\n
-          \n
+  <div data-gadget="gadgets/portal_status_message/gadget"\n
+       data-gadget-cache-id="portal_status_message"\n
+       data-gadget-cacheable="1"\n
+       id="portal_status_message"></div>\n
+\n
+\n
   <div class="document">\n
 \n
     <div class="actions">\n
@@ -62,16 +68,10 @@
         <span class="description">Save</span>\n
       </button>\n
 \n
-      <script type="text/javascript"\n
-        tal:content="python:\'\'\'ERP5Form.setCurrentFormId(\'%s\');;\n
-                               RenderJs.TabbularGadget.addNewTabGadget(\n
-                                  \'form_gadget\',\n
-                                  \'gadget-%s\',\n
-                                  \'%s/Form_asRenderJSGadget\',\n
-                                  \'ERP5Form.update\',\n
-                                  \'Form_asJSON?form_id=%s\', false);;\n
-                            \'\'\' %(current_form_id, current_form_id, current_form_id, current_form_id)">\n
-      </script>\n
+      <!-- Test -->\n
+      <div data-gadget="erp5_tabbular_form_renderer"\n
+           id="erp5_tabbular_form_renderer"\n
+           tal:attributes="data-gadget-property python: here.Base_asJSON(data_gadget_property);"> </div>\n
 \n
       <!-- get all tabs from server -->\n
       <ul class="tabs">\n
@@ -80,8 +80,7 @@
               tal:define="action_form python: action[\'url\'].split(\'/\')[-1]"\n
               tal:attributes="id action_form;\n
                               class python: action == current_action and \'selected\' or \'not_selected\'">\n
-\n
-            <a tal:attributes="onclick python: \'\'\'javascript: ERP5Form.openFormInTabbularGadget(\'form_gadget\', \'%s\');; return false ;;\'\'\' %(action_form)">\n
+            <a tal:attributes="onclick python: \'\'\'javascript: return ERP5Form.onTabClickHandler(\'%s\')\'\'\' %action_form">\n
               <span i18n:translate=""\n
                     i18n:domain="ui"\n
                     tal:content="action/name">action_name</span>\n
@@ -93,13 +92,13 @@
     </div>\n
 \n
     <div class="content editable">\n
-    \n
+\n
       <!--Form rendered content goes here -->\n
       <div id="form_gadget"></div>\n
 \n
     </div>\n
   </div>\n
-        \n
+\n
 </div>
 
 ]]></unicode> </value>

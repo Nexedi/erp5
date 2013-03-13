@@ -36,12 +36,19 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="field_name request/field_name | options/field_name">\n
+<tal:block tal:define="field_name request/field_name | options/field_name;\n
+                       field_name_stipped python: field_name.replace(\'field_\', \'\');\n
+                       form_id request/form_id | options/form_id;">\n
 \n
   <input type="text"\n
     tal:attributes="name field_name"/>\n
   <input type="image" name="portal_selections/viewSearchRelatedDocumentDialog0:method"\n
           value="update..." src="images/exec16.png">\n
+\n
+  <a tal:attributes="href string:Base_jumpToRelatedDocument?field_id=${field_name_stipped}&amp;form_id=${form_id}">\n
+    <img alt="jump" src="images/jump.png">\n
+  </a>\n
+\n
 </tal:block>
 
 ]]></unicode> </value>

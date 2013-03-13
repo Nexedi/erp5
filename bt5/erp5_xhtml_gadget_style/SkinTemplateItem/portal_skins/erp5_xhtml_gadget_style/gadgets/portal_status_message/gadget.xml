@@ -34,51 +34,32 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
-                        form_id here/getId;">\n
+            <value> <unicode>\074html\076\n
+  \074head\076\n
+  \074/head\076\n
+  \074body\076\n
+    \074p class="portal-status-message" style="display:none; color:red;font-weight:bold;"\076\074/p\076\n
 \n
-  <tal:block tal:repeat="group group_list">\n
+    \074script type="text/javascript" language="javascript"\076\n
+      //\074![CDATA[\n
+        $(document).ready(function() {\n
+            gadget = RenderJs.getSelfGadget();\n
 \n
-        <tal:block tal:define="gid group/gid;">\n
-\n
-          <fieldset tal:attributes="class python:gid +\' editable\';">\n
-\n
-            <tal:block tal:repeat="field python: here.get_fields_in_group(group[\'goid\'])">\n
-\n
-              <tal:block tal:define="title field/title;\n
-                                     field_name python: \'field_%s\' %field.getId();\n
-                                     proxied_field python: test(field.meta_type==\'ProxyField\', field.getRecursiveTemplateField(), field);\n
-                                     field_type python: proxied_field.meta_type;\n
-                                     is_listbox python: field_type==\'ListBox\'">\n
-\n
-                <div class="field">\n
-                  <label tal:content="title" tal:condition="not:is_listbox"/>\n
-                  <div class="input">\n
-\n
-                    <!-- render gadget asynchronously -->\n
-                    <div data-gadget-cacheable="1"\n
-                         tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
-                                         id string:${form_id}_${field_name};\n
-                                         data-gadget-cache-id string:${form_id}_${field_name};"></div>\n
-\n
-                  </div>\n
-                </div>\n
-\n
-              </tal:block>\n
-\n
-            </tal:block>\n
-\n
-           </fieldset>\n
-\n
-        </tal:block>\n
-\n
-  </tal:block>\n
-\n
-</tal:block>
-
-]]></unicode> </value>
+            gadget.showMessage = function (message, timeout) {\n
+              // show message in UI\n
+              var msg_element = $("#portal_status_message p");\n
+              if (timeout===undefined) {\n
+                timeout = 4000;\n
+              }\n
+              msg_element.toggle();\n
+              msg_element.html(message);\n
+              window.setTimeout(\'$("#portal_status_message p").toggle();\', timeout);\n
+            };\n
+        });\n
+      //]]\076\n
+    \074/script\076\n
+  \074/body\076\n
+\074/html\076</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -90,7 +71,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Form_asRenderJSGadget</string> </value>
+            <value> <string>gadget</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

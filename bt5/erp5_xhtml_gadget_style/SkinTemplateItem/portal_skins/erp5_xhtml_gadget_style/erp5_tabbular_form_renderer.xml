@@ -34,20 +34,40 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="field_name request/field_name | options/field_name">\n
-  <select tal:attributes="name string:subfield_${field_name}_default:list"\n
-          size="1">\n
-  </select>\n
+            <value> <unicode>\074html\076\n
+  \074head\076\n
+    \074title tal:content="template/title"\076The title\074/title\076\n
+    \074meta http-equiv="content-type" content="text/html;charset=utf-8"\076\n
+  \074/head\076\n
+  \074body\076\n
 \n
-  <input type="hidden"\n
-         value="0"\n
-         class="serialize-able"\n
-         tal:attributes="name string:default_subfield_${field_name}_default:list:int">\n
-</tal:block>
-
-]]></unicode> </value>
+    \074script type="text/javascript" language="javascript"\076\n
+      //\074![CDATA[\n
+        $(document).ready(function() {\n
+            gadget = RenderJs.getSelfGadget();\n
+\n
+            // default tab should be openned fist\n
+            gadget.redirect = function () {\n
+              $.url.redirect(\'/\' + gadget.default_tab_url + \'/\');\n
+            };\n
+\n
+            // default route\n
+            RenderJs.RouteGadget.add(\'\', gadget.redirect, 1);\n
+\n
+            $.each(gadget.action_id_list, function(index, value) {\n
+              // add dynamic function to gadget that will take care to render tab using gadgets\n
+              gadget[value] = function () {\n
+                 ERP5Form.openFormInTabbularGadget(gadget.tab_container_id, value);\n
+              };\n
+              //add dynamic route\n
+              RenderJs.RouteGadget.add(\'/\' + value + \'/\', gadget[value], 1);\n
+            });\n
+        });\n
+      //]]\076\n
+    \074/script\076\n
+\n
+  \074/body\076\n
+\074/html\076</unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -59,11 +79,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget</string> </value>
+            <value> <string>erp5_tabbular_form_renderer</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>iso-8859-15</string> </value>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -90,7 +90,7 @@ for field_id in form.get_field_ids():\n
     field_dict[\'display_width\'] = None\n
 \n
   # XXX: DateTime not serialize-able (see Base_viewMetaData)?\n
-  # in what format to transfer to client renderjs.js ? (seconds sinc eepoch?)\n
+  # in what format to transfer to client renderjs.js ? (seconds since epoch?)\n
   if field_meta_type in ["DateTimeField"]:\n
     if field_value not in MARKER:\n
         field_value = field_value.strftime("%Y/%m/%d")\n
@@ -102,6 +102,7 @@ for field_id in form.get_field_ids():\n
     field_dict[\'listbox\'][\'lines\'] = original_field.get_value("lines")\n
     field_dict[\'listbox\'][\'columns\'] = [x for x in original_field.get_value("columns")]\n
     field_dict[\'listbox\'][\'listbox_data_url\'] = "Listbox_asJSON"\n
+    field_dict[\'listbox\'][\'listbox_html\'] = original_field.render()\n
 \n
   if field_meta_type in LIST_FIELDS:\n
     # form contains selects, pass list of selects\' values and calculate default one?\n

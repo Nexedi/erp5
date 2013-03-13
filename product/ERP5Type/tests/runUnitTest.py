@@ -689,8 +689,8 @@ def main(argument_list=None):
       os.environ["erp5_tests_data_fs_path"] = arg
       os.environ["erp5_tests_recreate_catalog"] = "1"
     elif opt ==  '--bt5_path':
-      os.environ["erp5_tests_bt5_path"] = \
-          os.environ.get("erp5_tests_bt5_path", "") + arg
+      os.environ["erp5_tests_bt5_path"] = ','.join([arg] +
+        os.environ.get('erp5_tests_bt5_path', '').split(','))
     elif opt == '--firefox_bin':
       os.environ["firefox_bin"] = arg
     elif opt == '--xvfb_bin':
