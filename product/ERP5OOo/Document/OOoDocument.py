@@ -273,6 +273,15 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
+  def asPresentationHTML(self, **kw):
+    """
+      The start presentation page is different from the html of 
+      other iframe
+    """
+    mime, data = self._convert('html',**kw)
+    data = self.Presentation_renderWithNavigation(data=self._stripHTML(html=data)).encode('utf-8')
+    return data
+
   # Conversion API
   def _convert(self, format, frame=0, **kw):
     """Convert the document to the given format.
@@ -353,22 +362,15 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         cs = cStringIO.StringIO()
         cs.write(str(data))
         z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
-        for f in z.infolist():
-          fn = f.filename
-          if fn.endswith('html'):
-            if self.getPortalType() == 'Presentation'\
-                  and not (fn.find('impr') >= 0):
-              continue
-            data = z.read(fn)
-            break
         mime = 'text/html'
-        self._populateConversionCacheWithHTML(zip_file=z) # Maybe some parts should be asynchronous for
+        self._populateConversionCacheWithHTML(zip_file=z, **kw) # Maybe some parts should be asynchronous for
                                          # better usability
         z.close()
         cs.close()
       if original_format not in VALID_IMAGE_FORMAT_LIST \
-        and not requires_pdf_first:
-        self.setConversion(data, mime, format=original_format, **kw)
+        and not requires_pdf_first :
+        if not self.getPortalType() == 'Presentation':
+          self.setConversion(data, mime, format=original_format, **kw)
       else:
         # create temporary image and use it to resize accordingly
         temp_image = self.portal_contributions.newContent(
@@ -381,12 +383,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         mime, data = temp_image.convert(original_format, frame=frame, **kw)
         # store conversion
         self.setConversion(data, mime, format=original_format, **kw)
-
     return self.getConversion(format=original_format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
-  def _populateConversionCacheWithHTML(self, zip_file=None):
+  def _populateConversionCacheWithHTML(self, zip_file=None, **kw):
     """
     Extract content from the ODF zip file and populate the document.
     Optional parameter zip_file prevents from converting content twice.
@@ -419,6 +420,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       else:
         mime = guess_content_type(filename)[0]
         data = Pdata(zip_file.read(filename))
+      if ".impr." in filename and self.getPortalType() == 'Presentation':
+        self.setConversion(data, mime, format="html", **kw)
       self.setConversion(data, mime=mime, format=EMBEDDED_FORMAT, filename=filename)
     if must_close:
       zip_file.close()
