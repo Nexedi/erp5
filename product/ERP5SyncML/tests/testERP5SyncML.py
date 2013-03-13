@@ -336,10 +336,12 @@ class TestERP5SyncMLMixin(TestMixin):
       for m in sub.contentValues():
         self.assertEquals(m.getTemporaryData(), None)
         self.assertEquals(m.getPartialData(), None)
+        self.assertEquals(m.getValidationState(), "synchronized")
     for pub in portal_sync.contentValues(portal_type='SyncML Publication'):
       for sub in pub.contentValues(portal_type='SyncML Subscription'):
         for m in sub.contentValues():
           self.assertEquals(m.getPartialData(), None)
+          self.assertEquals(m.getValidationState(), "synchronized")
 
   def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name,
       last_name, person_server, person_client):
