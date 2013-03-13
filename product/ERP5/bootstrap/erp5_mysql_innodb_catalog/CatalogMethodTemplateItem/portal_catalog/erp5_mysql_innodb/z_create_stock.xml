@@ -90,6 +90,7 @@ CREATE TABLE `stock` (\n
   KEY `function_uid` (`function_uid`),\n
   KEY `project_uid` (`project_uid`),\n
   KEY `funding_uid` (`funding_uid`),\n
+  KEY `explanation_uid` (`explanation_uid`),\n
   KEY `simulation_state` (`simulation_state`),\n
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),\n
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`),\n
