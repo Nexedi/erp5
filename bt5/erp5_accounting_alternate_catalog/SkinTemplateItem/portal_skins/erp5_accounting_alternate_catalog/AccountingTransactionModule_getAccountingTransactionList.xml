@@ -151,7 +151,14 @@ select_dict.update(dict(total_debit=None,\n
                         operation_date=None))\n
 \n
 params[\'select_dict\'] = select_dict\n
-params.setdefault(\'group_by\', (\'uid\',))\n
+\n
+# We group by uid to really filter duplicated lines, but this makes generated\n
+# query much slower, and in reality duplicated lines are transactions for which\n
+# both source section and destination section match the criterions. This can be\n
+# because there are no criterion on section_uid or because both sections are members\n
+# of the selected group. In the later it can be accepted as not a problem.\n
+if not params.get(\'accounting_transaction.section_uid\'):\n
+  params.setdefault(\'group_by\', (\'uid\',))\n
 \n
 return context.searchFolder(**params)\n
 </string> </value>
