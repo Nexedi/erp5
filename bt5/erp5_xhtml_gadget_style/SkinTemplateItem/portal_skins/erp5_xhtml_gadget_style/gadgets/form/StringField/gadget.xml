@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -36,7 +40,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="field_name request/field_name | options/field_name">\n
+<tal:block tal:define="field_name request/field_name | options/field_name;">\n
   <input type="text"\n
     tal:attributes="name field_name"/>\n
 </tal:block>

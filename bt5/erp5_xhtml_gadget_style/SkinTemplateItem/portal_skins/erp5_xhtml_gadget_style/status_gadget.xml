@@ -51,22 +51,10 @@
 \n
   <p class="clear"></p>\n
 \n
-  <tal:block tal:condition="preferred_html_style_acknowledgeable_message | nothing">\n
-    <div id="acknowledgeable_message_render" class="acknowledgeable_message_render">\n
-      <div tal:content="structure here/acknowledgeable_message_render"/>\n
-    </div>\n
-  </tal:block>\n
+  <div data-gadget="gadgets/portal_status_message/gadget"\n
+       id="portal_status_message"></div>\n
 \n
-  <!-- XXX add portal_status_message gadget -->\n
-  <div tal:content="request/portal_status_message | nothing" id="transition_message"\n
-       class="transition_message"/>\n
 \n
-  <tal:block tal:condition="request/field_errors | nothing">\n
-    <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">\n
-        Input data has errors. Please look at the error messages below.\n
-    </div>\n
-    <script type="text/javascript">changed = true;</script>\n
-  </tal:block>\n
 </div>
 
 ]]></unicode> </value>

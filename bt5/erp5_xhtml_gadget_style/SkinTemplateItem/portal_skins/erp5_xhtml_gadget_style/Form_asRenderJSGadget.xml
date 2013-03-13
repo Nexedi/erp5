@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -37,7 +41,9 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
-                        form_id here/getId;">\n
+                        form_id here/getId;\n
+                        portal here/getPortalObject;\n
+                        portal_url portal/absolute_url">\n
 \n
   <tal:block tal:repeat="group group_list">\n
 \n
@@ -58,10 +64,8 @@
                   <div class="input">\n
 \n
                     <!-- render gadget asynchronously -->\n
-                    <div data-gadget-cacheable="1"\n
-                         tal:attributes="data-gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
-                                         id string:${form_id}_${field_name};\n
-                                         data-gadget-cache-id string:${form_id}_${field_name};"></div>\n
+                    <div tal:attributes="data-gadget string:${portal_url}/gadgets/form/${field_type}/gadget?field_name=${field_name}&form_id=${form_id};\n
+                                         id string:${form_id}_${field_name};"></div>\n
 \n
                   </div>\n
                 </div>\n

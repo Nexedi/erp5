@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63100043.51</string> </value>
+            <value> <string>ts63188257.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -167,11 +167,16 @@ var ERP5Form = ( function () {\n
 \n
           DateTimeField: function (field_id, field_dict) {\n
                       /* DateTimeField field */\n
-                      var date, dom;\n
+                      var date, dom, date_format;\n
                       dom = $("[name=" + this.getFieldId(field_id) + "]");\n
                       date = field_dict.value;\n
+                      date_format = field_dict[\'format\'];\n
+                      if (date_format==="dmy") {\n
+                        // XXX: support more formats\n
+                        date_format = \'dd/mm/yy\';\n
+                      }\n
                       date = new Date(date);\n
-                      dom.datepicker({ dateFormat: \'dd/mm/yy\' }); // XXX: get format from server!\n
+                      dom.datepicker({ dateFormat: date_format});\n
                       dom.datepicker(\'setDate\', date);\n
                       return dom;\n
           },\n
@@ -187,12 +192,19 @@ var ERP5Form = ( function () {\n
           },\n
 \n
           FormBox: function (field_id, field_dict) {\n
-                      /* Email field */\n
+                      /* FormBox field */\n
+                      // XXX: implement it to read all values and render properly\n
                       return this.BaseInputField(field_id, field_dict);\n
           },\n
 \n
           RelationStringField: function (field_id, field_dict) {\n
                       /* Relation field */\n
+                      return this.BaseInputField(field_id, field_dict);\n
+          },\n
+\n
+          MultiRelationStringField: function (field_id, field_dict) {\n
+                      /* MultiRelationStringField field */\n
+                      // XXX: support multiple values\n
                       return this.BaseInputField(field_id, field_dict);\n
           },\n
 \n
@@ -289,22 +301,29 @@ var ERP5Form = ( function () {\n
                             type = element.attr("type"),\n
                             element_class = element.attr("class");\n
 \n
-                        if (type==="checkbox") {\n
+                        if (type === "checkbox") {\n
                           value = element.is(":checked");\n
-                          if (value===true) {\n
+                          if (value === true) {\n
                             converted_value=1;\n
                           }\n
-                          if(value===false) {\n
+                          if (value === false) {\n
                             converted_value=0;\n
                           }\n
                           value = converted_value;\n
                         }\n
-                        // XXX: save DateTimeField values\n
-\n
                         if (element_class.indexOf("hasDatepicker") !== -1) {\n
-                            console.log(name, element_class, value);\n
+                            // backend codes expects that date object is represented by\n
+                            // three separate request parameters so created them here.\n
+                            // XXX: we assume format is dd/mm/YYYY so read it from DateTimeGadget for this field\n
+                            // which means we now must be able get hold of gadget and read it from there where\n
+                            // fist it should be initialized!)\n
+                            form_value_dict["subfield_" + name + "_year"] = value.substr(6,4);\n
+                            form_value_dict["subfield_" + name + "_month"] = value.substr(3,2);\n
+                            form_value_dict["subfield_" + name + "_day"] = value.substr(0,2);\n
                         }\n
+\n
                         // XXX: how to handle file uploads ?\n
+\n
                         // some values end with :list and we need to collect them all\n
                         if (/:list$/.test(name)) {\n
                           if (form_value_dict[name] === undefined) {\n
@@ -339,7 +358,6 @@ var ERP5Form = ( function () {\n
                                   $.each(field_errors, function(index, value){\n
                                       var dom, field;\n
                                       dom = $("[name=" + ERP5Form.getFieldId(index) + "]");\n
-                                      //dom.css("border", "1px solid red"); // XXX: use class / css\n
                                       dom.addClass("validation-failed");\n
                                       field = dom.parent().parent();\n
                                       if (field.children("span.error").length > 0){\n
@@ -419,7 +437,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18852</int> </value>
+            <value> <int>19948</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

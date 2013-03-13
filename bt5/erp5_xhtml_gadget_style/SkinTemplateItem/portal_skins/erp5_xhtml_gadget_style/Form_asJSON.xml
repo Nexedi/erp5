@@ -89,19 +89,18 @@ for field_id in form.get_field_ids():\n
   except:\n
     field_dict[\'display_width\'] = None\n
 \n
-  # XXX: DateTime not serialize-able (see Base_viewMetaData)?\n
-  # in what format to transfer to client renderjs.js ? (seconds since epoch?)\n
   if field_meta_type in ["DateTimeField"]:\n
     if field_value not in MARKER:\n
-        field_value = field_value.strftime("%Y/%m/%d")\n
-        field_dict[\'editable\'] = 0 # XXX: we have not implemented it yet at client side\n
+      field_value = field_value.millis()\n
+      field_dict[\'format\'] = context.portal_preferences.getPreferredDateOrder(\'ymd\')\n
 \n
   # listbox\n
   if field_meta_type in ["ListBox"]:\n
     field_dict[\'listbox\'] = {}\n
-    field_dict[\'listbox\'][\'lines\'] = original_field.get_value("lines")\n
-    field_dict[\'listbox\'][\'columns\'] = [x for x in original_field.get_value("columns")]\n
-    field_dict[\'listbox\'][\'listbox_data_url\'] = "Listbox_asJSON"\n
+    # disabled as now we pass entire listbox html\n
+    #field_dict[\'listbox\'][\'lines\'] = original_field.get_value("lines")\n
+    #field_dict[\'listbox\'][\'columns\'] = [x for x in original_field.get_value("columns")]\n
+    #field_dict[\'listbox\'][\'listbox_data_url\'] = "Listbox_asJSON"\n
     field_dict[\'listbox\'][\'listbox_html\'] = original_field.render()\n
 \n
   if field_meta_type in LIST_FIELDS:\n
@@ -116,11 +115,10 @@ for field_id in form.get_field_ids():\n
     for formbox_field_id in formbox_form.get_field_ids():\n
       formbox_field_id_field = getattr(formbox_form, formbox_field_id)\n
       field_value = formbox_field_id_field.get_value("default") # only last wins ?\n
-      \n
 \n
   # add field value\n
   field_dict[\'value\'] =  field_value\n
- \n
+\n
 return dumps(result)\n
 </string> </value>
         </item>
