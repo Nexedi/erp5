@@ -2,22 +2,9 @@
 
 # Based on a transaction analyzer by Matt Kromer.
 
-import pickle
-import re
 import sys
-import types
 from ZODB.FileStorage import FileStorage
-from cStringIO import StringIO
-
-class FakeError(Exception):
-    def __init__(self, module, name):
-        Exception.__init__(self)
-        self.module = module
-        self.name = name
-
-class FakeUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        raise FakeError(module, name)
+from ZODB.utils import get_pickle_metadata
 
 class Report:
     def __init__(self):
@@ -97,18 +84,8 @@ def analyze_trans(report, txn):
         analyze_rec(report, rec)
 
 def get_type(record):
-    try:
-        unpickled = FakeUnpickler(StringIO(record.data)).load()
-    except FakeError, err:
-        return "%s.%s" % (err.module, err.name)
-    except:
-        raise
-    classinfo = unpickled[0]
-    if isinstance(classinfo, types.TupleType):
-        mod, klass = classinfo
-        return "%s.%s" % (mod, klass)
-    else:
-        return str(classinfo)
+    mod, klass = get_pickle_metadata(record.data)
+    return "%s.%s" % (mod, klass)
 
 def analyze_rec(report, record):
     oid = record.oid
