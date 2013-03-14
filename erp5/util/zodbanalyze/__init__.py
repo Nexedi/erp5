@@ -13,7 +13,6 @@ class Report:
         self.OIDMAP = {}
         self.TYPEMAP = {}
         self.TYPESIZE = {}
-        self.FREEMAP = {}
         self.USEDMAP = {}
         self.TIDS = 0
         self.OIDS = 0
@@ -129,7 +128,6 @@ def analyze_rec(report, record):
         else:
             type = report.OIDMAP[oid]
             fsize = report.USEDMAP[oid]
-            report.FREEMAP[oid] = report.FREEMAP.get(oid, 0) + fsize
             report.USEDMAP[oid] = size
             report.FOIDS += 1
             report.FBYTES += fsize
