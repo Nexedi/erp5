@@ -690,16 +690,10 @@ class SyncMLSubscription(XMLObject):
 
         if not more_data:
           pass
-        #self.removeRemainingObjectPath(object_path)
         else:
           syncml_logger.info("Splitting document")
           break
       else:
-        # syncml_logger.info("Splitting package %s > %s - remains %s objects"
-        #                    % (loop, MAX_LEN,
-        #                       len(self.getProperty('remaining_object_path_list'))))
-        # if len(self.getProperty('remaining_object_path_list')):
-        #   finished=False
         syncml_logger.warning("Package is going to be splitted")
         break
       loop += 1
@@ -938,24 +932,6 @@ class SyncMLSubscription(XMLObject):
     for signature in self.objectValues():
       conflict_list.extend(signature.getConflictList())
     return conflict_list
-
-  # security.declareProtected(Permissions.ModifyPortalContent,
-  #                           'removeRemainingObjectPath')
-  # def removeRemainingObjectPath(self, object_path):
-  #   """
-  #   We should now wich objects should still
-  #   synchronize
-  #   """
-  #   remaining_object_list = self.getProperty('remaining_object_path_list')
-  #   if remaining_object_list is None:
-  #     # it is important to let remaining_object_path_list to None
-  #     # it means it has not beeing initialised yet
-  #     return
-  #   new_list = list(remaining_object_list)
-  #   # XXX why a while here ?
-  #   while object_path in new_list:
-  #     new_list.remove(object_path)
-  #   self._edit(remaining_object_path_list=new_list)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'initialiseSynchronization')
