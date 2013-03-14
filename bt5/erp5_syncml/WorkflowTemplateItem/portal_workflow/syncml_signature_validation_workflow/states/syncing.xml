@@ -22,6 +22,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>change_to_conflict</string>
                 <string>synchronize</string>
               </tuple>
             </value>
