@@ -20,6 +20,10 @@ class Report:
         self.CBYTES = 0
         self.FOIDS = 0
         self.FBYTES = 0
+        self.COIDSMAP = {}
+        self.CBYTESMAP = {}
+        self.FOIDSMAP = {}
+        self.FBYTESMAP = {}
 
 def shorten(s, n):
     l = len(s)
@@ -42,11 +46,12 @@ def report(rep):
            (rep.DBYTES * 1.0 / rep.TIDS))
 
     print "Types used:"
-    fmt = "%-46s %7s %9s %6s %7s"
-    fmtp = "%-46s %7d %9d %5.1f%% %7.2f" # per-class format
+    fmt = "%-46s %7s %9s %6s %7s %7s %9s %7s %9s"
+    fmtp = "%-46s %7d %9d %5.1f%% %7.2f %7d %9d %7d %9d" # per-class format
     fmts = "%46s %7d %8dk %5.1f%% %7.2f" # summary format
-    print fmt % ("Class Name", "Count", "TBytes", "Pct", "AvgSize")
-    print fmt % ('-'*46, '-'*7, '-'*9, '-'*5, '-'*7)
+    print fmt % ("Class Name", "T.Count", "T.Bytes", "Pct", "AvgSize",
+                 "C.Count", "C.Bytes", "O.Count", "O.Bytes")
+    print fmt % ('-'*46, '-'*7, '-'*9, '-'*5, '-'*7, '-'*7, '-'*9, '-'*7, '-'*9)
     typemap = rep.TYPEMAP.keys()
     typemap.sort(key=lambda a:rep.TYPESIZE[a])
     cumpct = 0.0
@@ -54,9 +59,11 @@ def report(rep):
         pct = rep.TYPESIZE[t] * 100.0 / rep.DBYTES
         cumpct += pct
         print fmtp % (shorten(t, 46), rep.TYPEMAP[t], rep.TYPESIZE[t],
-                      pct, rep.TYPESIZE[t] * 1.0 / rep.TYPEMAP[t])
+                      pct, rep.TYPESIZE[t] * 1.0 / rep.TYPEMAP[t],
+                      rep.COIDSMAP[t], rep.CBYTESMAP[t],
+                      rep.FOIDSMAP.get(t, 0), rep.FBYTESMAP.get(t, 0))
 
-    print fmt % ('='*46, '='*7, '='*9, '='*5, '='*7)
+    print fmt % ('='*46, '='*7, '='*9, '='*5, '='*7, '='*7, '='*9, '='*7, '='*9)
     print "%46s %7d %9s %6s %6.2fk" % ('Total Transactions', rep.TIDS, ' ',
         ' ', rep.DBYTES * 1.0 / rep.TIDS / 1024.0)
     print fmts % ('Total Records', rep.OIDS, rep.DBYTES / 1024.0, cumpct,
@@ -102,6 +109,8 @@ def analyze_rec(report, record):
             report.USEDMAP[oid] = size
             report.COIDS += 1
             report.CBYTES += size
+            report.COIDSMAP[type] = report.COIDSMAP.get(type, 0) + 1
+            report.CBYTESMAP[type] = report.CBYTESMAP.get(type, 0) + size
         else:
             type = report.OIDMAP[oid]
             fsize = report.USEDMAP[oid]
@@ -110,6 +119,9 @@ def analyze_rec(report, record):
             report.FOIDS += 1
             report.FBYTES += fsize
             report.CBYTES += size - fsize
+            report.FOIDSMAP[type] = report.FOIDSMAP.get(type, 0) + 1
+            report.FBYTESMAP[type] = report.FBYTESMAP.get(type, 0) + fsize
+            report.CBYTESMAP[type] = report.CBYTESMAP.get(type, 0) + size - fsize
         report.TYPEMAP[type] = report.TYPEMAP.get(type, 0) + 1
         report.TYPESIZE[type] = report.TYPESIZE.get(type, 0) + size
     except Exception, err:
