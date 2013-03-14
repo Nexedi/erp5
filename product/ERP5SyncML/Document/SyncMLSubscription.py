@@ -574,7 +574,6 @@ class SyncMLSubscription(XMLObject):
             media_type=conduit.getContentType())
 
         elif signature.getValidationState() in ('not_synchronized',
-                                                'synchronized',
                                                 'conflict_resolved_with_merge'):
           # We don't have synchronized this object yet but it has a signature
           xml_object = conduit.getXMLFromObjectWithId(document,
@@ -674,6 +673,10 @@ class SyncMLSubscription(XMLObject):
             finished = False
             xml_string = signature.getFirstPdataChunk(MAX_LEN)
           xml_string = etree.CDATA(xml_string.decode('utf-8'))
+        elif signature.getValidationState() in ('syncing', 'synchronized"):
+          raise ValueError("Must not get signature in %s state here, signature is %s"
+                           % (signature.getValidationState(),
+                              signature.getPath(),))
 
           syncml_response.addSyncCommand(
             sync_command=signature.getPartialAction(),

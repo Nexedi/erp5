@@ -202,9 +202,16 @@ class SyncMLAsynchronousEngine(EngineMixin):
         if syncml_request.isFinal:
           # Server then sends its modifications
           subscriber.sendModifications()
+          # Now that everything is ok, init sync information
+          if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
+                                                     "refresh_from_client_only"):
+            # Reset signature only if we have to check modifications on server side
+            subscriber.initialiseSynchronization()
+
           # Start to send modification only once we have processed
           # all message from client
           after_method_id='processServerSynchronization',
+          tag = (tag, "%s_reset" % subscriber.getPath(),)
       # Do not continue in elif, as sending modifications is done in the same
       # package as sending notifications
       if subscriber.getSynchronizationState() == "sending_modifications":

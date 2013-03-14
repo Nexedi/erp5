@@ -437,11 +437,6 @@ class EngineMixin(object):
         last_anchor=subscriber.getLastAnchor(),
         next_anchor=subscriber.getNextAnchor())
 
-      # Now that everything is ok, init sync information
-      if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
-                                                 "refresh_from_client_only"):
-        # Reset signature only if we have to check modifications on server side
-        subscriber.initialiseSynchronization()
       # Server get sync commands from client first
       subscriber.processSyncRequest()
     else:
