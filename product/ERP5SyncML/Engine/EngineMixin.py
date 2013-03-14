@@ -187,7 +187,10 @@ class EngineMixin(object):
     if subscription.getAuthenticationState() != 'logged_in':
       # Workflow action
       subscription.login()
-    subscription.initialiseSynchronization()
+    if subscription.getSyncmlAlertCode() not in ("one_way_from_server",
+                                                 "refresh_from_server_only"):
+      # Reset signature only if client send its modification to server
+      subscription.initialiseSynchronization()
 
     # Create the package 1
     syncml_response = SyncMLResponse()
@@ -435,7 +438,10 @@ class EngineMixin(object):
         next_anchor=subscriber.getNextAnchor())
 
       # Now that everything is ok, init sync information
-      subscriber.initialiseSynchronization()
+      if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
+                                                 "refresh_from_client_only"):
+        # Reset signature only if we have to check modifications on server side
+        subscriber.initialiseSynchronization()
       # Server get sync commands from client first
       subscriber.processSyncRequest()
     else:
