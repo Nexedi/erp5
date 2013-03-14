@@ -626,6 +626,7 @@ class SyncMLSubscription(XMLObject):
               # It will be copy to "data" property once synchronization
               # is confirmed
               signature.setTemporaryData(xml_object)
+              signature.doSync()
 
             # Generate the command
             syncml_logger.debug("will send Replace command with %s"
@@ -636,7 +637,6 @@ class SyncMLSubscription(XMLObject):
               data=data_diff,
               more_data=more_data,
               media_type=conduit.getContentType())
-            signature.doSync()
 
           elif signature.getValidationState() != 'synchronized':
             # We should not have this case when we are in CONFLICT_MERGE
