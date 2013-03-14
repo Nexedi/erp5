@@ -89,9 +89,9 @@ IDEAS:\n
           <link rel="stylesheet" type="text/css" media="screen" href="jquery/plugin/jqgrid/ui.jqgrid.css" />\n
           <link rel="stylesheet" type="text/css" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.css" />\n
 \n
-          <script data-main="lib/require-erp5.js"\n
+          <script data-main="gadget-style-lib/require-erp5.js"\n
             type="text/javascript"\n
-            src="lib/require.js"></script>\n
+            src="gadget-style-lib/require.js"></script>\n
 \n
           <link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
           <link rel="shortcut icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
