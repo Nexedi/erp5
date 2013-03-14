@@ -5,15 +5,26 @@
 import sys
 import os
 import getopt
+import anydbm as dbm
+import tempfile
+import shutil
 from ZODB.FileStorage import FileStorage
 from ZODB.utils import get_pickle_metadata
 
 class Report:
-    def __init__(self):
-        self.OIDMAP = {}
+    def __init__(self, use_dbm=False):
+        self.use_dbm = use_dbm
+        if use_dbm:
+            self.temp_dir = tempfile.mkdtemp()
+            self.OIDMAP = dbm.open(os.path.join(self.temp_dir, 'oidmap.db'),
+                                   'nf')
+            self.USEDMAP = dbm.open(os.path.join(self.temp_dir, 'usedmap.db'),
+                                    'nf')
+        else:
+            self.OIDMAP = {}
+            self.USEDMAP = {}
         self.TYPEMAP = {}
         self.TYPESIZE = {}
-        self.USEDMAP = {}
         self.TIDS = 0
         self.OIDS = 0
         self.DBYTES = 0
@@ -91,12 +102,14 @@ def report(rep, csv=False):
                       rep.FBYTES * 100.0 / rep.DBYTES,
                       rep.FBYTES * 1.0 / rep.FOIDS)
 
-def analyze(path):
+def analyze(path, use_dbm):
     fs = FileStorage(path, read_only=1)
     fsi = fs.iterator()
-    report = Report()
+    report = Report(use_dbm)
     for txn in fsi:
         analyze_trans(report, txn)
+    if use_dbm:
+        shutil.rmtree(report.temp_dir)
     return report
 
 def analyze_trans(report, txn):
@@ -120,15 +133,22 @@ def analyze_rec(report, record):
         if oid not in report.OIDMAP:
             type = get_type(record)
             report.OIDMAP[oid] = type
-            report.USEDMAP[oid] = size
+            if report.use_dbm:
+                report.USEDMAP[oid] = str(size)
+            else:
+                report.USEDMAP[oid] = size
             report.COIDS += 1
             report.CBYTES += size
             report.COIDSMAP[type] = report.COIDSMAP.get(type, 0) + 1
             report.CBYTESMAP[type] = report.CBYTESMAP.get(type, 0) + size
         else:
             type = report.OIDMAP[oid]
-            fsize = report.USEDMAP[oid]
-            report.USEDMAP[oid] = size
+            if report.use_dbm:
+                fsize = int(report.USEDMAP[oid])
+                report.USEDMAP[oid] = str(size)
+            else:
+                fsize = report.USEDMAP[oid]
+                report.USEDMAP[oid] = size
             report.FOIDS += 1
             report.FBYTES += fsize
             report.CBYTES += size - fsize
@@ -147,6 +167,7 @@ usage: %(program)s [options] /path/to/Data.fs
 Options:
   -h, --help                 this help screen
   -c, --csv                  output CSV
+  -d, --dbm                  use DBM as temporary storage to limit memory usage
 """
 
 def usage(stream, msg=None):
@@ -160,16 +181,19 @@ def usage(stream, msg=None):
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   'hc', ['help', 'csv'])
+                                   'hcd', ['help', 'csv', 'dbm'])
         path = args[0]
     except (getopt.GetoptError, IndexError), msg:
         usage(sys.stderr, msg)
         sys.exit(2)
     csv = False
+    use_dbm = False
     for opt, args in opts:
         if opt in ('-c', '--csv'):
             csv = True
-        elif opt in ('-h', '--help'):
+        if opt in ('-d', '--dbm'):
+            use_dbm = True
+        if opt in ('-h', '--help'):
             usage(sys.stdout)
             sys.exit()
-    report(analyze(path), csv)
+    report(analyze(path, use_dbm), csv)
