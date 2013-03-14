@@ -218,7 +218,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
           activity_created = self.runGetAndActivate(subscription=subscriber,
                                                     after_method_id=after_method_id,
                                                     tag=tag)
-          syncml_logger.info("X--> Server is sending modifications in activities")
+          syncml_logger.info("X--> Server is sending modifications in activities %s" %(activity_created))
         if not activity_created:
           # Server has no modification to send to client, return final message
           syncml_logger.info("X-> Server sending final message")
@@ -257,14 +257,21 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'subscription_path' : subscription.getRelativeUrl(),
       }
     pref = getSite().portal_preferences
-    return subscription.getAndActivate(
+    count = subscription.getAndActivate(
       callback="sendSyncCommand",
       method_kw=method_kw,
       activate_kw=activate_kw,
-      final_activate_kw=final_activate_kw,
       packet_size=pref.getPreferredDocumentRetrievedPerActivityCount(),
       activity_count=pref.getPreferredRetrievalActivityCount(),
       )
+    # Then get deleted document
+    # this will act as the final message of this sync part
+    activate = subscription.getPortalObject().portal_synchronizations.activate
+    callback_method = getattr(activate(**activate_kw), "sendDeleteCommand")
+    callback_method(message_id=subscription.getNextMessageId(),
+                    activate_kw=activate_kw,
+                    **method_kw)
+    return True
 
 
   def runApplySyncCommand(self, subscription, syncml_request, tag):

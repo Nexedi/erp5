@@ -97,8 +97,7 @@ class SyncMLSubscription(XMLObject):
     self._edit(authenticated_user=None)
 
   security.declarePrivate('getAndActivate')
-  def getAndActivate(self, callback, method_kw, activate_kw,
-                     final_activate_kw, **kw):
+  def getAndActivate(self, callback, method_kw, activate_kw, **kw):
     """
     This methods is called by the asynchronous engine to split activity
     generation into activities.
@@ -106,7 +105,6 @@ class SyncMLSubscription(XMLObject):
     callback : method to call in activity
     method_kw : callback's parameters
     activate_kw : activity parameters to pass to activate call
-    final_activate_kw : activity parameters to pass to the last activate call
     kw : any parameter getAndActivate can required if it calls itself
 
     Last activate must wait for all other activities to be processed in order
@@ -141,7 +139,7 @@ class SyncMLSubscription(XMLObject):
                            (kw["min_id"],))
 
         self.activate(**next_kw).getAndActivate(
-          callback, method_kw, activate_kw, final_activate_kw, **kw)
+          callback, method_kw, activate_kw, **kw)
         generated_other_activity = True
       r = [x.getId() for x in r]
       message_id_list = self.getNextMessageIdList(id_count=result_count)
@@ -166,25 +164,12 @@ class SyncMLSubscription(XMLObject):
                           activate_kw=activate_kw,
                           **method_kw)
         # Final activity must be executed after all other
-        callback_method = getattr(activate(**final_activate_kw), callback)
-        syncml_logger.info("---- getAndActivate : final call for %s : %s" %(r[i+packet_size:], final_activate_kw))
+        syncml_logger.info("---- getAndActivate : final call for %s : %s" %(r[i+packet_size:], activate_kw))
         callback_method(id_list=r[i+packet_size:],  # XXX Has to be unit tested
                                                     # with mock object
                         message_id=message_id_list.pop(),
-                        activate_kw=final_activate_kw,
-                        is_final_message=True,
+                        activate_kw=activate_kw,
                         **method_kw)
-    else:
-      # We got no more result, but we must send a message with a final tag
-      activate = self.getPortalObject().portal_synchronizations.activate
-      callback_method = getattr(activate(**final_activate_kw), callback)
-      syncml_logger.info("getAndActivate : No result : final call")
-      callback_method(id_list=[],
-                      message_id=self.getNextMessageId(),
-                      activate_kw=final_activate_kw,
-                      is_final_message=True,
-                      **method_kw)
-
     return result_count
 
   security.declarePrivate('sendMessage')
@@ -482,26 +467,18 @@ class SyncMLSubscription(XMLObject):
 
   def _getDeletedData(self, syncml_response):
     """
-    Return list of deleted data base on validation state of signature
+    Add delete command to syncml resposne
+    XXX Delete signature from database when we receive confirmation message
     """
-    return None # XXX Do nothing for now, must introduce a new state to distinguisehd
-                # from not-synchronized object for which we wait for a status answer
-                # Maybe signature can be make "synchronized" without the status
-                # and changed if status not ok
-    deleted_signature_list = self.searchFolder(
-      validation_state="not_synchronized")
-    # Slow method
-#    deleted_signature_list = [x for x in self.contentValues() if x.getValidationState() == "not_synchronized"]
-    syncml_logger.info("Got %d deleted objects list in %s" % (
-        len(deleted_signature_list), self.getPath(),))
-    for signature in deleted_signature_list:
-      syncml_response.addDeleteCommand(gid=signature.getId(),)
+    # XXX not efficient at all, must be review later
+    id_list = [x.getId() for x in self.contentValues() if x.getValidationState() == "not_synchronized"]
+    for gid in id_list:
+      syncml_response.addDeleteCommand(gid=gid)
+
 
   def _getSyncMLData(self, syncml_response, id_list=None):
     """
     XXX Comment to be fixed
-    if object is not None, this usually means we want to set the
-    actual xupdate on the signature.
     """
     if not id_list:
       syncml_logger.warning("Non optimal call to _getSyncMLData, no id list provided")
@@ -531,7 +508,7 @@ class SyncMLSubscription(XMLObject):
     create_signature = alert_code != "refresh_from_client_only"
 
     if not len(object_list):
-      syncml_logger.warning("No object retrieved althoud id_list (%s) is provided" 
+      syncml_logger.warning("No object retrieved althoud id_list (%s) is provided"
                             % (id_list))
 
     for result in object_list:
@@ -586,6 +563,7 @@ class SyncMLSubscription(XMLObject):
               # The data will be copied in 'data' property once we get
               # confirmation that the document was well synchronized
               signature.setTemporaryData(document_data)
+              signature.doSync()
 
           # Generate the message
           syncml_response.addSyncCommand(
@@ -613,10 +591,8 @@ class SyncMLSubscription(XMLObject):
               sync_code='conflict_resolved_with_merge',
               command='Replace')
 
-          set_synchronized = True
           if not signature.checkMD5(xml_object):
             # MD5 checksum tell there is a modification of the object
-            set_synchronized = False
             if conduit.getContentType() != 'text/xml':
               # If there is no xml, we re-send the whole object
               # XXX this must be managed by conduit ?
@@ -661,11 +637,12 @@ class SyncMLSubscription(XMLObject):
               data=data_diff,
               more_data=more_data,
               media_type=conduit.getContentType())
+            signature.doSync()
 
-          if set_synchronized and \
-              signature.getValidationState() != 'synchronized':
+          elif signature.getValidationState() != 'synchronized':
             # We should not have this case when we are in CONFLICT_MERGE
             signature.synchronize()
+
         elif signature.getValidationState() == \
             'conflict_resolved_with_client_command_winning':
           # We have decided to apply the update
@@ -704,6 +681,9 @@ class SyncMLSubscription(XMLObject):
             data=xml_string,
             more_data=more_data,
             media_type=self.getContentType())
+
+          if not more_data:
+            signature.doSync()
 
         if not more_data:
           pass
