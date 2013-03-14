@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63188257.39</string> </value>
+            <value> <string>ts63249775.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -217,51 +217,65 @@ var ERP5Form = ( function () {\n
           },\n
 \n
           ListBox:  function (field_id, field_dict) {\n
-                      /* Listbox field */\n
+                      /*\n
+                       * Listbox field rendered at server\n
+                       */\n
+                      var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict,\n
+                          listbox_data_url, colModel, column_title_list;\n
+                      listbox_id = "field_" + field_id;\n
+                      navigation_id = listbox_id + "_pager";\n
+                      listbox_table = $("#"+listbox_id + "_table");\n
+                      current_form_id = this.getCurrentFormId();\n
+                      listbox_dict = field_dict.listbox;\n
+                      listbox_data_url = listbox_dict.listbox_data_url;\n
+                      $("#" + listbox_id + "_field").html(listbox_dict["listbox_html"]);\n
+                      return\n
+          },\n
+\n
+          ListBoxJavaScript:  function (field_id, field_dict) {\n
+                      /*\n
+                       * Listbox field rendered entirely at client side using jqgrid plugin\n
+                       */\n
                       var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict,\n
                           listbox_data_url, colModel, column_title_list;\n
                       listbox_id = "field_" + field_id;\n
                       navigation_id = listbox_id + "_pager";\n
                       listbox_table = $("#"+listbox_id);\n
                       current_form_id = this.getCurrentFormId();\n
-\n
                       listbox_dict = field_dict.listbox;\n
                       listbox_data_url = listbox_dict.listbox_data_url;\n
-                      $("#" + listbox_id).html(listbox_dict["listbox_html"]);\n
-                      return;\n
-//                       Uncomment below to use jqgrid plugin to render listbox\n
-//                       colModel = [];\n
-//                       column_title_list = [];\n
-//                       $.each(listbox_dict.columns,\n
-//                               function(i, value){\n
-//                                 var index, title, column;\n
-//                                 index = value[0];\n
-//                                 title = value[1];\n
-//                                 column_title_list.push(title);\n
-//                                 column = {\'name\': index,\n
-//                                           \'index\': index,\n
-//                                           \'width\': 185,\n
-//                                           \'align\': \'left\'};\n
-//                                 colModel.push(column);\n
-//                       });\n
-// \n
-//                       listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
-//                                     datatype: "json",\n
-//                                     colNames:  column_title_list,\n
-//                                     colModel: colModel,\n
-//                                     rowNum: listbox_dict.lines,\n
-//                                     pager: \'#\'+navigation_id,\n
-//                                     sortname: \'id\',\n
-//                                     viewrecords: true,\n
-//                                     sortorder: "desc",\n
-//                                     loadError : function(xhr, textStatus, errorThrown)  {\n
-//                                                   // XXX: handle better than just alert.\n
-//                                                   alert("Error occurred during getting data from server.");\n
-//                                                   },\n
-//                                     cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
-//                                     caption: field_dict.title});\n
-//                       listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
-//                       return listbox_table;\n
+                      colModel = [];\n
+                      column_title_list = [];\n
+                      $.each(listbox_dict.columns,\n
+                              function(i, value){\n
+                                var index, title, column;\n
+                                index = value[0];\n
+                                title = value[1];\n
+                                column_title_list.push(title);\n
+                                column = {\'name\': index,\n
+                                          \'index\': index,\n
+                                          \'width\': 185,\n
+                                          \'align\': \'left\'};\n
+                                colModel.push(column);\n
+                      });\n
+\n
+                      listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
+                                    datatype: "json",\n
+                                    colNames:  column_title_list,\n
+                                    colModel: colModel,\n
+                                    rowNum: listbox_dict.lines,\n
+                                    pager: \'#\'+navigation_id,\n
+                                    sortname: \'id\',\n
+                                    viewrecords: true,\n
+                                    sortorder: "desc",\n
+                                    loadError : function(xhr, textStatus, errorThrown)  {\n
+                                                  // XXX: handle better than just alert.\n
+                                                  alert("Error occurred during getting data from server.");\n
+                                                  },\n
+                                    cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
+                                    caption: field_dict.title});\n
+                      listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
+                      return listbox_table;\n
           },\n
 \n
           update: function(data) {\n
@@ -437,7 +451,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19948</int> </value>
+            <value> <int>20620</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -97,11 +97,16 @@ for field_id in form.get_field_ids():\n
   # listbox\n
   if field_meta_type in ["ListBox"]:\n
     field_dict[\'listbox\'] = {}\n
-    # disabled as now we pass entire listbox html\n
-    #field_dict[\'listbox\'][\'lines\'] = original_field.get_value("lines")\n
-    #field_dict[\'listbox\'][\'columns\'] = [x for x in original_field.get_value("columns")]\n
-    #field_dict[\'listbox\'][\'listbox_data_url\'] = "Listbox_asJSON"\n
-    field_dict[\'listbox\'][\'listbox_html\'] = original_field.render()\n
+    if render_client_side_listbox:\n
+      # client side can request its javascript representation so it can generate it using jqgrid\n
+      # or ask server generate its entire HTML\n
+      field_dict[\'type\'] = \'ListBoxJavaScript\'\n
+      field_dict[\'listbox\'][\'lines\'] = original_field.get_value("lines")\n
+      field_dict[\'listbox\'][\'columns\'] = [x for x in original_field.get_value("columns")]\n
+      field_dict[\'listbox\'][\'listbox_data_url\'] = "Listbox_asJSON"\n
+    else:\n
+      # server generates entire HTML\n
+      field_dict[\'listbox\'][\'listbox_html\'] = original_field.render()\n
 \n
   if field_meta_type in LIST_FIELDS:\n
     # form contains selects, pass list of selects\' values and calculate default one?\n
@@ -124,7 +129,7 @@ return dumps(result)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None</string> </value>
+            <value> <string>form_id=None, render_client_side_listbox=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
