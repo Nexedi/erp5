@@ -673,7 +673,7 @@ class SyncMLSubscription(XMLObject):
             finished = False
             xml_string = signature.getFirstPdataChunk(MAX_LEN)
           xml_string = etree.CDATA(xml_string.decode('utf-8'))
-        elif signature.getValidationState() in ('syncing', 'synchronized"):
+        elif signature.getValidationState() in ('syncing', 'synchronized'):
           raise ValueError("Must not get signature in %s state here, signature is %s"
                            % (signature.getValidationState(),
                               signature.getPath(),))
