@@ -3,6 +3,8 @@
 # Based on a transaction analyzer by Matt Kromer.
 
 import sys
+import os
+import getopt
 from ZODB.FileStorage import FileStorage
 from ZODB.utils import get_pickle_metadata
 
@@ -39,29 +41,42 @@ def shorten(s, n):
             l = len(s)
     return "..." + s
 
-def report(rep):
-    print "Processed %d records in %d transactions" % (rep.OIDS, rep.TIDS)
-    print "Average record size is %7.2f bytes" % (rep.DBYTES * 1.0 / rep.OIDS)
-    print ("Average transaction size is %7.2f bytes" %
-           (rep.DBYTES * 1.0 / rep.TIDS))
+def report(rep, csv=False):
+    if not csv:
+        print "Processed %d records in %d transactions" % (rep.OIDS, rep.TIDS)
+        print "Average record size is %7.2f bytes" % (rep.DBYTES * 1.0 / rep.OIDS)
+        print ("Average transaction size is %7.2f bytes" %
+               (rep.DBYTES * 1.0 / rep.TIDS))
 
-    print "Types used:"
-    fmt = "%-46s %7s %9s %6s %7s %7s %9s %7s %9s"
-    fmtp = "%-46s %7d %9d %5.1f%% %7.2f %7d %9d %7d %9d" # per-class format
+        print "Types used:"
+    if csv:
+        fmt = "%s,%s,%s,%s,%s,%s,%s,%s,%s"
+        fmtp = "%s,%d,%d,%f%%,%f,%d,%d,%d,%d" # per-class format
+    else:
+        fmt = "%-46s %7s %9s %6s %7s %7s %9s %7s %9s"
+        fmtp = "%-46s %7d %9d %5.1f%% %7.2f %7d %9d %7d %9d" # per-class format
     fmts = "%46s %7d %8dk %5.1f%% %7.2f" # summary format
     print fmt % ("Class Name", "T.Count", "T.Bytes", "Pct", "AvgSize",
                  "C.Count", "C.Bytes", "O.Count", "O.Bytes")
-    print fmt % ('-'*46, '-'*7, '-'*9, '-'*5, '-'*7, '-'*7, '-'*9, '-'*7, '-'*9)
+    if not csv:
+        print fmt % ('-'*46, '-'*7, '-'*9, '-'*5, '-'*7, '-'*7, '-'*9, '-'*7, '-'*9)
     typemap = rep.TYPEMAP.keys()
     typemap.sort(key=lambda a:rep.TYPESIZE[a])
     cumpct = 0.0
     for t in typemap:
         pct = rep.TYPESIZE[t] * 100.0 / rep.DBYTES
         cumpct += pct
-        print fmtp % (shorten(t, 46), rep.TYPEMAP[t], rep.TYPESIZE[t],
+        if csv:
+            t_display = t
+        else:
+            t_display = shorten(t, 46)
+        print fmtp % (t_display, rep.TYPEMAP[t], rep.TYPESIZE[t],
                       pct, rep.TYPESIZE[t] * 1.0 / rep.TYPEMAP[t],
                       rep.COIDSMAP[t], rep.CBYTESMAP[t],
                       rep.FOIDSMAP.get(t, 0), rep.FBYTESMAP.get(t, 0))
+
+    if csv:
+        return
 
     print fmt % ('='*46, '='*7, '='*9, '='*5, '='*7, '='*7, '='*9, '='*7, '='*9)
     print "%46s %7d %9s %6s %6.2fk" % ('Total Transactions', rep.TIDS, ' ',
@@ -127,6 +142,36 @@ def analyze_rec(report, record):
     except Exception, err:
         print err
 
+__doc__ = """%(program)s: Data.fs analyzer
+
+usage: %(program)s [options] /path/to/Data.fs
+
+Options:
+  -h, --help                 this help screen
+  -c, --csv                  output CSV
+"""
+
+def usage(stream, msg=None):
+    if msg:
+        print >>stream, msg
+        print >>stream
+    program = os.path.basename(sys.argv[0])
+    print >>stream, __doc__ % {"program": program}
+
+
 def main():
-    path = sys.argv[1]
-    report(analyze(path))
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   'hc', ['help', 'csv'])
+        path = args[0]
+    except (getopt.GetoptError, IndexError), msg:
+        usage(sys.stderr, msg)
+        sys.exit(2)
+    csv = False
+    for opt, args in opts:
+        if opt in ('-c', '--csv'):
+            csv = True
+        elif opt in ('-h', '--help'):
+            usage(sys.stdout)
+            sys.exit()
+    report(analyze(path), csv)
