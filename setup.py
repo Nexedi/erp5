@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.32'
+version = '0.4.33'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -57,6 +57,7 @@ setup(name=name,
         'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
         'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
+        'zodbanalyse': ['ZODB'],
       },
       zip_safe=True,
       packages=package_list,

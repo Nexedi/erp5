@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.33 (2013-03-14)
+-------------------
+
+ * erp5.util.zodbanalyze:
+
+  - Initial version of an improved version of ZODB's ZODB/scripts/analyze.py
+    [Kazuhiko Shiozaki]
+
 0.4.32 (2013-03-13)
 -------------------
 
