@@ -34,8 +34,6 @@ from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
 from DateTime.DateTime import DateTime
-from email.mime.base import MIMEBase
-from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -892,15 +890,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                        **update_dict)
     return conflict_list
 
-  def isWorkflowActionAddable(self, object=None, status=None, wf_tool=None,
-                              wf_id=None, xml=None):
+  def isWorkflowActionAddable(self, document, status, wf_id):
     """
     Some checking in order to check if we should add the workfow or not
     We should not returns a conflict list as we wanted before, we should
     instead go to a conflict state.
     """
     # We first test if the status in not already inside the workflow_history
-    wf_history = object.workflow_history
+    wf_history = document.workflow_history
     if wf_id in wf_history:
       action_list = wf_history[wf_id]
     else:
@@ -910,9 +907,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for action in action_list:
       this_one = WORKFLOW_ACTION_ADDABLE
       if time <= action.get('time'):
-        # action in the past are not append
+        # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
-      for key in action.keys():
+      key_list = action.keys()
+      key_list.remove("time")
+      for key in key_list:
         if status[key] != action[key]:
           this_one = WORKFLOW_ACTION_NOT_ADDABLE
           break
@@ -948,10 +947,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #for action in self.getWorkflowActionFromXml(xml):
     status = self.getStatusFromXml(xml)
     #LOG('addNode, status:',0,status)
-    add_action = self.isWorkflowActionAddable(object=object,
-                                              status=status,wf_tool=wf_tool,
-                                              wf_id=wf_id,xml=xml)
-
+    add_action = self.isWorkflowActionAddable(document=object,
+                                              status=status,
+                                              wf_id=wf_id,)
     if not simulate:
       if add_action == WORKFLOW_ACTION_ADDABLE:
         wf_tool.setStatusOf(wf_id, object, status)
