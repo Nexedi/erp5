@@ -244,14 +244,19 @@ class TestERP5SyncMLMixin(TestMixin):
     while result:
       # We do thing three times, so that we will test
       # if we manage well duplicate messages
-      for x in xrange(3):
-        result = portal_sync.processServerSynchronization(publication.getPath())
+      # only first call will return an answer
+      result = portal_sync.processServerSynchronization(publication.getPath())
+      self.tic()
+      for x in xrange(2):
+        portal_sync.processServerSynchronization(publication.getPath())
         self.tic()
       nb_message += 1
       if not len(result):
         break
-      for x in xrange(3):
-        result = portal_sync.processClientSynchronization(subscription.getPath())
+      result = portal_sync.processClientSynchronization(subscription.getPath())
+      self.tic()
+      for x in xrange(2):
+        portal_sync.processClientSynchronization(subscription.getPath())
         self.tic()
       nb_message += 1
 
