@@ -33,7 +33,8 @@ from Products.PluggableAuthService.interfaces.plugins import \
 
 from Products.ERP5SyncML.XMLSyncUtils import resolveSyncmlStatusCode, decode
 from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse
-from Products.ERP5SyncML.SyncMLConstant import NULL_ANCHOR, ACTIVITY_PRIORITY
+from Products.ERP5SyncML.SyncMLConstant import NULL_ANCHOR, ACTIVITY_PRIORITY, \
+    SynchronizationError
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -64,6 +65,9 @@ class EngineMixin(object):
     sync_status_counter = 0
     for status in syncml_request.status_list:
       if status["command"] == "SyncHdr":  # Check for authentication
+        if domain.getSynchronizationState() != "initializing":
+          raise SynchronizationError(
+            "Authentication header found although it is already done")
         if status['status_code'] == \
             resolveSyncmlStatusCode('missing_credentials'):
           # Server challenged an authentication

@@ -34,7 +34,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY
+from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY, \
+    SynchronizationError
 from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse, SyncMLRequest
 from Products.ERP5SyncML.Engine.SynchronousEngine import SyncMLSynchronousEngine
 from Products.ERP5SyncML.Engine.AsynchronousEngine import SyncMLAsynchronousEngine
@@ -319,6 +320,13 @@ class SynchronizationTool(BaseTool):
       assert len(database_alert_list) <= 1, "Multi-databases sync no supported"
       if len(database_alert_list):
         # We are initializing the synchronization
+        if subscriber and subscriber.getSynchronizationState() not in \
+              ("not_running", "finished"):
+          syncml_logger.error(
+            'Trying to start a synchronization on server side : %s although synchronisation is already running'
+            % (subscriber.getPath(),))
+          # Prevent initilisation if sync already running
+          return
         syncml_response = engine.processServerInitialization(
           publication=publication,
           syncml_request=syncml_request,
@@ -329,7 +337,10 @@ class SynchronizationTool(BaseTool):
           raise ValueError("First synchronization message must contains alert command")
         else:
           # Let engine manage the synchronization
-          return engine.processServerSynchronization(subscriber, syncml_request)
+          try:
+            return engine.processServerSynchronization(subscriber, syncml_request)
+          except SynchronizationError:
+            return
     else:
       # This must be implemented following the syncml protocol, not with this hack
       raise NotImplementedError("Starting sync process from server is forbidden")

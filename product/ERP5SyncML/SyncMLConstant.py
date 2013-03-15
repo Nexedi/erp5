@@ -99,3 +99,5 @@ REPLACE_ACTION = 'Replace'
 ACTIVITY_PRIORITY = 5
 
 
+class SynchronizationError(Exception):
+    pass

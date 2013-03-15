@@ -28,7 +28,7 @@
 from logging import getLogger
 
 from Products.ERP5SyncML.Engine.EngineMixin import EngineMixin
-
+from Products.ERP5SyncML.SyncMLConstant import SynchronizationError
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -57,7 +57,13 @@ class SyncMLSynchronousEngine(EngineMixin):
     syncml_response = self._generateBaseResponse(subscription)
 
     # Read & apply status about databases & synchronizations
-    self._readStatusList(syncml_request, subscription, syncml_response)
+    try:
+      self._readStatusList(syncml_request, subscription, syncml_response)
+    except SynchronizationError:
+      # Looks like we process an already received message
+      syncml_logger.error("%s does no process packet due to error"
+                          % (subscription.getRelativeUrl()))
+      return
 
     if syncml_request.isFinal and \
       subscription.getSynchronizationState() == "initializing":
@@ -148,11 +154,14 @@ class SyncMLSynchronousEngine(EngineMixin):
       # Apply status about object send & synchronized if any
       self._readStatusList(syncml_request, subscriber, syncml_response, True)
 
-      if syncml_request.isFinal and \
-        subscriber.getSynchronizationState() == \
-        "sending_modifications":
+      if syncml_request.isFinal:
+        if subscriber.getSynchronizationState() == \
+              "waiting_notifications":
           # We got the last notifications from clients
           subscriber.finish()
+        elif subscriber.getSynchronizationState() != \
+              "processing_sync_requests":
+          raise SynchronizationError("Got final request although not waiting for it")
 
       # XXX We compute gid list so that we do not get issue with catalog
       # XXX This is a hack, if real datasynchronization is implemented
@@ -202,6 +211,7 @@ class SyncMLSynchronousEngine(EngineMixin):
         if finished:
           subscriber._getDeletedData(syncml_response=syncml_response)
           syncml_response.addFinal()
+          subscriber.waitNotifications()
           # Do not go into finished here as we must wait for
           # notifications from client
       if subscriber.getSynchronizationState() == "finished":
