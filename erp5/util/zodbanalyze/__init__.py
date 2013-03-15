@@ -197,3 +197,6 @@ def main():
             usage(sys.stdout)
             sys.exit()
     report(analyze(path, use_dbm), csv)
+
+if __name__ == "__main__":
+    main()
