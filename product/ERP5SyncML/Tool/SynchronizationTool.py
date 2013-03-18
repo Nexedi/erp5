@@ -321,7 +321,7 @@ class SynchronizationTool(BaseTool):
       if len(database_alert_list):
         # We are initializing the synchronization
         if subscriber and subscriber.getSynchronizationState() not in \
-              ("not_running", "finished"):
+              ("not_running", "initializing", "finished"):
           syncml_logger.error(
             'Trying to start a synchronization on server side : %s although synchronisation is already running'
             % (subscriber.getPath(),))
