@@ -34,6 +34,10 @@ from AccessControl import ClassSecurityInfo
 # Declarative security
 security = ClassSecurityInfo()
 
+WORKFLOW_ACTION_NOT_ADDABLE = 0
+WORKFLOW_ACTION_ADDABLE = 1
+WORKFLOW_ACTION_INSERTABLE = 2
+
 class ERP5DocumentConduit(ERP5Conduit):
   """
   ERP5DocumentConduit specialise generic Conduit
@@ -51,4 +55,37 @@ class ERP5DocumentConduit(ERP5Conduit):
     """
     return "%s-%s-%s" %\
              (object.getReference(), object.getVersion(), object.getLanguage())
+
+
+  def isWorkflowActionAddable(self, document, status, wf_id):
+    """
+    Some checking in order to check if we should add the workfow or not
+    We should not returns a conflict list as we wanted before, we should
+    instead go to a conflict state.
+    """
+    # We first test if the status in not already inside the workflow_history
+    wf_history = document.workflow_history
+    if wf_id in wf_history:
+      action_list = wf_history[wf_id]
+    else:
+      return WORKFLOW_ACTION_ADDABLE
+    addable = WORKFLOW_ACTION_ADDABLE
+    time = status.get('time')
+    for action in action_list:
+      this_one = WORKFLOW_ACTION_ADDABLE
+      # if time <= action.get('time'):
+      #   # action in the past are not appended
+      #   addable = WORKFLOW_ACTION_INSERTABLE
+      key_list = action.keys()
+      # key_list.remove("time")
+      # XXX-AUREL For document it seems that checking time != is required
+      # I don't know why ?
+      for key in key_list:
+        if status[key] != action[key]:
+          this_one = WORKFLOW_ACTION_NOT_ADDABLE
+          break
+      if this_one:
+        addable = WORKFLOW_ACTION_NOT_ADDABLE
+        break
+    return addable
 
