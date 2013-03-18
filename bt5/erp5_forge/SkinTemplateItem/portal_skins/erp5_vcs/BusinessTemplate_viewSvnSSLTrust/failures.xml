@@ -105,11 +105,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<b>Nb failures</b>
-
-]]></string> </value>
+                    <value> <string>Nb Failures</string> </value>
                 </item>
               </dictionary>
             </value>

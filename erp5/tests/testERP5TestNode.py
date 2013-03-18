@@ -126,10 +126,9 @@ class ERP5TestNode(TestCase):
       my_file.close()
       call("git commit -av -m next_commit".split())
       output = call(['git', 'log', '--format=%H %s'])
+      output = output.strip()
       output_line_list = output.split("\n")
-      self.assertEquals(3, len(output_line_list))
-      # remove additional return line
-      output_line_list = output_line_list[0:2]
+      self.assertEquals(2, len(output_line_list))
       expected_commit_subject_list = ["next_commit", "first_commit"]
       commit_subject_list = [x.split()[1] for x in output_line_list]
       self.assertEquals(expected_commit_subject_list, commit_subject_list)
@@ -233,6 +232,41 @@ branch = foo
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
     for vcs_repository in node_test_suite.vcs_repository_list:
       self.assertTrue(os.path.exists(vcs_repository['repository_path']))
+
+  def test_05b_changeRepositoryBranch(self):
+    """
+    It could happen that the branch is changed for a repository. Testnode must
+    be able to reset correctly the branch
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEquals(3, len(rev_list))
+    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
+    rep2_clone_path = [x['repository_path'] for x in \
+                       node_test_suite.vcs_repository_list \
+                       if x['repository_path'].endswith("rep2")][0]
+    call = self.getCaller(cwd=rep2_clone_path)
+    output = call("git branch".split()).strip()
+    self.assertTrue("* foo" in output.split('\n'))
+    vcs_repository_info = node_test_suite.vcs_repository_list[0]
+    self.assertEquals(vcs_repository_info['repository_id'], 'rep2')
+    self.assertEquals(vcs_repository_info['branch'], 'foo')
+    # change it to master
+    vcs_repository_info['branch'] = 'master'
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    output = call("git branch".split()).strip()
+    print output
+    self.assertTrue("* master" in output.split('\n'))
+    # Add a third branch on remote, make sure we could switch to it
+    remote_call = self.getCaller(cwd=self.remote_repository2)
+    output = remote_call('git checkout master -b bar'.split())
+    vcs_repository_info['branch'] = 'bar'
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    output = call("git branch".split()).strip()
+    self.assertTrue("* bar" in output.split('\n'))
 
   def test_06_checkRevision(self):
     """

@@ -182,20 +182,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>workflow_action_title</string>
+                          <string>Action</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>workflow_action</string>
+                          <string>Workflow Action</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>workflow_id</string>
+                          <string>Workflow ID</string>
                         </tuple>
                       </list>
                     </value>
@@ -322,7 +318,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.getTemplateField().get_value(\'columns\') + [(\'workflow_action_title\', \'Action\'), (\'workflow_id\', \'\'), (\'workflow_action\', \'\')]</string> </value>
+            <value> <string>python: field.getTemplateField().get_value(\'columns\') + field.get_orig_value(\'columns\')</string> </value>
         </item>
       </dictionary>
     </pickle>

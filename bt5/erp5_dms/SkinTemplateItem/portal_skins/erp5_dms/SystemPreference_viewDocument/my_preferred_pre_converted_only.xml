@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Serve Conversion Only If Already Converted In Cache</string> </value>
+                    <value> <string>Serve Conversion only if already Converted in Cache</string> </value>
                 </item>
               </dictionary>
             </value>

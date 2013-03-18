@@ -227,7 +227,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Amount To Be Receive</string> </value>
+                    <value> <string>Amount to be Received</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

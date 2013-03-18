@@ -114,7 +114,7 @@ msgstr "-- 워크플로우 --"
 msgid "1 day ago"
 msgstr "1일 전"
 
-msgid "10 newest items"
+msgid "10 Newest Items"
 msgstr "최신 아이템 10개"
 
 msgid "A Query about the current ${portal_type} was posted with ID ${query_id}."
@@ -363,7 +363,7 @@ msgstr "추가 지불"
 msgid "Additional Price"
 msgstr "추가 가격"
 
-msgid "Additional Term (days)"
+msgid "Additional Term (Days)"
 msgstr "추가 기간 (일)"
 
 msgid "Address"
@@ -790,9 +790,6 @@ msgid "Cache Expire Check Interval"
 msgstr "캐시 소멸 확인 간격"
 
 msgid "Cache Factories"
-msgstr "캐시 팩토리"
-
-msgid "Cache Factories List"
 msgstr "캐시 팩토리 리스트"
 
 msgid "Cache Factory"
@@ -1446,7 +1443,7 @@ msgstr "영어로부터 번역을 위한 용어 만들기"
 msgid "Create User"
 msgstr "사용자 만들기"
 
-msgid "Create Your New Account"
+msgid "Create your New Account"
 msgstr "귀하의 새로운 계정 만들기"
 
 msgid "Create a New Event for Reply"
@@ -1455,10 +1452,10 @@ msgstr "답장 이벤트 만들기"
 msgid "Create a Task"
 msgstr "테스크 만들기"
 
-msgid "Created After"
+msgid "Created after"
 msgstr "이후 생성"
 
-msgid "Created Before"
+msgid "Created before"
 msgstr "이전 생성"
 
 msgid "Created Clone ${portal_type}."
@@ -1620,7 +1617,7 @@ msgstr "각 문서의 디폴트 보내기"
 msgid "Default Export of Each Document (One sheet per view)"
 msgstr "각 문서의 디폴트 보내기 (뷰 마다 하나의 시트) "
 
-msgid "Default Fax"
+msgid "Default FAX"
 msgstr "기본 팩스"
 
 msgid "Default Payment Condition"
@@ -1854,7 +1851,7 @@ msgstr "할인"
 msgid "Distributed Ram Cache"
 msgstr "분산된 램 캐시"
 
-msgid "Distributed Ram Cache Plugin"
+msgid "Distributed RAM Cache Plugin"
 msgstr "분산된 램 캐시 플럭인"
 
 msgid "Diverged"
@@ -1908,9 +1905,6 @@ msgstr "문서 수집 워크플로우"
 msgid "Document Interactions"
 msgstr "문서 인터액션"
 
-msgid "Document List"
-msgstr "문서 리스트"
-
 msgid "Document Module"
 msgstr "문서 모듈"
 
@@ -1951,7 +1945,7 @@ msgid "Documentation URL"
 msgstr "ERP5 문서 URL"
 
 msgid "Documents"
-msgstr "문서"
+msgstr "문서 리스트"
 
 msgid "Documents to Review (%(count)s)"
 msgstr "검토할 문서 (%(count)s)"
@@ -2328,9 +2322,6 @@ msgstr "내보내기 포맷"
 msgid "Export Mode"
 msgstr "내보내기 양식"
 
-msgid "Export Terms As PO File"
-msgstr "PO 파일로 용어들을 보내기"
-
 msgid "Export Terms as PO File"
 msgstr "PO 파일로 용어들을 보내기"
 
@@ -2373,9 +2364,6 @@ msgstr "외부 프로세싱 워크플로우"
 msgid "External Source Content"
 msgstr "외부 소스 컨텐트"
 
-msgid "External Source List"
-msgstr "외부 소스 리스트"
-
 msgid "External Source Module"
 msgstr "외부 소스 모듈"
 
@@ -2383,21 +2371,15 @@ msgid "External Source View"
 msgstr "외부 소스 보기"
 
 msgid "External Sources"
-msgstr "외부 소스"
-
-msgid "FAX"
-msgstr "FAX"
+msgstr "외부 소스 리스트"
 
 msgid "Fast Input"
 msgstr "빠른 입력"
 
-msgid "Fax"
-msgstr "Fax"
-
 msgid "Fax Message"
 msgstr "Fax 메시지"
 
-msgid "Field List"
+msgid "Fields"
 msgstr "필드 리스트"
 
 msgid "Field Path"
@@ -2424,7 +2406,7 @@ msgstr "파일 상태"
 msgid "File format:"
 msgstr "파일 포맷"
 
-msgid "File to upload"
+msgid "File to Upload"
 msgstr "업로드할 파일"
 
 msgid "File uploaded."
@@ -2502,19 +2484,16 @@ msgstr "폴더"
 msgid "Folder Contents"
 msgstr "폴더 컨텐트"
 
-msgid "Follow Up"
-msgstr "이 개체가 소속된 곳"
-
-msgid "Follow Up Ticket"
+msgid "Follow-up Ticket"
 msgstr "소속된 티켓으로 가기"
 
-msgid "Follow Up Ticket Title"
+msgid "Follow-up Ticket Title"
 msgstr "소속 티켓 이름"
 
-msgid "Follow Up Ticket Type"
+msgid "Follow-up Ticket Type"
 msgstr "소속 티켓 유형"
 
-msgid "Follow up"
+msgid "Follow-up"
 msgstr "따라가기"
 
 msgid "Follow up must be set to acknowledge an Event."
@@ -2748,9 +2727,6 @@ msgstr "설정하면, 결제 조건에 명시된 월말에 결제가 요청됩�
 msgid "Image"
 msgstr "이미지"
 
-msgid "Image List"
-msgstr "이미지 리스트"
-
 msgid "Image Module"
 msgstr "이미지 모듈"
 
@@ -2758,7 +2734,7 @@ msgid "Image Thumbnail"
 msgstr "썸네일 이미지"
 
 msgid "Images"
-msgstr "이미지"
+msgstr "이미지 리스트"
 
 msgid "Import / Export"
 msgstr "가져오기 / 보내기"
@@ -3072,7 +3048,7 @@ msgstr "키워드"
 msgid "Keywords"
 msgstr "키워드"
 
-msgid "Kind of report"
+msgid "Kind of Report"
 msgstr "리포트 종류"
 
 msgid "Knowledge Box"
@@ -3123,13 +3099,13 @@ msgstr "최종 회기는 ${last_openned_date}에 마치고, 이 회기는 ${this
 msgid "Latest"
 msgstr "최종"
 
-msgid "Latest Content List"
+msgid "Latest Contents"
 msgstr "최종 컨텐트 리스트"
 
 msgid "Layout Configuration"
 msgstr "레이아웃 구성"
 
-msgid "Layout of contained boxes"
+msgid "Layout of Contained Boxes"
 msgstr "포함된 박스의 레이아웃"
 
 msgid "Learn"
@@ -3273,7 +3249,7 @@ msgstr "최대 범주"
 msgid "Max. Delay (Day)"
 msgstr "최장 지연 (일)"
 
-msgid "Maximum user inactivity duration"
+msgid "Maximum User Inactivity Duration"
 msgstr "이용자 비활성을 허용하는 최장 시간"
 
 msgid "Maximum user's inactivity duration in seconds before user is automatically logged out"
@@ -3414,7 +3390,7 @@ msgstr "수정됨"
 msgid "Modified Business Template"
 msgstr "수정된 비즈니스 템플릿"
 
-msgid "Modified categories"
+msgid "Modified Categories"
 msgstr "수정된 카테고리"
 
 msgid "Modify Transaction (journalise)"
@@ -3465,7 +3441,7 @@ msgstr "무브먼트"
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "복수의 (${document_count}) 문서가 ${document_reference} - ${document_language} - ${document_version} 이미 있습니다."
 
-msgid "My Content List"
+msgid "My Contents"
 msgstr "내 컨텐트 리스트"
 
 msgid "My Contributed Content"
@@ -3654,7 +3630,7 @@ msgstr "알림"
 msgid "Notification Message"
 msgstr "알림 메시지"
 
-msgid "Notification Message Content List"
+msgid "Notification Message Contents"
 msgstr "알림 메시지 컨텐트 리스트"
 
 msgid "Notification Message Module"
@@ -3672,10 +3648,10 @@ msgstr "중복 숫자"
 msgid "Number"
 msgstr "번호"
 
-msgid "Number of Lines Displayed in List Mode ListBoxes"
+msgid "Number of Lines Displayed in List Mode Listboxes"
 msgstr "리스트 모드 리스트박스에 표시될 라인 수"
 
-msgid "Number of Lines Displayed in View Mode ListBoxes"
+msgid "Number of Lines Displayed in View Mode Listboxes"
 msgstr "보기 모드의 리스트박스에 표시될 라인 수"
 
 msgid "Number of Related Objects"
@@ -4071,7 +4047,7 @@ msgstr "지불 시트 트랜젝션 갱신됨."
 msgid "Pay Sheet View"
 msgstr "지불 시트 뷰"
 
-msgid "PaySheet Order"
+msgid "Pay Sheet Order"
 msgstr "지불 시트 주문"
 
 msgid "Payable"
@@ -4264,13 +4240,10 @@ msgid "Portal Type Property"
 msgstr "포털 타입 속성"
 
 msgid "Portal Types"
-msgstr "포털 타입"
+msgstr "포털 타입 리스트"
 
 msgid "Portal Types updated."
 msgstr "포털 타입 갱신됨."
-
-msgid "PortalType List"
-msgstr "포털 타입 리스트"
 
 msgid "Post"
 msgstr "게시하기"
@@ -4320,7 +4293,7 @@ msgstr "설정"
 msgid "Preference Tool"
 msgstr "설정 도구"
 
-msgid "Preference priority"
+msgid "Preference Priority"
 msgstr "설정 우선순위"
 
 msgid "Preferences"
@@ -4809,7 +4782,7 @@ msgstr "RSS 피드"
 msgid "Ram Cache"
 msgstr "램 캐시"
 
-msgid "Ram Cache Plugin"
+msgid "RAM Cache Plugin"
 msgstr "램 캐시 플럭인"
 
 msgid "Ratio"
@@ -5490,9 +5463,6 @@ msgstr "검색 팁"
 msgid "Search Transactions"
 msgstr "트랜젝션 검색"
 
-msgid "Search results"
-msgstr "결과 검색"
-
 msgid "Section"
 msgstr "섹션"
 
@@ -5655,7 +5625,7 @@ msgstr "선적 날짜"
 msgid "Short Title"
 msgstr "짧은 제목"
 
-msgid "Show Accounts Without Transactions"
+msgid "Show Accounts without Transactions"
 msgstr "트랜젝션을 제외한 계정 보기"
 
 msgid "Show All"
@@ -6309,7 +6279,7 @@ msgstr "회기 잠정 중단"
 msgid "Temporary Stopped Accounting Period"
 msgstr "잠정 중단된 회기"
 
-msgid "Term (days)"
+msgid "Term (Days)"
 msgstr "기간 (일)"
 
 msgid "Terminate the Current Career Step"
@@ -6336,10 +6306,10 @@ msgstr "텍스트 포맷"
 msgid "Text area field"
 msgstr "텍스트 영역 필드"
 
-msgid "TextArea Field Height"
+msgid "Text Area Field Height"
 msgstr "문자영역 높이"
 
-msgid "TextArea Field Width"
+msgid "Text Area Field Width"
 msgstr "문자영역 폭"
 
 msgid "The Date"
@@ -6985,13 +6955,13 @@ msgstr "트랜잭션의 밸런스가 맞지 않습니다."
 msgid "Transactions"
 msgstr "트랜젝션"
 
-msgid "Transactions Related to This Account"
+msgid "Transactions Related to this Account"
 msgstr "이 계정과 관련된 트랜젝션"
 
-msgid "Transactions Related to This Bank Account"
+msgid "Transactions Related to this Bank Account"
 msgstr "이 은행 계좌와 관련된 트랜젝션"
 
-msgid "Transactions Related to This Entity"
+msgid "Transactions Related to this Entity"
 msgstr "이 개체와 관련된 트랜젝션"
 
 msgid "Transactions Simulation State"
@@ -7057,7 +7027,7 @@ msgstr "간이 장부"
 msgid "Type"
 msgstr "타입"
 
-msgid "Type of rendering"
+msgid "Type of Rendering"
 msgstr "렌더링 타입"
 
 msgid "URL"
@@ -7117,7 +7087,7 @@ msgstr "필드 갱신"
 msgid "Update Fields by English Glossary"
 msgstr "영어 용어집에 맞춰 필드 갱신"
 
-msgid "Update PortalTypes"
+msgid "Update Portal Types"
 msgstr "포털타입 갱신"
 
 msgid "Update PortalTypes by English Glossary"
@@ -7618,7 +7588,7 @@ msgstr "설치됨"
 msgid "invalidated"
 msgstr "확정 취소"
 
-msgid "matrixbox"
+msgid "Matrixbox"
 msgstr "매트릭스 박스"
 
 msgid "max"

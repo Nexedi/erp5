@@ -267,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Specialise Portal Types to test (leave blank to test all)</string> </value>
+                    <value> <string>Specialise Portal Types to Test (Leave Blank to Test all)</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

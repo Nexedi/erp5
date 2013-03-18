@@ -177,7 +177,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Base_viewRelatedObjectListBase</string> </value>
+                    <value> <string>Related Objects</string> </value>
                 </item>
               </dictionary>
             </value>

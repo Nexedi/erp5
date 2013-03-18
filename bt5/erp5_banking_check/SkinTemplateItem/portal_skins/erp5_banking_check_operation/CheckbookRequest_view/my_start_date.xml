@@ -301,7 +301,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Date de l\'opération</string> </value>
+                    <value> <string>Operation Date</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -399,11 +399,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -585,7 +585,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>Listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>

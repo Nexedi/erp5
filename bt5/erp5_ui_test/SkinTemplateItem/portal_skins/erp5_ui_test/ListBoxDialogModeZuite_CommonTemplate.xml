@@ -150,7 +150,7 @@
         </tr>\n
         <tr>\n
           <td>assertTextPresent</td>\n
-          <td>Useless Field In Bar Selection Dialog</td>\n
+          <td>Useless Field in Bar Selection Dialog</td>\n
           <td></td>\n
         </tr>\n
     <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/enter_dialog_value" />\n
@@ -178,7 +178,7 @@
 \n
 <tr>\n
   <td>assertTextPresent</td>\n
-  <td>Useless Field In Bar Selection Dialog</td>\n
+  <td>Useless Field in Bar Selection Dialog</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

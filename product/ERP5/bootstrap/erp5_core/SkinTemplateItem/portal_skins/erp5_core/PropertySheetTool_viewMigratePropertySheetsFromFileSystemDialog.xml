@@ -124,7 +124,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Migrate PropertySheets from File System</string> </value>
+            <value> <string>Migrate Property Sheets from File System</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

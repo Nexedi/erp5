@@ -157,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Include a Virtual Node For "None"</string> </value>
+                    <value> <string>Include a Virtual Node for none</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -53,6 +53,8 @@ from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Form.Selection import DomainSelection
+from Products.ERP5Type.tests.utils import createZODBPythonScript
+from textwrap import dedent
 
 class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -108,6 +110,17 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     PackingList.isPacked = isPacked
     self.createCurrency()
     self.setUpPreferences()
+
+  def beforeTearDown(self):
+    """Clear everything for next test."""
+    for module in [ 'portal_simulation',
+                    'inventory_module']:
+      folder = self.portal[module]
+      folder.manage_delObjects(list(folder.objectIds()))
+    self.portal.portal_skins.custom.manage_delObjects(
+      list(self.portal.portal_skins.custom.objectIds()))
+
+    self.tic()
 
   def createCategory(self, parent, id_list):
       last_category = None
@@ -2011,6 +2024,157 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
 
+  def stepSetTwoLevelProductLineOnFirstResource(self,
+                                                sequence=None,
+                                                sequence_list=None,
+                                                **kw):
+    """ Create a resource which has two level product_line """
+    category_tool = self.portal.portal_categories
+    pl = category_tool.product_line
+    self.createCategory(pl, ['level1', ['level2']])
+    product_module = self.portal.product_module
+    resource_value = product_module.newContent(title='Resource',
+                                               portal_type='Product')
+    resource_value.setProductLine('level1/level2')
+    sequence.edit(first_resource=resource_value)
+
+
+  def stepCreateTwoResourceFullInventory(self,
+                                         sequence=None,
+                                         sequence_list=None,
+                                         **kw):
+    """ Create a full Inventory which includes two inventory lines """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=True)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("first_resource"),
+      inventory = 10)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = 100)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepTestFullInventoryWithResourceCategory(self,
+                                                sequence=None,
+                                                sequence_list=None,
+                                                **kw):
+    """
+     Make sure that we can use resource_category parameter with Full inventory.
+    """
+    node = sequence.get('node')
+    section = sequence.get('section')
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(10, getInventory(section_uid=section.getUid(),
+                                        node_uid=node.getUid(),
+                                        resource_category='product_line/level1',
+                                        optimisation__=False))
+    self.assertEquals(10, getInventory(section_uid=section.getUid(),
+                                        node_uid=node.getUid(),
+                                        resource_category='product_line/level1',
+                                        optimisation__=True))
+    self.assertEquals(100, getInventory(section_uid=section.getUid(),
+                                        node_uid=node.getUid(),
+                                        resource_category='product_line/apparel',
+                                        optimisation__=False))
+    self.assertEquals(100, getInventory(section_uid=section.getUid(),
+                                        node_uid=node.getUid(),
+                                        resource_category='product_line/apparel',
+                                        optimisation__=True))
+
+  def stepSetUpInventoryIndexingByNodeAndSection(self,
+                                                 sequence=None,
+                                                 sequence_list=None,
+                                                 **kw):
+    script_name = 'Inventory_getDefaultInventoryCalculationList'
+    if script_name in self.portal.portal_skins.custom:
+      return
+    createZODBPythonScript(self.portal.portal_skins.custom,
+                           'Inventory_getDefaultInventoryCalculationList', '',
+    dedent('''
+    return ({'inventory_params':{
+             'section_uid':context.getDestinationSectionUid(),
+             'node_uid':context.getDestinationUid(),
+             'group_by_variation':1,
+             'group_by_resource':1},
+            'list_method':'getMovementList',
+            'first_level':({'key':'resource_relative_url',
+                            'getter':'getResource',
+                            'setter':('appendToCategoryList', 'resource')},
+                           {'key':'variation_text',
+                            'getter':'getVariationText',
+                            'setter':'splitAndExtendToCategoryList'},
+                           ),
+            },)
+    '''))
+
+
+  def stepSetTwoLevelGroupOnSection(self,
+                                    sequence=None,
+                                    sequence_list=None,
+                                    **kw):
+    """ Create a section which has two level group """
+    category_tool = self.portal.portal_categories
+    self.createCategory(category_tool.group, ['level1', ['level2']])
+    organisation_module = self.portal.organisation_module
+    section_value = organisation_module.newContent(title='Organisation',
+                                                   portal_type='Organisation')
+    section_value.setGroup('level1/level2')
+    sequence.edit(section=section_value)
+
+  def stepTestFullInventoryWithSectionCategory(self,
+                                               sequence=None,
+                                               sequence_list=None,
+                                               **kw):
+    """
+     Make sure that we can use section_category parameter with Full inventory.
+    """
+    node = sequence.get('node')
+    section = sequence.get('section')
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(202, getInventory(node_uid=node.getUid()))
+    self.assertEquals(101, getInventory(section_category='group/level1/level2',
+                                        node_uid=node.getUid(),
+                                        optimisation__=False))
+    self.assertEquals(101, getInventory(node_uid=node.getUid(),
+                                        section_category='group/level1/level2',
+                                        optimisation__=True))
+
+  def stepSetTwoLevelRegionOnNode(self,
+                                  sequence=None,
+                                  sequence_list=None,
+                                  **kw):
+    """ Create a node which has two tier region """
+    category_tool = self.portal.portal_categories
+    self.createCategory(category_tool.region, ['level1', ['level2']])
+    organisation_module = self.portal.organisation_module
+    node_value = organisation_module.newContent(title='Organisation',
+                                                portal_type='Organisation')
+    node_value.setRegion('level1/level2')
+    sequence.edit(node=node_value)
+
+  def stepTestFullInventoryWithNodeCategory(self,
+                                            sequence=None,
+                                            sequence_list=None,
+                                            **kw):
+    """
+     Make sure that we can use node_category parameter with Full inventory.
+    """
+    node = sequence.get('node')
+    section = sequence.get('section')
+    getInventory = self.getSimulationTool().getInventory
+    self.assertEquals(202, getInventory(section_uid=section.getUid()))
+    self.assertEquals(101, getInventory(section_uid=section.getUid(),
+                                        node_category='region/level1/level2',
+                                        optimisation__=False))
+    self.assertEquals(101, getInventory(section_uid=section.getUid(),
+                                        node_category='region/level1/level2',
+                                        optimisation__=True))
+
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -2258,6 +2422,56 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
 
+    sequence_list.play(self)
+
+  def test_09_FullInventoryWithResourceCategory(self, quiet=0, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetTwoLevelProductLineOnFirstResource \
+                       CreateNotVariatedSecondResource \
+                       Tic \
+                       CreateTwoResourceFullInventory \
+                       Tic \
+                       TestFullInventoryWithResourceCategory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_09_FullInventoryWithSectionCategory(self, quiet=0, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedSecondResource \
+                       Tic \
+                       CreateFullInventory \
+                       Tic \
+                       SetTwoLevelGroupOnSection \
+                       Tic \
+                       CreateFullInventory \
+                       Tic \
+                       TestFullInventoryWithSectionCategory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_09_FullInventoryWithNodeCategory(self, quiet=0, run=run_all_test):
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedSecondResource \
+                       Tic \
+                       CreateFullInventory \
+                       Tic \
+                       SetTwoLevelRegionOnNode \
+                       Tic \
+                       CreateFullInventory \
+                       Tic \
+                       TestFullInventoryWithNodeCategory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
 

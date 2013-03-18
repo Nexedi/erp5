@@ -337,11 +337,11 @@
                         </tuple>
                         <tuple>
                           <string>check_amount_title</string>
-                          <string>Number of checks</string>
+                          <string>Number of Checks</string>
                         </tuple>
                         <tuple>
                           <string>check_type_title</string>
-                          <string>Value of check</string>
+                          <string>Value of Check</string>
                         </tuple>
                         <tuple>
                           <string>destination_trade_title</string>

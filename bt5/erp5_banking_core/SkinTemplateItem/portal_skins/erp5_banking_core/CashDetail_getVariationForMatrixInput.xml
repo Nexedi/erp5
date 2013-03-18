@@ -115,7 +115,7 @@ for x in column_base_list:\n
    return_list.append([\'column\'+str(counter),x[0]])\n
    counter += 1\n
 return_list.append([\'price\',\'Price\'])\n
-return_list.append([\'resource_id\',\'\'])\n
+return_list.append([\'resource_id\',\'Resource\'])\n
 return return_list\n
 
 

@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -38,12 +42,20 @@
   \074head\076\n
   \074/head\076\n
   \074body\076\n
+\n
     \074p class="portal-status-message" style="display:none; color:red;font-weight:bold;"\076\074/p\076\n
 \n
     \074script type="text/javascript" language="javascript"\076\n
       //\074![CDATA[\n
         $(document).ready(function() {\n
-            gadget = RenderJs.getSelfGadget();\n
+            var portal_status_message,\n
+                gadget = RenderJs.getSelfGadget();\n
+\n
+            function getURLParameter(name) {\n
+                return decodeURI(\n
+                    (RegExp(name + \'=\' + \'(.+?)(\046|$)\').exec(location.search)||[,null])[1]\n
+                );\n
+            };\n
 \n
             gadget.showMessage = function (message, timeout) {\n
               // show message in UI\n
@@ -55,6 +67,13 @@
               msg_element.html(message);\n
               window.setTimeout(\'$("#portal_status_message p").toggle();\', timeout);\n
             };\n
+\n
+            // in some cases a message can be inside current URL as well\n
+            // so show it.\n
+            portal_status_message = getURLParameter("portal_status_message");\n
+            if (portal_status_message!==undefined \046\046 portal_status_message!==null \046\046 portal_status_message!==\'null\') {\n
+              gadget.showMessage(portal_status_message, 10000);\n
+            }\n
         });\n
       //]]\076\n
     \074/script\076\n

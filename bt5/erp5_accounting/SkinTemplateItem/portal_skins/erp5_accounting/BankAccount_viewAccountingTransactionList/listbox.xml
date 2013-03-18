@@ -277,7 +277,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transactions Related to This Bank Account</string> </value>
+                    <value> <string>Transactions Related to this Bank Account</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

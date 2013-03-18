@@ -483,7 +483,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>PortalType List</string> </value>
+                    <value> <string>Portal Types</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>

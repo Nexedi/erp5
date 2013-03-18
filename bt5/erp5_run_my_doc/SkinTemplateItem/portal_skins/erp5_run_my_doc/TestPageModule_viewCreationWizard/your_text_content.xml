@@ -122,7 +122,7 @@ Text (<details> tags will be automatically added at the beginning and at the end
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Introductionary text</string> </value>
+                    <value> <string>Introductionary Text</string> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>

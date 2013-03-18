@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts62754937.18</string> </value>
+            <value> <string>ts63271297.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,9 +23,9 @@
             <value> <string>// JavaScript file that is used to load ERP5\'s JavaScript depenencies\n
 require.config({\n
   paths: {\n
-    "erp5_form": "lib/erp5_form",\n
-    route: "lib/route",\n
-    url: "lib/url",\n
+    "erp5_form": "gadget-style-lib/erp5_form",\n
+    route: "gadget-style-lib/route",\n
+    url: "gadget-style-lib/url",\n
     jquery: "jquery/core/jquery",\n
     renderjs: "jquery/plugin/renderjs/renderjs",\n
     "jquery-ui": "jquery/ui/js/jquery-ui.min",\n
@@ -70,7 +70,7 @@ require(["erp5_xhtml_appearance", "erp5_knowledge_box", "erp5", "erp5_form",\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1474</int> </value>
+            <value> <int>1513</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

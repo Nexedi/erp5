@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_title</string> </value>
+                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -46,10 +46,11 @@ class Updater(object):
   stdin = file(os.devnull)
 
   def __init__(self, repository_path, log, revision=None, git_binary=None,
-      realtime_output=True, process_manager=None):
+      branch=None, realtime_output=True, process_manager=None):
     self.log = log
     self.revision = revision
     self._path_list = []
+    self.branch = branch
     self.repository_path = repository_path
     self.git_binary = git_binary
     self.realtime_output = realtime_output
@@ -144,7 +145,11 @@ class Updater(object):
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('fetch', '--prune')
+          self._git('fetch', '--all', '--prune')
+          if self.branch and \
+            not ("* %s" % self.branch in self._git('branch').split("\n")):
+              self._git('checkout',  'origin/%s' % self.branch, '-b',
+                        self.branch)
           self._git('update-index', '--refresh') # see note above
           self._git('reset', '--merge', '@{u}')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))

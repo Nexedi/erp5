@@ -79,15 +79,15 @@
                       <list>
                         <tuple>
                           <string>int_index</string>
-                          <string>int_index</string>
+                          <string>Int Index</string>
                         </tuple>
                         <tuple>
                           <string>gap_title</string>
-                          <string></string>
+                          <string>GAP</string>
                         </tuple>
                         <tuple>
                           <string>account_type_title_list</string>
-                          <string></string>
+                          <string>Account Type</string>
                         </tuple>
                       </list>
                     </value>

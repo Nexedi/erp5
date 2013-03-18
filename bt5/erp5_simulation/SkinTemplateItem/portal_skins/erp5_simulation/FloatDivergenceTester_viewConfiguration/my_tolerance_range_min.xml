@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Relative Tolerance (min)</string> </value>
+                    <value> <string>Relative Tolerance (Min)</string> </value>
                 </item>
               </dictionary>
             </value>

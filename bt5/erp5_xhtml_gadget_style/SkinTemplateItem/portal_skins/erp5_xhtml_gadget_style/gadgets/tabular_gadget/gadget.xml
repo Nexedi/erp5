@@ -37,7 +37,8 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <!-- Content  -->\n
-<div class="master" id="master"\n
+<div class="master"\n
+     id="master"\n
      tal:define="portal           here/portal_url/getPortalObject;\n
                  portal_path      portal_path | portal/absolute_url;\n
                  action_context   python: portal.restrictedTraverse(request.get(\'object_path\', \'?\'), here);\n
@@ -51,14 +52,6 @@
                  data_gadget_property python: {\'tab_container_id\': \'form_gadget\',\n
                                                \'default_tab_url\': action_id_list[0],\n
                                                \'action_id_list\': action_id_list}">\n
-\n
-\n
-  <div data-gadget="gadgets/portal_status_message/gadget"\n
-       data-gadget-cache-id="portal_status_message"\n
-       data-gadget-cacheable="1"\n
-       id="portal_status_message"></div>\n
-\n
-\n
   <div class="document">\n
 \n
     <div class="actions">\n
@@ -68,7 +61,6 @@
         <span class="description">Save</span>\n
       </button>\n
 \n
-      <!-- Test -->\n
       <div data-gadget="erp5_tabbular_form_renderer"\n
            id="erp5_tabbular_form_renderer"\n
            tal:attributes="data-gadget-property python: here.Base_asJSON(data_gadget_property);"> </div>\n
@@ -87,7 +79,7 @@
             </a>\n
           </li>\n
         </tal:block>\n
-       </ul>\n
+      </ul>\n
 \n
     </div>\n
 \n

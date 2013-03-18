@@ -475,7 +475,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>your_graph</string> </value>
+                    <value> <string>Graph</string> </value>
                 </item>
                 <item>
                     <key> <string>user_column_id_list</string> </key>

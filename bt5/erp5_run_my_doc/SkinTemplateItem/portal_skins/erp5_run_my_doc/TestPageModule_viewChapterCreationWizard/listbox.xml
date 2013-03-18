@@ -106,7 +106,7 @@
                         </tuple>
                         <tuple>
                           <string>slide_content</string>
-                          <string>Slide text</string>
+                          <string>Slide Text</string>
                         </tuple>
                         <tuple>
                           <string>text_content</string>
@@ -118,7 +118,7 @@
                         </tuple>
                         <tuple>
                           <string>file</string>
-                          <string>Image uploaded</string>
+                          <string>Image Uploaded</string>
                         </tuple>
                         <tuple>
                           <string>tested</string>

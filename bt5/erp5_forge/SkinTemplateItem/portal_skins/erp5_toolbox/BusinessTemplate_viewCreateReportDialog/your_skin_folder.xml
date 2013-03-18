@@ -100,7 +100,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Skin Folder in which the report will be created</string> </value>
+                    <value> <string>Skin Folder in which the Report will be Created</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -427,7 +427,7 @@ msgstr "Pagamentos Adicionais"
 msgid "Additional Price"
 msgstr "Preço Adicional"
 
-msgid "Additional Term (days)"
+msgid "Additional Term (Days)"
 msgstr "Termo Adicional (dias)"
 
 msgid "Address"
@@ -1594,7 +1594,7 @@ msgstr "Criar Usuário"
 msgid "Create User [transition in user_account_workflow]"
 msgstr "Criar Usuário"
 
-msgid "Create Your New Account"
+msgid "Create your New Account"
 msgstr "Criar Sua Nova Conta"
 
 msgid "Create a New Event for Reply"
@@ -1603,10 +1603,10 @@ msgstr "Criar um Novo Evento para Responder"
 msgid "Create a Task"
 msgstr "Criar uma Tarefa"
 
-msgid "Created After"
+msgid "Created after"
 msgstr "Criado Depois"
 
-msgid "Created Before"
+msgid "Created before"
 msgstr "Criado Antes"
 
 msgid "Created Clone ${portal_type}."
@@ -1735,10 +1735,10 @@ msgstr "Dia / Mês / Ano"
 msgid "Days"
 msgstr "Dias"
 
-msgid "Days Of Month"
+msgid "Days of Month"
 msgstr "Dias da Semana"
 
-msgid "Days Of Week"
+msgid "Days of Week"
 msgstr "Dias da Semana"
 
 msgid "Debit"
@@ -2635,9 +2635,6 @@ msgstr "Formato de Exportação"
 msgid "Export Mode"
 msgstr "Modo de Exportação"
 
-msgid "Export Terms As PO File"
-msgstr "Exportar termos como PO File"
-
 msgid "Export Terms as PO File"
 msgstr "Exportar termos como PO File"
 
@@ -2782,20 +2779,17 @@ msgstr "Francês"
 msgid "Frequency"
 msgstr "Frequência"
 
-msgid "Frequency (weeks)"
+msgid "Frequency in Days"
+msgstr "Frequência (dias)"
+
+msgid "Frequency in Hours"
+msgstr "Frequência (horas)"
+
+msgid "Frequency in Months"
+msgstr "Frequência (meses)"
+
+msgid "Frequency in Weeks"
 msgstr "Freqüência (semanas)"
-
-msgid "Frequency In Days"
-msgstr "Frequência em dias"
-
-msgid "Frequency In Hours"
-msgstr "Frequência em Horas"
-
-msgid "Frequency In Months"
-msgstr "Frequência em meses"
-
-msgid "Frequency In Weeks"
-msgstr "Frequência em Semanas"
 
 msgid "Friday"
 msgstr "Sexta"
@@ -3383,7 +3377,7 @@ msgstr "Modificado"
 msgid "Modified Files"
 msgstr "Arquivos Modificados"
 
-msgid "Modified categories"
+msgid "Modified Categories"
 msgstr "Categorias Modificadas."
 
 msgid "Modules"
@@ -3636,9 +3630,6 @@ msgid "Old Value"
 msgstr "Valor Antigo"
 
 msgid "Omit Empty Accounts"
-msgstr "Omitir Contas Vazias"
-
-msgid "Omit empty accounts"
 msgstr "Omitir Contas Vazias"
 
 msgid "Open"
@@ -4268,7 +4259,7 @@ msgstr "Produtos para Validar"
 msgid "Profile"
 msgstr "Perfil"
 
-msgid "Profit And Loss Account"
+msgid "Profit and Loss Account"
 msgstr "Conta de Resultados"
 
 msgid "Project"
@@ -5198,9 +5189,6 @@ msgstr "Dicas de Busca"
 msgid "Search Type:"
 msgstr "Tipo de Busca"
 
-msgid "Search results"
-msgstr "Resultados da Busca"
-
 msgid "Section Transaction Reference"
 msgstr "Referencia  "
 
@@ -5912,7 +5900,7 @@ msgstr "Fechar Temporariamente"
 msgid "Temporary closed"
 msgstr "Temporariamente encerrado"
 
-msgid "Term (days)"
+msgid "Term (Days)"
 msgstr "Prazo (dias)"
 
 msgid "Text"
@@ -5924,10 +5912,10 @@ msgstr "Editor de Texto"
 msgid "Text Format"
 msgstr "Formato do texto"
 
-msgid "TextArea Field Height"
+msgid "Text Area Field Height"
 msgstr "Altura do Campo de Texto"
 
-msgid "TextArea Field Width"
+msgid "Text Area Field Width"
 msgstr "Largura do Campo de Texto"
 
 msgid "The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created."
@@ -6390,7 +6378,7 @@ msgstr "Atualizar Campos a partir do Glossário em Inglês"
 msgid "Update File Metadata [transition in processing_status_workflow]"
 msgstr "Atualizar Metadados"
 
-msgid "Update My Credentials"
+msgid "Update my Credentials"
 msgstr "Atualizar Minhas Credências"
 
 msgid "Update Quantity from Container"

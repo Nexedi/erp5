@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
                 <string>enabled</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -92,10 +92,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The title of the document</string> </value>
-                </item>
-                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -113,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reference processing function (not implemented)</string> </value>
+                    <value> <string>Reference Processing Function (not Implemented)</string> </value>
                 </item>
               </dictionary>
             </value>

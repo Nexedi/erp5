@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Error message if the arity for the relation and portal type is too small</string> </value>
+                    <value> <string>Error Message if the Arity for the Relation and Portal Type is too Small</string> </value>
                 </item>
               </dictionary>
             </value>

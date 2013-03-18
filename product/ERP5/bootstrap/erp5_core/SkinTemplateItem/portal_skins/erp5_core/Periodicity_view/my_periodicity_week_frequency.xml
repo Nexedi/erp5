@@ -245,7 +245,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Frequency (weeks)</string> </value>
+                    <value> <string>Frequency in Weeks</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

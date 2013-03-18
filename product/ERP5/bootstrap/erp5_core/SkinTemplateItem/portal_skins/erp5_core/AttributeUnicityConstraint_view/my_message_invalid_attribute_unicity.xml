@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Error message if the attribute already exists on another document</string> </value>
+                    <value> <string>Error Message if the Attribute already Exists on another Document</string> </value>
                 </item>
               </dictionary>
             </value>

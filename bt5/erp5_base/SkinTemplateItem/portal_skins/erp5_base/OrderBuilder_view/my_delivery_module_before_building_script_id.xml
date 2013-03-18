@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Delivery Module Before Building Script</string> </value>
+                    <value> <string>Script to Call on Delivery Module before Building</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

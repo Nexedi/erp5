@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Error message when several measures have the same metric_type</string> </value>
+                    <value> <string>Error Message when several Measures have the same Metric Type</string> </value>
                 </item>
               </dictionary>
             </value>

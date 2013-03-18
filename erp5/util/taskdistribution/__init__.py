@@ -51,7 +51,7 @@ __all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'pa
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
 SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError,
-    xmlrpclib.Fault, httplib.BadStatusLine]
+    xmlrpclib.Fault, httplib.BadStatusLine, httplib.ResponseNotReady]
 parser, _ = xmlrpclib.getparser()
 if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
     SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)

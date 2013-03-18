@@ -101,7 +101,7 @@ function SelectFile(reference){window.opener.SetUrl(reference);window.close();}\
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Please select a document by clicking a cell.</string> </value>
+                    <value> <string>Please Select a Document by Clicking a Cell</string> </value>
                 </item>
               </dictionary>
             </value>

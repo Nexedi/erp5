@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Error message if the attribute is blacklisted</string> </value>
+                    <value> <string>Error Message if the Attribute is Blacklisted</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>your_string_field</string> </value>
+                    <value> <string>String Field</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

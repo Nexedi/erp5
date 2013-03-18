@@ -157,7 +157,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up</string>
+                          <string>Follow-up</string>
                         </tuple>
                         <tuple>
                           <string>publication_section_title</string>
@@ -383,7 +383,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up</string>
+                          <string>Follow-up</string>
                         </tuple>
                         <tuple>
                           <string>publication_section_title</string>
@@ -486,7 +486,7 @@
                         </tuple>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up</string>
+                          <string>Follow-up</string>
                         </tuple>
                         <tuple>
                           <string>publication_section_title</string>

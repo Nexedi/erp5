@@ -365,11 +365,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Valid From</string>
+                          <string>Valid from</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Valid Until</string>
+                          <string>Valid until</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

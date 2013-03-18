@@ -213,16 +213,17 @@ branch = %(branch)s
     for vcs_repository in node_test_suite.vcs_repository_list:
       repository_path = vcs_repository['repository_path']
       repository_id = vcs_repository['repository_id']
+      branch = vcs_repository.get('branch')
       if not os.path.exists(repository_path):
         parameter_list = [config['git_binary'], 'clone',
                           vcs_repository['url']]
-        if vcs_repository.get('branch') is not None:
-          parameter_list.extend(['-b',vcs_repository.get('branch')])
+        if branch is not None:
+          parameter_list.extend(['-b', branch])
         parameter_list.append(repository_path)
         log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
       # Make sure we have local repository
       updater = Updater(repository_path, git_binary=config['git_binary'],
-         log=log, process_manager=self.process_manager)
+         branch=branch, log=log, process_manager=self.process_manager)
       updater.checkout()
       revision = "-".join(updater.getRevision())
       full_revision_list.append('%s=%s' % (repository_id, revision))

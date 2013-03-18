@@ -109,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_constant_string_field</string> </value>
+                    <value> <string>Constant String Field</string> </value>
                 </item>
               </dictionary>
             </value>

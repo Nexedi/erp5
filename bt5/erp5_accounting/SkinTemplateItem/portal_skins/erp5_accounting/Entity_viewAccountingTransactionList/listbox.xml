@@ -320,7 +320,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Transactions Related to This Entity</string> </value>
+                    <value> <string>Transactions Related to this Entity</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

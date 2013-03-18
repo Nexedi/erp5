@@ -51,15 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import convertToUpperCase\n
-\n
-\n
-########### CONFIGURATION ######################################\n
-# If you want to index properties more, extend property_list   #\n
-# and portal_type_list.                                        #\n
-################################################################\n
-property_list = (\'title\',)\n
-portal_type_list = (\'Person\',)\n
-\n
+portal = context.getPortalObject()\n
+portal_type_property_mapping = portal.ERP5Site_getPortalTypeContentTranslationMapping()\n
 \n
 result = []\n
 \n
@@ -69,10 +62,12 @@ def upperCase(text):\n
 content_language_list = context.Localizer.get_languages()\n
 \n
 for document in document_list:\n
-  if document.getPortalType() not in portal_type_list:\n
+  portal_type = document.getPortalType()\n
+  if portal_type not in portal_type_property_mapping:\n
     continue\n
+  \n
   uid = document.getUid()\n
-  for property_name in property_list:\n
+  for property_name in portal_type_property_mapping[portal_type]:\n
     temporary_result = []\n
 \n
     original_text = None\n
