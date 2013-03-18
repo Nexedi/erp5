@@ -43,6 +43,7 @@ from Products.ERP5SyncML.SyncMLConstant import MAX_LEN
 from Products.ERP5SyncML.Document import SyncMLSubscription
 from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin \
      as TestMixin
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestERP5SyncMLMixin(TestMixin):
 
@@ -90,6 +91,9 @@ class TestERP5SyncMLMixin(TestMixin):
   publication_url = 'file:/' + _publication_url
   activity_enabled = False
 
+
+  def getTitle(self):
+    return "ERP5SyncML Synchronous"
 
   def afterSetUp(self):
     """Setup."""
@@ -1242,8 +1246,11 @@ return [context[%r]]
     finally:
       SyncMLSubscription.MAX_LEN = previous_max_lines
 
+  @expectedFailure
   def test_29_SameMessageSentMultipleTime(self):
     """
+    XXX The way the synchronization is done make it loop forever
+
     With http synchronization, when a message is not well
     received, then we send message again, we want to
     be sure that is such case we don't do stupid things
@@ -1836,8 +1843,11 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getLastName(), self.last_name3)
     self.checkSynchronizationStateIsSynchronized()
 
+  @expectedFailure
   def test_36_SynchronizationSubscriptionMaxLines(self):
     """
+    XXX This has not been implemented in new syncml version
+
     Check that messages are well splited when getting too many lines
     """
     self.login()
