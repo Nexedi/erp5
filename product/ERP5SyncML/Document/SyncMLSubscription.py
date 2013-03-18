@@ -507,7 +507,7 @@ class SyncMLSubscription(XMLObject):
     # on pub/sub instead
     create_signature = alert_code != "refresh_from_client_only"
 
-    if not len(object_list):
+    if not len(object_list) and id_list:
       syncml_logger.warning("No object retrieved althoud id_list (%s) is provided"
                             % (id_list))
 
