@@ -680,6 +680,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(document_s.getDescription(), self.description3)
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1)
 
+  @expectedFailure
   def test_08_MultiNodeConflict(self):
     """
     We will create conflicts with 3 differents nodes, and we will
