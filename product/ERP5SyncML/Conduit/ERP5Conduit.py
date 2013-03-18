@@ -560,10 +560,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       # copy of xml object for modification
       xml = deepcopy(xml)
     object_element = xml.find('object')
-    if attribute_name == 'id':
+    try:
       del object_element.attrib['gid']
-    else:
+    except KeyError:
+      pass
+    try:
       del object_element.attrib['id']
+    except KeyError:
+      pass
     object_element.attrib[attribute_name] = new_id
     if as_string:
       return etree.tostring(xml, encoding="utf-8")
@@ -1046,6 +1050,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     # XXX We can not find an object with remote id
     if object_id is None:
+      # XXX object must be retrieved by their GID, id must not be synchronised
+      # This hack is wrong, unfortunately all units are based on it so I can
+      # not remove it, all must be reviewed before
       object_id = xml.get('id')
     if object_id is not None:
       if sub_object is None:
