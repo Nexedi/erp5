@@ -12,8 +12,13 @@ Purchase Order Line | item_creation
 Purchase Order | aggregate_item
 Purchase Packing List Line | item_creation
 Purchase Packing List | aggregate_item
+Returned Purchase Order Line | item_creation
+Returned Purchase Order | aggregate_item
 Returned Purchase Packing List Line | item_creation
 Returned Purchase Packing List | aggregate_item
+Returned Sale Order Line | item_creation
+Returned Sale Order Line | select_item_fast_input
+Returned Sale Order | aggregate_item
 Returned Sale Packing List Line | item_creation
 Returned Sale Packing List | aggregate_item
 Sale Order Line | item_creation
