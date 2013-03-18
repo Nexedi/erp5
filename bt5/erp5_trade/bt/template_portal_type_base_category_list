@@ -6,7 +6,9 @@ Inventory Module | business_application
 Purchase Order Module | business_application
 Purchase Packing List Module | business_application
 Purchase Trade Condition Module | business_application
+Returned Purchase Order Module | business_application
 Returned Purchase Packing List Module | business_application
+Returned Sale Order Module | business_application
 Returned Sale Packing List Module | business_application
 Sale Order Module | business_application
 Sale Packing List Module | business_application
