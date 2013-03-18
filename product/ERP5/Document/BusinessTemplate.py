@@ -4568,15 +4568,14 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     if local_roles_group_id_dict:
       # local roles group id dict (not included by default to be stable with
       # old bts)
-      xml_data += '\n <local_roles_group_id>'
-      for principal, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
-        xml_data += "\n  <principal id='%s'>" % escape(principal)
-        for local_roles_group_id in local_roles_group_id_list:
-          for item in local_roles_group_id:
-            xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
-                escape(item)
-        xml_data += "\n  </principal>"
-      xml_data += '\n </local_roles_group_id>'
+      xml_data += '\n <local_role_group_ids>'
+      for local_role_group_id, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
+        xml_data += "\n  <local_role_group_id id='%s'>" % escape(local_role_group_id)
+        for principal, role in sorted(local_roles_group_id_list):
+          xml_data += "\n    <principal id='%s'>%s</principal>" % \
+                (escape(principal), escape(role))
+        xml_data += "\n  </local_role_group_id>"
+      xml_data += '\n </local_role_group_ids>'
 
     xml_data += '\n</local_roles_item>'
     if isinstance(xml_data, unicode):
@@ -4605,10 +4604,11 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
     # local roles group id
     local_roles_group_id_dict = {}
-    for principal in xml.findall('//principal'):
-      local_roles_group_id_dict[principal.get('id')] = set([tuple(
-        [group_id.text for group_id in
-            principal.findall('./local_roles_group_id')])])
+    for local_role_group_id in xml.findall('//local_role_group_id'):
+      role_set = set()
+      for principal in local_role_group_id.findall('./principal'):
+        role_set.add((principal.get('id'), principal.text))
+      local_roles_group_id_dict[local_role_group_id.get('id')] = role_set
     self._objects['local_roles/%s' % (file_name[:-4],)] = (
       local_roles_dict, local_roles_group_id_dict)
 
@@ -4655,6 +4655,9 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(path, None)
       if obj is not None:
         setattr(obj, '__ac_local_roles__', {})
+        if getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
+                    None) is not None:
+          delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
 class BusinessTemplate(XMLObject):
