@@ -1,0 +1,7 @@
+<module>
+ <id>returned_sale_order_module</id>
+ <permission_list>
+ </permission_list>
+ <portal_type>Returned Sale Order Module</portal_type>
+ <title>Returned Sale Orders</title>
+</module>
