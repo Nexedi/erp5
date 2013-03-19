@@ -28,8 +28,8 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.SyncMLConstant import XUPDATE_ELEMENT,\
-     XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE
+from Products.ERP5SyncML.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST, \
+    XUPDATE_DEL, XUPDATE_UPDATE
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from zLOG import LOG, INFO
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit

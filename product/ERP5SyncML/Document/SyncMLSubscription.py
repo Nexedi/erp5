@@ -129,13 +129,13 @@ class SyncMLSubscription(XMLObject):
     result_count = len(r)
     generated_other_activity = False
     if result_count:
-      syncml_logger.info("getAndActivate : got %d result, limit = %d, packet %d" %
+      syncml_logger.debug("getAndActivate : got %d result, limit = %d, packet %d" %
                          (result_count, limit, packet_size))
       if result_count == limit:
         # Recursive call to prevent too many activity generation
         next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
         kw["min_id"] = r[-1].getId()
-        syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
+        syncml_logger.debug("--> calling getAndActivate in activity, min = %s" %
                            (kw["min_id"],))
 
         self.activate(**next_kw).getAndActivate(
@@ -148,7 +148,7 @@ class SyncMLSubscription(XMLObject):
       callback_method = getattr(activate(**activate_kw), callback)
       if generated_other_activity:
         for i in xrange(0, result_count, packet_size):
-          syncml_logger.info("-- getAndActivate : recursive call, generating for %s"
+          syncml_logger.debug("-- getAndActivate : recursive call, generating for %s"
                              % (r[i:i+packet_size],))
           callback_method(id_list=r[i:i+packet_size],
                           message_id=message_id_list.pop(),
@@ -157,14 +157,14 @@ class SyncMLSubscription(XMLObject):
       else:
         i = 0
         for i in xrange(0, result_count-packet_size, packet_size):
-          syncml_logger.info("-- getAndActivate : call, generating for %s : %s" %
+          syncml_logger.debug("-- getAndActivate : call, generating for %s : %s" %
                              (r[i:i+packet_size], activate_kw))
           callback_method(id_list=r[i:i+packet_size],
                           message_id=message_id_list.pop(),
                           activate_kw=activate_kw,
                           **method_kw)
         # Final activity must be executed after all other
-        syncml_logger.info("---- getAndActivate : final call for %s : %s" %(r[i+packet_size:], activate_kw))
+        syncml_logger.debug("---- getAndActivate : final call for %s : %s" %(r[i+packet_size:], activate_kw))
         callback_method(id_list=r[i+packet_size:],  # XXX Has to be unit tested
                                                     # with mock object
                         message_id=message_id_list.pop(),
@@ -428,7 +428,7 @@ class SyncMLSubscription(XMLObject):
           message_ref=request_message_id)
 
     else:  # We want to retrieve more data
-      syncml_logger.info("we need to retrieve more data for %s" % (signature,))
+      syncml_logger.debug("we need to retrieve more data for %s" % (signature,))
       if signature.getValidationState() != 'partial':
         signature.changeToPartial()
       signature.appendPartialData(incoming_data)
@@ -481,7 +481,7 @@ class SyncMLSubscription(XMLObject):
     XXX Comment to be fixed
     """
     if not id_list:
-      syncml_logger.warning("Non optimal call to _getSyncMLData, no id list provided")
+      syncml_logger.warning("Non optimal call to _getSyncMLData, no id list provided : %r" %(id_list))
     else:
       syncml_logger.info("getSyncMLData, id list provided %s" % (id_list,))
 
@@ -551,7 +551,7 @@ class SyncMLSubscription(XMLObject):
               syncml_logger.debug("Created a signature %s for gid = %s, path %s"
                                  % (signature.getPath(), gid, document.getPath()))
             if len(document_data) > MAX_LEN:
-              syncml_logger.info("data too big, sending  multiple message")
+              syncml_logger.debug("data too big, sending  multiple message")
               more_data = True
               finished = False
               document_data, rest_string = cutXML(document_data, MAX_LEN)
@@ -564,6 +564,8 @@ class SyncMLSubscription(XMLObject):
               # confirmation that the document was well synchronized
               signature.setTemporaryData(document_data)
               signature.doSync()
+              syncml_logger.debug("signature %s is syncing"
+                                 % (signature.getRelativeUrl(),))
 
           # Generate the message
           syncml_response.addSyncCommand(
@@ -609,6 +611,9 @@ class SyncMLSubscription(XMLObject):
               # but Diff generator will return no diff for it
               # in this case, no need to send diff
               signature.synchronize()
+              syncml_logger.debug("signature %s is synchronized"
+                                 % (signature.getRelativeUrl(),))
+
               continue
 
             # Split data if necessary
@@ -621,12 +626,18 @@ class SyncMLSubscription(XMLObject):
               signature.setPartialAction(REPLACE_ACTION)
               if signature.getValidationState() != 'partial':
                 signature.changeToPartial()
+              syncml_logger.debug("signature %s is partial"
+                                 % (signature.getRelativeUrl(),))
+
             else:
               # Store the new representation of the document
               # It will be copy to "data" property once synchronization
               # is confirmed
               signature.setTemporaryData(xml_object)
               signature.doSync()
+              syncml_logger.debug("signature %s is syncing"
+                                 % (signature.getRelativeUrl(),))
+
 
             # Generate the command
             syncml_logger.debug("will send Replace command with %s"
@@ -640,6 +651,8 @@ class SyncMLSubscription(XMLObject):
 
           elif signature.getValidationState() != 'synchronized':
             # We should not have this case when we are in CONFLICT_MERGE
+            syncml_logger.debug("signature %s is synchronized"
+                               % (signature.getRelativeUrl(),))
             signature.synchronize()
 
         elif signature.getValidationState() == \
@@ -662,6 +675,8 @@ class SyncMLSubscription(XMLObject):
             sync_code='conflict_resolved_with_client_command_winning',
             command='Replace')
           signature.synchronize()
+          syncml_logger.debug("signature %s is synchronized"
+                             % (signature.getRelativeUrl(),))
         elif signature.getValidationState() == 'partial':
           # Case of partially sent data
           xml_string = signature.getPartialData()
@@ -683,6 +698,8 @@ class SyncMLSubscription(XMLObject):
 
           if not more_data:
             signature.doSync()
+            syncml_logger.debug("signature %s is syncing"
+                               % (signature.getRelativeUrl(),))
         elif signature.getValidationState() in ('syncing', 'synchronized'):
           raise ValueError("Must not get signature in %s state here, signature is %s"
                            % (signature.getValidationState(),
@@ -697,7 +714,8 @@ class SyncMLSubscription(XMLObject):
         syncml_logger.warning("Package is going to be splitted")
         break
       loop += 1
-
+    syncml_logger.debug("_getSyncMLData end with finished %s"
+                       % (finished,))
     return finished
 
   security.declareProtected(Permissions.AccessContentsInformation,

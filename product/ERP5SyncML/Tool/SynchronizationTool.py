@@ -503,6 +503,8 @@ class SynchronizationTool(BaseTool):
 
     # Send the message in activity to prevent recomputing data in case of
     # transport failure
+    syncml_logger.info("%s sendDeleteCommand with final tag"
+                       % (subscription.getRelativeUrl()))
     subscription.activate(**activate_kw).sendMessage(xml=str(syncml_response))
 
 

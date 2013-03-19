@@ -163,8 +163,8 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
     """ This is the method calling to create an object. """
     # if DEBUG:
-    #   LOG("ERP5NodeContuide._createContent", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=True),))
-    if object_id is not None:
+    # LOG("ERP5NodeContuide._createContent", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=True),))
+    if True: # object_id is not None:
       sub_object = None
       if sub_object is None: # If so, it doesn't exist
         # Check if we can find it in module
@@ -288,7 +288,6 @@ class ERP5NodeConduit(TioSafeBaseConduit):
           reset_workflow=reset_workflow,
           )
       self.afterCreateMethod(sub_object, **kw)
-
     return sub_object
 
 

@@ -60,8 +60,8 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
     """
     if object_id is None:
       object_id = self.getAttribute(xml, 'id')
-    if object_id is not None:
-      if sub_object is None:
+    if True: # object_id is not None:
+      if sub_object is None and object_id:
         try:
           sub_object = object._getOb(object_id)
         except (AttributeError, KeyError, TypeError):

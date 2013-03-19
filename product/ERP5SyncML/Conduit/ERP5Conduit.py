@@ -931,7 +931,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is really usefull if you want to write your
     own Conduit.
     """
-    #LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
+    from zLOG import LOG
+    LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
     subobject = object.newContent(portal_type=portal_type, id=object_id)
     return subobject, True, True
 

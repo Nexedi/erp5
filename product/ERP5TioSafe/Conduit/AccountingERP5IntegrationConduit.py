@@ -103,8 +103,8 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
     """
     if object_id is None:
       object_id = self.getAttribute(xml, 'id')
-    if object_id is not None:
-      if sub_object is None:
+    if True: # object_id is not None:
+      if sub_object is None and object_id:
         sub_object = object._getOb(object_id, None)
       if sub_object is None: # If so, it does not exist
         portal_type = ''
