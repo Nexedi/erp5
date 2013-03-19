@@ -66,7 +66,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>iframe_content</string>
                         <string>download_pdf</string>
                       </list>
                     </value>
@@ -75,7 +74,8 @@
                     <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
+                        <string>page_content</string>
+                        <string>js</string>
                       </list>
                     </value>
                 </item>

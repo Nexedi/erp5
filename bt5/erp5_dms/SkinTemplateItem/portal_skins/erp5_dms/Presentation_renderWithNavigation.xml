@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block>\n
+  <div class="presentation-preview-navigation">\n
+    <a id="first_slide">\n
+      <img id="first_slide_img" src="images/transparent-image.gif"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="First"\n
+        title="First"\n
+        class="first"/>\n
+    </a>\n
+    <a id="previous_slide">\n
+      <img id="previous_slide_img" src="images/transparent-image.gif"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="Previous"\n
+        title="Previous"\n
+        class="previous"/>\n
+    </a>\n
+\n
+    <!-- Current Thumbnail / Total Thumbnails -->\n
+    <input id="slide_selection_index"\n
+           size="1"\n
+           value="1"/>\n
+    / <span id="slides_total_number">1</span>\n
+\n
+    <a id="next_slide">\n
+      <img id="next_slide_img" src="images/transparent-image.gif"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="Next"\n
+        title="Next"\n
+        class="next"/>\n
+    </a>\n
+    <a id="last_slide">\n
+      <img id="last_slide_img" src="images/transparent-image.gif"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="Last"\n
+        title="Last"\n
+        class="last"/>\n
+    </a>\n
+    <a id="text_slide">\n
+      <img id="text_slide_img" src="images/text_block.png"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="Text"\n
+        title="Text"\n
+        class="text"/>\n
+    </a>\n
+    <a id="graphics_slide">\n
+      <img id="graphics_slide_img" src="images/slide.png"\n
+        i18n:attributes="alt; title"\n
+        i18n:domain="ui"\n
+        alt="Graphics"\n
+        title="Graphics"\n
+        class="graphics"/>\n
+    </a>\n
+  </div>\n
+</tal:block>\n
+<!--The content of the presentation-->\n
+<tal:block tal:content="structure options/data" />
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Presentation_renderWithNavigation</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
