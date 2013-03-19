@@ -74,6 +74,7 @@
                     <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
+                        <string>navigation</string>
                         <string>page_content</string>
                         <string>js</string>
                       </list>
