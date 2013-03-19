@@ -474,38 +474,4 @@ class SynchronizationTool(BaseTool):
     subscription.activate(**activate_kw).sendMessage(xml=str(syncml_response))
 
 
-  def sendDeleteCommand(self, message_id, subscription_path, activate_kw):
-    """
-    This methods is intented to be called by asynchronous engine in activity to
-    send delete sync commands for a set of data
-    As engines are not zodb object, the tool acts as a placeholder for method
-    that need to be called in activities
-    """
-    subscription = self.restrictedTraverse(subscription_path)
-    assert subscription is not None, "Impossible to find subscription %s" \
-        % (subscription_path)
-    # Build Message
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=subscription.getSessionId(),
-      message_id=message_id,
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString())
-    syncml_response.addBody()
-
-
-    subscription._getDeletedData(
-      syncml_response=syncml_response,
-      )
-
-    # Notify that all modifications were sent
-    syncml_response.addFinal()
-
-    # Send the message in activity to prevent recomputing data in case of
-    # transport failure
-    syncml_logger.info("%s sendDeleteCommand with final tag"
-                       % (subscription.getRelativeUrl()))
-    subscription.activate(**activate_kw).sendMessage(xml=str(syncml_response))
-
-
 InitializeClass(SynchronizationTool)

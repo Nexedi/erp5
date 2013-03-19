@@ -253,13 +253,6 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'tag' :tag,
       'priority' :ACTIVITY_PRIORITY
       }
-    final_activate_kw = {
-      'activity' : 'SQLQueue',
-      'after_tag' : tag,
-      'after_method_id' : ("processServerSynchronization",
-                           "processClientSynchronization"),
-      'priority' :ACTIVITY_PRIORITY + 1
-      }
     method_kw = {
       'subscription_path' : subscription.getRelativeUrl(),
       }
@@ -272,12 +265,8 @@ class SyncMLAsynchronousEngine(EngineMixin):
       activity_count=pref.getPreferredRetrievalActivityCount(),
       )
     # Then get deleted document
-    # this will act as the final message of this sync part
-    activate = subscription.getPortalObject().portal_synchronizations.activate
-    callback_method = getattr(activate(**activate_kw), "sendDeleteCommand")
-    callback_method(message_id=subscription.getNextMessageId(),
-                    activate_kw=activate_kw,
-                    **method_kw)
+    # this will send also the final message of this sync part
+    subscription.activate(after_tag=tag)._getDeletedData()
     return True
 
 

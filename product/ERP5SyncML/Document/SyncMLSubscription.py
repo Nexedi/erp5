@@ -45,6 +45,7 @@ from Products.ERP5SyncML.XMLSyncUtils import getConduitByName, \
      buildAnchorFromDate
 from Products.ERP5SyncML.SyncMLConstant import MAX_OBJECTS, ACTIVITY_PRIORITY,\
      NULL_ANCHOR
+from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse
 from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
 from Products.ERP5SyncML.Transport.File import FileTransport
 from Products.ERP5SyncML.Transport.Mail import MailTransport
@@ -143,6 +144,7 @@ class SyncMLSubscription(XMLObject):
         generated_other_activity = True
       r = [x.getId() for x in r]
       message_id_list = self.getNextMessageIdList(id_count=result_count)
+      # XXX maybe (result_count / packet_size) + 1 instead of result_count
       message_id_list.reverse()  # We pop each id in the following loop
       activate = self.getPortalObject().portal_synchronizations.activate
       callback_method = getattr(activate(**activate_kw), callback)
@@ -180,7 +182,7 @@ class SyncMLSubscription(XMLObject):
     # First register sent message in case we received same message multiple time
     # XXX-must be check according to specification
     # XXX-performance killer in scalable environment
-    # XXX must use memcached instead
+    # XXX maybe use memcached instead for this ?
     # self.setLastSentMessage(xml)
 
     # XXX must review all of this
@@ -465,15 +467,87 @@ class SyncMLSubscription(XMLObject):
         syncml_response=syncml_response,
         simulate=simulate)
 
-  def _getDeletedData(self, syncml_response):
+  def _getDeletedData(self, syncml_response=None):
     """
     Add delete command to syncml resposne
-    XXX Delete signature from database when we receive confirmation message
     """
-    # XXX not efficient at all, must be review later
-    id_list = [x.getId() for x in self.contentValues() if x.getValidationState() == "not_synchronized"]
-    for gid in id_list:
-      syncml_response.addDeleteCommand(gid=gid)
+    if self.getIsActivityEnabled():
+      self.recurseCallMethod(
+        method_id="getId",
+        min_depth=1,
+        max_depth=1,
+        activate_kw={'priority': ACTIVITY_PRIORITY,
+                     'group_method_id' : "%s/checkAndSendDeleteMessage"
+                     % (self.getRelativeUrl()),
+                     'tag' : "%s_delete" % self.getRelativeUrl()})
+      self.activate(after_tag="%s_delete" %(self.getRelativeUrl()),
+                    priority=ACTIVITY_PRIORITY+1,
+                    )._sendFinalMessage()
+    else:
+      # XXX not efficient at all but must not be used (former way)
+      syncml_logger.warning("Using non-efficient way to retrieve delete object on %s"
+                            % (self.getRelativeUrl(),))
+      id_list = [x.getId() for x in self.contentValues() if \
+                   x.getValidationState() == "not_synchronized"]
+      for gid in id_list:
+        syncml_response.addDeleteCommand(gid=gid)
+
+
+  def _sendFinalMessage(self):
+    """
+    Send an empty message containing the final tag to notify the end of
+    the "sending_modification" stage of the synchronization
+    """
+    syncml_response = SyncMLResponse()
+    syncml_response.addHeader(
+      session_id=self.getSessionId(),
+      message_id=self.getNextMessageId(),
+      target=self.getUrlString(),
+      source=self.getSubscriptionUrlString())
+    syncml_response.addBody()
+    syncml_response.addFinal()
+
+    final_activate_kw = {
+      'after_method_id' : ("processServerSynchronization",
+                           "processClientSynchronization"),
+      'priority' :ACTIVITY_PRIORITY + 1,
+      'tag' : "%s_delete" %(self.getRelativeUrl(),)
+      }
+    syncml_logger.warning("Sending final message for modificationson on %s"
+                            % (self.getRelativeUrl(),))
+    self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
+
+
+  def checkAndSendDeleteMessage(self, message_list):
+    """
+    This is a group method that will be invoked for a message list
+    It check signature synchronization state to know which one has
+    to be deleted and send the syncml message
+    """
+    syncml_logger.warning("Checking deleted signature on %s"
+                          % (self.getRelativeUrl(),))
+    to_delete_id_list = []
+    for m in message_list:
+      if m[0].getValidationState() == "not_synchronized":
+        to_delete_id_list.append(m[0].getId())
+    syncml_logger.warning("\tdeleted object is %s"
+                            % (to_delete_id_list,))
+    if len(to_delete_id_list):
+      syncml_response = SyncMLResponse()
+      syncml_response.addHeader(
+        session_id=self.getSessionId(),
+        message_id=self.getNextMessageId(),
+        target=self.getUrlString(),
+        source=self.getSubscriptionUrlString())
+      syncml_response.addBody()
+      for gid in to_delete_id_list:
+        syncml_response.addDeleteCommand(gid=gid)
+
+      syncml_logger.info("%s sendDeleteCommand for %s"
+                       % (self.getRelativeUrl(), to_delete_id_list))
+      self.activate(activity="SQLQueue",
+                    tag="%s_delete" % (self.getRelativeUrl(),),
+                    priority=ACTIVITY_PRIORITY).sendMessage(xml=str(syncml_response))
 
 
   def _getSyncMLData(self, syncml_response, id_list=None):
