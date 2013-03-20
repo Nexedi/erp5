@@ -85,7 +85,7 @@ for sync in sync_list:\n
                                            after_method_id=[\'reset\', \'manage_delObjects\', \'unindexObject\',\n
                                                             \'sendHttpResponse\', \'PubSync\',\n
                                                             \'activateSyncModif\', \'immediateReindexObject\'],\n
-                                           after_tag=after_tag).SubSync(sub.getPath())\n
+                                           after_tag=after_tag).processClientSynchronization(sub.getPath())\n
   afer_tag = [sub.getId(), pub.getId(), tag]\n
   portal_status_message = translateString("Synchronization started.")\n
 \n
@@ -94,6 +94,8 @@ context.activate(after_tag=after_tag).getTitle()\n
 \n
 if not batch_mode:\n
   context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))\n
+else:\n
+  return sub\n
 </string> </value>
         </item>
         <item>

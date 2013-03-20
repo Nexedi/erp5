@@ -34,12 +34,13 @@ from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class SyncMLPublication(SyncMLSubscription):
-  """Reply to request from SyncML clients,
+  """
+  Reply to request from SyncML clients,
   Serve data to be synchronized.
   """
 
   meta_type = 'ERP5 Publication'
-  portal_type = 'SyncML Publication' # may be useful in the future...
+  portal_type = 'SyncML Publication'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -48,20 +49,17 @@ class SyncMLPublication(SyncMLSubscription):
                             'getSubscriber')
   def getSubscriber(self, subscription_url):
     """
-    return the subscriber corresponding the to subscription_url
+    Return the subscriber corresponding the to subscription_url
     """
-    subscriber = None
     for subscription in self.contentValues(portal_type='SyncML Subscription'):
-      if subscription.getSubscriptionUrlString() == subscription_url:
-        subscriber = subscription
-        break
-    return subscriber
+      if subscription.getUrlString() == subscription_url:
+        return subscription
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSubscriberList')
   def getSubscriberList(self):
     """
-      Get the list of subscribers
+    Return the list of subscribers
     """
     return self.contentValues(portal_type='SyncML Subscription')
 
@@ -71,6 +69,7 @@ class SyncMLPublication(SyncMLSubscription):
     """
       Reset all subscribers
     """
+    # XXX See case with lot of signature
     self.activate(activity='SQLQueue',
                   priority=ACTIVITY_PRIORITY).manage_delObjects(ids=list(self.getObjectIds()))
 

@@ -27,21 +27,20 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.Conduit.VCardConduit import VCardConduit
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO
+
+from Products.ERP5SyncML.Conduit.VCardConduit import VCardConduit
+
 
 class SharedVCardConduit(VCardConduit):
   """
   A conduit is in charge to read data from a particular structure,
   and then to save this data in another structure.
-  
-  SharedVCardConduit is a peace of code who provide GID.
+
+  SharedVCardConduit is a piece of code who provide GID.
   This GID are the same for all subscriber, so a same object could be updated
   by all the subscriber.
   """
-
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -56,18 +55,15 @@ class SharedVCardConduit(VCardConduit):
     gid_list.append('_')
     if object.getLastName():
       gid_list.append(object.getLastName())
-    sql_kw = {}
-    sql_kw['portal_type'] = 'Person'
-    sql_kw['title'] = object.getTitle()
-    sql_kw['id'] = {'query': object.getId(), 'range': 'max'}
+    sql_kw = {'portal_type' : 'Person',
+       'title' : object.getTitle(),
+       'id' : {'query': object.getId(), 'range': 'max'}
+       }
     results = object.portal_catalog.countResults(**sql_kw)[0][0]
-    #LOG('getGidFromObject', INFO, 'getId:%s, getTitle:%s' % (object.getId(), object.getTitle()))
-    #LOG('getGidFromObject, number of results :', INFO, results)
     if int(results) > 0:
       gid_list.append('__')
       gid_list.append(str(int(results)+1))
     gid = ''.join(gid_list)
-    #LOG('getGidFromObject gid :', INFO, gid)
     return gid
 
   def getGidFromXML(self, vcard, gid_from_xml_list):
@@ -82,15 +78,11 @@ class SharedVCardConduit(VCardConduit):
     if vcard_dict.get('last_name'):
       gid_from_vcard_list.append(vcard_dict['last_name'])
     gid_from_vcard = ''.join(gid_from_vcard_list)
-    #LOG('getGidFromXML, gid_from_vcard :', INFO, gid_from_vcard)
     number = len([item for item in gid_from_xml_list if item.startswith(gid_from_vcard)])
-    #LOG('getGidFromXML, gid_from_xml_list :', INFO, gid_from_xml_list)
-    #LOG('getGidFromXML, number :', INFO, number)
     if number:
       gid_from_vcard_list.append('__')
-      gid_from_vcard_list.append(str(number+1)) 
+      gid_from_vcard_list.append(str(number+1))
       #it's mean for 3 persons a a a, the gid will be
       #a_, a___2 a___3
       gid_from_vcard = ''.join(gid_from_vcard_list)
-    #LOG('getGidFromXML, returned gid_from_vcard :', INFO, gid_from_vcard)
     return gid_from_vcard

@@ -25,10 +25,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from base64 import b16encode
-from lxml import etree
+
+from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 
 class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
   """
@@ -104,8 +103,8 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
     """
     if object_id is None:
       object_id = self.getAttribute(xml, 'id')
-    if object_id is not None:
-      if sub_object is None:
+    if True: # object_id is not None:
+      if sub_object is None and object_id:
         sub_object = object._getOb(object_id, None)
       if sub_object is None: # If so, it does not exist
         portal_type = ''
@@ -241,7 +240,7 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
             subscriber = arrow_dict[tag]['sync']
             # Encode to the output type
             link_gid = subnode.text
-            link_object = subscriber.getObjectFromGid(b16encode(link_gid))
+            link_object = subscriber.getDocumentFromGid(b16encode(link_gid))
           else:
             link_object = None
 

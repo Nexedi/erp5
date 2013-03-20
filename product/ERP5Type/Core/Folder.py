@@ -187,7 +187,6 @@ class FolderMixIn(ExtensionClass.Base):
     current_date = DateTime().strftime('%Y%m%d')
     my_id = self._generateRandomId()
     return "%s-%s" %(current_date, my_id)
-    
 
   def _generateRandomId(self):
     """

@@ -28,25 +28,24 @@
 ##############################################################################
 
 import unittest
-from Testing import ZopeTestCase
-from Products.ERP5Type.tests.runUnitTest import tests_home
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
-from base64 import b64encode, b64decode, b16encode, b16decode
-from ERP5Diff import ERP5Diff
+from base64 import b64encode, b64decode, b16encode
 from lxml import etree
 
+from AccessControl.SecurityManagement import newSecurityManager
+from ERP5Diff import ERP5Diff
+
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
-from Products.ERP5SyncML import SyncMLConstant
 from Products.ERP5SyncML.XMLSyncUtils import encode, decode,\
      isDecodeEncodeTheSame
 from Products.ERP5SyncML.XMLSyncUtils import getConduitByName
 from Products.ERP5SyncML.SyncMLConstant import MAX_LEN
-from Products.ERP5SyncML.Tool import SynchronizationTool
+from Products.ERP5SyncML.Document import SyncMLSubscription
+from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin \
+     as TestMixin
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-
-class TestERP5SyncMLMixin(ERP5TypeTestCase):
+class TestERP5SyncMLMixin(TestMixin):
 
   # Different variables used for this test
   workflow_id = 'edit_workflow'
@@ -82,22 +81,19 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
   nb_subscription = 2
   nb_publication = 1
   nb_synchronization = 3
-  nb_message_first_synchronization = 10
-  nb_message_first_sync_max_lines = 18
+  nb_message_first_synchronization = 6
+  nb_message_first_sync_max_lines = 16
   _subscription_url1 = tests_home + '/sync_client1'
   _subscription_url2 = tests_home + '/sync_client2'
   _publication_url = tests_home + '/sync_server'
-  # XXX Why the prefix is not 'file://' ? This is inconsistent with urlopen:
-  #     urlopen('file://tmp/foo') -> ERROR
-  #     urlopen('file:///tmp/foo') -> OK
   subscription_url1 = 'file:/' + _subscription_url1
   subscription_url2 = 'file:/' + _subscription_url2
   publication_url = 'file:/' + _publication_url
   activity_enabled = False
-  #publication_url = 'server@localhost'
-  #subscription_url1 = 'client1@localhost'
-  #subscription_url2 = 'client2@localhost'
 
+
+  def getTitle(self):
+    return "ERP5SyncML Synchronous"
 
   def afterSetUp(self):
     """Setup."""
@@ -109,32 +105,30 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
   def beforeTearDown(self):
     """Clean up."""
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 1
+    self.clearFiles()
+    self.getSynchronizationTool().manage_delObjects(
+      ids=list(self.getSynchronizationTool().objectIds()))
+    # clean modules
+    for module in ["person_server", "person_client1", "person_client2"]:
+      module = self.portal.get(module, None)
+      if module:
+        module.manage_delObjects(ids=list(module.objectIds()))
+    self.tic()
 
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
-
-      the business template sync_crm give 3 folders:
-      /person_server 
-      /person_client1 : empty
-      /person_client2 : empty
     """
-    return ('erp5_base', 'erp5_syncml',)
-
-  def getSynchronizationTool(self):
-    return getattr(self.getPortal(), 'portal_synchronizations', None)
+    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_syncml',)
 
   def getPersonClient1(self):
-    return getattr(self.getPortal(), 'person_client1', None)
+    return getattr(self.getPortalObject(), 'person_client1', None)
 
   def getPersonServer(self):
-    return getattr(self.getPortal(), 'person_server', None)
+    return getattr(self.getPortalObject(), 'person_server', None)
 
   def getPersonClient2(self):
-    return getattr(self.getPortal(), 'person_client2', None)
-
-  def getPortalId(self):
-    return self.getPortal().getId()
+    return getattr(self.getPortalObject(), 'person_client2', None)
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -162,42 +156,50 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
 
   def populatePersonServer(self):
     self.login()
-    portal = self.getPortal()
     self.initPersonModule()
     person_server = self.getPersonServer()
     if getattr(person_server, self.id1, None) is None:
-      person1 = person_server.newContent(id=self.id1, portal_type='Person',
-                                         first_name=self.first_name1,
-                                         last_name=self.last_name1,
-                                         description=self.description1)
+      person_server.newContent(id=self.id1, portal_type='Person',
+                               first_name=self.first_name1,
+                               last_name=self.last_name1,
+                               description=self.description1)
     if getattr(person_server, self.id2, None) is None:
-      person2 = person_server.newContent(id=self.id2,
-                                         portal_type='Person',
-                                         first_name=self.first_name2,
-                                         last_name=self.last_name2,
-                                         description=self.description2)
+      person_server.newContent(id=self.id2,
+                               portal_type='Person',
+                               first_name=self.first_name2,
+                               last_name=self.last_name2,
+                               description=self.description2)
     nb_person = len(person_server)
     self.assertEquals(nb_person, 2)
     return nb_person
 
   def populatePersonClient1(self):
     self.login()
-    portal = self.getPortal()
     self.initPersonModule()
     person_client = self.getPersonClient1()
     number_of_object = 60
     for id in range(1, number_of_object+1):
-      person = person_client.newContent(portal_type='Person',
-                                        id=id,
-                                        first_name=self.first_name1,
-                                        last_name=self.last_name1,
-                                        description=self.description1)
-      if id % 10 == 0:
-        # each 10 objects commit and reindex
-        self.tic()
+      person_client.newContent(portal_type='Person',
+                               id=id,
+                               first_name=self.first_name1,
+                               last_name=self.last_name1,
+                               description=self.description1)
+    self.tic()
     nb_person = len(person_client)
     self.assertEquals(nb_person, number_of_object)
     return nb_person
+
+  def clearFiles(self):
+    # reset files, because we do sync by files
+    file = open(self._subscription_url1, 'w')
+    file.write('')
+    file.close()
+    file = open(self._subscription_url2, 'w')
+    file.write('')
+    file.close()
+    file = open(self._publication_url, 'w')
+    file.write('')
+    file.close()
 
   def synchronize(self, id):
     """
@@ -206,37 +208,26 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     """
     portal_sync = self.getSynchronizationTool()
     subscription = portal_sync[id]
-    publication = None
-    for pub in portal_sync.searchFolder(portal_type='SyncML Publication',
+    pub_list = portal_sync.searchFolder(portal_type='SyncML Publication',
                        source_reference=subscription.getDestinationReference(),
-                       validation_state='validated'):
-      if pub.getUrlString() == subscription.getUrlString():
-        publication = pub
-    self.assertTrue(publication is not None)
-    # reset files, because we do sync by files
-    file = open(self._subscription_url1, 'w')
-    file.write('')
-    file.close()
-    file = open(self._subscription_url2, 'w')
-    file.write('')
-    file.close()
-    file = open(self._publication_url, 'w')
-    file.write('')
-    file.close()
+                       validation_state='validated')
+    self.assertEqual(len(pub_list), 1)
+    publication = pub_list[0].getObject()
+    self.clearFiles()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getPath())
+    result = portal_sync.processClientSynchronization(subscription.getPath())
     # XXX-AUREL : in reality readResponse is called
     # Why is it not call here ? This make the behaviour of
     # the test rather different of what happens in real life !
-    while result['has_response']:
-      portal_sync.PubSync(publication.getPath())
-      if self.activity_enabled:
-        self.tic()
-      result = portal_sync.SubSync(subscription.getPath())
-      if self.activity_enabled:
-        self.tic()
-      nb_message += 1 + result['has_response']
-    self.tic()
+    while len(result) > 0:
+      result = portal_sync.processServerSynchronization(publication.getPath())
+      self.tic()
+      nb_message += 1
+      if len(result) == 0:
+        break
+      result = portal_sync.processClientSynchronization(subscription.getPath())
+      self.tic()
+      nb_message += 1
     return nb_message
 
   def synchronizeWithBrokenMessage(self, id):
@@ -245,67 +236,108 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     to define it here because it is specific to the unit testing
     """
     portal_sync = self.getSynchronizationTool()
-    #portal_sync.email = None # XXX To be removed
     subscription = portal_sync[id]
-    publication = None
-    for pub in portal_sync.searchFolder(portal_type='SyncML Publication',
+    pub_list = portal_sync.searchFolder(portal_type='SyncML Publication',
                        source_reference=subscription.getDestinationReference(),
-                       validation_state='validated'):
-      if pub.getUrlString() == subscription.getUrlString():
-        publication = pub
-    self.assertTrue(publication is not None)
-    # reset files, because we do sync by files
-    file = open(self._subscription_url1, 'w')
-    file.write('')
-    file.close()
-    file = open(self._subscription_url2, 'w')
-    file.write('')
-    file.close()
-    file = open(self._publication_url, 'w')
-    file.write('')
-    file.close()
+                       validation_state='validated')
+    self.assertEqual(len(pub_list), 1)
+    publication = pub_list[0].getObject()
+    self.clearFiles()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getPath())
-    while result['has_response']:
+    result = portal_sync.processClientSynchronization(subscription.getPath())
+    while result:
       # We do thing three times, so that we will test
       # if we manage well duplicate messages
-      portal_sync.PubSync(publication.getPath())
-      if self.activity_enabled:
+      # only first call will return an answer
+      result = portal_sync.processServerSynchronization(publication.getPath())
+      self.tic()
+      for x in xrange(2):
+        portal_sync.processServerSynchronization(publication.getPath())
         self.tic()
-      portal_sync.PubSync(publication.getPath())
-      if self.activity_enabled:
+      nb_message += 1
+      if not len(result):
+        break
+      result = portal_sync.processClientSynchronization(subscription.getPath())
+      self.tic()
+      for x in xrange(2):
+        portal_sync.processClientSynchronization(subscription.getPath())
         self.tic()
-      portal_sync.PubSync(publication.getPath())
-      if self.activity_enabled:
-        self.tic()
-      result = portal_sync.SubSync(subscription.getPath())
-      if self.activity_enabled:
-        self.tic()
-      result = portal_sync.SubSync(subscription.getPath())
-      if self.activity_enabled:
-        self.tic()
-      result = portal_sync.SubSync(subscription.getPath())
-      if self.activity_enabled:
-        self.tic()
-      nb_message += 1 + result['has_response']
-    self.tic()
+      nb_message += 1
+
     return nb_message
+
+  def getSynchronizationState(self, context):
+    """
+    context : the context on which we are looking for state
+
+    This functions have to retrieve the synchronization state,
+    it will first look in the conflict list, if nothing is found,
+    then we have to check on a publication/subscription.
+
+    This method returns a mapping between subscription and states
+
+    JPS suggestion:
+      path -> object, document, context, etc.
+      type -> '/titi/toto' or ('','titi', 'toto') or <Base instance 1562567>
+      object = self.resolveContext(context) (method to add)
+
+    """
+    if context is None or isinstance(context, tuple):
+      path = context
+    elif isinstance(context, basestring):
+      path = tuple(context.split('/'))
+    else:
+      path = context.getPhysicalPath()
+
+    portal_sync = self.getSynchronizationTool()
+    conflict_list = portal_sync.getConflictList()
+    state_list = []
+    append = state_list.append
+    for conflict in conflict_list:
+      if conflict.getOrigin() == path:
+        append([conflict.getSubscriber(), 'conflict'])
+    for domain in portal_sync.searchFolder():
+      destination = domain.getSource()
+      j_path = '/'.join(path)
+      if destination in j_path:
+        if domain.getPortalType() == 'SyncML Publication':
+          subscriber_list = [result.getObject() for result in\
+                             domain.searchFolder(portal_type='SyncML Subscription')]
+        else:
+          subscriber_list = [domain,]
+
+        for subscriber in subscriber_list:
+          gid = subscriber.getGidFromObject(context)
+          signature = subscriber.getSignatureFromGid(gid)
+          #XXX check if signature could be not None ...
+          if signature is not None:
+            state = signature.getValidationState()
+            found = False
+            # Make sure there is not already a conflict giving the state
+            for state_item in state_list:
+              if state_item[0] == subscriber:
+                found = True
+                break
+            if not found:
+              append([subscriber, state])
+    return state_list
+
 
   def checkSynchronizationStateIsSynchronized(self):
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     for person in person_server.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
+      state_list = self.getSynchronizationState(person)
       for state in state_list:
         self.assertEquals(state[1], 'synchronized')
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
+      state_list = self.getSynchronizationState(person)
       for state in state_list:
         self.assertEquals(state[1], 'synchronized')
     person_client2 = self.getPersonClient2()
     for person in person_client2.objectValues():
-      state_list = portal_sync.getSynchronizationState(person)
+      state_list = self.getSynchronizationState(person)
       for state in state_list:
         self.assertEquals(state[1], 'synchronized')
     # Check for each signature that the tempXML is None
@@ -313,12 +345,14 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
       for m in sub.contentValues():
         self.assertEquals(m.getTemporaryData(), None)
         self.assertEquals(m.getPartialData(), None)
+        self.assertEquals(m.getValidationState(), "synchronized")
     for pub in portal_sync.contentValues(portal_type='SyncML Publication'):
       for sub in pub.contentValues(portal_type='SyncML Subscription'):
         for m in sub.contentValues():
           self.assertEquals(m.getPartialData(), None)
+          self.assertEquals(m.getValidationState(), "synchronized")
 
-  def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name, 
+  def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name,
       last_name, person_server, person_client):
     """
       verify that the first and last name are NOT synchronized
@@ -333,7 +367,7 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync[self.sub_id1]
     subscription2 = portal_sync[self.sub_id2]
-    self.assertEquals(len(subscription1.getObjectList()), nb_person)
+    self.assertEquals(len(subscription1.getDocumentList()), nb_person)
     person_server = self.getPersonServer() # We also check we don't
                                            # modify initial ob
     person1_s = person_server._getOb(self.id1)
@@ -345,9 +379,9 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     self.assertEquals(person1_c.getId(), id)
     self.assertEquals(person1_c.getFirstName(), self.first_name1)
     self.assertEquals(person1_c.getLastName(), self.last_name1)
-    self.assertEquals(len(subscription2.getObjectList()), nb_person)
+    self.assertEquals(len(subscription2.getDocumentList()), nb_person)
     person_client2 = self.getPersonClient2()
-    person2_c = person_client2._getOb(id) 
+    person2_c = person_client2._getOb(id)
     self.assertEquals(person2_c.getId(), id)
     self.assertEquals(person2_c.getFirstName(), self.first_name1)
     self.assertEquals(person2_c.getLastName(), self.last_name1)
@@ -425,7 +459,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     return "ERP5 SyncML"
 
   def setupPublicationAndSubscription(self):
-    portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     if person_server is not None:
       portal = self.getPortal()
@@ -446,28 +479,25 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     sub1.setConduitModuleId('ERP5ConduitTitleGid')
     sub2.setConduitModuleId('ERP5ConduitTitleGid')
     pub.setConduitModuleId('ERP5ConduitTitleGid')
-    pub.setSynchronizationIdGeneratorMethodId('_generateNextId')
-    sub1.setSynchronizationIdGeneratorMethodId('_generateNextId')
-    sub2.setSynchronizationIdGeneratorMethodId('_generateNextId')
 
   def checkSynchronizationStateIsConflict(self):
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     for person in person_server.objectValues():
       if person.getId()==self.id1:
-        state_list = portal_sync.getSynchronizationState(person)
+        state_list = self.getSynchronizationState(person)
         for state in state_list:
           self.assertEquals(state[1], 'conflict')
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
       if person.getId()==self.id1:
-        state_list = portal_sync.getSynchronizationState(person)
+        state_list = self.getSynchronizationState(person)
         for state in state_list:
           self.assertEquals(state[1], 'conflict')
     person_client2 = self.getPersonClient2()
     for person in person_client2.objectValues():
       if person.getId()==self.id1:
-        state_list = portal_sync.getSynchronizationState(person)
+        state_list = self.getSynchronizationState(person)
         for state in state_list:
           self.assertEquals(state[1], 'conflict')
     # make sure sub object are also in a conflict mode
@@ -475,10 +505,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     # use a temp_object to create a no persistent object in person
     sub_person =\
     person.newContent(id=self.id1, portal_type='Person', temp_object=1)
-    state_list = portal_sync.getSynchronizationState(sub_person)
+    state_list = self.getSynchronizationState(sub_person)
     for state in state_list:
       self.assertEquals(state[1], 'conflict')
-  
+
   def populatePersonServerWithSubObject(self):
     """
     Before this method, we need to call populatePersonServer
@@ -505,12 +535,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
           'description':self.description2}
     sub_sub_person2.edit(**kw)
     # remove ('','portal...','person_server')
-    len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+    len_path = len(sub_sub_person1.getPhysicalPath()) - 3
     self.assertEquals(len_path, 3)
-    len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+    len_path = len(sub_sub_person2.getPhysicalPath()) - 3
     self.assertEquals(len_path, 3)
 
-  def addAuthenticationToPublication(self, publication_id, login, password, 
+  def addAuthenticationToPublication(self, publication_id, login, password,
       auth_format, auth_type):
     """
       add authentication to the publication
@@ -523,7 +553,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     pub.setAuthenticationType(auth_type)
 
 
-  def addAuthenticationToSubscription(self, subscription_id, login, password, 
+  def addAuthenticationToSubscription(self, subscription_id, login, password,
       auth_format, auth_type):
     """
       add authentication to the subscription
@@ -546,14 +576,14 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     #self.failUnless(self.getPersonClient2()!=None)
 
   def addPublication(self):
-    portal_id = self.getPortalName()
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.pub_id, None) is not None:
       portal_sync._delObject(self.pub_id)
+    self.tic()
     publication = portal_sync.newContent(
                               portal_type='SyncML Publication',
                               id=self.pub_id,
-                              url_string=self.publication_url, 
+                              url_string=self.publication_url,  # XXX to be removed, maybe
                               source='person_server',
                               source_reference='Person',
                               list_method_id='objectValues',
@@ -562,22 +592,23 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
                               is_activity_enabled=self.activity_enabled)
     publication.validate()
     self.tic()
+    return publication
 
   def addSubscription1(self):
-    portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.sub_id1, None) is not None:
       portal_sync._delObject(self.sub_id1)
+    self.tic()
     subscription = portal_sync.newContent(portal_type='SyncML Subscription',
-                              id=self.sub_id1, 
+                              id=self.sub_id1,
                               url_string=self.publication_url,
                               subscription_url_string=self.subscription_url1,
                               source='person_client1',
-                              source_reference='Person', 
+                              source_reference='Person',
                               destination_reference='Person',
-                              list_method_id='objectValues', 
+                              list_method_id='objectValues',
                               xml_binding_generator_method_id=self.xml_mapping,
-                              conduit_module_id='ERP5Conduit', 
+                              conduit_module_id='ERP5Conduit',
                               is_activity_enabled=self.activity_enabled,
                               syncml_alert_code='two_way',
                               user_id='fab',
@@ -586,20 +617,20 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     self.tic()
 
   def addSubscription2(self):
-    portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.sub_id2, None) is not None:
       portal_sync._delObject(self.sub_id2)
+    self.tic()
     subscription = portal_sync.newContent(portal_type='SyncML Subscription',
-                              id=self.sub_id2, 
+                              id=self.sub_id2,
                               url_string=self.publication_url,
                               subscription_url_string=self.subscription_url2,
                               source='person_client2',
-                              source_reference='Person', 
+                              source_reference='Person',
                               destination_reference='Person',
-                              list_method_id='objectValues', 
+                              list_method_id='objectValues',
                               xml_binding_generator_method_id=self.xml_mapping,
-                              conduit_module_id='ERP5Conduit', 
+                              conduit_module_id='ERP5Conduit',
                               is_activity_enabled=self.activity_enabled,
                               syncml_alert_code='two_way',
                               user_id='fab',
@@ -616,9 +647,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     synchronization_list = portal_sync.objectValues()
     self.assertEquals(len(synchronization_list), self.nb_synchronization)
 
-  def test_06_GetObjectList(self):
+  def test_06_getDocumentList(self):
     """
-    This test the default getObjectList, ie, when the
+    This test the default getDocumentList, ie, when the
     query is 'objectValues', and this also test if we enter
     a new method for the query
     """
@@ -629,10 +660,10 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     publication_list = portal_sync.contentValues(
                                               portal_type='SyncML Publication')
     publication = publication_list[0]
-    object_list = publication.getObjectList()
+    object_list = publication.getDocumentList()
     self.assertEquals(len(object_list), nb_person)
     # now try to set a different method for query
-    method_id = 'PersonServer_getObjectList'
+    method_id = 'PersonServer_getDocumentList'
     ## add test cached method
     py_script_params = "**kw"
     py_script_body = """
@@ -643,12 +674,11 @@ return [context[%r]]
     py_script_obj = getattr(self.portal, method_id)
     py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
     publication.setListMethodId(method_id)
-    object_list = publication.getObjectList()
+    object_list = publication.getDocumentList()
     self.assertEquals(len(object_list), 1)
     # Add the query path
-    portal_id = self.getPortalName()
     publication.setListMethodId('person_server/objectValues')
-    object_list = publication.getObjectList()
+    object_list = publication.getDocumentList()
     self.assertEquals(len(object_list), nb_person)
 
   def test_07_ExportImport(self):
@@ -702,33 +732,20 @@ return [context[%r]]
     person_server = self.getPersonServer()
     long_line = 'a' * 10000 + ' --- '
     person1_s = person_server._getOb(self.id1)
-    kw = {'first_name':long_line} 
+    kw = {'first_name':long_line}
     person1_s.edit(**kw)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     self.assertEquals(nb_message1, self.nb_message_first_synchronization)
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync[self.sub_id1]
-    self.assertEquals(len(subscription1.getObjectList()), nb_person)
+    self.assertEquals(len(subscription1.getDocumentList()), nb_person)
     self.assertEquals(person1_s.getId(), self.id1)
     self.assertEquals(person1_s.getFirstName(), long_line)
     self.assertEquals(person1_s.getLastName(), self.last_name1)
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
-
-  def test_10_GetObjectFromGid(self):
-    # We will try to get an object from a publication
-    # just by givin the gid
-    self.login()
-    self.setupPublicationAndSubscription()
-    self.populatePersonServer()
-    # By default we can just give the id
-    portal_sync = self.getSynchronizationTool()
-    publication = portal_sync[self.pub_id]
-    object = publication.getObjectFromId(self.id1)
-    self.failUnless(object is not None)
-    self.assertEquals(object.getId(), self.id1)
 
   def test_11_GetSynchronizationState(self):
     # We will try to get the state of objects
@@ -737,12 +754,12 @@ return [context[%r]]
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
-    state_list_s = portal_sync.getSynchronizationState(person1_s)
+    state_list_s = self.getSynchronizationState(person1_s)
     self.assertEquals(len(state_list_s), self.nb_subscription) # one state
                                                   # for each subscriber
     person_client1 = self.getPersonClient1()
     person1_c = person_client1._getOb(self.id1)
-    state_list_c = portal_sync.getSynchronizationState(person1_c)
+    state_list_c = self.getSynchronizationState(person1_c)
     self.assertEquals(len(state_list_c), 1) # one state
                                         # for each subscriber
     self.checkSynchronizationStateIsSynchronized()
@@ -750,7 +767,6 @@ return [context[%r]]
   def test_12_UpdateSimpleData(self):
     self.test_08_FirstSynchronization()
     # First we do only modification on server
-    portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     kw = {'first_name':self.first_name3,'last_name':self.last_name3}
@@ -807,7 +823,7 @@ return [context[%r]]
     self.assertEquals(conflict.getLocalValue(), self.description2)
     self.assertEquals(conflict.getRemoteValue(), self.description3)
     subscriber = conflict.getSubscriber()
-    self.assertEquals(subscriber.getSubscriptionUrlString(), self.subscription_url1)
+    self.assertEquals(subscriber.getUrlString(), self.subscription_url1)
 
   def test_14_GetPublisherAndSubscriberDocument(self):
     # We will try to generate a conflict and then to get it
@@ -815,10 +831,6 @@ return [context[%r]]
     self.test_13_GetConflictList()
     # First we do only modification on server
     portal_sync = self.getSynchronizationTool()
-    person_server = self.getPersonServer()
-    person1_s = person_server._getOb(self.id1)
-    person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb(self.id1)
     conflict_list = portal_sync.getConflictList()
     conflict = conflict_list[0]
     publisher_document = conflict.getPublisherDocument()
@@ -881,9 +893,9 @@ return [context[%r]]
     sub_sub_person1 = sub_person1_c._getOb(self.id1)
     sub_sub_person2 = sub_person1_c._getOb(self.id2)
     # remove ('','portal...','person_server')
-    len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+    len_path = len(sub_sub_person1.getPhysicalPath()) - 3
     self.assertEquals(len_path, 3)
-    len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+    len_path = len(sub_sub_person2.getPhysicalPath()) - 3
     self.assertEquals(len_path, 3)
     self.assertEquals(sub_sub_person1.getDescription(), self.description1)
     self.assertEquals(sub_sub_person1.getFirstName(), self.first_name1)
@@ -943,9 +955,9 @@ return [context[%r]]
     publication = portal_sync[self.pub_id]
     subscription1 = portal_sync[self.sub_id1]
     subscription2 = portal_sync[self.sub_id2]
-    self.assertEquals(len(publication.getObjectList()), 0)
-    self.assertEquals(len(subscription1.getObjectList()), 0)
-    self.assertEquals(len(subscription2.getObjectList()), 0)
+    self.assertEquals(len(publication.getDocumentList()), 0)
+    self.assertEquals(len(subscription1.getDocumentList()), 0)
+    self.assertEquals(len(subscription2.getDocumentList()), 0)
 
   def test_20_DeleteSubObject(self):
     """
@@ -953,19 +965,22 @@ return [context[%r]]
     sides, and we will see if nothing is left on the server and also
     on the two clients
     - before :         after :
-      - id1             - id1 
+      - id1             - id1
         - id1             - id1
           - id2         - id2
           - id1
       - id2
     """
     self.test_17_AddSubObject()
+    # Delete one on server
     person_server = self.getPersonServer()
     sub_object_s = person_server._getOb(self.id1)._getOb(self.id1)
     sub_object_s.manage_delObjects(self.id1)
+    # Delete one on client 1
     person_client1 = self.getPersonClient1()
     sub_object_c1 = person_client1._getOb(self.id1)._getOb(self.id1)
     sub_object_c1.manage_delObjects(self.id2)
+    # Do nothing on client 2
     person_client2 = self.getPersonClient2()
     sub_object_c2 = person_client2._getOb(self.id1)._getOb(self.id1)
     self.synchronize(self.sub_id1)
@@ -990,8 +1005,6 @@ return [context[%r]]
     sub_object_s = object_s._getOb(self.id1)
     person_client1 = self.getPersonClient1()
     sub_object_c1 = person_client1._getOb(self.id1)._getOb(self.id1)
-    person_client2 = self.getPersonClient2()
-    sub_object_c2 = person_client2._getOb(self.id1)._getOb(self.id1)
     # Change values so that we will get conflicts
     kw = {'language':self.lang2,'description':self.description2}
     sub_object_s.edit(**kw)
@@ -1063,7 +1076,7 @@ return [context[%r]]
   def test_24_SynchronizeWithStrangeGid(self):
     """
     By default, the synchronization process use the id in order to
-    recognize objects (because by default, getGid==getId. Here, we will see 
+    recognize objects (because by default, getGid==getId. Here, we will see
     if it also works with a somewhat strange getGid
     """
     self.login()
@@ -1074,15 +1087,13 @@ return [context[%r]]
     self.checkSynchronizationStateIsSynchronized()
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync[self.sub_id1]
-    self.assertEquals(len(subscription1.getObjectList()), nb_person)
+    self.assertEquals(len(subscription1.getDocumentList()), nb_person)
     publication = portal_sync[self.pub_id]
-    self.assertEquals(len(publication.getObjectList()), nb_person)
+    self.assertEquals(len(publication.getDocumentList()), nb_person)
     gid = self.first_name1 +  ' ' + self.last_name1 # ie the title 'Sebastien Robin'
     gid = b16encode(gid)
-    person_c1 = subscription1.getObjectFromGid(gid)
-    id_c1 = person_c1.getId()
-    self.failUnless(id_c1 in ('1','2')) # id given by the default generateNewId
-    person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
+    person_c1 = subscription1.getDocumentFromGid(gid)
+    person_s = publication.getSubscriber(self.subscription_url1).getDocumentFromGid(gid)
     id_s = person_s.getId()
     self.assertEquals(id_s, self.id1)
     # This will test updating object
@@ -1094,14 +1105,13 @@ return [context[%r]]
     self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c1)
     # This will test deleting object
     person_server = self.getPersonServer()
-    person_client1 = self.getPersonClient1()
     person_server.manage_delObjects(self.id2)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEquals(len(subscription1.getObjectList()), (nb_person-1))
-    self.assertEquals(len(publication.getObjectList()), (nb_person-1))
-    person_s = publication.getSubscriber(self.subscription_url1).getObjectFromGid(gid)
-    person_c1 = subscription1.getObjectFromGid(gid)
+    self.assertEquals(len(subscription1.getDocumentList()), (nb_person-1))
+    self.assertEquals(len(publication.getDocumentList()), (nb_person-1))
+    person_s = publication.getSubscriber(self.subscription_url1).getDocumentFromGid(gid)
+    person_c1 = subscription1.getDocumentFromGid(gid)
     self.assertEquals(person_s.getDescription(), self.description3)
     self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c1)
 
@@ -1138,16 +1148,16 @@ return [context[%r]]
     # language on person_client1
     # format on person_client2
 
-    for conflict in conflict_list : 
+    for conflict in conflict_list :
       subscriber = conflict.getSubscriber()
       property = conflict.getPropertyId()
       resolve = 0
       if property == 'language':
-        if subscriber.getSubscriptionUrlString() == self.subscription_url1:
+        if subscriber.getUrlString() == self.subscription_url1:
           resolve = 1
           conflict.applySubscriberValue()
       if property == 'format':
-        if subscriber.getSubscriptionUrlString() == self.subscription_url2:
+        if subscriber.getUrlString() == self.subscription_url2:
           resolve = 1
           conflict.applySubscriberValue()
       if not resolve:
@@ -1162,7 +1172,7 @@ return [context[%r]]
     self.assertEquals(person1_s.getLanguage(), self.lang3)
     self.assertEquals(person1_s.getFormat(), self.format4)
     self.assertXMLViewIsEqual(self.sub_id2, person1_s, person1_c2)
-    # the workflow has one more "edit_workflow" in person1_c1 
+    # the workflow has one more "edit_workflow" in person1_c1
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.assertXMLViewIsEqual(self.sub_id2, person1_s, person1_c2)
@@ -1177,7 +1187,6 @@ return [context[%r]]
     # First, Create a new user
     uf = self.getPortal().acl_users
     uf._doAddUser('jp', '', ['Manager'], [])
-    user = uf.getUserById('jp').__of__(uf)
     # then update create and delete roles
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
@@ -1211,9 +1220,11 @@ return [context[%r]]
     self.test_08_FirstSynchronization()
     previous_max_lines = MAX_LEN
     try:
-      SynchronizationTool.MAX_LEN = 1 << 8
+      SyncMLSubscription.MAX_LEN = 1 << 8
       self.populatePersonServerWithSubObject()
+      self.checkSynchronizationStateIsSynchronized()
       self.synchronize(self.sub_id1)
+      self.checkSynchronizationStateIsSynchronized()
       self.synchronize(self.sub_id2)
       self.checkSynchronizationStateIsSynchronized()
       person_client1 = self.getPersonClient1()
@@ -1222,9 +1233,9 @@ return [context[%r]]
       sub_sub_person1 = sub_person1_c._getOb(self.id1)
       sub_sub_person2 = sub_person1_c._getOb(self.id2)
       # remove ('','portal...','person_server')
-      len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+      len_path = len(sub_sub_person1.getPhysicalPath()) - 3
       self.assertEquals(len_path, 3)
-      len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+      len_path = len(sub_sub_person2.getPhysicalPath()) - 3
       self.assertEquals(len_path, 3)
       self.assertEquals(sub_sub_person1.getDescription(),self.description1)
       self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
@@ -1233,10 +1244,13 @@ return [context[%r]]
       self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
       self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
     finally:
-      SynchronizationTool.MAX_LEN = previous_max_lines
+      SyncMLSubscription.MAX_LEN = previous_max_lines
 
-  def test_29_BrokenMessage(self):
+  @expectedFailure
+  def test_29_SameMessageSentMultipleTime(self):
     """
+    XXX The way the synchronization is done make it loop forever
+
     With http synchronization, when a message is not well
     received, then we send message again, we want to
     be sure that is such case we don't do stupid things
@@ -1244,27 +1258,31 @@ return [context[%r]]
     If we want to make this test more intersting, it is
     better to split messages
     """
-
+    from Products.ERP5SyncML import SyncMLConstant
     previous_max_lines = SyncMLConstant.MAX_LEN
-    SyncMLConstant.MAX_LEN = 1 << 4
-    self.setupPublicationAndSubscription()
-    nb_person = self.populatePersonServer()
-    # Synchronize the first client
-    nb_message1 = self.synchronizeWithBrokenMessage(self.sub_id1)
-    #self.failUnless(nb_message1==self.nb_message_first_synchronization)
-    portal_sync = self.getSynchronizationTool()
-    subscription1 = portal_sync[self.sub_id1]
-    self.assertEquals(len(subscription1.getObjectList()), nb_person)
-    person_server = self.getPersonServer() # We also check we don't
-                                           # modify initial ob
-    person1_s = person_server._getOb(self.id1)
-    person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb(self.id1)
-    self.assertEquals(person1_s.getId(), self.id1)
-    self.assertEquals(person1_s.getFirstName(), self.first_name1)
-    self.assertEquals(person1_s.getLastName(), self.last_name1)
-    self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
-    SyncMLConstant.MAX_LEN = previous_max_lines
+    try:
+      SyncMLConstant.MAX_LEN = 1 << 8
+      SyncMLSubscription.MAX_LEN = 1 << 8
+      self.setupPublicationAndSubscription()
+      nb_person = self.populatePersonServer()
+      # Synchronize the first client
+      self.synchronizeWithBrokenMessage(self.sub_id1)
+      portal_sync = self.getSynchronizationTool()
+      subscription1 = portal_sync[self.sub_id1]
+      self.assertEquals(len(subscription1.getDocumentList()), nb_person)
+      person_server = self.getPersonServer() # We also check we don't
+                                             # modify initial ob
+      person1_s = person_server._getOb(self.id1)
+      person_client1 = self.getPersonClient1()
+      person1_c = person_client1._getOb(self.id1)
+      self.assertEquals(person1_s.getId(), self.id1)
+      self.assertEquals(person1_s.getFirstName(), self.first_name1)
+      self.assertEquals(person1_s.getLastName(), self.last_name1)
+      self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
+    finally:
+      SyncMLConstant.MAX_LEN = previous_max_lines
+      SyncMLSubscription.MAX_LEN =previous_max_lines
+
 
   def test_30_GetSynchronizationType(self):
     # We will try to update some simple data, first
@@ -1357,7 +1375,6 @@ return [context[%r]]
     self.assertXMLViewIsEqual(self.sub_id2, person2_s, person2_c)
 
   def addOneWayFromServerSubscription(self):
-    portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     syncml_alert_code = self.portal.portal_categories.syncml_alert_code.\
                                                             one_way_from_server
@@ -1366,23 +1383,21 @@ return [context[%r]]
       subscription.edit(syncml_alert_code_value=syncml_alert_code)
     else:
       subscription = portal_sync.newContent(portal_type='SyncML Subscription',
-                              id=self.sub_id1, 
+                              id=self.sub_id1,
                               url_string=self.publication_url,
                               subscription_url_string=self.subscription_url1,
                               source='person_client1',
-                              source_reference='Person', 
+                              source_reference='Person',
                               destination_reference='Person',
-                              list_method_id='objectValues', 
+                              list_method_id='objectValues',
                               xml_binding_generator_method_id=self.xml_mapping,
-                              conduit_module_id='ERP5Conduit', 
+                              conduit_module_id='ERP5Conduit',
                               is_activity_enabled=self.activity_enabled,
                               syncml_alert_code_value=syncml_alert_code,
                               user_id='fab',
                               password='myPassword')
 
     self.tic()
-    self.assertTrue(subscription.isOneWayFromServer())
-
 
   def test_33_OneWayFromServer(self):
     """
@@ -1410,7 +1425,7 @@ return [context[%r]]
       self.assertEquals(sub.getSyncmlAlertCode(), 'one_way_from_server')
     self.assertEquals(nb_message1, self.nb_message_first_synchronization)
     subscription1 = portal_sync[self.sub_id1]
-    self.assertEquals(len(subscription1.getObjectList()), nb_person)
+    self.assertEquals(len(subscription1.getDocumentList()), nb_person)
     person_server = self.getPersonServer() # We also check we don't
                                            # modify initial ob
     person1_s = person_server._getOb(self.id1)
@@ -1443,12 +1458,11 @@ return [context[%r]]
     person1_c = person_client1._getOb(self.id1)
 
     self.assertEquals(person1_s.getFirstName(), self.first_name1)
-    self.assertEquals(person1_s.getLastName(), self.last_name2) 
+    self.assertEquals(person1_s.getLastName(), self.last_name2)
     self.checkSynchronizationStateIsSynchronized()
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c, force=1)
 
   def addOneWayFormClientSubscription(self):
-    portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     syncml_alert_code = self.portal.portal_categories.syncml_alert_code.\
                                                             one_way_from_client
@@ -1492,7 +1506,7 @@ return [context[%r]]
     subscription1 = portal_sync[self.sub_id1]
     self.assertEquals(subscription1.getSyncmlAlertCode(), 'one_way_from_client')
     # First do the sync from the server to the client
-    nb_message1 = self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id1)
     self.assertEquals(subscription1.getSyncmlAlertCode(),
                       'one_way_from_client')
     #self.assertEquals(nb_message1, self.nb_message_first_synchronization)
@@ -1509,44 +1523,155 @@ return [context[%r]]
     self.checkSynchronizationStateIsSynchronized()
     self.assertXMLViewIsEqual(self.sub_id1, client_person, server_person,
                               force=True)
-    # Then we change things on both sides and we look if there
-    # is synchronization only from only one client
-    # This will create a conflict !!
+    # Change part of the title on both side
+    # so that it generates a conflict
     client_person.setFirstName(self.first_name2)
     server_person.setLastName(self.last_name2)
-    nb_message1 = self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id1)
 
     # refresh documents
     server_person = server_person_module._getOb(object_id)
     client_person = client_person_module._getOb(object_id)
 
-    # In One_From_Client Sync mode, first_name of object on server side
-    # doesn't change because no data is send from Subscription
+    # Conflict is generated on title
+    # But first name still is processed
+    # so first name must be up to date
     self.assertEquals(server_person.getFirstName(), self.first_name2)
     self.assertEquals(server_person.getLastName(), self.last_name2)
+    # Client get no change from server as it is in one way from client
     self.assertEquals(client_person.getFirstName(), self.first_name2)
     self.assertEquals(client_person.getLastName(), self.last_name1)
-
-    ## Check again after conflict resolution
-    #self.assertEquals(server_person.getFirstName(), self.first_name2)
-    #self.assertEquals(server_person.getLastName(), self.last_name2)
-    #self.assertEquals(client_person.getFirstName(), self.first_name2)
-    #self.assertEquals(client_person.getLastName(), self.last_name1)
 
     # reset for refresh sync
     # after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()
-    nb_message1 = self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id1)
 
     # refresh documents
     server_person = server_person_module._getOb(object_id)
     client_person = client_person_module._getOb(object_id)
 
     self.assertEquals(server_person.getFirstName(), self.first_name2)
-    self.assertEquals(server_person.getLastName(), self.last_name1) 
+    self.assertEquals(server_person.getLastName(), self.last_name1)
+    self.assertEquals(client_person.getFirstName(), self.first_name2)
+    self.assertEquals(client_person.getLastName(), self.last_name1)
+
     self.checkSynchronizationStateIsSynchronized()
+
     self.assertXMLViewIsEqual(self.sub_id1, client_person, server_person,
                               force=True)
+
+  def addRefreshFormClientOnlySubscription(self):
+    portal_sync = self.getSynchronizationTool()
+    syncml_alert_code = self.portal.portal_categories.syncml_alert_code.\
+                                                            refresh_from_client_only
+    subscription = portal_sync._getOb(self.sub_id1, None)
+    if subscription is not None:
+      subscription.edit(syncml_alert_code_value=syncml_alert_code)
+    else:
+      subscription = portal_sync.newContent(portal_type='SyncML Subscription',
+                              id=self.sub_id1,
+                              url_string=self.publication_url,
+                              subscription_url_string=self.subscription_url1,
+                              source='person_client1',
+                              source_reference='Person',
+                              destination_reference='Person',
+                              list_method_id='objectValues',
+                              xml_binding_generator_method_id=self.xml_mapping,
+                              conduit_module_id='ERP5Conduit',
+                              is_activity_enabled=self.activity_enabled,
+                              syncml_alert_code_value=syncml_alert_code,
+                              user_id='fab',
+                              password='myPassword')
+
+    self.tic()
+
+
+  def test_refreshFromClientOnly(self):
+    """
+    Refresh from client only is used to send all data from the client to the
+    server, the server updating all its data. Modifications on server side are
+    not send to the client
+    """
+    publication = self.addPublication()
+    self.addRefreshFormClientOnlySubscription()
+
+    nb_person = self.populatePersonClient1()
+    portal_sync = self.getSynchronizationTool()
+    subscription1 = portal_sync[self.sub_id1]
+    self.assertEquals(subscription1.getSyncmlAlertCode(),
+                      'refresh_from_client_only')
+    # Execute first synchronization
+    # data from client will be synced on server
+    self.synchronize(self.sub_id1)
+    self.assertEquals(subscription1.getSyncmlAlertCode(),
+                      'refresh_from_client_only')
+    # Check no signature created
+    self.assertEquals(len(subscription1), 0)
+    subscriber_list = publication.contentValues(portal_type="SyncML Subscription")
+    self.assertEquals(len(subscriber_list), 1)
+    subscriber = subscriber_list[0]
+    self.assertEquals(len(subscriber), 0)
+
+    # Check same person on client & server side
+    client_person_module = self.getPersonClient1()
+    server_person_module = self.getPersonServer()
+    for x in xrange(1, 61):
+      client_person = client_person_module._getOb(str(x))
+      server_person = server_person_module._getOb(str(x))
+      self.assertEquals(client_person.getFirstName(), self.first_name1)
+      self.assertEquals(client_person.getLastName(), self.last_name1)
+      self.assertEquals(server_person.getFirstName(), self.first_name1)
+      self.assertEquals(server_person.getLastName(), self.last_name1)
+      self.assertXMLViewIsEqual(self.sub_id1, client_person, server_person,
+                                force=True)
+
+      # Modify data of persons on both side
+      client_person.setFirstName(self.first_name2)
+      server_person.setDescription(self.last_name2)
+
+    self.tic()
+    # Second synchronization
+    # Only client modification must have been synchronized
+    # Server modification will get ereased
+    self.synchronize(self.sub_id1)
+    # Check no signature created
+    self.assertEquals(len(subscription1), 0)
+    self.assertEquals(len(subscriber), 0)
+
+    for x in xrange(1, 61):
+      client_person = client_person_module._getOb(str(x))
+      server_person = server_person_module._getOb(str(x))
+      self.assertEquals(client_person.getFirstName(), self.first_name2)
+      self.assertEquals(client_person.getDescription(), self.description1)
+      self.assertEquals(server_person.getFirstName(), self.first_name2)
+      self.assertEquals(server_person.getDescription(), self.description1)
+      self.assertXMLViewIsEqual(self.sub_id1, client_person, server_person,
+                                force=True)
+      # Modify same data of person on both side
+      client_person.setLastName(self.last_name2)
+      server_person.setLastName(self.first_name2)
+
+    # Third synchronization
+    # Client modifications must win over server modifications
+    self.synchronize(self.sub_id1)
+    # Check no signature created
+    self.assertEquals(len(subscription1), 0)
+    self.assertEquals(len(subscriber), 0)
+
+    for x in xrange(1, 61):
+      client_person = client_person_module._getOb(str(x))
+      server_person = server_person_module._getOb(str(x))
+      self.assertEquals(client_person.getLastName(), self.last_name2)
+      self.assertEquals(server_person.getLastName(), self.last_name2)
+      # These property should not have changed
+      self.assertEquals(client_person.getFirstName(), self.first_name2)
+      self.assertEquals(client_person.getDescription(), self.description1)
+      self.assertEquals(server_person.getFirstName(), self.first_name2)
+      self.assertEquals(server_person.getDescription(), self.description1)
+      self.assertXMLViewIsEqual(self.sub_id1, client_person, server_person,
+                                force=True)
+
 
   def test_34_encoding(self):
     """
@@ -1580,26 +1705,22 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(b64decode(awaited_result_long_string), long_string)
 
     # test with the ERP5 functions
-    portal_sync = self.getSynchronizationTool()
-    publication = portal_sync[self.pub_id]
-    subscription1 = portal_sync[self.sub_id1]
-
     string_encoded = encode('b64', python)
     self.assertEquals(string_encoded, awaited_result_python)
     string_decoded = decode('b64', awaited_result_python)
     self.assertEquals(string_decoded, python)
-    self.failUnless(isDecodeEncodeTheSame(string_encoded, 
+    self.failUnless(isDecodeEncodeTheSame(string_encoded,
                     python, 'b64'))
-    self.failUnless(isDecodeEncodeTheSame(string_encoded, 
+    self.failUnless(isDecodeEncodeTheSame(string_encoded,
                     string_decoded, 'b64'))
 
-    string_encoded = encode('b64', long_string) 
+    string_encoded = encode('b64', long_string)
     self.assertEquals(string_encoded, awaited_result_long_string)
     string_decoded = decode('b64', awaited_result_long_string)
     self.assertEquals(string_decoded, long_string)
-    self.failUnless(isDecodeEncodeTheSame(string_encoded, 
+    self.failUnless(isDecodeEncodeTheSame(string_encoded,
                     long_string, 'b64'))
-    self.failUnless(isDecodeEncodeTheSame(string_encoded, 
+    self.failUnless(isDecodeEncodeTheSame(string_encoded,
                     string_decoded, 'b64'))
 
     self.assertEquals(encode('b64', ''), '')
@@ -1609,15 +1730,17 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
 
   def test_35_authentication(self):
     """
-      we will test 
-      - if we can't synchronize without good authentication for an 
-      autentication required publication.
-      - if we can synchronize without of with (and bad or good) authentication
-      for an not required autentication publication
+    Check :
+    - synchronization failed if bad authentication
+    - authentication is case sensitive
+    - authentication work in utf-8
+    XXX Missing tests :
+    - no authentication provided on client
+    - sending authentication when not required
+    - empty password on client/server
     """
     self.test_08_FirstSynchronization()
     # First we do only modification on client
-    portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     person_client1 = self.getPersonClient1()
@@ -1626,73 +1749,72 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     kw = {'first_name':self.first_name3,'last_name':self.last_name3}
     person1_c.edit(**kw)
 
-    #check that it's not synchronize
+    # check that it's not synchronize
     self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3,
       self.last_name3, person1_s, person1_c)
     self.synchronize(self.sub_id1)
-    #now it should be synchronize
+    # now it should be synchronize
     self.checkSynchronizationStateIsSynchronized()
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertEquals(person1_s.getFirstName(), self.first_name3)
     self.assertEquals(person1_s.getLastName(), self.last_name3)
 
-    #adding authentication :
+    # adding diferent authentication parameter on pub/sub
     self.addAuthenticationToPublication(self.pub_id, 'fab', 'myPassword', 'b64',
         'syncml:auth-basic')
-    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'pouet', 
+    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'pouet',
         'b64', 'syncml:auth-basic')
-    # try to synchronize with a wrong authentication on the subscription, it 
-    # should failed
+    # Do some modification
     kw = {'first_name':self.first_name2,'last_name':self.last_name2}
     person1_c.edit(**kw)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2, 
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2,
       self.last_name2, person1_s, person1_c)
-    # here, before and after synchronization, the person1_s shoudn't have
-    # the name as the person1_c because the user isn't authenticated
-    self.synchronize(self.sub_id1)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2, 
+    # try to synchronize with a wrong authentication on the subscription, it
+    # should failed
+    self.assertRaises(ValueError, self.synchronize, self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name2,
       self.last_name2, person1_s, person1_c)
 
-    #try to synchronize whith an authentication on both the client and server
-    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword', 
+    # now make the authentication match
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword',
         'b64', 'syncml:auth-basic')
-    #now it should be correctly synchronize
     self.synchronize(self.sub_id1)
+    # data must now have been synchronized
     self.checkSynchronizationStateIsSynchronized()
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertEquals(person1_s.getFirstName(), self.first_name2)
     self.assertEquals(person1_s.getLastName(), self.last_name2)
 
-    #try to synchronize with a bad login and/or password
-    #test if login is case sensitive (it should be !)
-    self.addAuthenticationToSubscription(self.sub_id1, 'fAb', 'myPassword', 
+    # try to synchronize with a bad login and/or password
+    # test if login is case sensitive (it should be !)
+    self.addAuthenticationToSubscription(self.sub_id1, 'fAb', 'myPassword',
         'b64', 'syncml:auth-basic')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
-    self.synchronize(self.sub_id1)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1, 
+    self.assertRaises(ValueError, self.synchronize, self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1,
       self.last_name1, person1_s, person1_c)
 
-    #with a paswword case sensitive
-    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'mypassword', 
+    # with a paswword case sensitive
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'mypassword',
         'b64', 'syncml:auth-basic')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
-    self.synchronize(self.sub_id1)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1, 
+    self.assertRaises(ValueError, self.synchronize, self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name1,
       self.last_name1, person1_s, person1_c)
 
-    #with the good password
-    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword', 
+    # with the good password
+    self.addAuthenticationToSubscription(self.sub_id1, 'fab', 'myPassword',
         'b64', 'syncml:auth-basic')
-    #now it should be correctly synchronize
+    # now it should be correctly synchronize
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertEquals(person1_s.getFirstName(), self.first_name1)
     self.assertEquals(person1_s.getLastName(), self.last_name1)
 
-    #verify that the login and password with utf8 caracters are accecpted
+    # verify that the login and password with utf8 caracters are accecpted
 
     # add a user with an utf8 login
     uf = self.getPortal().acl_users
@@ -1700,19 +1822,19 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     user = uf.getUserById('\xc3\xa9pouet').__of__(uf)
     newSecurityManager(None, user)
 
-    self.addAuthenticationToPublication(self.pub_id, '\xc3\xa9pouet', 'ploum', 
+    self.addAuthenticationToPublication(self.pub_id, '\xc3\xa9pouet', 'ploum',
         'b64', 'syncml:auth-basic')
-    #first, try with a wrong login :
-    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'ploum', 
+    # first, try with a wrong login :
+    self.addAuthenticationToSubscription(self.sub_id1, 'pouet', 'ploum',
         'b64', 'syncml:auth-basic')
     kw = {'first_name':self.first_name3,'last_name':self.last_name3}
     person1_c.edit(**kw)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3, 
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3,
       self.last_name3, person1_s, person1_c)
-    self.synchronize(self.sub_id1)
-    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3, 
+    self.assertRaises(ValueError, self.synchronize, self.sub_id1)
+    self.verifyFirstNameAndLastNameAreNotSynchronized(self.first_name3,
       self.last_name3, person1_s, person1_c)
-    #now with the good :
+    # now with the good :
     self.addAuthenticationToSubscription(self.sub_id1, '\xc3\xa9pouet', 'ploum',
         'b64', 'syncml:auth-basic')
     self.synchronize(self.sub_id1)
@@ -1721,10 +1843,13 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getLastName(), self.last_name3)
     self.checkSynchronizationStateIsSynchronized()
 
+  @expectedFailure
   def test_36_SynchronizationSubscriptionMaxLines(self):
-    # We will try to populate the folder person_server
-    # with the data form person_client 
-    # with the data which over max line of messages
+    """
+    XXX This has not been implemented in new syncml version
+
+    Check that messages are well splited when getting too many lines
+    """
     self.login()
     self.setupPublicationAndSubscription()
     nb_person = self.populatePersonClient1()
@@ -1737,21 +1862,25 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     #Verification number object synchronized
     self.assertEquals(nb_message1, self.nb_message_first_sync_max_lines)
     # Synchronize the second client
-    # data_Pub -> data_Sub2 the data are in pub to sub2 is empty so add +2 messages)
     nb_message2 = self.synchronize(self.sub_id2)
-    self.assertEquals(nb_message2, self.nb_message_first_sync_max_lines + 2)
+    self.assertEquals(nb_message2, self.nb_message_first_sync_max_lines)
     person_server = self.getPersonServer()
     person_client1 = self.getPersonClient1()
     person_client2 = self.getPersonClient2()
+    # Check we have all data synchronized
+    self.assertEquals(nb_person, len(person_server.objectValues()))
+    self.assertEquals(nb_person, len(person_client1.objectValues()))
+    self.assertEquals(nb_person, len(person_client2.objectValues()))
+
     for id in range(1, 60):
       person_s = person_server._getOb(str(id))
-      person_c = person_client1._getOb(str(id))
-      self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c)
-    self.assertEquals(nb_person, len(person_server.objectValues()))
-    self.assertEquals(nb_person, len(person_client2.objectValues()))
+      person_c1 = person_client1._getOb(str(id))
+      person_c2 = person_client2._getOb(str(id))
+      self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c1)
+      self.assertXMLViewIsEqual(self.sub_id1, person_s, person_c2)
+
 
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestERP5SyncML))
     return suite
-

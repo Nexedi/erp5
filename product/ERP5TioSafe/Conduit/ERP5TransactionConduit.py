@@ -26,12 +26,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
+from base64 import b16encode
+from copy import deepcopy
 
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST
-from base64 import b16encode
-from zLOG import LOG, WARNING
-from copy import deepcopy
 
 class ERP5TransactionConduit(TioSafeBaseConduit):
   """
@@ -61,8 +60,8 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
     """
     if object_id is None:
       object_id = self.getAttribute(xml, 'id')
-    if object_id is not None:
-      if sub_object is None:
+    if True: # object_id is not None:
+      if sub_object is None and object_id:
         try:
           sub_object = object._getOb(object_id)
         except (AttributeError, KeyError, TypeError):
@@ -236,8 +235,8 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         else:
           for synchronization in synchronization_list:
             # encode to the output type
-            if getattr(synchronization, 'getObjectFromGid', None) is not None:
-              link_object = synchronization.getObjectFromGid(b16encode(link_gid))
+            if getattr(synchronization, 'getDocumentFromGid', None) is not None:
+              link_object = synchronization.getDocumentFromGid(b16encode(link_gid))
               #LOG("trying to get %s from %s, got %s" %(link_gid, synchronization.getPath(), link_object), 300, "This is for category type %s" %(category))
               if link_object is not None:
                 break
@@ -286,7 +285,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         else:
           synchronization_list = self.getSynchronizationObjectListForType(kw.get('domain'), 'Product', 'publication')
           for synchronization in synchronization_list:
-            link_object = synchronization.getObjectFromGid(b16encode(link_gid))
+            link_object = synchronization.getDocumentFromGid(b16encode(link_gid))
             if link_object is not None:
               break
         # in the worse case save the line with the unknown product
@@ -307,7 +306,7 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         # set line values in the dict
         if subnode.text is not None:
           movement_dict_value[tag] = subnode.text#.encode('utf-8')
-    LOG("visitMovement", 300, "movement_dict_value = %s" %(movement_dict_value))
+          #LOG("visitMovement", 300, "movement_dict_value = %s" %(movement_dict_value))
     if 'quantity' not in movement_dict_value:
       return
 

@@ -27,21 +27,16 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName
-from Acquisition import aq_base, aq_inner, aq_chain, aq_acquire
-
-from xml.dom import implementation
 from xml.dom.ext import PrettyPrint
-from xml.dom import Node
-
 import random
 from cStringIO import StringIO
 
+from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
+from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+from Products.ERP5Type import Permissions
+from Products.CMFCore.utils import getToolByName
 
 
 class ERP5ShopOrderConduit(ERP5Conduit):
@@ -51,18 +46,11 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   Don't forget to add this base categories in portal_category :
       'hd_size', 'memory_size', 'optical_drive', 'keyboard_layout', 'cpu_type'
   """
-
-
-#   TODO: tester ce script sur le serveur de backup (qui semble être different)
-
-
   # Declarative security
   security = ClassSecurityInfo()
 
   # Initialize the random function
   random.seed()
-
-
 
   security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
   def constructContent(self, object, object_id, docid, portal_type):

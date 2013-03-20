@@ -1,10 +1,16 @@
 SyncML Publication | reset_publication
+SyncML Publication | update_url
 SyncML Publication | view
 SyncML Publication | view_conflict
 SyncML Signature | view
+SyncML Subscription | last_point_fixe_report
 SyncML Subscription | reset_subscription
 SyncML Subscription | start_synchronization
+SyncML Subscription | update_url
 SyncML Subscription | vew
 SyncML Subscription | view_conflict
+SyncML Subscription | view_signatures
+Synchronization Tool | point_fixe
 Synchronization Tool | view
+System Preference | syncml
 portal_actions | portal_synchronizations_action

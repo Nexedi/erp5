@@ -1926,12 +1926,6 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_selections', 'Selection Tool')
     addERP5Tool(p, 'portal_preferences', 'Preference Tool')
 
-    try:
-      # Add ERP5SyncML Tools
-      addERP5Tool(p, 'portal_synchronizations', 'Synchronization Tool')
-    except AttributeError:
-      pass
-
     # Add Message Catalog
     if not 'Localizer' in p.objectIds():
       addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer

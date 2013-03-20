@@ -27,34 +27,31 @@
 #
 ##############################################################################
 
+from hashlib import md5
+
 from AccessControl import ClassSecurityInfo
+
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
-
-from zLOG import LOG, DEBUG, INFO
 from Products.ERP5SyncML.Utils import PdataHelper
-from hashlib import md5
 
 _MARKER = []
 
 class SyncMLSignature(XMLObject):
   """
-    status -- SENT, CONFLICT...
-    md5_object -- An MD5 value of a given document
-    #uid -- The UID of the document
-    id -- the ID of the document
-    gid -- the global id of the document
-    rid -- the uid of the document on the remote database,
-        only needed on the server.
-    xml -- the xml of the object at the time where it was synchronized
+  A Signature represent a document that is synchronized
+
+  It contains as attribute the xml representation of the object which is used
+  to generate the diff of the object between two synchronization
+
+  It also contains the list of conflict as sub-objects when it happens
   """
   meta_type = 'ERP5 Signature'
   portal_type = 'SyncML Signature'
 
   isIndexable = ConstantGetter('isIndexable', value=False)
-  # Make sure RAD generated accessors at the class level
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -72,12 +69,11 @@ class SyncMLSignature(XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent, 'setData')
   def setData(self, value):
     """
-      set the XML corresponding to the object
+    Set the XML corresponding to the object
     """
     if value:
       # convert the string to Pdata
       pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      #data, size = pdata_wrapper()
       self._setData(pdata_wrapper)
       self.setTemporaryData(None) # We make sure that the data will not be erased
       self.setContentMd5(pdata_wrapper.getContentMd5())
@@ -88,11 +84,11 @@ class SyncMLSignature(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=_MARKER):
     """
-      get the XML corresponding to the object
+    Get the XML corresponding to the object
     """
     if self.hasData():
       return str(self._baseGetData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetData()
     else:
       return self._baseGetData(default)
@@ -101,13 +97,12 @@ class SyncMLSignature(XMLObject):
                             'setTemporaryData')
   def setTemporaryData(self, value):
     """
-      This is the xml temporarily saved, it will
-      be stored with setXML when we will receive
-      the confirmation of synchronization
+    This is the xml temporarily saved, it will
+    be stored with setXML when we will receive
+    the confirmation of synchronization
     """
     if value:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setTemporaryData(pdata_wrapper)
+      self._setTemporaryData(PdataHelper(self.getPortalObject(), value))
     else:
       self._setTemporaryData(None)
 
@@ -115,11 +110,11 @@ class SyncMLSignature(XMLObject):
                             'getTemporaryData')
   def getTemporaryData(self, default=_MARKER):
     """
-      get the temp xml
+    Return the temp xml as string
     """
     if self.hasTemporaryData():
       return str(self._baseGetTemporaryData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetTemporaryData()
     else:
       return self._baseGetTemporaryData(default)
@@ -127,9 +122,9 @@ class SyncMLSignature(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'checkMD5')
   def checkMD5(self, xml_string):
     """
-    check if the given md5_object returns the same things as
-    the one stored in this signature, this is very usefull
-    if we want to know if an objects has changed or not
+    Check if the given md5_object returns the same things as the one stored in
+    this signature, this is very usefull if we want to know if an objects has
+    changed or not
     Returns 1 if MD5 are equals, else it returns 0
     """
     if isinstance(xml_string, unicode):
@@ -139,10 +134,9 @@ class SyncMLSignature(XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent, 'setPartialData')
   def setPartialData(self, value):
     """
-    Set the partial string we will have to
-    deliver in the future
+    Set the partial string we will have to deliver in the future
     """
-    if value is not None:
+    if value:
       if not isinstance(value, PdataHelper):
         value = PdataHelper(self.getPortalObject(), value)
       self._setPartialData(value)
@@ -154,13 +148,11 @@ class SyncMLSignature(XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent, 'setLastData')
   def setLastData(self, value):
     """
-      This is the xml temporarily saved, it will
-      be stored with setXML when we will receive
-      the confirmation of synchronization
+      This is the xml temporarily saved, it will be stored with setXML when we
+      will receive the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setLastData(pdata_wrapper)
+    if value:
+      self._setLastData(PdataHelper(self.getPortalObject(), value))
     else:
       self._setLastData(None)
 
@@ -168,21 +160,22 @@ class SyncMLSignature(XMLObject):
                             'getPartialData')
   def getPartialData(self, default=_MARKER):
     """
-      get the patial xml
+    Return the patial xml as string
     """
     if self.hasPartialData():
       return str(self._baseGetPartialData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetPartialData()
     else:
       return self._baseGetPartialData(default)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'appendPartialData')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'appendPartialData')
   def appendPartialData(self, value):
     """
     Append the partial string we will have to deliver in the future
     """
-    if value is not None:
+    if value:
       if not isinstance(value, PdataHelper):
         value = PdataHelper(self.getPortalObject(), value)
       last_data = value.getLastPdata()
@@ -194,36 +187,11 @@ class SyncMLSignature(XMLObject):
         self.setPartialData(value)
       self.setLastDataPartialData(last_data)
 
-  #security.declareProtected(Permissions.AccessContentsInformation,
-                            #'getFirstChunkPdata')
-  #def getFirstChunkPdata(self, size_lines):
-    #"""
-    #"""
-    #chunk = [self.getPartialData().data]
-    #size = chunk[0].count('\n')
-
-    #current = self.getPartialData()
-    #next = current.next
-    #while size < size_lines and next is not None:
-      #current = next
-      #size += current.data.count('\n')
-      #chunk.append(current.data)
-      #next = current.next
-    #if size == size_lines:
-      #self.setPartialData(next)
-    #elif size > size_lines:
-      #overflow = size - size_lines
-      #data_list = chunk[-1].split('\n')
-      #chunk[-1] = '\n'.join(data_list[:-overflow])
-      #current.data = '\n'.join(data_list[-overflow:])
-      #self.setPartialData(current)
-    #return ''.join(chunk)
-
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getFirstPdataChunk')
   def getFirstPdataChunk(self, max_len):
     """
     """
-    #chunk, rest_in_queue = self._baseGetPartialData().\
-                                             #getFirstPdataChunkAndRestInQueue(max_len)
     partial_data = self._baseGetPartialData()
     chunk = partial_data[:max_len]
     rest_in_queue = partial_data[max_len:]
@@ -235,13 +203,11 @@ class SyncMLSignature(XMLObject):
                             'setSubscriberXupdate')
   def setSubscriberXupdate(self, value):
     """
-      This is the xml temporarily saved, it will
-      be stored with setXML when we will receive
-      the confirmation of synchronization
+    This is the xml temporarily saved, it will be stored with setXML when we
+    will receive the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setSubscriberXupdate(pdata_wrapper)
+    if value:
+      self._setSubscriberXupdate(PdataHelper(self.getPortalObject(), value))
     else:
       self._setSubscriberXupdate(None)
 
@@ -249,11 +215,11 @@ class SyncMLSignature(XMLObject):
                             'getSubscriberXupdate')
   def getSubscriberXupdate(self, default=_MARKER):
     """
-      get the patial xml
+    Return the patial xml as string
     """
     if self.hasSubscriberXupdate():
       return str(self._baseGetSubscriberXupdate())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetSubscriberXupdate()
     else:
       return self._baseGetSubscriberXupdate(default)
@@ -262,13 +228,11 @@ class SyncMLSignature(XMLObject):
                             'setPublisherXupdate')
   def setPublisherXupdate(self, value):
     """
-      This is the xml temporarily saved, it will
-      be stored with setXML when we will receive
-      the confirmation of synchronization
+    This is the xml temporarily saved, it will be stored with setXML when we
+    will receive the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setPublisherXupdate(pdata_wrapper)
+    if value:
+      self._setPublisherXupdate(PdataHelper(self.getPortalObject(), value))
     else:
       self._setPublisherXupdate(None)
 
@@ -276,67 +240,61 @@ class SyncMLSignature(XMLObject):
                             'getPublisherXupdate')
   def getPublisherXupdate(self, default=_MARKER):
     """
-      get the patial xml
+    Return the partial xml as string
     """
     if self.hasPublisherXupdate():
       return str(self._baseGetPublisherXupdate())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetPublisherXupdate()
     else:
       return self._baseGetPublisherXupdate(default)
 
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'reset')
-  def reset(self):
-    """Clear Signature and change validation_state to not_synchronized
+  def reset(self, no_conflict=False):
     """
+    Clear Signature and change validation_state to not_synchronized
+    no_conflict : prevent the reset of signature for which conflict
+                  has not been marked resolved, this is usefull when
+                  resetting all signature at the beginning of a sync process
+                  XXX Use a better name and a positive value by default
+    """
+    if no_conflict and self.getValidationState() in (
+      'conflict',
+      'conflict_resolved_with_merge',
+      'conflict_resolved_with_client_command_winning'):
+      return
     if self.getValidationState() != 'not_synchronized':
       self.drift()
-    self.setPartialData(None)
-    self.setTemporaryData(None)
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getConflictList')
   def getConflictList(self):
     """
     Return the actual action for a partial synchronization
     """
     return self.contentValues()
-    # returned_conflict_list = []
-    # if getattr(self, 'conflict_list', None) is None:
-    #   return returned_conflict_list
-    # if len(self.conflict_list)>0:
-    #   returned_conflict_list.extend(self.conflict_list)
-    # return returned_conflict_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setConflictList')
   def setConflictList(self, conflict_list):
     """
-    Return the actual action for a partial synchronization
+    XXX is it still usefull ?
     """
     return
-    # if conflict_list is None or conflict_list == []:
-    #   self.resetConflictList()
-    # else:
-    #   self.conflict_list = conflict_list 
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetConflictList')
   def resetConflictList(self):
     """
-    Return the actual action for a partial synchronization
+    XXX is it still usefull ?
     """
     return
-    #self.conflict_list = PersistentMapping()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'delConflict')
   def delConflict(self, conflict):
     """
     Delete provided conflict object
     """
     self.manage_delObjects([conflict.getId(),])
-    # conflict_list = []
-    # for c in self.getConflictList():
-    #   #LOG('delConflict, c==conflict',0,c==aq_base(conflict))
-    #   if c != aq_base(conflict):
-    #     conflict_list += [c]
-    # if conflict_list != []:
-    #   self.setConflictList(conflict_list)
-    # else:
-    #   self.resetConflictList()
-

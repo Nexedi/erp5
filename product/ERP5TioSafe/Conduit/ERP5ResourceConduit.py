@@ -51,7 +51,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     """
       This is the method calling to create an object
     """
-    if object_id is not None:
+    if True: # object_id is not None:
       if sub_object is None:
         sub_object = object._getOb(object_id, None)
       if sub_object is None: # If so, it does not exist

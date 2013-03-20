@@ -28,8 +28,6 @@
 
 from Products.ERP5SyncML.XMLSyncUtils import XMLSyncUtilsMixin
 from xml.dom.ext.reader.Sax2 import FromXml
-from Products.ERP5SyncML.SyncCode import SyncCode
-from zLOG import LOG
 
 class XupdateUtils(XMLSyncUtilsMixin):
   """

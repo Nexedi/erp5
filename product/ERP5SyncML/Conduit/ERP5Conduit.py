@@ -34,12 +34,10 @@ from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
 from DateTime.DateTime import DateTime
-from email.mime.base import MIMEBase
-from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
-import pickle
+
 from xml.sax.saxutils import unescape
 import re
 from lxml import etree
@@ -47,10 +45,12 @@ from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 from xml_marshaller.xml_marshaller import load_tree as unmarshaller
 from xupdate_processor import xuproc
-from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
 from zope.interface import implements
 from copy import deepcopy
+
+import logging
+syncml_logger = logging.getLogger('ERP5SyncML')
 
 import sha
 
@@ -147,7 +147,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, sub_object=None, reset=None,
-                                       simulate=None, **kw):
+              simulate=None, **kw):
     """
     A node is added
 
@@ -167,8 +167,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     reset_workflow = False
     conflict_list = []
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit.addNode', INFO, 'object path:%r' % object.getPath())
-    #LOG('ERP5Conduit.addNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
     if xml is None:
       return {'conflict_list': conflict_list, 'object': sub_object}
     # In the case where this new node is a object to add
@@ -207,7 +205,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, **kw):
     """
-    A node is deleted
+    This method manage the deletion of a node as well as the deletion
+    of one property
     """
     #LOG('ERP5Conduit.deleteNode', INFO, 'object path:%s' % object.getPath())
     #LOG('ERP5Conduit deleteNode', INFO, 'object_id:%r' % object_id)
@@ -277,11 +276,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     if xml is None:
-      return {'conflict_list':conflict_list, 'object':object}
+      return []
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit.updateNode, force: ', INFO, force)
-    #LOG('ERP5Conduit updateNode', INFO, object.getPath())
-    #LOG('ERP5Conduit updateNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
+    syncml_logger.debug("updateNode with xml %s"
+                       % (etree.tostring(xml, pretty_print=True)))
     if xml.tag == '{%s}modifications' % xml.nsmap.get('xupdate'):
       conflict_list += self.applyXupdate(object=object,
                                          xupdate=xml,
@@ -311,7 +309,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           for subnode in xml:
             if subnode.xpath('name()') == XUPDATE_ELEMENT:
               keyword = subnode.get('name')
-              data_xml = subnode
         else:
           #XXX find something better than hardcoded prefix
           # We can call add node
@@ -340,7 +337,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            xpath_expression,
                                            get_target_parent=get_target_parent)
           data_type = context.getPropertyType(keyword)
-          #LOG('ERP5Conduit.updateNode', INFO, 'data_type:%r for keyword: %s' % (data_type, keyword))
           data = self.convertXmlValue(xml, data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
@@ -352,9 +348,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #   - current_data : the data actually on this box
           isConflict = False
           if previous_xml and not force:
-          # if no previous_xml, no conflict
-            #old_data = self.getObjectProperty(keyword, previous_xml,
-                                              #data_type=data_type)
             previous_xml_tree = self.convertToXml(previous_xml)
             old_result = previous_xml_tree.xpath(xpath_expression)
             if old_result:
@@ -363,13 +356,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               raise ValueError('Xpath expression does not apply on previous'\
                                                   ' xml:%r' % xpath_expression)
             current_data = self.getProperty(context, keyword)
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict keyword: %s' % keyword)
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict data: %s' % str(data))
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict old_data: %s' % str(old_data))
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict current_data: %s' % str(current_data))
             if (old_data != current_data) and (data != current_data) and\
                                             keyword not in FORCE_CONFLICT_LIST:
-              #LOG('ERP5Conduit.updateNode', INFO, 'Conflict on : %s' % keyword)
               # This is a conflict
               isConflict = True
               xml_string = etree.tostring(xml, encoding='utf-8')
@@ -383,14 +371,23 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               if data_type not in DATA_TYPE_LIST:
                 conflict.edit(local_value=current_data,
                               remote_value=data)
+              syncml_logger.info("Generated a conflict for %s" % (keyword,))
               conflict_list += [conflict]
+          else:
+            syncml_logger.info("UpdateNode : no previous xml founds or force")
           # We will now apply the argument with the method edit
           if args and (not isConflict or force) and (not simulate or reset):
+            syncml_logger.info("calling updateContent : %s" % (args))
             self._updateContent(object=context, **args)
             # It is sometimes required to do something after an edit
             if getattr(context, 'manage_afterEdit', None) is not None:
               context.manage_afterEdit()
+          else:
+            syncml_logger.warning("did not call updateContent on %s" % (context))
+        else:
+          syncml_logger.info("UpdateNode : not editable property %s" % (keyword))
 
+        # Specific cases of update
         if keyword == 'object':
           # This is the case where we have to call addNode
           conflict_list += self.addNode(xml=xml,
@@ -413,6 +410,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           conflict_list += self.addNode(xml=xml, object=object,
                                        force=force, simulate=simulate,
                                        reset=reset, **kw)['conflict_list']
+      else:
+        syncml_logger.warning("UpdateNode : not a property %s" % (etree.tostring(xml, pretty_print=True),))
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -507,7 +506,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
       'isHistoryAdd')
   def isHistoryAdd(self, xml):
-    bad_list = (HISTROY_EXP,)
+    bad_list = (HISTORY_EXP,)
     value = xml.get('select')
     if value is not None:
       for bad_string in bad_list:
@@ -561,10 +560,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       # copy of xml object for modification
       xml = deepcopy(xml)
     object_element = xml.find('object')
-    if attribute_name == 'id':
+    try:
       del object_element.attrib['gid']
-    else:
+    except KeyError:
+      pass
+    try:
       del object_element.attrib['id']
+    except KeyError:
+      pass
     object_element.attrib[attribute_name] = new_id
     if as_string:
       return etree.tostring(xml, encoding="utf-8")
@@ -815,11 +818,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xupdate_builded = False
     xpath_expression_update_dict = {}
     for subnode in xupdate:
-      selection_name = ''
       original_xpath_expression = subnode.get('select', '')
-      if not xupdate_builded and\
-                            MARSHALLER_NAMESPACE_URI in subnode.nsmap.values()\
-                                  or 'block_data' in original_xpath_expression:
+      if not xupdate_builded and \
+          MARSHALLER_NAMESPACE_URI in subnode.nsmap.values() \
+          or 'block_data' in original_xpath_expression:
         # It means that the xpath expression is targetting
         # marshalled values or data nodes. We need to rebuild the original xml
         # in its own context in order to retrieve original value
@@ -892,15 +894,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                        **update_dict)
     return conflict_list
 
-  def isWorkflowActionAddable(self, object=None, status=None, wf_tool=None,
-                              wf_id=None, xml=None):
+  def isWorkflowActionAddable(self, document, status, wf_id):
     """
     Some checking in order to check if we should add the workfow or not
     We should not returns a conflict list as we wanted before, we should
     instead go to a conflict state.
     """
     # We first test if the status in not already inside the workflow_history
-    wf_history = object.workflow_history
+    wf_history = document.workflow_history
     if wf_id in wf_history:
       action_list = wf_history[wf_id]
     else:
@@ -910,9 +911,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for action in action_list:
       this_one = WORKFLOW_ACTION_ADDABLE
       if time <= action.get('time'):
-        # action in the past are not append
+        # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
-      for key in action.keys():
+      key_list = action.keys()
+      key_list.remove("time")
+      for key in key_list:
         if status[key] != action[key]:
           this_one = WORKFLOW_ACTION_NOT_ADDABLE
           break
@@ -928,7 +931,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is really usefull if you want to write your
     own Conduit.
     """
-    #LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
+    from zLOG import LOG
+    LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
     subobject = object.newContent(portal_type=portal_type, id=object_id)
     return subobject, True, True
 
@@ -948,10 +952,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #for action in self.getWorkflowActionFromXml(xml):
     status = self.getStatusFromXml(xml)
     #LOG('addNode, status:',0,status)
-    add_action = self.isWorkflowActionAddable(object=object,
-                                              status=status,wf_tool=wf_tool,
-                                              wf_id=wf_id,xml=xml)
-
+    add_action = self.isWorkflowActionAddable(document=object,
+                                              status=status,
+                                              wf_id=wf_id,)
     if not simulate:
       if add_action == WORKFLOW_ACTION_ADDABLE:
         wf_tool.setStatusOf(wf_id, object, status)
@@ -1017,6 +1020,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is the default editDocument method. This method
     can easily be overwritten.
     """
+    syncml_logger.debug("editing document %s with %s" % (object, kw))
     object._edit(**kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
@@ -1047,6 +1051,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     # XXX We can not find an object with remote id
     if object_id is None:
+      # XXX object must be retrieved by their GID, id must not be synchronised
+      # This hack is wrong, unfortunately all units are based on it so I can
+      # not remove it, all must be reviewed before
       object_id = xml.get('id')
     if object_id is not None:
       if sub_object is None:
@@ -1083,19 +1090,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return 'text/xml'
 
-  def generateDiff(self, old_data, new_data):
+  def generateDiff(self, new_data, former_data):
     """return xupdate node
     """
-    return getXupdateObject(old_data, new_data)
+    return getXupdateObject(new_data, former_data)
 
   def applyDiff(self, original_data, diff):
     """Use xuproc for computing patched content
     """
     # XXX xuproc does not support passing
     # etree objetcs
-    diff = etree.tostring(diff)
+    if not isinstance(diff, basestring):
+      diff = etree.tostring(diff)
     return etree.tostring(xuproc.applyXUpdate(xml_xu_string=diff,
-                                              xml_doc_string=original_data), encoding='utf-8')
+                                              xml_doc_string=original_data),
+                                              encoding='utf-8')
 
 #  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
 #    """

@@ -27,7 +27,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/date</string>
+                <string>elementary_type/string</string>
               </tuple>
             </value>
         </item>
@@ -50,6 +50,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: \'00000000T000000Z\'</string> </value>
         </item>
       </dictionary>
     </pickle>

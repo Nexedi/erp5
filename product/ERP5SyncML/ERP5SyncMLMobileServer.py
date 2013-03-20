@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # coding=UTF-8
-import httplib
-import urllib,urllib2, os
-import cStringIO
-import string
+import urllib,urllib2
 import socket
 import time
 from optparse import OptionParser

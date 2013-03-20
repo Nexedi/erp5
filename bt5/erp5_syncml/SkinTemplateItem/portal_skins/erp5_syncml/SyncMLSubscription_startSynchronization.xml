@@ -53,7 +53,7 @@
             <value> <string>from Products.CMFCore.utils import getToolByName\n
 portal = context.getPortalObject()\n
 synchronization_tool = getToolByName(portal, \'portal_synchronizations\')\n
-synchronization_tool.SubSync(context.getPath())\n
+synchronization_tool.processClientSynchronization(context.getPath())\n
 \n
 message = context.Base_translateString(\'Synchronization started\')\n
 return context.Base_redirect(form_id, keep_items={\'portal_status_message\' : message},  **kw)\n

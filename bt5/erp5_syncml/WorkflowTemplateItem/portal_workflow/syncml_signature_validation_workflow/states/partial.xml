@@ -23,6 +23,7 @@
             <value>
               <tuple>
                 <string>change_to_conflict</string>
+                <string>do_sync</string>
                 <string>synchronize</string>
               </tuple>
             </value>
