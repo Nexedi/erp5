@@ -471,6 +471,7 @@ class SyncMLSubscription(XMLObject):
     """
     Add delete command to syncml resposne
     """
+    # XXX property must be renamed to activity_enabled
     if self.getIsActivityEnabled():
       self.recurseCallMethod(
         method_id="getId",
