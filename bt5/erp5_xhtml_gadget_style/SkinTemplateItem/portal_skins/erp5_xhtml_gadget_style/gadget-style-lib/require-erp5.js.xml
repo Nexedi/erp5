@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63271297.53</string> </value>
+            <value> <string>ts63778282.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -44,7 +44,7 @@ require.config({\n
   }\n
 });\n
 \n
-require(["erp5_xhtml_appearance", "erp5_knowledge_box", "erp5", "erp5_form",\n
+require(["erp5_xhtml_appearance", "erp5_knowledge_box", "erp5", "erp5_form", "erp5_ui",\n
          "renderjs", "jquery", "jquery-ui", "route", "url",\n
         "jquery.jqGrid.src", "grid.locale-en"],\n
         function(domReady) {\n
@@ -70,7 +70,7 @@ require(["erp5_xhtml_appearance", "erp5_knowledge_box", "erp5", "erp5_form",\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1513</int> </value>
+            <value> <int>1524</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

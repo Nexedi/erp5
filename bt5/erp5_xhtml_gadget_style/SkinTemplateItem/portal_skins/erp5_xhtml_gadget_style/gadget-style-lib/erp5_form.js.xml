@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63249775.51</string> </value>
+            <value> <string>ts63852017.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -73,6 +73,22 @@ var ERP5Form = ( function () {\n
                           }\n
                           else {\n
                             select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                          }\n
+                        });\n
+          },\n
+\n
+          addOptionTagDictList: function (select_dom, item_list) {\n
+                      /*\n
+                      * Update select like dom element now using dict in this format:\n
+                      * [{\'selected\': True, \'id\': \'en\', \'title\': \'English\'}, \n
+                      *  {\'selected\': False, \'id\': \'fr\', \'title\': \'French\'}]\n
+                      */\n
+                      $.each(item_list, function (index, value){\n
+                          if(value.selected===true) {\n
+                            select_dom.append(\'<option selected value="\' + value.id + \'">\'  + value.title + \'</option>\');\n
+                          }\n
+                          else {\n
+                            select_dom.append(\'<option value="\' + value.id + \'">\'  + value.title + \'</option>\');\n
                           }\n
                         });\n
           },\n
@@ -451,7 +467,7 @@ var ERP5Form = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>20620</int> </value>
+            <value> <int>21463</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

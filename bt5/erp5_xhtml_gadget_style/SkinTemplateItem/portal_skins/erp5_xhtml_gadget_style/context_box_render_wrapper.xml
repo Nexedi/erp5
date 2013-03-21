@@ -37,7 +37,7 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />\n
-<tal:block metal:use-macro="here/context_box_render/macros/master" />
+<tal:block metal:use-macro="here/ERP5Site_contextBox/macros/master" />
 
 ]]></unicode> </value>
         </item>

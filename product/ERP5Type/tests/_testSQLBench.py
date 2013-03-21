@@ -57,5 +57,5 @@ class TestSQLBench(unittest.TestCase):
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     self.assertEquals(0, len(error), error)
-    self.assertTrue(output.find("Total time: ")>=0)
     print output
+    self.assertTrue(output.find("Total time: ")>=0)

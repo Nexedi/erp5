@@ -117,7 +117,7 @@ IDEAS:\n
               <div id="bars" class="bars">\n
 \n
                 <div id="main_bar"\n
-                     data-gadget="ERP5Site_renderCachedNavigationBox"></div>\n
+                     data-gadget="ERP5Site_renderNavigationBox"></div>\n
 \n
                 <div id="context_bar" class="context_bar">\n
                   <tal:block metal:define-slot="context_bar" />\n
@@ -127,7 +127,7 @@ IDEAS:\n
 \n
               <div id="status"\n
                    class="status"\n
-                   data-gadget="status_gadget"></div>\n
+                   data-gadget="ERP5Site_renderBreadcrumb"></div>\n
 \n
               <div id="master" class="master">\n
                 <tal:block metal:define-slot="main" />\n

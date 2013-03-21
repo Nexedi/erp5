@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode>\074tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\076\n
+  \074tal:block metal:define-macro="master"\076\n
+    \074span id="jump" class="jump" metal:define-macro="jump"\076\n
+      \074select name="select_jump"\n
+              onChange="submitAction(this.form,\'Base_doJump\')"\076\n
+        \074option selected="selected" value=""\n
+                i18n:translate="" i18n:domain="ui"\076Jump...\074/option\076\n
+      \074/select\076\n
+      \074button type="submit" name="Base_doJump:method" title="Jump"\n
+              i18n:attributes="title" i18n:domain="ui"\076\n
+        \074span class="image"\076\074/span\076\n
+        \074span class="description"\n
+              i18n:translate="" i18n:domain="ui"\076Jump\074/span\076\n
+      \074/button\076\n
+    \074/span\076\n
+\n
+    \074span class="separator"\076\074!--separator--\076\074/span\076\n
+\n
+    \074span id="action" class="action" metal:define-macro="action"\076\n
+      \074select name="select_action"\n
+              onChange="submitAction(this.form,\'Base_doAction\')"\076\n
+        \074option selected="selected" value=""\n
+                i18n:translate="" i18n:domain="ui"\076Action...\074/option\076\n
+\074!--        \074tal:block tal:repeat="content_id here/getVisibleAllowedContentTypeList | nothing"\076\n
+          \074option tal:attributes="value string:add $content_id"\n
+                  i18n:translate="" i18n:domain="ui"\076Add \074tal:block tal:content="content_id"\n
+                           i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /\076\074/option\076\n
+        \074/tal:block\076\n
+        \074tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
+                   tal:condition="document_template_list"\076\n
+          \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Templates\074/tal:block\076 --\074/option\076\n
+          \074tal:block tal:repeat="document_template document_template_list"\076\n
+            \074option tal:attributes="value string:template ${document_template/getRelativeUrl}"\n
+                    i18n:translate="" i18n:domain="ui"\076Add \074tal:block tal:content="document_template/getTitle"\n
+                             i18n:name="document_template" /\076\074/option\076\n
+          \074/tal:block\076\n
+        \074/tal:block\076\n
+\n
+        \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Workflows\074/tal:block\076 --\074/option\076\n
+        \074tal:block tal:repeat="action actions/workflow"\076\n
+          \074option tal:content="action/name"\n
+                  tal:attributes="value string:workflow ${action/url}"\n
+                  i18n:translate="" i18n:domain="ui" /\076\n
+        \074/tal:block\076\n
+        \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Object\074/tal:block\076 --\074/option\076\n
+        \074tal:block tal:repeat="action actions/object_action | nothing"\076\n
+          \074option tal:content="action/name"\n
+                  tal:attributes="value string:object ${action/url}"\n
+                  i18n:translate="" i18n:domain="ui" /\076\n
+        \074/tal:block\076\n
+        \074tal:block tal:define="object_view_list actions/object_view|nothing;\n
+                   module_view_list python:[i for i in object_view_list if i[\'id\']==\'module_view\']"\n
+                   tal:condition="module_view_list"\076\n
+          \074tal:block tal:repeat="action module_view_list"\076\n
+            \074option tal:content="action/name"\n
+                    tal:attributes="value string:object ${action/url}"\n
+                    i18n:translate="" i18n:domain="ui" /\076\n
+          \074/tal:block\076\n
+        \074/tal:block\076--\076\n
+        \074tal:block tal:replace=\'nothing\'\076\n
+          \074!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) --\076\n
+\074!--          \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Folder\074/tal:block\076 --\074/option\076\n
+          \074tal:block tal:repeat="action actions/folder"\076\n
+            \074option tal:content="action/name"\n
+                    tal:attributes="value string:folder ${action/url}"\n
+                    i18n:translate="" i18n:domain="ui" /\076\n
+          \074/tal:block\076--\076\n
+        \074/tal:block\076\n
+      \074/select\076\n
+      \074button type="submit" name="Base_doAction:method" title="Action"\n
+              i18n:attributes="title" i18n:domain="ui"\076\n
+        \074span class="image"\076\074/span\076\n
+        \074span class="description"\076Action\074/span\076\n
+      \074/button\076\n
+    \074/span\076\n
+\n
+\n
+    \074span class="tool_buttons" metal:define-macro="tool_buttons"\076\n
+\n
+      \074!-- XXX: exchange_actions seems to be bad condition --\076\n
+      \074span class="first"\n
+            tal:define="search_actions actions/object_search | nothing;\n
+            exchange_actions actions/object_exchange | nothing;\n
+            report_actions actions/object_report | nothing;\n
+            button_actions actions/object_button | nothing;\n
+            fast_input_actions actions/object_fast_input | nothing;\n
+            sort_actions actions/object_sort | nothing;\n
+            ui_actions actions/object_ui | nothing;\n
+            print_actions actions/object_print | nothing;\n
+            list_mode list_mode | nothing;\n
+            can_modify_portal_content python: portal.portal_membership.checkPermission(\'Modify portal content\', here)"\076\n
+        \074span class="separator"\076\074!--separator--\076\074/span\076\n
+        \074tal:block tal:condition="list_mode"\076\n
+          \074button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
+                  i18n:attributes="title" i18n:domain="ui"\n
+                  tal:condition="can_modify_portal_content"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Cut\074/span\076\n
+          \074/button\076\n
+          \074button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
+                  i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Copy\074/span\076\n
+          \074/button\076\n
+          \074button class="paste" type="submit" name="Folder_paste:method" title="Paste"\n
+                  i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Paste\074/span\076\n
+          \074/button\076\n
+          \074span class="separator"\076\074!--separator--\076\074/span\076\n
+        \074/tal:block\076\n
+        \074button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Print\074/span\076\n
+        \074/button\076\n
+        \074button class="new" type="submit" title="New"\n
+                tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076New\074/span\076\n
+        \074/button\076\n
+        \074button class="clone" type="submit" title="Clone"\n
+                name="Base_createCloneDocument:method"\n
+                tal:condition="not: list_mode"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Clone\074/span\076\n
+        \074/button\076\n
+        \074button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Delete\074/span\076\n
+        \074/button\076\n
+        \074tal:block tal:condition="not: list_mode"\076\n
+          \074tal:block tal:condition="request/selection_index | nothing"\076\n
+            \074span class="separator"\076\074!--separator--\076\074/span\076\n
+            \074a class="jump_first" title="First"\n
+               tal:attributes="href string:portal_selections/viewFirst?$http_parameters"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076First\074/span\076\n
+            \074/a\076\n
+            \074a class="jump_previous" title="Previous"\n
+               tal:attributes="href string:portal_selections/viewPrevious?$http_parameters"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076Previous\074/span\076\n
+            \074/a\076\n
+            \074a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request.get(\'selection_name\', None))"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076List Mode\074/span\076\n
+            \074/a\076\n
+            \074a class="jump_next" title="Next"\n
+               tal:attributes="href string:portal_selections/viewNext?$http_parameters"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076Next\074/span\076\n
+            \074/a\076\n
+            \074a class="jump_last" title="Last"\n
+               tal:attributes="href string:portal_selections/viewLast?$http_parameters"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076Last\074/span\076\n
+            \074/a\076\n
+          \074/tal:block\076\n
+        \074/tal:block\076\n
+        \074tal:block tal:condition="list_mode"\076\n
+          \074span class="separator"\076\074!--separator--\076\074/span\076\n
+          \074a tal:condition="search_actions" class="find" title="Find"\n
+             tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
+             i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Find\074/span\076\n
+          \074/a\076\n
+          \074button class="show_all" type="submit" name="Folder_show:method" title="Show All"\n
+                  i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Show All\074/span\076\n
+          \074/button\076\n
+          \074button type="submit" name="Folder_filter:method" title="Filter"\n
+                  tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request.get(\'selection_name\', None)) and \'filter_on\' or \'filter\';"\n
+                  i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Filter\074/span\076\n
+          \074/button\076\n
+          \074a tal:condition="sort_actions" class="sort" title="Sort"\n
+             tal:attributes="href python: portal.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
+             i18n:attributes="title" i18n:domain="ui"\076\n
+            \074span class="image"\076\074/span\076\n
+            \074span class="description" i18n:translate="" i18n:domain="ui"\076Sort\074/span\076\n
+          \074/a\076\n
+        \074/tal:block\076\n
+        \074span tal:condition="exchange_actions | report_actions"\n
+              class="separator"\076\074!--separator--\076\074/span\076\n
+        \074button tal:condition="exchange_actions" class="import_export"\n
+              type="submit" name="Base_doExchange:method" title="Import / Export"\n
+              i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Import / Export\074/span\076\n
+        \074/button\076\n
+        \074button tal:condition="report_actions" class="report" type="submit" name="Base_doReport:method" title="Report"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Report\074/span\076\n
+        \074/button\076\n
+        \074a tal:condition="fast_input_actions" class="fast_input" title="Fast Input"\n
+           tal:attributes="href python: portal.ERP5Site_renderCustomLink(fast_input_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_fast_input\')"\n
+           i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Fast Input\074/span\076\n
+        \074/a\076\n
+        \074tal:block tal:condition="button_actions"\076\n
+          \074span class="separator"\076\074!--separator--\076\074/span\076\n
+          \074tal:block tal:repeat="button_action button_actions"\076\n
+            \074a tal:attributes="href python: \'%s%s%s\' % (button_action[\'url\'], \'?\' in button_action[\'url\'] and \'\046amp;\' or \'?\', http_parameters)"\076\n
+              \074img i18n:attributes="title" i18n:domain="ui"\n
+                   tal:attributes="src button_action/icon;\n
+                   title button_action/name;\n
+                   alt button_action/name" /\076\n
+            \074/a\076\n
+          \074/tal:block\076\n
+        \074/tal:block\076\n
+        \074tal:block tal:condition="list_mode"\076\n
+          \074tal:block tal:condition="ui_actions"\076\n
+            \074span class="separator"\076\074!--separator--\076\074/span\076\n
+            \074a class="configure" title="Configure"\n
+               tal:attributes="href python: portal.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
+               i18n:attributes="title" i18n:domain="ui"\076\n
+              \074span class="image"\076\074/span\076\n
+              \074span class="description" i18n:translate="" i18n:domain="ui"\076Configure\074/span\076\n
+            \074/a\076\n
+          \074/tal:block\076\n
+        \074/tal:block\076\n
+      \074/span\076\n
+\n
+      \074span class="second"\076\n
+        \074a tal:condition="preferred_html_style_contextual_help"\n
+           class="jump_help" title="Help"\n
+           tal:attributes="href python: portal.ERP5Site_getHelpUrl(current_action=current_action, current_form_id=current_form_id, workflow_action=request.get(\'workflow_action\'))"\n
+           i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Help\074/span\076\n
+        \074/a\076\n
+        \074a tal:condition="preferred_html_style_developper_mode"\n
+           class="inspect_object" title="Inspect object" href="Base_viewInspectionReport"\n
+           i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Inspect Object\074/span\076\n
+        \074/a\076\n
+        \074a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
+           title="Activity Pending"\n
+           tal:attributes="href python: portal.portal_membership.checkPermission(\'View management screens\', portal.portal_activities) and \'%s/portal_activities/manageActivities\' % (portal.portal_url()) or \'#\'"\n
+           i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description" i18n:translate="" i18n:domain="ui"\076Activity Pending\074/span\076\n
+        \074/a\076\n
+      \074/span\076\n
+    \074/span\076\n
+    \074p class="clear"\076\074/p\076\n
+\n
+    \074script type="text/javascript"\076\n
+      //\074![CDATA[\n
+        gadget =  RenderJs.getSelfGadget();\n
+        gadget.render = ERP5UI.updateContextBox;\n
+        gadget.render();\n
+      //]]\076\n
+    \074/script\076\n
+\n
+  \074/tal:block\076\n
+\074/tal:block\076</unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_contextBox</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

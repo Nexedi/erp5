@@ -61,7 +61,6 @@
         <tal:block metal:fill-slot="main">\n
 \n
           <div id="content"\n
-               data-gadget="gadgets/content/gadget"\n
                tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>\n
 \n
         </tal:block>\n
