@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode>\074tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\076\n
+    \074span class="first"\076\n
+      \074span id="favourites" class="favourites"\076\n
+\n
+        \074select name="select_favorite"\n
+                onChange="submitAction(this.form,\'Base_doFavorite\')"\076\n
+          \074option selected="selected" value=""\n
+                  i18n:translate="" i18n:domain="ui"\076My Favourites\074/option\076\n
+        \074/select\076\n
+\n
+        \074button type="submit" name="Base_doFavorite:method" title="Select Favourite"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description"\n
+                i18n:translate="" i18n:domain="ui"\076Select Favourite\074/span\076\n
+        \074/button\076\n
+      \074/span\076\n
+\n
+      \074span class="separator"\076\074!--separator--\076\074/span\076\n
+\n
+      \074span id="modules" class="modules"\076\n
+\n
+        \074select name="select_module"\n
+                onChange="submitAction(this.form,\'Base_doModule\')"\076\n
+\n
+          \074option selected="selected" value="" i18n:translate="" i18n:domain="ui"\076Modules\074/option\076\n
+        \074/select\076\n
+\n
+        \074button type="submit" name="Base_doModule:method" title="Select Module"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description"\n
+                i18n:translate="" i18n:domain="ui"\076Select Module\074/span\076\n
+        \074/button\076\n
+      \074/span\076\n
+    \074/span\076\n
+\n
+    \074span class="second"\076\n
+      \074span id="language" class="language"\076\n
+        \074select name="select_language"\n
+                onChange="submitAction(this.form,\'Base_doLanguage\')"\076\n
+\n
+          \074option value=""\n
+                  i18n:translate="" i18n:domain="ui"\076My Language\074/option\076\n
+        \074/select\076\n
+        \074button type="submit" name="Base_doLanguage:method" title="Select Language"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description"\n
+                i18n:translate="" i18n:domain="ui"\076Select Language\074/span\076\n
+        \074/button\076\n
+      \074/span\076\n
+\n
+      \074span class="separator"\076\074!--separator--\076\074/span\076\n
+\n
+      \074span id="search" class="search" tal:define="search_default_text python:here.Base_translateString(\'Search\')"\076\n
+        \074input type="hidden" name="all_languages" value="1" /\076\n
+        \074input class="quick_search_field" accesskey="4" \n
+               type="text" name="field_your_search_text"\n
+               value="Search" \n
+               tal:attributes="value string:${search_default_text};\n
+                                         onfocus string:if (this.value==\'${search_default_text}\') this.value=\'\';"\n
+          onfocus="this.value=\'\';"\n
+          onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');" /\076\n
+\n
+        \074select size="1" class="input" name="field_your_search_portal_type"\076\n
+\n
+          \074option value="" selected="selected" i18n:translate="" i18n:domain="ui"\076Everything\074/option\076\n
+          \074option value="all" i18n:translate="" i18n:domain="ui"\076All Documents\074/option\076\n
+        \074/select\076\n
+\n
+        \074button type="submit" name="ERP5Site_processAdvancedSearch:method" title="Search"\n
+                i18n:attributes="title" i18n:domain="ui"\076\n
+          \074span class="image"\076\074/span\076\n
+          \074span class="description"\n
+                i18n:translate="" i18n:domain="ui"\076Search\074/span\076\n
+        \074/button\076\n
+      \074/span\076\n
+    \074/span\076\n
+    \074p class="clear"\076\074/p\076\n
+\n
+\074/tal:block\076\n
+\n
+\074script type="text/javascript"\076\n
+  //\074![CDATA[\n
+    gadget =  RenderJs.getSelfGadget();\n
+    gadget.render = ERP5UI.updateNavigationBox;\n
+    gadget.render();\n
+  //]]\076\n
+\074/script\076</unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_navigationBox</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
