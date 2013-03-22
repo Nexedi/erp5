@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63959068.92</string> </value>
+            <value> <string>ts63969427.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,9 +26,16 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*! jQuery Validation Plugin - v1.11.0 - 2/4/2013\n
-* https://github.com/jzaefferer/jquery-validation\n
-* Copyright (c) 2013 Jörn Zaefferer; Licensed MIT */\n
+/*!\n
+ * jQuery Validation Plugin 1.11.1\n
+ *\n
+ * http://bassistance.de/jquery-plugins/jquery-plugin-validation/\n
+ * http://docs.jquery.com/Plugins/Validation\n
+ *\n
+ * Copyright 2013 Jörn Zaefferer\n
+ * Released under the MIT license:\n
+ *   http://www.opensource.org/licenses/mit-license.php\n
+ */\n
 \n
 (function($) {\n
 \n
@@ -66,6 +73,11 @@ $.extend($.fn, {\n
 \t\t\t\tif ( $(event.target).hasClass("cancel") ) {\n
 \t\t\t\t\tvalidator.cancelSubmit = true;\n
 \t\t\t\t}\n
+\n
+\t\t\t\t// allow suppressing validation by adding the html5 formnovalidate attribute to the submit button\n
+\t\t\t\tif ( $(event.target).attr("formnovalidate") !== undefined ) {\n
+\t\t\t\t\tvalidator.cancelSubmit = true;\n
+\t\t\t\t}\n
 \t\t\t});\n
 \n
 \t\t\t// validate the form on submit\n
@@ -79,7 +91,7 @@ $.extend($.fn, {\n
 \t\t\t\t\tif ( validator.settings.submitHandler ) {\n
 \t\t\t\t\t\tif ( validator.submitButton ) {\n
 \t\t\t\t\t\t\t// insert a hidden input as a replacement for the missing submit button\n
-\t\t\t\t\t\t\thidden = $("<input type=\'hidden\'/>").attr("name", validator.submitButton.name).val(validator.submitButton.value).appendTo(validator.currentForm);\n
+\t\t\t\t\t\t\thidden = $("<input type=\'hidden\'/>").attr("name", validator.submitButton.name).val( $(validator.submitButton).val() ).appendTo(validator.currentForm);\n
 \t\t\t\t\t\t}\n
 \t\t\t\t\t\tvalidator.settings.submitHandler.call( validator, validator.currentForm, event );\n
 \t\t\t\t\t\tif ( validator.submitButton ) {\n
@@ -119,7 +131,7 @@ $.extend($.fn, {\n
 \t\t\tvar valid = true;\n
 \t\t\tvar validator = $(this[0].form).validate();\n
 \t\t\tthis.each(function() {\n
-\t\t\t\tvalid &= validator.element(this);\n
+\t\t\t\tvalid = valid && validator.element(this);\n
 \t\t\t});\n
 \t\t\treturn valid;\n
 \t\t}\n
@@ -145,6 +157,8 @@ $.extend($.fn, {\n
 \t\t\tswitch(command) {\n
 \t\t\tcase "add":\n
 \t\t\t\t$.extend(existingRules, $.validator.normalizeRule(argument));\n
+\t\t\t\t// remove messages from rules, but allow them to be set separetely\n
+\t\t\t\tdelete existingRules.messages;\n
 \t\t\t\tstaticRules[element.name] = existingRules;\n
 \t\t\t\tif ( argument.messages ) {\n
 \t\t\t\t\tsettings.messages[element.name] = $.extend( settings.messages[element.name], argument.messages );\n
@@ -187,11 +201,11 @@ $.extend($.fn, {\n
 // Custom selectors\n
 $.extend($.expr[":"], {\n
 \t// http://docs.jquery.com/Plugins/Validation/blank\n
-\tblank: function( a ) { return !$.trim("" + a.value); },\n
+\tblank: function( a ) { return !$.trim("" + $(a).val()); },\n
 \t// http://docs.jquery.com/Plugins/Validation/filled\n
-\tfilled: function( a ) { return !!$.trim("" + a.value); },\n
+\tfilled: function( a ) { return !!$.trim("" + $(a).val()); },\n
 \t// http://docs.jquery.com/Plugins/Validation/unchecked\n
-\tunchecked: function( a ) { return !a.checked; }\n
+\tunchecked: function( a ) { return !$(a).prop("checked"); }\n
 });\n
 \n
 // constructor for validator\n
@@ -581,7 +595,7 @@ $.extend($.validator, {\n
 \t\t\t\t\t}\n
 \t\t\t\t} catch(e) {\n
 \t\t\t\t\tif ( this.settings.debug && window.console ) {\n
-\t\t\t\t\t\tconsole.log( "Exception occured when checking element " + element.id + ", check the \'" + rule.method + "\' method.", e );\n
+\t\t\t\t\t\tconsole.log( "Exception occurred when checking element " + element.id + ", check the \'" + rule.method + "\' method.", e );\n
 \t\t\t\t\t}\n
 \t\t\t\t\tthrow e;\n
 \t\t\t\t}\n
@@ -854,6 +868,7 @@ $.extend($.validator, {\n
 \tattributeRules: function( element ) {\n
 \t\tvar rules = {};\n
 \t\tvar $element = $(element);\n
+\t\tvar type = $element[0].getAttribute("type");\n
 \n
 \t\tfor (var method in $.validator.methods) {\n
 \t\t\tvar value;\n
@@ -872,9 +887,17 @@ $.extend($.validator, {\n
 \t\t\t\tvalue = $element.attr(method);\n
 \t\t\t}\n
 \n
+\t\t\t// convert the value to a number for number inputs, and for text for backwards compability\n
+\t\t\t// allows type="date" and others to be compared as strings\n
+\t\t\tif ( /min|max/.test( method ) && ( type === null || /number|range|text/.test( type ) ) ) {\n
+\t\t\t\tvalue = Number(value);\n
+\t\t\t}\n
+\n
 \t\t\tif ( value ) {\n
 \t\t\t\trules[method] = value;\n
-\t\t\t} else if ( $element[0].getAttribute("type") === method ) {\n
+\t\t\t} else if ( type === method && type !== \'range\' ) {\n
+\t\t\t\t// exception: the jquery validate \'range\' method\n
+\t\t\t\t// does not test for the html5 \'range\' type\n
 \t\t\t\trules[method] = true;\n
 \t\t\t}\n
 \t\t}\n
@@ -945,7 +968,7 @@ $.extend($.validator, {\n
 \t\t\t\trules[this] = Number(rules[this]);\n
 \t\t\t}\n
 \t\t});\n
-\t\t$.each([\'rangelength\'], function() {\n
+\t\t$.each([\'rangelength\', \'range\'], function() {\n
 \t\t\tvar parts;\n
 \t\t\tif ( rules[this] ) {\n
 \t\t\t\tif ( $.isArray(rules[this]) ) {\n
@@ -1014,93 +1037,6 @@ $.extend($.validator, {\n
 \t\t\treturn $.trim(value).length > 0;\n
 \t\t},\n
 \n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/remote\n
-\t\tremote: function( value, element, param ) {\n
-\t\t\tif ( this.optional(element) ) {\n
-\t\t\t\treturn "dependency-mismatch";\n
-\t\t\t}\n
-\n
-\t\t\tvar previous = this.previousValue(element);\n
-\t\t\tif (!this.settings.messages[element.name] ) {\n
-\t\t\t\tthis.settings.messages[element.name] = {};\n
-\t\t\t}\n
-\t\t\tprevious.originalMessage = this.settings.messages[element.name].remote;\n
-\t\t\tthis.settings.messages[element.name].remote = previous.message;\n
-\n
-\t\t\tparam = typeof param === "string" && {url:param} || param;\n
-\n
-\t\t\tif ( previous.old === value ) {\n
-\t\t\t\treturn previous.valid;\n
-\t\t\t}\n
-\n
-\t\t\tprevious.old = value;\n
-\t\t\tvar validator = this;\n
-\t\t\tthis.startRequest(element);\n
-\t\t\tvar data = {};\n
-\t\t\tdata[element.name] = value;\n
-\t\t\t$.ajax($.extend(true, {\n
-\t\t\t\turl: param,\n
-\t\t\t\tmode: "abort",\n
-\t\t\t\tport: "validate" + element.name,\n
-\t\t\t\tdataType: "json",\n
-\t\t\t\tdata: data,\n
-\t\t\t\tsuccess: function( response ) {\n
-\t\t\t\t\tvalidator.settings.messages[element.name].remote = previous.originalMessage;\n
-\t\t\t\t\tvar valid = response === true || response === "true";\n
-\t\t\t\t\tif ( valid ) {\n
-\t\t\t\t\t\tvar submitted = validator.formSubmitted;\n
-\t\t\t\t\t\tvalidator.prepareElement(element);\n
-\t\t\t\t\t\tvalidator.formSubmitted = submitted;\n
-\t\t\t\t\t\tvalidator.successList.push(element);\n
-\t\t\t\t\t\tdelete validator.invalid[element.name];\n
-\t\t\t\t\t\tvalidator.showErrors();\n
-\t\t\t\t\t} else {\n
-\t\t\t\t\t\tvar errors = {};\n
-\t\t\t\t\t\tvar message = response || validator.defaultMessage( element, "remote" );\n
-\t\t\t\t\t\terrors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;\n
-\t\t\t\t\t\tvalidator.invalid[element.name] = true;\n
-\t\t\t\t\t\tvalidator.showErrors(errors);\n
-\t\t\t\t\t}\n
-\t\t\t\t\tprevious.valid = valid;\n
-\t\t\t\t\tvalidator.stopRequest(element, valid);\n
-\t\t\t\t}\n
-\t\t\t}, param));\n
-\t\t\treturn "pending";\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/minlength\n
-\t\tminlength: function( value, element, param ) {\n
-\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
-\t\t\treturn this.optional(element) || length >= param;\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/maxlength\n
-\t\tmaxlength: function( value, element, param ) {\n
-\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
-\t\t\treturn this.optional(element) || length <= param;\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/rangelength\n
-\t\trangelength: function( value, element, param ) {\n
-\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
-\t\t\treturn this.optional(element) || ( length >= param[0] && length <= param[1] );\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/min\n
-\t\tmin: function( value, element, param ) {\n
-\t\t\treturn this.optional(element) || value >= param;\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/max\n
-\t\tmax: function( value, element, param ) {\n
-\t\t\treturn this.optional(element) || value <= param;\n
-\t\t},\n
-\n
-\t\t// http://docs.jquery.com/Plugins/Validation/Methods/range\n
-\t\trange: function( value, element, param ) {\n
-\t\t\treturn this.optional(element) || ( value >= param[0] && value <= param[1] );\n
-\t\t},\n
-\n
 \t\t// http://docs.jquery.com/Plugins/Validation/Methods/email\n
 \t\temail: function( value, element ) {\n
 \t\t\t// contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/\n
@@ -1164,6 +1100,39 @@ $.extend($.validator, {\n
 \t\t\treturn (nCheck % 10) === 0;\n
 \t\t},\n
 \n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/minlength\n
+\t\tminlength: function( value, element, param ) {\n
+\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
+\t\t\treturn this.optional(element) || length >= param;\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/maxlength\n
+\t\tmaxlength: function( value, element, param ) {\n
+\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
+\t\t\treturn this.optional(element) || length <= param;\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/rangelength\n
+\t\trangelength: function( value, element, param ) {\n
+\t\t\tvar length = $.isArray( value ) ? value.length : this.getLength($.trim(value), element);\n
+\t\t\treturn this.optional(element) || ( length >= param[0] && length <= param[1] );\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/min\n
+\t\tmin: function( value, element, param ) {\n
+\t\t\treturn this.optional(element) || value >= param;\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/max\n
+\t\tmax: function( value, element, param ) {\n
+\t\t\treturn this.optional(element) || value <= param;\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/range\n
+\t\trange: function( value, element, param ) {\n
+\t\t\treturn this.optional(element) || ( value >= param[0] && value <= param[1] );\n
+\t\t},\n
+\n
 \t\t// http://docs.jquery.com/Plugins/Validation/Methods/equalTo\n
 \t\tequalTo: function( value, element, param ) {\n
 \t\t\t// bind to the blur event of the target in order to revalidate whenever the target field is updated\n
@@ -1175,6 +1144,60 @@ $.extend($.validator, {\n
 \t\t\t\t});\n
 \t\t\t}\n
 \t\t\treturn value === target.val();\n
+\t\t},\n
+\n
+\t\t// http://docs.jquery.com/Plugins/Validation/Methods/remote\n
+\t\tremote: function( value, element, param ) {\n
+\t\t\tif ( this.optional(element) ) {\n
+\t\t\t\treturn "dependency-mismatch";\n
+\t\t\t}\n
+\n
+\t\t\tvar previous = this.previousValue(element);\n
+\t\t\tif (!this.settings.messages[element.name] ) {\n
+\t\t\t\tthis.settings.messages[element.name] = {};\n
+\t\t\t}\n
+\t\t\tprevious.originalMessage = this.settings.messages[element.name].remote;\n
+\t\t\tthis.settings.messages[element.name].remote = previous.message;\n
+\n
+\t\t\tparam = typeof param === "string" && {url:param} || param;\n
+\n
+\t\t\tif ( previous.old === value ) {\n
+\t\t\t\treturn previous.valid;\n
+\t\t\t}\n
+\n
+\t\t\tprevious.old = value;\n
+\t\t\tvar validator = this;\n
+\t\t\tthis.startRequest(element);\n
+\t\t\tvar data = {};\n
+\t\t\tdata[element.name] = value;\n
+\t\t\t$.ajax($.extend(true, {\n
+\t\t\t\turl: param,\n
+\t\t\t\tmode: "abort",\n
+\t\t\t\tport: "validate" + element.name,\n
+\t\t\t\tdataType: "json",\n
+\t\t\t\tdata: data,\n
+\t\t\t\tsuccess: function( response ) {\n
+\t\t\t\t\tvalidator.settings.messages[element.name].remote = previous.originalMessage;\n
+\t\t\t\t\tvar valid = response === true || response === "true";\n
+\t\t\t\t\tif ( valid ) {\n
+\t\t\t\t\t\tvar submitted = validator.formSubmitted;\n
+\t\t\t\t\t\tvalidator.prepareElement(element);\n
+\t\t\t\t\t\tvalidator.formSubmitted = submitted;\n
+\t\t\t\t\t\tvalidator.successList.push(element);\n
+\t\t\t\t\t\tdelete validator.invalid[element.name];\n
+\t\t\t\t\t\tvalidator.showErrors();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tvar errors = {};\n
+\t\t\t\t\t\tvar message = response || validator.defaultMessage( element, "remote" );\n
+\t\t\t\t\t\terrors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;\n
+\t\t\t\t\t\tvalidator.invalid[element.name] = true;\n
+\t\t\t\t\t\tvalidator.showErrors(errors);\n
+\t\t\t\t\t}\n
+\t\t\t\t\tprevious.valid = valid;\n
+\t\t\t\t\tvalidator.stopRequest(element, valid);\n
+\t\t\t\t}\n
+\t\t\t}, param));\n
+\t\t\treturn "pending";\n
 \t\t}\n
 \n
 \t}\n
@@ -1212,7 +1235,8 @@ $.format = $.validator.format;\n
 \t\t\t\tif ( pendingRequests[port] ) {\n
 \t\t\t\t\tpendingRequests[port].abort();\n
 \t\t\t\t}\n
-\t\t\t\treturn (pendingRequests[port] = ajax.apply(this, arguments));\n
+\t\t\t\tpendingRequests[port] = ajax.apply(this, arguments);\n
+\t\t\t\treturn pendingRequests[port];\n
 \t\t\t}\n
 \t\t\treturn ajax.apply(this, arguments);\n
 \t\t};\n
@@ -1243,7 +1267,7 @@ $.format = $.validator.format;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>38015</int> </value>
+            <value> <int>38951</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
