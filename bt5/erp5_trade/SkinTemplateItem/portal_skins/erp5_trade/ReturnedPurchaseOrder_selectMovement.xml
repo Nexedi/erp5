@@ -49,6 +49,25 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+\n
+kw[\'query\'] = ComplexQuery(\n
+  Query(portal_type=\'Simulation Movement\', explanation_portal_type=\'Returned Purchase Order\'),\n
+  ComplexQuery(\n
+    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\', \'Delivery Root Simulation Rule\'],\n
+          simulation_state=\'confirmed\'),\n
+    Query(parent_specialise_portal_type=\'Delivery Simulation Rule\',\n
+          grand_parent_simulation_state=\'confirmed\'),\n
+    operator=\'or\'),\n
+  operator=\'and\')\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+return context.Order_zSelectMovement(src__=src__, **kw)\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>src__=0, **kw</string> </value>
         </item>
