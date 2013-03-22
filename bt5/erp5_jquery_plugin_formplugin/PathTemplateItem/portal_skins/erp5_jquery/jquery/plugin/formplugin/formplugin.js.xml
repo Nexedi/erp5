@@ -7,8 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts54097163.47</string> </value>
+            <value> <string>ts63959149.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,373 +28,714 @@
 
 /*!\n
  * jQuery Form Plugin\n
- * version: 2.43 (12-MAR-2010)\n
- * @requires jQuery v1.3.2 or later\n
+ * version: 3.29.0-2013.03.22\n
+ * @requires jQuery v1.5 or later\n
  *\n
  * Examples and documentation at: http://malsup.com/jquery/form/\n
+ * Project repository: https://github.com/malsup/form\n
  * Dual licensed under the MIT and GPL licenses:\n
- *   http://www.opensource.org/licenses/mit-license.php\n
- *   http://www.gnu.org/licenses/gpl.html\n
+ *    http://malsup.github.com/mit-license.txt\n
+ *    http://malsup.github.com/gpl-license-v2.txt\n
  */\n
+/*global ActiveXObject alert */\n
 ;(function($) {\n
+"use strict";\n
 \n
 /*\n
-\tUsage Note:\n
-\t-----------\n
-\tDo not use both ajaxSubmit and ajaxForm on the same form.  These\n
-\tfunctions are intended to be exclusive.  Use ajaxSubmit if you want\n
-\tto bind your own submit handler to the form.  For example,\n
+    Usage Note:\n
+    -----------\n
+    Do not use both ajaxSubmit and ajaxForm on the same form.  These\n
+    functions are mutually exclusive.  Use ajaxSubmit if you want\n
+    to bind your own submit handler to the form.  For example,\n
 \n
-\t$(document).ready(function() {\n
-\t\t$(\'#myForm\').bind(\'submit\', function() {\n
-\t\t\t$(this).ajaxSubmit({\n
-\t\t\t\ttarget: \'#output\'\n
-\t\t\t});\n
-\t\t\treturn false; // <-- important!\n
-\t\t});\n
-\t});\n
+    $(document).ready(function() {\n
+        $(\'#myForm\').on(\'submit\', function(e) {\n
+            e.preventDefault(); // <-- important\n
+            $(this).ajaxSubmit({\n
+                target: \'#output\'\n
+            });\n
+        });\n
+    });\n
 \n
-\tUse ajaxForm when you want the plugin to manage all the event binding\n
-\tfor you.  For example,\n
+    Use ajaxForm when you want the plugin to manage all the event binding\n
+    for you.  For example,\n
 \n
-\t$(document).ready(function() {\n
-\t\t$(\'#myForm\').ajaxForm({\n
-\t\t\ttarget: \'#output\'\n
-\t\t});\n
-\t});\n
+    $(document).ready(function() {\n
+        $(\'#myForm\').ajaxForm({\n
+            target: \'#output\'\n
+        });\n
+    });\n
 \n
-\tWhen using ajaxForm, the ajaxSubmit function will be invoked for you\n
-\tat the appropriate time.\n
+    You can also use ajaxForm with delegation (requires jQuery v1.7+), so the\n
+    form does not have to exist when you invoke ajaxForm:\n
+\n
+    $(\'#myForm\').ajaxForm({\n
+        delegation: true,\n
+        target: \'#output\'\n
+    });\n
+\n
+    When using ajaxForm, the ajaxSubmit function will be invoked for you\n
+    at the appropriate time.\n
 */\n
+\n
+/**\n
+ * Feature detection\n
+ */\n
+var feature = {};\n
+feature.fileapi = $("<input type=\'file\'/>").get(0).files !== undefined;\n
+feature.formdata = window.FormData !== undefined;\n
 \n
 /**\n
  * ajaxSubmit() provides a mechanism for immediately submitting\n
  * an HTML form using AJAX.\n
  */\n
 $.fn.ajaxSubmit = function(options) {\n
-\t// fast fail if nothing selected (http://dev.jquery.com/ticket/2752)\n
-\tif (!this.length) {\n
-\t\tlog(\'ajaxSubmit: skipping submit process - no element selected\');\n
-\t\treturn this;\n
-\t}\n
+    /*jshint scripturl:true */\n
 \n
-\tif (typeof options == \'function\')\n
-\t\toptions = { success: options };\n
+    // fast fail if nothing selected (http://dev.jquery.com/ticket/2752)\n
+    if (!this.length) {\n
+        log(\'ajaxSubmit: skipping submit process - no element selected\');\n
+        return this;\n
+    }\n
 \n
-\tvar url = $.trim(this.attr(\'action\'));\n
-\tif (url) {\n
-\t\t// clean url (don\'t include hash vaue)\n
-\t\turl = (url.match(/^([^#]+)/)||[])[1];\n
-   \t}\n
-   \turl = url || window.location.href || \'\';\n
+    var method, action, url, $form = this;\n
 \n
-\toptions = $.extend({\n
-\t\turl:  url,\n
-\t\ttype: this.attr(\'method\') || \'GET\',\n
-\t\tiframeSrc: /^https/i.test(window.location.href || \'\') ? \'javascript:false\' : \'about:blank\'\n
-\t}, options || {});\n
+    if (typeof options == \'function\') {\n
+        options = { success: options };\n
+    }\n
 \n
-\t// hook for manipulating the form data before it is extracted;\n
-\t// convenient for use with rich editors like tinyMCE or FCKEditor\n
-\tvar veto = {};\n
-\tthis.trigger(\'form-pre-serialize\', [this, options, veto]);\n
-\tif (veto.veto) {\n
-\t\tlog(\'ajaxSubmit: submit vetoed via form-pre-serialize trigger\');\n
-\t\treturn this;\n
-\t}\n
+    method = this.attr(\'method\');\n
+    action = this.attr(\'action\');\n
+    url = (typeof action === \'string\') ? $.trim(action) : \'\';\n
+    url = url || window.location.href || \'\';\n
+    if (url) {\n
+        // clean url (don\'t include hash vaue)\n
+        url = (url.match(/^([^#]+)/)||[])[1];\n
+    }\n
 \n
-\t// provide opportunity to alter form data before it is serialized\n
-\tif (options.beforeSerialize && options.beforeSerialize(this, options) === false) {\n
-\t\tlog(\'ajaxSubmit: submit aborted via beforeSerialize callback\');\n
-\t\treturn this;\n
-\t}\n
+    options = $.extend(true, {\n
+        url:  url,\n
+        success: $.ajaxSettings.success,\n
+        type: method || \'GET\',\n
+        iframeSrc: /^https/i.test(window.location.href || \'\') ? \'javascript:false\' : \'about:blank\'\n
+    }, options);\n
 \n
-\tvar a = this.formToArray(options.semantic);\n
-\tif (options.data) {\n
-\t\toptions.extraData = options.data;\n
-\t\tfor (var n in options.data) {\n
-\t\t  if(options.data[n] instanceof Array) {\n
-\t\t\tfor (var k in options.data[n])\n
-\t\t\t  a.push( { name: n, value: options.data[n][k] } );\n
-\t\t  }\n
-\t\t  else\n
-\t\t\t a.push( { name: n, value: options.data[n] } );\n
-\t\t}\n
-\t}\n
+    // hook for manipulating the form data before it is extracted;\n
+    // convenient for use with rich editors like tinyMCE or FCKEditor\n
+    var veto = {};\n
+    this.trigger(\'form-pre-serialize\', [this, options, veto]);\n
+    if (veto.veto) {\n
+        log(\'ajaxSubmit: submit vetoed via form-pre-serialize trigger\');\n
+        return this;\n
+    }\n
 \n
-\t// give pre-submit callback an opportunity to abort the submit\n
-\tif (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {\n
-\t\tlog(\'ajaxSubmit: submit aborted via beforeSubmit callback\');\n
-\t\treturn this;\n
-\t}\n
+    // provide opportunity to alter form data before it is serialized\n
+    if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {\n
+        log(\'ajaxSubmit: submit aborted via beforeSerialize callback\');\n
+        return this;\n
+    }\n
 \n
-\t// fire vetoable \'validate\' event\n
-\tthis.trigger(\'form-submit-validate\', [a, this, options, veto]);\n
-\tif (veto.veto) {\n
-\t\tlog(\'ajaxSubmit: submit vetoed via form-submit-validate trigger\');\n
-\t\treturn this;\n
-\t}\n
+    var traditional = options.traditional;\n
+    if ( traditional === undefined ) {\n
+        traditional = $.ajaxSettings.traditional;\n
+    }\n
 \n
-\tvar q = $.param(a);\n
+    var elements = [];\n
+    var qx, a = this.formToArray(options.semantic, elements);\n
+    if (options.data) {\n
+        options.extraData = options.data;\n
+        qx = $.param(options.data, traditional);\n
+    }\n
 \n
-\tif (options.type.toUpperCase() == \'GET\') {\n
-\t\toptions.url += (options.url.indexOf(\'?\') >= 0 ? \'&\' : \'?\') + q;\n
-\t\toptions.data = null;  // data is null for \'get\'\n
-\t}\n
-\telse\n
-\t\toptions.data = q; // data is the query string for \'post\'\n
+    // give pre-submit callback an opportunity to abort the submit\n
+    if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {\n
+        log(\'ajaxSubmit: submit aborted via beforeSubmit callback\');\n
+        return this;\n
+    }\n
 \n
-\tvar $form = this, callbacks = [];\n
-\tif (options.resetForm) callbacks.push(function() { $form.resetForm(); });\n
-\tif (options.clearForm) callbacks.push(function() { $form.clearForm(); });\n
+    // fire vetoable \'validate\' event\n
+    this.trigger(\'form-submit-validate\', [a, this, options, veto]);\n
+    if (veto.veto) {\n
+        log(\'ajaxSubmit: submit vetoed via form-submit-validate trigger\');\n
+        return this;\n
+    }\n
 \n
-\t// perform a load on the target only if dataType is not provided\n
-\tif (!options.dataType && options.target) {\n
-\t\tvar oldSuccess = options.success || function(){};\n
-\t\tcallbacks.push(function(data) {\n
-\t\t\tvar fn = options.replaceTarget ? \'replaceWith\' : \'html\';\n
-\t\t\t$(options.target)[fn](data).each(oldSuccess, arguments);\n
-\t\t});\n
-\t}\n
-\telse if (options.success)\n
-\t\tcallbacks.push(options.success);\n
+    var q = $.param(a, traditional);\n
+    if (qx) {\n
+        q = ( q ? (q + \'&\' + qx) : qx );\n
+    }\n
+    if (options.type.toUpperCase() == \'GET\') {\n
+        options.url += (options.url.indexOf(\'?\') >= 0 ? \'&\' : \'?\') + q;\n
+        options.data = null;  // data is null for \'get\'\n
+    }\n
+    else {\n
+        options.data = q; // data is the query string for \'post\'\n
+    }\n
 \n
-\toptions.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg\n
-\t\tfor (var i=0, max=callbacks.length; i < max; i++)\n
-\t\t\tcallbacks[i].apply(options, [data, status, xhr || $form, $form]);\n
-\t};\n
+    var callbacks = [];\n
+    if (options.resetForm) {\n
+        callbacks.push(function() { $form.resetForm(); });\n
+    }\n
+    if (options.clearForm) {\n
+        callbacks.push(function() { $form.clearForm(options.includeHidden); });\n
+    }\n
 \n
-\t// are there files to upload?\n
-\tvar files = $(\'input:file\', this).fieldValue();\n
-\tvar found = false;\n
-\tfor (var j=0; j < files.length; j++)\n
-\t\tif (files[j])\n
-\t\t\tfound = true;\n
+    // perform a load on the target only if dataType is not provided\n
+    if (!options.dataType && options.target) {\n
+        var oldSuccess = options.success || function(){};\n
+        callbacks.push(function(data) {\n
+            var fn = options.replaceTarget ? \'replaceWith\' : \'html\';\n
+            $(options.target)[fn](data).each(oldSuccess, arguments);\n
+        });\n
+    }\n
+    else if (options.success) {\n
+        callbacks.push(options.success);\n
+    }\n
 \n
-\tvar multipart = false;\n
-//\tvar mp = \'multipart/form-data\';\n
-//\tmultipart = ($form.attr(\'enctype\') == mp || $form.attr(\'encoding\') == mp);\n
+    options.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg\n
+        var context = options.context || this ;    // jQuery 1.4+ supports scope context\n
+        for (var i=0, max=callbacks.length; i < max; i++) {\n
+            callbacks[i].apply(context, [data, status, xhr || $form, $form]);\n
+        }\n
+    };\n
 \n
-\t// options.iframe allows user to force iframe mode\n
-\t// 06-NOV-09: now defaulting to iframe mode if file input is detected\n
-   if ((files.length && options.iframe !== false) || options.iframe || found || multipart) {\n
-\t   // hack to fix Safari hang (thanks to Tim Molendijk for this)\n
-\t   // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d\n
-\t   if (options.closeKeepAlive)\n
-\t\t   $.get(options.closeKeepAlive, fileUpload);\n
-\t   else\n
-\t\t   fileUpload();\n
-\t   }\n
-   else\n
-\t   $.ajax(options);\n
+    // are there files to upload?\n
 \n
-\t// fire \'notify\' event\n
-\tthis.trigger(\'form-submit-notify\', [this, options]);\n
-\treturn this;\n
+    // [value] (issue #113), also see comment:\n
+    // https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219\n
+    var fileInputs = $(\'input[type=file]:enabled[value!=""]\', this);\n
+\n
+    var hasFileInputs = fileInputs.length > 0;\n
+    var mp = \'multipart/form-data\';\n
+    var multipart = ($form.attr(\'enctype\') == mp || $form.attr(\'encoding\') == mp);\n
+\n
+    var fileAPI = feature.fileapi && feature.formdata;\n
+    log("fileAPI :" + fileAPI);\n
+    var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;\n
+\n
+    var jqxhr;\n
+\n
+    // options.iframe allows user to force iframe mode\n
+    // 06-NOV-09: now defaulting to iframe mode if file input is detected\n
+    if (options.iframe !== false && (options.iframe || shouldUseFrame)) {\n
+        // hack to fix Safari hang (thanks to Tim Molendijk for this)\n
+        // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d\n
+        if (options.closeKeepAlive) {\n
+            $.get(options.closeKeepAlive, function() {\n
+                jqxhr = fileUploadIframe(a);\n
+            });\n
+        }\n
+        else {\n
+            jqxhr = fileUploadIframe(a);\n
+        }\n
+    }\n
+    else if ((hasFileInputs || multipart) && fileAPI) {\n
+        jqxhr = fileUploadXhr(a);\n
+    }\n
+    else {\n
+        jqxhr = $.ajax(options);\n
+    }\n
+\n
+    $form.removeData(\'jqxhr\').data(\'jqxhr\', jqxhr);\n
+\n
+    // clear element array\n
+    for (var k=0; k < elements.length; k++)\n
+        elements[k] = null;\n
+\n
+    // fire \'notify\' event\n
+    this.trigger(\'form-submit-notify\', [this, options]);\n
+    return this;\n
+\n
+    // utility fn for deep serialization\n
+    function deepSerialize(extraData){\n
+        var serialized = $.param(extraData).split(\'&\');\n
+        var len = serialized.length;\n
+        var result = [];\n
+        var i, part;\n
+        for (i=0; i < len; i++) {\n
+            // #252; undo param space replacement\n
+            serialized[i] = serialized[i].replace(/\\+/g,\' \');\n
+            part = serialized[i].split(\'=\');\n
+            // #278; use array instead of object storage, favoring array serializations\n
+            result.push([decodeURIComponent(part[0]), decodeURIComponent(part[1])]);\n
+        }\n
+        return result;\n
+    }\n
+\n
+     // XMLHttpRequest Level 2 file uploads (big hat tip to francois2metz)\n
+    function fileUploadXhr(a) {\n
+        var formdata = new FormData();\n
+\n
+        for (var i=0; i < a.length; i++) {\n
+            formdata.append(a[i].name, a[i].value);\n
+        }\n
+\n
+        if (options.extraData) {\n
+            var serializedData = deepSerialize(options.extraData);\n
+            for (i=0; i < serializedData.length; i++)\n
+                if (serializedData[i])\n
+                    formdata.append(serializedData[i][0], serializedData[i][1]);\n
+        }\n
+\n
+        options.data = null;\n
+\n
+        var s = $.extend(true, {}, $.ajaxSettings, options, {\n
+            contentType: false,\n
+            processData: false,\n
+            cache: false,\n
+            type: method || \'POST\'\n
+        });\n
+\n
+        if (options.uploadProgress) {\n
+            // workaround because jqXHR does not expose upload property\n
+            s.xhr = function() {\n
+                var xhr = jQuery.ajaxSettings.xhr();\n
+                if (xhr.upload) {\n
+                    xhr.upload.addEventListener(\'progress\', function(event) {\n
+                        var percent = 0;\n
+                        var position = event.loaded || event.position; /*event.position is deprecated*/\n
+                        var total = event.total;\n
+                        if (event.lengthComputable) {\n
+                            percent = Math.ceil(position / total * 100);\n
+                        }\n
+                        options.uploadProgress(event, position, total, percent);\n
+                    }, false);\n
+                }\n
+                return xhr;\n
+            };\n
+        }\n
+\n
+        s.data = null;\n
+            var beforeSend = s.beforeSend;\n
+            s.beforeSend = function(xhr, o) {\n
+                o.data = formdata;\n
+                if(beforeSend)\n
+                    beforeSend.call(this, xhr, o);\n
+        };\n
+        return $.ajax(s);\n
+    }\n
+\n
+    // private function for handling file uploads (hat tip to YAHOO!)\n
+    function fileUploadIframe(a) {\n
+        var form = $form[0], el, i, s, g, id, $io, io, xhr, sub, n, timedOut, timeoutHandle;\n
+        var useProp = !!$.fn.prop;\n
+        var deferred = $.Deferred();\n
+\n
+        if (a) {\n
+            // ensure that every serialized input is still enabled\n
+            for (i=0; i < elements.length; i++) {\n
+                el = $(elements[i]);\n
+                if ( useProp )\n
+                    el.prop(\'disabled\', false);\n
+                else\n
+                    el.removeAttr(\'disabled\');\n
+            }\n
+        }\n
+\n
+        s = $.extend(true, {}, $.ajaxSettings, options);\n
+        s.context = s.context || s;\n
+        id = \'jqFormIO\' + (new Date().getTime());\n
+        if (s.iframeTarget) {\n
+            $io = $(s.iframeTarget);\n
+            n = $io.attr(\'name\');\n
+            if (!n)\n
+                 $io.attr(\'name\', id);\n
+            else\n
+                id = n;\n
+        }\n
+        else {\n
+            $io = $(\'<iframe name="\' + id + \'" src="\'+ s.iframeSrc +\'" />\');\n
+            $io.css({ position: \'absolute\', top: \'-1000px\', left: \'-1000px\' });\n
+        }\n
+        io = $io[0];\n
 \n
 \n
-\t// private function for handling file uploads (hat tip to YAHOO!)\n
-\tfunction fileUpload() {\n
-\t\tvar form = $form[0];\n
+        xhr = { // mock object\n
+            aborted: 0,\n
+            responseText: null,\n
+            responseXML: null,\n
+            status: 0,\n
+            statusText: \'n/a\',\n
+            getAllResponseHeaders: function() {},\n
+            getResponseHeader: function() {},\n
+            setRequestHeader: function() {},\n
+            abort: function(status) {\n
+                var e = (status === \'timeout\' ? \'timeout\' : \'aborted\');\n
+                log(\'aborting upload... \' + e);\n
+                this.aborted = 1;\n
 \n
-\t\tif ($(\':input[name=submit]\', form).length) {\n
-\t\t\talert(\'Error: Form elements must not be named "submit".\');\n
-\t\t\treturn;\n
-\t\t}\n
+                try { // #214, #257\n
+                    if (io.contentWindow.document.execCommand) {\n
+                        io.contentWindow.document.execCommand(\'Stop\');\n
+                    }\n
+                }\n
+                catch(ignore) {}\n
 \n
-\t\tvar opts = $.extend({}, $.ajaxSettings, options);\n
-\t\tvar s = $.extend(true, {}, $.extend(true, {}, $.ajaxSettings), opts);\n
+                $io.attr(\'src\', s.iframeSrc); // abort op in progress\n
+                xhr.error = e;\n
+                if (s.error)\n
+                    s.error.call(s.context, xhr, e, status);\n
+                if (g)\n
+                    $.event.trigger("ajaxError", [xhr, s, e]);\n
+                if (s.complete)\n
+                    s.complete.call(s.context, xhr, e);\n
+            }\n
+        };\n
 \n
-\t\tvar id = \'jqFormIO\' + (new Date().getTime());\n
-\t\tvar $io = $(\'<iframe id="\' + id + \'" name="\' + id + \'" src="\'+ opts.iframeSrc +\'" onload="(jQuery(this).data(\\\'form-plugin-onload\\\'))()" />\');\n
-\t\tvar io = $io[0];\n
+        g = s.global;\n
+        // trigger ajax global events so that activity/block indicators work like normal\n
+        if (g && 0 === $.active++) {\n
+            $.event.trigger("ajaxStart");\n
+        }\n
+        if (g) {\n
+            $.event.trigger("ajaxSend", [xhr, s]);\n
+        }\n
 \n
-\t\t$io.css({ position: \'absolute\', top: \'-1000px\', left: \'-1000px\' });\n
+        if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {\n
+            if (s.global) {\n
+                $.active--;\n
+            }\n
+            deferred.reject();\n
+            return deferred;\n
+        }\n
+        if (xhr.aborted) {\n
+            deferred.reject();\n
+            return deferred;\n
+        }\n
 \n
-\t\tvar xhr = { // mock object\n
-\t\t\taborted: 0,\n
-\t\t\tresponseText: null,\n
-\t\t\tresponseXML: null,\n
-\t\t\tstatus: 0,\n
-\t\t\tstatusText: \'n/a\',\n
-\t\t\tgetAllResponseHeaders: function() {},\n
-\t\t\tgetResponseHeader: function() {},\n
-\t\t\tsetRequestHeader: function() {},\n
-\t\t\tabort: function() {\n
-\t\t\t\tthis.aborted = 1;\n
-\t\t\t\t$io.attr(\'src\', opts.iframeSrc); // abort op in progress\n
-\t\t\t}\n
-\t\t};\n
+        // add submitting element to data if we know it\n
+        sub = form.clk;\n
+        if (sub) {\n
+            n = sub.name;\n
+            if (n && !sub.disabled) {\n
+                s.extraData = s.extraData || {};\n
+                s.extraData[n] = sub.value;\n
+                if (sub.type == "image") {\n
+                    s.extraData[n+\'.x\'] = form.clk_x;\n
+                    s.extraData[n+\'.y\'] = form.clk_y;\n
+                }\n
+            }\n
+        }\n
 \n
-\t\tvar g = opts.global;\n
-\t\t// trigger ajax global events so that activity/block indicators work like normal\n
-\t\tif (g && ! $.active++) $.event.trigger("ajaxStart");\n
-\t\tif (g) $.event.trigger("ajaxSend", [xhr, opts]);\n
+        var CLIENT_TIMEOUT_ABORT = 1;\n
+        var SERVER_ABORT = 2;\n
 \n
-\t\tif (s.beforeSend && s.beforeSend(xhr, s) === false) {\n
-\t\t\ts.global && $.active--;\n
-\t\t\treturn;\n
-\t\t}\n
-\t\tif (xhr.aborted)\n
-\t\t\treturn;\n
+        function getDoc(frame) {\n
+            var doc = frame.contentWindow ? frame.contentWindow.document : frame.contentDocument ? frame.contentDocument : frame.document;\n
+            return doc;\n
+        }\n
 \n
-\t\tvar cbInvoked = false;\n
-\t\tvar timedOut = 0;\n
+        // Rails CSRF hack (thanks to Yvan Barthelemy)\n
+        var csrf_token = $(\'meta[name=csrf-token]\').attr(\'content\');\n
+        var csrf_param = $(\'meta[name=csrf-param]\').attr(\'content\');\n
+        if (csrf_param && csrf_token) {\n
+            s.extraData = s.extraData || {};\n
+            s.extraData[csrf_param] = csrf_token;\n
+        }\n
 \n
-\t\t// add submitting element to data if we know it\n
-\t\tvar sub = form.clk;\n
-\t\tif (sub) {\n
-\t\t\tvar n = sub.name;\n
-\t\t\tif (n && !sub.disabled) {\n
-\t\t\t\topts.extraData = opts.extraData || {};\n
-\t\t\t\topts.extraData[n] = sub.value;\n
-\t\t\t\tif (sub.type == "image") {\n
-\t\t\t\t\topts.extraData[n+\'.x\'] = form.clk_x;\n
-\t\t\t\t\topts.extraData[n+\'.y\'] = form.clk_y;\n
-\t\t\t\t}\n
-\t\t\t}\n
-\t\t}\n
+        // take a breath so that pending repaints get some cpu time before the upload starts\n
+        function doSubmit() {\n
+            // make sure form attrs are set\n
+            var t = $form.attr(\'target\'), a = $form.attr(\'action\');\n
 \n
-\t\t// take a breath so that pending repaints get some cpu time before the upload starts\n
-\t\tfunction doSubmit() {\n
-\t\t\t// make sure form attrs are set\n
-\t\t\tvar t = $form.attr(\'target\'), a = $form.attr(\'action\');\n
+            // update form attrs in IE friendly way\n
+            form.setAttribute(\'target\',id);\n
+            if (!method) {\n
+                form.setAttribute(\'method\', \'POST\');\n
+            }\n
+            if (a != s.url) {\n
+                form.setAttribute(\'action\', s.url);\n
+            }\n
 \n
-\t\t\t// update form attrs in IE friendly way\n
-\t\t\tform.setAttribute(\'target\',id);\n
-\t\t\tif (form.getAttribute(\'method\') != \'POST\')\n
-\t\t\t\tform.setAttribute(\'method\', \'POST\');\n
-\t\t\tif (form.getAttribute(\'action\') != opts.url)\n
-\t\t\t\tform.setAttribute(\'action\', opts.url);\n
+            // ie borks in some cases when setting encoding\n
+            if (! s.skipEncodingOverride && (!method || /post/i.test(method))) {\n
+                $form.attr({\n
+                    encoding: \'multipart/form-data\',\n
+                    enctype:  \'multipart/form-data\'\n
+                });\n
+            }\n
 \n
-\t\t\t// ie borks in some cases when setting encoding\n
-\t\t\tif (! opts.skipEncodingOverride) {\n
-\t\t\t\t$form.attr({\n
-\t\t\t\t\tencoding: \'multipart/form-data\',\n
-\t\t\t\t\tenctype:  \'multipart/form-data\'\n
-\t\t\t\t});\n
-\t\t\t}\n
+            // support timout\n
+            if (s.timeout) {\n
+                timeoutHandle = setTimeout(function() { timedOut = true; cb(CLIENT_TIMEOUT_ABORT); }, s.timeout);\n
+            }\n
 \n
-\t\t\t// support timout\n
-\t\t\tif (opts.timeout)\n
-\t\t\t\tsetTimeout(function() { timedOut = true; cb(); }, opts.timeout);\n
+            // look for server aborts\n
+            function checkState() {\n
+                try {\n
+                    var state = getDoc(io).readyState;\n
+                    log(\'state = \' + state);\n
+                    if (state && state.toLowerCase() == \'uninitialized\')\n
+                        setTimeout(checkState,50);\n
+                }\n
+                catch(e) {\n
+                    log(\'Server abort: \' , e, \' (\', e.name, \')\');\n
+                    cb(SERVER_ABORT);\n
+                    if (timeoutHandle)\n
+                        clearTimeout(timeoutHandle);\n
+                    timeoutHandle = undefined;\n
+                }\n
+            }\n
 \n
-\t\t\t// add "extra" data to form if provided in options\n
-\t\t\tvar extraInputs = [];\n
-\t\t\ttry {\n
-\t\t\t\tif (opts.extraData)\n
-\t\t\t\t\tfor (var n in opts.extraData)\n
-\t\t\t\t\t\textraInputs.push(\n
-\t\t\t\t\t\t\t$(\'<input type="hidden" name="\'+n+\'" value="\'+opts.extraData[n]+\'" />\')\n
-\t\t\t\t\t\t\t\t.appendTo(form)[0]);\n
+            // add "extra" data to form if provided in options\n
+            var extraInputs = [];\n
+            try {\n
+                if (s.extraData) {\n
+                    for (var n in s.extraData) {\n
+                        if (s.extraData.hasOwnProperty(n)) {\n
+                           // if using the $.param format that allows for multiple values with the same name\n
+                           if($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty(\'name\') && s.extraData[n].hasOwnProperty(\'value\')) {\n
+                               extraInputs.push(\n
+                               $(\'<input type="hidden" name="\'+s.extraData[n].name+\'">\').val(s.extraData[n].value)\n
+                                   .appendTo(form)[0]);\n
+                           } else {\n
+                               extraInputs.push(\n
+                               $(\'<input type="hidden" name="\'+n+\'">\').val(s.extraData[n])\n
+                                   .appendTo(form)[0]);\n
+                           }\n
+                        }\n
+                    }\n
+                }\n
 \n
-\t\t\t\t// add iframe to doc and submit the form\n
-\t\t\t\t$io.appendTo(\'body\');\n
-\t\t\t\t$io.data(\'form-plugin-onload\', cb);\n
-\t\t\t\tform.submit();\n
-\t\t\t}\n
-\t\t\tfinally {\n
-\t\t\t\t// reset attrs and remove "extra" input elements\n
-\t\t\t\tform.setAttribute(\'action\',a);\n
-\t\t\t\tt ? form.setAttribute(\'target\', t) : $form.removeAttr(\'target\');\n
-\t\t\t\t$(extraInputs).remove();\n
-\t\t\t}\n
-\t\t};\n
+                if (!s.iframeTarget) {\n
+                    // add iframe to doc and submit the form\n
+                    $io.appendTo(\'body\');\n
+                    if (io.attachEvent)\n
+                        io.attachEvent(\'onload\', cb);\n
+                    else\n
+                        io.addEventListener(\'load\', cb, false);\n
+                }\n
+                setTimeout(checkState,15);\n
 \n
-\t\tif (opts.forceSync)\n
-\t\t\tdoSubmit();\n
-\t\telse\n
-\t\t\tsetTimeout(doSubmit, 10); // this lets dom updates render\n
-\t\n
-\t\tvar domCheckCount = 100;\n
+                try {\n
+                    form.submit();\n
+                } catch(err) {\n
+                    // just in case form has element with name/id of \'submit\'\n
+                    var submitFn = document.createElement(\'form\').submit;\n
+                    submitFn.apply(form);\n
+                }\n
+            }\n
+            finally {\n
+                // reset attrs and remove "extra" input elements\n
+                form.setAttribute(\'action\',a);\n
+                if(t) {\n
+                    form.setAttribute(\'target\', t);\n
+                } else {\n
+                    $form.removeAttr(\'target\');\n
+                }\n
+                $(extraInputs).remove();\n
+            }\n
+        }\n
 \n
-\t\tfunction cb() {\n
-\t\t\tif (cbInvoked) \n
-\t\t\t\treturn;\n
+        if (s.forceSync) {\n
+            doSubmit();\n
+        }\n
+        else {\n
+            setTimeout(doSubmit, 10); // this lets dom updates render\n
+        }\n
 \n
-\t\t\tvar ok = true;\n
-\t\t\ttry {\n
-\t\t\t\tif (timedOut) throw \'timeout\';\n
-\t\t\t\t// extract the server response from the iframe\n
-\t\t\t\tvar data, doc;\n
+        var data, doc, domCheckCount = 50, callbackProcessed;\n
 \n
-\t\t\t\tdoc = io.contentWindow ? io.contentWindow.document : io.contentDocument ? io.contentDocument : io.document;\n
-\t\t\t\t\n
-\t\t\t\tvar isXml = opts.dataType == \'xml\' || doc.XMLDocument || $.isXMLDoc(doc);\n
-\t\t\t\tlog(\'isXml=\'+isXml);\n
-\t\t\t\tif (!isXml && (doc.body == null || doc.body.innerHTML == \'\')) {\n
-\t\t\t\t \tif (--domCheckCount) {\n
-\t\t\t\t\t\t// in some browsers (Opera) the iframe DOM is not always traversable when\n
-\t\t\t\t\t\t// the onload callback fires, so we loop a bit to accommodate\n
-\t\t\t\t \t\tlog(\'requeing onLoad callback, DOM not available\');\n
-\t\t\t\t\t\tsetTimeout(cb, 250);\n
-\t\t\t\t\t\treturn;\n
-\t\t\t\t\t}\n
-\t\t\t\t\tlog(\'Could not access iframe DOM after 100 tries.\');\n
-\t\t\t\t\treturn;\n
-\t\t\t\t}\n
+        function cb(e) {\n
+            if (xhr.aborted || callbackProcessed) {\n
+                return;\n
+            }\n
+            try {\n
+                doc = getDoc(io);\n
+            }\n
+            catch(ex) {\n
+                log(\'cannot access response document: \', ex);\n
+                e = SERVER_ABORT;\n
+            }\n
+            if (e === CLIENT_TIMEOUT_ABORT && xhr) {\n
+                xhr.abort(\'timeout\');\n
+                deferred.reject(xhr, \'timeout\');\n
+                return;\n
+            }\n
+            else if (e == SERVER_ABORT && xhr) {\n
+                xhr.abort(\'server abort\');\n
+                deferred.reject(xhr, \'error\', \'server abort\');\n
+                return;\n
+            }\n
 \n
-\t\t\t\tlog(\'response detected\');\n
-\t\t\t\tcbInvoked = true;\n
-\t\t\t\txhr.responseText = doc.body ? doc.body.innerHTML : null;\n
-\t\t\t\txhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;\n
-\t\t\t\txhr.getResponseHeader = function(header){\n
-\t\t\t\t\tvar headers = {\'content-type\': opts.dataType};\n
-\t\t\t\t\treturn headers[header];\n
-\t\t\t\t};\n
+            if (!doc || doc.location.href == s.iframeSrc) {\n
+                // response not received yet\n
+                if (!timedOut)\n
+                    return;\n
+            }\n
+            if (io.detachEvent)\n
+                io.detachEvent(\'onload\', cb);\n
+            else\n
+                io.removeEventListener(\'load\', cb, false);\n
 \n
-\t\t\t\tif (opts.dataType == \'json\' || opts.dataType == \'script\') {\n
-\t\t\t\t\t// see if user embedded response in textarea\n
-\t\t\t\t\tvar ta = doc.getElementsByTagName(\'textarea\')[0];\n
-\t\t\t\t\tif (ta)\n
-\t\t\t\t\t\txhr.responseText = ta.value;\n
-\t\t\t\t\telse {\n
-\t\t\t\t\t\t// account for browsers injecting pre around json response\n
-\t\t\t\t\t\tvar pre = doc.getElementsByTagName(\'pre\')[0];\n
-\t\t\t\t\t\tif (pre)\n
-\t\t\t\t\t\t\txhr.responseText = pre.innerHTML;\n
-\t\t\t\t\t}\t\t\t  \n
-\t\t\t\t}\n
-\t\t\t\telse if (opts.dataType == \'xml\' && !xhr.responseXML && xhr.responseText != null) {\n
-\t\t\t\t\txhr.responseXML = toXml(xhr.responseText);\n
-\t\t\t\t}\n
-\t\t\t\tdata = $.httpData(xhr, opts.dataType);\n
-\t\t\t}\n
-\t\t\tcatch(e){\n
-\t\t\t\tlog(\'error caught:\',e);\n
-\t\t\t\tok = false;\n
-\t\t\t\txhr.error = e;\n
-\t\t\t\t$.handleError(opts, xhr, \'error\', e);\n
-\t\t\t}\n
+            var status = \'success\', errMsg;\n
+            try {\n
+                if (timedOut) {\n
+                    throw \'timeout\';\n
+                }\n
 \n
-\t\t\t// ordering of these callbacks/triggers is odd, but that\'s how $.ajax does it\n
-\t\t\tif (ok) {\n
-\t\t\t\topts.success(data, \'success\');\n
-\t\t\t\tif (g) $.event.trigger("ajaxSuccess", [xhr, opts]);\n
-\t\t\t}\n
-\t\t\tif (g) $.event.trigger("ajaxComplete", [xhr, opts]);\n
-\t\t\tif (g && ! --$.active) $.event.trigger("ajaxStop");\n
-\t\t\tif (opts.complete) opts.complete(xhr, ok ? \'success\' : \'error\');\n
+                var isXml = s.dataType == \'xml\' || doc.XMLDocument || $.isXMLDoc(doc);\n
+                log(\'isXml=\'+isXml);\n
+                if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {\n
+                    if (--domCheckCount) {\n
+                        // in some browsers (Opera) the iframe DOM is not always traversable when\n
+                        // the onload callback fires, so we loop a bit to accommodate\n
+                        log(\'requeing onLoad callback, DOM not available\');\n
+                        setTimeout(cb, 250);\n
+                        return;\n
+                    }\n
+                    // let this fall through because server response could be an empty document\n
+                    //log(\'Could not access iframe DOM after mutiple tries.\');\n
+                    //throw \'DOMException: not available\';\n
+                }\n
 \n
-\t\t\t// clean up\n
-\t\t\tsetTimeout(function() {\n
-\t\t\t\t$io.removeData(\'form-plugin-onload\');\n
-\t\t\t\t$io.remove();\n
-\t\t\t\txhr.responseXML = null;\n
-\t\t\t}, 100);\n
-\t\t};\n
+                //log(\'response detected\');\n
+                var docRoot = doc.body ? doc.body : doc.documentElement;\n
+                xhr.responseText = docRoot ? docRoot.innerHTML : null;\n
+                xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;\n
+                if (isXml)\n
+                    s.dataType = \'xml\';\n
+                xhr.getResponseHeader = function(header){\n
+                    var headers = {\'content-type\': s.dataType};\n
+                    return headers[header];\n
+                };\n
+                // support for XHR \'status\' & \'statusText\' emulation :\n
+                if (docRoot) {\n
+                    xhr.status = Number( docRoot.getAttribute(\'status\') ) || xhr.status;\n
+                    xhr.statusText = docRoot.getAttribute(\'statusText\') || xhr.statusText;\n
+                }\n
 \n
-\t\tfunction toXml(s, doc) {\n
-\t\t\tif (window.ActiveXObject) {\n
-\t\t\t\tdoc = new ActiveXObject(\'Microsoft.XMLDOM\');\n
-\t\t\t\tdoc.async = \'false\';\n
-\t\t\t\tdoc.loadXML(s);\n
-\t\t\t}\n
-\t\t\telse\n
-\t\t\t\tdoc = (new DOMParser()).parseFromString(s, \'text/xml\');\n
-\t\t\treturn (doc && doc.documentElement && doc.documentElement.tagName != \'parsererror\') ? doc : null;\n
-\t\t};\n
-\t};\n
+                var dt = (s.dataType || \'\').toLowerCase();\n
+                var scr = /(json|script|text)/.test(dt);\n
+                if (scr || s.textarea) {\n
+                    // see if user embedded response in textarea\n
+                    var ta = doc.getElementsByTagName(\'textarea\')[0];\n
+                    if (ta) {\n
+                        xhr.responseText = ta.value;\n
+                        // support for XHR \'status\' & \'statusText\' emulation :\n
+                        xhr.status = Number( ta.getAttribute(\'status\') ) || xhr.status;\n
+                        xhr.statusText = ta.getAttribute(\'statusText\') || xhr.statusText;\n
+                    }\n
+                    else if (scr) {\n
+                        // account for browsers injecting pre around json response\n
+                        var pre = doc.getElementsByTagName(\'pre\')[0];\n
+                        var b = doc.getElementsByTagName(\'body\')[0];\n
+                        if (pre) {\n
+                            xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;\n
+                        }\n
+                        else if (b) {\n
+                            xhr.responseText = b.textContent ? b.textContent : b.innerText;\n
+                        }\n
+                    }\n
+                }\n
+                else if (dt == \'xml\' && !xhr.responseXML && xhr.responseText) {\n
+                    xhr.responseXML = toXml(xhr.responseText);\n
+                }\n
+\n
+                try {\n
+                    data = httpData(xhr, dt, s);\n
+                }\n
+                catch (err) {\n
+                    status = \'parsererror\';\n
+                    xhr.error = errMsg = (err || status);\n
+                }\n
+            }\n
+            catch (err) {\n
+                log(\'error caught: \',err);\n
+                status = \'error\';\n
+                xhr.error = errMsg = (err || status);\n
+            }\n
+\n
+            if (xhr.aborted) {\n
+                log(\'upload aborted\');\n
+                status = null;\n
+            }\n
+\n
+            if (xhr.status) { // we\'ve set xhr.status\n
+                status = (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) ? \'success\' : \'error\';\n
+            }\n
+\n
+            // ordering of these callbacks/triggers is odd, but that\'s how $.ajax does it\n
+            if (status === \'success\') {\n
+                if (s.success)\n
+                    s.success.call(s.context, data, \'success\', xhr);\n
+                deferred.resolve(xhr.responseText, \'success\', xhr);\n
+                if (g)\n
+                    $.event.trigger("ajaxSuccess", [xhr, s]);\n
+            }\n
+            else if (status) {\n
+                if (errMsg === undefined)\n
+                    errMsg = xhr.statusText;\n
+                if (s.error)\n
+                    s.error.call(s.context, xhr, status, errMsg);\n
+                deferred.reject(xhr, \'error\', errMsg);\n
+                if (g)\n
+                    $.event.trigger("ajaxError", [xhr, s, errMsg]);\n
+            }\n
+\n
+            if (g)\n
+                $.event.trigger("ajaxComplete", [xhr, s]);\n
+\n
+            if (g && ! --$.active) {\n
+                $.event.trigger("ajaxStop");\n
+            }\n
+\n
+            if (s.complete)\n
+                s.complete.call(s.context, xhr, status);\n
+\n
+            callbackProcessed = true;\n
+            if (s.timeout)\n
+                clearTimeout(timeoutHandle);\n
+\n
+            // clean up\n
+            setTimeout(function() {\n
+                if (!s.iframeTarget)\n
+                    $io.remove();\n
+                xhr.responseXML = null;\n
+            }, 100);\n
+        }\n
+\n
+        var toXml = $.parseXML || function(s, doc) { // use parseXML if available (jQuery 1.5+)\n
+            if (window.ActiveXObject) {\n
+                doc = new ActiveXObject(\'Microsoft.XMLDOM\');\n
+                doc.async = \'false\';\n
+                doc.loadXML(s);\n
+            }\n
+            else {\n
+                doc = (new DOMParser()).parseFromString(s, \'text/xml\');\n
+            }\n
+            return (doc && doc.documentElement && doc.documentElement.nodeName != \'parsererror\') ? doc : null;\n
+        };\n
+        var parseJSON = $.parseJSON || function(s) {\n
+            /*jslint evil:true */\n
+            return window[\'eval\'](\'(\' + s + \')\');\n
+        };\n
+\n
+        var httpData = function( xhr, type, s ) { // mostly lifted from jq1.4.4\n
+\n
+            var ct = xhr.getResponseHeader(\'content-type\') || \'\',\n
+                xml = type === \'xml\' || !type && ct.indexOf(\'xml\') >= 0,\n
+                data = xml ? xhr.responseXML : xhr.responseText;\n
+\n
+            if (xml && data.documentElement.nodeName === \'parsererror\') {\n
+                if ($.error)\n
+                    $.error(\'parsererror\');\n
+            }\n
+            if (s && s.dataFilter) {\n
+                data = s.dataFilter(data, type);\n
+            }\n
+            if (typeof data === \'string\') {\n
+                if (type === \'json\' || !type && ct.indexOf(\'json\') >= 0) {\n
+                    data = parseJSON(data);\n
+                } else if (type === "script" || !type && ct.indexOf("javascript") >= 0) {\n
+                    $.globalEval(data);\n
+                }\n
+            }\n
+            return data;\n
+        };\n
+\n
+        return deferred;\n
+    }\n
 };\n
 \n
 /**\n
@@ -399,9 +744,9 @@ $.fn.ajaxSubmit = function(options) {\n
  * The advantages of using this method instead of ajaxSubmit() are:\n
  *\n
  * 1: This method will include coordinates for <input type="image" /> elements (if the element\n
- *\tis used to submit the form).\n
+ *    is used to submit the form).\n
  * 2. This method will include the submit element\'s name/value data (for the element that was\n
- *\tused to submit the form).\n
+ *    used to submit the form).\n
  * 3. This method binds the submit() method to the form for you.\n
  *\n
  * The options argument for ajaxForm works exactly as it does for ajaxSubmit.  ajaxForm merely\n
@@ -409,42 +754,83 @@ $.fn.ajaxSubmit = function(options) {\n
  * the form itself.\n
  */\n
 $.fn.ajaxForm = function(options) {\n
-\treturn this.ajaxFormUnbind().bind(\'submit.form-plugin\', function(e) {\n
-\t\te.preventDefault();\n
-\t\t$(this).ajaxSubmit(options);\n
-\t}).bind(\'click.form-plugin\', function(e) {\n
-\t\tvar target = e.target;\n
-\t\tvar $el = $(target);\n
-\t\tif (!($el.is(":submit,input:image"))) {\n
-\t\t\t// is this a child element of the submit el?  (ex: a span within a button)\n
-\t\t\tvar t = $el.closest(\':submit\');\n
-\t\t\tif (t.length == 0)\n
-\t\t\t\treturn;\n
-\t\t\ttarget = t[0];\n
-\t\t}\n
-\t\tvar form = this;\n
-\t\tform.clk = target;\n
-\t\tif (target.type == \'image\') {\n
-\t\t\tif (e.offsetX != undefined) {\n
-\t\t\t\tform.clk_x = e.offsetX;\n
-\t\t\t\tform.clk_y = e.offsetY;\n
-\t\t\t} else if (typeof $.fn.offset == \'function\') { // try to use dimensions plugin\n
-\t\t\t\tvar offset = $el.offset();\n
-\t\t\t\tform.clk_x = e.pageX - offset.left;\n
-\t\t\t\tform.clk_y = e.pageY - offset.top;\n
-\t\t\t} else {\n
-\t\t\t\tform.clk_x = e.pageX - target.offsetLeft;\n
-\t\t\t\tform.clk_y = e.pageY - target.offsetTop;\n
-\t\t\t}\n
-\t\t}\n
-\t\t// clear form vars\n
-\t\tsetTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);\n
-\t});\n
+    options = options || {};\n
+    options.delegation = options.delegation && $.isFunction($.fn.on);\n
+\n
+    // in jQuery 1.3+ we can fix mistakes with the ready state\n
+    if (!options.delegation && this.length === 0) {\n
+        var o = { s: this.selector, c: this.context };\n
+        if (!$.isReady && o.s) {\n
+            log(\'DOM not ready, queuing ajaxForm\');\n
+            $(function() {\n
+                $(o.s,o.c).ajaxForm(options);\n
+            });\n
+            return this;\n
+        }\n
+        // is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()\n
+        log(\'terminating; zero elements found by selector\' + ($.isReady ? \'\' : \' (DOM not ready)\'));\n
+        return this;\n
+    }\n
+\n
+    if ( options.delegation ) {\n
+        $(document)\n
+            .off(\'submit.form-plugin\', this.selector, doAjaxSubmit)\n
+            .off(\'click.form-plugin\', this.selector, captureSubmittingElement)\n
+            .on(\'submit.form-plugin\', this.selector, options, doAjaxSubmit)\n
+            .on(\'click.form-plugin\', this.selector, options, captureSubmittingElement);\n
+        return this;\n
+    }\n
+\n
+    return this.ajaxFormUnbind()\n
+        .bind(\'submit.form-plugin\', options, doAjaxSubmit)\n
+        .bind(\'click.form-plugin\', options, captureSubmittingElement);\n
 };\n
+\n
+// private event handlers\n
+function doAjaxSubmit(e) {\n
+    /*jshint validthis:true */\n
+    var options = e.data;\n
+    if (!e.isDefaultPrevented()) { // if event has been canceled, don\'t proceed\n
+        e.preventDefault();\n
+        $(this).ajaxSubmit(options);\n
+    }\n
+}\n
+\n
+function captureSubmittingElement(e) {\n
+    /*jshint validthis:true */\n
+    var target = e.target;\n
+    var $el = $(target);\n
+    if (!($el.is("[type=submit],[type=image]"))) {\n
+        // is this a child element of the submit el?  (ex: a span within a button)\n
+        var t = $el.closest(\'[type=submit]\');\n
+        if (t.length === 0) {\n
+            return;\n
+        }\n
+        target = t[0];\n
+    }\n
+    var form = this;\n
+    form.clk = target;\n
+    if (target.type == \'image\') {\n
+        if (e.offsetX !== undefined) {\n
+            form.clk_x = e.offsetX;\n
+            form.clk_y = e.offsetY;\n
+        } else if (typeof $.fn.offset == \'function\') {\n
+            var offset = $el.offset();\n
+            form.clk_x = e.pageX - offset.left;\n
+            form.clk_y = e.pageY - offset.top;\n
+        } else {\n
+            form.clk_x = e.pageX - target.offsetLeft;\n
+            form.clk_y = e.pageY - target.offsetTop;\n
+        }\n
+    }\n
+    // clear form vars\n
+    setTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);\n
+}\n
+\n
 \n
 // ajaxFormUnbind unbinds the event handlers that were bound by ajaxForm\n
 $.fn.ajaxFormUnbind = function() {\n
-\treturn this.unbind(\'submit.form-plugin click.form-plugin\');\n
+    return this.unbind(\'submit.form-plugin click.form-plugin\');\n
 };\n
 \n
 /**\n
@@ -458,45 +844,74 @@ $.fn.ajaxFormUnbind = function() {\n
  * It is this array that is passed to pre-submit callback functions provided to the\n
  * ajaxSubmit() and ajaxForm() methods.\n
  */\n
-$.fn.formToArray = function(semantic) {\n
-\tvar a = [];\n
-\tif (this.length == 0) return a;\n
+$.fn.formToArray = function(semantic, elements) {\n
+    var a = [];\n
+    if (this.length === 0) {\n
+        return a;\n
+    }\n
 \n
-\tvar form = this[0];\n
-\tvar els = semantic ? form.getElementsByTagName(\'*\') : form.elements;\n
-\tif (!els) return a;\n
-\tfor(var i=0, max=els.length; i < max; i++) {\n
-\t\tvar el = els[i];\n
-\t\tvar n = el.name;\n
-\t\tif (!n) continue;\n
+    var form = this[0];\n
+    var els = semantic ? form.getElementsByTagName(\'*\') : form.elements;\n
+    if (!els) {\n
+        return a;\n
+    }\n
 \n
-\t\tif (semantic && form.clk && el.type == "image") {\n
-\t\t\t// handle image inputs on the fly when semantic == true\n
-\t\t\tif(!el.disabled && form.clk == el) {\n
-\t\t\t\ta.push({name: n, value: $(el).val()});\n
-\t\t\t\ta.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
-\t\t\t}\n
-\t\t\tcontinue;\n
-\t\t}\n
+    var i,j,n,v,el,max,jmax;\n
+    for(i=0, max=els.length; i < max; i++) {\n
+        el = els[i];\n
+        n = el.name;\n
+        if (!n) {\n
+            continue;\n
+        }\n
 \n
-\t\tvar v = $.fieldValue(el, true);\n
-\t\tif (v && v.constructor == Array) {\n
-\t\t\tfor(var j=0, jmax=v.length; j < jmax; j++)\n
-\t\t\t\ta.push({name: n, value: v[j]});\n
-\t\t}\n
-\t\telse if (v !== null && typeof v != \'undefined\')\n
-\t\t\ta.push({name: n, value: v});\n
-\t}\n
+        if (semantic && form.clk && el.type == "image") {\n
+            // handle image inputs on the fly when semantic == true\n
+            if(!el.disabled && form.clk == el) {\n
+                a.push({name: n, value: $(el).val(), type: el.type });\n
+                a.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
+            }\n
+            continue;\n
+        }\n
 \n
-\tif (!semantic && form.clk) {\n
-\t\t// input type==\'image\' are not found in elements array! handle it here\n
-\t\tvar $input = $(form.clk), input = $input[0], n = input.name;\n
-\t\tif (n && !input.disabled && input.type == \'image\') {\n
-\t\t\ta.push({name: n, value: $input.val()});\n
-\t\t\ta.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
-\t\t}\n
-\t}\n
-\treturn a;\n
+        v = $.fieldValue(el, true);\n
+        if (v && v.constructor == Array) {\n
+            if (elements)\n
+                elements.push(el);\n
+            for(j=0, jmax=v.length; j < jmax; j++) {\n
+                a.push({name: n, value: v[j]});\n
+            }\n
+        }\n
+        else if (feature.fileapi && el.type == \'file\' && !el.disabled) {\n
+            if (elements)\n
+                elements.push(el);\n
+            var files = el.files;\n
+            if (files.length) {\n
+                for (j=0; j < files.length; j++) {\n
+                    a.push({name: n, value: files[j], type: el.type});\n
+                }\n
+            }\n
+            else {\n
+                // #180\n
+                a.push({ name: n, value: \'\', type: el.type });\n
+            }\n
+        }\n
+        else if (v !== null && typeof v != \'undefined\') {\n
+            if (elements)\n
+                elements.push(el);\n
+            a.push({name: n, value: v, type: el.type, required: el.required});\n
+        }\n
+    }\n
+\n
+    if (!semantic && form.clk) {\n
+        // input type==\'image\' are not found in elements array! handle it here\n
+        var $input = $(form.clk), input = $input[0];\n
+        n = input.name;\n
+        if (n && !input.disabled && input.type == \'image\') {\n
+            a.push({name: n, value: $input.val()});\n
+            a.push({name: n+\'.x\', value: form.clk_x}, {name: n+\'.y\', value: form.clk_y});\n
+        }\n
+    }\n
+    return a;\n
 };\n
 \n
 /**\n
@@ -504,8 +919,8 @@ $.fn.formToArray = function(semantic) {\n
  * in the format: name1=value1&amp;name2=value2\n
  */\n
 $.fn.formSerialize = function(semantic) {\n
-\t//hand off to jQuery.param for proper encoding\n
-\treturn $.param(this.formToArray(semantic));\n
+    //hand off to jQuery.param for proper encoding\n
+    return $.param(this.formToArray(semantic));\n
 };\n
 \n
 /**\n
@@ -513,47 +928,51 @@ $.fn.formSerialize = function(semantic) {\n
  * This method will return a string in the format: name1=value1&amp;name2=value2\n
  */\n
 $.fn.fieldSerialize = function(successful) {\n
-\tvar a = [];\n
-\tthis.each(function() {\n
-\t\tvar n = this.name;\n
-\t\tif (!n) return;\n
-\t\tvar v = $.fieldValue(this, successful);\n
-\t\tif (v && v.constructor == Array) {\n
-\t\t\tfor (var i=0,max=v.length; i < max; i++)\n
-\t\t\t\ta.push({name: n, value: v[i]});\n
-\t\t}\n
-\t\telse if (v !== null && typeof v != \'undefined\')\n
-\t\t\ta.push({name: this.name, value: v});\n
-\t});\n
-\t//hand off to jQuery.param for proper encoding\n
-\treturn $.param(a);\n
+    var a = [];\n
+    this.each(function() {\n
+        var n = this.name;\n
+        if (!n) {\n
+            return;\n
+        }\n
+        var v = $.fieldValue(this, successful);\n
+        if (v && v.constructor == Array) {\n
+            for (var i=0,max=v.length; i < max; i++) {\n
+                a.push({name: n, value: v[i]});\n
+            }\n
+        }\n
+        else if (v !== null && typeof v != \'undefined\') {\n
+            a.push({name: this.name, value: v});\n
+        }\n
+    });\n
+    //hand off to jQuery.param for proper encoding\n
+    return $.param(a);\n
 };\n
 \n
 /**\n
  * Returns the value(s) of the element in the matched set.  For example, consider the following form:\n
  *\n
  *  <form><fieldset>\n
- *\t  <input name="A" type="text" />\n
- *\t  <input name="A" type="text" />\n
- *\t  <input name="B" type="checkbox" value="B1" />\n
- *\t  <input name="B" type="checkbox" value="B2"/>\n
- *\t  <input name="C" type="radio" value="C1" />\n
- *\t  <input name="C" type="radio" value="C2" />\n
+ *      <input name="A" type="text" />\n
+ *      <input name="A" type="text" />\n
+ *      <input name="B" type="checkbox" value="B1" />\n
+ *      <input name="B" type="checkbox" value="B2"/>\n
+ *      <input name="C" type="radio" value="C1" />\n
+ *      <input name="C" type="radio" value="C2" />\n
  *  </fieldset></form>\n
  *\n
- *  var v = $(\':text\').fieldValue();\n
+ *  var v = $(\'input[type=text]\').fieldValue();\n
  *  // if no values are entered into the text inputs\n
  *  v == [\'\',\'\']\n
  *  // if values entered into the text inputs are \'foo\' and \'bar\'\n
  *  v == [\'foo\',\'bar\']\n
  *\n
- *  var v = $(\':checkbox\').fieldValue();\n
+ *  var v = $(\'input[type=checkbox]\').fieldValue();\n
  *  // if neither checkbox is checked\n
  *  v === undefined\n
  *  // if both checkboxes are checked\n
  *  v == [\'B1\', \'B2\']\n
  *\n
- *  var v = $(\':radio\').fieldValue();\n
+ *  var v = $(\'input[type=radio]\').fieldValue();\n
  *  // if neither radio is checked\n
  *  v === undefined\n
  *  // if first radio is checked\n
@@ -565,51 +984,63 @@ $.fn.fieldSerialize = function(successful) {\n
  * for each element is returned.\n
  *\n
  * Note: This method *always* returns an array.  If no valid value can be determined the\n
- *\t   array will be empty, otherwise it will contain one or more values.\n
+ *    array will be empty, otherwise it will contain one or more values.\n
  */\n
 $.fn.fieldValue = function(successful) {\n
-\tfor (var val=[], i=0, max=this.length; i < max; i++) {\n
-\t\tvar el = this[i];\n
-\t\tvar v = $.fieldValue(el, successful);\n
-\t\tif (v === null || typeof v == \'undefined\' || (v.constructor == Array && !v.length))\n
-\t\t\tcontinue;\n
-\t\tv.constructor == Array ? $.merge(val, v) : val.push(v);\n
-\t}\n
-\treturn val;\n
+    for (var val=[], i=0, max=this.length; i < max; i++) {\n
+        var el = this[i];\n
+        var v = $.fieldValue(el, successful);\n
+        if (v === null || typeof v == \'undefined\' || (v.constructor == Array && !v.length)) {\n
+            continue;\n
+        }\n
+        if (v.constructor == Array)\n
+            $.merge(val, v);\n
+        else\n
+            val.push(v);\n
+    }\n
+    return val;\n
 };\n
 \n
 /**\n
  * Returns the value of the field element.\n
  */\n
 $.fieldValue = function(el, successful) {\n
-\tvar n = el.name, t = el.type, tag = el.tagName.toLowerCase();\n
-\tif (typeof successful == \'undefined\') successful = true;\n
+    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();\n
+    if (successful === undefined) {\n
+        successful = true;\n
+    }\n
 \n
-\tif (successful && (!n || el.disabled || t == \'reset\' || t == \'button\' ||\n
-\t\t(t == \'checkbox\' || t == \'radio\') && !el.checked ||\n
-\t\t(t == \'submit\' || t == \'image\') && el.form && el.form.clk != el ||\n
-\t\ttag == \'select\' && el.selectedIndex == -1))\n
-\t\t\treturn null;\n
+    if (successful && (!n || el.disabled || t == \'reset\' || t == \'button\' ||\n
+        (t == \'checkbox\' || t == \'radio\') && !el.checked ||\n
+        (t == \'submit\' || t == \'image\') && el.form && el.form.clk != el ||\n
+        tag == \'select\' && el.selectedIndex == -1)) {\n
+            return null;\n
+    }\n
 \n
-\tif (tag == \'select\') {\n
-\t\tvar index = el.selectedIndex;\n
-\t\tif (index < 0) return null;\n
-\t\tvar a = [], ops = el.options;\n
-\t\tvar one = (t == \'select-one\');\n
-\t\tvar max = (one ? index+1 : ops.length);\n
-\t\tfor(var i=(one ? index : 0); i < max; i++) {\n
-\t\t\tvar op = ops[i];\n
-\t\t\tif (op.selected) {\n
-\t\t\t\tvar v = op.value;\n
-\t\t\t\tif (!v) // extra pain for IE...\n
-\t\t\t\t\tv = (op.attributes && op.attributes[\'value\'] && !(op.attributes[\'value\'].specified)) ? op.text : op.value;\n
-\t\t\t\tif (one) return v;\n
-\t\t\t\ta.push(v);\n
-\t\t\t}\n
-\t\t}\n
-\t\treturn a;\n
-\t}\n
-\treturn el.value;\n
+    if (tag == \'select\') {\n
+        var index = el.selectedIndex;\n
+        if (index < 0) {\n
+            return null;\n
+        }\n
+        var a = [], ops = el.options;\n
+        var one = (t == \'select-one\');\n
+        var max = (one ? index+1 : ops.length);\n
+        for(var i=(one ? index : 0); i < max; i++) {\n
+            var op = ops[i];\n
+            if (op.selected) {\n
+                var v = op.value;\n
+                if (!v) { // extra pain for IE...\n
+                    v = (op.attributes && op.attributes[\'value\'] && !(op.attributes[\'value\'].specified)) ? op.text : op.value;\n
+                }\n
+                if (one) {\n
+                    return v;\n
+                }\n
+                a.push(v);\n
+            }\n
+        }\n
+        return a;\n
+    }\n
+    return $(el).val();\n
 };\n
 \n
 /**\n
@@ -620,47 +1051,70 @@ $.fieldValue = function(el, successful) {\n
  *  - inputs of type submit, button, reset, and hidden will *not* be effected\n
  *  - button elements will *not* be effected\n
  */\n
-$.fn.clearForm = function() {\n
-\treturn this.each(function() {\n
-\t\t$(\'input,select,textarea\', this).clearFields();\n
-\t});\n
+$.fn.clearForm = function(includeHidden) {\n
+    return this.each(function() {\n
+        $(\'input,select,textarea\', this).clearFields(includeHidden);\n
+    });\n
 };\n
 \n
 /**\n
  * Clears the selected form elements.\n
  */\n
-$.fn.clearFields = $.fn.clearInputs = function() {\n
-\treturn this.each(function() {\n
-\t\tvar t = this.type, tag = this.tagName.toLowerCase();\n
-\t\tif (t == \'text\' || t == \'password\' || tag == \'textarea\')\n
-\t\t\tthis.value = \'\';\n
-\t\telse if (t == \'checkbox\' || t == \'radio\')\n
-\t\t\tthis.checked = false;\n
-\t\telse if (tag == \'select\')\n
-\t\t\tthis.selectedIndex = -1;\n
-\t});\n
+$.fn.clearFields = $.fn.clearInputs = function(includeHidden) {\n
+    var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i; // \'hidden\' is not in this list\n
+    return this.each(function() {\n
+        var t = this.type, tag = this.tagName.toLowerCase();\n
+        if (re.test(t) || tag == \'textarea\') {\n
+            this.value = \'\';\n
+        }\n
+        else if (t == \'checkbox\' || t == \'radio\') {\n
+            this.checked = false;\n
+        }\n
+        else if (tag == \'select\') {\n
+            this.selectedIndex = -1;\n
+        }\n
+\t\telse if (t == "file") {\n
+\t\t\tif (/MSIE/.test(navigator.userAgent)) {\n
+\t\t\t\t$(this).replaceWith($(this).clone(true));\n
+\t\t\t} else {\n
+\t\t\t\t$(this).val(\'\');\n
+\t\t\t}\n
+\t\t}\n
+        else if (includeHidden) {\n
+            // includeHidden can be the value true, or it can be a selector string\n
+            // indicating a special test; for example:\n
+            //  $(\'#myForm\').clearForm(\'.special:hidden\')\n
+            // the above would clean hidden inputs that have the class of \'special\'\n
+            if ( (includeHidden === true && /hidden/.test(t)) ||\n
+                 (typeof includeHidden == \'string\' && $(this).is(includeHidden)) )\n
+                this.value = \'\';\n
+        }\n
+    });\n
 };\n
 \n
 /**\n
  * Resets the form data.  Causes all form elements to be reset to their original value.\n
  */\n
 $.fn.resetForm = function() {\n
-\treturn this.each(function() {\n
-\t\t// guard against an input with the name of \'reset\'\n
-\t\t// note that IE reports the reset function as an \'object\'\n
-\t\tif (typeof this.reset == \'function\' || (typeof this.reset == \'object\' && !this.reset.nodeType))\n
-\t\t\tthis.reset();\n
-\t});\n
+    return this.each(function() {\n
+        // guard against an input with the name of \'reset\'\n
+        // note that IE reports the reset function as an \'object\'\n
+        if (typeof this.reset == \'function\' || (typeof this.reset == \'object\' && !this.reset.nodeType)) {\n
+            this.reset();\n
+        }\n
+    });\n
 };\n
 \n
 /**\n
  * Enables or disables any matching elements.\n
  */\n
 $.fn.enable = function(b) {\n
-\tif (b == undefined) b = true;\n
-\treturn this.each(function() {\n
-\t\tthis.disabled = !b;\n
-\t});\n
+    if (b === undefined) {\n
+        b = true;\n
+    }\n
+    return this.each(function() {\n
+        this.disabled = !b;\n
+    });\n
 };\n
 \n
 /**\n
@@ -668,36 +1122,42 @@ $.fn.enable = function(b) {\n
  * selects/deselects and matching option elements.\n
  */\n
 $.fn.selected = function(select) {\n
-\tif (select == undefined) select = true;\n
-\treturn this.each(function() {\n
-\t\tvar t = this.type;\n
-\t\tif (t == \'checkbox\' || t == \'radio\')\n
-\t\t\tthis.checked = select;\n
-\t\telse if (this.tagName.toLowerCase() == \'option\') {\n
-\t\t\tvar $sel = $(this).parent(\'select\');\n
-\t\t\tif (select && $sel[0] && $sel[0].type == \'select-one\') {\n
-\t\t\t\t// deselect all other options\n
-\t\t\t\t$sel.find(\'option\').selected(false);\n
-\t\t\t}\n
-\t\t\tthis.selected = select;\n
-\t\t}\n
-\t});\n
+    if (select === undefined) {\n
+        select = true;\n
+    }\n
+    return this.each(function() {\n
+        var t = this.type;\n
+        if (t == \'checkbox\' || t == \'radio\') {\n
+            this.checked = select;\n
+        }\n
+        else if (this.tagName.toLowerCase() == \'option\') {\n
+            var $sel = $(this).parent(\'select\');\n
+            if (select && $sel[0] && $sel[0].type == \'select-one\') {\n
+                // deselect all other options\n
+                $sel.find(\'option\').selected(false);\n
+            }\n
+            this.selected = select;\n
+        }\n
+    });\n
 };\n
+\n
+// expose debug var\n
+$.fn.ajaxSubmit.debug = false;\n
 \n
 // helper fn for console logging\n
-// set $.fn.ajaxSubmit.debug to true to enable debug logging\n
 function log() {\n
-\tif ($.fn.ajaxSubmit.debug) {\n
-\t\tvar msg = \'[jquery.form] \' + Array.prototype.join.call(arguments,\'\');\n
-\t\tif (window.console && window.console.log)\n
-\t\t\twindow.console.log(msg);\n
-\t\telse if (window.opera && window.opera.postError)\n
-\t\t\twindow.opera.postError(msg);\n
-\t}\n
-};\n
+    if (!$.fn.ajaxSubmit.debug)\n
+        return;\n
+    var msg = \'[jquery.form] \' + Array.prototype.join.call(arguments,\'\');\n
+    if (window.console && window.console.log) {\n
+        window.console.log(msg);\n
+    }\n
+    else if (window.opera && window.opera.postError) {\n
+        window.opera.postError(msg);\n
+    }\n
+}\n
 \n
-})(jQuery);\n
-
+})(jQuery);
 
 ]]></string> </value>
         </item>
@@ -707,7 +1167,7 @@ function log() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>20805</int> </value>
+            <value> <int>39528</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
