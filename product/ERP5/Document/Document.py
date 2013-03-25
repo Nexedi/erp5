@@ -45,7 +45,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request,\
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 from AccessControl import Unauthorized
 import zope.interface
 from Products.PythonScripts.Utility import allow_class
@@ -542,7 +542,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
               reference=self.getReference(),
               version=self.getVersion(),
               language=self.getLanguage(),
-              validation_state="!=cancelled")
+              query=NegatedQuery(Query(validation_state=('cancelled', 'deleted'))))
     catalog = self.getPortalObject().portal_catalog
     self_count = catalog.unrestrictedCountResults(uid=self.getUid(), **kw)[0][0]
     count = catalog.unrestrictedCountResults(**kw)[0][0]
@@ -600,8 +600,9 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
-                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"),
+                query=NegatedQuery(Query(validation_state=invalid_validation_state_list)),
                 sort_on='creation_date')
+
       if self.getVersion():
         kw['version'] = self.getVersion()
       if self.getLanguage():
