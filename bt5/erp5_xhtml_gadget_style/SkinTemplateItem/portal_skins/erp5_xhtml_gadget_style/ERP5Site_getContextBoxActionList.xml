@@ -87,6 +87,13 @@ def unLazyActionList(action_list):\n
   return fixed_action_list\n
 \n
 result = {}\n
+result[\'type_info_list\'] = []\n
+result[\'workflow_list\'] = []\n
+result[\'document_template_list\'] = []\n
+result[\'object_workflow_action_list\'] = []\n
+result[\'object_action_list\'] = []\n
+result[\'object_view_list\'] = []\n
+result[\'folder_action_list\'] = []\n
 result[\'object_jump_list\'] = unLazyActionList(actions[\'object_jump\'])\n
 \n
 # add links to edit current portal type\n
@@ -103,7 +110,6 @@ if preferred_html_style_developper_mode:\n
 # add links for workflows\n
 if portal.portal_workflow.Base_getSourceVisibility():\n
   workflow_list = portal.portal_workflow.getWorkflowsFor(context)\n
-  result[\'workflow_list\'] = []\n
   if workflow_list:\n
     result[\'workflow_list\'] = [{"title": "-- %s --" %translate("Workflows"),\n
                                 "url": ""}]\n
@@ -114,7 +120,6 @@ visible_allowed_content_type_list = context.getVisibleAllowedContentTypeList()\n
 result[\'visible_allowed_content_type_list\'] = [{"title": "Add %s" %x,\n
                                                 "url": "add %s" %x} for x in visible_allowed_content_type_list]\n
 \n
-result[\'document_template_list\'] = []\n
 document_template_list = context.getDocumentTemplateList()\n
 if document_template_list:\n
   result[\'document_template_list\'] = [{"title": "-- %s --" %translate("Templates"),\n
@@ -152,6 +157,7 @@ if folder_action_list:\n
                                    "url": ""}]\n
   result[\'folder_action_list\'].extend([{"title": "%s" %x[\'title\'],\n
                                         "url": "folder %s" %x[\'url\']} for x in object_action_list])\n
+# XXX: buttons\n
 \n
 return dumps(result)\n
 

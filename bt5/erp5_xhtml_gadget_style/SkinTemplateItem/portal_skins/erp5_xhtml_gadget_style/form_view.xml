@@ -40,30 +40,11 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master">\n
-    <tal:block\n
-              tal:define="object_uid           here/getUid | nothing;\n
-              object_path          here/getPath | nothing;\n
-              form                 nocall: form | nothing;\n
-              form_id              form/id | template/id | nothing;\n
-              portal               here/getPortalObject;\n
-              form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
-              local_parameter_list local_parameter_list | python: {};\n
-              dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
-              title                python: \'%s - %s\' % (portal.Base_translateString(template.title_or_id()), here.getTitle());">\n
+    <tal:block metal:use-macro="here/view_main/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
 \n
-      <tal:block metal:use-macro="here/main_template/macros/master">\n
-        <tal:block metal:fill-slot="context_bar">\n
+        <!--<tal:block metal:use-macro="here/form_render/macros/master" />-->\n
 \n
-          <div id="context_box_render"\n
-               data-gadget="context_box_render_wrapper"></div>\n
-\n
-        </tal:block>\n
-        <tal:block metal:fill-slot="main">\n
-\n
-          <div id="content"\n
-               tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}&current_form_id=${form_id}"></div>\n
-\n
-        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
@@ -81,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_main_disable</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

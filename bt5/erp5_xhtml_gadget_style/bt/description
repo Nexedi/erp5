@@ -1,5 +1,2 @@
 Ajax-zation of ERP5 user interface.
-
-Note: To enable this bt5 after install remove "_disable" from ids of "form_view_disable" , "view_main_disable" and "template_erp5_xhtml_style"
-
 This is still considered a work in progress.

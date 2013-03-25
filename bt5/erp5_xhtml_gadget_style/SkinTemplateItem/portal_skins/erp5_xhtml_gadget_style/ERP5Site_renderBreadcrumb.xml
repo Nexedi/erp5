@@ -36,7 +36,8 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div tal:define="portal here/getPortalObject">\n
+<div tal:define="portal here/getPortalObject;\n
+                 portal_url portal/absolute_url;">\n
 \n
   <div id="breadcrumb" class="breadcrumb">\n
     <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />\n
@@ -52,6 +53,7 @@
   <p class="clear"></p>\n
 \n
   <div data-gadget="ERP5Site_renderPortalStatusMessage"\n
+       tal:attributes="data-gadget string:${portal_url}/ERP5Site_renderPortalStatusMessage"\n
        id="portal_status_message"></div>\n
 \n
 \n

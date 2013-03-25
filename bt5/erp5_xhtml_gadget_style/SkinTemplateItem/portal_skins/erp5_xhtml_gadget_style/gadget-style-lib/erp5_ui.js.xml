@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63864401.96</string> </value>
+            <value> <string>ts63878317.05</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -71,9 +71,9 @@ var ERP5UI = ( function () {\n
               url: "ERP5Site_getContextBoxActionList",\n
               dataType: "json",\n
               success: function (data) {\n
-                        console.log(data.object_jump);\n
                         var jump_dom = $(\'select[name="select_jump"]\'),\n
                             action_dom = $(\'select[name="select_action"]\');\n
+                            console.log(data);\n
                         addOptionTagDict(jump_dom, data.object_jump_list);\n
                         addOptionTagDict(jump_dom, data.type_info_list);\n
                         addOptionTagDict(jump_dom, data.workflow_list);\n
@@ -82,6 +82,7 @@ var ERP5UI = ( function () {\n
                         addOptionTagDict(action_dom, data.object_workflow_action_list);\n
                         addOptionTagDict(action_dom, data.object_action_list);\n
                         addOptionTagDict(action_dom, data.object_view_list);\n
+                        addOptionTagDict(action_dom, data.folder_action_list);\n
                      }\n
           });\n
     }\n
@@ -100,7 +101,7 @@ var ERP5UI = ( function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2922</int> </value>
+            <value> <int>2993</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

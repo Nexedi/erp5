@@ -59,51 +59,6 @@
               onChange="submitAction(this.form,\'Base_doAction\')"\076\n
         \074option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui"\076Action...\074/option\076\n
-\074!--        \074tal:block tal:repeat="content_id here/getVisibleAllowedContentTypeList | nothing"\076\n
-          \074option tal:attributes="value string:add $content_id"\n
-                  i18n:translate="" i18n:domain="ui"\076Add \074tal:block tal:content="content_id"\n
-                           i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /\076\074/option\076\n
-        \074/tal:block\076\n
-        \074tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
-                   tal:condition="document_template_list"\076\n
-          \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Templates\074/tal:block\076 --\074/option\076\n
-          \074tal:block tal:repeat="document_template document_template_list"\076\n
-            \074option tal:attributes="value string:template ${document_template/getRelativeUrl}"\n
-                    i18n:translate="" i18n:domain="ui"\076Add \074tal:block tal:content="document_template/getTitle"\n
-                             i18n:name="document_template" /\076\074/option\076\n
-          \074/tal:block\076\n
-        \074/tal:block\076\n
-\n
-        \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Workflows\074/tal:block\076 --\074/option\076\n
-        \074tal:block tal:repeat="action actions/workflow"\076\n
-          \074option tal:content="action/name"\n
-                  tal:attributes="value string:workflow ${action/url}"\n
-                  i18n:translate="" i18n:domain="ui" /\076\n
-        \074/tal:block\076\n
-        \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Object\074/tal:block\076 --\074/option\076\n
-        \074tal:block tal:repeat="action actions/object_action | nothing"\076\n
-          \074option tal:content="action/name"\n
-                  tal:attributes="value string:object ${action/url}"\n
-                  i18n:translate="" i18n:domain="ui" /\076\n
-        \074/tal:block\076\n
-        \074tal:block tal:define="object_view_list actions/object_view|nothing;\n
-                   module_view_list python:[i for i in object_view_list if i[\'id\']==\'module_view\']"\n
-                   tal:condition="module_view_list"\076\n
-          \074tal:block tal:repeat="action module_view_list"\076\n
-            \074option tal:content="action/name"\n
-                    tal:attributes="value string:object ${action/url}"\n
-                    i18n:translate="" i18n:domain="ui" /\076\n
-          \074/tal:block\076\n
-        \074/tal:block\076--\076\n
-        \074tal:block tal:replace=\'nothing\'\076\n
-          \074!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) --\076\n
-\074!--          \074option disabled="disabled"\076-- \074tal:block i18n:translate="" i18n:domain="ui"\076Folder\074/tal:block\076 --\074/option\076\n
-          \074tal:block tal:repeat="action actions/folder"\076\n
-            \074option tal:content="action/name"\n
-                    tal:attributes="value string:folder ${action/url}"\n
-                    i18n:translate="" i18n:domain="ui" /\076\n
-          \074/tal:block\076--\076\n
-        \074/tal:block\076\n
       \074/select\076\n
       \074button type="submit" name="Base_doAction:method" title="Action"\n
               i18n:attributes="title" i18n:domain="ui"\076\n

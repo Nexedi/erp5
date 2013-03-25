@@ -47,6 +47,8 @@ IDEAS:\n
   </tal:block>\n
   <tal:block metal:define-macro="master">\n
     <tal:block tal:define="global_definitions_macros here/global_definitions/macros;\n
+                           portal here/getPortalObject;\n
+                           portal_url portal/absolute_url;\n
                            subject_list subject_list | python:here.getProperty(\'subject_list\', []) or []">\n
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />\n
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
@@ -117,7 +119,7 @@ IDEAS:\n
               <div id="bars" class="bars">\n
 \n
                 <div id="main_bar"\n
-                     data-gadget="ERP5Site_renderNavigationBox"></div>\n
+                     tal:attributes="data-gadget string:${portal_url}/ERP5Site_renderNavigationBox"></div>\n
 \n
                 <div id="context_bar" class="context_bar">\n
                   <tal:block metal:define-slot="context_bar" />\n
@@ -153,7 +155,7 @@ IDEAS:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template_erp5_xhtml_style_disable</string> </value>
+            <value> <string>template_erp5_xhtml_style</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
