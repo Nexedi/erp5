@@ -669,9 +669,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     catalog = self.getPortalObject().portal_catalog
     result_list = catalog.unrestrictedSearchResults(
                                       reference=self.getReference(),
-                                      sort_on=(('creation_date', 
+                                      sort_on=(('creation_date',
                                                 'ascending'),))
-    # XXX this should be security-unaware - delegate to script with proxy roles
     if result_list:
       return result_list[0].getLanguage()
     return
