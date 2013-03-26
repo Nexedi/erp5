@@ -161,11 +161,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.stepCreateOrganisation(sequence=sequence,
                         sequence_list=sequence_list, **kw)
     mirror_section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    other_section = sequence.get('organisation')
     sequence.edit(
           node = node,
           section = section,
           mirror_node = mirror_node,
           mirror_section = mirror_section,
+          other_section = other_section,
         )
 
   def stepCreateAggregatingInventory(self, sequence=None, sequence_list=None, **kw):
@@ -2109,6 +2113,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                             'getter':'getVariationText',
                             'setter':'splitAndExtendToCategoryList'},
                            ),
+            "second_level":({'key' : 'sub_variation_text',
+                             'getter' : 'getSubVariationText',
+                             'setter' : "splitAndExtendToCategoryList"},
+                            ),
             },)
     '''))
 
@@ -2174,6 +2182,88 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(101, getInventory(section_uid=section.getUid(),
                                         node_category='region/level1/level2',
                                         optimisation__=True))
+
+  def stepCreateFullInventoryAtTheDate(self, sequence=None,
+                                       sequence_list=None, **kw):
+    """ Create Full Inventory at the date: '2013/03/12 GMT+9' """
+    inventory_list = sequence.get('inventory_list',[])
+    self.assertEquals(len(inventory_list), 0)
+    inventory = self.createInventory(sequence=sequence)
+    inventory.edit(full_inventory=True,
+                   destination_section_value=sequence.get('section'),
+                   destination_value=sequence.get('node'),
+                   start_date='2013/03/12 00:00:00 GMT+9')
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("resource"),
+      inventory = 100)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+
+  def stepCheckMultipleSectionAndFullInventory(self, sequence=None,
+                                               sequence_list=None, **kw):
+    """ Check that getInvetory() is surely working in
+    MultipleSectionAndFullInventory case """
+    section = sequence.get('section')
+    other_section  = sequence.get('other_section')
+    self._testGetInventory(expected=102, section_uid=section.getUid())
+    self._testGetInventory(expected=7, section_uid=other_section.getUid())
+
+
+  def stepCreatePackingListForMultipleSectionAndFullInventory(
+        self, sequence=None, sequence_list=None, **kw):
+    """ Create packing lists for MultipleSectionAndFullInventory Test """
+    node = sequence.get('node')
+    section = sequence.get('section')
+    mirror_node = sequence.get('mirror_node')
+    mirror_section = sequence.get('mirror_section')
+    other_section = sequence.get('other_section')
+    resource = sequence.get('resource')
+    packing_list_module = self.getPortal().getDefaultModule(
+                              portal_type=self.packing_list_portal_type)
+    movement_list = [
+      dict(start_date='2013/03/10 00:00:00 GMT+9',
+           destination_section_value=section, quantity=1),
+      dict(start_date='2013/03/13 00:00:00 GMT+9',
+           destination_section_value=section, quantity=2),
+      dict(start_date='2013/03/11 00:00:00 GMT+9',
+           destination_section_value=other_section, quantity=3),
+      dict(start_date='2013/03/12 00:00:00 GMT+9',
+           destination_section_value=other_section, quantity=4)]
+    packing_list_list = []
+    for movement in movement_list:
+      packing_list = packing_list_module.newContent(
+                              portal_type=self.packing_list_portal_type)
+      packing_list.edit(specialise=self.business_process,
+                        source_section_value=mirror_section,
+                        source_value=mirror_node,
+                        destination_section_value= \
+                          movement['destination_section_value'],
+                        destination_value=node,
+                        start_date=movement['start_date'],
+                        price_currency=self.price_currency)
+      self.assertNotEquals(packing_list.getSourceSectionValue(), None)
+      self.assertNotEquals(packing_list.getSourceValue(), None)
+      self.assertNotEquals(packing_list.getSourceSectionValue(),
+                           packing_list.getDestinationSectionValue())
+
+      line = packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type)
+      line.edit(resource_value=resource, quantity=movement['quantity'])
+      packing_list_list.append(packing_list)
+    sequence.edit(packing_list_list=packing_list_list)
+
+  def stepDeliverAllPackingList(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """Deliver all the packing lists that are created by test sequences"""
+    packing_list_list = sequence.get('packing_list_list')
+    for packing_list in packing_list_list:
+      for action in ('confirm', 'setReady', 'start', 'stop', 'deliver'):
+        workflow_action = getattr(packing_list, action)
+        workflow_action()
+        self.tic()
 
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
@@ -2458,6 +2548,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.play(self)
 
   def test_09_FullInventoryWithNodeCategory(self, quiet=0, run=run_all_test):
+    if not run: return
     sequence_list = SequenceList()
     sequence_string = 'CreateOrganisationsForModule \
                        SetUpInventoryIndexingByNodeAndSection \
@@ -2474,6 +2565,37 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_10_MultipleSectionAndFullInventory(self, quiet=0, run=run_all_test):
+    """Make sure that getInventory works in the situation which
+    two sections use the same node and one section has full inventory for
+    the node.
+    For Example:
+    movement: 2013/03/10, section=A, node=C, quantity=1
+    movement: 2013/03/13, section=A, node=C, quantity=2
+    movement: 2013/03/11, section=B, node=C, quantity=3
+    movement: 2013/03/12, section=B, node=C, quantity=4
+
+    full inventory: 2013/03/12, section=A, node=C, quantity=100
+
+    getInventory(section_A_uid) should return 102 (not 103)
+    getInventory(section_B_uid) should return 7 (not 100)
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreatePackingListForMultipleSectionAndFullInventory \
+                       Tic \
+                       DeliverAllPackingList \
+                       Tic \
+                       CreateFullInventoryAtTheDate \
+                       Tic \
+                       CheckMultipleSectionAndFullInventory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
