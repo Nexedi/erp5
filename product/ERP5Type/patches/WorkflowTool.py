@@ -482,7 +482,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
     getSecurityUidDictAndRoleColumnDict = \
       portal_catalog.getSecurityUidDictAndRoleColumnDict
-    security_query_cache_dict = {}
     def _getWorklistActionList():
       worklist_result_dict = {}
       sql_catalog = portal_catalog.getSQLCatalog()
