@@ -35,12 +35,22 @@ from Acquisition import aq_base, aq_inner
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
+from Persistence import Persistent
+from ZPublisher import BeforeTraverse
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
 # Global keys used for URL generation
 WEBSECTION_KEY = 'web_section_value'
 MARKER = []
+
+class WebSectionTraversalHook(Persistent):
+  def __call__(self, container, request):
+    if not request.get('ignore_layout', None):
+      # If a skin selection is defined in this web section, change the skin now.
+      skin_selection_name = container.getSkinSelectionName()
+      if skin_selection_name and request.get('portal_skin', None) is None:
+        container.getPortalObject().changeSkin(skin_selection_name)
 
 class WebSection(Domain, DocumentExtensibleTraversableMixin):
     """
@@ -125,6 +135,20 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
           document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request,
             '404.error.page')
       return document
+
+    security.declarePrivate( 'manage_beforeDelete' )
+    def manage_beforeDelete(self, item, container):
+      if item is self and self.getPortalType() == 'Web Section':
+        handle = self.meta_type + '/' + self.getId()
+        BeforeTraverse.unregisterBeforeTraverse(item, handle)
+      super(WebSection, self).manage_beforeDelete(item, container)
+
+    security.declarePrivate( 'manage_afterAdd' )
+    def manage_afterAdd(self, item, container):
+      if item is self and self.getPortalType() == 'Web Section':
+        handle = self.meta_type + '/' + self.getId()
+        BeforeTraverse.registerBeforeTraverse(item, WebSectionTraversalHook(), handle)
+      super(WebSection, self).manage_afterAdd(item, container)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
     def getLayoutProperty(self, key, default=None):
@@ -386,3 +410,10 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         cache[key] = result
 
       return result
+
+    def _edit(self, **kw):
+      # migrate beforeTraverse hook if missing
+      if getattr(self, '__before_traverse__', None) is None and self.getPortalType() == 'Web Section':
+        handle = self.meta_type + '/' + self.getId()
+        BeforeTraverse.registerBeforeTraverse(self, WebSectionTraversalHook(), handle)
+      super(WebSection, self)._edit(**kw)
