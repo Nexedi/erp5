@@ -145,7 +145,9 @@ def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criter
       [workflow_worklist_key] = valid_criterion_dict
 
 def groupWorklistListByCondition(worklist_dict, sql_catalog,
-                                 getSecurityUidDictAndRoleColumnDict=None):
+      getSecurityUidDictAndRoleColumnDict=None,
+      catalog_security_uid_groups_columns_dict=None,
+    ):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
     conditions.
@@ -182,8 +184,6 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
   metadata_dict = {}
-  catalog_security_uid_groups_columns_dict = \
-    sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
@@ -474,17 +474,35 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     def _getWorklistActionList():
       is_anonymous = portal.portal_membership.isAnonymousUser()
       portal_catalog = portal.portal_catalog
+      sql_catalog = portal_catalog.getSQLCatalog()
+      catalog_security_uid_groups_columns_dict = \
+        sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
+      getSecurityUidDictAndRoleColumnDict = \
+        portal_catalog.getSecurityUidDictAndRoleColumnDict
       search_result = getattr(self, "Base_getCountFromWorklistTable", None)
       use_cache = search_result is not None
       if use_cache:
+        ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
+        ignored_security_uid_parameter_set = set(x
+          for x, y in catalog_security_uid_groups_columns_dict.iteritems()
+          if y in ignored_security_column_id_set
+        )
+        _getSecurityUidDictAndRoleColumnDict = getSecurityUidDictAndRoleColumnDict
+        def getSecurityUidDictAndRoleColumnDict(**kw):
+          security_uid_dict, role_column_dict, local_role_column_dict = \
+            _getSecurityUidDictAndRoleColumnDict(**kw)
+          for ignored_security_column_id in ignored_security_column_id_set:
+            role_column_dict.pop(ignored_security_column_id, None)
+            local_role_column_dict.pop(ignored_security_column_id, None)
+          for ignored_security_uid_parameter in \
+              ignored_security_uid_parameter_set:
+            security_uid_dict.pop(ignored_security_uid_parameter)
+          return security_uid_dict, role_column_dict, local_role_column_dict
         select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
       else:
         search_result = portal_catalog.unrestrictedSearchResults
         select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
-      getSecurityUidDictAndRoleColumnDict = \
-        portal_catalog.getSecurityUidDictAndRoleColumnDict
       worklist_result_dict = {}
-      sql_catalog = portal_catalog.getSQLCatalog()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
       (worklist_list_grouped_by_condition, worklist_metadata) = \
@@ -492,7 +510,10 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           worklist_dict=worklist_dict,
           sql_catalog=sql_catalog,
           getSecurityUidDictAndRoleColumnDict=\
-            getSecurityUidDictAndRoleColumnDict)
+            getSecurityUidDictAndRoleColumnDict,
+          catalog_security_uid_groups_columns_dict=\
+            catalog_security_uid_groups_columns_dict,
+        )
       if src__:
         action_list = []
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
@@ -561,6 +582,12 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 
 WorkflowTool.listActions = WorkflowTool_listActions
 
+def _getWorklistIgnoredSecurityColumnSet(self):
+  return getattr(self,
+    'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
+WorkflowTool._getWorklistIgnoredSecurityColumnSet = \
+  _getWorklistIgnoredSecurityColumnSet
+
 def WorkflowTool_refreshWorklistCache(self):
   """
     Refresh worklist cache table.
@@ -608,7 +635,13 @@ def WorkflowTool_refreshWorklistCache(self):
         sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \
         [x[1] for x in sql_catalog.getSQLCatalogRoleKeysList()] + \
         [x[1] for x in sql_catalog.getSQLCatalogLocalRoleKeysList()]
-      for security_column_id in security_column_id_list:
+      security_column_id_set = set(security_column_id_list)
+      assert len(security_column_id_set) == len(security_column_id_list), (
+        security_column_id_set, security_column_id_list)
+      del security_column_id_list
+      security_column_id_set.difference_update(
+        self._getWorklistIgnoredSecurityColumnSet())
+      for security_column_id in security_column_id_set:
         assert security_column_id in table_column_id_set
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
@@ -621,7 +654,7 @@ def WorkflowTool_refreshWorklistCache(self):
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
         for criterion_id in total_criterion_id_list:
           assert criterion_id in table_column_id_set
-        for security_column_id in security_column_id_list:
+        for security_column_id in security_column_id_set:
           assert security_column_id not in total_criterion_id_list
           total_criterion_id_list.append(security_column_id)
         group_by_expression = ', '.join(total_criterion_id_list)
