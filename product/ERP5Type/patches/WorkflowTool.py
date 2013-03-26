@@ -470,19 +470,19 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 
   if worklist_dict:
     portal = self.getPortalObject()
-    is_anonymous = portal.portal_membership.isAnonymousUser()
     portal_url = portal.portal_url()
-    portal_catalog = portal.portal_catalog
-    search_result = getattr(self, "Base_getCountFromWorklistTable", None)
-    use_cache = search_result is not None
-    if use_cache:
-      select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
-    else:
-      search_result = portal_catalog.unrestrictedSearchResults
-      select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
-    getSecurityUidDictAndRoleColumnDict = \
-      portal_catalog.getSecurityUidDictAndRoleColumnDict
     def _getWorklistActionList():
+      is_anonymous = portal.portal_membership.isAnonymousUser()
+      portal_catalog = portal.portal_catalog
+      search_result = getattr(self, "Base_getCountFromWorklistTable", None)
+      use_cache = search_result is not None
+      if use_cache:
+        select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
+      else:
+        search_result = portal_catalog.unrestrictedSearchResults
+        select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
+      getSecurityUidDictAndRoleColumnDict = \
+        portal_catalog.getSecurityUidDictAndRoleColumnDict
       worklist_result_dict = {}
       sql_catalog = portal_catalog.getSQLCatalog()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
