@@ -182,6 +182,8 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
   metadata_dict = {}
+  catalog_security_uid_groups_columns_dict = \
+    sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
@@ -207,8 +209,6 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         for key, value in local_role_column_dict.items():
           worklist_match_dict[key] = [value]
 
-        catalog_security_uid_groups_columns_dict = \
-            sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
         for local_roles_group_id, uid_list in uid_dict.iteritems():
           role_column_dict[
             catalog_security_uid_groups_columns_dict[local_roles_group_id]] = uid_list
@@ -609,6 +609,8 @@ def WorkflowTool_refreshWorklistCache(self):
         sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \
         [x[1] for x in sql_catalog.getSQLCatalogRoleKeysList()] + \
         [x[1] for x in sql_catalog.getSQLCatalogLocalRoleKeysList()]
+      for security_column_id in security_column_id_list:
+        assert security_column_id in table_column_id_set
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
@@ -622,7 +624,6 @@ def WorkflowTool_refreshWorklistCache(self):
           assert criterion_id in table_column_id_set
         for security_column_id in security_column_id_list:
           assert security_column_id not in total_criterion_id_list
-          assert security_column_id in table_column_id_set
           total_criterion_id_list.append(security_column_id)
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
