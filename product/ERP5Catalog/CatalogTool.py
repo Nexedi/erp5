@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
@@ -526,15 +527,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             # dtml instead ? ... yes, but how to be bw compatible ?
             allowedRolesAndUsers = [sqlquote(role) for role in allowedRolesAndUsers]
 
-            security_uid_dict = dict()
+            security_uid_dict = defaultdict(list)
             for brain in method(security_roles_list=allowedRolesAndUsers):
-              try:
-                local_roles_group_id = brain.local_roles_group_id
-              except AttributeError:
-                # backwards compatability in cases when catalog use default schema
-                local_roles_group_id = ''
-              security_uid_dict.setdefault(local_roles_group_id,
-                  []).append(brain.uid)
+              security_uid_dict[getattr(brain, 'local_roles_group_id', '')
+                ].append(brain.uid)
 
           security_uid_cache[cache_key] = security_uid_dict
       else:
