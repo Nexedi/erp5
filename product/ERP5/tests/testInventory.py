@@ -201,16 +201,20 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
 
-  def createInventory(self, sequence=None, full=False):
+  def createInventory(self, sequence=None, full=False, **kw):
     """
     """
     portal = self.getPortal()
+    if kw.get('start_date', None) is not None:
+      start_date = kw['start_date']
+    else:
+      start_date = DateTime() + 1
     inventory_list = sequence.get('inventory_list',[])
     inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
     inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
     inventory.edit(destination_value = sequence.get('node'),
                    destination_section_value = sequence.get('section'),
-                   start_date = DateTime() + 1,
+                   start_date = start_date,
                    full_inventory=full,
                   )
     inventory_list.append(inventory)
@@ -2191,11 +2195,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                        sequence_list=None, **kw):
     """ Create Full Inventory at the date' """
     inventory_list = sequence.get('inventory_list',[])
-    self.assertEquals(len(inventory_list), 0)
     if kw.get('start_date', None) is not None:
       start_date = kw['start_date']
     else:
       start_date = '2013/03/12 00:00:00 GMT+9'
+    if kw.get('resource_value', None) is not None:
+      resource_value = kw['resource_value']
+    else:
+      resource_value = sequence.get('resource')
     inventory = self.createInventory(sequence=sequence)
     inventory.edit(full_inventory=True,
                    destination_section_value=sequence.get('section'),
@@ -2203,7 +2210,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                    start_date=start_date)
     inventory_line = inventory.newContent(
       portal_type = self.inventory_line_portal_type,
-      resource_value = sequence.get("resource"),
+      resource_value = resource_value,
       inventory = 100)
     inventory.deliver()
     inventory_list.append(inventory)
@@ -2212,11 +2219,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
   def stepCreateFullInventoryAtTheDate1(self, sequence=None,
                                         sequence_list=None, **kw):
-    if getattr(self, 'inventory_start_date_1', None) is None:
-      raise UnboundLocalError('Please assign self.inventory_start_date_1 '
+    if getattr(self, 'full_inventory_start_date_1', None) is None:
+      raise UnboundLocalError('Please assign self.full_inventory_start_date_1 '
                               'in your test method')
-    self.stepCreateFullInventoryAtTheDate(
-      sequence, sequence_list, start_date=self.inventory_start_date_1)
+    params = dict(start_date=self.full_inventory_start_date_1)
+    if getattr(self, 'full_inventory_resource_1', None) is not None:
+      params['resource_value'] = sequence.get(self.full_inventory_resource_1)
+    self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
 
   def stepCheckMultipleSectionAndFullInventory(self, sequence=None,
                                                sequence_list=None, **kw):
@@ -2345,6 +2354,69 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                                        {'total_quantity':100},],
                               section_uid=section.getUid(),
                               node_uid=node.getUid())
+
+  def stepCreateInventoryAtTheDate(self, sequence=None,
+                                   sequence_list=None, **kw):
+    """ Create Inventory at the date with some flexible variables """
+    inventory_quantity = kw['inventory'] if 'inventory' in kw else 100
+    start_date = kw['start_date'] if 'start_date' in kw else None
+    if 'resource_value' in kw:
+      resource_value = kw['resource_value']
+    else:
+      resource_value = sequence.get('second_resource')
+    inventory = self.createInventory(sequence=sequence,
+                                     full=False, start_date=start_date)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory_line = inventory.newContent(
+      portal_type=self.inventory_line_portal_type,
+      resource_value=resource_value,
+      inventory=inventory_quantity)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepCreateInventoryAtTheDate1(self, sequence=None,
+                                    sequence_list=None, **kw):
+    """ Create Inventory at the date:'self.inventory_start_date_1'
+     with some flexible variables """
+    if getattr(self, 'inventory_start_date_1', None) is None:
+      raise UnboundLocalError('Please assign self.inventory_start_date_1 '
+                              'in your test method')
+    params = dict(start_date=self.inventory_start_date_1)
+    if getattr(self, 'inventory_1', None) is not None:
+      params['inventory'] = self.inventory_1
+    if getattr(self, 'inventory_resource_1', None) is not None:
+      params['resource_value'] = sequence.get(self.inventory_resource_1)
+
+    self.stepCreateInventoryAtTheDate(sequence, sequence_list, **params)
+
+  def stepCreateInventoryAtTheDate2(self, sequence=None,
+                                    sequence_list=None, **kw):
+    """ Create Inventory at the date:'self.inventory_start_date_2'
+     with some flexible variables """
+    if getattr(self, 'inventory_start_date_2', None) is None:
+      raise UnboundLocalError('Please assign self.inventory_start_date_2 '
+                              'in your test method')
+    params = dict(start_date=self.inventory_start_date_2)
+    if getattr(self, 'inventory_2', None) is not None:
+      params['inventory'] = self.inventory_2
+    if getattr(self, 'inventory_resource_2', None) is not None:
+      params['resource_value'] = sequence.get(self.inventory_resource_2)
+    self.stepCreateInventoryAtTheDate(sequence, sequence_list, **params)
+
+  def stepCheckUseBothFullAndPartialInventory(
+        self, sequence=None, sequence_list=None, **kw):
+    """ Check a case Using both Full and Normal Inventory"""
+    resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=3,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=3,
+                           resource_uid=resource_value.getUid(),
+                           optimise__=False)
 
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
@@ -2699,7 +2771,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
     if not run: return
 
-    self.inventory_start_date_1 = '2013/03/15 00:00:00 GMT+9'
+    self.full_inventory_start_date_1 = '2013/03/15 00:00:00 GMT+9'
     self.start_date_1 = '2013/02/10 00:00:00 GMT+9'
     self.start_date_2 = '2013/02/01 00:00:00 GMT+9'
     sequence_list = SequenceList()
@@ -2719,6 +2791,46 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        DeliverPackingList \
                        Tic \
                        CheckFullInventoryAddOldMovement \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
+  def test_12_UseBothFullAndPartialInventory(self, quiet=0, run=run_all_test):
+    """
+    Make sure a case Using both Full and Partial Inventories:
+
+    The case is:
+    1) inventory: 2013/01/10, section=A, node=B, resource=X, quantity=3
+    2) full inventory: 2013/02/21,section=A, node=B, resource=Y, quantity=100
+       (there is only *Y*. No X.)
+    3) inventory: 2013/03/10,section=A, node=B, resource=X, quantity=3
+
+    [test]
+    getInventory(resource=X) should return 3
+    getInventory(resource=X, optimise__=False) should return 3
+    """
+    if not run: return
+
+    self.inventory_start_date_1 = '2013/01/10 00:00:00 GMT+9'
+    self.full_inventory_start_date_1 = '2013/01/10 00:00:00 GMT+9'
+    self.inventory_start_date_2 = '2013/03/10 00:00:00 GMT+9'
+    self.full_inventory_resource_1 = 'resource'
+    self.inventory_resource_1 = self.inventory_resource_2 = 'second_resource'
+    self.inventory_1 = 3
+    self.inventory_2 = 3
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       Tic \
+                       CreateInventoryAtTheDate1 \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CreateInventoryAtTheDate2 \
+                       Tic \
+                       CheckUseBothFullAndPartialInventory \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
