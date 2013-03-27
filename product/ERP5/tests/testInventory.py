@@ -351,14 +351,18 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.packing_list_portal_type)
     packing_list = packing_list_module.newContent(
                               portal_type=self.packing_list_portal_type)
+    if kw.get('start_date', None) is not None:
+      start_date = stop_date = kw['start_date']
+    else:
+      start_date = stop_date = DateTime() - 2
     packing_list.edit(
                       specialise=self.business_process,
                       source_section_value = mirror_section,
                       source_value = mirror_node,
                       destination_section_value = section,
                       destination_value = node,
-                      start_date = DateTime() - 2,
-                      stop_date = DateTime() - 2,
+                      start_date = start_date,
+                      stop_date = stop_date,
                       price_currency = self.price_currency
                      )
     self.assertNotEquals( packing_list.getSourceSectionValue(), None)
@@ -2185,14 +2189,18 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
   def stepCreateFullInventoryAtTheDate(self, sequence=None,
                                        sequence_list=None, **kw):
-    """ Create Full Inventory at the date: '2013/03/12 GMT+9' """
+    """ Create Full Inventory at the date' """
     inventory_list = sequence.get('inventory_list',[])
     self.assertEquals(len(inventory_list), 0)
+    if kw.get('start_date', None) is not None:
+      start_date = kw['start_date']
+    else:
+      start_date = '2013/03/12 00:00:00 GMT+9'
     inventory = self.createInventory(sequence=sequence)
     inventory.edit(full_inventory=True,
                    destination_section_value=sequence.get('section'),
                    destination_value=sequence.get('node'),
-                   start_date='2013/03/12 00:00:00 GMT+9')
+                   start_date=start_date)
     inventory_line = inventory.newContent(
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("resource"),
@@ -2201,6 +2209,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
 
+
+  def stepCreateFullInventoryAtTheDate1(self, sequence=None,
+                                        sequence_list=None, **kw):
+    if getattr(self, 'inventory_start_date_1', None) is None:
+      raise UnboundLocalError('Please assign self.inventory_start_date_1 '
+                              'in your test method')
+    self.stepCreateFullInventoryAtTheDate(
+      sequence, sequence_list, start_date=self.inventory_start_date_1)
 
   def stepCheckMultipleSectionAndFullInventory(self, sequence=None,
                                                sequence_list=None, **kw):
@@ -2264,6 +2280,71 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         workflow_action = getattr(packing_list, action)
         workflow_action()
         self.tic()
+
+  def stepCreatePackingListAtTheDate1(self,
+                                     sequence=None,
+                                     sequence_list=None,
+                                     **kw):
+    """ Create Packing List with self.start_date_1"""
+    if getattr(self, 'start_date_1', None) is None:
+      raise UnboundLocalError('Please Assign self.start_date_1 '
+                              'in your test method')
+    start_date = self.start_date_1
+    self.stepCreatePackingListForModule(sequence=sequence,
+                                        sequence_list=sequence_list,
+                                        start_date=start_date)
+
+  def stepCreatePackingListAtTheDate2(self,
+                                     sequence=None,
+                                     sequence_list=None,
+                                     **kw):
+    """ Create Packing List with self.start_date_2"""
+    if getattr(self, 'start_date_2', None) is None:
+      raise UnboundLocalError('Please Assign self.start_date_2 '
+                              'in your test method')
+    start_date = self.start_date_2
+    self.stepCreatePackingListForModule(sequence=sequence,
+                                        sequence_list=sequence_list,
+                                        start_date=start_date)
+
+  def _testGetMovementHistoryList(self, expected_history=None, **kw):
+    """ Helper method to check getMovementHistoryList """
+    simulation = self.getPortal().portal_simulation
+    LOG('Testing movement history with args :', 0, kw)
+    result = simulation.getMovementHistoryList(**kw)
+    self.assertTrue(len(result) > 0)
+    # Note: Now only checking total_quantity but can be checked more
+    actual_history = [{'total_quantity':x.total_quantity} for x in result]
+    try:
+      self.assertEquals(len(expected_history), len(actual_history))
+      for expected, actual in zip(expected_history, actual_history):
+        shared_keys = set(expected.keys()) & set(actual.keys())
+        self.assertEquals(len(shared_keys), len(expected.keys()))
+        shared_item = set(expected.items()) & set(actual.items())
+        self.assertEquals(len(shared_item), len(expected.keys()))
+    except AssertionError:
+      msg = 'History differs between expected:\n%s\nand real:\n%s'\
+             % (repr(expected_history), repr(actual_history))
+      LOG('TestInventory._testGetMovementHistoryList', 0, msg)
+      LOG('SQL Query was : ', 0,
+         str(simulation.getMovementHistoryList(src__=1, **kw)))
+      raise AssertionError(msg)
+
+  def stepCheckFullInventoryAddOldMovement(self,
+                                           sequence=None,
+                                           sequence_list=None,
+                                           **kw):
+    """ Check Create Full Inventory Then Add Old Movement use case """
+    section = sequence.get('section')
+    node  = sequence.get('node')
+    self._testGetInventory(expected=100,
+                           section_uid=section.getUid(),
+                           node_uid=node.getUid())
+    self._testGetMovementHistoryList(expected_history=[{'total_quantity':-100},
+                                                       {'total_quantity':100},
+                                                       {'total_quantity':100},],
+                              section_uid=section.getUid(),
+                              node_uid=node.getUid())
 
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
@@ -2596,6 +2677,52 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  # Note: This inventory reindex function is not implemented yet
+  @expectedFailure
+  def test_11_FullInventoryAddOldMovement(self, quiet=0, run=run_all_test):
+    """
+    Make sure the following case:
+
+    1) add movement 2013/02/10, quantity=100
+    2) full inventory: 2013/03/15, quantity=100
+
+    [test]
+    getInventory() should return 100
+    getMovementHistory() should return 100 ([100])
+
+    3) add movement: 2013/02/01, quantity=100
+
+    [test]
+    getInventory() should return 100
+    getMovementHistory() should return 100 ([-100, 100, 100])
+    """
+    if not run: return
+
+    self.inventory_start_date_1 = '2013/03/15 00:00:00 GMT+9'
+    self.start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    self.start_date_2 = '2013/02/01 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLine \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CreatePackingListAtTheDate2 \
+                       CreatePackingListLine \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CheckFullInventoryAddOldMovement \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()
