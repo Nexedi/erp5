@@ -2058,11 +2058,12 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
-        new_param_dict = param_dict.copy()
-        new_param_dict['brain'] = current_section.object_list[offset]
-        new_param_dict['list_index'] = index
-        new_param_dict['total_size'] = self.total_size
-        row_css_class_name = self.getRowCSSClassName(**new_param_dict)
+        row_css_class_name = self.getRowCSSClassName(
+          brain=current_section.object_list[offset],
+          field=self.field,
+          list_index=index,
+          total_size=self.total_size,
+          **param_dict)
         line = line_class(renderer = self,
                           obj = current_section.object_list[offset],
                           index = index,
