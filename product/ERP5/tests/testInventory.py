@@ -164,12 +164,16 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.stepCreateOrganisation(sequence=sequence,
                         sequence_list=sequence_list, **kw)
     other_section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    other_node = sequence.get('organisation')
     sequence.edit(
           node = node,
           section = section,
           mirror_node = mirror_node,
           mirror_section = mirror_section,
           other_section = other_section,
+          other_node = other_node,
         )
 
   def stepCreateAggregatingInventory(self, sequence=None, sequence_list=None, **kw):
@@ -381,10 +385,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     Create a line not variated
     """
     packing_list = sequence.get('packing_list')
-    resource = sequence.get('resource')
+    if kw.get('resource_value', None) is not None:
+      resource_value = kw['resource_value']
+    else:
+      resource_value = sequence.get('resource')
     packing_list_line = packing_list.newContent(
                   portal_type=self.packing_list_line_portal_type)
-    packing_list_line.edit(resource_value = resource,
+    packing_list_line.edit(resource_value = resource_value,
                            quantity = 100.
                           )
 
@@ -2203,10 +2210,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       resource_value = kw['resource_value']
     else:
       resource_value = sequence.get('resource')
+    if kw.get('destination_value', None) is not None:
+      destination_value = kw['destination_value']
+    else:
+      destination_value = sequence.get('node')
     inventory = self.createInventory(sequence=sequence)
     inventory.edit(full_inventory=True,
                    destination_section_value=sequence.get('section'),
-                   destination_value=sequence.get('node'),
+                   destination_value=destination_value,
                    start_date=start_date)
     inventory_line = inventory.newContent(
       portal_type = self.inventory_line_portal_type,
@@ -2224,7 +2235,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                               'in your test method')
     params = dict(start_date=self.full_inventory_start_date_1)
     if getattr(self, 'full_inventory_resource_1', None) is not None:
+      self.assertNotEquals(sequence.get(self.full_inventory_resource_1), None)
       params['resource_value'] = sequence.get(self.full_inventory_resource_1)
+    if getattr(self, 'full_inventory_node_1', None) is not None:
+      self.assertNotEquals(sequence.get(self.full_inventory_node_1), None)
+      params['destination_value'] = sequence.get(self.full_inventory_node_1)
     self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
 
   def stepCheckMultipleSectionAndFullInventory(self, sequence=None,
@@ -2298,10 +2313,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     if getattr(self, 'start_date_1', None) is None:
       raise UnboundLocalError('Please Assign self.start_date_1 '
                               'in your test method')
-    start_date = self.start_date_1
     self.stepCreatePackingListForModule(sequence=sequence,
                                         sequence_list=sequence_list,
-                                        start_date=start_date)
+                                        start_date=self.start_date_1)
 
   def stepCreatePackingListAtTheDate2(self,
                                      sequence=None,
@@ -2311,10 +2325,38 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     if getattr(self, 'start_date_2', None) is None:
       raise UnboundLocalError('Please Assign self.start_date_2 '
                               'in your test method')
-    start_date = self.start_date_2
     self.stepCreatePackingListForModule(sequence=sequence,
                                         sequence_list=sequence_list,
-                                        start_date=start_date)
+                                        start_date=self.start_date_2)
+
+  def stepCreatePackingListLineWithResource1(self,
+                                             sequence=None,
+                                             sequence_list=None,
+                                             **kw):
+    """ Create Packing List Line with self.resrouce_1"""
+    if getattr(self, 'resource_1', None) is None:
+      raise UnboundLocalError('Please Assign self.resource_1 '
+                              'in your test method')
+    resource_value = sequence.get(self.resource_1)
+    self.assertNotEquals(resource_value, None)
+    self.stepCreatePackingListLine(sequence=sequence,
+                                   sequence_list=sequence_list,
+                                   resource_value=resource_value)
+
+  def stepCreatePackingListLineWithResource2(self,
+                                             sequence=None,
+                                             sequence_list=None,
+                                             **kw):
+    """ Create Packing List Line with self.resrouce_2"""
+    if getattr(self, 'resource_2', None) is None:
+      raise UnboundLocalError('Please Assign self.resource_2 '
+                              'in your test method')
+    resource_value = sequence.get(self.resource_2)
+    self.assertNotEquals(resource_value, None)
+    self.stepCreatePackingListLine(sequence=sequence,
+                                   sequence_list=sequence_list,
+                                   resource_value=resource_value)
+
 
   def _testGetMovementHistoryList(self, expected_history=None, **kw):
     """ Helper method to check getMovementHistoryList """
@@ -2418,6 +2460,30 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            resource_uid=resource_value.getUid(),
                            optimise__=False)
 
+  def stepTestFullInventoryMultipleNodeAndResource(
+        self, sequence=None, sequence_list=None, **kw):
+    """ Test Full inventory with multiple nodes and resources"""
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=second_resource_value.getUid())
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=other_node_value.getUid(),
+                           resource_uid=second_resource_value.getUid())
+    self._testGetInventory(expected=0,
+                           section_uid=section_value.getUid(),
+                           node_uid=other_node_value.getUid(),
+                           resource_uid=resource_value.getUid())
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -2836,8 +2902,56 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.play(self)
 
 
+  def test_13_FullInventoryMultipleNodeAndResource(
+        self, quiet=0, run=run_all_test):
+    """
+     Test a case that is using full inventory with multiple nodes and resources.
+
+     The case:
+     1) movement: section=A,node=B,resource=X,quantity=100
+     2) movement: section=A,node=B,resource=Y,quantity=100
+     3) full inventory: section=A,node=C,resource=Y,quantity=100
+
+     [Test]
+     getInventory(section=A, node=B, resource=X) should return 100
+     getInventory(section=A, node=B, resource=Y) should return 100
+     getInventory(section=A, node=C, resource=Y) should return 100
+     getInventory(section=A, node=C, resource=X) should return 0
+    """
+    if not run: return
+
+    self.start_date_1 = '2013/03/10 00:00:00 GMT+9'
+    self.resource_1 = 'resource'
+    self.start_date_2 = '2013/03/12 00:00:00 GMT+9'
+    self.resource_2 = 'second_resource'
+    self.full_inventory_start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.full_inventory_resource_1 = 'second_resource'
+    self.full_inventory_node_1 = 'other_node'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLineWithResource1 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListAtTheDate2 \
+                       CreatePackingListLineWithResource2 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       TestFullInventoryMultipleNodeAndResource \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInventory))
   return suite
-
