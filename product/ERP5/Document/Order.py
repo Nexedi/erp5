@@ -75,20 +75,13 @@ class Order(Delivery):
       if kw.get('fast'):
         kw['only_accountable'] = False
       rounding = kw.get('rounding')
+
       if kw.get('base_contribution') is None:
         kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
         return Delivery.getTotalPrice(self, **kw)
       else:
-        # Find amounts from the result of getAggregatedAmountList.
-        # Call getAggregatedAmountList and sum all the amounts which
-        # base_contribution category is matched with.
-        from Products.ERP5Type.Document import newTempTradeModelLine
-        from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_MOVEMENT
-        trade_condition = self.getSpecialiseValue()
-        if trade_condition is None:
-          # We cannot find any amount so that the result is 0.
-          return 0
         base_contribution = kw.get('base_contribution')
+        # Find amounts from movements in the delivery.
         if isinstance(base_contribution, (tuple, list)):
           base_contribution_list = base_contribution
         else:
@@ -102,20 +95,25 @@ class Order(Delivery):
         if not base_contribution_value_list:
           # We cannot find any amount so that the result is 0.
           return 0
-        current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
-        trade_model_line = newTempTradeModelLine(
-            self, '_temp_' + self.getId(), notify_workflow=False)
-        # prevent invoking interaction workflows.
-        trade_model_line.portal_type = ''
-        trade_model_line.edit(target_level=TARGET_LEVEL_MOVEMENT, price=1,
-                              efficiency=1, quantity=None,
-                              base_application_value_list=base_contribution_value_list)
-        aggregated_amount_list = trade_model_line._getAggregatedAmountList(
-            self,
-            movement_list=self.getMovementList(),
-            current_aggregated_amount_list=current_aggregated_amount_list,
-            rounding=rounding)
-        return aggregated_amount_list.getTotalPrice()
+
+        movement_list = self.getMovementList()
+
+
+        if rounding:
+          portal_roundings = self.portal_roundings
+          movement_list = [
+              portal_roundings.getRoundingProxy(movement)
+                for movement in movement_list]
+
+        trade_model_line_list = self.getAggregatedAmountList(rounding=rounding)
+        matched_model_line_list = [ line for line in trade_model_line_list
+              if set(line.getBaseApplicationValueList()).intersection(base_contribution_value_list)]
+
+        result = sum([movement.getTotalPrice()
+                          for movement in movement_list])
+        result += sum([line.getTotalPrice()
+                        for line in matched_model_line_list])
+        return result
 
     def getTotalQuantity(self, **kw) :
       """Returns the total quantity for this Order. """
