@@ -1,7 +1,4 @@
 <allowed_content_type_list>
- <portal_type id="Position">
-  <item>Career</item>
- </portal_type>
  <portal_type id="Position Announcement">
   <item>File</item>
   <item>Image</item>

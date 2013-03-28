@@ -1,4 +1,10 @@
 <base_category_list>
+ <portal_type id="Assignment">
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="Career">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Position Announcement">
   <item>aggregate</item>
   <item>classification</item>

@@ -52,8 +52,6 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -62,28 +60,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_career_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_person</string>
-                        <string>listbox_start_date</string>
-                        <string>listbox_stop_date</string>
+                        <string>my_description</string>
                       </list>
                     </value>
                 </item>
@@ -92,12 +72,11 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_subordination_title</string>
-                        <string>my_career_role</string>
-                        <string>my_career_grade</string>
-                        <string>my_career_function</string>
-                        <string>my_career_start_date</string>
-                        <string>my_career_stop_date</string>
+                        <string>my_destination_project_title</string>
+                        <string>my_specialise_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_calendar_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -105,10 +84,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_career_collective_agreement_title</string>
-                        <string>my_career_salary_level</string>
-                        <string>my_career_salary_coefficient</string>
-                        <string>my_career_skill_list</string>
+                        <string>my_destination_title</string>
+                        <string>my_group</string>
+                        <string>my_activity</string>
+                        <string>my_function</string>
+                        <string>my_role</string>
+                        <string>my_site</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
@@ -118,7 +99,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Position_view</string> </value>
+            <value> <string>Assignment_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -126,7 +107,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Position</string> </value>
+            <value> <string>General</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -142,7 +123,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Position</string> </value>
+            <value> <string>Assignment</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

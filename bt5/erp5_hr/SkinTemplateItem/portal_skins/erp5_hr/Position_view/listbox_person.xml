@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="RelationStringField" module="Products.ERP5Form.RelationField"/>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_career_subordination_title</string> </value>
+            <value> <string>listbox_person</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -38,23 +38,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -90,19 +78,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>jump_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -119,10 +95,6 @@
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>update_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -141,24 +113,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -193,19 +155,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>jump_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>relation_setter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -222,10 +172,6 @@
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>update_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -240,30 +186,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>allow_jump</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>subordination</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -272,10 +196,6 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>organisation</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -287,11 +207,11 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>30</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -306,73 +226,20 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>jump_method</string> </key>
-                    <value> <string>Base_jumpToRelatedDocument</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>parameter_list</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>relation_setter_id</string> </key>
-                    <value> <string>setCareerSubordinationUid</string> </value>
-                </item>
-                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Organisation</string> </value>
+                    <value> <string>listbox_person</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -383,15 +250,24 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>update_method</string> </key>
-                    <value> <string>Base_validateRelation</string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: cell.getParentValue().getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>
