@@ -50,53 +50,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+\n
+request = container.REQUEST\n
 request.other.update(request_other)\n
+\n
 portal = context.getPortalObject()\n
 ap = portal.restrictedTraverse(active_process_url)\n
-N_ = portal.Base_translateString\n
 \n
-# emulate Localizer\'s __before_publishing_traverse__\n
-request.form[\'LOCALIZER_LANGUAGE\'] = localizer_language\n
-request.get(\'PARENTS\', []).insert(0, portal)\n
-portal.Localizer(context, request)\n
-# set the selected skin\n
-portal.portal_skins.changeSkin(skin_name)\n
+with portal.Localizer.translationContext(localizer_language):\n
+  # set the selected skin\n
+  portal.portal_skins.changeSkin(skin_name)\n
 \n
-report_section_list = [r.getResult() for r in ap.getResultList()]\n
-report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
+  report_section_list = [r.getResult() for r in ap.getResultList()]\n
+  report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
 \n
-def dummyReportMethod():\n
-  return report_section_list\n
+  def dummyReportMethod():\n
+    return report_section_list\n
 \n
-report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
+  report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
       extra_context=dict(options={\'format\': format},\n
-                         rendered_report_item_list=[r[1] for r in report_section_list],\n
+                         rendered_report_item_list=[r[1].decode(\'zlib\') for r in report_section_list],\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
-attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
+  attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
                         \'content-disposition\') or \'\').split(\';\')\n
                       if x.startswith(\' filename=\')][0]\n
-if attachment_name.startswith(\'"\'):\n
-  attachment_name = attachment_name[1:]\n
-if attachment_name.endswith(\'"\'):\n
-  attachment_name = attachment_name[:-1]\n
-attachment_list = (\n
-  {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
-   \'content\': \'%s\' % report_data,\n
-   \'name\': attachment_name},)\n
+  if attachment_name.startswith(\'"\'):\n
+    attachment_name = attachment_name[1:]\n
+  if attachment_name.endswith(\'"\'):\n
+    attachment_name = attachment_name[:-1]\n
+  attachment_list = (\n
+    {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
+     \'content\': \'%s\' % report_data,\n
+     \'name\': attachment_name},)\n
 \n
-# XXX Use notification message to improve message content\n
-portal.portal_notifications.sendMessage(\n
-  recipient=user_name,\n
+portal.ERP5Site_notifyReportComplete(\n
+  user_name=user_name,\n
   subject=title,\n
-  message=N_(\'Your report is attached.\\n\'),\n
-  message_text_format=\'text/plain\',\n
-  notifier_list=(\'Mail Message\',),\n
-  store_as_event=False,\n
-  attachment_list=attachment_list,\n
-  )\n
+  message=\'\',\n
+  attachment_list=attachment_list)\n
 </string> </value>
         </item>
         <item>

@@ -50,39 +50,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># context.log(\'report_section %s: %s/%s\' % (\n
-#                 report_section_idx, context.getPath(), report_section.getFormId(),))\n
-request = container.REQUEST\n
+            <value> <string>request = container.REQUEST\n
 request.other.update(request_other)\n
 \n
 portal = context.getPortalObject()\n
 \n
-# emulate Localizer\'s __before_publishing_traverse__\n
-request.form[\'LOCALIZER_LANGUAGE\'] = localizer_language\n
-request.get(\'PARENTS\', []).insert(0, portal)\n
-portal.Localizer(context, request)\n
+with portal.Localizer.translationContext(localizer_language):\n
+  portal.portal_skins.changeSkin(skin_name)\n
 \n
-portal.portal_skins.changeSkin(skin_name)\n
+  # for unicode encoding\n
+  request.RESPONSE.setHeader("Content-Type", "application/xml; charset=utf-8")\n
+  render_prefix = \'x%s\' % report_section_idx\n
+  report_section.pushReport(portal, render_prefix=render_prefix)\n
 \n
-# for unicode encoding\n
-request.RESPONSE.setHeader("Content-Type", "application/xml; charset=utf-8")\n
-render_prefix = \'x%s\' % report_section_idx\n
-report_section.pushReport(portal, render_prefix=render_prefix)\n
+  if report_section.getFormId():\n
+    form = getattr(context, report_section.getFormId())\n
+  else:\n
+    form = None\n
 \n
-if report_section.getFormId():\n
-  form = getattr(context, report_section.getFormId())\n
-else:\n
-  form = None\n
+  selection_name = request.get(\'prefixed_selection_name\')\n
+  data = context.render_report_section.pt_render(\n
+                extra_context=dict(form=form,\n
+                                   report_section=report_section,\n
+                                   render_prefix=render_prefix))\n
 \n
-selection_name = request.get(\'prefixed_selection_name\')\n
-data = context.render_report_section.pt_render(\n
-              extra_context=dict(form=form,\n
-                                 report_section=report_section,\n
-                                 render_prefix=render_prefix))\n
+  report_section.popReport(portal, render_prefix=render_prefix)\n
 \n
-report_section.popReport(portal, render_prefix=render_prefix)\n
-\n
-return report_section_idx, data\n
+return report_section_idx, data.encode(\'utf8\').encode(\'zlib\')\n
 </string> </value>
         </item>
         <item>
