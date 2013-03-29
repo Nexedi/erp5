@@ -693,7 +693,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Old date
     ################################
     request.form['at_date'] = DateTime(2005, 1, 1)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
@@ -705,7 +705,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Middle date
     ################################
     request.form['at_date'] = DateTime(2006, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
@@ -733,7 +733,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Futur date
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     
     line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
         get_value('default',
@@ -852,7 +852,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Positive Stock
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
     line_list = \
       self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
@@ -881,7 +881,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Negative Stock
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
     request.form['negative_stock'] = 1
     
@@ -918,7 +918,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Zero Stock
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
     request.form['negative_stock'] = 0
     request.form['zero_stock'] = 1
@@ -958,7 +958,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # And Negative Stock
     ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
     request.form['negative_stock'] = 1
     request.form['zero_stock'] = 0
@@ -981,7 +981,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Positive And Zero Stock
     ########################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
     request.form['negative_stock'] = 0
     request.form['zero_stock'] = 1
@@ -1004,7 +1004,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Negative And Zero Stock
     ########################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
     request.form['negative_stock'] = 1
     request.form['zero_stock'] = 1
@@ -1034,7 +1034,7 @@ class TestTradeReports(ERP5ReportTestCase):
     # Don't Display Positive,Negative And Zero Stock
     ################################################
     request.form['at_date'] = DateTime(2008, 4, 4)
-    request.form['site'] = 'demo_site_A'
+    request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
     request.form['negative_stock'] = 1
     request.form['zero_stock'] = 1

@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_site_title</string> </value>
+            <value> <string>your_section_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_report_mode_site_title</string> </value>
+                    <value> <string>my_report_mode_section_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

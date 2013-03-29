@@ -99,8 +99,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_site_title</string>
-                        <string>your_group_title</string>
+                        <string>your_node_category</string>
+                        <string>your_section_category</string>
                         <string>your_at_date</string>
                       </list>
                     </value>
