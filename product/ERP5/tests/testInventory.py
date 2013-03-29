@@ -2242,6 +2242,20 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       params['destination_value'] = sequence.get(self.full_inventory_node_1)
     self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
 
+  def stepCreateFullInventoryAtTheDate2(self, sequence=None,
+                                        sequence_list=None, **kw):
+    if getattr(self, 'full_inventory_start_date_2', None) is None:
+      raise UnboundLocalError('Please assign self.full_inventory_start_date_2 '
+                              'in your test method')
+    params = dict(start_date=self.full_inventory_start_date_2)
+    if getattr(self, 'full_inventory_resource_2', None) is not None:
+      self.assertNotEquals(sequence.get(self.full_inventory_resource_2), None)
+      params['resource_value'] = sequence.get(self.full_inventory_resource_2)
+    if getattr(self, 'full_inventory_node_2', None) is not None:
+      self.assertNotEquals(sequence.get(self.full_inventory_node_2), None)
+      params['destination_value'] = sequence.get(self.full_inventory_node_2)
+    self.stepCreateFullInventoryAtTheDate(sequence, sequence_list, **params)
+
   def stepCheckMultipleSectionAndFullInventory(self, sequence=None,
                                                sequence_list=None, **kw):
     """ Check that getInvetory() is surely working in
@@ -2484,6 +2498,38 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            section_uid=section_value.getUid(),
                            node_uid=other_node_value.getUid(),
                            resource_uid=resource_value.getUid())
+
+  def stepTestFullInventoryCollideWithEachOther(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=200,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
+  def stepTestInventoryCollisionByMovements(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=300,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
+
+  def stepTestInventoryCollisionByInventory(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=300,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -2946,6 +2992,208 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        CreateFullInventoryAtTheDate1 \
                        Tic \
                        TestFullInventoryMultipleNodeAndResource \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
+  def test_14_FullInventoryCollision(self, quiet=0, run=run_all_test):
+    """
+     Make sure a case when Full Inventory collide with other documents.
+
+     The cases are:
+
+     full inventory: 2013/03/20 00:00:00, section=A, node=B, quantity=100
+     full inventory: 2013/03/20 00:00:00, section=A, node=B, quantity=100
+
+     [Test]
+     getInventory(section=A, node=B) should return 200 (not 100)
+
+     movement: 2013/03/20 00:00:00, section=A, node=B, quantity=10
+     movement: 2013/03/20 00:00:00, section=A, node=B, quantity=20
+     full inventory: 2013/03/20 00:00:00, section=A, node=B, quantity=200
+
+     [Test]
+     getInventory(section=A, node=B) should return 230 (not 200)
+
+     Full inventory acts as if it is created at FIRST among the SETS of the
+     documents that are created at THE time.
+
+     This is the specification of full inventory, the details are as follows.
+
+
+     The specification when Full Inventory collide with others
+     =========================================================
+
+     case A [common usage]
+     ---------------------
+
+     1| packing list   | 2013/03/20 00:00:00 | 100
+     2| packing list   | 2013/03/20 00:00:00 | 100
+     3| full inventory | 2013/03/20 00:00:01 | 100 # The time is 00:00:01
+
+     stock:
+     1| movement | 2013/03/20 00:00:00 | 100
+     2| movement | 2013/03/20 00:00:00 | 100
+     3| movement | 2013/03/20 00:00:00 | -100
+
+     getInventory() should return 100
+
+     This full inventory does not collide with others, it is a normal usage of
+     full inventory.
+
+     case B [less common usage]
+     --------------------------
+
+     1| full inventory | 2013/03/20 00:00:01 100
+     2| packing list   | 2013/03/20 00:00:00 100
+     3| packing list   | 2013/03/20 00:00:00 100
+
+     stock:
+     1| movement | 2013/03/20 00:00:01 | 100  # The time is 00:00:01 !
+     2| movement | 2013/03/20 00:00:00 | 100
+     3| movement | 2013/03/20 00:00:00 | 100
+
+     getInventory() should return 100 (or should not be in this state)
+
+     This behavior is OK in some business. Full inventory is created AS at last
+     even if the creation_date is at first.
+     Or, if you do not want to fall in this situation, you can reject such a
+     packing list inputs with a proper Constraint.
+
+     case C [collision by movements]
+     -------------------------------
+
+     Input documents:
+     1| full inventory | 2013/03/20 00:00:00 | 100
+     2| packing list   | 2013/03/20 00:00:00 | 100
+     3| packing list   | 2013/03/20 00:00:00 | 100
+
+     stock:
+     1| movement | 2013/03/20 00:00:00 | 100
+     2| movement | 2013/03/20 00:00:00 | 100
+     3| movement | 2013/03/20 00:00:00 | 100
+
+     getInventory() should return 300
+
+     This behavior is probably natural, at the beginning of a day, someone
+     create a full inventory, then users input daily movements.
+     In such case, users' inputs should be respected.
+
+     case D [collision by full inventory]
+     ------------------------------------
+
+     Input documents:
+     1| packing list   | 2013/03/20 00:00:00 | 100
+     2| packing list   | 2013/03/20 00:00:00 | 100
+     3| full inventory | 2013/03/20 00:00:00 | 100
+
+     stock:
+     1| movement |  2013/03/20 00:00:00 | 100
+     2| movement |  2013/03/20 00:00:00 | 100
+     3| movement |  2013/03/20 00:00:00 | 100
+
+     getInventory() returns 300? (or should not be in this state)
+
+     This behavior probably sounds weird because even if the full inventory
+     created at last within the same date, it does not reset stocks.
+     In this case, proper constrains should reject the SAMEDATE-SAMETIME full
+     inventory inputs.
+
+     case E [full inventories collide with each other]
+     -----------------------------------------
+
+     Input documents:
+     1|  full inventory | 2013/03/20 00:00:00 | 100
+     1|  full inventory | 2013/03/20 00:00:00 | 100
+
+     stock:
+     1| movement |  2013/03/20 00:00:00 | 100
+     2| movement |  2013/03/20 00:00:00 | 100
+
+     getInventory() returns 200??
+
+     This must be an unnatural behavior, in reality, production environments
+     must not fall into this state, because both two full inventory argue that
+     "I am the full inventory" in the same time. In such case, which should be
+     the TRUE full inventory? How can you decide it? We can not answer it.
+
+     In other words, this behavior is UNDEFINED, like x/0 in arithmetics.
+     Thus appropriate constraints MUST reject those full inventory inputs.
+    """
+    if not run: return
+
+    # case A and B are tested in other tests
+
+    # case C [collision by movements]
+    self.full_inventory_start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.full_inventory_resource_1 = 'resource'
+    self.start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.resource_1 = 'resource'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLineWithResource1 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLineWithResource1 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       TestInventoryCollisionByMovements \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+    # case D [collision by full inventory]
+    self.start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.resource_1 = 'resource'
+    self.full_inventory_start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.full_inventory_resource_1 = 'resource'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLineWithResource1 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLineWithResource1 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       TestInventoryCollisionByInventory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+    # case E [full inventories collide with each other]
+    self.full_inventory_start_date_1 = '2013/03/20 00:00:00 GMT+9'
+    self.full_inventory_resource_1 = 'resource'
+    self.full_inventory_start_date_2 = '2013/03/20 00:00:00 GMT+9'
+    self.full_inventory_resource_2 = 'resource'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       SetUpInventoryIndexingByNodeAndSection \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CreateFullInventoryAtTheDate2 \
+                       Tic \
+                       TestFullInventoryCollideWithEachOther \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
