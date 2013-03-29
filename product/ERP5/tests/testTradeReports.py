@@ -113,6 +113,13 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_2',
                               group='g2',
                               site='demo_site_B')
+    # no group no site
+    if not self.organisation_module.has_key('Organisation_3'):
+      org = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              reference='Organisation_3',
+                              title='Organisation_3',
+                              id='Organisation_3',)
 
     # create unit categories
     for unit_id in ('kg', 'g',):
@@ -621,6 +628,7 @@ class TestTradeReports(ERP5ReportTestCase):
               title='Inventory 1',
               simulation_state='delivered',
               destination_value=self.organisation_module.Organisation_1,
+              source_value=self.organisation_module.Organisation_3,
               start_date=DateTime(2006, 2, 2),
               resource='product_module/product_A',
               quantity=11,
