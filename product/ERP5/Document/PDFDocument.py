@@ -277,7 +277,7 @@ class PDFDocument(Image):
       else:
         try:
           pdf_file = PdfFileReader(tmp)
-          for info_key, info_value in pdf_file.getDocumentInfo().iteritems():
+          for info_key, info_value in (pdf_file.getDocumentInfo() or {}).iteritems():
             info_key = info_key.lstrip("/")
             if isinstance(info_value, unicode):
               info_value = info_value.encode("utf-8")
