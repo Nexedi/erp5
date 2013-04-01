@@ -2657,7 +2657,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  @expectedFailure
   def test_05_CancelInventoryAfterDelivered(self, quiet=0, run=run_all_test):
     """
       Make sure that changing workflow state after delivered changes
