@@ -577,6 +577,22 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_dict.itervalues():
         activity.initialize(self)
       self.maybeMigrateConnectionClass()
+
+      connection = self.cmf_activity_sql_connection()
+      for column_dict in connection.columns('message_queue'):
+        if column_dict['Name'] == 'group_method_id':
+          break
+      else:
+        LOG('ActivityTool', INFO,
+            "Upgrading 'message_queue' table to add 'group_method_id' column")
+
+        connection.query(
+          'ALTER TABLE message_queue ADD COLUMN `group_method_id` '
+          'VARCHAR(255) NOT NULL DEFAULT \'\' AFTER `priority`')
+
+        import transaction
+        transaction.commit()
+
       is_initialized = True
 
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
