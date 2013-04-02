@@ -580,7 +580,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Tests html preview of an OOo document with images as extensible content.
     For this test, Presentation_checkConversionFormatPermission does not allow
     access to original format for Unauthenticated users.
-    Chack that user can still access to other format.
+    Check that user can still access to other format.
     """
     portal = self.portal
     script_id = 'Presentation_checkConversionFormatPermission'

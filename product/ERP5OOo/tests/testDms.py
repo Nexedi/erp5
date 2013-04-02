@@ -1850,7 +1850,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertEquals(result_list, [])
 
   def test_conversionCache_reseting(self):
-    """Chack that modifying a document with edit method,
+    """Check that modifying a document with edit method,
     compute a new cache key and refresh cached conversions.
     """
     web_page_portal_type = 'Web Page'
