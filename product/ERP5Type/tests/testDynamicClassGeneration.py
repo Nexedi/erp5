@@ -1282,7 +1282,8 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     self._component_tool = self.getPortal().portal_components
     self._module = __import__(self._getComponentModuleName(),
                               fromlist=['erp5.component'])
-    self._component_tool.reset(force=True, reset_portal_type=True)
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
 
   @abc.abstractmethod
   def _newComponent(self, reference, text_content, version='erp5'):
@@ -1413,7 +1414,8 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       self.assertEquals(error_message, error_list[0])
       self.assertEquals(component.getReference(), invalid_reference)
       self.assertEquals(component.getReference(validated_only=True), valid_reference)
-      self._component_tool.reset(force=True, reset_portal_type=True)
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable(valid_reference)
 
     # Set a valid reference and check that the Component is in validated state
@@ -1490,7 +1492,8 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       self.assertEquals(error_message, error_list[0])
       self.assertEquals(component.getVersion(), invalid_version)
       self.assertEquals(component.getVersion(validated_only=True), valid_version)
-      self._component_tool.reset(force=True, reset_portal_type=True)
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable(reference)
 
     # Set a valid version and check that the Component is in validated state
@@ -1564,7 +1567,8 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       self.assertTrue(error_list[0].startswith(error_message))
       self.assertEquals(component.getTextContent(), invalid_code)
       self.assertEquals(component.getTextContent(validated_only=True), valid_code)
-      self._component_tool.reset(force=True, reset_portal_type=True)
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
       self.assertModuleImportable('TestComponentWithSyntaxError')
 
     # Set a valid source code and check that the Component is in validated
@@ -1892,7 +1896,8 @@ class TestPortalType(Person):
     self.assertFalse(self._module.TestPortalType in person.__class__.mro())
 
     # Reset Portal Type classes to ghost to make sure that everything is reset
-    self._component_tool.reset(force=True, reset_portal_type=True)
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
 
     # TestPortalType must be available in type class list
     self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
@@ -2017,7 +2022,8 @@ class Test(ERP5TypeTestCase):
 
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertModuleImportable('testRunLiveTest')
-    self._component_tool.reset(force=True, reset_portal_type=True)
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
 
     # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
     # needs to be restored after calling runLiveTest
@@ -2045,7 +2051,8 @@ class Test(ERP5TypeTestCase):
 
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertModuleImportable('testRunLiveTest')
-    self._component_tool.reset(force=True, reset_portal_type=True)
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
 
     base_tuple = ERP5TypeTestCase.__bases__
     try:
