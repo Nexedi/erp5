@@ -46,6 +46,7 @@ from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Accessor import Base as BaseAccessor
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -227,6 +228,17 @@ class FolderMixIn(ExtensionClass.Base):
       # Not a processing node
       node_number = 111
     return "%03d-%s" %(node_number, self._generateRandomId())
+
+  # Getter defines to address migration of a site to ZODB Property Sheets,
+  # otherwise installing erp5_property_sheets fails in generateNewId() as
+  # getIdGenerator accessor does not exist yet
+  getIdGenerator = BaseAccessor.Getter('getIdGenerator', 'id_generator',
+                                       'string', default='')
+
+  getLastId = BaseAccessor.Getter('getLastId', 'last_id', 'string',
+                                  default='0')
+
+  _setLastId = BaseAccessor.Setter('_setLastId', 'last_id', 'string')
 
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
