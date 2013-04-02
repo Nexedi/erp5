@@ -347,8 +347,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         # This should only happen before erp5_core is installed
         synchronizeDynamicModules(self)
       else:
-        # If Components are reset, then portal type classes should be reset
-        synchronizeDynamicModules(self, component_tool.reset())
+        component_tool.reset()
 
     return self
 

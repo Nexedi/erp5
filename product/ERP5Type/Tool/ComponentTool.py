@@ -62,7 +62,9 @@ class ComponentTool(BaseTool):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
-  def reset(self, force=False, reset_portal_type=False):
+  def reset(self,
+            force=False,
+            reset_portal_type_at_transaction_boundary=False):
     """
     Reset all ZODB Component packages. A cache cookie is used to check whether
     the reset is necessary when force is not specified. This allows to make
@@ -115,8 +117,11 @@ class ComponentTool(BaseTool):
         else:
           package.reset()
 
-    if reset_portal_type:
+    if reset_portal_type_at_transaction_boundary:
       type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+    else:
+      from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+      synchronizeDynamicModules(self, force)
 
     return True
 

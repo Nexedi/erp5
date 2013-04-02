@@ -4054,13 +4054,15 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if self._is_already_migrated(object_list):
       ObjectTemplateItem.install(self, context, **kw)
-      self.portal_components.reset(force=True, reset_portal_type=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
 
   def afterUninstall(self, already_migrated=False):
     if already_migrated:
-      self.portal_components.reset(force=True, reset_portal_type=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
 
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
