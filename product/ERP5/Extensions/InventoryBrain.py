@@ -42,17 +42,11 @@ class InventoryBrain(ZSQLBrain):
       return inventory
 
   def getCurrentInventory(self):
-    """
-      Returns current inventory
-    """
     return self.getInventory(
         simulation_state=self.getPortalCurrentInventoryStateList(),
         ignore_variation=1)
 
   def getFutureInventory(self):
-    """
-      Returns current inventory
-    """
     return self.getInventory(
                    ignore_variation=1,
                    simulation_state= \
@@ -61,9 +55,6 @@ class InventoryBrain(ZSQLBrain):
                        list(self.getPortalCurrentInventoryStateList()))
 
   def getAvailableInventory(self):
-    """
-      Returns current inventory
-    """
     at_date=DateTime()
     current = self.getCurrentInventory()
     result = self.Resource_zGetInventory( 
@@ -80,12 +71,9 @@ class InventoryBrain(ZSQLBrain):
     return current + reserved_inventory
 
   def getQuantityUnit(self, **kw):
-    try:
-      resource = self.portal_categories.unrestrictedTraverse(
-                                      self.resource_relative_url)
+    resource = self.portal_catalog.getObject(self.resource_uid)
+    if resource is not None:
       return resource.getQuantityUnit()
-    except AttributeError:
-      return ''
 
 class InventoryListBrain(ZSQLBrain):
   """
@@ -94,52 +82,37 @@ class InventoryListBrain(ZSQLBrain):
 
   # Stock management
   def getInventory(self, **kw):
-    """
-    Returns the inventory
-    """
     simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getInventory(
-                   node=self.node_relative_url,
+                   node_uid=self.node_uid,
                    variation_text=self.variation_text,
-                   resource=self.resource_relative_url, **kw)
+                   resource_uid=self.resource_uid, **kw)
 
   def getCurrentInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getCurrentInventory(
-                             node=self.node_relative_url,
+                             node_uid=self.node_uid,
                              variation_text=self.variation_text,
-                             resource=self.resource_relative_url, **kw)
+                             resource_uid=self.resource_uid, **kw)
 
   def getFutureInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self,'portal_simulation')
     return simulation_tool.getFutureInventory(
-                              node=self.node_relative_url,
+                              node_uid=self.node_uid,
                               variation_text=self.variation_text,
-                              resource=self.resource_relative_url, **kw)
+                              resource_uid=self.resource_uid, **kw)
 
   def getAvailableInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self,'portal_simulation')
     return simulation_tool.getAvailableInventory(
-                             node=self.node_relative_url,
+                             node_uid=self.node_uid,
                              variation_text=self.variation_text,
-                             resource=self.resource_relative_url, **kw)
+                             resource_uid=self.resource_uid, **kw)
 
   def getQuantityUnit(self, **kw):
-    try:
-      resource = self.portal_categories.unrestrictedTraverse(
-                                           self.resource_relative_url)
+    resource = self.portal_catalog.getObject(self.resource_uid)
+    if resource is not None:
       return resource.getQuantityUnit()
-    except AttributeError:
-      return ''
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
@@ -159,10 +132,9 @@ class InventoryListBrain(ZSQLBrain):
                   explanation.getRelativeUrl())
       else:
         return ''
-    elif getattr(self, 'resource_relative_url', None) is not None:
+    elif getattr(self, 'resource_uid', None) is not None:
       # A resource is defined, so try to display the movement list
-      resource = self.portal_categories.unrestrictedTraverse(
-                              self.resource_relative_url)
+      resource = self.portal_catalog.getObject(self.resource_uid)
       form_name = 'Resource_viewMovementHistory'
       query_kw = {
         'variation_text': self.variation_text,
