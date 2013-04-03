@@ -3034,7 +3034,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
      stock:
      1| movement | 2013/03/20 00:00:00 | 100
      2| movement | 2013/03/20 00:00:00 | 100
-     3| movement | 2013/03/20 00:00:00 | -100
+     3| movement | 2013/03/20 00:00:01 | -100
 
      getInventory() should return 100
 

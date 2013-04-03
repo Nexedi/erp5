@@ -97,7 +97,7 @@ class Inventory(Delivery):
     disable_archive = kw.pop("disable_archive", 0)
 
     draft_state_list = list(self.getPortalDraftOrderStateList())
-    # we need reindex when we do cancelling inventories
+    # we need reindex when cancelling inventories
     if 'cancelled' in draft_state_list:
       draft_state_list.remove('cancelled')
     if self.getSimulationState() in draft_state_list:
