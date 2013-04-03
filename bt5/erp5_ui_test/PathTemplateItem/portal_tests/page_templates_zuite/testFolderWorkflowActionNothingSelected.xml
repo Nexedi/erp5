@@ -131,7 +131,7 @@
 </tr>\n
 <tr>\n
   <td>assertPortalStatusMessage</td>\n
-  <td>You must select one action.</td>\n
+  <td>You must select only one action.</td>\n
   <td></td>\n
 </tr>\n
 \n
