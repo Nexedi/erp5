@@ -48,6 +48,7 @@
 import unittest
 import time
 import StringIO
+from subprocess import Popen, PIPE
 from cgi import FieldStorage
 
 import ZPublisher.HTTPRequest
@@ -265,7 +266,6 @@ class TestDocument(TestDocumentMixin):
       image = Image.open(filename)
       image_size = image.size
     except ImportError:
-      from subprocess import Popen, PIPE
       identify_output = Popen(['identify', filename],
                               stdout=PIPE).communicate()[0]
       image_size = tuple(map(lambda x:int(x),
@@ -1342,6 +1342,15 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
+    self.assertEquals('ERP5 is a free software\n\n', document.asText())
+
+  def test_MonochromeImageResize(self):
+    upload_file = makeFileUpload('monochrome_sample.tiff')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('Image', document.getPortalType())
+    resized_image = document.convert(format='png', display='small')[1]
+    identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
+    self.assertFalse('1-bit' in identify_output)
     self.assertEquals('ERP5 is a free software\n\n', document.asText())
 
   def test_Base_showFoundText(self):
