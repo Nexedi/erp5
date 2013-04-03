@@ -136,6 +136,7 @@ class TestERP5Credential(ERP5TypeTestCase):
             'site/dakar',
             'site/paris',
             'site/tokyo',
+            'region/europe/fr',
            )
 
   def beforeTearDown(self):
@@ -1358,6 +1359,34 @@ class TestERP5Credential(ERP5TypeTestCase):
       "CheckCredentialRecoveryNotEmptyDestinationDecision"
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_credential_request_properties(self):
+    # test to prevent regression with a bug in property sheet definition
+    cr = self.portal.credential_request_module.newContent(
+      portal_type='Credential Request')
+    self.assertEquals(cr.getDefaultAddressCity(), None)
+    self.assertEquals(cr.getDefaultAddressRegion(), None)
+    self.assertEquals(cr.getOrganisationDefaultAddressCity(), None)
+    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), None)
+
+    cr.setDefaultAddressRegion('europe/fr')
+
+    self.assertEquals(cr.getDefaultAddressCity(), None)
+    self.assertEquals(cr.getDefaultAddressRegion(), 'europe/fr')
+    self.assertEquals(cr.getOrganisationDefaultAddressCity(), None)
+    self.assertEquals(cr.getOrganisationDefaultTelephoneText(), None)
+    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), None)
+
+    cr.deleteContent('default_address')
+
+    cr.setOrganisationDefaultAddressCity('Lille')
+    cr.setOrganisationDefaultAddressRegion('europe/fr')
+
+    self.assertEquals(cr.getOrganisationDefaultAddressCity(), 'Lille')
+    self.assertEquals(cr.getOrganisationDefaultAddressRegion(), 'europe/fr')
+    self.assertEquals(cr.getDefaultAddressCity(), None)
+    self.assertEquals(cr.getDefaultAddressRegion(), None)
+
 
 
 def test_suite():
