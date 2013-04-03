@@ -82,7 +82,7 @@ CREATE TABLE `stock` (\n
   `sub_variation_text` VARCHAR(255),\n
   PRIMARY KEY (`uid`, `order_id`),\n
   KEY `quantity` (`quantity`),\n
-  KEY `section_uid_portal_type` (`section_uid`, `portal_type`),\n
+  KEY `section_uid_portal_type_mirror_section_uid` (`section_uid`, `portal_type`, `mirror_section_uid`),\n
   KEY `mirror_section_uid` (`mirror_section_uid`),\n
   KEY `mirror_node_uid` (`mirror_node_uid`),\n
   KEY `node_uid` (`node_uid`),\n
