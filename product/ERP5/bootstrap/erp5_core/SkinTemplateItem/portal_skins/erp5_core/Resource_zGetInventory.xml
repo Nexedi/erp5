@@ -101,7 +101,7 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if omit_simulation>\n
-  AND catalog.portal_type != \'Simulation Movement\'\n
+  AND stock.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
 <dtml-if omit_input>\n
