@@ -1436,7 +1436,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
     """Test attributes exposed on brains."""
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=100)
-    brain = getMovementHistoryList()[0]
+    brain = getMovementHistoryList(section_uid=self.section.getUid())[0]
     self.assertTrue(hasattr(brain, 'node_uid'))
     self.assertTrue(hasattr(brain, 'resource_uid'))
     self.assertTrue(hasattr(brain, 'section_uid'))
@@ -1447,6 +1447,36 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertTrue(hasattr(brain, 'funding_uid'))
     self.assertTrue(hasattr(brain, 'mirror_node_uid'))
     self.assertTrue(hasattr(brain, 'mirror_section_uid'))
+
+    # compatiblity names
+    self.assertTrue(hasattr(brain, 'section_title'))
+    self.assertEquals(brain.section_title, self.section.getTitle())
+    self.assertTrue(hasattr(brain, 'section_relative_url'))
+    self.assertEquals(brain.section_relative_url, self.section.getRelativeUrl())
+    self.assertTrue(hasattr(brain, 'node_title'))
+    self.assertEquals(brain.node_title, self.node.getTitle())
+    self.assertTrue(hasattr(brain, 'node_relative_url'))
+    self.assertEquals(brain.node_relative_url, self.node.getRelativeUrl())
+    self.assertTrue(hasattr(brain, 'resource_title'))
+    self.assertEquals(brain.resource_title, self.resource.getTitle())
+    self.assertTrue(hasattr(brain, 'resource_relative_url'))
+    self.assertEquals(brain.resource_relative_url, self.resource.getRelativeUrl())
+
+  def testBrainGetItem(self):
+    """Test __getitem__ interface on brains."""
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=100)
+    brain = getMovementHistoryList(section_uid=self.section.getUid())[0]
+
+    self.assertEquals(brain['node_uid'], self.node.getUid())
+    self.assertEquals(brain['node_relative_url'], self.node.getRelativeUrl())
+    self.assertEquals(brain['node_title'], self.node.getTitle())
+    self.assertEquals(brain['section_uid'], self.section.getUid())
+    self.assertEquals(brain['section_relative_url'], self.section.getRelativeUrl())
+    self.assertEquals(brain['section_title'], self.section.getTitle())
+    self.assertEquals(brain['resource_uid'], self.resource.getUid())
+    self.assertEquals(brain['resource_relative_url'], self.resource.getRelativeUrl())
+    self.assertEquals(brain['resource_title'], self.resource.getTitle())
 
   def testSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList

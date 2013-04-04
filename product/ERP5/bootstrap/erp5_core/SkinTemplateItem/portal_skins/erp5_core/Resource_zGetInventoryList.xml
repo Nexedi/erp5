@@ -33,7 +33,6 @@ ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n
 only_accountable\r\n
-section_filtered\r\n
 omit_input\r\n
 omit_output\r\n
 input_simulation_state:list\r\n
@@ -92,7 +91,7 @@ SELECT\n
   SUM(ROUND(<dtml-var stock_table_id>.quantity\n
     <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>)) AS total_quantity,\n
   <dtml-if convert_quantity_result>\n
-    SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity \n
+    SUM(ROUND(<dtml-var stock_table_id>.quantity * measure.quantity\n
       <dtml-if quantity_unit_uid> / quantity_unit_conversion.quantity</dtml-if>\n
       <dtml-if transformed_uid> * transformation.quantity</dtml-if>, <dtml-var precision>))\n
     AS converted_quantity,\n
@@ -110,20 +109,15 @@ SELECT\n
   IFNULL(SUM(<dtml-var stock_table_id>.total_price), 0) AS total_price\n
 </dtml-if>\n
 <dtml-if inventory_list>\n
-  ,node.title AS node_title,\n
-  node.uid AS node_uid,\n
-  node.relative_url AS node_relative_url,\n
-  section.title AS section_title,\n
-  section.uid AS section_uid,\n
-  section.relative_url AS section_relative_url,\n
-  resource.title AS resource_title,\n
-  resource.relative_url AS resource_relative_url,\n
-<dtml-if transformed_uid>\n
-  transformed_resource.title AS transformed_resource_title,\n
-  transformed_resource.relative_url AS transformed_resource_relative_url,\n
-  transformation.transformed_uid AS transformed_resource_uid,\n
-  transformation.transformed_variation_text AS transformed_variation_text,\n
-</dtml-if>\n
+  ,\n
+  <dtml-var stock_table_id>.node_uid AS node_uid,\n
+  <dtml-var stock_table_id>.section_uid AS section_uid,\n
+  <dtml-if transformed_uid>\n
+    transformed_resource.title AS transformed_resource_title,\n
+    transformed_resource.relative_url AS transformed_resource_relative_url,\n
+    transformation.transformed_uid AS transformed_resource_uid,\n
+    transformation.transformed_variation_text AS transformed_variation_text,\n
+  </dtml-if>\n
   <dtml-var stock_table_id>.resource_uid AS resource_uid,\n
   <dtml-var stock_table_id>.variation_text AS variation_text,\n
   <dtml-var stock_table_id>.sub_variation_text AS sub_variation_text,\n
@@ -142,12 +136,6 @@ SELECT\n
 </dtml-if>\n
 <dtml-if statistic>\n
   ,\n
-  COUNT(DISTINCT node.title) AS node_title,\n
-  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
-  COUNT(DISTINCT section.title) AS section_title,\n
-  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
-  COUNT(DISTINCT resource.title) AS resource_title,\n
-  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
   COUNT(DISTINCT <dtml-var stock_table_id>.variation_text) AS variation_text,\n
   MAX(<dtml-var stock_table_id>.resource_uid) AS resource_uid,\n
   COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,\n
@@ -157,8 +145,6 @@ SELECT\n
 \n
 FROM\n
   catalog, <dtml-var stock_table_id>\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-       JOIN catalog AS section ON (section.uid = <dtml-var stock_table_id>.section_uid)\n
 <dtml-if quantity_unit_uid>\n
   LEFT JOIN quantity_unit_conversion ON \n
     (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid\n
@@ -171,7 +157,7 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource <dtml-if transformed_uid>, transformation, catalog as transformed_resource</dtml-if>\n
+  <dtml-if transformed_uid>, transformation, catalog as transformed_resource</dtml-if>\n
 \n
 WHERE\n
   <dtml-var stock_table_id>.uid = catalog.uid\n
@@ -179,11 +165,8 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
-  AND node.uid = <dtml-var stock_table_id>.node_uid\n
-\n
 <dtml-if transformed_uid>\n
   AND transformation.uid = <dtml-var stock_table_id>.resource_uid\n
-  AND resource.uid = transformation.uid\n
   AND <dtml-var stock_table_id>.variation_text = transformation.variation_text\n
 \n
   AND transformed_resource.uid = transformation.transformed_uid\n
@@ -191,8 +174,6 @@ WHERE\n
   <dtml-if transformed_variation_text>\n
   AND <dtml-sqltest transformed_variation_text column="transformation.transformed_variation_text" type=string>\n
   </dtml-if>\n
-<dtml-else>\n
-  AND resource.uid = <dtml-var stock_table_id>.resource_uid\n
 </dtml-if>\n
 \n
 <dtml-if omit_simulation>\n
@@ -211,7 +192,6 @@ WHERE\n
 <dtml-if convert_quantity_result>\n
   AND concat(<dtml-var stock_table_id>.variation_text,\'\\n\') REGEXP measure.variation\n
 </dtml-if>\n
-\n
 \n
 <dtml-if group_by_expression>\n
 GROUP BY\n
