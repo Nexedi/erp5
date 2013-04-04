@@ -347,7 +347,8 @@ Alarm Tool Node: %s
       limit = self.isActive() and 2 or 1
     active_process_list = self.getPortalObject().portal_catalog(
       portal_type='Active Process', limit=limit,
-      sort_on=(('creation_date', 'DESC'),),
+      sort_on=(('creation_date', 'DESC'),
+               ('id', 'DESC', 'UNSIGNED'),),
       causality_uid=self.getUid())
     if len(active_process_list) < limit:
       process = None
