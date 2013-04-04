@@ -10,7 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -72,8 +72,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The name of a document in ERP5</string> </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
