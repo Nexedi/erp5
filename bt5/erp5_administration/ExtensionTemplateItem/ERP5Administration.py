@@ -135,3 +135,12 @@ def checkConversionToolAvailability(self):
     result.edit(detail=message)
   result.edit(severity=severity)
   active_process.activateResult(result)
+
+def runPyflakes(script_code, script_path):
+  from pyflakes.api import check
+  from pyflakes import reporter
+  from StringIO import StringIO
+  stream = StringIO()
+  check(script_code, script_path, reporter.Reporter(stream, stream))
+  return stream.getvalue()
+
