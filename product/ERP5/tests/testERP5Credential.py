@@ -240,7 +240,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def _disablePreference(self):
     preference = self._getPreference()
-    if preference.getPreferenceState() in ('enable', 'global'):
+    if preference.getPreferenceState() in ('enabled', 'global'):
       preference.disable()
 
   def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None):
