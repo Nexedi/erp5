@@ -141,7 +141,7 @@ class PDFDocument(Image):
       content_information = self.getContentInformation()
       page_count = int(content_information.get('Pages', 0))
       for page_number in range(page_count):
-        src_mimetype, png_data = self.convert(
+        src_mimetype, png_data = self._convert(
             'png', quality=100, resolution=300,
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
