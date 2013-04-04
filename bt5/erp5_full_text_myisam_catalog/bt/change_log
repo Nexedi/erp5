@@ -1,3 +1,6 @@
+2013-04-04 Kazuhiko
+* defer fulltext index in a lower priority activity.
+
 2012-01-05 Kazuhiko
 * move create/drop table SQL for content_translation table from erp5_content_translation to erp5_full_text_*_catalog BT.
 
