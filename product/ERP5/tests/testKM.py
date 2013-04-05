@@ -821,8 +821,6 @@ class TestKM(TestKMMixIn):
                                   box_url)    
     self.failUnless(subsection.getTitle() not in 
                     self.publish(url, self.auth).getBody())
-    self.failUnless('Browse' in 
-                    self.publish(url, self.auth).getBody())
 
     # make section visible
     subsection.edit(visible=True)
