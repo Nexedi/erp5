@@ -128,7 +128,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                          **substitution_method_parameter_dict)
 
     def _convert(self, format, substitution_method_parameter_dict=None,
-                safe_substitute=True, charset=None, text_content=None, **kw):
+                safe_substitute=True, charset=None, text_content=None, substitute=True, **kw):
       """
         Convert text using portal_transforms or oood
       """
@@ -184,7 +184,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           self.setConversion(result, original_mime_type, **kw)
         else:
           mime_type, result = self.getConversion(**kw)
-        if format in VALID_TEXT_FORMAT_LIST:
+        if substitute and format in VALID_TEXT_FORMAT_LIST:
           # only textual content can be sustituted 
           if substitution_method_parameter_dict is None:
             substitution_method_parameter_dict = {}
