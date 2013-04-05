@@ -252,8 +252,8 @@ class TestListBox(ERP5TypeTestCase):
     portal.ListBoxZuite_reset()
     listbox = portal.FooModule_viewFooList.listbox
     # XXX isn't Selection automatically created ?
-    portal.portal_selections.setSelectionFor(
-          listbox.get_value('selection_name'), Selection())
+    name = listbox.get_value('selection_name')
+    portal.portal_selections.setSelectionFor(name, Selection(name))
 
     request = get_request()
     request['here'] = portal.foo_module

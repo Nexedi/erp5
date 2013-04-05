@@ -53,7 +53,8 @@ class TestSelectionTool(ERP5TypeTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     self.portal_selections = self.getPortal().portal_selections
-    self.portal_selections.setSelectionFor('test_selection', Selection())
+    name = 'test_selection'
+    self.portal_selections.setSelectionFor(name, Selection(name))
     self.portal_selections.setSelectionParamsFor('test_selection', {'key':'value'})
 
   def testGetSelectionContainer(self):
@@ -252,7 +253,8 @@ class TestSelectionPersistence(unittest.TestCase):
     self.cnx = self.db.open()
     self.portal_selections = \
       self.cnx.root().portal_selections = SelectionTool()
-    self.portal_selections.setSelectionFor('test_selection', Selection())
+    name = 'test_selection'
+    self.portal_selections.setSelectionFor(name, Selection(name))
     transaction.commit()
 
   def tearDown(self):

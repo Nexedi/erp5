@@ -104,7 +104,6 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     list_url=''
     columns=()
     checked_uids=()
-    name=None
     index=None
     domain_path = ('portal_categories',)
     domain_list = ((),)
@@ -123,9 +122,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def getId(self):
       return self.name
 
-    def __init__(self, method_path=None, params=None, sort_on=None, default_sort_on=None,
-                 uids=None, invert_mode=0, list_url='', domain=None, report=None,
-                 columns=None, checked_uids=None, name=None, index=None):
+    def __init__(self, name, method_path=None, params=None, sort_on=None,
+                 default_sort_on=None, uids=None, invert_mode=0, list_url='',
+                 domain=None, report=None, columns=None, checked_uids=None,
+                 index=None):
         if params is None: params = {}
         if sort_on is None: sort_on = []
         if default_sort_on is None: default_sort_on = []

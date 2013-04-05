@@ -1072,8 +1072,10 @@ class ListBoxRenderer:
 
     # Create a selection, if not present, with the default sort order.
     if selection is None:
-      selection = Selection(params = dict(self.getDefaultParamList()), default_sort_on = self.getDefaultSortColumnList())
-      selection = selection.__of__(selection_tool)
+      selection = Selection(selection_name,
+                            params=dict(self.getDefaultParamList()),
+                            default_sort_on=self.getDefaultSortColumnList(),
+                           ).__of__(selection_tool)
     # Or make sure all sort arguments are valid.
     else:
       # Reset the selection, if specified.
@@ -2605,8 +2607,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     
     # Make it sure to store the current selection, only if a list method is defined.
     list_method = self.getListMethod()
-    selection = self.getSelection()
     if list_method is not None:
+      selection = self.getSelection()
       method_path = '%s/%s' % (getPath(self.getContext()), self.getListMethodName())
       list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
       selection_index = self.getSelectionIndex()

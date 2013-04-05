@@ -164,7 +164,7 @@ class ZPyChart(ZMIField, PythonScript):
 
         # If selection is None, create a new one
         if selection is None:
-          selection = Selection()
+          selection = Selection(selection_name)
         
         # Get the data method if defined
         if data_method is not None:

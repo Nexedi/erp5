@@ -139,7 +139,7 @@ class ZGDChartWidget(Widget.Widget):
 
     # Creation selection if needed
     if selection is None:
-      selection = Selection(params=data)
+      selection = Selection(selection_name, params=data)
     else:
       LOG('ZGDChart.render',0,'selection is not None')
       kw = {'params':data}
