@@ -52,34 +52,20 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
 from ZODB.POSException import ConflictError\n
+from zExceptions import Unauthorized\n
 \n
-# Retrieves SearchableText from catalog\n
-method = context.z_catalog_sphinxse_index_list\n
-parameter_dict = {\'uid\':[], \'SearchableText\':[]}\n
-for i in context.getPortalObject().portal_catalog(path=getPath, select_expression=\'SearchableText\'):\n
-  for property in (\'uid\', \'SearchableText\'):\n
-    parameter_dict[property].append(getattr(i, property))\n
-if len(parameter_dict[\'uid\']):\n
-  return method(**parameter_dict)\n
-return\n
-\n
-# the following is the alternate version that fails in case of errors (eg. NotConvertedError).\n
-# if we separate updating full_text table activities too, we can consider using this one.\n
-\n
-# Obtain the properties from the Z SQL Method itself, as like catalogObjectList.\n
-method = context.z_catalog_sphinxse_index_list\n
+method = context.z_catalog_fulltext_list\n
+method2 = context.z_catalog_sphinxse_index_list\n
 property_list = method.arguments_src.split()\n
-\n
-# This below emulates what catalogObjectList is doing.\n
-portal = context.getPortalObject()\n
-document_type_list = portal.getPortalDocumentTypeList()\n
 parameter_dict = {}\n
 failed_path_list = []\n
-for path in getPath:\n
-  obj = portal.restrictedTraverse(path, None)\n
+restrictedTraverse = context.getPortalObject().restrictedTraverse\n
+for path in path_list:\n
+  if not path: # should happen in tricky testERP5Catalog tests only \n
+    continue\n
+  obj = restrictedTraverse(path, None)\n
   if obj is None:\n
     continue\n
-\n
   try:\n
     tmp_dict = {}\n
     for property in property_list:\n
@@ -90,7 +76,10 @@ for path in getPath:\n
       tmp_dict[property] = value\n
   except ConflictError:\n
     raise\n
-  except:\n
+  except Unauthorized: # should happen in tricky testERP5Catalog tests only \n
+    continue\n
+  except Exception, e:\n
+    exception = e\n
     failed_path_list.append(path)\n
   else:\n
     for property, value in tmp_dict.items():\n
@@ -99,30 +88,23 @@ for path in getPath:\n
 if len(failed_path_list):\n
   if len(parameter_dict):\n
     # reregister activity for failed objects only\n
-    context.activate(activity=\'SQLQueue\', priority=5, serialization_tag=\'sphinxse_indexing\').SQLCatalog_catalogSphinxSE(getPath=failed_path_list)\n
+    context.activate(activity=\'SQLQueue\', priority=5, serialization_tag=\'sphinxse_indexing\').SQLCatalog_deferFullTextIndexActivity(path_list=failed_path_list)\n
   else:\n
     # if all objects are failed one, just raise an exception to avoid infinite loop.\n
-    raise AttributeError, \'exception raised in indexing %r\' % failed_path_list\n
+    raise AttributeError, \'exception %r raised in indexing %r\' % (exception, failed_path_list)\n
 \n
-if len(parameter_dict):\n
-  return method(**parameter_dict)\n
+if parameter_dict:\n
+  method(**parameter_dict)\n
+  method2(**parameter_dict)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>getPath</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>path_list</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_catalogSphinxSE</string> </value>
+            <value> <string>SQLCatalog_deferFullTextIndexActivity</string> </value>
         </item>
       </dictionary>
     </pickle>

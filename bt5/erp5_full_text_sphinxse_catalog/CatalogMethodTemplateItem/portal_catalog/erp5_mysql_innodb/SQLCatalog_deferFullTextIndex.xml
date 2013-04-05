@@ -50,10 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script is called to separate SphinxSE indexing into a low-priority active object,\n
-# so that the important part can be finished quickly and also to serialise it because\n
-# concurrent write may cause crash of searchd.\n
-context.activate(activity=\'SQLQueue\', priority=3, serialization_tag=\'sphinxse_indexing\').SQLCatalog_catalogSphinxSE(getPath=getPath)\n
+            <value> <string># This script is called to defer fulltext indexing in a lower priority.\n
+# Activities are serialised because concurrent write may cause crash of searchd.\n
+context.activate(activity=\'SQLQueue\', priority=4, serialization_tag=\'sphinxse_indexing\').SQLCatalog_deferFullTextIndexActivity(path_list=list(getPath))\n
 </string> </value>
         </item>
         <item>
@@ -62,7 +61,7 @@ context.activate(activity=\'SQLQueue\', priority=3, serialization_tag=\'sphinxse
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_deferSphinxSEIndexing</string> </value>
+            <value> <string>SQLCatalog_deferFullTextIndex</string> </value>
         </item>
       </dictionary>
     </pickle>

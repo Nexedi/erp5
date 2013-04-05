@@ -60,7 +60,7 @@ while True:\n
   full_text_list = portal_catalog(limit=(i*LIMIT, LIMIT))\n
   if len(full_text_list) == 0:\n
     break\n
-  sql_catalog.SQLCatalog_deferSphinxSEIndexing(getPath=[x.path for x in full_text_list])\n
+  sql_catalog.SQLCatalog_deferFullTextIndex(getPath=[x.path for x in full_text_list])\n
   i += 1\n
 return \'SphinxSE index will be updated in background.\'\n
 </string> </value>
