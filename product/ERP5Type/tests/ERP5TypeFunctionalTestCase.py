@@ -187,6 +187,7 @@ class Firefox(Browser):
     os.environ['MOZ_NO_REMOTE'] = '0'
 
   def getPrefJs(self):
+    from App.config import getConfiguration
     return """
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
@@ -224,7 +225,15 @@ user_pref("capability.principal.codebase.p1.subjectName", "");
 
 // For debugging, do not waste space on screen
 user_pref("browser.tabs.autoHide", true);
-""" % (self.host, self.port)
+
+// This is required to download reports without requiring user interaction
+// (See ERP5UpgradeUtils for corresponding Extensions)
+user_pref("browser.download.folderList", 2);
+user_pref("browser.download.manager.showWhenStarting", false);
+user_pref("browser.download.dir", "%s");
+user_pref("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
+""" % (self.host, self.port,
+       os.path.join(getConfiguration().instancehome, 'var'))
 
 class PhantomJS(Browser):
   def _createRunJS(self):
