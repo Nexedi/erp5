@@ -49,6 +49,14 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>searchable_text_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>asRawText</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
