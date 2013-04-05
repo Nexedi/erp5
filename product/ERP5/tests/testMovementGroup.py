@@ -449,6 +449,81 @@ class TestMovementGroupCommonAPI(MovementGroupTestCase):
         instance = class_('dummy')
         self.assertEqual(instance._separate([]), [])
 
+class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
+
+  def test_property_movement_group_grouping(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)))
+    self.builder.newContent(
+                  portal_type='Property Grouping Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+     # This movent group must not assign the properties
+    self.assertEquals({}, group_list[0].getGroupEditDict())
+
+  def test_property_movement_group_separating(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 2)))
+    self.builder.newContent(
+                  portal_type='Property Grouping Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(2, len(group_list))
+    for group in group_list:
+      # This movent group must not assign the properties
+      self.assertEquals({}, group.getGroupEditDict())
+
+  def test_property_movement_group_and_separating(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        title='B',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        title='B',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        title='A',
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 2)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        title='A',
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 3)))
+    self.builder.newContent(
+                  portal_type='Property Grouping Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date', 'title'))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+
+    # must not be 4
+    self.assertEquals(3, len(group_list))
+
+    for group in group_list:
+      # This movent group must not assign the properties
+      self.assertEquals({}, group.getGroupEditDict())
 
 def test_suite():
   suite = unittest.TestSuite()
@@ -460,5 +535,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestDuplicatedKeyRaiseException))
   suite.addTest(unittest.makeSuite(TestCategoryMovementGroup))
   suite.addTest(unittest.makeSuite(TestMovementGroupCommonAPI))
+  suite.addTest(unittest.makeSuite(TestPropertyGroupingMovementGroup))
   return suite
 
