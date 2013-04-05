@@ -29,8 +29,24 @@ from Products.ERP5.Document.MovementGroup import MovementGroup
 
 class SplitMovementGroup(MovementGroup):
   """
-  The purpose of MovementGroup is to define how movements are grouped,
-  and how values are updated from simulation movements.
+  This movement group is used to split all the movements that are aggregated
+  by the Simulation Select Method.
+
+  XXX-Tatuya: However this test() method returns True, so the aggregated
+  movements can be inserted into existing Delivery/Line/Cell that are aggregated
+  by the Delivery Select Method. What use case this is applied for?
+
+  * Reference:
+  http://www.erp5.org/HowToConfigureMovementGroup
+
+  test(self, object, property_dict, **kw):
+    (mandatory)
+    This method returns if object can be used for updating according to
+    property_dict. Its return value is [updatable? (True or False),
+    property_dict that is used to update values]. If you want to create a
+    new Delivery/Line/Cell instead of updating existing one,
+    return [False, property_dict].
+
   """
   meta_type = 'ERP5 Split Movement Group'
   portal_type = 'Split Movement Group'
