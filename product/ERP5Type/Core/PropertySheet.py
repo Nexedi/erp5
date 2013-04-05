@@ -123,45 +123,38 @@ class PropertySheet(Folder):
 
     constraint_list = getattr(definition_class, '_constraints', None)
     if constraint_list:
-      # Get filesystem Constraint names to be able to map them properly
-      # to ZODB Constraint Portal Types as some filesystem constraint
-      # names are 'NAMEConstraint' or 'NAME'
-      from Products.ERP5Type import Constraint as FilesystemConstraint
-      filesystem_constraint_class_name_set = set(class_name
-        for class_name in FilesystemConstraint.__dict__
-        if class_name[0] != '_' )
-
       # Mapping between the filesystem 'type' field and Portal Types ID
       portal_type_dict = {}
-
       for portal_type_id in types_tool.objectIds():
-        if not portal_type_id.endswith(' Constraint'):
-          continue
-
-        constraint_class_name = portal_type_id.replace(' ', '')
-
-        if constraint_class_name not in filesystem_constraint_class_name_set:
-          constraint_class_name = constraint_class_name.replace('Constraint', '')
-          if constraint_class_name not in filesystem_constraint_class_name_set:
-            LOG("Tool.PropertySheetTool", WARNING,
-                "PropertySheet %s: No matching Constraint found for Portal %r"
-                % (property_sheet_name, portal_type_id))
-            continue
-
-        portal_type_dict[constraint_class_name] = portal_type_id
+        if portal_type_id.endswith(' Constraint'):
+          portal_type_dict[portal_type_id.replace(' ', '')] = portal_type_id
 
       portal_type_dict.update(cls._merged_portal_type_dict)
 
       for constraint in constraint_list:
+        # Some filesystem Constraints does not end with 'Constraint', whereas
+        # ZODB Constraint *must* have a Portal Type ending with
+        # 'Constraint'.
+        #
+        # Previously, it was implemented through a mapping between Portal Type
+        # and filesystem Constraint class name but this does not work when two
+        # projects used Constraints within a shared bt5 which has already been
+        # migrated for a project (thus filesystem Constraints have been
+        # deleted) but not the other...
+        constraint_type = constraint['type']
+        if not constraint['type'].endswith('Constraint'):
+          constraint_type += 'Constraint'
+
         try:
-          portal_type = portal_type_dict[constraint['type']]
+          portal_type = portal_type_dict[constraint_type]
         except KeyError:
           # TODO: Constraints without Portal Type yet (e.g. Constraints
           # which have not been migrated yet (within BTs or per-project
           # Products)) are simply *ignored* for now
           LOG("Tool.PropertySheetTool", WARNING,
-              "Not migrating constraint %s to portal_property_sheets"
-              % constraint['type'])
+              "Not migrating constraint %s to portal_property_sheets as "
+              "the corresponding Portal Type could not be found"
+              % constraint_type)
         else:
           portal_type_class = types_tool.getPortalTypeClass(portal_type)
           # Create the new constraint
