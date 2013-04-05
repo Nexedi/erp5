@@ -966,6 +966,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
+        # Process Activities after each bt5 installation, otherwise processing
+        # Activities can take forever when installing masterdata bt5s as it
+        # generate many activities
+        self.tic(verbose=1)
+
     def setUpERP5Site(self,
                      business_template_list=(),
                      quiet=0,
