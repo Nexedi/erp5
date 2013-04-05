@@ -168,6 +168,15 @@ class Firefox(Browser):
     os.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
     os.environ["NO_EM_RESTART"] = "1"
 
+    # This disables unwanted SCIM as it fails with Xvfb, at least on Mandriva
+    # 2010.0, because Firefox tries to start scim-bridge which SIGSEGV and
+    # thus Firefox is stucked on register_imcontext()
+    for remove_environment_variable in ('GTK_IM_MODULE',
+                                        'XIM_PROGRAM',
+                                        'XMODIFIERS',
+                                        'QT_IM_MODULE'):
+      os.environ.pop(remove_environment_variable, None)
+
   def _run(self, url):
     # Prepare to run
     self._createFile('prefs.js', self.getPrefJs())
