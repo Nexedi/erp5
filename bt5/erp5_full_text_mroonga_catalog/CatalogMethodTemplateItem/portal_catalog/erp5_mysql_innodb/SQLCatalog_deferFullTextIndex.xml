@@ -59,14 +59,6 @@ context.activate(activity=\'SQLQueue\', priority=4).SQLCatalog_deferFullTextInde
             <value> <string>getPath</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>SQLCatalog_deferFullTextIndex</string> </value>
         </item>
