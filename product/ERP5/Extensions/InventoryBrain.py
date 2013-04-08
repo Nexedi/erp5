@@ -279,62 +279,6 @@ class TrackingListBrain(InventoryListBrain):
         return self.date.toZone(timezone)
     return self.date
 
-class DeliveryListBrain(InventoryListBrain):
-  """
-    Lists each variation
-  """
-
-  # Stock management
-  def getInventory(self, at_date=None, ignore_variation=0, 
-                   simulation_state=None, **kw):
-    if isinstance(simulation_state, str):
-      simulation_state = [simulation_state]
-    where_expression = getattr(self, 'where_expression', None)
-    result = self.Resource_zGetInventory(
-                    resource_uid = [self.resource_uid],
-                    to_date=at_date,
-                    section_category = self.getPortalDefaultSectionCategory(),
-                    variation_text = self.variation_text,
-                    simulation_state = simulation_state,
-                    where_expression = where_expression)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
-
-  def getAvailableInventory(self):
-    """
-      Returns current inventory at current date
-    """
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory(
-                resource_uid = [self.resource_uid],
-                omit_simulation = 1, omit_input = 1,
-                section_category = self.getPortalDefaultSectionCategory(),
-                variation_text = self.variation_text,
-                simulation_state = self.getPortalReservedInventoryStateList())
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
-
-  def getInventoryAtDate(self):
-    """
-      Returns inventory at the date provided by the SQL method
-    """
-    at_date=self.at_date
-    return self.getInventory(
-            at_date=at_date, ignore_variation=0, 
-            simulation_state= \
-                      list(self.getPortalFutureInventoryStateList()) + \
-                      list(self.getPortalReservedInventoryStateList()) + \
-                      list(self.getPortalCurrentInventoryStateList()))
-
 
 class MovementHistoryListBrain(InventoryListBrain):
   """Brain for getMovementHistoryList
