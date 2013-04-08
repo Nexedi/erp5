@@ -774,10 +774,6 @@ table.listbox input.listbox-select-action{\n
   display:block;\n
 }\n
 \n
-.listbox-table-data-cell > a{\n
-  display:block;\n
-}\n
-\n
 table.listbox th button{\n
   border-width:0;\n
   cursor:pointer;\n

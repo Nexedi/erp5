@@ -365,16 +365,11 @@ function redirectPDFPage(event, element){\n
   }\n
 }\n
 \n
-var makeWholeCellClickable = function() {\n
-  $(\'.listbox-table-data-cell > a\').each(function(i) {$(this).height($(this).parent().outerHeight());});\n
-};\n
-\n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
-$(document).ready(makeWholeCellClickable);
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
 
 ]]></string> </value>
         </item>
