@@ -286,18 +286,6 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
                 explanation.getRelativeUrl())
     return ''
 
-  def getAggregateListText(self):
-    aggregate_list = self.Resource_zGetAggregateList(
-                                   explanation_uid = self.explanation_uid,
-                                   node_uid = self.node_uid,
-                                   section_uid = self.section_uid,
-                                   variation_text = self.variation_text,
-                                   resource_uid = self.resource_uid)
-    result = []
-    for o in aggregate_list:
-      result.append(o.relative_url)
-    return '<br>'.join(result)
-
   def getExplanationText(self):
     # Returns an explanation of the movement
     o = self.getObject()
