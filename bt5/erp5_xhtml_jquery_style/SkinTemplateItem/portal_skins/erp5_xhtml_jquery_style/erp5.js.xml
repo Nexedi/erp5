@@ -67,8 +67,8 @@ function clickSaveButton(act) {\n
 // search field will get the focus. This is generally the title input text of\n
 // a view\n
 function autoFocus() {\n
-  var first_autofocus_expr = ".//input[@class=\'autofocus\']"\n
-  var FIRST_RESULT = XPathResult.FIRST_ORDERED_NODE_TYPE\n
+  var first_autofocus_expr = ".//input[@class=\'autofocus\']";\n
+  var FIRST_RESULT = XPathResult.FIRST_ORDERED_NODE_TYPE;\n
 \n
   var input = document.evaluate(first_autofocus_expr, document, null, FIRST_RESULT, null).singleNodeValue;\n
   if (input) {\n
@@ -80,6 +80,7 @@ function autoFocus() {\n
     //if (first_text_input){\n
     //  first_text_input.focus();\n
     //}\n
+   true;\n
   }\n
 }\n
 \n
@@ -111,12 +112,12 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
         var item_list = [row_begin];\n
         var row_item = row_begin;\n
         var end_line = false;\n
-        while ((!end_line) && (row_item = row_item.nextSibling) != null) {\n
-          var predicate_result = columnPredicate(row_item, row_begin)\n
-          if ((predicate_result & 1) != 0)\n
+        while ((!end_line) && (row_item = row_item.nextSibling) !== null) {\n
+          var predicate_result = columnPredicate(row_item, row_begin);\n
+          if ((predicate_result & 1) !== 0)\n
             item_list.push(row_item);\n
-          end_table = ((predicate_result & 4) != 0);\n
-          end_line = ((predicate_result & 6) != 0);\n
+          end_table = ((predicate_result & 4) !== 0);\n
+          end_line = ((predicate_result & 6) !== 0);\n
         }\n
         row_list.push(item_list);\n
       }\n
@@ -145,7 +146,7 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
 function matchLeftFieldset(element) {\n
 // XXX: not used anymore ?\n
   return (element.tagName == "FIELDSET" &&\n
-       element.className.toLowerCase().indexOf(\'left\') != -1)\n
+       element.className.toLowerCase().indexOf(\'left\') != -1);\n
 }\n
 \n
 function matchRightFieldset(element, ignored) {\n
@@ -176,31 +177,31 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 // if clear_changed_flag is set to true, changed will be set to false, so no\n
 // warning message about unsaved changes will be displayed\n
 function submitFormOnEnter(event, form, method_name, clear_changed_flag, element){\n
-  if (clear_changed_flag == null){ clear_changed_flag = false; }\n
+  if (clear_changed_flag === null){ clear_changed_flag = false; }\n
   if(event.keyCode == 13){\n
     if (form == "main_form") {\n
       form = document.forms[form]; // backward compatibility\n
     }\n
     form.action = method_name;\n
-    if (clear_changed_flag==true) {\n
+    if (clear_changed_flag === true) {\n
       changed = false;\n
     }\n
     form.submit();\n
   }\n
 }\n
 \n
-var old_index=0;\n
+var old_index = 0;\n
 function shiftCheck(evt) {\n
   /*Uncheck all checkboxes from last unchecked one in \n
     business template Install / Update / Reinstall dialog.\n
   */\n
-  evt=(evt)?evt:event;\n
+  evt = (evt)?evt:event;\n
   var target=(evt.target)?evt.target:evt.srcElement;\n
   // remove "checkbox" part from ID\n
   // This part can be reused easilly by usual left column\n
   var target_index= target.id.substr(8);\n
   if(!evt.shiftKey) {\n
-    old_index= target_index\n
+    old_index = target_index;\n
     check_option = target.checked;\n
     return false;\n
     }\n
@@ -219,7 +220,7 @@ var indexAllCheckBoxesAtBTInstallationOnLoad = function() {\n
       function(index){$(this).attr("id",  "checkbox"+index);});\n
     //var inputs = window.getElementsByTagAndClassName("input", "shift_check_support");\n
     //for(i=0;i<=inputs.length-1;i++) {inputs[i].id = "checkbox" + i; }\n
-}\n
+};\n
 \n
 var resizeIFrameOnLoad = function() {\n
   /* Resize all frames in document in order to remove sliders  */\n
@@ -229,7 +230,7 @@ var resizeIFrameOnLoad = function() {\n
       $(this).css("height", inner_frame.documentElement.offsetHeight + \'px\');\n
     }\n
   });\n
-}\n
+};\n
 \n
 var changed = false;\n
 function installUnsavedChangesWarning(warning_message) {\n
@@ -238,8 +239,7 @@ function installUnsavedChangesWarning(warning_message) {\n
       // show an warning box only if save button do exists\n
       return warning_message;\n
   };\n
-};\n
-\n
+}\n
 \n
 var addOnChangeEventHandler = function() {\n
   /* Add a onchange event handler for all fields inputs.\n
@@ -285,7 +285,7 @@ var addOnChangeEventHandler = function() {\n
         });\n
     }\n
   });\n
-}\n
+};\n
 \n
 var rewriteIndentedSelect = function() {\n
   /*\n
@@ -312,13 +312,13 @@ var rewriteIndentedSelect = function() {\n
           }\n
         }\n
         if (level >= 1) {\n
-          level = level / 4.;\n
+          level = level / 4.0;\n
           $(this).html(text.replace(/^(&nbsp;)+/, ""));\n
           $(this).css("paddingLeft", level+"em");\n
         }\n
       });\n
     });\n
-}\n
+};\n
 \n
 function queryStringToArray(query_string){\n
   /*\n
@@ -337,20 +337,20 @@ function submitLinkAsHtmlForm(event){\n
   Parse link into form arguments and pass everything as a \n
   form (together with rest of page\'s input elements).\n
   */\n
-  url = $(this).attr("href")\n
-  form = $("form")\n
-  method = url.substring(0, url.indexOf(\'?\'))\n
-  query_string = url.substring(url.indexOf(\'?\')+1)\n
-  params = queryStringToArray(query_string)\n
+  var url = $(this).attr("href");\n
+  var form = $("form");\n
+  var method = url.substring(0, url.indexOf(\'?\'));\n
+  var query_string = url.substring(url.indexOf(\'?\')+1);\n
+  var params = queryStringToArray(query_string);\n
   $.each(params, function(key, value) {\n
     if (!$(\'*[name="\' + key + \'"]\').length){\n
       // key not part of HTML namespace\n
       form.append(\'<input type="hidden" name="\' + key+ \'" value="\' + value + \'">\');\n
     }});\n
   // submit form  \n
-  form.attr("action", method)\n
-  form.submit()\n
-  event.stopPropagation()  \n
+  form.attr("action", method);\n
+  form.submit();\n
+  event.stopPropagation();\n
   return false;\n
 }\n
 \n
@@ -359,15 +359,15 @@ function redirectPDFPage(event, element){\n
     Used in PDF thumbnail preview mode\n
   */\n
   if(event.keyCode == 13){\n
-    selection_index = parseInt($(element).val()) - 1;\n
+    selection_index = parseInt($(element).val(), 10) - 1;\n
     window.location.href = "PDF_viewHTMLPreviewAsImage?selection_index=" + selection_index;\n
     return false;    \n
   }\n
 }\n
 \n
 var makeWholeCellClickable = function() {\n
-  $(\'.listbox-table-data-cell > a\').each(function(i) {$(this).height($(this).parent().outerHeight())})\n
-}\n
+  $(\'.listbox-table-data-cell > a\').each(function(i) {$(this).height($(this).parent().outerHeight());});\n
+};\n
 \n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
