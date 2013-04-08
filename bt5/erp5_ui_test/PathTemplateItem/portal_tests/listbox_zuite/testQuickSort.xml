@@ -88,12 +88,22 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -118,22 +128,37 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -169,32 +194,37 @@
 <!-- click the ID -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -230,32 +260,37 @@
 <!-- click the ID again -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -289,28 +324,54 @@
   <td></td>\n
 </tr>\n
 <!-- click the Title -->\n
+<!-- reset id sort -->\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:none\']</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementNotPresent</td>\n
   <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
@@ -352,32 +413,42 @@
 <!-- click the Title again -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -414,8 +485,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

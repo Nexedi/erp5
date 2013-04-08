@@ -61,7 +61,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.title\']</td>\n
+  <td>//button[@value=\'listbox.title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -93,7 +93,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.title\']</td>\n
+  <td>//button[@value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -118,8 +118,7 @@
   <td>foo bar</td>\n
 </tr>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
