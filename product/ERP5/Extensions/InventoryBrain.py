@@ -47,62 +47,6 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
       return item.__of__(self)
     return item
 
-class InventoryBrain(ZSQLBrain):
-  """
-    Global analysis (all variations and categories)
-  """
-  # Stock management
-  def getInventory(self, at_date=None, ignore_variation=0,
-                   simulation_state=None, **kw):
-    if isinstance(simulation_state, str):
-      simulation_state = [simulation_state]
-    result = self.Resource_zGetInventory(
-                      resource_uid=[self.resource_uid],
-                      to_date=at_date, omit_simulation=0,
-                      section_category=self.getPortalDefaultSectionCategory(),
-                      simulation_state=simulation_state)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
-
-  def getCurrentInventory(self):
-    return self.getInventory(
-        simulation_state=self.getPortalCurrentInventoryStateList(),
-        ignore_variation=1)
-
-  def getFutureInventory(self):
-    return self.getInventory(
-                   ignore_variation=1,
-                   simulation_state= \
-                       list(self.getPortalFutureInventoryStateList())+ \
-                       list(self.getPortalReservedInventoryStateList())+ \
-                       list(self.getPortalCurrentInventoryStateList()))
-
-  def getAvailableInventory(self):
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory( 
-                    resource_uid=[self.resource_uid], ignore_variation=1,
-                    omit_simulation=1, omit_input=1,
-                    section_category=self.getPortalDefaultSectionCategory(),
-                    simulation_state= \
-                        self.getPortalReservedInventoryStateList())
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
-
-  def getQuantityUnit(self, **kw):
-    resource = self.portal_catalog.getObject(self.resource_uid)
-    if resource is not None:
-      return resource.getQuantityUnit()
-
-
 class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
   """
     Lists each variation
