@@ -453,11 +453,11 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     lista_latest = {}
     for o in lista.keys():
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
-    if lista_latest.has_key(self):
-      lista_latest.pop(self) # remove this document
-    if lista_latest.has_key(self.getLatestVersionValue()):
-      # remove last version of document itself from related documents
-      lista_latest.pop(self.getLatestVersionValue())
+
+    # remove this document
+    lista_latest.pop(self, None)
+    # remove last version of document itself from related documents
+    lista_latest.pop(self.getLatestVersionValue(), None)
 
     return lista_latest.keys()
 
