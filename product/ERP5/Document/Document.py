@@ -478,7 +478,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     if not self.getReference():
       return self
     catalog = self.getPortalObject().portal_catalog
-    kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
+    kw = dict(reference=self.getReference(),
+              sort_on=(('version', 'descending', 'SIGNED'),))
     if language is not None:
       kw['language'] = language
     result_list = catalog(**kw)
