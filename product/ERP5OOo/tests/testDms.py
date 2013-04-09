@@ -892,6 +892,19 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
+
+    document = portal.document_module.newContent(
+                   portal_type = 'Presentation',)
+    # searchable text is empty by default
+    self.assertEquals('', document.SearchableText())
+    # it contains title
+    document.setTitle('foo')
+    self.assertEquals('foo', document.SearchableText())
+    # and description
+    document.setDescription('bar')
+    self.assertTrue('bar' in document.SearchableText(),
+      document.SearchableText())
+
   def test_10_SearchString(self):
     """
     Test search string search generation and parsing.

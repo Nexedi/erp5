@@ -3020,10 +3020,13 @@ class Base( CopyContainer,
         # so use definition of 'Base Type' for searchable methods & properties
         portal_type = self.portal_types.getTypeInfo('Base Type')
       searchable_text_method_id_list = []
+
       # generated from properties methods and add explicitly defined method_ids as well 
       for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
-        method_id = convertToUpperCase(searchable_text_property_id)
-        searchable_text_method_id_list.extend(['get%s' %method_id])
+        if self.hasProperty(searchable_text_property_id):
+          method_id = convertToUpperCase(searchable_text_property_id)
+          searchable_text_method_id_list.extend(['get%s' %method_id])
+
       searchable_text_method_id_list.extend(portal_type.getSearchableTextMethodIdList())
       for method_id in searchable_text_method_id_list:
         # XXX: how to exclude exclude acquisition (not working)
@@ -3039,7 +3042,7 @@ class Base( CopyContainer,
             else:
               searchable_text_list.append(method_value)
       searchable_text = ' '.join([str(x) for x in searchable_text_list])
-      return searchable_text
+      return searchable_text.strip()
 
   # Compatibility with CMF Catalog / CPS sites
   SearchableText = getSearchableText
