@@ -132,7 +132,7 @@
 <!-- ASC -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -153,7 +153,7 @@
 <!-- DESC -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -245,8 +245,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
