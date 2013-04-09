@@ -53,32 +53,37 @@ Test quick sort on the project module.\n
 \n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'Begin Date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'End Date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.stop_date:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'Begin Date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'Begin Date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[6]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[6]/img[@title="Descending Display"]</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -98,22 +103,27 @@ Test quick sort on the project module.\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'Begin Date\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @title=\'Begin Date\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[6]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[6]/img[@title="Descending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.delivery.start_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[6]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -134,8 +144,7 @@ Test quick sort on the project module.\n
 \n
 </tbody></table>\n
 </body>\n
-</html> \n
-
+</html>
 
 ]]></unicode> </value>
         </item>
