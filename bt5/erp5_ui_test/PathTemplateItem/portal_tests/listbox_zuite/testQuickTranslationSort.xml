@@ -133,17 +133,22 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/td[2]/button/img[@alt="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -164,22 +169,27 @@
 <!-- click the state -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -195,22 +205,27 @@
 <!-- click the state again -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -280,17 +295,17 @@
 </tr> \n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -311,22 +326,27 @@
 <!-- click the state -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -342,22 +362,27 @@
 <!-- click the state again -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:none\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -380,8 +405,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
