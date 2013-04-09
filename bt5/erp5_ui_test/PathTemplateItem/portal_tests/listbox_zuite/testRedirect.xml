@@ -92,12 +92,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/span</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
