@@ -853,6 +853,48 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
 
+  def test_sortOnRelatedKeyWithUnsetRelation(self):
+    """
+      Check that sorting on a related key does not filter out objects for
+      which the relation is not set.
+    """
+    portal = self.getPortalObject()
+    organisation = portal.organisation_module.\
+                   newContent(portal_type="Organisation")
+    person_module = portal.person_module
+    person_1 = person_module.newContent(portal_type="Person")
+    person_2 = person_module.newContent(portal_type="Person",
+                 career_subordination_value=organisation)
+    self.tic()
+    self.assertEqual(len(person_module.searchFolder()),
+                     len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
+
+  def test_sortOnRelatedKeyWithoutLeftJoinSupport(self):
+    """Check that sorting on a related key that does not support left join.
+    """
+    portal = self.getPortalObject()
+    org_a = self._makeOrganisation(title='abc', default_address_city='abc')
+
+    # now turn the z_related_grand_parent into an old-style method, without
+    # RELATED_QUERY_SEPARATOR
+    method = portal.portal_catalog.getSQLCatalog().z_related_grand_parent
+    old_src = method.src
+
+    @self._addCleanup
+    def cleanGrandParentMethod(self):
+      method.manage_edit(method.title, method.connection_id,
+                         method.arguments_src, old_src)
+
+    src = old_src.replace('<dtml-var RELATED_QUERY_SEPARATOR>', ' AND ')
+    method.manage_edit(method.title, method.connection_id, method.arguments_src,
+                       src)
+
+    query = dict(grand_parent_portal_type="Organisation Module",
+                 parent_reference=org_a.getReference())
+    self.tic()
+    self.assertNotEquals(0, len(portal.portal_catalog(
+      portal_type='Address',
+      sort_on=[('grand_parent_portal_type', 'ascending')])))
 
   def _makeOrganisation(self, **kw):
     """Creates an Organisation in it's default module and reindex it.
@@ -3409,23 +3451,6 @@ VALUES
     result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
     self.assertEqual(len(result), 2)
 
-  @todo_erp5
-  def test_sortOnRelatedKeyWithUnsetRelation(self):
-    """
-      Check that sorting on a related key does not filter out objects for
-      which the relation is not set.
-    """
-    portal = self.getPortalObject()
-    organisation = portal.organisation_module.\
-                   newContent(portal_type="Organisation")
-    person_module = portal.person_module
-    person_1 = person_module.newContent(portal_type="Person")
-    person_2 = person_module.newContent(portal_type="Person",
-                 career_subordination_value=organisation)
-    self.tic()
-    self.assertEqual(len(person_module.searchFolder()),
-                     len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
-
   def test_multipleRelatedKeyDoMultipleJoins(self):
     """
       Check that when multiple related keys are present in the same query,
@@ -3919,26 +3944,26 @@ VALUES
     # Now lets fetch the titles of groups of the above orgs using select_dict.
     search_kw.update(select_dict=dict(strict_group_title=None))
     records = module.searchFolder(**search_kw)
-    # by default the catalog only returns items containing the
-    # relationship we asked for (group). Besides, some entries will
-    # appear many times, according to the number of relationships each
-    # catalog entry has in that related key.
-    results = [(rec.title, rec.strict_group_title or '-None-')
+    # By default the catalog returns all items, and the selected
+    # strict_group_title is set to None for documents without groups
+    # Besides, some entries will appear many times, according to the number of
+    # relationships each catalog entry has in that related key.
+    results = [(rec.title, rec.strict_group_title)
                for rec in records]
-    self.assertEquals(sorted(results), 
-                      [('org2', 'Nexedi'),
+    self.assertEquals(sorted(results),
+                      [('org1', None),
+                       ('org2', 'Nexedi'),
                        ('org3', 'TIOLive'),
                        ('org4', 'Nexedi'),
                        ('org4', 'TIOLive')])
-    # But if we demand a left-join on that column, then we'll have all
-    # orgs we created. They'll still be repeated according to their
-    # relationships, though.
+    # This also works if we force a left join on the column.
+    # They'll still be repeated according to their relationships, though.
     search_kw.update(left_join_list=('strict_group_title',))
     records = module.searchFolder(**search_kw)
-    results = [(rec.title, rec.strict_group_title or '-None-')
+    results = [(rec.title, rec.strict_group_title)
                for rec in records]
-    self.assertEquals(sorted(results), 
-                      [('org1', '-None-'),
+    self.assertEquals(sorted(results),
+                      [('org1', None),
                        ('org2', 'Nexedi'),
                        ('org3', 'TIOLive'),
                        ('org4', 'Nexedi'),
