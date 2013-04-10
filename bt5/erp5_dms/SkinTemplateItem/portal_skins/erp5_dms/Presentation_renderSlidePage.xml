@@ -58,11 +58,26 @@ absolute_url = "%s" % context.absolute_url()\n
 \n
 return """\n
 \n
-var slide_total_pages=1\n
 var slide_current_page=""\n
+var slide_current_page_number=0\n
+var current_page_is_img=true\n
+img_file_name_list=[]\n
+text_file_name_list=[]\n
 \n
 function goToNewSlide(relative_path){\n
   slide_current_page=relative_path;\n
+  for (var j=0; j<img_file_name_list.length; j++) {\n
+    if (img_file_name_list[j].match(slide_current_page)){\n
+      slide_current_page_number=j;\n
+      current_page_is_img=true; \n
+    }\n
+  }\n
+  for (var j=0; j<text_file_name_list.length; j++) {\n
+    if (text_file_name_list[j].match(slide_current_page)){\n
+      slide_current_page_number=j;\n
+      current_page_is_img=false; \n
+    }\n
+  }\n
   $.ajax({\n
     url: %(absolute_url)s+"/"+relative_path,\n
     type: \'get\',\n
@@ -72,7 +87,45 @@ function goToNewSlide(relative_path){\n
     } \n
   });\n
   renderNavigation();\n
-  resetPageSelector();\n
+  $("#slide_selection_index").val(slide_current_page_number+1);\n
+}\n
+\n
+function getFileNameList(){\n
+  var file_name_list=[];\n
+  $.ajax({\n
+    url: %(absolute_url)s+"/"+"getPresentationFileNameList",\n
+    type: \'get\',\n
+    async: false,\n
+    success: function(data) {\n
+      file_name_list=$.parseJSON(data);\n
+    } \n
+  });\n
+  return file_name_list;\n
+}\n
+\n
+function getImgFileNameList(file_name_list){\n
+  var img_list=[];\n
+  var img_list_without_first=[];\n
+  var img_first=[];\n
+  for (var i=0; i<file_name_list.length; i++) {\n
+    if(file_name_list[i].indexOf(".impr.")!=-1)\n
+      img_first.push(file_name_list[i]);    \n
+    else if(file_name_list[i].indexOf("img")!=-1)\n
+      img_list_without_first.push(file_name_list[i]);\n
+  }\n
+  img_list_without_first.sort();\n
+  img_list=img_first.concat(img_list_without_first)\n
+  return img_list;\n
+}\n
+\n
+function getTextFileNameList(file_name_list){\n
+  var text_list=[];\n
+  for (var i=0; i<file_name_list.length; i++) {\n
+    if(file_name_list[i].indexOf("text")!=-1)\n
+      text_list.push(file_name_list[i]);\n
+  }\n
+  text_list.sort();\n
+  return text_list;\n
 }\n
 \n
 function resetNavigation(name,id_a,id_img,class_default,class_hide){\n
@@ -102,62 +155,38 @@ function renderNavigation(){\n
   resetNavigation("Graphics","graphics_slide","graphics_slide_img","graphics","graphics hidden");\n
 }\n
 \n
-function resetPageSelector(){\n
-  $("#slides_total_number").text(slide_total_pages);\n
-  $("#slide_selection_index").keyup(function(event) {\n
-    if (event.keyCode==13) {\n
-      redirectPresentationPage()\n
-    }\n
-  });\n
-  if(slide_current_page.indexOf("text")==-1){\n
-    if(parseInt(slide_current_page.replace(".html","").replace("img","")))\n
-      $("#slide_selection_index").val(parseInt(slide_current_page.replace(".html","").replace("img",""))+1);\n
-    else\n
-      $("#slide_selection_index").val(1);\n
-  }\n
-  else\n
-    if(parseInt(slide_current_page.replace(".html","").replace("text","")))\n
-      $("#slide_selection_index").val(parseInt(slide_current_page.replace(".html","").replace("text",""))+1);\n
-    else\n
-      $("#slide_selection_index").val(1);\n
-}\n
-\n
-function redirectPresentationPage(){\n
+function redirectPresentationPage(slide_total_pages){\n
+  next_page_number = $("#slide_selection_index").val()\n
   //Graphic pages\n
-  if(slide_current_page.indexOf("text")==-1){\n
-    if(slide_total_pages!=1)\n
-      {\n
-      //if entered number bigger than total number, go to last page, else incorrect number go to first page\n
-      if( $("#slide_selection_index").val()>1 && $("#slide_selection_index").val()<slide_total_pages){\n
-        real_page_number=$("#slide_selection_index").val()-1;\n
-        goToNewSlide("img"+real_page_number+".html");\n
-      }\n
-      else if($("#slide_selection_index").val()>=slide_total_pages){\n
-        real_page_number=slide_total_pages-1\n
-        goToNewSlide("img"+real_page_number+".html");\n
-      }\n
-      else{\n
-        goToNewSlide("asPresentationHTML");\n
-      }\n
+  if(current_page_is_img){\n
+    //if entered number bigger than total number, go to last page, else incorrect number go to first page\n
+    if( next_page_number>1 && next_page_number<slide_total_pages){\n
+      real_page_number=next_page_number-1;\n
+      goToNewSlide(img_file_name_list[real_page_number]);\n
     }\n
-    else\n
-      goToNewSlide("asPresentationHTML");\n
+    else if(next_page_number>=slide_total_pages){\n
+      real_page_number=slide_total_pages-1\n
+      goToNewSlide(img_file_name_list[real_page_number]);\n
+    }\n
+    else{\n
+      goToNewSlide(img_file_name_list[0]);\n
+    }\n
   }\n
   //Text pages\n
   else{\n
     //if entered number bigger than total number, go to last page, else incorrect number go to first page\n
-    if( $("#slide_selection_index").val()>1 && $("#slide_selection_index").val()<slide_total_pages){\n
-      real_page_number=$("#slide_selection_index").val()-1;\n
-      goToNewSlide("text"+real_page_number+".html");\n
+    if( next_page_number>1 && next_page_number<slide_total_pages){\n
+      real_page_number=next_page_number-1;\n
+      goToNewSlide(text_file_name_list[real_page_number]);\n
     }\n
-    else if($("#slide_selection_index").val()>=slide_total_pages){\n
+    else if(next_page_number>=slide_total_pages){\n
       real_page_number=slide_total_pages-1\n
-      goToNewSlide("text"+real_page_number+".html");\n
+      goToNewSlide(text_file_name_list[real_page_number]);\n
     }\n
     else{\n
-      goToNewSlide("text0.html");\n
+      goToNewSlide(text_file_name_list[0]);\n
     }\n
-  }  \n
+  }\n
 }\n
 \n
 function preventEnterKeyInGlobal(){\n
@@ -177,13 +206,17 @@ function preventEnterKeyInGlobal(){\n
 }\n
 \n
 $(document).ready(function() {\n
-  goToNewSlide("asPresentationHTML");\n
-  var last_page_href=$("a:contains(\'Last page\')").attr("href");\n
-  if(last_page_href)\n
-    slide_total_pages=parseInt(last_page_href.replace(".html","").replace("img",""))+1;\n
-  else\n
-    slide_total_pages=1;\n
-  resetPageSelector();\n
+  file_name_list=getFileNameList();\n
+  img_file_name_list=getImgFileNameList(file_name_list);\n
+  text_file_name_list=getTextFileNameList(file_name_list);\n
+  slide_total_pages=file_name_list.length/2;\n
+  $("#slides_total_number").text(slide_total_pages);\n
+  $("#slide_selection_index").keyup(function(event) {\n
+    if (event.keyCode==13) {\n
+      redirectPresentationPage(slide_total_pages)\n
+    }\n
+  });\n
+  goToNewSlide(img_file_name_list[0]);\n
   preventEnterKeyInGlobal();\n
 });\n
 \n
