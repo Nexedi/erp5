@@ -87,15 +87,21 @@ Test `preferred_gap_id` column of Account Module\n
 \n
 <!-- make sure we are sorted by preferred_gap_id ASC -->\n
 <tr>\n
-  <!-- sort by title, to reset any sort on preferred_gap_id -->\n
-  <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.title\']</td>\n
+  <td>storeLocation</td>\n
+  <td>current_account_url</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset any sort on preferred_gap_id. previously here was sorting by title, \n
+       but now we can sort by multiple columns, so sort by title does not reset sorting. -->\n
+  <td>openAndWait</td>\n
+  <td>${current_account_url}&reset=int:1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -124,7 +130,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -152,7 +158,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- make sure we end up sorting in ASCENDING-->\n
   <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -160,8 +166,7 @@ Test `preferred_gap_id` column of Account Module\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>
