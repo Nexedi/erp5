@@ -81,7 +81,7 @@ Sorting in Grouping Dialog\n
 <!-- Sort by date asc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[6]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:asc"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -109,7 +109,7 @@ Sorting in Grouping Dialog\n
 <!-- Sort by date desc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[6]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:desc"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -136,8 +136,19 @@ Sorting in Grouping Dialog\n
 \n
 <!-- Sort by title asc {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset date sorting -->\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[7]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[7]/button[@value="listbox.parent_title:asc"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -165,7 +176,7 @@ Sorting in Grouping Dialog\n
 <!-- Sort by title desc {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[7]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[7]/button[@value="listbox.parent_title:desc"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -192,8 +203,21 @@ Sorting in Grouping Dialog\n
 \n
 <!-- Sort by grouping reference asc {{{ -->\n
 <tr>\n
+  <!-- reset title sorting -->\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[7]/button[@value="listbox.parent_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset title sorting -->\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[2]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[7]/button[@value="listbox.parent_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- XXX-Tatuya: For what purpose of this sort? -->\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:asc"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -201,8 +225,19 @@ Sorting in Grouping Dialog\n
 \n
 <!-- Sort by Account Name asc {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset grouping reference sorting -->\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[9]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:asc"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- all lines have the same account here. -->\n
@@ -210,8 +245,19 @@ Sorting in Grouping Dialog\n
 \n
 <!-- Sort by third party title asc {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset Account Name sorting -->\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[10]/button</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[10]/button[@value="listbox.Movement_getMirrorSectionTitle:asc"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- this is not really sorting by title, but by uid just to make sure lines\n
@@ -222,8 +268,7 @@ for the same party are grouped together.\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>
