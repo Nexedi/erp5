@@ -61,6 +61,7 @@ return """\n
 var slide_current_page=""\n
 var slide_current_page_number=0\n
 var current_page_is_img=true\n
+var slides_total_number=0\n
 img_file_name_list=[]\n
 text_file_name_list=[]\n
 \n
@@ -155,37 +156,30 @@ function renderNavigation(){\n
   resetNavigation("Graphics","graphics_slide","graphics_slide_img","graphics","graphics hidden");\n
 }\n
 \n
-function redirectPresentationPage(slide_total_pages){\n
+function checkTheSelectionFieldAndGoToNewSlide(next_page_number,file_list){\n
+//if entered number bigger than total number, go to last page, else incorrect number go to first page\n
+  if( next_page_number>1 && next_page_number<slide_total_number){\n
+    real_page_number=next_page_number-1;\n
+    goToNewSlide(file_list[real_page_number]);\n
+  }\n
+  else if(next_page_number>=slide_total_number){\n
+    real_page_number=slide_total_pages-1\n
+    goToNewSlide(file_list[real_page_number]);\n
+  }\n
+  else{\n
+    goToNewSlide(file_list[0]);\n
+  }\n
+}\n
+\n
+function redirectPresentationPage(){\n
   next_page_number = $("#slide_selection_index").val()\n
   //Graphic pages\n
   if(current_page_is_img){\n
-    //if entered number bigger than total number, go to last page, else incorrect number go to first page\n
-    if( next_page_number>1 && next_page_number<slide_total_pages){\n
-      real_page_number=next_page_number-1;\n
-      goToNewSlide(img_file_name_list[real_page_number]);\n
-    }\n
-    else if(next_page_number>=slide_total_pages){\n
-      real_page_number=slide_total_pages-1\n
-      goToNewSlide(img_file_name_list[real_page_number]);\n
-    }\n
-    else{\n
-      goToNewSlide(img_file_name_list[0]);\n
-    }\n
+    checkTheSelectionFieldAndGoToNewSlide(next_page_number,img_file_name_list)\n
   }\n
   //Text pages\n
   else{\n
-    //if entered number bigger than total number, go to last page, else incorrect number go to first page\n
-    if( next_page_number>1 && next_page_number<slide_total_pages){\n
-      real_page_number=next_page_number-1;\n
-      goToNewSlide(text_file_name_list[real_page_number]);\n
-    }\n
-    else if(next_page_number>=slide_total_pages){\n
-      real_page_number=slide_total_pages-1\n
-      goToNewSlide(text_file_name_list[real_page_number]);\n
-    }\n
-    else{\n
-      goToNewSlide(text_file_name_list[0]);\n
-    }\n
+    checkTheSelectionFieldAndGoToNewSlide(next_page_number,text_file_name_list)\n
   }\n
 }\n
 \n
@@ -209,11 +203,11 @@ $(document).ready(function() {\n
   file_name_list=getFileNameList();\n
   img_file_name_list=getImgFileNameList(file_name_list);\n
   text_file_name_list=getTextFileNameList(file_name_list);\n
-  slide_total_pages=file_name_list.length/2;\n
-  $("#slides_total_number").text(slide_total_pages);\n
+  slide_total_number=file_name_list.length/2;\n
+  $("#slides_total_number").text(slide_total_number);\n
   $("#slide_selection_index").keyup(function(event) {\n
     if (event.keyCode==13) {\n
-      redirectPresentationPage(slide_total_pages)\n
+      redirectPresentationPage()\n
     }\n
   });\n
   goToNewSlide(img_file_name_list[0]);\n
