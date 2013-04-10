@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Last Post Author</string> </value>
+                    <value> <string>Latest Post Author</string> </value>
                 </item>
               </dictionary>
             </value>
