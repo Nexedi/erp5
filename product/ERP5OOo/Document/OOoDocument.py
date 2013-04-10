@@ -274,23 +274,11 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # XXX: handle possible OOOd server failure
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
-  def asPresentationHTML(self, **kw):
-    """
-      The start presentation page is different from the html of 
-      other iframe
-    """
-    mime, data = self._convert('html',**kw)
-    data = self.Presentation_renderWithNavigation(data=self._stripHTML(html=data)).encode('utf-8')
-    return data
-
   def getPresentationFileNameList(self, **kw):
     """
-      The start presentation page is different from the html of 
-      other iframe
+      Get the file list of name of the converted file
     """
 
-    if not self.hasData():
-      return 'text/plain', ''
     format ="html"
     original_format = format
     allowed_format_list = self.getTargetFormatList()
