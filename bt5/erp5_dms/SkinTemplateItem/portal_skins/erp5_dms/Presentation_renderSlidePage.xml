@@ -61,9 +61,47 @@ return """\n
 var slide_current_page=""\n
 var slide_current_page_number=0\n
 var current_page_is_img=true\n
-var slides_total_number=0\n
+var slide_total_number=0\n
 img_file_name_list=[]\n
 text_file_name_list=[]\n
+\n
+function getTextFileNameList(file_name_list){\n
+  var text_list=[];\n
+  for (var i=0; i<file_name_list.length; i++) {\n
+    if(file_name_list[i].indexOf("text")!=-1)\n
+      text_list.push(file_name_list[i]);\n
+  }\n
+  text_list.sort();\n
+  return text_list;\n
+}\n
+\n
+function getFileNameList(){\n
+  var file_name_list=[];\n
+  $.ajax({\n
+    url: %(absolute_url)s+"/"+"getPresentationFileNameList",\n
+    type: \'get\',\n
+    async: false,\n
+    success: function(data) {\n
+      file_name_list=$.parseJSON(data);\n
+    } \n
+  });\n
+  return file_name_list;\n
+}\n
+\n
+function getImgFileNameList(file_name_list){\n
+  var img_list=[];\n
+  var img_list_without_first=[];\n
+  var img_first=[];\n
+  for (var i=0; i<file_name_list.length; i++) {\n
+    if(file_name_list[i].indexOf(".impr.")!=-1)\n
+      img_first.push(file_name_list[i]);    \n
+    else if(file_name_list[i].indexOf("img")!=-1)\n
+      img_list_without_first.push(file_name_list[i]);\n
+  }\n
+  img_list_without_first.sort();\n
+  img_list=img_first.concat(img_list_without_first)\n
+  return img_list;\n
+}\n
 \n
 function goToNewSlide(relative_path){\n
   slide_current_page=relative_path;\n
@@ -88,72 +126,82 @@ function goToNewSlide(relative_path){\n
     } \n
   });\n
   renderNavigation();\n
+  deleteTheDefaultNavigation();\n
   $("#slide_selection_index").val(slide_current_page_number+1);\n
 }\n
 \n
-function getFileNameList(){\n
-  var file_name_list=[];\n
-  $.ajax({\n
-    url: %(absolute_url)s+"/"+"getPresentationFileNameList",\n
-    type: \'get\',\n
-    async: false,\n
-    success: function(data) {\n
-      file_name_list=$.parseJSON(data);\n
-    } \n
-  });\n
-  return file_name_list;\n
-}\n
-\n
-function getImgFileNameList(file_name_list){\n
-  var img_list=[];\n
-  var img_list_without_first=[];\n
-  var img_first=[];\n
-  for (var i=0; i<file_name_list.length; i++) {\n
-    if(file_name_list[i].indexOf(".impr.")!=-1)\n
-      img_first.push(file_name_list[i]);    \n
-    else if(file_name_list[i].indexOf("img")!=-1)\n
-      img_list_without_first.push(file_name_list[i]);\n
-  }\n
-  img_list_without_first.sort();\n
-  img_list=img_first.concat(img_list_without_first)\n
-  return img_list;\n
-}\n
-\n
-function getTextFileNameList(file_name_list){\n
-  var text_list=[];\n
-  for (var i=0; i<file_name_list.length; i++) {\n
-    if(file_name_list[i].indexOf("text")!=-1)\n
-      text_list.push(file_name_list[i]);\n
-  }\n
-  text_list.sort();\n
-  return text_list;\n
-}\n
-\n
-function resetNavigation(name,id_a,id_img,class_default,class_hide){\n
-  $nav_default=$("a:contains(\'"+name+"\')")\n
-  if($nav_default.length>0){\n
-    $nav_default.addClass("hidden");\n
-    $("#"+id_a).attr("onclick","goToNewSlide(\'"+$nav_default.attr("href")+"\')");\n
-    $("#"+id_a).css("cursor","pointer")\n
-    $("#"+id_img).attr("class",class_default);\n
-  }\n
+function deleteTheDefaultNavigation(){\n
+  if(slide_current_page_number!=0 && slide_current_page_number+1!=slide_total_number)\n
+    for(var i=1;i<11;i++)\n
+      $("#slide_content").contents().get(1).remove();\n
   else\n
-  {\n
-    //remove the string without tag\n
-    $("#slide_content").html($("#slide_content").html().replace(name, ""));\n
-    $("#"+id_a).attr("onclick","");\n
-    $("#"+id_a).css("cursor","default")\n
-    $("#"+id_img).attr("class",class_hide);\n
-  }\n
+    for(var i=1;i<7;i++)\n
+      $("#slide_content").contents().get(1).remove();\n
+}\n
+\n
+function hideOneNavigation(nav_id,nav_img_id,nav_img_class){\n
+  $("#"+nav_id).attr("onclick","");\n
+  $("#"+nav_id).css("cursor","default")\n
+  $("#"+nav_img_id).attr("class",nav_img_class);\n
+}\n
+\n
+function resetOneNavigation(nav_id,nav_img_id,nav_img_class,new_href){\n
+  $("#"+nav_id).attr("onclick","goToNewSlide(\'"+new_href+"\')");\n
+  $("#"+nav_id).css("cursor","pointer")\n
+  $("#"+nav_img_id).attr("class",nav_img_class);\n
 }\n
 \n
 function renderNavigation(){\n
-  resetNavigation("First page","first_slide","first_slide_img","first","first shaded");\n
-  resetNavigation("Back","previous_slide","previous_slide_img","previous","previous shaded");\n
-  resetNavigation("Continue","next_slide","next_slide_img","next","next shaded");\n
-  resetNavigation("Last page","last_slide","last_slide_img","last","last shaded");\n
-  resetNavigation("Text","text_slide","text_slide_img","text","text hidden");\n
-  resetNavigation("Graphics","graphics_slide","graphics_slide_img","graphics","graphics hidden");\n
+  if(slide_current_page_number==0){\n
+    hideOneNavigation("first_slide","first_slide_img","first shaded")\n
+    hideOneNavigation("previous_slide","previous_slide_img","previous shaded")\n
+    if(current_page_is_img){\n
+      resetOneNavigation("next_slide","next_slide_img","next",img_file_name_list[slide_current_page_number+1])\n
+      resetOneNavigation("last_slide","last_slide_img","last",img_file_name_list[slide_total_number-1])\n
+      resetOneNavigation("text_slide","text_slide_img","text",text_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("graphics_slide","graphics_slide_img","graphics hidden")\n
+    }\n
+    else{\n
+      resetOneNavigation("next_slide","next_slide_img","next",text_file_name_list[slide_current_page_number+1])\n
+      resetOneNavigation("last_slide","last_slide_img","last",text_file_name_list[slide_total_number-1])\n
+      resetOneNavigation("graphics_slide","graphics_slide_img","graphics",img_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("text_slide","text_slide_img","text hidden")\n
+    }\n
+  }\n
+  else if(slide_current_page_number+1==slide_total_number){\n
+    if(current_page_is_img){\n
+      resetOneNavigation("first_slide","first_slide_img","first",img_file_name_list[0])\n
+      resetOneNavigation("previous_slide","previous_slide_img","previous",img_file_name_list[slide_current_page_number-1])\n
+      resetOneNavigation("text_slide","text_slide_img","text",text_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("graphics_slide","graphics_slide_img","graphics hidden")\n
+    }\n
+    else{\n
+      resetOneNavigation("first_slide","first_slide_img","first",text_file_name_list[0])\n
+      resetOneNavigation("previous_slide","previous_slide_img","previous",text_file_name_list[slide_current_page_number-1])\n
+      resetOneNavigation("graphics_slide","graphics_slide_img","graphics",img_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("text_slide","text_slide_img","text hidden")\n
+    }\n
+    hideOneNavigation("next_slide","next_slide_img","next shaded")\n
+    hideOneNavigation("last_slide","last_slide_img","last shaded")\n
+  }\n
+  else{\n
+    if(current_page_is_img){\n
+      resetOneNavigation("first_slide","first_slide_img","first",img_file_name_list[0])\n
+      resetOneNavigation("previous_slide","previous_slide_img","previous",img_file_name_list[slide_current_page_number-1])\n
+      resetOneNavigation("next_slide","next_slide_img","next",img_file_name_list[slide_current_page_number+1])\n
+      resetOneNavigation("last_slide","last_slide_img","last",img_file_name_list[slide_total_number-1])\n
+      resetOneNavigation("text_slide","text_slide_img","text",text_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("graphics_slide","graphics_slide_img","graphics hidden")\n
+    }\n
+    else{\n
+      resetOneNavigation("first_slide","first_slide_img","first",text_file_name_list[0])\n
+      resetOneNavigation("previous_slide","previous_slide_img","previous",text_file_name_list[slide_current_page_number-1])\n
+      resetOneNavigation("next_slide","next_slide_img","next",text_file_name_list[slide_current_page_number+1])\n
+      resetOneNavigation("last_slide","last_slide_img","last",text_file_name_list[slide_total_number-1])\n
+      resetOneNavigation("graphics_slide","graphics_slide_img","graphics",img_file_name_list[slide_current_page_number])\n
+      hideOneNavigation("text_slide","text_slide_img","text hidden")\n
+    }\n
+  }\n
 }\n
 \n
 function checkTheSelectionFieldAndGoToNewSlide(next_page_number,file_list){\n
@@ -163,7 +211,7 @@ function checkTheSelectionFieldAndGoToNewSlide(next_page_number,file_list){\n
     goToNewSlide(file_list[real_page_number]);\n
   }\n
   else if(next_page_number>=slide_total_number){\n
-    real_page_number=slide_total_pages-1\n
+    real_page_number=slide_total_number-1\n
     goToNewSlide(file_list[real_page_number]);\n
   }\n
   else{\n
