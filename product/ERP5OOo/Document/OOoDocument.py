@@ -44,6 +44,7 @@ from Products.ERP5.Document.Document import Document, \
 from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, ERROR
+from json import dumps
 
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
@@ -282,6 +283,34 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     data = self.Presentation_renderWithNavigation(data=self._stripHTML(html=data)).encode('utf-8')
     return data
 
+  def getPresentationFileNameList(self, **kw):
+    """
+      The start presentation page is different from the html of 
+      other iframe
+    """
+
+    if not self.hasData():
+      return 'text/plain', ''
+    format ="html"
+    original_format = format
+    allowed_format_list = self.getTargetFormatList()
+    format_list = [x for x in allowed_format_list
+                              if x.startswith('html') or x.endswith('html')]
+    format = format_list[0]
+    # Do real conversion
+    mime, data = self._getConversionFromProxyServer(format)
+    # Extra processing required since
+    # we receive a zip file
+    cs = cStringIO.StringIO()
+    cs.write(str(data))
+    z = zipfile.ZipFile(cs) # A disk file would be more RAM efficient
+    mime = 'text/html'
+    file_name_list = self._populateConversionCacheWithHTML(zip_file=z, **kw) # Maybe some parts should be asynchronous for
+                                     # better usability
+    z.close()
+    cs.close()
+    return dumps(file_name_list)
+
   # Conversion API
   def _convert(self, format, frame=0, **kw):
     """Convert the document to the given format.
@@ -403,6 +432,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       must_close = 1
     else:
       must_close = 0
+    file_name_list=[]
     for f in zip_file.infolist():
       filename = f.filename
       document = self.get(filename, None)
@@ -417,6 +447,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                             zip_file.read(filename),
                                             object=self, context=self,
                                             mimetype=mime)
+        file_name_list.append(filename)
       else:
         mime = guess_content_type(filename)[0]
         data = Pdata(zip_file.read(filename))
@@ -426,6 +457,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     if must_close:
       zip_file.close()
       archive_file.close()
+    return file_name_list
 
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
