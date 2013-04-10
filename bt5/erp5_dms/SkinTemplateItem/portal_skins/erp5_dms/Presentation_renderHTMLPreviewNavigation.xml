@@ -78,7 +78,7 @@
         class="last"/>\n
     </a>\n
     <a id="text_slide">\n
-      <img id="text_slide_img" src="images/text_block.png"\n
+      <img id="text_slide_img" src="images/text.png"\n
         i18n:attributes="alt; title"\n
         i18n:domain="ui"\n
         alt="Text"\n
