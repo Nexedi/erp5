@@ -94,21 +94,6 @@ Accounting Transaction Module Search Columns\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>2200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>2200.00</td>\n
-</tr>\n
 <!-- check source and destination section -->\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -199,21 +184,6 @@ as title is a search key -->\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>5500.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>5500.00</td>\n
-</tr>\n
 <!-- }}} --> \n
 \n
 <!-- filter on Third Party (Sale) {{{ -->\n
@@ -283,21 +253,6 @@ as title is a search key -->\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>5500.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>5500.00</td>\n
-</tr>\n
 <!-- }}} --> \n
 \n
 <!-- filter on Third Party (Purchase) {{{ -->\n
@@ -342,21 +297,6 @@ as title is a search key -->\n
 //tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>7700.0</td>\n
-</tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>7700.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>7700.00</td>\n
 </tr>\n
 <!-- check source and destination section -->\n
 <tr>\n
@@ -424,21 +364,6 @@ as title is a search key -->\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
 <!-- }}} --> \n
 \n
 <!-- filter on Date {{{ -->\n
@@ -484,21 +409,6 @@ as title is a search key -->\n
 //tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>2200.0</td>\n
-</tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>2200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>2200.00</td>\n
 </tr>\n
 \n
 <!-- unset search parameters, to make sure it\'s not kept -->\n
@@ -562,21 +472,7 @@ as title is a search key -->\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
+\n
 <!-- unset search parameters, to make sure it\'s not kept -->\n
 <tr>\n
   <td>type</td>\n

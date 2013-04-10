@@ -205,17 +205,6 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
   <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[10]</td>\n
   <td>3300.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]</td>\n
-  <td>3300.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]</td>\n
-  <td>3300.00</td>\n
-</tr>\n
 <!-- }}} -->\n
 \n
 </tbody></table>\n

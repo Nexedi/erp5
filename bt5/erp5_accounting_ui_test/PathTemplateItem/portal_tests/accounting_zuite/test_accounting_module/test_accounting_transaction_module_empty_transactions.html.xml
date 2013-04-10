@@ -68,22 +68,6 @@ Accounting Transaction Module Displays empty Transactions\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>4 records</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>33200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>33200.00</td>\n
-</tr>\n
-<!-- }}} -->\n
 \n
 <!-- Add empty transaction {{{ -->\n
 <tr>\n
@@ -123,7 +107,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- Check new values (1 more item (values 0), same stats) {{{ -->\n
+<!-- Check new values (1 more item (values 0)) {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
@@ -190,22 +174,6 @@ Accounting Transaction Module Displays empty Transactions\n
 //tr[@class=\'listbox-data-line-0 DataA\']/td[10]\n
   </td>\n
   <td>0.0</td>\n
-</tr>\n
-\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>33200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>33200.00</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -291,7 +259,7 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- Check new values (1 more item (values 0), same stats) {{{ -->\n
+<!-- Check new values (1 more item (values 0)) {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
@@ -416,30 +384,13 @@ Accounting Transaction Module Displays empty Transactions\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
-\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>33200.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>33200.00</td>\n
-</tr>\n
 <!-- }}} -->\n
 \n
 \n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

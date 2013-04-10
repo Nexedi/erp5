@@ -104,21 +104,6 @@ Accounting Transaction Module Search Dialog: seach by date\n
 </td>\n
   <td>7700.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>7700.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>7700.00</td>\n
-</tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//a[@title=\'Find\']</td>\n
@@ -212,21 +197,6 @@ Accounting Transaction Module Search Dialog: seach by date\n
 //tr[@class=\'listbox-data-line-1 DataB\']/td[10]/a\n
 </td>\n
   <td>3300.0</td>\n
-</tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>5500.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[10]\n
-</td>\n
-  <td>5500.00</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
