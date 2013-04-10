@@ -60,6 +60,12 @@ role, but someday we\'ll have to move this to unrestricted environment.\n
 """\n
 delivery_movement = state_change[\'object\']\n
 \n
+# Always modify movement even if there is no related movement simulation,\n
+# because a concurrent transaction may be linking one to this movement\n
+# (which would modify the local index for "delivery" category).\n
+# In such case, one of the 2 transactions must be restarted.\n
+delivery_movement.serialize()\n
+\n
 # Clean simulation\n
 simulation_movement_list = delivery_movement.getDeliveryRelatedValueList(\n
     portal_type="Simulation Movement")\n
