@@ -36,7 +36,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage portal</string>
               </tuple>
             </value>
         </item>
