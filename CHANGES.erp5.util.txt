@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.34 (2013-04-11)
+-------------------
+
+ * erp5.util.testsuite:
+
+  - allow to define sub results in tests, like we do for selenium
+    [Sebastien Robin]
+
 0.4.33 (2013-03-14)
 -------------------
 
