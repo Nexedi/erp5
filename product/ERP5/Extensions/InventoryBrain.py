@@ -158,14 +158,11 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
           # with the inventory's uid. Then they are their own explanation.
           explanation = o
         if explanation is not None:
-          return '%s/%s' % (
-                  self.portal_url.getPortalObject().absolute_url(),
-                  explanation.getRelativeUrl())
-      else:
-        return ''
+          return explanation.absolute_url()
+      return ''
     elif resource is not None:
       # A resource is defined, so try to display the movement list
-      form_name = 'Resource_viewMovementHistory'
+      form_id = 'Resource_viewMovementHistory'
       query_kw = {
         'variation_text': self.variation_text,
         'selection_name': selection_name,
@@ -216,7 +213,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
         }
       query_kw.update(query_kw_update)
       return '%s/%s?%s&reset=1' % ( resource.absolute_url(),
-                                    form_name,
+                                    form_id,
                                     make_query(**query_kw) )
 
     # default case, if it's a movement, return link to the explanation of this
@@ -225,9 +222,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
     if document.isMovement():
       explanation = document.getExplanationValue()
       if explanation is not None:
-        return '%s/%s' % (
-                self.portal_url.getPortalObject().absolute_url(),
-                explanation.getRelativeUrl())
+        return explanation.absolute_url()
     return ''
 
   def getExplanationText(self):
