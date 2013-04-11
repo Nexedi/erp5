@@ -808,16 +808,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       BaseMessage.max_retry = property(lambda self:
         self.activity_kw.get('max_retry', 1))
 
-      template_list = self.getBusinessTemplateList()
+      template_list = list(self.getBusinessTemplateList())
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
                                             'erp5_mysql_innodb_catalog')
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
-        template_list = (erp5_catalog_storage, 'erp5_property_sheets',
-                         'erp5_core', 'erp5_xhtml_style') \
-                         + tuple(template_list)
+        template_list[:0] = (erp5_catalog_storage, 'erp5_property_sheets',
+                             'erp5_core', 'erp5_xhtml_style')
         # Update only specified business templates, regular expression
         # can be used.
         if update_only is not None:
@@ -836,10 +835,13 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
-      # We want to always have optimisation available
-      if "erp5_stock_cache" not in template_list:
-        template_list = list(template_list)
-        template_list.append("erp5_stock_cache")
+      for x, y in (("erp5_core_proxy_field_legacy", "erp5_base"),
+                   ("erp5_stock_cache", "erp5_pdm")):
+        if x not in template_list:
+          try:
+            template_list.insert(template_list.index(y), x)
+          except ValueError:
+            pass
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,
