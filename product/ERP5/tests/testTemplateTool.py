@@ -53,6 +53,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_myisam_catalog',
             'erp5_base',
+            'erp5_stock_cache',
             'erp5_csv_style')
 
   def getTitle(self):
