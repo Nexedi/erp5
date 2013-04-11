@@ -299,6 +299,18 @@ class MovementHistoryListBrain(InventoryListBrain):
       if timezone is not None:
         self.date = self.date.toZone(timezone)
 
+  def getListItemUrl(self, cname_id, selection_index, selection_name):
+    """Returns the URL for column `cname_id`. Used by ListBox
+    Here we just want a link to the explanation of movement.
+    """
+    document = self.getObject()
+    if document.isMovement():
+      explanation = document.getExplanationValue()
+      if explanation is not None:
+        return explanation.absolute_url()
+    return ''
+
+
   def _debit(self):
     if self.getObject().isCancellationAmount():
       return min(self.total_quantity, 0)
