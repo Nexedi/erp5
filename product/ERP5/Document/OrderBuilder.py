@@ -28,4 +28,4 @@
 #       for builders, and still distinguish order builders from others
 #       Once legacy simulation is dropped, "Order Builder" portal type should
 #       should be changed to use SimulatedDeliveryBuilder class.
-from SimulatedDeliveryBuilder import SimulatedDeliveryBuilder as OrderBuilder
+from GeneratedDeliveryBuilder import GeneratedDeliveryBuilder as OrderBuilder
