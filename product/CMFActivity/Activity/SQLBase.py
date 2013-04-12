@@ -38,7 +38,8 @@ from Products.CMFActivity.ActiveObject import (
   INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
-from Queue import Queue, VALIDATION_ERROR_DELAY
+from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
+from Products.CMFActivity.Errors import ActivityFlushError
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -334,7 +335,7 @@ class SQLBase(Queue):
       if group_method_id not in (None, ""):
         method  = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
-                self.merge_duplicate)
+                hasattr(self, 'generateMessageUID'))
         activity_runtime_environment = ActivityRuntimeEnvironment(None)
       else:
         method = activity_tool.invoke
@@ -504,3 +505,47 @@ class SQLBase(Queue):
       # Notification failures must not cause this method to raise.
       self._log(WARNING,
         'Exception during notification phase of finalizeMessageExecution')
+
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+    """
+      object_path is a tuple
+    """
+    path = '/'.join(object_path)
+    if invoke:
+      invoked = set()
+      def invoke(message):
+        try:
+          key = self.generateMessageUID(message)
+          if key in invoked:
+            return
+          invoked.add(key)
+        except AttributeError:
+          pass
+        line = getattr(message, 'line', None)
+        validate_value = VALID if line and line.processing_node != -1 else \
+                         message.validate(self, activity_tool)
+        if validate_value == VALID:
+          # Try to invoke the message - what happens if invoke calls flushActivity ??
+          activity_tool.invoke(message)
+          if message.getExecutionState() != MESSAGE_EXECUTED:
+            raise ActivityFlushError('Could not invoke %s on %s'
+                                     % (message.method_id, path))
+        elif validate_value is INVALID_PATH:
+          raise ActivityFlushError('The document %s does not exist' % path)
+        else:
+          raise ActivityFlushError('Could not validate %s on %s'
+                                   % (message.method_id, path))
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (
+         method_id is None or method_id == m.method_id):
+        if invoke:
+          invoke(m)
+        activity_tool.unregisterMessage(self, m)
+    uid_list = []
+    for line in self._getMessageList(activity_tool, path=path, processing=0,
+        **({'method_id': method_id} if method_id else {})):
+      uid_list.append(line.uid)
+      if invoke:
+        invoke(self.loadMessage(line.message, uid=line.uid, line=line))
+    if uid_list:
+      activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
