@@ -267,7 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/getDefaultTelephoneText</string> </value>
+            <value> <string>cell/getDefaultTelephoneCoordinateText</string> </value>
         </item>
       </dictionary>
     </pickle>
