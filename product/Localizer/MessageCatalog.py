@@ -270,10 +270,10 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         if not isinstance(message, basestring):
             raise TypeError, 'only strings can be translated.'
 
-        message = message.strip()
-
         if default is None:
             default = message
+
+        message = message.strip()
 
         # BBB call get_message_key to support both (old) str key and
         # (new) unicode key.

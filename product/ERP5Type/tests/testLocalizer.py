@@ -185,6 +185,25 @@ assertEquals("This is 1€.", context.Base_translateString("This is 1€."))
     from Products.Localizer.utils import get_request
     self.assertEquals(get_request(), self.portal.REQUEST)
 
+  def test_default_not_changed(self):
+    """
+    When there is no translation available for a given message, the default
+    value (e.g. the original message) must be returned
+    """
+    message = "   This is 1€ non-translated    "
+    localizer = self.portal.Localizer
+
+    # Base_translateString == Localizer.translate() currently, which calls
+    # zope.i18n.translate and sets 'default' to 'message' before passing it to
+    # MessageCatalog (Localizer.erp5_ui.translate)
+    self.assertEquals(message, self.portal.Base_translateString(message))
+    self.assertEquals(message,
+                      self.portal.Localizer.translate('ui', message).encode('utf-8'))
+
+    # default=None, thus 'message' was previously stripped before being set as
+    # 'default' value (MessageCatalog.gettext)
+    self.assertEquals(message, self.portal.Localizer.erp5_ui.translate(message))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestLocalizer))
