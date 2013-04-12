@@ -42,8 +42,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
 <title tal:content="template/getId"/>\n
 </head>\n
-<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf;\n
-                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
+<body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
