@@ -102,6 +102,10 @@ stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_in
 stool.setSelectionFor(\'entity_transaction_selection\', None)\n
 stool.setSelectionFor(\'account_module_selection\', None)\n
 \n
+# set sort order on accounting module\n
+stool.setSelectionParamsFor(\'accounting_selection\', dict()) # (this recreates selection)\n
+stool.setSelectionSortOrder(\'accounting_selection\', sort_on=((\'operation_date\', \'ascending\'),))\n
+\n
 # set sort order and columns on account module\n
 stool.setSelectionParamsFor(\'account_module_selection\', dict()) # (this recreates selection)\n
 stool.setSelectionSortOrder(\'account_module_selection\', sort_on=((\'preferred_gap_id\', \'ascending\'),))\n
