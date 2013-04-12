@@ -3056,7 +3056,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             if not k:
               continue
           type_role_dict[k] = v
-        type_role_list.append(type_role_dict)
+        if 'id' in type_role_dict:
+          type_role_list.append(type_role_dict)
       type_role_list.sort(key=lambda x: (x.get('title'), x['object_id'],))
 
   # Function to generate XML Code Manually
