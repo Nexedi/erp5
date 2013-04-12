@@ -1,3 +1,6 @@
+2013-04-12 arnaud.fontaine
+* Ignore temporary documents for content translation Interaction Workflow. This is useless and likely to trigger errors anyway, such as the document being not available when Interactions is actually called.
+
 2012-01-05 Kazuhiko
 * move create/drop table SQL for content_translation table from erp5_content_translation to erp5_full_text_*_catalog BT.
 
