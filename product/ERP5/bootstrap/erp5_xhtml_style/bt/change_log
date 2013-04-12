@@ -1,3 +1,7 @@
+2013-04-12 tatuya
+* Add erp5_jquery dependency because  jQuery has become essential in ERP5 for  good compatibility among modern web browsers.
+* Move jQuerified erp5.js from erp5_xhtml_jquery_style
+
 2013-01-28 Kazuhiko
 * update RequireJS 2.1.4.
 

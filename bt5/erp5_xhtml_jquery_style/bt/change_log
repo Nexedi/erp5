@@ -1,2 +1,5 @@
+2013-04-12 tatuya
+* Move erp5.js to erp5_xhtml_style since jQuery has become essential in ERP5.
+
 2011-01-14 Ivan
 * Initial import
