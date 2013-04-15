@@ -97,6 +97,12 @@ class TestCRM(BaseTestCRM):
       event.setQuantity(321)
       self.assertEquals(321, event.getQuantity())
 
+  def test_Event_isMovement(self):
+    event_module = self.portal.event_module
+    for portal_type in self.portal.getPortalEventTypeList():
+      event = event_module.newContent(portal_type=portal_type)
+      self.assertTrue(event.isMovement(),
+        "%s is not a movement" % portal_type)
 
   def test_Event_CreateRelatedEvent(self):
     # test workflow to create a related event from responded event

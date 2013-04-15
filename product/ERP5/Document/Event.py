@@ -88,7 +88,7 @@ class AcknowledgeableMixin:
         result = True
     return result
 
-class Event(EmailDocument, Movement, AcknowledgeableMixin):
+class Event(Movement, EmailDocument, AcknowledgeableMixin):
   """
     Event is the base class for all events in ERP5.
 
