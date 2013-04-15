@@ -93,12 +93,12 @@ class TaskDistributionTool(BaseTool):
       previous_test_result_list = portal.test_result_module.searchFolder(
              title='="%s"' % test_result.getTitle(),
              sort_on=[('creation_date','descending')],
-             simulation_state='stopped',
+             simulation_state=('stopped', 'public_stopped'),
              limit=1)
       if len(previous_test_result_list):
         previous_test_result = previous_test_result_list[0].getObject()
         for line in previous_test_result.objectValues():
-          if line.getSimulationState() == 'stopped':
+          if line.getSimulationState() in ('stopped', 'public_stopped'):
             duration_list.append((line.getTitle(),line.getProperty('duration')))
       duration_list.sort(key=lambda x: -x[1])
       sorted_test_list = [x[0] for x in duration_list]
@@ -144,7 +144,7 @@ class TaskDistributionTool(BaseTool):
             test_result.serialize() # prevent duplicate test result lines
             createTestResultLineList(test_result, test_name_list)
           return test_result.getRelativeUrl(), last_revision
-        if last_state in ('stopped',):
+        if last_state in ('stopped', 'public_stopped'):
           if reference_list_string is not None:
             if reference_list_string == test_result.getReference() \
                 and not allow_restart:
