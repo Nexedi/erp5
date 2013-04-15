@@ -34,23 +34,24 @@ import urllib
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5 import __file__ as ERP5PackagePath
 from Products.CMFCore.utils import getToolByName
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from xml.dom import minidom
 
-from glob import glob
 
-#
-# Test Setting
-#
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
 bt5_base_path = os.environ.get('erp5_tests_bt5_path',
                                os.path.join(INSTANCE_HOME, 'bt5'))
 bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
                                    'bootstrap')
+# if Products.ERP5 is a git checkout, then this folder will contain bt5s
+repository_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
+                                   '..', '..', 'bt5')
+bt5_search_path_list = '%s,%s,%s' % (
+  bt5_base_path,
+  bootstrap_base_path,
+  repository_base_path)
 
 # some forms have intentionally empty listbox selections like RSS generators
 FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
@@ -365,7 +366,12 @@ class W3Validator(object):
     line_number, col_number, error description
     """
     result_list_list = []
-    xml_doc = minidom.parseString(result)
+    try:
+      xml_doc = minidom.parseString(result)
+    except:
+      import sys
+      print >> sys.stderr, "Could not parse result:\n%s" % result
+      raise
     for severity in 'm:error', 'm:warning':
       result_list = []
       for error in xml_doc.getElementsByTagName(severity):
@@ -422,14 +428,12 @@ class TidyValidator(object):
           location_list = data[0].split(' ')
           line = location_list[1]
           column = location_list[3]
-          error = True
           message = data[1].split(': ')[1]
           error_list.append((line, column, message))
         elif data[1].startswith('Warning: '):
           location_list = data[0].split(' ')
           line = location_list[1]
           column = location_list[3]
-          warning = True
           message = data[1].split(': ')[1]
           warning_list.append((line, column, message))
     return (error_list, warning_list)
@@ -583,30 +587,20 @@ def addTestMethodDynamically(validator, target_business_templates):
   business_template_info_list = []
 
   for i in target_business_templates:
-    business_template = os.path.join(bt5_base_path, i)
-
-    # Look for business templates, they can be:
-    #  .bt5 files in $INSTANCE_HOME/bt5/
-    #  directories in $INSTANCE_HOME/
-    #  directories in $INSTANCE_HOME/bt5/*/
-    #  directories in $INSTANCE_HOME/Products/ERP5/bootstrap/
-    if not ( os.path.exists(business_template) or
-        os.path.exists('%s.bt5' % business_template)):
-      # try in $INSTANCE_HOME/bt5/*/
-      business_template_glob_list = glob('%s/*/%s' % (bt5_base_path, i))
-      if business_template_glob_list:
-        business_template = business_template_glob_list[0]
-      else:
-        # try in $INSTANCE_HOME/Products/ERP5/bootstrap
-        business_template = os.path.join(bootstrap_base_path,i) 
-
-    if os.path.isdir(business_template):
-      business_template_info = BusinessTemplateInfoDir(business_template)
-    elif os.path.isfile(business_template+'.bt5'):
-      business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
+    for bt5_search_path in bt5_search_path_list.split(','):
+      business_template = os.path.join(bt5_search_path, i)
+      business_template_info = None
+      if (os.path.exists(business_template) or
+          os.path.exists('%s.bt5' % business_template)):
+        if os.path.isdir(business_template):
+          business_template_info = BusinessTemplateInfoDir(business_template)
+        elif os.path.isfile(business_template+'.bt5'):
+          business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
+      if business_template_info is not None:
+        business_template_info_list.append(business_template_info)
+        break
     else:
-      raise KeyError, "Can't find the business template: %s" % i
-    business_template_info_list.append(business_template_info)
+      raise KeyError, "Can't find business template %s" % i
 
   tested_portal_type_list = []
   for business_template_info in business_template_info_list:
