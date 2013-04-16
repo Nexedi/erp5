@@ -376,6 +376,12 @@ class W3Validator(object):
       result_list = []
       for error in xml_doc.getElementsByTagName(severity):
         result = []
+
+        # Ignore warning about using direct input mode (W28)
+        messageid_list = error.getElementsByTagName('m:messageid')
+        if messageid_list and messageid_list[0].firstChild.nodeValue == 'W28':
+          continue
+
         for name in 'm:line', 'm:col', 'm:message':
           element_list = error.getElementsByTagName(name)
           if element_list:
