@@ -48,7 +48,6 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHelper
 
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
                                                   SUPER_USER,\
                                                   _AuthenticationFailure
@@ -328,7 +327,6 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         return None
 
       #Function to allow cache
-      @UnrestrictedMethod
       def _authenticateCredentials(login):
         if not login:
           return None
@@ -339,7 +337,10 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           raise _AuthenticationFailure()
         user = user_list[0]
 
-        if True:
+        #We need to be super_user
+        sm = getSecurityManager()
+        if sm.getUser().getId() != SUPER_USER:
+          newSecurityManager(self, self.getUser(SUPER_USER))
           try:
             # get assignment list
             assignment_list = [x for x in user.contentValues(portal_type="Assignment") \
@@ -360,7 +361,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
             if len(valid_assignment_list) > 0:
               return (login, login)
           finally:
-            pass
+            setSecurityManager(sm)
 
           raise _AuthenticationFailure()
 

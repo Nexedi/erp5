@@ -28,7 +28,6 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 from Products.ERP5Type.Cache import CachingMethod, transactional_cached
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
@@ -127,7 +126,6 @@ class ERP5UserManager(BasePlugin):
         if login == SUPER_USER:
           return None
 
-        @UnrestrictedMethod
         def _authenticateCredentials(login, password, path,
           ignore_password=False):
             if not login or not (password or ignore_password):
@@ -140,6 +138,9 @@ class ERP5UserManager(BasePlugin):
 
             user = user_list[0]
 
+            sm = getSecurityManager()
+            if sm.getUser().getId() != SUPER_USER:
+              newSecurityManager(self, self.getUser(SUPER_USER))
             try:
               # get assignment
               assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
@@ -160,7 +161,7 @@ class ERP5UserManager(BasePlugin):
                      .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
             finally:
-              pass
+              setSecurityManager(sm)
             raise _AuthenticationFailure()
 
         _authenticateCredentials = CachingMethod(_authenticateCredentials,
