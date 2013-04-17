@@ -1323,6 +1323,12 @@ class TestDocument(TestDocumentMixin):
     content_information = document.getContentInformation()
     self.assertEquals('1', content_information['Pages'])    
 
+  def test_empty_PDF_content_information(self):
+    document = self.portal.document_module.newContent(portal_type='PDF')
+    content_information = document.getContentInformation()
+    # empty PDF have no content information
+    self.assertEquals(dict(), content_information)
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')

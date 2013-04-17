@@ -234,13 +234,10 @@ class PDFDocument(Image):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
+    """Returns the information about the PDF document with pdfinfo.
     """
-    Returns the information about the PDF document with
-    pdfinfo.
-
-    NOTE: XXX check that command exists and was executed
-    successfully
-    """
+    if not self.hasData():
+      return dict()
     try:
       return self._content_information.copy()
     except AttributeError:
