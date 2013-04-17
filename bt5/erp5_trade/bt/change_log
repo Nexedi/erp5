@@ -1,3 +1,6 @@
+2013-04-17 arnaud.fontaine
+* erp5_simulation should not be required as some system do not use simulation.
+
 2012-01-05 Kazuhiko
 * move builders from erp5_trade to erp5_simulation_test BT.
 
