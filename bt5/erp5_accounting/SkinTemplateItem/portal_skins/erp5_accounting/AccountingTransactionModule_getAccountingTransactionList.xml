@@ -50,63 +50,125 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# XXX workarounds for DTML limitation\n
-# Because DTML cannot do <dtml-if node or resource or...>\n
-# If Python is used, it does not check the existence of a variable automatically\n
+            <value> <string>portal = context.getPortalObject()\n
+getUid = portal.portal_categories.getCategoryUid\n
 \n
-if \'node\' not in params:\n
-  params[\'node\'] = []\n
-if \'resource\' not in params:\n
-  params[\'resource\'] = []\n
-if \'from_date\' not in params:\n
-  params[\'from_date\'] = \'\'\n
-if \'to_date\' not in params:\n
-  params[\'to_date\'] = \'\'\n
-if \'section_category\' not in params:\n
-  params[\'section_category\'] = \'\'\n
+section_category = params.pop(\'section_category\', None)\n
+section_category_strict = params.pop(\'section_category_strict\', None)\n
+params[\'accounting_transaction.section_uid\'] = \'\'\n
+if section_category:\n
+  params[\'accounting_transaction.section_uid\'] = context.Base_getSectionUidListForSectionCategory(\n
+                                   section_category, strict_membership=section_category_strict)\n
 \n
-if params.get(\'stat\', 0):\n
-  params[\'stat\'] = 0\n
-if params.get(\'count\', 0):\n
-  params[\'count\'] = 0\n
-params[\'omit_input\'] = 0\n
-params[\'omit_output\'] = 0\n
+# rewrite payment_mode_relative_url to uid\n
+payment_mode_relative_url = params.pop(\'payment_mode_relative_url\', None)\n
+if payment_mode_relative_url:\n
+  params[\'default_payment_mode_uid\'] = \\\n
+    portal.portal_categories.payment_mode.getCategoryUid(payment_mode_relative_url)\n
+\n
+# rewrite currency to uid\n
+resource = params.pop(\'resource\', None)\n
+if resource:\n
+  params[\'accounting_transaction.resource_uid\'] = getUid(resource)\n
 \n
 \n
-params[\'source_section_where_expression\'] = \'\'\n
-params[\'destination_section_where_expression\'] = \'\'\n
+# XXX wrong name compat\n
+# TODO: make it better on search dialog\n
+node_list = params.pop(\'node\', None)\n
+if node_list:\n
+  params[\'accounting_transaction_line_node_uid\'] = [\n
+      getUid(node) for node in node_list]\n
 \n
-if (params.get(\'operation_date\') or {}).get(\'query\'):\n
-  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
-  params[\'source_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
-  params[\'destination_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.stop_date\': params[\'operation_date\']})[\'where_expression\']\n
-  del params[\'operation_date\']\n
+entity = params.pop(\'entity\', None)\n
+if entity:\n
+  params[\'accounting_transaction.mirror_section_uid\'] = getUid(entity)\n
+\n
+if not params.get(\'operation_date\'):\n
+  params.pop(\'from_date\', None)\n
+  params.pop(\'to_date\', None)\n
+  if from_date or to_date:\n
+    if from_date:\n
+      if to_date:\n
+        params[\'operation_date\'] = dict(\n
+                    query=(from_date, to_date),\n
+                    range=\'minngt\')\n
+      else:\n
+        params[\'operation_date\'] = dict(\n
+                    query=(from_date, ),\n
+                    range=\'min\')\n
+    else:\n
+      params[\'operation_date\'] = dict(\n
+                  query=(to_date, ),\n
+                  range=\'ngt\')\n
+  \n
+amount = params.pop(\'amount\', \'\')\n
+if amount not in (None, \'\'):\n
+  params[\'accounting_transaction_line_total_price\'] = amount\n
+else:\n
+  amount_range_min = params.pop(\'amount_range_min\', None)\n
+  amount_range_max = params.pop(\'amount_range_max\', None)\n
+  if amount_range_min or amount_range_max:\n
+    if amount_range_min:\n
+      if amount_range_max:\n
+        params[\'accounting_transaction_line_total_price\'] = dict(\n
+                    query=(amount_range_min, amount_range_max),\n
+                    range=\'minmax\')\n
+      else:\n
+        params[\'accounting_transaction_line_total_price\'] = dict(\n
+                    query=(amount_range_min, ),\n
+                    range=\'min\')\n
+    else:\n
+      params[\'accounting_transaction_line_total_price\'] = dict(\n
+                  query=(amount_range_max, ),\n
+                  range=\'max\')\n
 \n
 \n
-# this method can be used to build another complex query, for example\n
-# as a catalog.parent_uid filter with SimulationTool.getMovementList.\n
-# In this example, you can use side independant inventory API with \n
-# accounting module selection. see erp5_accounting_l10n_fr_m9 for an example.\n
-# ... XXX no this is deprecated\n
-src__ = context.REQUEST.other.get(\'src__\', 0)\n
-search_result_keys = context.REQUEST.other.get(\'search_result_keys\', None)\n
+creation_date_range_min = params.pop(\'creation_date_range_min\', None)\n
+creation_date_range_max = params.pop(\'creation_date_range_max\', None)\n
+if creation_date_range_min or creation_date_range_max:\n
+  if creation_date_range_min:\n
+    if creation_date_range_max:\n
+      params[\'creation_date\'] = dict(\n
+                  query=(creation_date_range_min, creation_date_range_max),\n
+                  range=\'minmax\')\n
+    else:\n
+      params[\'creation_date\'] = dict(\n
+                  query=(creation_date_range_min, ),\n
+                  range=\'min\')\n
+  else:\n
+    params[\'creation_date\'] = dict(\n
+                query=(creation_date_range_max, ),\n
+                range=\'max\')\n
 \n
-return context.AccountingTransactionModule_zGetAccountingTransactionList( \n
-                            selection_params=params,\n
-                            src__=src__,\n
-                            search_result_keys=search_result_keys,\n
-                            **params)\n
-
-
-]]></string> </value>
+if stat:\n
+  return context.countFolder(**params)\n
+\n
+select_dict = params.get(\'select_dict\') or dict()\n
+select_dict.update(dict(total_debit=None,\n
+                        total_credit=None,\n
+                        reference=None,\n
+                        specific_reference=None,\n
+                        project_uid=None,\n
+                        payment_uid=None,\n
+                        mirror_section_uid=None,\n
+                        operation_date=None))\n
+\n
+params[\'select_dict\'] = select_dict\n
+\n
+# We group by uid to really filter duplicated lines, but this makes generated\n
+# query much slower, and in reality duplicated lines are transactions for which\n
+# both source section and destination section match the criterions. This can be\n
+# because there are no criterion on section_uid or because both sections are members\n
+# of the selected group. In the later it can be accepted as not a problem.\n
+if not params.get(\'accounting_transaction.section_uid\'):\n
+  params.setdefault(\'group_by\', (\'uid\',))\n
+\n
+return context.searchFolder(**params)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**params</string> </value>
+            <value> <string>from_date=None, to_date=None, stat=False, **params</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

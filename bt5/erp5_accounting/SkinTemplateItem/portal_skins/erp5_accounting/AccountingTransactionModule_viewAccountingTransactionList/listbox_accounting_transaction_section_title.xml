@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="FloatField" module="Products.Formulator.StandardFields"/>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_total_net_price</string> </value>
+            <value> <string>listbox_accounting_transaction_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,12 +19,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>not_float</string> </key>
-                    <value> <string>You did not enter a floating point number.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -78,11 +78,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -91,6 +87,14 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -114,7 +118,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -126,9 +132,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -151,16 +155,8 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -168,6 +164,14 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -187,7 +191,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>figure</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -226,11 +230,7 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1 234.5</string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -239,7 +239,15 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Net Total Price</string> </value>
+                    <value> <string>Own Section</string> </value>
+                </item>
+                <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -259,33 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_money_quantity_field_width\', 10)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:preferences.getPreference(\'preferred_money_quantity_style\', \'-1 234.5\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(cell.getPriceCurrency())</string> </value>
+            <value> <string>cell/delivery_own_section_title|cell/AccountingTransaction_getOwnSectionTitle</string> </value>
         </item>
       </dictionary>
     </pickle>
