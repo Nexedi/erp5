@@ -57,15 +57,22 @@ def sqltest_dict():
       column = name
     column_op = "%s %s " % (column, op)
     def render(value, render_string):
-      if value is None: # XXX: see comment in SQLBase._getMessageList
-        assert op == '='
-        return column + " IS NULL"
       if isinstance(value, no_quote_type):
         return column_op + str(value)
       if isinstance(value, DateTime):
         value = value.toZone('UTC').ISO()
-      assert isinstance(value, basestring), value
-      return column_op + render_string(value)
+      if isinstance(value, basestring):
+        return column_op + render_string(value)
+      assert op == "=", value
+      if value is None: # XXX: see comment in SQLBase._getMessageList
+        return column + " IS NULL"
+      for x in value:
+        if isinstance(x, no_quote_type):
+          render_string = str
+        elif isinstance(x, DateTime):
+          value = (x.toZone('UTC').ISO() for x in value)
+        return "%s IN (%s)" % (column, ', '.join(map(render_string, value)))
+      return "0"
     sqltest_dict[name] = render
   _('active_process_uid')
   _('group_method_id')

@@ -3645,6 +3645,27 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     category_tool._delObject(c[0].getId())
     self.tic()
 
+  def test_getMessageList(self):
+    activity_tool = self.portal.portal_activities
+    module = self.portal.person_module
+    module.activate(after_tag="foo").getUid()
+    module.activate(activity='SQLQueue', tag="foo").getId()
+    activity_tool.activate(priority=-1).getId()
+    def check(expected, **kw):
+      self.assertEqual(expected, len(activity_tool.getMessageList(**kw)))
+    def test(check=lambda _, **kw: check(0, **kw)):
+      check(2, path=module.getPath())
+      check(3, method_id=("getId", "getUid"))
+      check(1, tag="foo")
+      check(0, tag="foo", method_id="getUid")
+      check(1, processing_node=-1)
+      check(3, processing_node=range(-5,5))
+    test()
+    self.commit()
+    test(check)
+    self.tic()
+    test()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
