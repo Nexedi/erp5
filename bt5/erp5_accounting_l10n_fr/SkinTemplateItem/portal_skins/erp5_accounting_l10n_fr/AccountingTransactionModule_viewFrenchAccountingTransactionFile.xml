@@ -60,7 +60,7 @@ if person_value is None:\n
               portal_status_message=translateString("No person found for your user")))\n
 \n
 tag = \'AccountingTransactionModule_viewFrenchAccountingTransactionFile\'\n
-aggregate_tag = \'%s:aggregate\'\n
+aggregate_tag = \'%s:aggregate\' % tag\n
 \n
 if portal.portal_activities.countMessageWithTag(tag) or \\\n
       portal.portal_activities.countMessageWithTag(aggregate_tag):\n
