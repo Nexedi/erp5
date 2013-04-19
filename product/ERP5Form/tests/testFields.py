@@ -87,7 +87,7 @@ class TestFloatField(ERP5TypeTestCase):
   def test_format_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
     self.assertEquals('1 000.0', self.widget.format_value(self.field, 1000))
-  
+
   def test_format_thousand_separator_coma(self):
     self.field.values['input_style'] = '-1 234,5'
     self.assertEquals('1 000,0', self.widget.format_value(self.field, 1000))
@@ -105,6 +105,11 @@ class TestFloatField(ERP5TypeTestCase):
     self.field.values['input_style'] = '-1,234.5'
     self.assertEquals('100,000.0', self.widget.format_value(self.field, 100000))
     self.assertEquals('-100,000.0', self.widget.format_value(self.field, -100000))
+
+  def test_format_with_separator_and_precision0(self):
+    self.field.values['input_style'] = '-1,234.5'
+    self.field.values['precision'] = 0
+    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.25))
 
   def test_format_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
