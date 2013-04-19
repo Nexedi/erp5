@@ -228,6 +228,24 @@ class FolderMixIn(ExtensionClass.Base):
       node_number = 0
     return "%03d-%s" %(node_number, self._generateRandomId())
 
+  def _generatePerDayNodeNumberId(self):
+    """
+    Generate id base on date and node number, useful for import and mass
+    creation of objects inside a module using activities. We also append
+    random id.
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    node_list = list(activity_tool.getNodeList())
+    current_node = activity_tool.getCurrentNode()
+    try:
+      node_number = node_list.index(current_node) + 1
+    except ValueError:
+      # Not a processing node
+      node_number = 0
+    current_date = DateTime().strftime('%Y%m%d')
+    my_id = self._generateRandomId()
+    return "%s.%03d-%s" %(current_date, node_number, my_id)
+
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
