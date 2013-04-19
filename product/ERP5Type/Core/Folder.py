@@ -222,10 +222,10 @@ class FolderMixIn(ExtensionClass.Base):
     node_list = list(activity_tool.getNodeList())
     current_node = activity_tool.getCurrentNode()
     try:
-      node_number = node_list.index(current_node)
+      node_number = node_list.index(current_node) + 1
     except ValueError:
       # Not a processing node
-      node_number = 111
+      node_number = 0
     return "%03d-%s" %(node_number, self._generateRandomId())
 
   # Automatic ID Generation method
