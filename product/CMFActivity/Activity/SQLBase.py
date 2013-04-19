@@ -33,7 +33,7 @@ from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
-  MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
+  Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
@@ -122,7 +122,7 @@ class SQLBase(Queue):
     if type(result) is str: # src__ == 1
       return result,
     class_name = self.__class__.__name__
-    return [self.loadMessage(line.message,
+    return [Message.load(line.message,
                              activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
@@ -221,7 +221,7 @@ class SQLBase(Queue):
     # do not merge anything
     def load(line):
       uid = line.uid
-      m = self.loadMessage(line.message, uid=uid, line=line)
+      m = Message.load(line.message, uid=uid, line=line)
       return m, uid, ()
     return load
 
@@ -546,6 +546,6 @@ class SQLBase(Queue):
         **({'method_id': method_id} if method_id else {})):
       uid_list.append(line.uid)
       if invoke:
-        invoke(self.loadMessage(line.message, uid=line.uid, line=line))
+        invoke(Message.load(line.message, uid=line.uid, line=line))
     if uid_list:
       activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)

@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
+from Products.CMFActivity.ActivityTool import Message, registerActivity
 from ZODB.POSException import ConflictError
 from SQLBase import SQLBase, sort_message_key
 from zExceptions import ExceptionFormatter
@@ -71,7 +71,7 @@ class SQLQueue(SQLBase):
       for m in message_list:
         m.order_validation_text = x = self.getOrderValidationText(m)
         processing_node_list.append(0 if x == 'none' else -1)
-      dumped_message_list = map(self.dumpMessage, message_list)
+      dumped_message_list = map(Message.dump, message_list)
       activity_tool.SQLQueue_writeMessageList(
         uid_list=uid_list,
         path_list=path_list,
@@ -127,7 +127,7 @@ class SQLQueue(SQLBase):
     if dumpMessageList is not None:
       result = dumpMessageList()
       for line in result:
-        m = self.loadMessage(line.message, uid=line.uid, line=line)
+        m = Message.load(line.message, uid=line.uid, line=line)
         message_list.append(m)
     return message_list
 
@@ -148,7 +148,7 @@ class SQLQueue(SQLBase):
         validation_text_dict = {'none': 1}
         message_dict = {}
         for line in result:
-          message = self.loadMessage(line.message, uid=line.uid, line=line)
+          message = Message.load(line.message, uid=line.uid, line=line)
           if not hasattr(message, 'order_validation_text'): # BBB
             message.order_validation_text = self.getOrderValidationText(message)
           self.getExecutableMessageList(activity_tool, message, message_dict,
@@ -202,7 +202,7 @@ class SQLQueue(SQLBase):
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:
-        m = self.loadMessage(line.message,
+        m = Message.load(line.message,
                              line=line,
                              uid=line.uid,
                              date=line.date,

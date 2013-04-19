@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import cPickle, sys
+import sys
 from hashlib import sha1
 from DateTime import DateTime
 from zLOG import LOG, WARNING, ERROR
@@ -201,14 +201,6 @@ class Queue(object):
 
   def flush(self, activity_tool, object, **kw):    
     pass
-
-  def loadMessage(self, s, **kw):
-    m = cPickle.load(StringIO(s))
-    m.__dict__.update(kw)
-    return m
-
-  def dumpMessage(self, m):
-    return cPickle.dumps(m)
 
   def getOrderValidationText(self, message):
     # Return an identifier of validators related to ordering.

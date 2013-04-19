@@ -32,7 +32,7 @@ import threading
 import sys
 from types import StringType
 import re
-
+from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
@@ -213,6 +213,14 @@ class Message(BaseMessage):
         self.request_info['HTTP_ACCEPT_LANGUAGE'] = \
           request.environ['HTTP_ACCEPT_LANGUAGE']
       self.request_info['_script'] = list(request._script)
+
+  @staticmethod
+  def load(s, **kw):
+    self = loads(s)
+    self.__dict__.update(kw)
+    return self
+
+  dump = dumps
 
   def getGroupId(self):
     get = self.activity_kw.get

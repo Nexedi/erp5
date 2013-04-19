@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
+from Products.CMFActivity.ActivityTool import Message, registerActivity
 import sys
 #from time import time
 from SQLBase import SQLBase, sort_message_key
@@ -73,7 +73,7 @@ class SQLDict(SQLBase):
         #      schema, and much code can be merged into SQLBase.
         order_validation_text_list.append(x)
         processing_node_list.append(0 if x == 'none' else -1)
-      dumped_message_list = map(self.dumpMessage, message_list)
+      dumped_message_list = map(Message.dump, message_list)
       # The uid_list also is store in the ZODB
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
         id_generator='uid', id_group='portal_activity',
@@ -128,7 +128,7 @@ class SQLDict(SQLBase):
       uid = line.uid
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
-        m = self.loadMessage(line.message, uid=uid, line=line)
+        m = Message.load(line.message, uid=uid, line=line)
         merge_parent = m.activity_kw.get('merge_parent')
         try:
           if merge_parent:
@@ -154,7 +154,7 @@ class SQLDict(SQLBase):
                 line = result[0]
                 key = line.path, method_id
                 uid = line.uid
-                m = self.loadMessage(line.message, uid=uid, line=line)
+                m = Message.load(line.message, uid=uid, line=line)
             # return unreserved similar children
             result = activity_tool.SQLDict_selectChildMessageList(
               path=line.path,
@@ -208,7 +208,7 @@ class SQLDict(SQLBase):
     if dumpMessageList is not None:
       result = dumpMessageList()
       for line in result:
-        m = self.loadMessage(line.message, uid=line.uid, line=line)
+        m = Message.load(line.message, uid=line.uid, line=line)
         message_list.append(m)
     return message_list
 
@@ -229,7 +229,7 @@ class SQLDict(SQLBase):
         validation_text_dict = {'none': 1}
         message_dict = {}
         for line in result:
-          message = self.loadMessage(line.message, uid=line.uid, line=line)
+          message = Message.load(line.message, uid=line.uid, line=line)
           if not hasattr(message, 'order_validation_text'): # BBB
             message.order_validation_text = line.order_validation_text
           self.getExecutableMessageList(activity_tool, message, message_dict,
@@ -307,7 +307,7 @@ class SQLDict(SQLBase):
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:
-        m = self.loadMessage(line.message,
+        m = Message.load(line.message,
                              line=line,
                              uid=line.uid,
                              date=line.date,
