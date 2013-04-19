@@ -1823,7 +1823,8 @@ class FloatWidget(TextWidget):
         # just return it as is
         if 'e' in value:
           return value
-        value, fpart = value.split('.')
+        if precision != 0:
+          value, fpart = value.split('.')
       except ValueError:
         return value
 
