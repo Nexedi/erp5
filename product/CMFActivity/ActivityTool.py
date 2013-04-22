@@ -169,6 +169,7 @@ class Message(BaseMessage):
   is_executed = MESSAGE_NOT_EXECUTED
   processing = None
   traceback = None
+  oid = None
 
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
@@ -177,6 +178,12 @@ class Message(BaseMessage):
     else:
       self.object_path = obj.getPhysicalPath()
       activity_creation_trace = obj.getPortalObject().portal_activities.activity_creation_trace
+      try:
+        self.oid = aq_base(obj)._p_oid
+        # Note that it's too early to get the OID of a newly created object,
+        # so at this point, self.oid may still be None.
+      except AttributeError:
+        pass
     if active_process is not None:
       self.active_process = active_process.getPhysicalPath()
       self.active_process_uid = active_process.getUid()
@@ -216,29 +223,38 @@ class Message(BaseMessage):
 
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
-    return activity_tool.unrestrictedTraverse(self.object_path)
+    try:
+      obj = activity_tool.unrestrictedTraverse(self.object_path)
+    except KeyError:
+      LOG('CMFActivity', WARNING, "Message dropped (no object found at path %r)"
+          % (self.object_path,), error=sys.exc_info())
+      self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
+    else:
+      if self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None):
+        raise ValueError("OID mismatch for %r" % obj)
+      return obj
 
   def getObjectList(self, activity_tool):
-    """return the list of object that can be expanded from this message."""
-    object_list = []
-    try:
-      object_list.append(self.getObject(activity_tool))
-    except KeyError:
-      pass
-    else:
-      if self.hasExpandMethod():
-        expand_method_id = self.activity_kw['expand_method_id']
-        # FIXME: how to pass parameters?
-        object_list = getattr(object_list[0], expand_method_id)()
-    return object_list
-
-  def hasExpandMethod(self):
-    """return true if the message has an expand method.
+    """return the list of object that can be expanded from this message
     An expand method is used to expand the list of objects and to turn a
     big recursive transaction affecting many objects into multiple
     transactions affecting only one object at a time (this can prevent
     duplicated method calls)."""
-    return self.activity_kw.has_key('expand_method_id')
+    obj = self.getObject(activity_tool)
+    if obj is None:
+      return ()
+    if 'expand_method_id' in self.activity_kw:
+      return getattr(obj, self.activity_kw['expand_method_id'])()
+    return obj,
+
+  def getObjectCount(self, activity_tool):
+    if 'expand_method_id' in self.activity_kw:
+      try:
+        obj = activity_tool.unrestrictedTraverse(self.object_path)
+        return len(getattr(obj, self.activity_kw['expand_method_id'])())
+      except StandardError:
+        pass
+    return 1
 
   def changeUser(self, user_name, activity_tool):
     """restore the security context for the calling user."""
@@ -280,39 +296,21 @@ class Message(BaseMessage):
   def __call__(self, activity_tool):
     try:
       obj = self.getObject(activity_tool)
-    except KeyError:
-      exc_info = sys.exc_info()
-      LOG('CMFActivity', ERROR,
-          'Message failed in getting an object from the path %r'
-          % (self.object_path,), error=exc_info)
-      self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
-                             context=activity_tool)
-    else:
-      try:
+      if obj is not None:
         old_security_manager = getSecurityManager()
         try:
           # Change user if required (TO BE DONE)
           # We will change the user only in order to execute this method
           self.changeUser(self.user_name, activity_tool)
-          try:
-            # XXX: There is no check to see if user is allowed to access
-            # that method !
-            method = getattr(obj, self.method_id)
-          except Exception:
-            exc_info = sys.exc_info()
-            LOG('CMFActivity', ERROR,
-                'Message failed in getting a method %r from an object %r'
-                % (self.method_id, obj), error=exc_info)
-            method = None
-            self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
-                                   context=activity_tool)
+          # XXX: There is no check to see if user is allowed to access
+          #      that method !
+          method = getattr(obj, self.method_id)
+          # Store site info
+          setSite(activity_tool.getParentValue())
+          if activity_tool.activity_timing_log:
+            result = activity_timing_method(method, self.args, self.kw)
           else:
-            # Store site info
-            setSite(activity_tool.getParentValue())
-            if activity_tool.activity_timing_log:
-              result = activity_timing_method(method, self.args, self.kw)
-            else:
-              result = method(*self.args, **self.kw)
+            result = method(*self.args, **self.kw)
         finally:
           setSecurityManager(old_security_manager)
 
@@ -322,8 +320,8 @@ class Message(BaseMessage):
               activity_tool.unrestrictedTraverse(self.active_process),
               result, obj)
           self.setExecutionState(MESSAGE_EXECUTED)
-      except:
-        self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
+    except:
+      self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
@@ -338,9 +336,7 @@ class Message(BaseMessage):
     email_from_name = portal.getProperty('email_from_name',
                        portal.getProperty('email_from_address'))
     fail_count = self.line.retry + 1
-    if self.getExecutionState() == MESSAGE_NOT_EXECUTABLE:
-      message = "Not executable activity"
-    elif retry:
+    if retry:
       message = "Pending activity already failed %s times" % fail_count
     else:
       message = "Activity failed"
@@ -371,7 +367,7 @@ Named Parameters: %r
 
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
-    obj= self.getObject(activity_tool)
+    obj = activity_tool.unrestrictedTraverse(self.object_path)
     old_security_manager = getSecurityManager()
     try:
       # Change user if required (TO BE DONE)
@@ -410,7 +406,7 @@ Named Parameters: %r
     """
     assert is_executed in (MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, MESSAGE_NOT_EXECUTABLE)
     self.is_executed = is_executed
-    if is_executed != MESSAGE_EXECUTED:
+    if is_executed == MESSAGE_NOT_EXECUTED:
       if not exc_info:
         exc_info = sys.exc_info()
       if self.on_error_callback is not None:
@@ -1189,21 +1185,11 @@ class ActivityTool (Folder, UniqueObject):
         # alternate method is used to segregate objects which cannot be grouped.
         alternate_method_id = m.activity_kw.get('alternate_method_id')
         try:
-          obj = m.getObject(self)
-        except KeyError:
-          exc_info = sys.exc_info()
-          LOG('CMFActivity', ERROR,
-              'Message failed in getting an object from the path %r'
-              % (m.object_path,), error=exc_info)
-          m.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info, context=self)
-          continue
-        try:
-          if m.hasExpandMethod():
-            subobject_list = m.getObjectList(self)
-          else:
-            subobject_list = (obj,)
+          object_list = m.getObjectList(self)
+          if object_list is None:
+            continue
           message_dict[m] = expanded_object_list = []
-          for subobj in subobject_list:
+          for subobj in object_list:
             if merge_duplicate:
               path = subobj.getPath()
               if path in path_set:

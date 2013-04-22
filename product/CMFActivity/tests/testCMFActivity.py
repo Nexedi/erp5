@@ -26,18 +26,16 @@
 #
 ##############################################################################
 
-
+import inspect
 import unittest
 
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.backportUnittest import skip
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Base import Base
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
-                                              VALIDATE_ERROR_STATE
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 import Products.CMFActivity.ActivityTool
@@ -432,60 +430,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     o.activate(activity = activity).titi('c')
     self.tic()
     self.assertEquals(o.getTitle(), 'acb')
-
-  def ExpandedMethodWithDeletedSubObject(self, activity):
-    """
-    Do recursiveReindexObject, then delete a
-    subobject an see if there is only one activity
-    in the queue
-    """
-    portal = self.getPortal()
-    organisation_module = self.getOrganisationModule()
-    if not(organisation_module.hasContent(self.company_id2)):
-      o2 = organisation_module.newContent(id=self.company_id2)
-    o1 =  portal.organisation._getOb(self.company_id)
-    o2 =  portal.organisation._getOb(self.company_id2)
-    for o in (o1,o2):
-      if not(o.hasContent('1')):
-        o.newContent(portal_type='Email',id='1')
-      if not(o.hasContent('2')):
-        o.newContent(portal_type='Email',id='2')
-    o1.recursiveReindexObject()
-    o2.recursiveReindexObject()
-    o1._delOb('2')
-    self.commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
-    self.commit()
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
-
-  def ExpandedMethodWithDeletedObject(self, activity):
-    """
-    Do recursiveReindexObject, then delete a
-    subobject an see if there is only one activity
-    in the queue
-    """
-    portal = self.getPortal()
-    organisation_module = self.getOrganisationModule()
-    if not(organisation_module.hasContent(self.company_id2)):
-      o2 = organisation_module.newContent(id=self.company_id2)
-    o1 =  portal.organisation._getOb(self.company_id)
-    o2 =  portal.organisation._getOb(self.company_id2)
-    for o in (o1,o2):
-      if not(o.hasContent('1')):
-        o.newContent(portal_type='Email',id='1')
-      if not(o.hasContent('2')):
-        o.newContent(portal_type='Email',id='2')
-    o1.recursiveReindexObject()
-    o2.recursiveReindexObject()
-    organisation_module._delOb(self.company_id2)
-    self.commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
-    self.commit()
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
 
   def TryAfterTag(self, activity):
     """
@@ -1061,24 +1005,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Check if what we did was executed as toto
     self.assertEquals(email.getOwnerInfo()['id'],'toto')
 
-  def test_57_ExpandedMethodWithDeletedSubObject(self, quiet=0, run=run_all_test):
-    # Test if after_method_id can be used
-    if not run: return
-    if not quiet:
-      message = '\nTry Expanded Method With Deleted Sub Object'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.ExpandedMethodWithDeletedSubObject('SQLDict')
-
-  def test_58_ExpandedMethodWithDeletedObject(self, quiet=0, run=run_all_test):
-    # Test if after_method_id can be used
-    if not run: return
-    if not quiet:
-      message = '\nTry Expanded Method With Deleted Object'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.ExpandedMethodWithDeletedObject('SQLDict')
-
   def test_59_TryAfterTagWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if after_tag can be used
     if not run: return
@@ -1162,8 +1088,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
       finished = 1
       for message in activity_tool.getMessageList():
-        if message.processing_node not in (INVOKE_ERROR_STATE,
-                                           VALIDATE_ERROR_STATE):
+        if message.processing_node != INVOKE_ERROR_STATE:
           finished = 0
 
       activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
@@ -1969,38 +1894,33 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       delattr(Organisation, 'checkMarkerValue')
 
   def TryUserNotificationOnActivityFailure(self, activity):
+    message_list = self.portal.MailHost._message_list
+    del message_list[:]
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    self.tic()
-    # Use a mutable variable to be able to modify the same instance from
-    # monkeypatch method.
-    notification_done = []
-    from Products.CMFActivity.ActivityTool import Message
-    def fake_notifyUser(self, *args, **kw):
-      notification_done.append(True)
-    original_notifyUser = Message.notifyUser
-    def failingMethod(self):
-      raise ValueError, 'This method always fail'
-    Message.notifyUser = fake_notifyUser
+    def failingMethod(self): raise ValueError('This method always fails')
     Organisation.failingMethod = failingMethod
     try:
       # MESSAGE_NOT_EXECUTED
       obj.activate(activity=activity).failingMethod()
       self.commit()
-      self.assertEqual(len(notification_done), 0)
+      self.assertFalse(message_list)
       self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEqual(len(notification_done), 1)
+      # Check there is a traceback in the email notification
+      sender, recipients, mail = message_list.pop()
+      self.assertTrue("Module %s, line %s, in failingMethod" % (
+        __name__, inspect.getsourcelines(failingMethod)[1]) in mail, mail)
+      self.assertTrue("ValueError:" in mail, mail)
       # MESSAGE_NOT_EXECUTABLE
       obj.getParentValue()._delObject(obj.getId())
-      obj.activate(activity=activity).getId()
+      obj.activate(activity=activity).failingMethod()
       self.commit()
-      self.assertEqual(len(notification_done), 1)
-      self.flushAllActivities(silent=1, loop_size=100)
-      self.assertEqual(len(notification_done), 2)
+      self.assertTrue(obj.hasActivity())
+      self.tic()
+      self.assertFalse(obj.hasActivity())
+      self.assertFalse(message_list)
     finally:
-      Message.notifyUser = original_notifyUser
-      delattr(Organisation, 'failingMethod')
-
+      del Organisation.failingMethod
 
   def test_90_userNotificationOnActivityFailureWithSQLDict(self, quiet=0, run=run_all_test):
     """
@@ -2579,89 +2499,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       delattr(Organisation, 'checkAbsoluteUrl')
 
-  def CheckMissingActivityContextObject(self, activity):
-    """
-      Check that a message whose context has ben deleted goes to -3
-      processing_node.
-      This must happen on first message execution, without any delay.
-    """
-    activity_tool = self.getActivityTool()
-    container = self.getPortal().organisation_module
-    organisation = container.newContent(portal_type='Organisation')
-    self.tic()
-    organisation.activate(activity=activity).getTitle()
-    self.commit()
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
-    # Here, we delete the subobject using most low-level method, to avoid
-    # pending activity to be removed.
-    organisation_id = organisation.id
-    container._delOb(organisation_id)
-    del organisation # Avoid keeping a reference to a deleted object.
-    self.commit()
-    self.assertEqual(getattr(container, organisation_id, None), None)
-    self.assertEqual(len(activity_tool.getMessageList()), 1)
-    activity_tool.distribute()
-    self.assertEqual([], activity_tool.getMessageList(activity=activity,
-                                                      processing_node=-3))
-    activity_tool.tic()
-    self.assertEqual(1, len(activity_tool.getMessageList(activity=activity,
-                                                         processing_node=-3)))
-
-  def test_109_checkMissingActivityContextObjectSQLDict(self, quiet=0,
-      run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = '\nCheck missing activity context object (SQLDict)'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CheckMissingActivityContextObject('SQLDict')
-
-  def test_110_checkMissingActivityContextObjectSQLQueue(self, quiet=0,
-      run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = '\nCheck missing activity context object (SQLQueue)'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CheckMissingActivityContextObject('SQLQueue')
-
-  def test_111_checkMissingActivityContextObjectSQLDict(self, quiet=0,
-      run=run_all_test):
-    """
-      This is similar to tst 108, but here the object will be missing for an
-      activity with a group_method_id.
-    """
-    if not run: return
-    if not quiet:
-      message = '\nCheck missing activity context object with ' \
-                'group_method_id (SQLDict)'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    activity_tool = self.getActivityTool()
-    container = self.getPortalObject().organisation_module
-    organisation = container.newContent(portal_type='Organisation')
-    organisation_2 = container.newContent(portal_type='Organisation')
-    self.tic()
-    organisation.reindexObject()
-    organisation_2.reindexObject()
-    self.commit()
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
-    # Here, we delete the subobject using most low-level method, to avoid
-    # pending activity to be removed.
-    organisation_id = organisation.id
-    container._delOb(organisation_id)
-    del organisation # Avoid keeping a reference to a deleted object.
-    self.commit()
-    self.assertEqual(getattr(container, organisation_id, None), None)
-    self.assertEqual(len(activity_tool.getMessageList()), 2)
-    activity_tool.distribute()
-    self.assertEqual([], activity_tool.getMessageList(activity="SQLDict",
-                                                      processing_node=-3))
-    activity_tool.tic()
-    message, = activity_tool.getMessageList()
-    # The message excuted on "organisation_2" must have succeeded.
-    self.assertEqual(message.processing_node, -3)
-
   def CheckLocalizerWorks(self, activity):
     FROM_STRING = 'Foo'
     TO_STRING = 'Bar'
@@ -2711,69 +2548,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.CheckLocalizerWorks('SQLDict')
-
-  def testMessageContainsFailureTraceback(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = '\nCheck message contains failure traceback'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortalObject()
-    activity_tool = self.getActivityTool()
-    def checkMessage(message, exception_type):
-      self.assertNotEqual(message.getExecutionState(), 1) # 1 == MESSAGE_EXECUTED
-      self.assertEqual(message.exc_type, exception_type)
-      self.assertNotEqual(message.traceback, None)
-    # With Message.__call__
-    # 1: activity context does not exist when activity is executed
-    organisation = portal.organisation_module.newContent(portal_type='Organisation')
-    self.tic()
-    organisation.activate().getTitle() # This generates the mssage we want to test.
-    self.commit()
-    message_list = activity_tool.getMessageList()
-    self.assertEqual(len(message_list), 1)
-    message = message_list[0]
-    portal.organisation_module._delOb(organisation.id)
-    message(activity_tool)
-    checkMessage(message, KeyError)
-    activity_tool.manageCancel(message.object_path, message.method_id)
-    # 2: activity method does not exist when activity is executed
-    portal.organisation_module.activate().this_method_does_not_exist()
-    self.commit()
-    message_list = activity_tool.getMessageList()
-    self.assertEqual(len(message_list), 1)
-    message = message_list[0]
-    message(activity_tool)
-    checkMessage(message, AttributeError)
-    activity_tool.manageCancel(message.object_path, message.method_id)
-
-    # With ActivityTool.invokeGroup
-    # 1: activity context does not exist when activity is executed
-    organisation = portal.organisation_module.newContent(portal_type='Organisation')
-    self.tic()
-    organisation.activate().getTitle() # This generates the mssage we want to test.
-    self.commit()
-    message_list = activity_tool.getMessageList()
-    self.assertEqual(len(message_list), 1)
-    message = message_list[0]
-    portal.organisation_module._delOb(organisation.id)
-    activity_tool.invokeGroup('getTitle', [message], 'SQLDict', True)
-    checkMessage(message, KeyError)
-    activity_tool.manageCancel(message.object_path, message.method_id)
-    # 2: activity method does not exist when activity is executed
-    portal.organisation_module.activate().this_method_does_not_exist()
-    self.commit()
-    message_list = activity_tool.getMessageList()
-    self.assertEqual(len(message_list), 1)
-    message = message_list[0]
-    activity_tool.invokeGroup('this_method_does_not_exist',
-                              [message], 'SQLDict', True)
-    checkMessage(message, KeyError)
-    activity_tool.manageCancel(message.object_path, message.method_id)
-
-    # Unadressed error paths (in both cases):
-    #  3: activity commit raises
-    #  4: activity raises
 
   def test_114_checkSQLQueueActivitySucceedsAfterActivityChangingSkin(self,
     quiet=0, run=run_all_test):
@@ -3619,6 +3393,41 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     test(check)
     self.tic()
     test()
+
+  def test_MessageNonExecutable(self):
+    message_list = self.portal.MailHost._message_list
+    del message_list[:]
+    activity_tool = self.portal.portal_activities
+    kw = {}
+    self._catch_log_errors(subsystem='CMFActivity')
+    try:
+      for kw['activity'] in 'SQLDict', 'SQLQueue':
+        for kw['group_method_id'] in '', None:
+          obj = activity_tool.newActiveProcess()
+          self.tic()
+          obj.activate(**kw).getId()
+          activity_tool._delOb(obj.getId())
+          obj = activity_tool.newActiveProcess(id=obj.getId(),
+                                               is_indexable=False)
+          self.commit()
+          self.assertEqual(1, activity_tool.countMessage())
+          self.flushAllActivities()
+          sender, recipients, mail = message_list.pop()
+          self.assertTrue('OID mismatch' in mail, mail)
+          m, = activity_tool.getMessageList()
+          self.assertEqual(m.processing_node, INVOKE_ERROR_STATE)
+          obj.flushActivity()
+          obj.activate(**kw).getId()
+          activity_tool._delOb(obj.getId())
+          self.commit()
+          self.assertEqual(1, activity_tool.countMessage())
+          activity_tool.tic()
+          self.assertTrue('no object found' in self.logged.pop().getMessage())
+    finally:
+      self._ignore_log_errors()
+    self.assertFalse(self.logged)
+    self.assertFalse(message_list, message_list)
+
 
 def test_suite():
   suite = unittest.TestSuite()

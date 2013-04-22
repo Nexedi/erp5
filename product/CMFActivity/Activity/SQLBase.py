@@ -34,8 +34,7 @@ from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
   MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
-from Products.CMFActivity.ActiveObject import (
-  INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
 from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
@@ -278,7 +277,7 @@ class SQLBase(Queue):
           # Count the number of objects to prevent too many objects.
           cost = m.activity_kw.get('group_method_cost', .01)
           assert 0 < cost <= 1, (self.sql_table, uid)
-          count = len(m.getObjectList(activity_tool))
+          count = m.getObjectCount(activity_tool)
           # this is heuristic (messages with same group_method_id
           # are likely to have the same group_method_cost)
           limit = int(1. / cost + 1 - count)
@@ -294,7 +293,7 @@ class SQLBase(Queue):
                 uid_to_duplicate_uid_list_dict[uid] += uid_list
                 continue
               uid_to_duplicate_uid_list_dict[uid] = uid_list
-              cost += len(m.getObjectList(activity_tool)) * \
+              cost += m.getObjectCount(activity_tool) * \
                       m.activity_kw.get('group_method_cost', .01)
               message_list.append(m)
               if cost >= 1:
@@ -415,7 +414,6 @@ class SQLBase(Queue):
     final_error_uid_list = []
     make_available_uid_list = []
     notify_user_list = []
-    non_executable_message_list = []
     executed_uid_list = deletable_uid_list
     if uid_to_duplicate_uid_list_dict is not None:
       for m in message_list:
@@ -461,12 +459,14 @@ class SQLBase(Queue):
           except:
             self._log(WARNING, 'Failed to reactivate %r' % uid)
         make_available_uid_list.append(uid)
-      else:
-        # Internal CMFActivity error: the message can not be executed because
-        # something is missing (context object cannot be found, method cannot
-        # be accessed on object).
-        non_executable_message_list.append(uid)
-        notify_user_list.append((m, False))
+      else: # MESSAGE_NOT_EXECUTABLE
+        # 'path' does not point to any object. Activities are normally flushed
+        # (without invoking them) when an object is deleted, but this is only
+        # an optimisation. There is no efficient and reliable way to do such
+        # this, because a concurrent and very long transaction may be about to
+        # activate this object, without conflict.
+        # So we have to clean up any remaining activity.
+        deletable_uid_list.append(uid)
     if deletable_uid_list:
       try:
         self._retryOnLockError(activity_tool.SQLBase_delMessage,
@@ -490,13 +490,6 @@ class SQLBase(Queue):
       except:
         self._log(ERROR, 'Failed to set message to error state for %r'
                          % final_error_uid_list)
-    if non_executable_message_list:
-      try:
-        activity_tool.SQLBase_assignMessage(table=self.sql_table,
-          uid=non_executable_message_list, processing_node=VALIDATE_ERROR_STATE)
-      except:
-        self._log(ERROR, 'Failed to set message to invalid path state for %r'
-                         % non_executable_message_list)
     if make_available_uid_list:
       try:
         self.makeMessageListAvailable(activity_tool=activity_tool,

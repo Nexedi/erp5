@@ -41,10 +41,6 @@ DEFAULT_ACTIVITY = 'SQLDict'
 # Processing node are used to store processing state or processing node
 DISTRIBUTABLE_STATE = -1
 INVOKE_ERROR_STATE = -2
-VALIDATE_ERROR_STATE = -3
-STOP_STATE = -4
-# Special state which allows to select positive nodes
-POSITIVE_NODE_STATE = 'Positive Node State'
 
 _DEFAULT_ACTIVATE_PARAMETER_KEY = 'default_activate_parameter'
 
@@ -144,12 +140,6 @@ class ActiveObject(ExtensionClass.Base):
     """Tells if there is failed activities for this object.
     """
     return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
-
-  security.declareProtected( permissions.View, 'hasInvalidActivity' )
-  def hasInvalidActivity(self, **kw):
-    """Tells if there is invalied activities for this object.
-    """
-    return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
   def getActiveProcess(self):
     path = getActivityRuntimeEnvironment()._message.active_process
