@@ -52,7 +52,6 @@ from Products.CMFActivity.ActivityTool import Message
 import gc
 import random
 import threading
-import sys
 import weakref
 import transaction
 
@@ -109,12 +108,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.activity_kw.get('max_retry', 5))
     self.login()
     portal = self.portal
-    # trap outgoing e-mails
-    self.oldMailHost = getattr(self.portal, 'MailHost', None)
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-    
     # remove all message in the message_table because
     # the previous test might have failed
     message_list = portal.portal_activities.getMessageList()
@@ -1163,15 +1156,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     messages.
     """
     activity_tool = self.getPortal().portal_activities
-    loop_count=0
-    # flush activities
-    while 1:
-      loop_count += 1
-      if loop_count >= loop_size:
-        if silent:
-          return
-        self.fail('flushAllActivities maximum loop count reached')
-
+    for _ in xrange(loop_size):
       activity_tool.distribute(node_count=1)
       activity_tool.tic(processing_node=1)
 
@@ -1185,6 +1170,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       if finished:
         return
+    if not silent:
+      self.fail('flushAllActivities maximum loop count reached')
 
   def test_65_TestMessageValidationAndFailedActivities(self,
                                               quiet=0, run=run_all_test):
@@ -1213,13 +1200,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise ValueError, 'This method always fail'
     Organisation.failingMethod = failingMethod
-
-    # Monkey patch Message not to send failure notification emails
-    from Products.CMFActivity.ActivityTool import Message
-    originalNotifyUser = Message.notifyUser
-    def notifyUserSilent(self, *args, **kw):
-      pass
-    Message.notifyUser = notifyUserSilent
 
     activity_list = ['SQLQueue', 'SQLDict', ]
     for activity in activity_list:
@@ -1258,10 +1238,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           ['failingMethod'])
       self.assertEquals(obj.getTitle(), original_title)
 
-    # restore notification and flush failed and blocked activities
-    Message.notifyUser = originalNotifyUser
-    activity_tool.manageClearActivities(keep=0)
-
   def test_66_TestCountMessageWithTagWithSQLDict(self, quiet=0, run=run_all_test):
     """
       Test new countMessageWithTag function with SQLDict.
@@ -1296,13 +1272,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise ValueError, 'This method always fail'
     Organisation.failingMethod = failingMethod
-
-    # Monkey patch Message not to send failure notification emails
-    from Products.CMFActivity.ActivityTool import Message
-    originalNotifyUser = Message.notifyUser
-    def notifyUserSilent(self, *args, **kw):
-      pass
-    Message.notifyUser = notifyUserSilent
 
     # First, index the object.
     self.commit()
@@ -3202,28 +3171,20 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
     self.tic()
-    original_notifyUser = Message.notifyUser
+    original_notifyUser = Message.notifyUser.im_func
     def failSendingEmail(self, *args, **kw):
       raise MailHostError, 'Mail is not sent'
-    Message.notifyUser = failSendingEmail
-    class ActivityUnitTestError(Exception):
-      pass
-    activity_unit_test_error = ActivityUnitTestError()
+    activity_unit_test_error = Exception()
     def failingMethod(self):
       raise activity_unit_test_error
-    Organisation.failingMethod = failingMethod
-    self._catch_log_errors(ignored_level=sys.maxint) 
-
     try:
-      import traceback
+      Message.notifyUser = failSendingEmail
+      Organisation.failingMethod = failingMethod
+      self._catch_log_errors()
       obj.activate(activity=activity, priority=6).failingMethod()
       self.commit()
       self.flushAllActivities(silent=1, loop_size=100)   
-      message_list = activity_tool.getMessageList()
-      self.assertEqual(len(message_list), 1)
-      message = message_list[0]
-      logged_errors = []
-      logged_errors = self.logged
+      message, = activity_tool.getMessageList()
       self.commit()
       for log_record in self.logged:
         if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
@@ -3231,9 +3192,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.commit()
       self.assertTrue(activity_unit_test_error is value)
     finally:
-      self._ignore_log_errors()
       Message.notifyUser = original_notifyUser
-      delattr(Organisation, 'failingMethod')
+      del Organisation.failingMethod
+      self._ignore_log_errors()
 
   def test_118_userNotificationSavedOnEventLogWhenNotifyUserRaisesWithSQLDict(self, quiet=0, run=run_all_test):
     """
@@ -3324,36 +3285,29 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise activity_unit_test_error
     from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
-    SiteErrorLog.original_raising = SiteErrorLog.raising
+    original_raising = SiteErrorLog.raising.im_func
 
     # Monkey patch Site Error to induce conflict errors artificially.
     def raising(self, info):
-      from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
       raise AttributeError
-      return self.original_raising(info)
-    from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
-    SiteErrorLog.original_raising = SiteErrorLog.raising
-    SiteErrorLog.raising = raising
-    Organisation.failingMethod = failingMethod
-    self._catch_log_errors(ignored_level=sys.maxint)
-
     try:
+      SiteErrorLog.raising = raising
+      Organisation.failingMethod = failingMethod
+      self._catch_log_errors()
       o.activate(activity = activity).failingMethod()
       self.commit()
       self.assertEquals(len(activity_tool.getMessageList()), 1)
       self.flushAllActivities(silent = 1)
-      SiteErrorLog.raising = SiteErrorLog.original_raising
-      logged_errors = self.logged
+      SiteErrorLog.raising = original_raising
       self.commit()
       for log_record in self.logged:
         if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
           type, value, trace = log_record.exc_info     
       self.assertTrue(activity_unit_test_error is value)
     finally:
+      SiteErrorLog.raising = original_raising
+      del Organisation.failingMethod
       self._ignore_log_errors()
-      SiteErrorLog.raising = SiteErrorLog.original_raising
-      delattr(Organisation, 'failingMethod')
-      del SiteErrorLog.original_raising
 
   def test_122_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLDict(self, quiet=0, run=run_all_test):
     if not run: return
