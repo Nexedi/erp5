@@ -176,9 +176,6 @@ class TestCase(unittest.TestCase):
         """Skip this test."""
         raise SkipTest(reason)
 
-    def defaultTestResult(self):
-        return TestResult()
-
 if not hasattr(unittest.TestResult, 'addSkip'): # BBB: Python < 2.7
 
     unittest.TestResult._orig_init__ = unittest.TestResult.__init__.im_func
