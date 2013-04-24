@@ -5,6 +5,9 @@
  <portal_type id="Career">
   <item>specialise</item>
  </portal_type>
+ <portal_type id="Position">
+  <item>agent</item>
+ </portal_type>
  <portal_type id="Position Announcement">
   <item>aggregate</item>
   <item>classification</item>
