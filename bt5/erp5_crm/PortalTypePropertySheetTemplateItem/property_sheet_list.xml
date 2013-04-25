@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Campaign">
+  <item>DefaultEventPath</item>
+ </portal_type>
  <portal_type id="Support Request">
   <item>Codification</item>
  </portal_type>

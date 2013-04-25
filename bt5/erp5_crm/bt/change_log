@@ -1,3 +1,6 @@
+2013-04-25 Gabriel
+* Initial implementation of Event Path and extension of Campaign to create massive events. Event Path is a subobject of Campaign to store all information related to creation of events
+
 2012-10-30 Kazuhiko
 * add destination_decision_language related key.
 

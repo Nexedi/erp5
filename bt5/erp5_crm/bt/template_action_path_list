@@ -3,6 +3,7 @@ Campaign Module | campaign_detailed_report
 Campaign Module | campaign_status
 Campaign Module | view
 Campaign | clone_ticket_and_event_list
+Campaign | create_event_from_event_path
 Campaign | create_new_file
 Campaign | document_list
 Campaign | new_event
@@ -11,6 +12,7 @@ Event Module | event_activity
 Event Module | event_detailed_report
 Event Module | view
 Event Module | workflow_report
+Event Path | view
 Fax Message | assessment
 Fax Message | create_response
 Fax Message | preview
