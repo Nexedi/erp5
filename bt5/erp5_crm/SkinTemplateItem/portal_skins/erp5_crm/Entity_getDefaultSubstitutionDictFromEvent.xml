@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return {"social_title" : getattr(context, \'getSocialTitleTranslatedTitle\', \'\'),\n
+            <value> <string>return {"social_title" : getattr(context, \'getSocialTitleTranslatedTitle\', lambda x: \'\')(None),\n
   "title": context.getTitle(),\n
 }\n
 </string> </value>
