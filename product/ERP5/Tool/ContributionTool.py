@@ -230,7 +230,7 @@ class ContributionTool(BaseTool):
                                 input_parameter_dict=input_parameter_dict)
       if REQUEST is not None:
         response = REQUEST.RESPONSE
-        response.setHeader('Location', document.absolute_url())
+        response.setHeader('X-Location', document.absolute_url())
         return response.redirect(self.absolute_url())
       return document
 
