@@ -77,7 +77,8 @@ event = context.Base_addEvent(title=notification_message.getTitle(),\n
   keep_draft=keep_draft,\n
   batch_mode=True)\n
 \n
-event.edit(follow_up=follow_up)\n
+event.edit(follow_up=follow_up,\n
+ source=source)\n
 </string> </value>
         </item>
         <item>
