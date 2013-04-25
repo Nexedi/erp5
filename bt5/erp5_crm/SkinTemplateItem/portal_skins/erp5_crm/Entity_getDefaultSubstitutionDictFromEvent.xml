@@ -50,9 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return {"social_title" : context.getSocialTitleTranslatedTitle(),\n
-  "first_name": context.getFirstName(),\n
-  "last_name": context.getLastName()\n
+            <value> <string>return {"social_title" : getattr(context, \'getSocialTitleTranslatedTitle\', \'\'),\n
+  "title": context.getTitle(),\n
 }\n
 </string> </value>
         </item>
