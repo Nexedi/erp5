@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DefaultEventPath_view</string> </value>
+            <value> <string>Campaign_viewEventPath</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

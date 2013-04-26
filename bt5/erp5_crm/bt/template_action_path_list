@@ -5,10 +5,10 @@ Campaign Module | view
 Campaign | clone_ticket_and_event_list
 Campaign | create_event_from_event_path
 Campaign | create_new_file
-Campaign | default_event_path
 Campaign | document_list
 Campaign | new_event
 Campaign | view
+Campaign | view_event_path
 Event Module | event_activity
 Event Module | event_detailed_report
 Event Module | view
