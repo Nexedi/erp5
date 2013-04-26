@@ -52,10 +52,11 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
-campaign = portal.portal_domains.restrictedTraverse(follow_up)\n
-event_portal_type = campaign.getDefaultEventPathEventPortalType()\n
-resource_reference = campaign.getDefaultEventPathResourceReference()\n
-source = campaign.getDefaultEventPathSource()\n
+event_path = portal.restrictedTraverse(event_path)\n
+follow_up = event_path.getParentRelativeUrl()\n
+event_portal_type = event_path.getEventPortalType()\n
+resource_reference = event_path.getResourceReference()\n
+source = event_path.getSource()\n
 \n
 language = context.getLanguage()\n
 notification_message = portal.notification_message_module.NotificationTool_getDocumentValue(\n
@@ -77,13 +78,15 @@ event = context.Base_addEvent(title=notification_message.getTitle(),\n
   keep_draft=keep_draft,\n
   batch_mode=True)\n
 \n
-event.edit(follow_up=follow_up,\n
- source=source)\n
+event.setFollowUp(follow_up)\n
+\n
+if event.getSource() is None:\n
+  event.setSource(source)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, keep_draft</string> </value>
+            <value> <string>event_path, keep_draft</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

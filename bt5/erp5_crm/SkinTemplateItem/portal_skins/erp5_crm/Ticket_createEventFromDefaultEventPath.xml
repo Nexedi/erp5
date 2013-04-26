@@ -53,14 +53,16 @@
             <value> <string>portal = context.getPortalObject()\n
 destination = context.getDefaultEventPathDestination()\n
 domain = portal.portal_domains.restrictedTraverse(destination)\n
+event_path = context.getDefaultEventPathValue(portal_type="Event Path")\n
 \n
-method_kw = {\'follow_up\': context.getRelativeUrl(),\n
-  \'keep_draft\': keep_draft}\n
+method_kw = {\'event_path\': event_path.getRelativeUrl(),\n
+ \'keep_draft\': keep_draft}\n
 portal.portal_catalog.searchAndActivate("Entity_createEventFromDefaultEventPath",\n
   selection_domain={domain.getParentId(): (\'portal_domains\', destination)},\n
   method_kw=method_kw)\n
 \n
-context.Base_redirect(keep_items={\'portal_status_message\': context.Base_translateString(\'Events are being created in background\')})\n
+return context.Base_redirect(\n
+  keep_items={\'portal_status_message\': context.Base_translateString(\'Events are being created in background\')})\n
 </string> </value>
         </item>
         <item>
