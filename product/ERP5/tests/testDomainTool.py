@@ -32,7 +32,6 @@ import unittest
 from Products.ERP5.tests.testPredicate import TestPredicateMixIn, \
     REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH
 from DateTime import DateTime
-from zLOG import LOG
 from Products.ZSQLCatalog.SQLCatalog import Query
 
 class TestDomainTool(TestPredicateMixIn):
@@ -277,24 +276,15 @@ class TestDomainTool(TestPredicateMixIn):
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
-  def test_01_SearchPredidateListWithNoTest(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Search Predicate List With No Test')
+  def test_01_SearchPredidateListWithNoTest(self):
     self.createData()
     self.checkPredicate(test=0)
 
-  def test_02_SearchPredidateListWithTest(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Search Predicate List With Test')
+  def test_02_SearchPredidateListWithTest(self):
     self.createData()
     self.checkPredicate(test=1)
 
-  def test_03_GenerateMappedValue(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Generate Mapped Value')
+  def test_03_GenerateMappedValue(self):
     self.createData()
     self.supply_line.setVariationBaseCategoryList(['colour'])
     self.supply_line.setBasePrice(23)
@@ -309,10 +299,7 @@ class TestDomainTool(TestPredicateMixIn):
     mapped_value = domain_tool.generateMappedValue(context, portal_type="Supply Line")
     self.assertEquals(mapped_value.getBasePrice(),23)
 
-  def test_04_GenerateMappedValueWithRanges(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Generate Mapped Value With Ranges')
+  def test_04_GenerateMappedValueWithRanges(self):
     self.createData()
     self.supply_line.setBasePrice(23)
     self.supply_line.setPricedQuantity(1)
@@ -321,8 +308,6 @@ class TestDomainTool(TestPredicateMixIn):
     date2 = DateTime('2005/04/10')
     self.supply_line.setStartDateRangeMin(date1)
     self.supply_line.setStartDateRangeMax(date2)
-    LOG('Test04, supply_line.getStartDateRangeMin',0,self.supply_line.getStartDateRangeMin())
-    LOG('Test04, supply_line.getStartDateRangeMax',0,self.supply_line.getStartDateRangeMax())
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
     self.tic()
     domain_tool = self.getDomainTool()
@@ -338,10 +323,7 @@ class TestDomainTool(TestPredicateMixIn):
     mapped_value = domain_tool.generateMappedValue(order_line,**kw)
     self.assertEquals(mapped_value.getBasePrice(),23)
 
-  def test_05_GenerateMappedValueWithVariation(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Generate Mapped Value With Variation')
+  def test_05_GenerateMappedValueWithVariation(self):
     self.createData()
     self.supply_line.setVariationBaseCategoryList(['colour'])
     self.supply_line.setBasePrice(23)
@@ -355,7 +337,6 @@ class TestDomainTool(TestPredicateMixIn):
       cell = self.supply_line.newCell(range,base_id='path',portal_type='Supply Cell')
       cell.setMappedValuePropertyList(['base_price','priced_quantity'])
       cell.setMultimembershipCriterionBaseCategoryList(['resource','variation'])
-      LOG('test, range',0,range)
       cell.setPricedQuantity(1)
       if range.find('blue')>=0:
         cell.setMembershipCriterionCategoryList([range])
@@ -418,10 +399,7 @@ class TestDomainTool(TestPredicateMixIn):
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_key_method=sort_key_method),45)
 
-  def test_06_SQLQueryDoesNotReturnTooManyPredicates(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Check that SQL query does not return unneeded predicates')
+  def test_06_SQLQueryDoesNotReturnTooManyPredicates(self):
     predicate_both_match = self.createPredicate(
         multimembership_criterion_base_category_list=['group', 'region'],
         membership_criterion_category_list=[GROUP_STOREVER_PATH, REGION_FRANCE_PATH])
@@ -439,11 +417,7 @@ class TestDomainTool(TestPredicateMixIn):
     # Real test
     self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=0))
 
-  def test_07_NonLeftJoinModeOfSearchPredicateList(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Test non-left join mode of searchPredicateList method')
-
+  def test_07_NonLeftJoinModeOfSearchPredicateList(self):
     # Add system preference
     system_preference = self.portal.portal_preferences.newContent(portal_type='System Preference')
     system_preference.setPreferredPredicateCategoryList(
