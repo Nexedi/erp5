@@ -2204,9 +2204,6 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'getBaseCategoryValues' )
   getBaseCategoryValues = getBaseCategoryValueList
 
-  def _cleanupCategories(self):
-    self._getCategoryTool()._cleanupCategories()
-
   # Category testing
   security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
   def isMemberOf(self, category, **kw):
