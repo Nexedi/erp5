@@ -111,7 +111,12 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         self.assertEquals(len(self.folder), expected_length)
         obj = self.newContent()
         self.assertEquals(obj.getId(), id_generator_id_list[expected_length])
- 
+
+    def test_03_unkownGenerateNewId(self):
+      self.folder.setIdGenerator('no such method')
+      self.assertRaises(ValueError, self.folder.generateNewId)
+      self.assertRaises(ValueError, self.folder.newContent)
+
     def _setAllowedContentTypesForFolderType(self, allowed_content_type_list):
       """Set allowed content types for Folder portal type."""
       self.getTypesTool().Folder.edit(

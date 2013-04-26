@@ -256,7 +256,6 @@ class FolderMixIn(ExtensionClass.Base):
 
       Permission is view because we may want to add content to a folder
       without changing the folder content itself.
-      XXX
     """
     my_id = None
     if id_group is None:
@@ -273,7 +272,7 @@ class FolderMixIn(ExtensionClass.Base):
         # default value of id_generator and force safe fallback in this case.
         idGenerator = getattr(self, id_generator, None)
         if idGenerator is None:
-          idGenerator = self._generateNextId
+          raise ValueError("Could not find id_generator %r" % (id_generator,))
       else:
         idGenerator = self._generateNextId
       my_id = idGenerator()
