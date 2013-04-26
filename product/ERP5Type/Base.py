@@ -1810,14 +1810,19 @@ class Base( CopyContainer,
   # categories
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
-    start_string = "%s/" % id
-    start_string_len = len(start_string)
+    getRelativeUrl = self.getPortalObject().portal_url.getRelativeUrl
+    def cleanupCategory(path):
+      # prevent duplicating base categories and storing "portal_categories/"
+      for start_string in ("%s/" % id, "portal_categories/"):
+        if path.startswith(start_string):
+          path = path[len(start_string):]
+      return path
+
     if target is None :
       path = target
     elif isinstance(target, str):
       # We have been provided a string
       path = target
-      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
@@ -1825,15 +1830,13 @@ class Base( CopyContainer,
         if isinstance(target_item, str):
           path = target_item
         else:
-          path = target_item.getRelativeUrl()
-        if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
-        path_list += [path]
+          path = getRelativeUrl(target_item)
+        path_list.append(cleanupCategory(path))
       path = path_list
     else:
       # We have been provided an object
-      # Find the object
-      path = target.getRelativeUrl()
-      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
+      path = cleanupCategory(getRelativeUrl(target))
+
     self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type,
                                 base=0, keep_default=keep_default,
                                 checked_permission=checked_permission)

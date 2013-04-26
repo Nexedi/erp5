@@ -675,6 +675,29 @@ class TestDomainTool(TestPredicateMixIn):
       tested_base_category_list=['WAAA', 'BOOO'],
       src__=1))
 
+  def test_setRelationToBaseDomain(self):
+    # category accessors can be useed to set relations to base domains.
+    base_domain = self.portal.portal_domains.newContent(
+      portal_type='Base Domain')
+    # get a document with source accessor
+    document = self.portal.sale_order_module.newContent(
+      portal_type='Sale Order')
+
+    document.setSourceValue(base_domain)
+    self.assertEqual(base_domain, document.getSourceValue())
+
+  def test_setRelationToDomain(self):
+    # category accessors can be useed to set relations to domains.
+    base_domain = self.portal.portal_domains.newContent(
+      portal_type='Base Domain')
+    domain = base_domain.newContent(portal_type='Domain')
+    # get a document with source accessor
+    document = self.portal.sale_order_module.newContent(
+      portal_type='Sale Order')
+
+    document.setSourceValue(domain)
+    self.assertEqual(domain, document.getSourceValue())
+
 
 def test_suite():
   suite = unittest.TestSuite()
