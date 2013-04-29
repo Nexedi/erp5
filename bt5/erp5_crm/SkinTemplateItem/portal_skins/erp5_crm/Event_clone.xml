@@ -50,28 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-new_ticket = context.Base_createCloneDocument(form_id=None, batch_mode=True)\n
-\n
-portal.portal_catalog.searchAndActivate(\n
-  portal_type=portal.getPortalEventTypeList(),\n
-  default_follow_up_uid=context.getUid(),\n
-  method_id=\'Event_clone\',\n
-  method_kw=dict(follow_up_relative_url=new_ticket.getRelativeUrl()))\n
-\n
-portal_status_message = portal.Base_translateString(\'Events are beeing cloned in the background.\')\n
-keep_items = {\'portal_status_message\':portal_status_message}\n
-new_ticket.Base_redirect(form_id=form_id, keep_items=keep_items)\n
+            <value> <string>event = context.Base_createCloneDocument(batch_mode=True)\n
+event.setFollowUp(follow_up_relative_url)\n
+return event\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\'</string> </value>
+            <value> <string>follow_up_relative_url</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Ticket_cloneTicketAndEventList</string> </value>
+            <value> <string>Event_clone</string> </value>
         </item>
       </dictionary>
     </pickle>
