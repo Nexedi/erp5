@@ -115,6 +115,11 @@ event_kw = {\n
 # Create event\n
 module = portal.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
+\n
+if notification_message:\n
+  event.Event_setTextContentFromNotificationMessage(\n
+     reference=notification_message)\n
+\n
 if not keep_draft:\n
   if direction == \'incoming\':\n
     # Support event_workflow and event_simulation_workflow\n
@@ -135,7 +140,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, keep_draft=False, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

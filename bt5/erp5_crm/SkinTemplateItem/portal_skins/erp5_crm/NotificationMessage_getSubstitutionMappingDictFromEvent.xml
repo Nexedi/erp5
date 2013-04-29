@@ -50,49 +50,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-"""\n
-portal = context.getPortalObject()\n
-module = portal.getDefaultModule(response_event_portal_type)\n
+            <value> <string>def getSubstitutionMappingDict():\n
+  kw.update(\n
+    destination_title=event_value.getDestinationTitle() or \'\',\n
+    destination_portal_type=event_value.getDestination() and event_value.getDestinationValue().getTranslatedPortalType(),\n
+    destination_social_title=event_value.getDestination() and event_value.getDestinationValue().getProperty(\'social_title_translated_title\') or \'\',\n
+    destination_reference=event_value.getDestination() and event_value.getDestinationValue().getReference() or \'\',\n
+    source_title=event_value.getSourceTitle() or \'\',\n
+  )\n
+  return kw\n
 \n
-response = module.newContent(portal_type=response_event_portal_type,\n
-                             source=context.getDestination(),\n
-                             destination=context.getSource(),\n
-                             resource=response_event_resource,\n
-                             title=response_event_title,\n
-                             text_content=response_event_text_content,\n
-                             start_date=response_event_start_date,\n
-                             causality_value=context,\n
-                             follow_up_list=context.getFollowUpList(),\n
-                             content_type=context.getContentType())\n
-\n
-if response_event_notification_message:\n
-  response.Event_setTextContentFromNotificationMessage(\n
-     reference=response_event_notification_message,\n
-      substitution_method_parameter_dict=dict(reply_body=context.getReplyBody(),\n
-                                              reply_subject=context.getReplySubject()))\n
-\n
-message = portal.Base_translateString(\'Response Created.\')\n
-if response_workflow_action == \'send\':\n
-  # use doActionFor to initialise workflow variable\n
-  portal.portal_workflow.doActionFor(response, \'start_action\', send_mail=True)\n
-  return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message})\n
-elif response_workflow_action == \'plan\':\n
-  response.plan()\n
-  return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message})\n
-elif response_workflow_action == \'draft\':\n
-  return response.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
-else:\n
-  raise NotImplementedError(\'Do not know what to do\')\n
+if context.hasLanguage():\n
+  with context.getPortalObject().Localizer.translationContext(context.getLanguage()):\n
+    return getSubstitutionMappingDict()\n
+return getSubstitutionMappingDict()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, response_event_notification_message=None, **kw</string> </value>
+            <value> <string>event_value, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_createResponse</string> </value>
+            <value> <string>NotificationMessage_getSubstitutionMappingDictFromEvent</string> </value>
         </item>
       </dictionary>
     </pickle>
