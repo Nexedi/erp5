@@ -888,6 +888,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                         self.getDefaultSitePreferenceId()]
       preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
       preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
+      if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+        preference.enable()
 
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration
