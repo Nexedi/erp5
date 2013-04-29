@@ -161,7 +161,7 @@ class TestCRM(BaseTestCRM):
                              title='Incoming Title',
                              description='New Desc')
       self.tic()
-      new_event = ticket.getFollowUpRelatedValueList()[0]
+      new_event, = ticket.getFollowUpRelatedValueList(portal_type=ptype)
       self.assertEquals('stopped', new_event.getSimulationState())
 
       # outgoing
@@ -170,8 +170,8 @@ class TestCRM(BaseTestCRM):
                                         title='Outgoing Title',
                                         description='New Desc')
       self.tic()
-      new_event = [event for event in ticket.getFollowUpRelatedValueList() if\
-                   event.getTitle() == 'Outgoing Title'][0]
+      new_event, = [event for event in ticket.getFollowUpRelatedValueList(portal_type=ptype) if\
+                   event.getTitle() == 'Outgoing Title']
       self.assertEquals('planned', new_event.getSimulationState())
 
   def test_Ticket_CreateRelatedEventUnauthorized(self):
