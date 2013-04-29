@@ -81,7 +81,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_default_event_path_destination</string>
+                        <string>my_default_event_path_destination_title</string>
                         <string>my_default_event_path_event_portal_type</string>
                         <string>my_default_event_path_resource_title</string>
                         <string>your_keep_draft</string>

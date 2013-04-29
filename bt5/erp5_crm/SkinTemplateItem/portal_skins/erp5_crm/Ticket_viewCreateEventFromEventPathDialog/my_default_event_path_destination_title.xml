@@ -12,13 +12,14 @@
               <list>
                 <string>editable</string>
                 <string>items</string>
+                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_event_path_destination</string> </value>
+            <value> <string>my_default_event_path_destination_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -89,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_list_field</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -118,7 +119,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Domain</string> </value>
+                    <value> <string>Recipients</string> </value>
                 </item>
               </dictionary>
             </value>
