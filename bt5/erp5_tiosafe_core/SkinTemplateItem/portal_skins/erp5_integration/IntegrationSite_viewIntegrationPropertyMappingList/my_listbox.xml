@@ -80,11 +80,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>title</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>source_reference</string>

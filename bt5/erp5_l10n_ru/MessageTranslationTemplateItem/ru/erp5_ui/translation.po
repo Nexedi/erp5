@@ -378,7 +378,7 @@ msgstr "Дата Начала"
 msgid "Beginning Date"
 msgstr "Дата Вступления в Силу"
 
-msgid "Beginning Value (without tax)"
+msgid "Beginning Value (without Tax)"
 msgstr "Начальная Стоимость (без налогов)"
 
 msgid "Being Closed"
@@ -702,7 +702,7 @@ msgstr "Контейнеры"
 msgid "Content"
 msgstr "Содержание"
 
-msgid "Content format"
+msgid "Content Format"
 msgstr "Формат"
 
 msgid "Contents"
@@ -1166,7 +1166,7 @@ msgstr "Курс"
 msgid "Exchange Type"
 msgstr "Вид Обмена"
 
-msgid "Expected disposal price"
+msgid "Expected Disposal Price"
 msgstr "Ожидаемая Реализационная Стоимость "
 
 msgid "Expected item price when completely amortised."
@@ -2594,7 +2594,7 @@ msgstr "Подчиненная Расходная Накладная"
 msgid "Related Transformation"
 msgstr "Соответствующая Трансформация"
 
-msgid "Remaining Amortisation Duration (months)"
+msgid "Remaining Amortisation Duration (Months)"
 msgstr "Срок Амортизации (месяцев)"
 
 msgid "Report"

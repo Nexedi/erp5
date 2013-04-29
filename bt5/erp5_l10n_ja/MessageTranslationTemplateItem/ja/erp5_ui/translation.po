@@ -1293,7 +1293,7 @@ msgstr "容れ物"
 msgid "Content"
 msgstr "内容"
 
-msgid "Content format"
+msgid "Content Format"
 msgstr "内容の形式"
 
 msgid "Content of the web page"

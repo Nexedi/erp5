@@ -1278,7 +1278,7 @@ msgstr "컨테이너"
 msgid "Content"
 msgstr "컨텐트"
 
-msgid "Content format"
+msgid "Content Format"
 msgstr "컨텐트 포맷"
 
 msgid "Content of the web page"
@@ -2331,7 +2331,7 @@ msgstr "스프레드시트로 보내기"
 msgid "Express"
 msgstr "익스프레스"
 
-msgid "Express After Setup Script ID"
+msgid "Express after Setup Script ID"
 msgstr "스크립트 ID를 설정한 뒤의 익스프레스"
 
 msgid "Express Configuration Status"
@@ -2703,17 +2703,11 @@ msgstr "참조 통화 대비 본 통화의 가치"
 msgid "I forgot my password!"
 msgstr "패스워드를 잊었습니다."
 
-msgid "ID"
-msgstr "ID"
-
 msgid "ID Search Key"
 msgstr "ID 검색 키"
 
 msgid "ISO code of the currency or something similar"
 msgstr "ISO 통화 코드"
-
-msgid "Id"
-msgstr "ID"
 
 msgid "Identification"
 msgstr "식별"

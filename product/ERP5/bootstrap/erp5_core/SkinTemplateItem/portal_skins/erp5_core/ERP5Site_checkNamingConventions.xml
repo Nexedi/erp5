@@ -68,13 +68,16 @@ ABBREVIATION_WORD_SET = ((\n
   "FAX", "GAP", "HTML", "IBAN", "ID", "KM", "MIME", "NVP", "ODT", "PDF",\n
   "PDM", "PO", "RAM", "RSS", "SMS", "SQL", "SVN", "TALES", "TSV", "UBM",\n
   "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "ZODB",\n
+  "DNS", "IP", "CSS", "IMAP", "XML", "GPG", "GID", "TCP", "SOAP",\n
 ))\n
 \n
 # List of words that do not need to be titlecased\n
 LOWERCASE_WORD_SET = set((\'g\', \'cm\', \'kg\', \'%\', \'/\', \'...\', \'m\', \'-\', \'g/m2\', \'iCalendar\', \'m&#179;\', \'kB\'))\n
 \n
 # List of words that should not be modified\n
-SPECIALCASE_WORD_SET = set((\'OpenOffice\', \'LibreOffice\', \'ChangeLog\', \'OAuth\', \'will\', \'included\'))\n
+SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",\n
+  "JavaScript", "LibreOffice", "OAuth", "OpenAM", "OpenOffice", "SyncML",\n
+  "TioSafe", "will"))\n
 \n
 CLOSED_CLASS_WORD_LIST = """\n
   a about above across after against aged all along alongside already although\n
@@ -203,7 +206,7 @@ for folder in context.portal_skins.objectValues(spec=(\'Folder\',)):\n
   if not folder.id.startswith(\'erp5_\'):\n
     continue\n
   for form in folder.objectValues(spec=(\'ERP5 Form\',)):\n
-    if form.pt == \'embedded_form_render\':\n
+    if form.pt in (\'embedded_form_render\', \'ical_view\', \'rss_view\'):\n
       continue\n
     message = checkTitle(\'/\'.join([folder.id, form.id]), \'Title of the Form itself\', form.title)\n
     if message:\n

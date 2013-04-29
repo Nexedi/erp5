@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_user_id</string> </value>
+                    <value> <string>User ID</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

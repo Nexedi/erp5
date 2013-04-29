@@ -78,11 +78,11 @@
                       <list>
                         <tuple>
                           <string>source_reference</string>
-                          <string>source_reference</string>
+                          <string>Source Reference</string>
                         </tuple>
                         <tuple>
                           <string>destination_reference</string>
-                          <string>destination_reference</string>
+                          <string>Destination Reference</string>
                         </tuple>
                       </list>
                     </value>

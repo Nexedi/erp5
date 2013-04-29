@@ -359,7 +359,7 @@
                       <list>
                         <tuple>
                           <string>property_id</string>
-                          <string>Id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>property_label</string>
@@ -522,7 +522,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Erasable properties</string> </value>
+                    <value> <string>Erasable Properties</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>

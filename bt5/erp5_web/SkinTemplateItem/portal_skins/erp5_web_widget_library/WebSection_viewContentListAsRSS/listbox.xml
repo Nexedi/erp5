@@ -113,27 +113,27 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>title</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>Publication Date</string>
+                          <string>pubDate</string>
                         </tuple>
                         <tuple>
                           <string>Base_getRSSAuthor</string>
-                          <string>Author</string>
+                          <string>author</string>
                         </tuple>
                         <tuple>
                           <string>link</string>
-                          <string>Link</string>
+                          <string>link</string>
                         </tuple>
                         <tuple>
                           <string>Base_getDescription</string>
-                          <string>Description</string>
+                          <string>description</string>
                         </tuple>
                         <tuple>
                           <string>link</string>
-                          <string>Guid</string>
+                          <string>guid</string>
                         </tuple>
                       </list>
                     </value>

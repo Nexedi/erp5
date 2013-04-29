@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Number of retrieved documents per activity</string> </value>
+                    <value> <string>Number of Retrieved Documents per Activity</string> </value>
                 </item>
               </dictionary>
             </value>

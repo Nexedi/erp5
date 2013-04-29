@@ -10,17 +10,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>sort</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>default_params</string>
-                <string>search</string>
                 <string>anchor</string>
+                <string>columns</string>
+                <string>default_params</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>search</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -186,7 +186,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Tcp Port Numbers</string> </value>
+                    <value> <string>TCP Port Numbers</string> </value>
                 </item>
               </dictionary>
             </value>
