@@ -51,7 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_catalog = context.getPortalObject().portal_catalog\n
-return portal_catalog.countResults(selection_domain={\'campagin_domain\': (\'portal_domains\', context.getDefaultEventPathDestination())})\n
+domain = context.getDefaultEventPathDestinationValue()\n
+return portal_catalog.countResults(\n
+  selection_domain={domain.getParentId(): (\'portal_domains\', domain.getRelativeUrl(),)})\n
 </string> </value>
         </item>
         <item>
