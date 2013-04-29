@@ -220,7 +220,7 @@ class SQLDict(SQLBase):
       validated_count = 0
       while 1:
         result = self._getMessageList(activity_tool, processing_node=-1,
-                                      to_date=now_date, processing=0,
+                                      to_date=now_date,
                                       offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
