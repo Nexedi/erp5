@@ -74,14 +74,12 @@ if dms_module is not None:\n
 if len(uids) == 1:\n
   message = Base_translateString(\'${portal_type} created successfully.\',\n
                                  mapping={\'portal_type\':document.getTranslatedPortalType()})\n
-  return context.REQUEST.RESPONSE.redirect(\n
-    \'%s/view?portal_status_message=%s\' % (document.absolute_url(), message)\n
-    )\n
+  return document.Base_redirect(keep_items=dict(portal_status_message=message))\n
+\n
 message = Base_translateString(\'${count} documents created successfully.\',\n
                                mapping={\'count\':len(uids)})\n
-return context.REQUEST.RESPONSE.redirect(\n
-  \'%s?portal_status_message=%s\' % (dms_module.absolute_url(), message)\n
-  )\n
+\n
+return context.Base_redirect(keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
