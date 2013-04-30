@@ -52,16 +52,19 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 domain = context.getDefaultEventPathDestinationValue()\n
-event_path = context.getDefaultEventPathValue(portal_type="Event Path")\n
 \n
-method_kw = {\'event_path\': event_path.getRelativeUrl(),\n
- \'keep_draft\': keep_draft}\n
-portal.portal_catalog.searchAndActivate("Entity_createEventFromDefaultEventPath",\n
-  selection_domain={domain.getParentId(): (\'portal_domains\', domain.getRelativeUrl())},\n
-  method_kw=method_kw)\n
+if domain is None:\n
+  message = \'Recipients must be defined\'\n
+else:\n
+  event_path = context.getDefaultEventPathValue(portal_type="Event Path")\n
+  method_kw = {\'event_path\': event_path.getRelativeUrl(),\n
+   \'keep_draft\': keep_draft}\n
+  portal.portal_catalog.searchAndActivate("Entity_createEventFromDefaultEventPath",\n
+    selection_domain={domain.getParentId(): (\'portal_domains\', domain.getRelativeUrl())},\n
+    method_kw=method_kw)\n
+  message = \'Events are being created in background\'\n
 \n
-return context.Base_redirect(\n
-  keep_items={\'portal_status_message\': context.Base_translateString(\'Events are being created in background\')})\n
+return context.Base_redirect(keep_items={\'portal_status_message\': context.Base_translateString(message)})\n
 </string> </value>
         </item>
         <item>

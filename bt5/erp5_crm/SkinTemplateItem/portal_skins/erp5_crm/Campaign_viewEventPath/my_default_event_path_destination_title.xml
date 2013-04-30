@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>destination</string> </value>
+                    <value> <string>default_event_path_destination</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

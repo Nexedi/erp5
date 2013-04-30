@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>base_category</string>
                 <string>editable</string>
               </list>
             </value>
@@ -71,6 +72,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>default_event_path_source</string> </value>
+                </item>
                 <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
