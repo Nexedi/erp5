@@ -674,11 +674,13 @@ class BusinessProcess(Path, XMLObject):
     update_property_method -- 
     """
     if not trade_phase:
-      trade_phase = amount.getTradePhase()
+      trade_phase = amount.getTradePhaseList()
       if not trade_phase:
         raise ValueError("%s: a trade_phase must be defined on the " \
                          "Amount or provided to getTradePhaseMovementList" %
                           amount.getRelativeUrl())
+    elif isinstance(trade_phase, basestring):
+      trade_phase = trade_phase,
 
     # Build a list of temp movements
     from Products.ERP5Type.Document import newTempSimulationMovement
