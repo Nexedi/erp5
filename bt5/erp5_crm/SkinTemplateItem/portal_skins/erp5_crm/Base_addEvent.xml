@@ -75,7 +75,6 @@ if logged_in_user_value is not None:\n
 \n
 person_relative_url = None\n
 organisation_relative_url = None\n
-follow_up = None\n
 if context.getPortalType() in portal_entity_type_list:\n
   if context.getPortalType() == \'Person\':\n
     person_relative_url = context.getRelativeUrl()\n
@@ -140,7 +139,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
