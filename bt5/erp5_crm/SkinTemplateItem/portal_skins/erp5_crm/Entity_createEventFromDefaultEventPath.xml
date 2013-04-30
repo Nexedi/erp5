@@ -53,6 +53,13 @@
             <value> <string>portal = context.getPortalObject()\n
 \n
 event_path = portal.restrictedTraverse(event_path)\n
+\n
+# Test that the event path destination predicate applies for this destination.\n
+# Also support the case where the destination is given directly as a node.\n
+event_path_destination = event_path.getDestinationValue()\n
+if not (context == event_path_destination or event_path_destination.test(context)):\n
+  return\n
+\n
 follow_up = event_path.getParentRelativeUrl()\n
 event_portal_type = event_path.getEventPortalType()\n
 resource_reference = event_path.getResourceReference()\n
