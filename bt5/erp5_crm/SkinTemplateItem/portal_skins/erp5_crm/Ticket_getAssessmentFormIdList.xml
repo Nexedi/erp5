@@ -51,15 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This script returns the list of items based on the preferred\n
-resources for events. It is intended to be used\n
-by ListField instances.\n
+This script returns the list of forms that will be used as assessment forms on tickets\n
 """\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getFormItemList():\n
-  result = []\n
+  result = [(\'\', \'\')]\n
   form_id_list = context.portal_preferences.getPreferredEventAssessmentFormIdList()\n
   for form_id in form_id_list:\n
     form = getattr(context.getPortalObject(), form_id, None)\n
@@ -68,7 +66,7 @@ def getFormItemList():\n
   return result\n
 \n
 getFormItemList = CachingMethod(getFormItemList, \n
-      id=(\'Ticket_getFormItemList\', context.Localizer.get_selected_language()), \n
+      id=(\'Ticket_getFormItemList\', context.Localizer.get_selected_language()),\n
       cache_factory=\'erp5_ui_long\')\n
                                  \n
 return getFormItemList()\n
