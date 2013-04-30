@@ -214,9 +214,9 @@ class BusinessProcess(Path, XMLObject):
     """
     if trade_phase is not None:
       if isinstance(trade_phase, basestring):
-        trade_phase = set((trade_phase,))
+        trade_phase = frozenset((trade_phase,))
       else:
-        trade_phase = set(trade_phase)
+        trade_phase = frozenset(trade_phase)
     kw.setdefault('portal_type', self.getPortalBusinessLinkTypeList())
     kw.setdefault('sort_on', 'int_index')
     original_business_link_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
@@ -231,7 +231,7 @@ class BusinessProcess(Path, XMLObject):
       if (successor is not _marker and
           business_link.getSuccessor() != successor):
         continue # Filter our business link which successor does not match
-      if trade_phase is not None and not trade_phase.intersection(
+      if trade_phase is not None and trade_phase.isdisjoint(
                                    business_link.getTradePhaseList()):
         continue # Filter our business link which trade phase does not match
       business_link_list.append(business_link)
@@ -686,7 +686,7 @@ class BusinessProcess(Path, XMLObject):
     id_index = 0
     base_id = amount.getId()
     if update_property_dict is None: update_property_dict = {}
-    filter_trade_phase = set(trade_phase).intersection
+    filter_trade_phase = frozenset(trade_phase).intersection
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
       movement = newTempSimulationMovement(trade_model_path,
