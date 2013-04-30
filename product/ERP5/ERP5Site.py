@@ -2180,7 +2180,7 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage,
+      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage, 'erp5_jquery',
                  'erp5_xhtml_style'):
         if not bt:
           continue

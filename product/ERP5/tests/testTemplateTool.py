@@ -627,8 +627,8 @@ class TestTemplateTool(ERP5TypeTestCase):
     first_group = range(0, 6)
     second_group =  range(6, 8)
     third_group = range(8, 10)
-    fourth_group = range(10, 13)
-    fifth_group = range(13, 14)
+    fourth_group = range(10, 12)
+    fifth_group = range(12, 13)
 
     expected_position_dict = dict((('erp5_property_sheets', first_group),
                                    ('erp5_core_proxy_field_legacy', first_group),
@@ -640,7 +640,6 @@ class TestTemplateTool(ERP5TypeTestCase):
                                    ('erp5_base', second_group),
                                    ('erp5_jquery', third_group),
                                    ('erp5_ingestion', third_group),
-                                   ('erp5_xhtml_jquery_style', fourth_group),
                                    ('erp5_web', fourth_group),
                                    ('erp5_crm', fourth_group),
                                    ('erp5_credential', fifth_group)))

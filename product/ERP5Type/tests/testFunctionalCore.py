@@ -42,7 +42,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
         return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_jquery', 'erp5_jquery_ui', 'erp5_xhtml_jquery_style',
+                'erp5_jquery', 'erp5_jquery_ui',
                 'erp5_knowledge_pad',
                 'erp5_pdm',
                 'erp5_simulation',
