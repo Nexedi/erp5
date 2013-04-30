@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>items</string>
                 <string>required</string>
               </list>
             </value>
@@ -62,12 +61,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -91,12 +84,6 @@
                     <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>required</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -106,19 +93,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + map(lambda x: (here.Base_translateString(x), x), here.getPortalEventTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
