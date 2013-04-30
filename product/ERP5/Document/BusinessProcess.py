@@ -686,14 +686,15 @@ class BusinessProcess(Path, XMLObject):
     id_index = 0
     base_id = amount.getId()
     if update_property_dict is None: update_property_dict = {}
+    filter_trade_phase = set(trade_phase).intersection
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
       movement = newTempSimulationMovement(trade_model_path,
         '%s_%s' % (base_id, id_index), notify_workflow=False)
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
+      trade_phase = filter_trade_phase(trade_model_path.getTradePhaseList())
       try:
-        kw['trade_phase'], = \
-          set(trade_phase).intersection(trade_model_path.getTradePhaseList())
+        kw['trade_phase'], = trade_phase
       except ValueError:
         pass
       kw.update(update_property_dict)
