@@ -51,11 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  XXX: Return list of Persons who belong to a position.\n
+  Return list of Persons that have this position in their Career.\n
 """\n
 kw[\'portal_type\'] = \'Career\'\n
 kw[\'agent_uid\'] = context.getUid()\n
-return context.portal_catalog(**kw)\n
+return [x.getParentValue() for x in context.portal_catalog(**kw)]\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +64,7 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Position_getCareerList</string> </value>
+            <value> <string>Position_getPersonList</string> </value>
         </item>
       </dictionary>
     </pickle>

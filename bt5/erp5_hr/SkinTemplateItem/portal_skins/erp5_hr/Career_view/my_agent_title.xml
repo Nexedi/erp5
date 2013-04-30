@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise_title</string> </value>
+            <value> <string>my_agent_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>specialise</string> </value>
+                    <value> <string>agent</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
