@@ -78,10 +78,8 @@ event = context.Base_addEvent(title=\'\',\n
   notification_message=resource_reference,\n
   keep_draft=keep_draft,\n
   follow_up=follow_up,\n
+  source=source,\n
   batch_mode=True)\n
-\n
-if event.getSource() is None:\n
-  event.setSource(source)\n
 </string> </value>
         </item>
         <item>

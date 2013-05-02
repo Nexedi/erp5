@@ -67,9 +67,9 @@ portal_entity_type_list = portal.getPortalEntityTypeList()\n
 logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 start_date = DateTime()\n
 \n
-person = None\n
+person = source\n
 organisation = None\n
-if logged_in_user_value is not None:\n
+if logged_in_user_value is not None and person is None:\n
   person = logged_in_user_value.getRelativeUrl()\n
   organisation = logged_in_user_value.getSubordination()\n
 \n
@@ -139,7 +139,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, source=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
