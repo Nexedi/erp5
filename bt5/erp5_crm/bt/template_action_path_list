@@ -6,6 +6,7 @@ Campaign | clone_ticket_and_event_list
 Campaign | create_event_from_event_path
 Campaign | create_new_file
 Campaign | document_list
+Campaign | jump_related_event
 Campaign | new_event
 Campaign | view
 Campaign | view_event_path
