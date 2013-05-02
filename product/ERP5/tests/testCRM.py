@@ -473,9 +473,9 @@ class TestCRM(BaseTestCRM):
       id='event_path_domain')
     person_domain = base_domain.newContent(portal_type="Domain",
       title="All Customers")
-    person_domain.setCriterionPropertyList(['portal_type', 'reference'])
+    person_domain.setCriterionPropertyList(['portal_type', 'validation_state'])
     person_domain.setCriterion('portal_type', identity=['Person'])
-    person_domain.setCriterion('reference', identity=['!= sender'])
+    person_domain.setCriterion('validation_state', identity=['validated'])
     organisation_domain = base_domain.newContent(portal_type="Domain",
       title="All Organisations")
     organisation_domain.setCriterionPropertyList(['portal_type'])
