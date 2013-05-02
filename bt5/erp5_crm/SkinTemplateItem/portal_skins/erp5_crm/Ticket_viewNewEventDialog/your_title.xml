@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>editable</string>
-                <string>required</string>
               </list>
             </value>
         </item>
@@ -83,10 +82,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewCRMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
