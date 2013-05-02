@@ -59,9 +59,6 @@
 """\n
 portal = context.getPortalObject()\n
 portal_catalog = portal.portal_catalog\n
-# The list of portal types here should be large enough to include\n
-# all portal_types defined in the various sections so that\n
-# href tags which point to a document by reference can still work.\n
 valid_portal_type_list = (\'Notification Message\',)\n
 \n
 # Find the applicable language\n
