@@ -1,0 +1,67 @@
+##############################################################################
+#
+# Copyright (c) 2002-2013 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+class TestJIO(ERP5TypeTestCase):
+  """
+  A Sample Test Class
+  """
+
+  def getTitle(self):
+    return "SampleTest"
+
+  def getBusinessTemplateList(self):
+    """
+    Tuple of Business Templates we need to install
+    """
+    return ('erp5_base',
+            'erp5_dms',
+            'erp5_jio')
+
+  def afterSetUp(self):
+    """
+    This is ran before anything, used to set the environment
+    """
+    # here, you can create the categories and objects your test will depend on
+    pass
+
+  def test_01_sampleTest(self):
+    """
+    A Sample Test
+
+    For the method to be called during the test,
+    its name must start with 'test'.
+    The '_01_' part of the name is not mandatory,
+    it just allows you to define in which order the tests are to be launched.
+    Tests methods (self.assert... and self.failIf...)
+    are defined in /usr/lib/python/unittest.py.
+    """
+    portal = self.getPortalObject()
+    portal.JIO_getClass(foo='bar')
+    self.assertEqual(0, 1)
+    
