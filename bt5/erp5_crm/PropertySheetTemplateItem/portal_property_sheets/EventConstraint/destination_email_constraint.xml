@@ -20,11 +20,14 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Recipients email must be defined</string> </value>
+            <value> <string>Recipients email must be defined\n
+\n
+\n
+python: object.getDestination() is not None and any(destination for destination in context.getDestinationValueList() if not destination.getDefaultEmailText())</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: object.getDestination() is not None and object.Event_checkIfDestinationEmailExist()</string> </value>
+            <value> <string>python: object.getDestination() is not None and any(destination for destination in context.getDestinationValueList() if not destination.getDefaultEmailText())</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
