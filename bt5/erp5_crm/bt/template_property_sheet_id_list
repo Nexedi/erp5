@@ -1,3 +1,4 @@
 DefaultEventPath
 EventPath
 EventConstraint
+MailMessageConstraint
