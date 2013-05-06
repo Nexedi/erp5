@@ -280,6 +280,7 @@ var addOnChangeEventHandler = function() {\n
                   this.onchange = function() { changed = true; };\n
                 }\n
               });\n
+              return true;\n
             });\n
           }\n
         });\n
@@ -316,6 +317,7 @@ var rewriteIndentedSelect = function() {\n
           $(this).html(text.replace(/^(&nbsp;)+/, ""));\n
           $(this).css("paddingLeft", level+"em");\n
         }\n
+        return true;
       });\n
     });\n
 };\n

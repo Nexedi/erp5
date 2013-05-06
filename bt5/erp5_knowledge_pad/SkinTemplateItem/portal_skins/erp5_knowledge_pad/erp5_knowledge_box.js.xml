@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts07964628.69</string> </value>
+            <value> <string>ts67855922.32</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -61,17 +61,17 @@ function createCustomKnowledgePadOnServer(){\n
 \n
 function showCreateDefaultKnowledgePadWarningMessage(){\n
   user_choice = confirm("In order to complete operation you must have your own tab on server instead of the default one which you are currently using and which you can not change.Is it OK to create new one for you now?");\n
-  if (user_choice==true){\n
+  if (user_choice===true){\n
     createCustomKnowledgePadOnServer();}\n
 }\n
 \n
 function createCookie(name, value, days, path) {\n
+  var expires = "";\n
   if (days){\n
     var date = new Date();\n
     date.setTime(date.getTime()+(days*24*60*60*1000));\n
-    var expires = "; expires="+date.toGMTString();}\n
-  else var expires = "";\n
-  if (!path){var path=\'/\';}\n
+    expires = "; expires="+date.toGMTString();}\n
+  if (!path){path=\'/\';}\n
   document.cookie = name+"="+value+expires+"; path="+path;\n
 }\n
 \n
@@ -96,7 +96,7 @@ function updater(url, box_relative_url, dom_id, \n
         request_params["form_id"] = value;}\n
       else if(is_list){\n
         if(typeof(request_params[name]) == "undefined"){\n
-          request_params[name] = new Array()}\n
+          request_params[name] = new Array();}\n
         request_params[name].push(value);}\n
       else{\n
         // not list input\n
@@ -162,9 +162,9 @@ function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group
                      default_pad_group: default_pad_group},\n
               dataType: "json",\n
               success:  function (data){if(data.result=="False"){window.location=return_url;}}\n
-              })},\n
+              });},\n
     timeout);\n
-};\n
+}\n
 \n
 function createDefaultPadOnServer(timeout, default_pad_group, return_url, mode){\n
   /* create default tab on server and then check if \n
@@ -193,12 +193,12 @@ function submitSynchronousGadgetPreferenceForm(\n
   /* this will add respective gadget knowledge box relative url and\n
      gadget ERP5 preference form field_prefix (so multiple gadgets can \n
      safely coexist in one HTML page with one HTML form */\n
-  redirect_url = window.location.protocol + "//" + window.location.host + window.location.pathname\n
-  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\')\n
-  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\')\n
-  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\')\n
-  $("form").append(\'<input type="hidden" name="form_id" value="\' +edit_form_id +  \'">\') \n
-  clickSaveButton(knowledge_box_edit_script_id)\n
+  redirect_url = window.location.protocol + "//" + window.location.host + window.location.pathname;\n
+  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\');\n
+  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\');\n
+  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\');\n
+  $("form").append(\'<input type="hidden" name="form_id" value="\' +edit_form_id +  \'">\') ;\n
+  clickSaveButton(knowledge_box_edit_script_id);\n
 }\n
 \n
 function submitAsynchronousGadgetPreferenceForm(\n
@@ -219,7 +219,7 @@ function submitAsynchronousGadgetPreferenceForm(\n
       type = element.attr("type");\n
       name = element.attr("name");\n
       is_checked = element.attr("checked");\n
-      value = element.val()\n
+      value = element.val();\n
       if (type == "checkbox"){\n
         if (is_checked){request_str+=name + ":boolean=True&";}\n
         else {request_str+=name + ":boolean=False&";}}\n
@@ -233,7 +233,7 @@ function submitAsynchronousGadgetPreferenceForm(\n
       element = $(this);\n
       name = element.attr("name");\n
       is_multiple = element.attr("multiple");\n
-      value = element.val()      \n
+      value = element.val();\n
       if (is_multiple){\n
         //support multifield selects in gadget edit form\n
         element.children("option").each(\n
@@ -249,14 +249,14 @@ function submitAsynchronousGadgetPreferenceForm(\n
           success: function (data){\n
                      if (data.validation_status){\n
                        // server side validation passed\n
-                       updater(view_form_url, box_relative_url, visual_block_dom_id)\n
-                       $("#" + form_dom_id).toggle()\n
+                       updater(view_form_url, box_relative_url, visual_block_dom_id);\n
+                       $("#" + form_dom_id).toggle();\n
                        // clean error messages\n
-                       $("#" + form_dom_id + " span.error").remove()\n
+                       $("#" + form_dom_id + " span.error").remove();\n
                      }\n
                      else{\n
                        // server side validation failed show error message\n
-                       $("#" + form_dom_id + " div.edit-form-content").html(data.content)\n
+                       $("#" + form_dom_id + " div.edit-form-content").html(data.content);\n
                      }\n
           } });\n
 }\n
@@ -269,7 +269,7 @@ function updateServerBoxColumnLayout(event, ui){\n
   columns.sort(function(a, b) {\n
                  var compA = $(a).attr("id").toUpperCase();\n
                  var compB = $(b).attr("id").toUpperCase();\n
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;})\n
+                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;});\n
 \n
   columns.each(function(column_index, column){\n
     column = $(this);\n
@@ -277,7 +277,7 @@ function updateServerBoxColumnLayout(event, ui){\n
     column_items = column.find("div.block");\n
     column_items.each(function(box_index, box){\n
       items_arr[box_index] = column_items[box_index].id;});           \n
-    columns_arr[column_index] = items_arr.join(\'|\') });\n
+    columns_arr[column_index] = items_arr.join(\'|\');});\n
   \n
   var layout = columns_arr.join("##");\n
   // .. and send it to server only if it\'s different\n
@@ -308,14 +308,14 @@ function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_
 function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   //  show some animation\n
-  $("#loading-wrapper").first().show()\n
+  $("#loading-wrapper").first().show();\n
   $.ajax({url: knowledge_pad_as_json_script_id, \n
           data: {pad_relative_url: pad_relative_url,\n
                  mode: mode},\n
           dataType: "json",\n
           success: handleServerSuccess});\n
   // set old pad to not selected\n
-  old_selected_pad = $("#tabs ul").children("li.tab_selected").first()\n
+  old_selected_pad = $("#tabs ul").children("li.tab_selected").first();\n
   old_selected_pad.removeClass("tab_selected");\n
   old_selected_pad.addClass("tab");\n
   \n
@@ -327,29 +327,29 @@ function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   new_selected_pad.addClass("tab_selected");\n
   \n
   // enable "settings" for this pad and hide instant switch\n
-  pad_actions = new_selected_pad.children("div.pad-actions").first()\n
-  pad_actions.show()\n
+  pad_actions = new_selected_pad.children("div.pad-actions").first();\n
+  pad_actions.show();\n
   \n
   // set new active pad\n
   active_knowledge_pad_relative_url = pad_relative_url;\n
   \n
   // update "Add Gadget" link\n
   current_url = $("#add-gadgets").attr("href");\n
-  new_url = current_url.substring(0, current_url.indexOf("active_pad_relative_url=")+24)+active_knowledge_pad_relative_url\n
+  new_url = current_url.substring(0, current_url.indexOf("active_pad_relative_url=")+24)+active_knowledge_pad_relative_url;\n
   $("#add-gadgets").attr("href", new_url);\n
   \n
   //function metadataFetchFailed(meta){}\n
   function handleServerSuccess(data){\n
-    body = data.body\n
-    javascript = data.javascript\n
-    body_element = $("#pad-body-wrapper")[0]\n
+    body = data.body;\n
+    javascript = data.javascript;\n
+    body_element = $("#pad-body-wrapper")[0];\n
     body_element.innerHTML = body;\n
     // init new Pad\n
     initialize();\n
     // execute JS code provided by server\n
     eval(javascript);\n
     // give some timeout as we can be sometimes two fast loading a tab\n
-    setTimeout("$(\'#loading-wrapper\').first().hide();", 250 );};\n
+    setTimeout("$(\'#loading-wrapper\').first().hide();", 250 );}\n
 }\n
 \n
 function addPadOnServerOnEnter(event, mode, cancel_url){\n
@@ -364,7 +364,7 @@ function addPadOnServer(mode,\n
   /* add pad on server */\n
   pad_title_value = $("#new_pad_title").first().val();\n
   window.location = add_new_knowledge_pad_script_id + "?redirect_url=" + cancel_url + "&mode=" + mode + "&pad_title=" + pad_title_value;\n
-};\n
+}\n
 \n
 function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
   /* remove pad from server*/\n
@@ -373,7 +373,7 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
   else{\n
     var user_choice = true;\n
     user_choice = confirm("Are you sure you want to remove this pad from your home?");\n
-    if (user_choice==true){\n
+    if (user_choice===true){\n
       location.href=knowledge_pad_delete_script_id + "?knowledge_pad_relative_url=" + knowledge_pad_relative_url+"&mode="+mode;} }\n
 }\n
 \n
@@ -389,8 +389,8 @@ function renameKnowledgePadToServer(){\n
     showCreateDefaultKnowledgePadWarningMessage();}\n
   else{\n
     // rename it locally and update server asynchonously\n
-    title_element = $("#"+active_knowledge_pad_title_dom_id).first()\n
-    input_element = $("#new_knowledge_pad_title")\n
+    title_element = $("#"+active_knowledge_pad_title_dom_id).first();\n
+    input_element = $("#new_knowledge_pad_title");\n
     var knowledge_pad_title = input_element.val();\n
     title_element.html(knowledge_pad_title);\n
     $.ajax({url: knowledge_pad_rename_script_id, \n
@@ -402,7 +402,7 @@ function renameKnowledgePadToServer(){\n
 \n
 function initialize(){\n
   // initialize sortable columns\n
-  if (is_knowledge_template_used==0){\n
+  if (is_knowledge_template_used===0){\n
     // allow drag and drop only if we are dealing with a pad we can modify\n
     sortable_list = $("div.portal-column");\n
     function makeSortables(index){\n
@@ -417,7 +417,7 @@ function initialize(){\n
                           containment: "document",\n
                           delay: 100,\n
                           stop: updateServerBoxColumnLayout});} }\n
-    if (sortable_list!=null) sortable_list.each(makeSortables);\n
+    if (sortable_list!==null) sortable_list.each(makeSortables);\n
   }\n
 \n
   // enable show/hide tabs\n
@@ -440,7 +440,7 @@ function initialize(){\n
  \n
   function bindGadgetHandlers(index, box){\n
     /* Bind all gadgets handlers */\n
-    box = $(this)\n
+    box = $(this);\n
     var edit = box.find("a.block-edit-form").first();\n
     var edit_form = box.find("div.edit-form").first();\n
     var remove = box.find("a.block-remove").first();   \n
@@ -452,7 +452,7 @@ function initialize(){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
         else{\n
           minimize_wrapper.toggle();\n
-          box_id = box.attr("id")\n
+          box_id = box.attr("id");\n
           js_dom_id = box_id + "_content";\n
           js_code = invisible_gadgets[js_dom_id];\n
           if (js_code!=undefined){\n
@@ -468,7 +468,7 @@ function initialize(){\n
       edit.unbind("click");\n
       edit.bind("click", function (){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
-        else{edit_form.toggle()}});}\n
+        else{edit_form.toggle();}});}\n
         \n
     if(remove){\n
       remove.unbind("click");\n
@@ -476,7 +476,7 @@ function initialize(){\n
         if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
         else{\n
           user_choice = confirm("Are you sure you want to remove this gadget from your personalized page?");\n
-          if (user_choice==true){\n
+          if (user_choice===true){\n
             box_id = box.attr("id");\n
             box.toggle();\n
             $.ajax({url: knowledge_pad_delete_box_script_id, \n
@@ -491,7 +491,7 @@ function initialize(){\n
   \n
   // for each box (gadget) add respective event handlers\n
   gadget_list = $("div.block");\n
-  if (gadget_list!=null){\n
+  if (gadget_list!==null){\n
     gadget_list.each(bindGadgetHandlers);\n
     // when dom is loaded we need to remove all gadget\'s scripts otherwise currently when a gadget is moved\n
     // its HTML is getting executed again, thus making unecessary calls to server, etc ...\n
@@ -501,8 +501,7 @@ function initialize(){\n
 }\n
 \n
 // call function after load of document\n
-$(document).ready(initialize);\n
-
+$(document).ready(initialize);
 
 ]]></string> </value>
         </item>
@@ -512,7 +511,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19261</int> </value>
+            <value> <int>19272</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

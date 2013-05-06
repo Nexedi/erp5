@@ -102,7 +102,7 @@ $().ready(function(){\n
        data: emailUid,\n
        mediaType: "json",\n
        success: function(data){\n
-         var data = jQuery.parseJSON(data);\n
+         data = jQuery.parseJSON(data);\n
          $("div.main-right fieldset.widget").hide();\n
          $("div.main-right").css("background-color", "#BBCCFF");\n
          $("div.main-right").load("EmailThread_formView", {}, function(){\n
@@ -111,12 +111,12 @@ $().ready(function(){\n
            }\n
            $("button#save-mail, button#send-mail").click(saveEmailThread);\n
            $(this).ready(function(){\n
-             (data.cc != null) ? $("textarea#cc").attr("value", data.cc) : null;\n
-             (data.bcc != null) ? $("textarea#bcc").attr("value", data.bcc) : null;\n
-             (data.to != null) ? $("textarea#to").attr("value", data.to) : null;\n
-             (data.text_content != null) ? $("textarea#text-content").attr("value", data.text_content) : null;\n
-             (data.subject != null) ? $("input#subject").attr("value", data.subject) : null;\n
-             (data.id != null) ? $("div.compose-mail-page").data("event_id", data.id) : null;\n
+             (data.cc !== null) ? $("textarea#cc").attr("value", data.cc) : null;\n
+             (data.bcc !== null) ? $("textarea#bcc").attr("value", data.bcc) : null;\n
+             (data.to !== null) ? $("textarea#to").attr("value", data.to) : null;\n
+             (data.text_content !== null) ? $("textarea#text-content").attr("value", data.text_content) : null;\n
+             (data.subject !== null) ? $("input#subject").attr("value", data.subject) : null;\n
+             (data.id !== null) ? $("div.compose-mail-page").data("event_id", data.id) : null;\n
              loadEmailFormActions();\n
            });\n
          });\n

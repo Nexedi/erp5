@@ -44,6 +44,7 @@ function callBeforeRequest(type){\n
     case 4:\n
       message = "The request is being processed ...";\n
       break;\n
+    default: break;\n
   }\n
   $("#errorpannel").hide();\n
   $("#loadingpannel").html(message).show();\n
@@ -89,14 +90,14 @@ function Edit(data){\n
                          {name : \'title\', \'value\': dataHash.title},\n
                          {name : \'request_type\', \'value\': \'update\'},\n
                          {name : \'event_id\', \'value\': $("input#event_id").attr("value")},\n
-                         {name : \'event_text_content\', \'value\': dataHash.event_text_content}]\n
+                         {name : \'event_text_content\', \'value\': dataHash.event_text_content}];\n
 \n
         $.post("Base_updateCalendarEventList", paramList, function(){\n
                 $("div#new_event_dialog").dialog("close");\n
                 $("div#showreflashbtn.fbutton").click();\n
         });\n
-      },\n
-    },\n
+      }\n
+    }\n
   });\n
   $("div#new_event_dialog").load(url, {}, function(){\n
     $("form#create_new_event").append("<input type=\'hidden\' id=\'event_id\'/>");\n
@@ -105,13 +106,13 @@ function Edit(data){\n
     $("textarea[name=\'event_text_content\']").val(data[11]);\n
     $("input[name=\'title\']").attr("value", data[1]);\n
     $("input.start_date_field[name=\'start_date_year\']").attr("value", data[2].getFullYear());\n
-    $("input.start_date_field[name=\'start_date_month\']").attr("value", (parseInt(data[2].getMonth()) + 1));\n
+    $("input.start_date_field[name=\'start_date_month\']").attr("value", (parseInt(data[2].getMonth(),10) + 1));\n
     $("input.start_date_field[name=\'start_date_day\']").attr("value", data[2].getDate());\n
     $("input.start_date_field[name=\'start_date_hour\']").attr("value", data[2].getHours());\n
     $("input.start_date_field[name=\'start_date_minute\']").attr("value", data[2].getMinutes());\n
 \n
     $("input.stop_date_field[name=\'stop_date_year\']").attr("value", data[3].getFullYear());\n
-    $("input.stop_date_field[name=\'stop_date_month\']").attr("value", (parseInt(data[3].getMonth()) + 1));\n
+    $("input.stop_date_field[name=\'stop_date_month\']").attr("value", (parseInt(data[3].getMonth(),10) + 1));\n
     $("input.stop_date_field[name=\'stop_date_day\']").attr("value", data[3].getDate());\n
     $("input.stop_date_field[name=\'stop_date_hour\']").attr("value", data[3].getHours());\n
     $("input.stop_date_field[name=\'stop_date_minute\']").attr("value", data[3].getMinutes());\n
@@ -165,7 +166,7 @@ function createFieldToInsertOnDialog(){\n
          "<option>Site Message</option>" + \n
          "<option>Visit</option>" +\n
          "<option>Web Message</option>" +\n
-         "</select></td>"\n
+         "</select></td>";\n
 }\n
 \n
 i18n.xgcalendar.content = "Title";\n
@@ -191,7 +192,7 @@ $(document).ready(function() {     \n
     quickAddUrl: DATA_FEED_URL + "?request_type=add",\n
     quickUpdateUrl: DATA_FEED_URL + "?request_type=update",\n
     quickDeleteUrl: DATA_FEED_URL + "?request_type=remove",\n
-    loadFieldOnDialog: createFieldToInsertOnDialog, \n
+    loadFieldOnDialog: createFieldToInsertOnDialog \n
   };\n
   var $dv = $("#calhead");\n
   var _MH = document.documentElement.clientHeight;\n
@@ -205,7 +206,7 @@ $(document).ready(function() {     \n
     $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
-    })\n
+    });\n
     $(this).addClass("fcurrent");\n
     var optionList = $("#gridcontainer").swtichView("day").BcalGetOp();\n
     $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
@@ -215,7 +216,7 @@ $(document).ready(function() {     \n
     $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
-    })\n
+    });\n
     $(this).addClass("fcurrent");\n
     var optionList = $("#gridcontainer").swtichView("week").BcalGetOp();\n
     $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
@@ -225,7 +226,7 @@ $(document).ready(function() {     \n
     $("div.toolbar-listview, div.event-listview").remove();\n
     $("#caltoolbar div.fcurrent").each(function() {\n
       $(this).removeClass("fcurrent");\n
-    })\n
+    });\n
     $(this).addClass("fcurrent");\n
     var optionList = $("#gridcontainer").swtichView("month").BcalGetOp();\n
     $("div#display-datetime span#text-datetime").text(optionList.datestrshow);\n
@@ -264,7 +265,7 @@ $(document).ready(function() {     \n
     autoOpen: false,\n
     height: 248,\n
     width: 410,\n
-    modal: true,\n
+    modal: true\n
   });\n
   $("#datepicker").datepicker({\n
     onSelect: function(dateText, inst){\n
@@ -278,12 +279,12 @@ $(document).ready(function() {     \n
   });\n
   $("input#submit-search").click(function(event){\n
     event.preventDefault();\n
-    if ($("input[name=\'searchable-text\']").val() == "")\n
+    if ($("input[name=\'searchable-text\']").val() === "")\n
       return false;\n
     $("div#dvCalMain.calmain div#gridcontainer").css("background", "none repeat scroll 0 0 #FFFFFF");\n
     $("div#dvwkcontaienr.wktopcontainer").remove();\n
     $("div#gridcontainer div#dvtec.scolltimeevent").remove();\n
-    if (document.getElementById("blank-result") != null){\n
+    if (document.getElementById("blank-result") !== null){\n
       $("div#blank-result").remove();\n
     }\n
     $("div#gridcontainer div.event-listview,div#gridcontainer div.toolbar-listview").remove();\n
@@ -299,7 +300,7 @@ $(document).ready(function() {     \n
     tableList.push("<table width=\'100%\' cellspacing=\'0\' cellpadding=\'2\'><tbody>");\n
     text = $("input[name=\'searchable-text\']").val();\n
     paramList = [{name: "request_type", value: "list"}];\n
-    if (text != "")\n
+    if (text !== "")\n
       paramList.push({name: "SearchableText", value: text});\n
     $.ajax({\n
            url:"Base_updateCalendarEventList",\n
@@ -341,17 +342,16 @@ $(document).ready(function() {     \n
                $("#gridcontainer").bcalendar(op).BcalGetOp();\n
              });\n
              if ($("div.event-listview tr").height() > 0){\n
-               $("div#gridcontainer").css("height", \n
+               $("div#gridcontainer").css("height",\n
                  $("div#gridcontainer table tbody tr").length*$("div.event-listview tr").height() + "px");\n
              } else {\n
-                $("div#gridcontainer")\n
-                  .css("height", "54px")\n
-                  .append("<div id=\'blank-result\'>No Results</div>");\n
+                $("div#gridcontainer").css("height", "54px").append("<div id=\'blank-result\'>No Results</div>");\n
              }\n
-           },\n
+           }\n
     });\n
     tableList.push("</tbody></table></div>");\n
     $("div#gridcontainer").append(tableList.join(""));\n
+    return true;\n
   });\n
   $("img[alt=\'calendar_logo_box\']").click(function(){\n
     window.location.reload();\n
@@ -363,14 +363,14 @@ $("div#new_event_dialog").ready(function(){\n
     title: "Create New Event",\n
     autoOpen: false,\n
     buttons: {\n
-      "Create": createNewEvent,\n
-      },\n
+      "Create": createNewEvent\n
+      }\n
   });\n
 });\n
 \n
 window.onload = function(){\n
   $("div#dvCalMain.calmain").parent().css("padding", "0 0 0 1px");\n
-}
+};
 
 ]]></string> </value>
         </item>

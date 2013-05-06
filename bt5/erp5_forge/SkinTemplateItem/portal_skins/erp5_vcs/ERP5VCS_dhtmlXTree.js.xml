@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45870562.28</string> </value>
+            <value> <string>ts68190334.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -103,7 +103,7 @@ function dhtmlXTreeObject(htmlObject,width,height,rootId){\n
  \n
 \n
  return this;\n
-};\n
+}\n
 \n
  \n
 function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHandler,mode){\n
@@ -135,21 +135,21 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  this.htmlNode.objBelong=this;\n
  return this;\n
-};\n
+}\n
 \n
  dhtmlXTreeObject.prototype._getAllParentId=function(temp, list_id)\n
 {\n
- if(!temp || !temp.parentObject || temp.parentObject.id==0) return list_id;\n
+ if(!temp || !temp.parentObject || temp.parentObject.id===0) return list_id;\n
  return this._getAllParentId(temp.parentObject, list_id+\',\'+temp.parentObject.id);\n
 }; \n
 \n
  dhtmlXTreeObject.prototype.getAllParentId=function(itemId)\n
 {\n
  var temp=this._globalIdStorageFind(itemId);\n
- if((!temp)||(!temp.parentObject)||temp.parentObject.id==0){\n
+ if((!temp)||(!temp.parentObject)||temp.parentObject.id===0){\n
    return "";\n
  }else{\n
-   list_id = this._getAllParentId(temp.parentObject, temp.parentObject.id)\n
+   list_id = this._getAllParentId(temp.parentObject, temp.parentObject.id);\n
    return list_id.substring(0, list_id.length);\n
  }\n
 };\n
@@ -163,7 +163,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 };\n
  \n
  dhtmlXTreeObject.prototype._globalIdStorageSub=function(itemId){\n
- for(var i=0;i<this._globalIdStorageSize;i++)\n
+ for(var i=0;i<this._globalIdStorageSize;i++){\n
  if(this._globalIdStorage[i]==itemId)\n
 {\n
  this._globalIdStorage[i]=this._globalIdStorage[this._globalIdStorageSize-1];\n
@@ -172,17 +172,18 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  this._globalIdStorage[this._globalIdStorageSize]=0;\n
  this.globalNodeStorage[this._globalIdStorageSize]=0;\n
 }\n
+}\n
 };\n
  \n
  \n
  dhtmlXTreeObject.prototype._globalIdStorageFind=function(itemId,skipXMLSearch,skipParsing){\n
  \n
- for(var i=0;i<this._globalIdStorageSize;i++)\n
+ for(var i=0;i<this._globalIdStorageSize;i++){\n
  if(this._globalIdStorage[i]==itemId)\n
 {\n
  return this.globalNodeStorage[i];\n
 }\n
- \n
+}\n
  \n
  return null;\n
 };\n
@@ -217,7 +218,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  dhtmlXTreeObject.prototype._attachChildNode=function(parentObject,itemId,itemText,itemActionHandler,image1,image2,image3,optionStr,childs,beforeNode){\n
  if(beforeNode)parentObject=beforeNode.parentObject;\n
- if(((parentObject.XMLload==0)&&(this.XMLsource))&&(!this.XMLloadingWarning))\n
+ if(((parentObject.XMLload===0)&&(this.XMLsource))&&(!this.XMLloadingWarning))\n
 {\n
  parentObject.XMLload=1;this.loadXML(this.XMLsource+getUrlSymbol(this.XMLsource)+"itemId="+escape(parentObject.id));\n
 }\n
@@ -228,12 +229,13 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  if(beforeNode)\n
 {\n
  var ik,jk;\n
- for(ik=0;ik<Count;ik++)\n
+ for(ik=0;ik<Count;ik++){\n
  if(Nodes[ik]==beforeNode)\n
 {\n
  for(jk=Count;jk!=ik;jk--)\n
  Nodes[1+jk]=Nodes[jk];\n
  break;\n
+}\n
 }\n
  ik++;\n
  Count=ik;\n
@@ -252,9 +254,10 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  Nodes[ik+Count]=Nodes[ik+Count-1];\n
  Count=0;\n
  break;\n
+ default: break;\n
 }\n
-};\n
-};\n
+}\n
+}\n
 \n
  Nodes[Count]=new dhtmlXTreeItemObject(itemId,itemText,parentObject,this,itemActionHandler,1);\n
 \n
@@ -281,18 +284,18 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 \n
  if((beforeNode)&&(!beforeNode.span))beforeNode=null;\n
  \n
- if(this.XMLsource)if((childs)&&(childs!=0))Nodes[Count].XMLload=0;else Nodes[Count].XMLload=1;\n
+ if(this.XMLsource){if((childs)&&(childs!==0))Nodes[Count].XMLload=0;else Nodes[Count].XMLload=1;}\n
 \n
  Nodes[Count].tr=tr;\n
  tr.nodem=Nodes[Count];\n
 \n
- if(parentObject.itemId==0)\n
+ if(parentObject.itemId===0)\n
  tr.childNodes[0].className="hitemIddenRow";\n
  \n
  if(optionStr){\n
- var tempStr=optionStr.split(",");\n
+   tempStr=optionStr.split(",");\n
  \n
- for(var i=0;i<tempStr.length;i++)\n
+ for(i=0;i<tempStr.length;i++)\n
 {\n
  switch(tempStr[i])\n
 {\n
@@ -309,9 +312,10 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  this._setCheck(Nodes[Count],"notsure");\n
  break;\n
  case "OPEN": Nodes[Count].openMe=1;break;\n
+ default: break;\n
 }\n
-};\n
-};\n
+}\n
+}\n
 \n
  if(!this.XMLloadingWarning)\n
 {\n
@@ -382,7 +386,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  var aColor=nodx.getAttribute("aCol");\n
  //var sColor=nodx.getAttribute("sCol");\n
- var sColor=aColor\n
+ var sColor=aColor;\n
  \n
  var chd=nodx.getAttribute("child");\n
 \n
@@ -432,15 +436,16 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 }\n
  else{\n
  if(node.childNodes[i].childNodes.length>0){\n
- for(var a=0;a<node.childNodes[i].childNodes.length;a++)\n
+ for(var a=0;a<node.childNodes[i].childNodes.length;a++){\n
  if(node.childNodes[i].childNodes[a].tagName=="item"){\n
  newNode.unParsed=node.childNodes[i];\n
  break;\n
 }\n
 }\n
 }\n
+}\n
  \n
- if(zcall!="")nodeAskingCall=zcall;\n
+ if(zcall!=="")nodeAskingCall=zcall;\n
  \n
 }\n
  else dhtmlObject._parseXMLTree(dhtmlObject,node.childNodes[i],cId,1);\n
@@ -448,13 +453,13 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  else\n
  if((node.childNodes[i].nodeType==1)&&(node.childNodes[i].tagName == "userdata"))\n
 {\n
- var name=node.childNodes[i].getAttribute("name");\n
+ name=node.childNodes[i].getAttribute("name");\n
  if((name)&&(node.childNodes[i].childNodes[0])){\n
  if((!dhtmlObject.waitUpdateXML)||(dhtmlObject.waitUpdateXML.toString().search(","+parentId+",")!=-1))\n
  dhtmlObject.setUserData(parentId,name,node.childNodes[i].childNodes[0].data);\n
-};\n
-};\n
-};\n
+}\n
+}\n
+}\n
 \n
  if(!level){\n
  if(dhtmlObject.waitUpdateXML)\n
@@ -462,7 +467,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  else{\n
  \n
  var parsedNodeTop=dhtmlObject._globalIdStorageFind(dhtmlObject.parsingOn);\n
- for(var i=0;i<dhtmlObject.parsedArray.length;i++)\n
+ for(i=0;i<dhtmlObject.parsedArray.length;i++)\n
  parsedNodeTop.htmlNode.childNodes[0].appendChild(dhtmlObject.parsedArray[i]);\n
  dhtmlObject.parsingOn=0;\n
 \n
@@ -470,11 +475,12 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 \n
  dhtmlObject.XMLloadingWarning=0;\n
  var chArr=dhtmlObject.setCheckList.split(",");\n
- for(var n=0;n<chArr.length;n++)\n
+ for(var n=0;n<chArr.length;n++){\n
  if(chArr[n])dhtmlObject.setCheck(chArr[n],1);\n
+ }\n
  dhtmlObject._redrawFrom(dhtmlObject);\n
 \n
- if(nodeAskingCall!="")dhtmlObject.selectItem(nodeAskingCall,true);\n
+ if(nodeAskingCall!=="")dhtmlObject.selectItem(nodeAskingCall,true);\n
  if(dhtmlObject.waitCall)dhtmlObject.waitCall();\n
 }\n
 }\n
@@ -513,7 +519,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  dhtmlObject._redrawFrom(dhtmlObject,tempx.childNodes[i]);\n
  \n
- if(this.childCalc!=null){\n
+ if(this.childCalc!==null){\n
  \n
  if((tempx.childNodes[i].unParsed)||((!tempx.childNodes[i].XMLload)&&(this.XMLsource)))\n
 {\n
@@ -543,7 +549,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 }\n
  if(this.childCalc==4)\n
 {\n
- var zCount=tempx.childNodes[i]._acc;\n
+ zCount=tempx.childNodes[i]._acc;\n
  if(zCount)\n
  tempx.childNodes[i].span.innerHTML=tempx.childNodes[i].label+this.htmlcA+zCount+this.htmlcB;\n
 }\n
@@ -562,12 +568,13 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  \n
  \n
-};\n
+}\n
  \n
  if((!tempx.unParsed)&&((tempx.XMLload)||(!this.XMLsource)))\n
  tempx._acc=acc;\n
  dhtmlObject._correctLine(tempx);\n
  dhtmlObject._correctPlus(tempx);\n
+ return "";\n
 };\n
 \n
  \n
@@ -597,7 +604,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  \n
  dhtmlXTreeObject.prototype._correctPlus=function(itemObject){\n
  \n
- var workArray=this.lineArray;\n
+ workArray=this.lineArray;\n
  if((this.XMLsource)&&(!itemObject.XMLload))\n
 {\n
  var workArray=this.plusArray;\n
@@ -608,12 +615,12 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
 {\n
  if((itemObject.htmlNode.childNodes[0].childNodes[1])&&(itemObject.htmlNode.childNodes[0].childNodes[1].style.display!="none"))\n
 {\n
- if(!itemObject.wsign)var workArray=this.minusArray;\n
+ if(!itemObject.wsign)workArray=this.minusArray;\n
  itemObject.htmlNode.childNodes[0].childNodes[0].childNodes[2].childNodes[0].src=this.imPath+itemObject.images[1];\n
 }\n
  else\n
 {\n
- if(!itemObject.wsign)var workArray=this.plusArray;\n
+ if(!itemObject.wsign)workArray=this.plusArray;\n
  itemObject.htmlNode.childNodes[0].childNodes[0].childNodes[2].childNodes[0].src=this.imPath+itemObject.images[2];\n
 }\n
 }\n
@@ -635,8 +642,8 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  dhtmlXTreeObject.prototype._correctLine=function(itemObject){\n
  var sNode=itemObject.parentObject;\n
  try{\n
- if(sNode)\n
- if((this._getLineStatus(itemObject.id,sNode)==0)||(!this.treeLinesOn))\n
+ if(sNode){\n
+ if((this._getLineStatus(itemObject.id,sNode)===0)||(!this.treeLinesOn))\n
 {\n
  for(var i=1;i<=itemObject.childsCount;i++)\n
 {\n
@@ -644,35 +651,37 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  itemObject.htmlNode.childNodes[0].childNodes[i].childNodes[0].style.backgroundRepeat="";\n
 }\n
 }\n
- else\n
- for(var i=1;i<=itemObject.childsCount;i++)\n
+}\n
+ else{\n
+ for(i=1;i<=itemObject.childsCount;i++)\n
 {\n
  itemObject.htmlNode.childNodes[0].childNodes[i].childNodes[0].style.backgroundImage="url("+this.imPath+"line1.gif)";\n
  itemObject.htmlNode.childNodes[0].childNodes[i].childNodes[0].style.backgroundRepeat="repeat-y";\n
 }\n
 }\n
- catch(e){};\n
+}\n
+ catch(e){}\n
 };\n
  \n
  dhtmlXTreeObject.prototype._getCountStatus=function(itemId,itemObject){\n
  try{\n
  if(itemObject.childsCount<=1){if(itemObject.id==this.rootId)return 4;else return 0;}\n
  \n
- if(itemObject.htmlNode.childNodes[0].childNodes[1].nodem.id==itemId)if(!itemObject.id)return 2;else return 1;\n
+ if(itemObject.htmlNode.childNodes[0].childNodes[1].nodem.id==itemId){if(!itemObject.id)return 2;else return 1;}\n
  if(itemObject.htmlNode.childNodes[0].childNodes[itemObject.childsCount].nodem.id==itemId)return 0;\n
 }\n
- catch(e){};\n
+ catch(e){}\n
  return 1;\n
 };\n
  \n
  dhtmlXTreeObject.prototype._getLineStatus =function(itemId,itemObject){\n
  if(itemObject.htmlNode.childNodes[0].childNodes[itemObject.childsCount].nodem.id==itemId)return 0;\n
  return 1;\n
-}\n
+};\n
 \n
  \n
  dhtmlXTreeObject.prototype._HideShow=function(itemObject,mode){\n
- if((this.XMLsource)&&(!itemObject.XMLload)){itemObject.XMLload=1;this.loadXML(this.XMLsource+getUrlSymbol(this.XMLsource)+"id="+escape(itemObject.id));return;};\n
+ if((this.XMLsource)&&(!itemObject.XMLload)){itemObject.XMLload=1;this.loadXML(this.XMLsource+getUrlSymbol(this.XMLsource)+"id="+escape(itemObject.id));return;}\n
 \n
  var Nodes=itemObject.htmlNode.childNodes[0].childNodes;var Count=Nodes.length;\n
  if(Count>1){\n
@@ -688,33 +697,35 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  Nodes[i].style.display=nodestyle;\n
 }\n
  this._correctPlus(itemObject);\n
-}\n
+};\n
  \n
  dhtmlXTreeObject.prototype._getOpenState=function(itemObject){\n
- if(!itemObject)return;\n
+ if(!itemObject)return -1;\n
  var z=itemObject.htmlNode.childNodes[0].childNodes;\n
  if(z.length<=1)return 0;\n
  if(z[1].style.display!="none")return 1;\n
- else return -1;\n
-}\n
+ return -1;\n
+};\n
 \n
 \n
  \n
  \n
  dhtmlXTreeObject.prototype.onRowClick2=function(){\n
- if(this.parentObject.treeNod.dblclickFuncHandler)if(!this.parentObject.treeNod.dblclickFuncHandler(this.parentObject.id))return 0;\n
+ if(this.parentObject.treeNod.dblclickFuncHandler){if(!this.parentObject.treeNod.dblclickFuncHandler(this.parentObject.id))return 0;}\n
  if((this.parentObject.closeble)&&(this.parentObject.closeble!="0"))\n
  this.parentObject.treeNod._HideShow(this.parentObject);\n
  else\n
  this.parentObject.treeNod._HideShow(this.parentObject,2);\n
+ return -1;\n
 };\n
  \n
  dhtmlXTreeObject.prototype.onRowClick=function(){\n
- if(this.parentObject.treeNod.openFuncHandler)if(!this.parentObject.treeNod.openFuncHandler(this.parentObject.id,this.parentObject.treeNod._getOpenState(this.parentObject)))return 0;\n
+ if(this.parentObject.treeNod.openFuncHandler){if(!this.parentObject.treeNod.openFuncHandler(this.parentObject.id,this.parentObject.treeNod._getOpenState(this.parentObject)))return 0;}\n
  if((this.parentObject.closeble)&&(this.parentObject.closeble!="0"))\n
  this.parentObject.treeNod._HideShow(this.parentObject);\n
  else\n
  this.parentObject.treeNod._HideShow(this.parentObject,2);\n
+ return -1;\n
 };\n
 \n
 \n
@@ -722,6 +733,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  dhtmlXTreeObject.prototype.onRowClickDown=function(){\n
  var that=this.parentObject.treeNod;\n
  that._selectItem(this.parentObject);\n
+ return;\n
 };\n
  \n
  dhtmlXTreeObject.prototype._selectItem=function(node){\n
@@ -731,11 +743,11 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  var z=node.htmlNode.childNodes[0].childNodes[0].childNodes[3].childNodes[0];\n
  z.className="selectedTreeRow";\n
  this.lastSelected=z.parentNode;\n
-}\n
+};\n
  \n
  dhtmlXTreeObject.prototype._unselectItem=function(node){\n
  node.htmlNode.childNodes[0].childNodes[0].childNodes[3].childNodes[0].className="standartTreeRow";\n
-}\n
+};\n
  \n
  dhtmlXTreeObject.prototype.onRowSelect=function(e,htmlObject,mode){\n
  \n
@@ -746,7 +758,7 @@ function dhtmlXTreeItemObject(itemId,itemText,parentObject,treeObject,actionHand
  if(htmlObject.parentObject.scolor)htmlObject.parentObject.span.style.color=htmlObject.parentObject.scolor;\n
  if((htmlObject.parentObject.treeNod.lastSelected)&&(htmlObject.parentObject.treeNod.lastSelected!=htmlObject))\n
 {\n
- var lastId=htmlObject.parentObject.treeNod.lastSelected.parentObject.id;\n
+ lastId=htmlObject.parentObject.treeNod.lastSelected.parentObject.id;\n
  htmlObject.parentObject.treeNod.lastSelected.parentObject.span.className="standartTreeRow";\n
  if(htmlObject.parentObject.treeNod.lastSelected.parentObject.acolor)htmlObject.parentObject.treeNod.lastSelected.parentObject.span.style.color=htmlObject.parentObject.treeNod.lastSelected.parentObject.acolor;\n
 }\n
@@ -773,26 +785,27 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  var act=dhtmlObject.htmlNode.childNodes[0].childNodes;\n
  var flag1=0;var flag2=0;\n
  if(act.length<2)return;\n
- for(var i=1;i<act.length;i++)\n
- if(act[i].nodem.checkstate==0)flag1=1;\n
+ for(var i=1;i<act.length;i++){\n
+ if(act[i].nodem.checkstate===0)flag1=1;\n
  else if(act[i].nodem.checkstate==1)flag2=1;\n
- else{flag1=1;flag2=1;break;}\n
+ else{flag1=1;flag2=1;break;}}\n
 \n
  if((flag1)&&(flag2))this._setCheck(dhtmlObject,"notsure");\n
  else if(flag1)this._setCheck(dhtmlObject,false);\n
  else this._setCheck(dhtmlObject,true);\n
  \n
  this._correctCheckStates(dhtmlObject.parentObject);\n
-}\n
+};\n
 \n
  \n
  dhtmlXTreeObject.prototype.onCheckBoxClick=function(e){\n
- if(this.treeNod.tscheck)\n
+ if(this.treeNod.tscheck){\n
  if(this.parentObject.checkstate==1)this.treeNod._setSubChecked(false,this.parentObject);\n
  else this.treeNod._setSubChecked(true,this.parentObject);\n
- else\n
+ }\n
+ else{\n
  if(this.parentObject.checkstate==1)this.treeNod._setCheck(this.parentObject,false);\n
- else this.treeNod._setCheck(this.parentObject,true);\n
+ else this.treeNod._setCheck(this.parentObject,true);}\n
  this.treeNod._correctCheckStates(this.parentObject.parentObject);\n
  if(this.treeNod.checkFuncHandler)return(this.treeNod.checkFuncHandler(this.parentObject.id,this.parentObject.checkstate));\n
  else return true;\n
@@ -922,6 +935,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  var temp=this._globalIdStorageFind(itemId);\n
  if(!temp)return 0;\n
  this._xopenAll(temp);\n
+ return -1;\n
 };\n
  \n
  \n
@@ -937,32 +951,35 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  var temp=this._globalIdStorageFind(itemId);\n
  if(!temp)return 0;\n
  this._xcloseAll(temp);\n
+ return -1;\n
 };\n
  \n
  \n
  \n
  dhtmlXTreeObject.prototype.setUserData=function(itemId,name,value){\n
  var sNode=this._globalIdStorageFind(itemId);\n
- if(!sNode)return;\n
+ if(!sNode)return -1;\n
  if(name=="hint")sNode.htmlNode.childNodes[0].childNodes[0].title=value;\n
  sNode.userData["t_"+name]=value;\n
  if(!sNode._userdatalist)sNode._userdatalist=name;\n
  else sNode._userdatalist+=","+name;\n
+ return -1;\n
 };\n
  \n
  \n
  dhtmlXTreeObject.prototype.getUserData=function(itemId,name){\n
  var sNode=this._globalIdStorageFind(itemId);\n
- if(!sNode)return;\n
+ if(!sNode)return -1;\n
  return sNode.userData["t_"+name];\n
 };\n
 \n
  \n
  dhtmlXTreeObject.prototype.getSelectedItemId=function()\n
 {\n
- if(this.lastSelected)\n
+ if(this.lastSelected){\n
  if(this._globalIdStorageFind(this.lastSelected.parentObject.id))\n
  return this.lastSelected.parentObject.id;\n
+ }\n
  return("");\n
 };\n
  \n
@@ -981,10 +998,11 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  \n
  dhtmlXTreeObject.prototype.setItemColor=function(itemId,defaultColor,selectedColor)\n
 {\n
+ var temp= "";\n
  if((itemId)&&(itemId.span))\n
- var temp=itemId;\n
+ temp=itemId;\n
  else\n
- var temp=this._globalIdStorageFind(itemId);\n
+ temp=this._globalIdStorageFind(itemId);\n
  if(!temp)return 0;\n
  else{\n
  if((this.lastSelected)&&(temp.tr==this.lastSelected.parentObject.tr))\n
@@ -995,6 +1013,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  if(selectedColor)temp.scolor=selectedColor;\n
  if(defaultColor)temp.acolor=defaultColor;\n
 }\n
+ return -1;\n
 };\n
 \n
  \n
@@ -1032,11 +1051,13 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  if(!temp)return 0;\n
  temp.id=newItemId;\n
  temp.span.contextMenuId=newItemId;\n
- for(var i=0;i<this._globalIdStorageSize;i++)\n
+ for(var i=0;i<this._globalIdStorageSize;i++){\n
  if(this._globalIdStorage[i]==itemId)\n
 {\n
  this._globalIdStorage[i]=newItemId;\n
 }\n
+}\n
+return -1;\n
 };\n
 \n
  \n
@@ -1064,6 +1085,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  this._moveNode(temp,this.nodeCut.parentObject);\n
  this.clearCut();\n
 }\n
+return -1;\n
 };\n
  \n
  \n
@@ -1095,7 +1117,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  while(true){\n
  z=this._getPrevNode(z);\n
  if((z==-1)){z=this.htmlNode;break;}\n
- if((z.tr.style.display=="")||(!z.parentObject))break;\n
+ if((z.tr.style.display==="")||(!z.parentObject))break;\n
  \n
  \n
 }\n
@@ -1109,13 +1131,13 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
  while(true){\n
  z=this._getNextNode(z);\n
  if((z==-1)){z=this.htmlNode;break;}\n
- if((z.tr.style.display=="")||(!z.parentObject))break;\n
+ if((z.tr.style.display==="")||(!z.parentObject))break;\n
  \n
  \n
 }\n
 \n
- var nodeB=z;\n
- var nodeA=targetObject;\n
+ nodeB=z;\n
+ nodeA=targetObject;\n
 }\n
 \n
 \n
@@ -1136,7 +1158,7 @@ dhtmlXTreeObject.prototype._correctCheckStates=function(dhtmlObject){\n
 }\n
  else return this._moveNodeTo(itemObject,targetObject);\n
  \n
-}\n
+};\n
 \n
  \n
 \n
@@ -1146,11 +1168,11 @@ dhtmlXTreeObject.prototype._fixNodesCollection=function(target,zParent){\n
  var Count=target.childsCount-1;\n
  \n
  if(zParent==Nodes[Count])return;\n
- for(var i=0;i<Count;i++)\n
+ for(var i=0;i<Count;i++){\n
  if(Nodes[i]==Nodes[Count]){Nodes[i]=Nodes[i+1];Nodes[i+1]=Nodes[Count];}\n
-\n
+ }\n
  \n
- for(var i=0;i<Count+1;i++)\n
+ for(i=0;i<Count+1;i++)\n
 {\n
  if(flag){\n
  var temp=Nodes[i];\n
@@ -1165,14 +1187,14 @@ dhtmlXTreeObject.prototype._fixNodesCollection=function(target,zParent){\n
 \n
  \n
  dhtmlXTreeObject.prototype._moveNodeTo=function(itemObject,targetObject,beforeNode){\n
- \n
+ var framesMove;\n
  if(targetObject.mytype)\n
- var framesMove=(itemObject.treeNod.lWin!=targetObject.lWin);\n
+ framesMove=(itemObject.treeNod.lWin!=targetObject.lWin);\n
  else\n
- var framesMove=(itemObject.treeNod.lWin!=targetObject.treeNod.lWin);\n
+ framesMove=(itemObject.treeNod.lWin!=targetObject.treeNod.lWin);\n
 \n
- if(this.dragFunc)if(!this.dragFunc(itemObject.id,targetObject.id,(beforeNode?beforeNode.id:null),itemObject.treeNod,targetObject.treeNod))return false;\n
- if((targetObject.XMLload==0)&&(this.XMLsource))\n
+ if(this.dragFunc){if(!this.dragFunc(itemObject.id,targetObject.id,(beforeNode?beforeNode.id:null),itemObject.treeNod,targetObject.treeNod))return false;}\n
+ if((targetObject.XMLload===0)&&(this.XMLsource))\n
 {\n
  targetObject.XMLload=1;this.loadXML(this.XMLsource+getUrlSymbol(this.XMLsource)+"id="+escape(targetObject.id));\n
 }\n
@@ -1227,7 +1249,7 @@ dhtmlXTreeObject.prototype._fixNodesCollection=function(target,zParent){\n
  tr.nodem=itemObject;\n
  itemObject.parentObject=targetObject;\n
  \n
- if(oldTree!=targetObject.treeNod){if(itemObject.treeNod._registerBranch(itemObject,oldTree))return;this._clearStyles(itemObject);this._redrawFrom(this,itemObject.parentObject);};\n
+ if(oldTree!=targetObject.treeNod){if(itemObject.treeNod._registerBranch(itemObject,oldTree))return -1;this._clearStyles(itemObject);this._redrawFrom(this,itemObject.parentObject);}\n
  \n
  this._correctPlus(targetObject);\n
  this._correctLine(targetObject);\n
@@ -1340,13 +1362,14 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  \n
  dhtmlXTreeObject.prototype.enableTreeLines=function(mode){\n
  this.treeLinesOn=convertStringToBoolean(mode);\n
-}\n
+};\n
 \n
  \n
  dhtmlXTreeObject.prototype.setImageArrays=function(arrayName,image1,image2,image3,image4,image5){\n
  switch(arrayName){\n
  case "plus": this.plusArray[0]=image1;this.plusArray[1]=image2;this.plusArray[2]=image3;this.plusArray[3]=image4;this.plusArray[4]=image5;break;\n
  case "minus": this.minusArray[0]=image1;this.minusArray[1]=image2;this.minusArray[2]=image3;this.minusArray[3]=image4;this.minusArray[4]=image5;break;\n
+ default: break;\n
 }\n
 };\n
 \n
@@ -1371,6 +1394,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  if(!temp)return 0;\n
  if(temp.closeble)\n
  this._HideShow(temp,1);\n
+ return -1;\n
 };\n
  \n
  \n
@@ -1410,13 +1434,15 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  \n
  dhtmlXTreeObject.prototype.setItemCloseable=function(itemId,flag)\n
 {\n
+ var temp;\n
  flag=convertStringToBoolean(flag);\n
  if((itemId)&&(itemId.span))\n
- var temp=itemId;\n
+   temp=itemId;\n
  else \n
- var temp=this._globalIdStorageFind(itemId);\n
+   temp=this._globalIdStorageFind(itemId);\n
  if(!temp)return 0;\n
  temp.closeble=flag;\n
+ return -1;\n
 };\n
  \n
  \n
@@ -1434,7 +1460,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  if((this.XMLsource)&&(!temp.XMLload))return true;\n
  else \n
  return temp.childsCount;\n
-};\n
+}\n
 };\n
  \n
 \n
@@ -1448,6 +1474,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  temp.label=newLabel;\n
  temp.span.innerHTML=newLabel;\n
  temp.span.parentNode.title=newTooltip||"";\n
+ return -1;\n
 };\n
  \n
  dhtmlXTreeObject.prototype.refreshItem=function(itemId){\n
@@ -1465,6 +1492,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  temp.images[2]=image3;\n
  temp.images[0]=image1;\n
  this._correctPlus(temp);\n
+ return -1;\n
 };\n
  \n
  dhtmlXTreeObject.prototype.setItemImage=function(itemId,image1,image2)\n
@@ -1478,6 +1506,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
 }\n
  else temp.images[0]=image1;\n
  this._correctPlus(temp);\n
+ return -1;\n
 };\n
  \n
  \n
@@ -1488,15 +1517,15 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  if(!temp)return 0;\n
 \n
  var z="";\n
- for(i=0;i<temp.childsCount;i++)\n
+ for(i=0;i<temp.childsCount;i++){\n
  if(!z)z=temp.childNodes[i].id;\n
- else z+=","+temp.childNodes[i].id;\n
+ else z+=","+temp.childNodes[i].id;}\n
  return z;\n
 };\n
  \n
  dhtmlXTreeObject.prototype.getAllSubItems =function(itemId){\n
  return this._getAllSubItems(itemId);\n
-}\n
+};\n
  \n
  \n
  dhtmlXTreeObject.prototype._getAllSubItems =function(itemId,z,node)\n
@@ -1504,7 +1533,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  if(node)temp=node;\n
  else{\n
  var temp=this._globalIdStorageFind(itemId);\n
-};\n
+}\n
  if(!temp)return 0;\n
  \n
  z="";\n
@@ -1512,7 +1541,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
 {\n
  if(!z)z=temp.childNodes[i].id;\n
  else z+=","+temp.childNodes[i].id;\n
- var zb=this._getAllSubItems(0,z,temp.childNodes[i])\n
+ var zb=this._getAllSubItems(0,z,temp.childNodes[i]);\n
  if(zb)z+=","+zb;\n
 }\n
  return z;\n
@@ -1532,6 +1561,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  this.onRowSelect(0,temp.htmlNode.childNodes[0].childNodes[0].childNodes[3],false);\n
  else\n
  this.onRowSelect(0,temp.htmlNode.childNodes[0].childNodes[0].childNodes[3],true);\n
+ return -1;\n
 };\n
  \n
  \n
@@ -1551,8 +1581,8 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  Count--;\n
  for(var i=0;i<Count;i++)\n
 {\n
- if(Nodes[i]==0){Nodes[i]=Nodes[i+1];Nodes[i+1]=0;}\n
-};\n
+ if(Nodes[i]===0){Nodes[i]=Nodes[i+1];Nodes[i+1]=0;}\n
+}\n
 };\n
  \n
  dhtmlXTreeObject.prototype._deleteNode=function(itemId,htmlObject,skip){\n
@@ -1591,6 +1621,7 @@ dhtmlXTreeObject.prototype._checkParenNodes=function(itemId,htmlObject,shtmlObje
  this._correctLine(tempos2);\n
 }\n
  if(this.tscheck)this._correctCheckStates(sN);\n
+ return -1;\n
 };\n
  \n
  dhtmlXTreeObject.prototype.setCheck=function(itemId,state){\n
@@ -1618,7 +1649,7 @@ dhtmlXTreeObject.prototype.setSubChecked=function(itemId,state){\n
  var sNode=this._globalIdStorageFind(itemId);\n
  this._setSubChecked(state,sNode);\n
  this._correctCheckStates(sNode.parentObject);\n
-}\n
+};\n
 \n
  \n
 dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
@@ -1631,31 +1662,32 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
  this._setSubCheckedXML(state,tag);\n
 }\n
 }\n
-}\n
+};\n
 \n
 \n
  \n
  dhtmlXTreeObject.prototype._setSubChecked=function(state,sNode){\n
  state=convertStringToBoolean(state);\n
- if(!sNode)return;\n
+ if(!sNode)return -1;\n
  if(sNode.unParsed)\n
- this._setSubCheckedXML(state,sNode.unParsed)\n
+ this._setSubCheckedXML(state,sNode.unParsed);\n
  for(var i=0;i<sNode.childsCount;i++)\n
 {\n
  this._setSubChecked(state,sNode.childNodes[i]);\n
-};\n
+}\n
  var z=sNode.htmlNode.childNodes[0].childNodes[0].childNodes[1].childNodes[0];\n
  \n
  if(state)sNode.checkstate=1;\n
  else sNode.checkstate=0;\n
 \n
  z.src=this.imPath+this.checkArray[sNode.checkstate];\n
+ return -1;\n
 };\n
 \n
  \n
  dhtmlXTreeObject.prototype.isItemChecked=function(itemId){\n
  var sNode=this._globalIdStorageFind(itemId);\n
- if(!sNode)return;\n
+ if(!sNode)return -1;\n
  return sNode.checkstate;\n
 };\n
 \n
@@ -1666,26 +1698,27 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
  \n
  dhtmlXTreeObject.prototype.getAllChecked=function(){\n
  return this._getAllChecked("","",1);\n
-}\n
+};\n
 \n
  dhtmlXTreeObject.prototype.getAllPartiallyChecked=function(){\n
  return this._getAllPartiallyChecked("","",1);\n
-}\n
+};\n
 \n
  dhtmlXTreeObject.prototype.getAllCheckedBranches=function(){\n
  return this._getAllChecked("","",0);\n
-}\n
+};\n
  \n
  \n
  dhtmlXTreeObject.prototype._getAllChecked=function(htmlNode,list,mode){\n
  if(!htmlNode)htmlNode=this.htmlNode;\n
- if(((mode)&&(htmlNode.checkstate==1))||((!mode)&&(htmlNode.checkstate>0)))\n
+ if(((mode)&&(htmlNode.checkstate==1))||((!mode)&&(htmlNode.checkstate>0))){\n
  if(!htmlNode.nocheckbox){if(list)list+=","+htmlNode.id;else list=htmlNode.id;}\n
+ }\n
  var j=htmlNode.childsCount;\n
  for(var i=0;i<j;i++)\n
 {\n
  list=this._getAllChecked(htmlNode.childNodes[i],list,mode);\n
-};\n
+}\n
  if(htmlNode.unParsed)\n
  list=this._getAllCheckedXML(htmlNode.unParsed,list,mode);\n
 \n
@@ -1694,13 +1727,14 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
 \n
  dhtmlXTreeObject.prototype._getAllPartiallyChecked=function(htmlNode,list,mode){\n
  if(!htmlNode)htmlNode=this.htmlNode;\n
- if(((mode)&&(htmlNode.checkstate==2))||((!mode)&&(htmlNode.checkstate>0)))\n
+ if(((mode)&&(htmlNode.checkstate==2))||((!mode)&&(htmlNode.checkstate>0))){\n
  if(!htmlNode.nocheckbox){if(list)list+=","+htmlNode.id;else list=htmlNode.id;}\n
+ }\n
  var j=htmlNode.childsCount;\n
  for(var i=0;i<j;i++)\n
 {\n
  list=this._getAllPartiallyChecked(htmlNode.childNodes[i],list,mode);\n
-};\n
+}\n
  if(htmlNode.unParsed)\n
  list=this._getAllPartiallyCheckedXML(htmlNode.unParsed,list,mode);\n
 \n
@@ -1715,14 +1749,15 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
  if(tNode.tagName=="item")\n
 {\n
  var z=tNode.getAttribute("checked");\n
- if((z!=null)&&(z!="")&&(z!="0"))\n
- if(((z=="-1")&&(!mode))||(z!="-1"))\n
+ if((z!==null)&&(z!=="")&&(z!=="0")){\n
+ if(((z=="-1")&&(!mode))||(z!="-1")){\n
  if(list)list+=","+tNode.getAttribute("id");\n
  else list=htmlNode.id;\n
-\n
+ }\n
+ }\n
  list=this._getAllChecked(tNode,list,mode);\n
 }\n
-};\n
+}\n
 \n
  if(list)return list;else return "";\n
 };\n
@@ -1735,14 +1770,14 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
  if(tNode.tagName=="item")\n
 {\n
  var z=tNode.getAttribute("checked");\n
- if((z!=null)&&(z!="")&&(z!="0"))\n
- if(((z=="-1")&&(!mode))||(z!="-1"))\n
+ if((z!==null)&&(z!=="")&&(z!=="0")){\n
+ if(((z=="-1")&&(!mode))||(z!="-1")){\n
  if(list)list+=","+tNode.getAttribute("id");\n
- else list=htmlNode.id;\n
-\n
+ else list=htmlNode.id;}\n
+ }\n
  list=this._getAllPartiallyChecked(tNode,list,mode);\n
 }\n
-};\n
+}\n
 \n
  if(list)return list;else return "";\n
 };\n
@@ -1756,18 +1791,18 @@ dhtmlXTreeObject.prototype._setSubCheckedXML=function(state,sNode){\n
  for(var i=0;i<j;i++)\n
 {\n
  this._deleteNode(sNode.childNodes[0].id,sNode.childNodes[0]);\n
-};\n
+}\n
 };\n
 \n
  \n
 dhtmlXTreeObject.prototype.deleteItem=function(itemId,selectParent){\n
  this._deleteItem(itemId,selectParent);\n
-}\n
+};\n
  \n
 dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
  selectParent=convertStringToBoolean(selectParent);\n
  var sNode=this._globalIdStorageFind(itemId);\n
- if(!sNode)return;\n
+ if(!sNode)return -1;\n
  if(selectParent)this.selectItem(this.getParentId(this.getSelectedItemId()),1);\n
  else\n
  if(sNode==this.lastSelected.parentObject)\n
@@ -1775,7 +1810,7 @@ dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
  if(!skip){\n
  this._globalIdStorageRecSub(sNode);\n
  \n
-};\n
+}\n
  var zTemp=sNode.parentObject;\n
  this._deleteNode(itemId,sNode,skip);\n
  this._correctPlus(zTemp);\n
@@ -1791,7 +1826,7 @@ dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
 {\n
  this._globalIdStorageRecSub(itemObject.childNodes[i]);\n
  this._globalIdStorageSub(itemObject.childNodes[i].id);\n
-};\n
+}\n
  this._globalIdStorageSub(itemObject.id);\n
 };\n
  \n
@@ -1801,7 +1836,7 @@ dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
  if((!sNode)||(!sNode.parentObject))return(0);\n
 \n
  this._attachChildNode(0,itemId,itemName,itemActionHandler,image1,image2,image3,optionStr,childs,sNode);\n
-\n
+ return -1;\n
 };\n
 \n
 \n
@@ -1857,7 +1892,7 @@ dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
  this.dadmodefix=0;\n
 \n
 \n
- if(this.dadmodec==0)\n
+ if(this.dadmodec===0)\n
 {\n
  htmlNode.parentObject.span.className=\'selectedTreeRow\';\n
  if(htmlNode.parentObject.scolor)htmlNode.parentObject.span.style.color=htmlNode.parentObject.scolor;\n
@@ -1874,11 +1909,11 @@ dhtmlXTreeObject.prototype._deleteItem=function(itemId,selectParent,skip){\n
  if(this.autoScroll)\n
 {\n
  \n
- if((a1-a2-parseInt(this.allTree.scrollTop))>(parseInt(this.allTree.offsetHeight)-50))\n
- this.allTree.scrollTop=parseInt(this.allTree.scrollTop)+20;\n
+ if((a1-a2-parseInt(this.allTree.scrollTop,10))>(parseInt(this.allTree.offsetHeight,10)-50))\n
+ this.allTree.scrollTop=parseInt(this.allTree.scrollTop,10)+20;\n
  \n
- if((a1-a2)<(parseInt(this.allTree.scrollTop)+30))\n
- this.allTree.scrollTop=parseInt(this.allTree.scrollTop)-20;\n
+ if((a1-a2)<(parseInt(this.allTree.scrollTop,10)+30))\n
+ this.allTree.scrollTop=parseInt(this.allTree.scrollTop,10)-20;\n
 }\n
 }\n
 };\n
@@ -1894,14 +1929,14 @@ dhtmlXTreeObject.prototype._createDragNode=function(htmlObject){\n
  dragSpan.style.position="absolute";\n
  dragSpan.className="dragSpanDiv";\n
  return dragSpan;\n
-}\n
+};\n
 \n
  \n
 \n
 dhtmlXTreeObject.prototype._preventNsDrag=function(e){\n
  if((e)&&(e.preventDefault)){e.preventDefault();return false;}\n
  return false;\n
-}\n
+};\n
 \n
 dhtmlXTreeObject.prototype._drag=function(sourceHtmlObject,dhtmlObject,targetHtmlObject){\n
 \n
@@ -1922,11 +1957,7 @@ dhtmlXTreeObject.prototype._drag=function(sourceHtmlObject,dhtmlObject,targetHtm
  z.selectItem(newID);\n
 }\n
 \n
- try{}\n
- catch(e){\n
- return;\n
-}\n
-}\n
+};\n
 \n
 dhtmlXTreeObject.prototype._dragIn=function(htmlObject,shtmlObject,x,y){\n
  if(!htmlObject.parentObject)\n
@@ -1949,14 +1980,16 @@ dhtmlXTreeObject.prototype._dragIn=function(htmlObject,shtmlObject,x,y){\n
  return htmlObject;\n
 }\n
  else return 0;\n
-}\n
+};\n
+\n
 dhtmlXTreeObject.prototype._autoOpenItem=function(e,treeObject){\n
  treeObject.openItem(treeObject._autoOpenId);\n
 };\n
+\n
 dhtmlXTreeObject.prototype._dragOut=function(htmlObject){\n
 this._clearMove(htmlObject);\n
 if(this._autoOpenTimer)clearTimeout(this._autoOpenTimer);\n
-}\n
+};\n
 \n
 \n
 \n
@@ -1997,7 +2030,7 @@ dhtmlXTreeObject.prototype._getPrevNode=function(node,mode){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>53275</int> </value>
+            <value> <int>53613</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
