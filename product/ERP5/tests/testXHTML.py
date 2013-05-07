@@ -32,6 +32,7 @@ import os
 import popen2
 import urllib
 
+from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5 import __file__ as ERP5PackagePath
@@ -96,7 +97,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_jquery',
       'erp5_web',
       'erp5_dms',
-
+      'erp5_email_reader',
       'erp5_commerce',
       'erp5_credential',
 
@@ -130,6 +131,27 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
                                        # reviewed. Many bt like erp5_project are
                                        # using obsolete field library of trade
+      'erp5_xhtml_style',
+      'erp5_jquery_plugin_svg_editor',
+      'erp5_jquery_plugin_spinbtn',
+      'erp5_jquery_plugin_jquerybbq',
+      'erp5_jquery_plugin_svgicon',
+      'erp5_jquery_plugin_jgraduate',
+      'erp5_jquery_plugin_hotkey',
+      'erp5_jquery_plugin_elastic',
+      'erp5_jquery_plugin_colorpicker',
+      'erp5_jquery_plugin_jqchart',
+      'erp5_jquery_plugin_sheet',
+      'erp5_jquery_plugin_mbmenu',
+      'erp5_jquery_plugin_wdcalendar',
+      'erp5_xinha_editor',
+      'erp5_svg_editor',
+      'erp5_jquery_sheet_editor',
+      'erp5_web_ung_core',
+      'erp5_web_ung_theme',
+      'erp5_web_ung_role',
+      'erp5_ui_test',
+      'erp5_web_ung_ui_test'
     )
 
   def afterSetUp(self):
@@ -145,7 +167,8 @@ class TestXHTML(ERP5TypeTestCase):
     portal_preferences = getToolByName(self.portal, 'portal_preferences')
     portal_workflow = getToolByName(self.portal, 'portal_workflow')
     default_site_preference = portal_preferences.default_site_preference
-    portal_workflow.doActionFor(default_site_preference, 'enable_action')
+    if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
+      default_site_preference.enable()
 
   def changeSkin(self, skin_name):
     """
@@ -257,6 +280,36 @@ class TestXHTML(ERP5TypeTestCase):
                      "Repeated listbox selection names:\n" +
                      portal_skins.SkinsTool_checkDuplicateSelectionName())
     
+  def test_javascript_lint(self):
+    skins_tool = self.portal.portal_skins
+    path_list = []
+    for script_path, script in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['File','DTML Method','DTML Document'], search_sub=1):
+      is_required_check_path = True
+      ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor']
+      ignore_files = ['require.js','require.min.js','wz_dragdrop.js']
+      if script_path.endswith('.js'):
+        for ignore_bt_name in ignore_bts:
+          if  script_path.startswith(ignore_bt_name):
+            is_required_check_path = False
+        for ignore_file in ignore_files:
+          if  script_path.endswith(ignore_file):
+            is_required_check_path = False
+        if is_required_check_path:
+          path_list.append(script_path)
+    def jsl(check_path):
+      body = self.publish(check_path).getBody()
+      try:
+        stdout, stderr = Popen(['jsl', '-stdin', '-nologo', '-nosummary'],
+                               stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True).communicate(body)
+      except OSError, e:
+        raise OSError, '%r\n%r' % (os.environ, e)
+      self.assertEquals(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
+    portal_skins_path = '%s/portal_skins' % self.portal.getId()
+    for path in path_list:
+      check_path = '%s/%s' % (portal_skins_path, path)
+      jsl(check_path)
+
   def test_PythonScriptSyntax(self):
     """ 
     Check that Python Scripts syntax is correct.
@@ -585,7 +638,6 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                        portal_type_path_dict=new_portal_type_path_dict,
                        base_path=next_base_path,
                        tested_portal_type_list=tested_portal_type_list)
-
 
 def addTestMethodDynamically(validator, target_business_templates):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
