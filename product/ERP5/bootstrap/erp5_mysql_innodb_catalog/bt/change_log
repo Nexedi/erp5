@@ -1,3 +1,6 @@
+2013-05-08 arnaud.fontaine
+* Prevent order_id column value to overflow following changes in Inventory (cf53db4).
+
 2011-04-14 yusei
 * Add datetime key to effective_date and expiration_date on versioning table. They were missing.
 
