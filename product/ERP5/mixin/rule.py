@@ -365,12 +365,17 @@ class RuleMixin(Predicate):
         if decision_movement.isDeletable():
           # Delete deletable
           movement_collection_diff.addDeletableMovement(decision_movement)
-        else:
-          # Compensate non deletable
-          new_movement = decision_movement.asContext(
-                            quantity=-decision_movement.getQuantity())
-          new_movement.setDelivery(None)
-          movement_collection_diff.addNewMovement(new_movement)
+          continue
+        quantity = decision_movement.getQuantity()
+        if quantity:
+          if decision_movement.isFrozen():
+            # Compensate
+            new_movement = decision_movement.asContext(quantity=-quantity)
+            new_movement.setDelivery(None)
+            movement_collection_diff.addNewMovement(new_movement)
+          else:
+            movement_collection_diff.addUpdatableMovement(decision_movement,
+                                                          {'quantity': 0})
       return
 
     # Case 2: movements which should be added
