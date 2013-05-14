@@ -276,43 +276,51 @@ class PasswordTool(BaseTool):
     """
     Reset the password for a given login
     """
-    # check the key
-    register_user_login, expiration_date = self._password_request_dict.get(
-                                                    password_key, (None, None))
+    # BBB: password_confirm: unused argument
+    def error(message):
+      # BBB: should "raise Redirect" instead of just returning, simplifying
+      #      calling code and making mistakes more difficult
+      # BBB: should probably not translate message when REQUEST is None
+      message = translateString(message)
+      if REQUEST is None:
+        return message
+      return REQUEST.RESPONSE.redirect(
+        site_url + '/login_form?' + urlencode({
+          'portal_status_message': message,
+        })
+      )
 
-    current_date = DateTime()
-    msg = None
     if REQUEST is None:
       REQUEST = get_request()
-    site_url = self.getPortalObject().absolute_url()
-    if REQUEST and 'came_from' in REQUEST:
-      site_url = REQUEST.came_from
     if self.getWebSiteValue():
       site_url = self.getWebSiteValue().absolute_url()
-    if register_user_login is None:
-      msg = "Key not known. Please ask reset password."
-    elif user_login is not None and register_user_login != user_login:
-      msg = translateString("Bad login provided.")
-    elif current_date > expiration_date:
-      msg = translateString("Date has expire.")
-    if msg is not None:
-      if REQUEST is not None:
-        parameter = urlencode(dict(portal_status_message=msg))
-        ret_url = '%s/login_form?%s' % (site_url, parameter)
-        return REQUEST.RESPONSE.redirect( ret_url )
-      else:
-        return msg
-
-    # all is OK, change password and remove it from request dict
-    self._password_request_dict.pop(password_key)
-    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(register_user_login)
+    elif REQUEST and 'came_from' in REQUEST:
+      site_url = REQUEST.came_from
+    else:
+      site_url = self.getPortalObject().absolute_url()
+    try:
+      register_user_login, expiration_date = self._password_request_dict[
+        password_key]
+    except KeyError:
+      # XXX: incorrect grammar and not descriptive enough
+      return error('Key not known. Please ask reset password.')
+    if user_login is not None and register_user_login != user_login:
+      # XXX: not descriptive enough
+      return error("Bad login provided.")
+    if DateTime() > expiration_date:
+      # XXX: incorrect grammar
+      return error("Date has expire.")
+    del self._password_request_dict[password_key]
+    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(
+      register_user_login)
     person = persons[0]
     person._forceSetPassword(password)
     person.reindexObject()
     if REQUEST is not None:
-      msg = translateString("Password changed.")
-      parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (site_url, parameter)
-      return REQUEST.RESPONSE.redirect( ret_url )
+      return REQUEST.RESPONSE.redirect(
+        site_url + '/login_form?' + urlencode({
+          'portal_status_message': translateString("Password changed."),
+        })
+      )
 
 InitializeClass(PasswordTool)
