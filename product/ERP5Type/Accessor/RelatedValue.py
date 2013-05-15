@@ -58,6 +58,8 @@ class DefaultGetter(BaseGetter):
   def __call__(self, instance, *args, **kw):
     if self._warning:
       LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
+    assert not 'validation_state' in kw, "validation_state parameter is not supported"
+    assert not 'simulation_state' in kw, "simulation_state parameter is not supported"
     return instance._getDefaultRelatedValue(
                             self._key,
                             spec=kw.get('spec',()),
@@ -96,6 +98,8 @@ class ListGetter(BaseGetter):
     self._warning = warning
 
   def __call__(self, instance, *args, **kw):
+    assert not 'validation_state' in kw, "validation_state parameter is not supported"
+    assert not 'simulation_state' in kw, "simulation_state parameter is not supported"
     if self._warning:
       LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
     return instance._getRelatedValueList(self._key, *args, **kw)
@@ -134,6 +138,8 @@ class DefaultPropertyGetter(BaseGetter):
   def __call__(self, instance, key, *args, **kw):
     if self._warning:
       LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
+    assert not 'validation_state' in kw, "validation_state parameter is not supported"
+    assert not 'simulation_state' in kw, "simulation_state parameter is not supported"
     return instance._getDefaultRelatedProperty(
                          self._key, key,
                          spec=kw.get('spec',()),
@@ -169,6 +175,8 @@ class PropertyListGetter(BaseGetter):
   def __call__(self, instance, key, *args, **kw):
     if self._warning:
       LOG("ERP5Type", WARNING, "Deprecated Getter Id: %s" % self._id)
+    assert not 'validation_state' in kw, "validation_state parameter is not supported"
+    assert not 'simulation_state' in kw, "simulation_state parameter is not supported"
     return instance._getRelatedPropertyList(
                            self._key, key,
                            spec=kw.get('spec',()),
