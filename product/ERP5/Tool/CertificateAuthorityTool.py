@@ -195,10 +195,10 @@ class CertificateAuthorityTool(BaseTool):
       cert = os.path.join(self.certificate_authority_path, 'certs',
           new_id + '.crt')
       try:
-        popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
+        popenCommunicate([self.openssl_binary, 'req', '-utf8', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
           '3650'], '%s\n' % common_name, stdin=subprocess.PIPE)
-        popenCommunicate([self.openssl_binary, 'ca', '-days', '3650',
+        popenCommunicate([self.openssl_binary, 'ca', '-utf8', '-days', '3650',
           '-batch', '-config', self.openssl_config, '-out', cert, '-infiles',
           csr])
         os.unlink(csr)
@@ -235,9 +235,9 @@ class CertificateAuthorityTool(BaseTool):
       if not os.path.exists(cert):
         raise ValueError('Certificate with serial %r does not exists' % serial)
       try:
-        popenCommunicate([self.openssl_binary, 'ca', '-config',
+        popenCommunicate([self.openssl_binary, 'ca', '-utf8', '-config',
           self.openssl_config, '-revoke', cert])
-        popenCommunicate([self.openssl_binary, 'ca', '-config',
+        popenCommunicate([self.openssl_binary, 'ca', '-utf8', '-config',
           self.openssl_config, '-gencrl', '-out', crl])
         hash = popenCommunicate([self.openssl_binary, 'crl', '-noout',
           '-hash', '-in', crl]).strip()
