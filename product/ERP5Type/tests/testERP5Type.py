@@ -398,10 +398,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                             portal_type = "Person"), [person_object] )
         self.assertEquals( category_object.getRegionRelatedTitleList(
                             portal_type = "Person"), [person_title] )
+        self.assertEquals( category_object.getRegionRelatedTitleSet(
+                            portal_type = "Person"), [person_title] )
         self.assertEquals( category_object.getRegionRelatedList(
                             portal_type = "Person"), [person_relative_url] )
         self.assertEquals( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [person_id] )
+        self.assertEquals( category_object.getRegionRelatedIdSet(
+                            portal_type = "Person"), [person_id] )
+
       def checkRelationUnset(self):
         self.commit()
         person_object.reindexObject()
