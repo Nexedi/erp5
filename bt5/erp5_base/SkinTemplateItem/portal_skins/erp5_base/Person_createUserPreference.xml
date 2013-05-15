@@ -67,7 +67,7 @@ preference = portal.portal_preferences.createPreferenceForUser(\n
                                   context.getReference(), enable=True)\n
 \n
 preference.setTitle(translateString(\'Preference for ${name}\',\n
-                     mapping=dict(name=context.getTitle().decode(\'utf-8\'))))\n
+                     mapping=dict(name=context.getTitle())))\n
 \n
 for assignment in context.contentValues(portal_type=\'Assignment\'):\n
   group = assignment.getGroup(base=True)\n
