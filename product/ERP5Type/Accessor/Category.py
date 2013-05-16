@@ -88,23 +88,10 @@ class DefaultSetter(BaseSetter):
                                                  checked_permission=kw.get('checked_permission', None))
       return (instance, )
 
-class SetSetter(BaseSetter):
+class SetSetter(ListSetter):
     """
       Sets a set of category
     """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', 'category')
-    func_code.co_argcount = 2
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
 
     def __call__(self, instance, value, *args, **kw):
       """
@@ -113,14 +100,7 @@ class SetSetter(BaseSetter):
       """
       if type(value) not in (set, frozenset):
         value = frozenset(value)
-      instance._setCategoryMembership(self._key, tuple(value),
-                                      spec=kw.get('spec',()),
-                                      filter=kw.get('filter', None),
-                                      portal_type=kw.get('portal_type',()),
-                                      base=kw.get('base', 0),
-                                      keep_default=1,
-                                      checked_permission=kw.get('checked_permission', None))
-      return (instance, )
+      return ListSetter.__call__(self, instance, value, *args, **kw)
 
 
 class DefaultGetter(BaseGetter):
