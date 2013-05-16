@@ -2441,6 +2441,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
 
       self.portal.Localizer.erp5_content._translated = []
+      self.assertEquals(['Alpha'], doc.getRegionTranslatedTitleList())
+      self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
+
+      self.portal.Localizer.erp5_content._translated = []
       self.assertEquals('Gamma System/Alpha', doc.getRegionTranslatedLogicalPath())
       self.assertEquals(['Gamma System', 'Alpha'],
                         self.portal.Localizer.erp5_content._translated)

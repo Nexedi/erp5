@@ -148,7 +148,6 @@ class ListGetter(BaseGetter):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      #LOG("__call__:",0, str((args,kw)))
       return instance._getAcquiredValueList(self._key, **kw)
 
     psyco.bind(__call__)
@@ -190,28 +189,10 @@ class DefaultTitleGetter(BaseGetter):
 
     psyco.bind(__call__)
 
-class TitleListGetter(BaseGetter):
-    """
-      Gets a list of reference objects
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getTitle() for x in instance._getAcquiredValueList(self._key, **kw)]
-
-    psyco.bind(__call__)
+class TitleListGetter(ListGetter):
+  def __call__(self, instance, *args, **kw):
+    return [x.getTitle() for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class TitleSetGetter(TitleListGetter):
     """
@@ -223,63 +204,18 @@ class TitleSetGetter(TitleListGetter):
       return result_set
 
 
-class DefaultTranslatedTitleGetter(BaseGetter):
-    """
-      Gets a default reference object
-    """
-    _need__name__=1
+class DefaultTranslatedTitleGetter(DefaultGetter):
+  def __call__(self, instance, *args, **kw):
+    o = DefaultGetter.__call__(self, instance, *args, **kw)
+    if o is None:
+      return None
+    return o.getTranslatedTitle()
+  psyco.bind(__call__)
 
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self', )
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      o = instance._getDefaultAcquiredValue(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 checked_permission=kw.get('checked_permission', None))
-      if o is None:
-        return None
-      return o.getTranslatedTitle()
-
-    psyco.bind(__call__)
-
-class TranslatedTitleListGetter(BaseGetter):
-    """
-      Gets a list of reference objects
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getTranslatedTitle() for x in instance._getAcquiredValueList(self._key,
-                                                    spec=kw.get('spec',()),
-                                                    filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()),
-                                                    checked_permission=kw.get('checked_permission', None))
-                                                  ]
-
-    psyco.bind(__call__)
+class TranslatedTitleListGetter(ListGetter):
+  def __call__(self, instance, *args, **kw):
+    return [x.getTranslatedTitle() for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class TranslatedTitleSetGetter(TranslatedTitleListGetter):
     """
@@ -322,33 +258,10 @@ class DefaultReferenceGetter(BaseGetter):
 
     psyco.bind(__call__)
 
-class ReferenceListGetter(BaseGetter):
-    """
-      Gets a list of reference objects
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getReference() for x in instance._getAcquiredValueList(self._key,
-                                                    spec=kw.get('spec',()),
-                                                    filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()),
-                                                    checked_permission=kw.get('checked_permission', None))
-                                                  ]
-
-    psyco.bind(__call__)
+class ReferenceListGetter(ListGetter):
+  def __call__(self, instance, *args, **kw):
+    return [x.getReference() for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class ReferenceSetGetter(ReferenceListGetter):
     """
@@ -394,33 +307,10 @@ class DefaultUidGetter(BaseGetter):
 
 UidGetter = DefaultUidGetter
 
-class UidListGetter(BaseGetter):
-    """
-      Gets a list of reference objects uid
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getUid() for x in instance._getAcquiredValueList(self._key,
-                                                    spec=kw.get('spec',()),
-                                                    filter=kw.get('filter', None),
-                                                    portal_type=kw.get('portal_type',()),
-                                                    checked_permission=kw.get('checked_permission', None))
-                                                  ]
-
-    psyco.bind(__call__)
+class UidListGetter(ListGetter):
+  def __call__(self, instance, *args, **kw):
+    return [x.getUid() for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class UidSetGetter(UidListGetter):
     """
@@ -593,33 +483,10 @@ class DefaultTranslatedLogicalPathGetter(DefaultLogicalPathGetter):
 
 TranslatedLogicalPathGetter = DefaultTranslatedLogicalPathGetter
 
-class IdListGetter(BaseGetter):
-    """
-      Gets a list of reference objects uid
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getId() for x in instance._getAcquiredValueList(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 checked_permission=kw.get('checked_permission', None))
-                                                  ]
-
-    psyco.bind(__call__)
+class IdListGetter(ListGetter):
+  def __call__(self, instance, *args, **kw):
+    return [x.getId() for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class IdSetGetter(IdListGetter):
     """
@@ -632,33 +499,11 @@ class IdSetGetter(IdListGetter):
       return result_set
 
 
-class LogicalPathListGetter(BaseGetter):
-    """
-      Gets a list of logical path
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-    _item_method = 'getTitle'
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, *args, **kw):
-      return [x.getLogicalPath(item_method=self._item_method)
-         for x in instance._getAcquiredValueList(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 checked_permission=kw.get('checked_permission', None))
-                                                  ]
+class LogicalPathListGetter(ListGetter):
+  _item_method = 'getTitle'
+  def __call__(self, instance, *args, **kw):
+    return [x.getLogicalPath(item_method=self._item_method) for x in
+            ListGetter.__call__(self, instance, *args, **kw)]
 
 class LogicalPathSetGetter(LogicalPathListGetter):
     """
@@ -704,33 +549,10 @@ class DefaultPropertyGetter(BaseGetter):
 
 PropertyGetter = DefaultPropertyGetter
 
-class PropertyListGetter(BaseGetter):
-    """
-      Gets a list of reference objects uid
-    """
-    _need__name__=1
-
-    # Generic Definition of Method Object
-    # This is required to call the method form the Web
-    func_code = func_code()
-    func_code.co_varnames = ('self',)
-    func_code.co_argcount = 1
-    func_defaults = ()
-
-    def __init__(self, id, key):
-      self._id = id
-      self.__name__ = id
-      self._key = key
-
-    def __call__(self, instance, key, *args, **kw):
-      return [x.getProperty(key) for x in instance._getAcquiredValueList(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()),
-                                                 checked_permission=kw.get('checked_permission', None))
-                                                  ]
-
-    psyco.bind(__call__)
+class PropertyListGetter(ListGetter):
+  def __call__(self, instance, key, *args, **kw):
+    return [x.getProperty(key) for x in ListGetter.__call__(self, instance, *args, **kw)]
+  psyco.bind(__call__)
 
 class PropertySetGetter(PropertyListGetter):
     """
