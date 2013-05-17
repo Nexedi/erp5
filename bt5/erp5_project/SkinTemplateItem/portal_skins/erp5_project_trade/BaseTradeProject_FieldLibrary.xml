@@ -38,6 +38,16 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -64,28 +74,6 @@
                         <string>my_source_project_title</string>
                         <string>my_destination_project_title</string>
                         <string>my_requirement_logical_path_list</string>
-                        <string>my_comment</string>
-                        <string>my_destination_decision_title</string>
-                        <string>my_destination_section_title</string>
-                        <string>my_destination_title</string>
-                        <string>my_predecessor_title_list</string>
-                        <string>my_source_title</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
-                        <string>my_title</string>
-                        <string>my_specialise_title</string>
-                        <string>my_resource_title</string>
-                        <string>my_source_administration_title</string>
-                        <string>my_source_section_title</string>
-                        <string>simulation_state</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_description</string>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
-                        <string>my_destination_administration_title</string>
-                        <string>my_destination_payment_title</string>
-                        <string>my_source_payment_title</string>
-                        <string>my_source_decision_title</string>
                         <string>my_requirement_reference_list</string>
                       </list>
                     </value>
@@ -119,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Trade Project Field Library</string> </value>
+            <value> <string>Trade Project Field Library (obsolete)</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -127,6 +115,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
