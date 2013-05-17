@@ -75,7 +75,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string: ${portal_url}/event_module/view?form_id=view&keep_items.reset:int:record=1&keep_items.default_follow_up_uid:record=${context/getUid}
+string:${portal_url}/event_module/view?reset:int=1&default_follow_up_uid=${context/getUid}&ignore_hide_rows:int=1
 
 ]]></string> </value>
         </item>
