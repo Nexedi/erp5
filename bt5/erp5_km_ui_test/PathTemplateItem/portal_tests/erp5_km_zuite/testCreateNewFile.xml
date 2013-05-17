@@ -55,7 +55,7 @@
 \n
 <tr>\n
   <td>setTimeout</td>\n
-  <td>60000</td>\n
+  <td>90000</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -185,7 +185,7 @@
 </tr>\n
 <tr>\n
   <td>setTimeout</td>\n
-  <td>30000</td>\n
+  <td>90000</td>\n
   <td></td>\n
 </tr>\n
 \n
