@@ -701,7 +701,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setRegionList(['beta', 'alpha', 'alpha'])
       self.assertEquals(person.getRegionList(), ['beta', 'alpha', 'alpha'])
       person.setRegionSet(['alpha', 'beta', 'alpha'])
-      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      self.assertEquals(sorted(person.getRegionList()), ['alpha', 'beta'])
       person.setDefaultRegion('alpha')
       self.assertEquals(person.getDefaultRegion(), 'alpha')
       self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
