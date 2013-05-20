@@ -2335,7 +2335,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     module_id = sequence.get('module_id')
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
-    bt.edit(template_local_roles_list=[module_id])
+    bt.edit(template_local_role_list=[module_id])
 
   def stepCheckLocalRolesExists(self, sequence=None, **kw):
     """
@@ -3084,7 +3084,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
     self.assertEqual(len(ptype_ids), 2)
-    bt.edit(template_portal_type_roles_list=ptype_ids)
+    bt.edit(template_portal_type_role_list=ptype_ids)
 
   def stepCheckPortalTypeRoleExists(self, sequence=None, **kw):
     """
@@ -6654,7 +6654,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title=self.id(),
-                          template_local_roles_list=('geek_module/1',),
+                          template_local_role_list=('geek_module/1',),
                           template_path_list=('geek_module/1',),
                           template_portal_type_role_list=('Geek Object',),)
 

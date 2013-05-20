@@ -99,6 +99,6 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     ## Update BT5
     bt5_obj = business_configuration.getSpecialiseValue()
     # keep existing roles definition (from previous configuration saves)
-    for existing_type in bt5_obj.getTemplatePortalTypeRolesList():
+    for existing_type in bt5_obj.getTemplatePortalTypeRoleList():
       portal_type_dict[existing_type] = 1
-    bt5_obj.edit(template_portal_type_roles_list=[i for i in portal_type_dict.keys() if i not in ignore_list])
+    bt5_obj.edit(template_portal_type_role_list=[i for i in portal_type_dict.keys() if i not in ignore_list])

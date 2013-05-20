@@ -5852,14 +5852,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       wtool = self.getPortalObject().portal_workflow
       ttool = self.getPortalObject().portal_types
-      bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
-      bt_hidden_content_type_list = list(getattr(self, 'template_portal_type_hidden_content_type', []) or [])
-      bt_property_sheet_list = list(getattr(self, 'template_portal_type_property_sheet', []) or [])
-      bt_base_category_list = list(getattr(self, 'template_portal_type_base_category', []) or [])
-      bt_action_list = list(getattr(self, 'template_action_path', []) or [])
+      bt_allowed_content_type_list = list(
+        self.getTemplatePortalTypeAllowedContentTypeList())
+      bt_hidden_content_type_list = list(
+        self.getTemplatePortalTypeHiddenContentTypeList())
+      bt_property_sheet_list = list(
+        self.getTemplatePortalTypePropertySheetList())
+      bt_base_category_list = list(
+        self.getTemplatePortalTypeBaseCategoryList())
+      bt_action_list = list(self.getTemplateActionPathList())
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
-      bt_portal_type_roles_list =  list(getattr(self, 'template_portal_type_roles', []) or [])
-      bt_wf_chain_list = list(getattr(self, 'template_portal_type_workflow_chain', []) or [])
+      bt_portal_type_roles_list = list(self.getTemplatePortalTypeRoleList())
+      bt_wf_chain_list = list(self.getTemplatePortalTypeWorkflowChainList())
 
       for id in bt_portal_types_id_list:
         portal_type = ttool.getTypeInfo(id)
@@ -5923,14 +5927,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_action_list.sort()
       bt_wf_chain_list.sort()
 
-      self.setProperty('template_portal_type_workflow_chain', bt_wf_chain_list)
-      self.setProperty('template_portal_type_roles', bt_portal_type_roles_list)
-      self.setProperty('template_portal_type_allowed_content_type', bt_allowed_content_type_list)
-      self.setProperty('template_portal_type_hidden_content_type', bt_hidden_content_type_list)
-      self.setProperty('template_portal_type_property_sheet', bt_property_sheet_list)
-      self.setProperty('template_portal_type_base_category', bt_base_category_list)
-      self.setProperty('template_action_path', bt_action_list)
-      return
+      self.setTemplatePortalTypeWorkflowChainList(bt_wf_chain_list)
+      self.setTemplatePortalTypeRoleList(bt_portal_type_roles_list)
+      self.setTemplatePortalTypeAllowedContentTypeList(bt_allowed_content_type_list)
+      self.setTemplatePortalTypeHiddenContentTypeList(bt_hidden_content_type_list)
+      self.setTemplatePortalTypePropertySheetList(bt_property_sheet_list)
+      self.setTemplatePortalTypeBaseCategoryList(bt_base_category_list)
+      self.setTemplateActionPathList(bt_action_list)
 
 
     def guessPortalTypes(self, **kw):
