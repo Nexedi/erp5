@@ -700,8 +700,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
       person.setRegionList(['beta', 'alpha', 'alpha'])
       self.assertEquals(person.getRegionList(), ['beta', 'alpha', 'alpha'])
+      # at this point the person have a default region set to the first item in
+      # the list.
+      self.assertEquals(person.getDefaultRegion(), 'beta')
       person.setRegionSet(['alpha', 'beta', 'alpha'])
-      self.assertEquals(sorted(person.getRegionList()), ['alpha', 'beta'])
+      self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      # calling a set setter did not change the default region
+      self.assertEquals(person.getDefaultRegion(), 'beta')
+
       person.setDefaultRegion('alpha')
       self.assertEquals(person.getDefaultRegion(), 'alpha')
       self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])

@@ -100,7 +100,14 @@ class SetSetter(ListSetter):
       """
       if type(value) not in (set, frozenset):
         value = frozenset(value)
-      return ListSetter.__call__(self, instance, value, *args, **kw)
+      instance._setCategoryMembership(self._key, value,
+                                      spec=kw.get('spec',()),
+                                      filter=kw.get('filter', None),
+                                      portal_type=kw.get('portal_type',()),
+                                      base=kw.get('base', 0),
+                                      keep_default=1,
+                                      checked_permission=kw.get('checked_permission', None))
+      return (instance, )
 
 
 class DefaultGetter(BaseGetter):
