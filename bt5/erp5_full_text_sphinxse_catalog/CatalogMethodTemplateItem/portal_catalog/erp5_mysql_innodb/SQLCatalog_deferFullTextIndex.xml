@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string># This script is called to defer fulltext indexing in a lower priority.\n
 # Activities are serialised because concurrent write may cause crash of searchd.\n
-context.activate(activity=\'SQLQueue\', priority=4, serialization_tag=\'sphinxse_indexing\').SQLCatalog_deferFullTextIndexActivity(path_list=list(getPath))\n
+context.activate(activity=\'SQLQueue\', priority=4, serialization_tag=\'sphinxse_indexing\', group_method_id=None).SQLCatalog_deferFullTextIndexActivity(path_list=list(getPath))\n
 </string> </value>
         </item>
         <item>
