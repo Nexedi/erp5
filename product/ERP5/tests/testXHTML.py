@@ -560,9 +560,9 @@ def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
                                   bt_name=bt_name))
   return testMethod
 
-def testPortalTypeViewRecursivly(validator, module_id, business_template_info, 
-    business_template_info_list, portal_type_list, portal_type_path_dict, 
-    base_path, tested_portal_type_list):
+def testPortalTypeViewRecursivly(test_class, validator, module_id,
+    business_template_info, business_template_info_list, portal_type_list,
+    portal_type_path_dict, base_path, tested_portal_type_list):
   '''
   This function go on all portal_type recursivly if the portal_type could 
   contain other portal_types and make a test for all view that have action
@@ -605,7 +605,7 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                           str(portal_type).replace(' ','_'), # can be unicode
                           view_name))
           method.__name__ = method_name
-          setattr(TestXHTML, method_name, method)
+          setattr(test_class, method_name, method)
           module_id = backuped_module_id
           business_template_info = backuped_business_template_info
 
@@ -630,7 +630,8 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
           new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
         else:
           new_portal_type_path_dict[pt] = pt 
-      testPortalTypeViewRecursivly(validator=validator,
+      testPortalTypeViewRecursivly(test_class=test_class,
+                       validator=validator,
                        module_id=module_id, 
                        business_template_info=backuped_business_template_info, 
                        business_template_info_list=business_template_info_list,
@@ -639,7 +640,7 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                        base_path=next_base_path,
                        tested_portal_type_list=tested_portal_type_list)
 
-def addTestMethodDynamically(validator, target_business_templates):
+def addTestMethodDynamically(test_class, validator, target_business_templates):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
@@ -667,7 +668,8 @@ def addTestMethodDynamically(validator, target_business_templates):
             business_template_info.allowed_content_types.get(module_portal_type, [])
       portal_type_path_dict = {}
       portal_type_path_dict = dict(map(None,portal_type_list,portal_type_list))
-      testPortalTypeViewRecursivly(validator=validator,
+      testPortalTypeViewRecursivly(test_class=test_class,
+                       validator=validator,
                        module_id=module_id, 
                        business_template_info=business_template_info, 
                        business_template_info_list=business_template_info_list,
@@ -712,7 +714,7 @@ def test_suite():
   if validator is not None:
     # add erp5_core to the list here to not return it
     # on getBusinessTemplateList call
-    addTestMethodDynamically(validator,
+    addTestMethodDynamically(TestXHTML, validator,
       ('erp5_core',) + TestXHTML.getBusinessTemplateList())
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
