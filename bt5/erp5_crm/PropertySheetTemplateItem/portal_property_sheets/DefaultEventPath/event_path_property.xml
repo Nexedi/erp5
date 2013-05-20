@@ -105,16 +105,13 @@
               <tuple>
                 <string>title</string>
                 <string>resource</string>
-                <string>resource_id</string>
                 <string>resource_title</string>
                 <string>resource_value</string>
                 <string>resource_reference</string>
                 <string>destination</string>
-                <string>destination_id</string>
                 <string>destination_title</string>
                 <string>destination_value</string>
                 <string>source</string>
-                <string>source_id</string>
                 <string>source_title</string>
                 <string>source_value</string>
                 <string>source_reference</string>
@@ -134,7 +131,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The current address of the person</string> </value>
+            <value> <string>The default event path, path to create events.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
