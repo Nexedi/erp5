@@ -3428,6 +3428,19 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(self.logged)
     self.assertFalse(message_list, message_list)
 
+  def test_activateByPath(self):
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+      self.tic()
+    organisation = organisation_module._getOb(self.company_id)
+    portal.portal_activities.activateObject(
+      organisation.getPath(),
+      activity='SQLDict',
+      active_process=None
+      ).getTitle()
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

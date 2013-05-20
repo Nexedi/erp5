@@ -171,7 +171,7 @@ class Message(BaseMessage):
   traceback = None
   oid = None
 
-  def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
+  def __init__(self, obj, active_process, activity_kw, method_id, args, kw, request=None):
     if isinstance(obj, str):
       self.object_path = tuple(obj.split('/'))
       activity_creation_trace = False
@@ -202,7 +202,6 @@ class Message(BaseMessage):
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
     self.request_info = {}
-    request = getattr(obj, 'REQUEST', None)
     if request is not None:
       if 'SERVER_URL' in request.other:
         self.request_info['SERVER_URL'] = request.other['SERVER_URL']
@@ -439,17 +438,19 @@ Named Parameters: %r
 
 class Method:
 
-  def __init__(self, passive_self, activity, active_process, kw, method_id):
+  def __init__(self, portal_activities, passive_self, activity, active_process, kw, method_id, request):
+    self.__portal_activities = portal_activities
     self.__passive_self = passive_self
     self.__activity = activity
     self.__active_process = active_process
     self.__kw = kw
     self.__method_id = method_id
+    self.__request = request
 
   def __call__(self, *args, **kw):
     passive_self = self.__passive_self
-    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    portal_activities = passive_self.getPortalObject().portal_activities
+    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id, args, kw, self.__request)
+    portal_activities = self.__portal_activities
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
@@ -458,21 +459,20 @@ class Method:
 allow_class(Method)
 
 class ActiveWrapper:
-  # XXX: maybe we should accept and forward an 'activity_tool' parameter,
-  #      so that Method:
-  #      - does not need to search it again
-  #      - a string can be passed as first parameter to ActiveWrapper
-
-  def __init__(self, passive_self, activity, active_process, kw):
+  def __init__(self, portal_activities, passive_self, activity, active_process, kw, request):
+    # second parameter can be an object or an object's path
+    self.__dict__['__portal_activities'] = portal_activities
     self.__dict__['__passive_self'] = passive_self
     self.__dict__['__activity'] = activity
     self.__dict__['__active_process'] = active_process
     self.__dict__['__kw'] = kw
+    self.__dict__['__request'] = request
 
   def __getattr__(self, id):
-    return Method(self.__dict__['__passive_self'], self.__dict__['__activity'],
+    return Method(self.__dict__['__portal_activities'],
+                  self.__dict__['__passive_self'], self.__dict__['__activity'],
                   self.__dict__['__active_process'],
-                  self.__dict__['__kw'], id)
+                  self.__dict__['__kw'], id, self.__dict__['__request'])
 
   def __repr__(self):
     return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
@@ -1067,7 +1067,8 @@ class ActivityTool (Folder, UniqueObject):
       self.getActivityBuffer()
       if isinstance(active_process, str):
         active_process = self.unrestrictedTraverse(active_process)
-      return ActiveWrapper(object, activity, active_process, kw)
+      return ActiveWrapper(self, object, activity, active_process, kw,
+                           getattr(self, 'REQUEST', None))
 
     def getRegisteredMessageList(self, activity):
       activity_buffer = self.getActivityBuffer(create_if_not_found=False)
