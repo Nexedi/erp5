@@ -455,10 +455,12 @@ class TestCRM(BaseTestCRM):
     mapping_method_id = "NotificationMessage_getSubstitutionMappingDictFromEvent"
     portal = self.portal
     notification_message_reference = 'campaign-Event.Path'
+    service = portal.service_module.newContent(portal_type='Service')
     resource = portal.notification_message_module.newContent(
         reference=notification_message_reference,
         content_type="text/html",
         portal_type="Notification Message",
+        specialise_value=service,
         text_content_substitution_mapping_method_id=mapping_method_id,
         text_content="Hello ${destination_title}")
     resource.validate()
@@ -490,7 +492,8 @@ class TestCRM(BaseTestCRM):
     self.tic()
     campaign.Ticket_createEventFromDefaultEventPath()
     self.tic()
-    event_list = campaign.getFollowUpRelatedValueList(portal_type='NOT Mail Message')
+    event_list = [event for event in campaign.getFollowUpRelatedValueList()
+      if event.getPortalType() != 'Mail Message']
     self.assertEquals(event_list, [])
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Mail Message')
     self.assertNotEquals(event_list, [])
@@ -499,6 +502,7 @@ class TestCRM(BaseTestCRM):
     mail_message = event_list[0]
     self.assertEquals(sender.getRelativeUrl(), mail_message.getSource())
     self.assertEquals(mail_message.getTextContent(), "Hello %s\n" % first_user.getTitle())
+    self.assertEquals(mail_message.getResourceValue(), service)
 
     campaign = portal.campaign_module.newContent(portal_type="Campaign",
         default_event_path_event_portal_type="Visit",
@@ -508,12 +512,17 @@ class TestCRM(BaseTestCRM):
     self.tic()
     campaign.Ticket_createEventFromDefaultEventPath()
     self.tic()
-    event_list = campaign.getFollowUpRelatedValueList(portal_type='NOT Visit')
+    event_list = [event for event in campaign.getFollowUpRelatedValueList()
+      if event.getPortalType() != 'Visit']
     self.assertEquals([], event_list)
     event_list = campaign.getFollowUpRelatedValueList(portal_type='Visit')
     self.assertNotEquals([], event_list)
     destination_uid_list = map(lambda x: x.getDestinationUid(), event_list)
     self.assertEquals([organisation.getUid()], destination_uid_list)
+
+    resource_value_list = map(lambda x: x.getResourceValue(), event_list)
+    self.assertEquals([service], resource_value_list)
+
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
