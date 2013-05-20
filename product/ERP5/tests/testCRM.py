@@ -524,6 +524,29 @@ class TestCRM(BaseTestCRM):
     resource_value_list = map(lambda x: x.getResourceValue(), event_list)
     self.assertEquals([service], resource_value_list)
 
+  def test_OutcomePath(self):
+    service = self.portal.service_module.newContent(portal_type='Service')
+    currency = self.portal.currency_module.newContent(portal_type='Currency')
+
+    campaign = self.portal.campaign_module.newContent(portal_type="Campaign")
+    campaign.setDefaultOutcomePathQuantity(3)
+    campaign.setDefaultOutcomePathQuantityUnit('unit/piece')
+    campaign.setDefaultOutcomePathResourceValue(service)
+    campaign.setDefaultOutcomePathPrice(4)
+    campaign.setDefaultOutcomePathPriceCurrency(currency.getRelativeUrl())
+
+    self.assertEquals(3*4, campaign.getDefaultOutcomePathTotalPrice())
+
+    self.assertEquals(3, campaign.getDefaultOutcomePathQuantity())
+    self.assertEquals('unit/piece', campaign.getDefaultOutcomePathQuantityUnit())
+    self.assertEquals(service.getRelativeUrl(),
+      campaign.getDefaultOutcomePathResource())
+    self.assertEquals(4, campaign.getDefaultOutcomePathPrice())
+    self.assertEquals(currency.getRelativeUrl(),
+      campaign.getDefaultOutcomePathPriceCurrency())
+
+    outcome_path = campaign._getOb('default_outcome_path')
+    self.assertEquals('Outcome Path', outcome_path.getPortalType())
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.

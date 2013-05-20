@@ -1,5 +1,6 @@
 Campaign Module | Campaign
 Campaign | Event Path
+Campaign | Outcome Path
 Event Module | Acknowledgement
 Event Module | Fax Message
 Event Module | Letter

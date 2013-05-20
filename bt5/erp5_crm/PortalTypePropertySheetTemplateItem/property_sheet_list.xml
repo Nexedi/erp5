@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Campaign">
   <item>DefaultEventPath</item>
+  <item>DefaultOutcomePath</item>
  </portal_type>
  <portal_type id="Event Path">
   <item>EventPath</item>
