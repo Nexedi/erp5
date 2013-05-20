@@ -421,6 +421,7 @@ class TestCRM(BaseTestCRM):
     resource_list = [category.getRelativeUrl() \
                                       for category in resource.contentValues()]
     resource_list.append(person.getRelativeUrl())
+    # XXX this preference is obsolete, this is now based on use category
     system_preference.setPreferredEventResourceList(resource_list)
     self.tic()
     # Then create One event and play with it
