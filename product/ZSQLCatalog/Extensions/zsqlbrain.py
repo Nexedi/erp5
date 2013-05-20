@@ -23,6 +23,11 @@ from AccessControl.SecurityInfo import allow_class
 
 from zLOG import LOG, WARNING
 
+try:
+  from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
+except ImportError:
+  DEFAULT_ACTIVITY = None
+
 _MARKER = []
 
 class ZSQLBrain(Acquisition.Implicit):
@@ -119,6 +124,35 @@ class ZSQLBrain(Acquisition.Implicit):
       raise
     except:
       pass
+
+  # If CMFActivity is available, we add ZSQLBrain.activate() that does
+  # not call getObject() for better performance and less memory usage.
+  if DEFAULT_ACTIVITY is not None:
+    def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
+                 activate_kw=None, **kw):
+      """
+      This method returns an ActiveWrapper without calling getObject().
+
+      See CMFActivity.ActiveObject.activate() for the detail of API.
+      """
+      try:
+        activity_tool = self.aq_parent.getPortalObject().portal_activities
+      except AttributeError:
+        return self # Do nothing if no portal_activities
+      # here we cannot have local default_activate_parameter because
+      # we don't want to access the object. if we really need local
+      # one, we can just call like brain.getObject().activate()
+      # instead.
+      new_kw = activity_tool.getDefaultActivateParameterDict(inherit_placeless=False)
+      if activate_kw:
+        new_kw.update(activate_kw)
+      new_kw.update(kw)
+
+      # activate returns an ActiveWrapper
+      # a queue can be provided as well as extra parameters
+      # which can be used for example to define deferred tasks
+      return activity_tool.activateObject(
+        self.getPath(), activity, active_process, **new_kw)
 
 allow_class(ZSQLBrain)
 

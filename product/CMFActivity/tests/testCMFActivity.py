@@ -3442,6 +3442,16 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ).getTitle()
     self.tic()
 
+  def test_activateOnZsqlBrain(self):
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+      self.tic()
+    organisation = organisation_module.searchFolder(id=self.company_id)[0]
+    organisation.activate().getTitle()
+    self.tic()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
