@@ -1316,7 +1316,7 @@ class ActivityTool (Folder, UniqueObject):
       self.flush(object_path,method_id=method_id,invoke=0)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
-          self.absolute_url(), 'view'))
+          self.absolute_url(), 'manageActivities'))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageDelete' )
     def manageDelete(self, message_uid_list, activity, REQUEST=None):
