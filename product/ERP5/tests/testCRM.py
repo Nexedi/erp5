@@ -85,6 +85,7 @@ class TestCRM(BaseTestCRM):
             'erp5_core_proxy_field_legacy',
             'erp5_base',
             'erp5_ingestion',
+            'erp5_pdm',
             'erp5_crm',)
 
   def test_Event_getQuantity(self):
@@ -537,6 +538,7 @@ class TestCRMMailIngestion(BaseTestCRM):
             'erp5_base',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_pdm',
             'erp5_crm',
             )
 
