@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_event_path</string> </value>
+            <value> <string>view_details</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Event Path</string> </value>
+            <value> <string>Details</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Campaign_viewEventPath</string> </value>
+            <value> <string>string:${object_url}/Campaign_viewDetails</string> </value>
         </item>
       </dictionary>
     </pickle>

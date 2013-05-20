@@ -9,7 +9,7 @@ Campaign | document_list
 Campaign | jump_related_event
 Campaign | new_event
 Campaign | view
-Campaign | view_event_path
+Campaign | view_details
 Event Module | event_activity
 Event Module | event_detailed_report
 Event Module | view

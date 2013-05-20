@@ -61,6 +61,8 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>left_outcome</string>
+                <string>right_outcome</string>
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
@@ -99,6 +101,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>left_outcome</string> </key>
+                    <value>
+                      <list>
+                        <string>my_default_outcome_quantity</string>
+                        <string>my_default_outcome_quantity_unit</string>
+                        <string>my_default_outcome_path_resource_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>right</string> </key>
                     <value>
                       <list>
@@ -107,12 +119,22 @@
                       </list>
                     </value>
                 </item>
+                <item>
+                    <key> <string>right_outcome</string> </key>
+                    <value>
+                      <list>
+                        <string>my_default_outcome_price</string>
+                        <string>my_default_outcome_price_currency</string>
+                        <string>my_default_outcome_total_price</string>
+                      </list>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Campaign_viewEventPath</string> </value>
+            <value> <string>Campaign_viewDetails</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -120,7 +142,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DefaultEventPath_view</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -136,7 +158,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Event Path</string> </value>
+            <value> <string>Details</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
