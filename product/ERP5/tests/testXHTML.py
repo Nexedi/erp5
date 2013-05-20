@@ -314,12 +314,12 @@ class TestXHTML(ERP5TypeTestCase):
     """ 
     Check that Python Scripts syntax is correct.
     """
-    skins_tool = self.portal.portal_skins
-    for script_path, script in skins_tool.ZopeFind(
-              skins_tool, obj_metatypes=['Script (Python)'], search_sub=1):
-      if script.errors!=():
-        # we need to add script id as well in test failure
-        self.assertEquals('%s : %s' %(script_path, script.errors), ())
+    for tool in (self.portal.portal_skins, self.portal.portal_workflow):
+      for script_path, script in tool.ZopeFind(
+                tool, obj_metatypes=['Script (Python)'], search_sub=1):
+        if script.errors!=():
+          # we need to add script id as well in test failure
+          self.assertEquals('%s : %s' %(script_path, script.errors), ())
 
   def test_SkinItemId(self):
     """ 
