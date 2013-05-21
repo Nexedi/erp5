@@ -144,6 +144,12 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return resource.relative_url
   resource_relative_url = ComputedAttribute(getResourceRelativeUrl, 1)
 
+  def getResourceReference(self):
+    resource = self.getResourceValue()
+    if resource is not None:
+      return resource.getReference()
+  resource_reference = ComputedAttribute(getResourceReference, 1)
+
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
     """
