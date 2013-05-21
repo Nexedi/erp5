@@ -1060,8 +1060,7 @@ class ActivityTool (Folder, UniqueObject):
         thread_activity_buffer[my_thread_key] = buffer
         return buffer
 
-    security.declarePrivate('activateObject')
-    def activateObject(self, object, activity, active_process, **kw):
+    def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
       if not is_initialized:
         self.initialize()
       self.getActivityBuffer()
