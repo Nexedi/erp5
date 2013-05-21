@@ -91,11 +91,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
