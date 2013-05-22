@@ -41,16 +41,18 @@ class TestERP5CatalogSecurityUidOptimization(ERP5TypeTestCase):
     bt5 to be installed in advance.
     XXX: Inherit from TestERP5Catalog so we test default and security_uid optmization with same tests.
   """
-    
   business_template_list = ['erp5_security_uid_innodb_catalog',
                             'erp5_full_text_myisam_catalog','erp5_base']
 
   def getBusinessTemplateList(self):
     return self.business_template_list
-    
+
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    group = portal.portal_categories.group
+    if 'g1' not in group.objectIds():
+      group.newContent(portal_type='Category', id='g1', codification='GROUP1')
 
   def test_local_roles_group_id_on_role_information(self):
     """Test usage of local_roles_group_id when searching catalog.
@@ -111,6 +113,13 @@ CREATE TABLE alternate_roles_and_users (
       role_base_category_script_id='ERP5Type_getSecurityCategoryFromSelf',
       role_base_category='agent',
       local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl())
+    # add another role information that does not grant view permission
+    self.portal.portal_types.Person.newContent(
+      portal_type='Role Information',
+      role_name='Unknown',
+      role_category_list=('group/g1'),
+      role_base_category='group',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl())
 
     self.portal.portal_caches.clearAllCache()
     self.tic()
@@ -119,21 +128,23 @@ CREATE TABLE alternate_roles_and_users (
       # create two persons and users
       user1 = self.portal.person_module.newContent(portal_type='Person',
         reference='user1')
-      user1.newContent(portal_type='Assignment').open()
+      user1.newContent(portal_type='Assignment', group='g1').open()
       user1.updateLocalRolesOnSecurityGroups()
       self.assertEquals(user1.__ac_local_roles__.get('user1'), ['Auditor'])
+      self.assertEquals(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
 
       user2 = self.portal.person_module.newContent(portal_type='Person',
         reference='user2')
-      user2.newContent(portal_type='Assignment').open()
+      user2.newContent(portal_type='Assignment', group='g1').open()
       user2.updateLocalRolesOnSecurityGroups()
       self.assertEquals(user2.__ac_local_roles__.get('user2'), ['Auditor'])
+      self.assertEquals(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
       self.tic()
 
       # security_uid_dict in catalog contains entries for user1 and user2:
       user1_alternate_security_uid = sql_catalog.security_uid_dict[
         ('Alternate', ('user:user1', 'user:user1:Auditor'))]
-      bob_alternate_security_uid = sql_catalog.security_uid_dict[
+      user2_alternate_security_uid = sql_catalog.security_uid_dict[
         ('Alternate', ('user:user2', 'user:user2:Auditor'))]
 
       # those entries are in alternate security table
@@ -143,7 +154,7 @@ CREATE TABLE alternate_roles_and_users (
                            alternate_security_uid=user1_alternate_security_uid) in
                       alternate_roles_and_users)
       self.assertTrue(dict(uid=user2.getUid(),
-                           alternate_security_uid=bob_alternate_security_uid) in
+                           alternate_security_uid=user2_alternate_security_uid) in
                       alternate_roles_and_users)
 
       # low level check of the security query of a logged in user
@@ -168,11 +179,14 @@ CREATE TABLE alternate_roles_and_users (
           local_roles='Auditor')])
 
       # searches still work for other users
+      self.login('user2')
+      self.assertEquals([user2],
+        [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
+
       self.login('ERP5TypeTestCase')
       self.assertSameSet([user1, user2],
         [o.getObject() for o in
           self.portal.portal_catalog(portal_type='Person')])
-
     finally:
       # restore catalog configuration
       sql_catalog.sql_search_tables = current_sql_search_tables

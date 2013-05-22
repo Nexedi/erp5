@@ -133,14 +133,13 @@ class IndexableObjectWrapper(object):
         optimized_role_set = set()
         # First parse optimized roles and build optimized_role_set
         for role_definition_group, user_and_role_list in local_roles_group_id_group_id.items():
-          try:
-            group_allowed_set = allowed_by_local_roles_group_id[role_definition_group]
-          except KeyError:
-            allowed_by_local_roles_group_id[role_definition_group] = group_allowed_set = set()
+          group_allowed_set = allowed_by_local_roles_group_id.setdefault(
+            role_definition_group, set())
           for user, role in user_and_role_list:
-            prefix = 'user:' + user
-            group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
-            optimized_role_set.add((user, role))
+            if role in allowed_role_set:
+              prefix = 'user:' + user
+              group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
+              optimized_role_set.add((user, role))
 
         # Then parse other roles
         for user, roles in localroles.iteritems():
@@ -155,10 +154,8 @@ class IndexableObjectWrapper(object):
                 user_view_permission_role_dict[role] = user
             elif role in allowed_role_set:
               for group in local_roles_group_id_group_id.get(user, ('', )):
-                try:
-                  group_allowed_set = allowed_by_local_roles_group_id[group]
-                except KeyError:
-                   allowed_by_local_roles_group_id[group] = group_allowed_set = set()
+                group_allowed_set = allowed_by_local_roles_group_id.setdefault(
+                  group, set())
                 if (user, role) not in optimized_role_set:
                   # add only if not already added to optimized_role_set to avoid polluting indexation table
                   group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
