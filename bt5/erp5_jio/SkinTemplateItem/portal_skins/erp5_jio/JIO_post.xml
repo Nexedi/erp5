@@ -68,9 +68,7 @@ jio.setMode(mode)\n
 \n
 try:\n
   response_json = jio.putDocumentMetadata(doc, overwrite=False)\n
-except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot post document", str(e)))\n
-except TypeError as e:\n
+except (ValueError, TypeError) as e:\n
   return jio.sendError(jio.createBadRequestDict("Cannot post document", str(e)))\n
 except LookupError as e:\n
   return jio.sendError(jio.createConflictDict("Cannot post document", str(e)))\n

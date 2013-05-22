@@ -68,10 +68,10 @@ jio.setMode(mode)\n
 \n
 try:\n
   response_json = jio.removeDocument(doc)\n
-except ValueError as e:\n
+except (ValueError, TypeError) as e:\n
   return jio.sendError(jio.createBadRequestDict("Cannot remove document", str(e)))\n
-except TypeError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot remove document", str(e)))\n
+except LookupError as e:\n
+  return jio.sendError(jio.createNotFoundDict("Cannot remove document", str(e)))\n
 \n
 return jio.sendSuccess(response_json)\n
 </string> </value>

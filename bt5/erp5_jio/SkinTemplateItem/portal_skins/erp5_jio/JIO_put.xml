@@ -68,9 +68,7 @@ jio.setMode(mode)\n
 \n
 try:\n
   response_json = jio.putDocumentMetadata(doc)\n
-except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot put document", str(e)))\n
-except TypeError as e:\n
+except (ValueError, TypeError) as e:\n
   return jio.sendError(jio.createBadRequestDict("Cannot put document", str(e)))\n
 \n
 return jio.sendSuccess(response_json)\n

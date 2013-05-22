@@ -59,6 +59,7 @@ class FakeDocument():\n
   def getObject(self): return self\n
   def hasProperty(self, property_id): return False\n
 \n
+\n
 class JioErp5Only():\n
   def getDocumentAttachment(self, metadata_json):\n
     tool.checkMetadata(metadata_json)\n
@@ -77,6 +78,7 @@ class JioErp5Only():\n
     document_dict["workflow_history"] = [v for v in document.workflow_history]\n
     return document_dict\n
 \n
+\n
 class JioGeneric():\n
   "Processes generic jIO requests"\n
   def __init__(self):\n
@@ -93,7 +95,9 @@ class JioGeneric():\n
     self.allowed_property_id_dict = ["title", "short_title", "description",\n
                                      "language", "reference", "version",\n
                                      "format", "posted_date", "type",\n
+                                     "expiration_date",\n
                                      "contributor", "subject", "category"]\n
+    self.allowed_portal_type_list = ["Web Page", "Image"]\n
     self.local_attachment_key = "local_attachment_dict"\n
 \n
   def getDocumentAttachment(self, metadata_json):\n
@@ -106,11 +110,11 @@ class JioGeneric():\n
     if metadata_json.get("_attachment") == "body" and \\\n
       "text_content" in document_dict:\n
       return document_dict["text_content"]\n
-    elif document_dict.get(self.local_attachment_key) is not None and \\\n
-         metadata_json.get("_attachment") in \\\n
-         document_dict.get(self.local_attachment_key):\n
-      return document_dict[self.local_attachment_key][\n
-        metadata_json["_attachment"]]["data"]\n
+    # elif document_dict.get(self.local_attachment_key) is not None and \\\n
+    #      metadata_json.get("_attachment") in \\\n
+    #      document_dict.get(self.local_attachment_key):\n
+    #   return document_dict[self.local_attachment_key][\n
+    #     metadata_json["_attachment"]]["data"]\n
     raise KeyError("Missing attachment")\n
 \n
   def getDocumentMetadata(self, metadata_json):\n
@@ -131,16 +135,16 @@ class JioGeneric():\n
           }\n
         }\n
       )\n
-    if document_dict.get(self.local_attachment_key) is not None:\n
-      tmp = {}\n
-      for k, v in document_dict[self.local_attachment_key].items():\n
-        tmp[k] = {\n
-          "length": len(document_dict[self.local_attachment_key][k]["data"]),\n
-          "content_type": document_dict[self.local_attachment_key][k][\n
-            "content_type"]\n
-        }\n
-      real_document_dict["_attachments"] = tool.dictFusion(\n
-        real_document_dict.get("_attachments"), tmp);\n
+    # if document_dict.get(self.local_attachment_key) is not None:\n
+    #   tmp = {}\n
+    #   for k, v in document_dict[self.local_attachment_key].items():\n
+    #     tmp[k] = {\n
+    #       "length": len(document_dict[self.local_attachment_key][k]["data"]),\n
+    #       "content_type": document_dict[self.local_attachment_key][k][\n
+    #         "content_type"]\n
+    #     }\n
+    #   real_document_dict["_attachments"] = tool.dictFusion(\n
+    #     real_document_dict.get("_attachments"), tmp);\n
     while True:\n
       try: k, v = document_dict.popitem()\n
       except KeyError: break\n
@@ -170,6 +174,7 @@ class JioGeneric():\n
         real_document_dict[k] = v\n
     real_document_dict["_id"] = metadata_json["_id"]\n
     real_document_dict["type"] = document.getPortalType()\n
+    #tool.stringifyDictDateValue(real_document_dict)\n
     return real_document_dict\n
 \n
   def updateDocumentMetadataEditKw(self, metadata_json,\n
@@ -200,14 +205,15 @@ class JioGeneric():\n
     if metadata_json.get("_attachment") == "body":\n
       document.edit(text_content=metadata_json.get("_data"))\n
     else:\n
-      edit_kw = {self.local_attachment_key:\n
-                 document.getProperty(self.local_attachment_key)}\n
-      if edit_kw.get(self.local_attachment_key) is None:\n
-        edit_kw[self.local_attachment_key] = {}\n
-      edit_kw[self.local_attachment_key][metadata_json.get("_attachment")] = {\n
-        "content_type": metadata_json.get("_mimetype"),\n
-        "data": metadata_json.get("_data")}\n
-      document.edit(**edit_kw)\n
+      raise ValueError("Unauthorized attachment id")\n
+      # edit_kw = {self.local_attachment_key:\n
+      #            document.getProperty(self.local_attachment_key)}\n
+      # if edit_kw.get(self.local_attachment_key) is None:\n
+      #   edit_kw[self.local_attachment_key] = {}\n
+      # edit_kw[self.local_attachment_key][metadata_json.get("_attachment")] = {\n
+      #   "content_type": metadata_json.get("_mimetype"),\n
+      #   "data": metadata_json.get("_data")}\n
+      # document.edit(**edit_kw)\n
     return {"ok": True, "id": metadata_json["_id"],\n
             "attachment": metadata_json.get("_attachment")}\n
 \n
@@ -248,15 +254,36 @@ class JioGeneric():\n
     except ValueError: raise LookupError("Missing document")\n
     except KeyError: raise LookupError("Missing document")\n
     document_id = document.getId()\n
-    document.getParentValue.manage_delObjects(ids=[document_id])\n
-    return {"ok": True, "id": document_id}\n
+    document.getParentValue().manage_delObjects(ids=[document_id])\n
+    return {"ok": True, "id": metadata_json["_id"]}\n
 \n
-  def removeAttachment(self, document, data_dict):\n
-    document = document.getObject()\n
+  def removeAttachment(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json["_id"])\n
+    except AttributeError: raise ValueError("Bad document id")\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
     edit_kw = {}\n
-    if data_dict.get("_attachment") == "body.html":\n
-      edit_kw[self.mode["attachment_data_key"]] = None\n
-    document.edit(**edit_kw)\n
+    if metadata_json.get("_attachment") == "body":\n
+      if document.getTextContent() == None:\n
+        raise LookupError("Missing attachment")\n
+      document.edit(text_content = None)\n
+    else:\n
+      raise ValueError("Unauthorized attachment id")\n
+    return {"ok": True, "id": metadata_json["_id"],\n
+            "attachment": metadata_json.get("_attachment")}\n
+\n
+  def getAllDocuments(self, option_json):\n
+    response = {"rows":[]}\n
+    for portal_type in self.allowed_portal_type_list:\n
+      for document in context.portal_catalog(portal_type=portal_type):\n
+        url = tool.getUrlFromDocument(document)\n
+        row = {"id": url, "key": url, "values": {}}\n
+        if option_json.get(\'include_docs\') is True:\n
+          row["doc"] = self.getDocumentMetadata({"_id": url})\n
+        response["rows"].append(row)\n
+    response["total_rows"] = len(response["rows"])\n
+    return response\n
 \n
 class JioTool():\n
   # TODO doc strings\n
@@ -341,6 +368,8 @@ class JioTool():\n
     elif isinstance(obj, dict):\n
       return dict(((k.encode("utf-8"), self.recursiveEncodeToUtf8(v)) \\\n
                    for k, v in obj.iteritems()))\n
+    else:\n
+      return obj\n
 \n
   def jsonUtf8Loads(self, json_str):\n
     return self.recursiveEncodeToUtf8(json.loads(json_str))\n
@@ -392,6 +421,12 @@ class JioTool():\n
 \n
   def removeDocument(self, metadata_json):\n
     return self.jio.removeDocument(metadata_json)\n
+\n
+  def removeAttachment(self, metadata_json):\n
+    return self.jio.removeAttachment(metadata_json)\n
+\n
+  def getAllDocuments(self, option_json):\n
+    return self.jio.getAllDocuments(option_json)\n
 \n
   def sendSuccess(self, param):\n
     return json.dumps({"err": None, "response": param})\n

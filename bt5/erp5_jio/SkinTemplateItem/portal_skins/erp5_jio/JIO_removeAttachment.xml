@@ -58,31 +58,22 @@ context.REQUEST.response.setHeader("Access-Control-Allow-Origin", "*")\n
 \n
 jio = context.JIO_class()\n
 \n
-try:\n
-  doc = json.loads(context.REQUEST.form["doc"])\n
-except IndexError:\n
-  return jio.sendError(jio.createBadRequestErrorObject("Unable to operate put request", "No document received"))\n
-try:\n
-  mode = str(context.REQUEST.form["mode"])\n
+try: doc = jio.jsonUtf8Loads(context.REQUEST.form["doc"])\n
 except KeyError:\n
-  mode = "normal"\n
+  return jio.sendError(jio.createBadRequestDict("Cannot get document", "No document information received"))\n
 \n
+try: mode = str(context.REQUEST.form["mode"])\n
+except KeyError: mode = "generic"\n
 jio.setMode(mode)\n
 \n
-doc = jio.recursiveEncodeToUtf8(doc)\n
+try:\n
+  response_json = jio.removeAttachment(doc)\n
+except (ValueError, TypeError) as e:\n
+  return jio.sendError(jio.createBadRequestDict("Cannot remove attachment", str(e)))\n
+except LookupError as e:\n
+  return jio.sendError(jio.createNotFoundDict("Cannot remove attachment", str(e)))\n
 \n
-if not isinstance(doc.get("_id"), str) or doc.get("_id") == "":\n
-  return jio.sendError(jio.createBadRequestErrorObject("Unable to operate put request", "Document id is missing"))\n
-\n
-document_list = jio.getDocumentListFromId(doc.get("_id"))\n
-\n
-if len(document_list) == 0:\n
-  return jio.sendError(jio.createNotFoundErrorObject("Unable to find \\"" + doc.get("_id") + "\\"", "Document not found"))\n
-else:\n
-  # TODO manage several documents\n
-  jio.removeAttachment(document_list[0], doc)\n
-\n
-  return jio.sendSuccess({"ok": True, "id": doc["_id"], "attachment": doc["_attachment"]})\n
+return jio.sendSuccess(response_json)\n
 </string> </value>
         </item>
         <item>
