@@ -75,6 +75,7 @@ if context.getPortalType() == \'Budget\':\n
 else:\n
   # ... or on the budget module, and in this case, all budgets are used\n
   defined_group = request[\'section_category\']\n
+  validation_state = request.get(\'validation_state\', [])\n
   strict_section_membership = request.get(\'section_category_strict\', False)\n
   search_kw = dict(portal_type=\'Budget\',\n
                    validation_state=validation_state)\n
