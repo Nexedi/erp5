@@ -140,6 +140,14 @@ class Coordinate(Base):
       """
       return self.asText()
 
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'hasText')
+    def hasText(self):
+      """
+      calls asText
+      """
+      return bool(self.asText())
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getCoordinateText')
     def getCoordinateText(self, default=_marker):
       """Fallback on splitted values (old API)
