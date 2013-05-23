@@ -61,6 +61,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -196,7 +200,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getPortalResourceTypeList()</string> </value>
+            <value> <string>python: [(x, x) for x in context.getPortalResourceTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
