@@ -270,6 +270,7 @@ class ExplanationCache:
 
     # Build a new closure business process
     module = business_process.getPortalObject().business_process_module # XXX-JPS
+    self.closure_cache[business_link] = self.closure_cache[path_list] = \
     new_business_process = module.newContent(portal_type="Business Process", 
                                                                         temp_object=True) # XXX-JPS is this really OK with union business processes
     i = 0
@@ -281,8 +282,6 @@ class ExplanationCache:
         id = 'closure_path_%s' % i
         new_business_process._setOb(id, business_link.asContext(id=id))
 
-    self.closure_cache[business_link] = new_business_process
-    self.closure_cache[path_list] = new_business_process
     return new_business_process
 
   def getUnionBusinessProcess(self):
