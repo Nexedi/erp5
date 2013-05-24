@@ -264,24 +264,31 @@ class ExplanationCache:
     path_list.sort()
     path_list = tuple(path_list)
     new_business_process = self.closure_cache.get(path_list)
-    if new_business_process is not None:
-      self.closure_cache[business_link] = new_business_process
-      return new_business_process
+    if new_business_process is None:
+      business_link_list = []
+      new_business_process = business_process
+      for x in business_process.getBusinessLinkValueList():
+        if self.getSimulationMovementValueList(path=path_list,
+                                               causality_uid=x.getUid()):
+          # We have matching movements.
+          business_link_list.append(x)
+        else:
+          new_business_process = None
+      if new_business_process is None:
+        # Build a new closure business process.
+        # Initially, business_process is often the result of
+        # asComposedDocument() and business_process.getParentValue() is not a
+        # module where newContent() allows creation of Business Processes.
+        # XXX-JPS is this really OK with union business processes
+        from Products.ERP5Type.Document import newTempBusinessProcess
+        new_business_process = newTempBusinessProcess(
+          self.explanation, 'closure_business_process')
+        for i, x in enumerate(business_link_list):
+          id = 'closure_path_%s' % i
+          new_business_process._setOb(id, x.asContext(id=id))
+      self.closure_cache[path_list] = new_business_process
 
-    # Build a new closure business process
-    module = business_process.getPortalObject().business_process_module # XXX-JPS
-    self.closure_cache[business_link] = self.closure_cache[path_list] = \
-    new_business_process = module.newContent(portal_type="Business Process", 
-                                                                        temp_object=True) # XXX-JPS is this really OK with union business processes
-    i = 0
-    for business_link in business_process.getBusinessLinkValueList():
-      if self.getSimulationMovementValueList(path=path_list,
-                                  causality_uid=business_link.getUid()):
-        # We have matching movements.
-        i += 1
-        id = 'closure_path_%s' % i
-        new_business_process._setOb(id, business_link.asContext(id=id))
-
+    self.closure_cache[business_link] = new_business_process
     return new_business_process
 
   def getUnionBusinessProcess(self):
