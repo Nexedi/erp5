@@ -2771,7 +2771,7 @@ class ListBoxValidator(Validator.Validator):
           selected_uid_set = set(REQUEST.get('uids', ()))
         #LOG('ListBox.validate: REQUEST',0,REQUEST)
         errors = []
-        object_list = None
+        object_dict = None
         # We have two things to do in the case of temp objects,
         # the first thing is to create a list with new temp objects
         # then try to validate some data, and then create again
@@ -2780,19 +2780,27 @@ class ListBoxValidator(Validator.Validator):
         listbox = {}
         for uid in listbox_uids:
           if uid[:4] == 'new_':
-            if object_list is None:
+            if object_dict is None:
               list_method = field.get_value('list_method')
               list_method = getattr(here, list_method.method_name)
               #LOG('ListBoxValidator', 0, 'call %s' % repr(list_method))
               object_list = list_method(REQUEST=REQUEST, **params)
+              object_dict = dict()
+              for obj in object_list:
+                o_uid = obj.getUid()
+                assert o_uid not in object_dict,\
+                  "List method returned duplicate uid %s %s" % (
+                    o_uid, object_dict)
+                object_dict[o_uid] = obj
+
             row_key = uid[4:]
-            for o in object_list:
-              if o.getUid() == uid:
-                break
-            else:
+            try:
+              o = object_dict[uid]
+            except KeyError:
               # First case: dialog input to create new objects
               o = newTempBase(portal, row_key) # Arghhh - XXX acquisition problem - use portal root
               o.uid = uid
+
             listbox[row_key] = row_result = {}
             # We first try to set a listbox corresponding to all things
             # we can validate, so that we can use the same list
@@ -2811,24 +2819,34 @@ class ListBoxValidator(Validator.Validator):
                   pass
                 except KeyError:
                   pass
+
         # Here we generate again the object_list with listbox the listbox we
         # have just created
+        # XXX why ? -jerome
         if listbox:
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
           REQUEST.set(field.id, listbox)
           object_list = list_method(REQUEST=REQUEST, **params)
+          object_dict = dict()
+          for obj in object_list:
+            o_uid = obj.getUid()
+            assert o_uid not in object_dict,\
+              "List method returned duplicate uid %s" % o_uid
+            object_dict[o_uid] = obj
+
+
         for uid in listbox_uids:
           row_result = {}
           if uid[:4] == 'new_':
-            # First case: dialog input to create new objects
             row_key = uid[4:]
-            for o in object_list:
-              if o.getUid() == uid:
-                break
-            else:
+            try:
+              o = object_dict[uid]
+            except KeyError:
+              # First case: dialog input to create new objects
               o = newTempBase(portal, row_key) # Arghhh - XXX acquisition problem - use portal root
               o.uid = uid
+
             for sql in editable_column_ids:
               editable_field = editable_field_dict.get(sql.replace('.', '_'))
               if editable_field is not None:
@@ -2895,6 +2913,7 @@ class ListBoxValidator(Validator.Validator):
             #except:
             else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
+
           result[row_key] = row_result
           if select:
             row_result['listbox_selected'] = uid in selected_uid_set
