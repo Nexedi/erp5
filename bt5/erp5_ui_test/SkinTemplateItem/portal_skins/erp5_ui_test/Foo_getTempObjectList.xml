@@ -51,11 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
+\n
+def makeObject(uid):\n
+  def getUid():\n
+    return uid\n
+  return Object(uid=uid, getUid=getUid)\n
+\n
 object_list = []\n
 for i in range(3):\n
-  object_list.append(\n
-         Object(uid=\'new_%s\' % i,\n
-                getUid = lambda: \'new_%s\' % i))\n
+  object_list.append(makeObject(\'new_%s\' % i))\n
+\n
 return object_list\n
 </string> </value>
         </item>
