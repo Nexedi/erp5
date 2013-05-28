@@ -2781,12 +2781,10 @@ class ListBoxValidator(Validator.Validator):
         for uid in listbox_uids:
           if uid[:4] == 'new_':
             if object_dict is None:
+              object_dict = {}
               list_method = field.get_value('list_method')
               list_method = getattr(here, list_method.method_name)
-              #LOG('ListBoxValidator', 0, 'call %s' % repr(list_method))
-              object_list = list_method(REQUEST=REQUEST, **params)
-              object_dict = dict()
-              for obj in object_list:
+              for obj in list_method(REQUEST=REQUEST, **params):
                 o_uid = obj.getUid()
                 assert o_uid not in object_dict,\
                   "List method returned duplicate uid %s %s" % (
@@ -2822,19 +2820,16 @@ class ListBoxValidator(Validator.Validator):
 
         # Here we generate again the object_list with listbox the listbox we
         # have just created
-        # XXX why ? -jerome
         if listbox:
+          object_dict = {}
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
           REQUEST.set(field.id, listbox)
-          object_list = list_method(REQUEST=REQUEST, **params)
-          object_dict = dict()
-          for obj in object_list:
+          for obj in list_method(REQUEST=REQUEST, **params):
             o_uid = obj.getUid()
             assert o_uid not in object_dict,\
               "List method returned duplicate uid %s" % o_uid
             object_dict[o_uid] = obj
-
 
         for uid in listbox_uids:
           row_result = {}
@@ -2878,19 +2873,20 @@ class ListBoxValidator(Validator.Validator):
               except (KeyError, NotFound, ValueError), err:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
-                if object_list is None:
+                if object_dict is None:
+                  object_dict = {}
                   list_method = field.get_value('list_method')
                   list_method = getattr(here, list_method.method_name)
-                  object_list = list_method(REQUEST=REQUEST, **params)
-                for o in object_list:
-                  try:
-                    if o.getUid() == int(uid):
-                      break
-                  except ValueError:
-                    if str(o.getUid()) == uid:
-                      break
-                else:
-                  raise err
+                  for obj in list_method(REQUEST=REQUEST, **params):
+                    o_uid = str(obj.getUid())
+                    assert o_uid not in object_dict,\
+                      "List method returned duplicate uid %s" % o_uid
+                    object_dict[o_uid] = obj
+
+                  o = object_dict.get(str(uid))
+                  if o is None:
+                    raise err
+
               row_key = o.getUrl()
               for sql in editable_column_ids:
                 editable_field = editable_field_dict.get(sql.replace('.', '_'))
