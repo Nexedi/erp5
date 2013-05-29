@@ -3261,6 +3261,145 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                      sorted([(movement.getResourceUid(), movement.getQuantity())
                              for movement in full_inventory_2.getMovementList()]))
 
+  def stepImmediateReindexTheLatestInventory(
+         self, sequence=None, sequence_list=None, **kw):
+    inventory_list = sequence.get('inventory_list')
+    sorted_list = sorted(
+      inventory_list, key=lambda inventory: inventory.getStartDate())
+    latest_inventory = sorted_list[-1]
+    latest_inventory.immediateReindexObject()
+
+  def stepDoubleStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table inconsistent so that we can check that
+      optimisation is well used
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity*2 \0"
+      "COMMIT")
+    self.commit()
+
+  def stepHalfStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table inconsistent so that we can check that
+      optimisation is well used
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity/2 \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepClearInventoryCache(
+        self, sequence=None, sequence_list=None, **kw):
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "DELETE FROM inventory_cache \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepCheckCorruptedCacheHasFixedByReindex(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           optimise=True,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=100,
+                           optimise__=False,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
+
+  def stepStoreWrongCache(self, sequence=None, sequence_list=None, **kw):
+    """
+      Cache a corrupted stock data.
+    """
+    node_value = sequence.get('node')
+    to_date=DateTime(self.two_resource_full_inventory2_start_date)
+    self.getPortalObject().portal_simulation.getCurrentInventoryList(
+      to_date=to_date,
+      node=node_value.getRelativeUrl(),
+      group_by_variation=1,
+      group_by_sub_variation=1,
+      group_by_resource=1)
+
+  @expectedFailure
+  def test_16_CorruptedInventoryCacheAndFullInventory(
+        self, quiet=0, run=run_all_test):
+    """
+    XXX-Tatuya: Do we really need to support this case?
+
+    To make assure this validity, we must ignore all the cache when reindexing.
+
+    Proof: Inventory caching caches more than one month older inventory,
+    to make THIS inventory valid, we need to invalidate one month ago
+    inventory's cache, and the one month ago inventory may wrongly cached two
+    month ago inventory and.. by mathematical induction, we need to invalidate
+    all the cache when getting inventory from new to old.
+     In contrast, reindex from the oldest inventory up to the newest one must
+    work if and only if..
+    ALL THE WRONG CACHES CAN BE REMOVED/IGNORED BY INVENTORY DOCUMENTS REINDEX.
+     For example, if the oldest wrong cache date is 31 days before than the
+    oldest inventory, re-index and stock table will be corrupted.
+     The cache is still enable because it is older than 30 days ago and newer
+    than 60 days ago, at the same time it can not be removed because the date
+    is older than the oldest inventory start_date.
+    Thus we must ignore all the cache to make assure this case validity.
+
+    The case is:
+    1) full inventory: 2013/01/01,section=A, node=B, resource=X, quantity=100
+                                                     resource=Y, quantity=100
+    2) clear the existing cache
+    3) modify stock table by hand
+    4) cache the wrong stock result at 2013/02/02
+       Note: Here we need to use between 2013/02/02 and 2013/02/28 to cache
+             2013/01/01 stock data.
+    5) fix back the stock table
+    6) full inventory: 2013/02/02,section=A, node=B, resource=X, quantity=100
+                                                     resource=Y, quantity=100
+       Note: Here we need to use between 2013/02/02 and 2013/02/28
+    [test]
+    getInventory(resource=X, to_date=2013/02/10) should return 100
+    getInventory(resource=Y, to_date=2013/02/10) should return 100
+    """
+    if not run: return
+    self.two_resource_full_inventory1_start_date = '2013/01/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 100
+    self.two_resource_full_inventory1_inventory_2 = 100
+    self.two_resource_full_inventory2_start_date = '2013/02/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 100
+    self.two_resource_full_inventory2_inventory_2 = 100
+    self.full_inventory_start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       ClearInventoryCache \
+                       DoubleStockValue \
+                       StoreWrongCache \
+                       HalfStockValue \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CheckCorruptedCacheHasFixedByReindex \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestInventory))
