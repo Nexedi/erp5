@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>uid\r\n
+order_id\r\n
+mirror_order_id\r\n
+getExplanationUid\r\n
+getResourceUid\r\n
+getInventoriatedQuantity\r\n
+getSourceUid\r\n
+getDestinationUid\r\n
+getSourceSectionUid\r\n
+getDestinationSectionUid\r\n
+isMovement\r\n
+isCancellationAmount\r\n
+isInventoryMovement\r\n
+getSourcePaymentUid\r\n
+getDestinationPaymentUid\r\n
+getSourceFunctionUid\r\n
+getDestinationFunctionUid\r\n
+getSourceProjectUid\r\n
+getDestinationProjectUid\r\n
+getSourceFundingUid\r\n
+getDestinationFundingUid\r\n
+getSourcePaymentRequestUid\r\n
+getDestinationPaymentRequestUid\r\n
+getSimulationState\r\n
+getSourceInventoriatedTotalAssetPrice\r\n
+getDestinationInventoriatedTotalAssetPrice\r\n
+getStartDate\r\n
+getStopDate\r\n
+isAccountable\r\n
+getPortalType\r\n
+getVariationText\r\n
+getSubVariationText</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_catalog_stock_list_without_delete_for_inventory_virtual_movement</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let row_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">\n
+      <dtml-if "getDestinationUid[loop_item]">\n
+        <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    order_id[loop_item],\n
+                    getExplanationUid[loop_item],\n
+                    getDestinationUid[loop_item],\n
+                    getDestinationSectionUid[loop_item],\n
+                    getDestinationPaymentUid[loop_item],\n
+                    getDestinationFunctionUid[loop_item],\n
+                    getDestinationProjectUid[loop_item], \n
+                    getDestinationFundingUid[loop_item], \n
+                    getDestinationPaymentRequestUid[loop_item], \n
+                    getSourceSectionUid[loop_item], \n
+                    getSourceUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    getInventoriatedQuantity[loop_item],\n
+                    isCancellationAmount[loop_item],\n
+                    isAccountable[loop_item],\n
+                    getStopDate[loop_item], \n
+                    getStartDate[loop_item], \n
+                    getDestinationInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+      </dtml-if>\n
+      <dtml-if "getSourceUid[loop_item]">\n
+        <dtml-call expr="row_list.append([\n
+                    uid[loop_item], \n
+                    mirror_order_id[loop_item],\n
+                    getExplanationUid[loop_item],\n
+                    getSourceUid[loop_item],\n
+                    getSourceSectionUid[loop_item],\n
+                    getSourcePaymentUid[loop_item],\n
+                    getSourceFunctionUid[loop_item],\n
+                    getSourceProjectUid[loop_item], \n
+                    getSourceFundingUid[loop_item], \n
+                    getSourcePaymentRequestUid[loop_item], \n
+                    getDestinationSectionUid[loop_item], \n
+                    getDestinationUid[loop_item], \n
+                    getResourceUid[loop_item],\n
+                    -(getInventoriatedQuantity[loop_item] or 0), \n
+                    isCancellationAmount[loop_item],\n
+                    isAccountable[loop_item],\n
+                    getStartDate[loop_item], \n
+                    getStopDate[loop_item],\n
+                    getSourceInventoriatedTotalAssetPrice[loop_item], \n
+                    getPortalType[loop_item], \n
+                    getSimulationState[loop_item], \n
+                    getVariationText[loop_item],\n
+                    getSubVariationText[loop_item]])">\n
+      </dtml-if>\n
+    </dtml-if>\n
+  </dtml-in>  \n
+  <dtml-if "row_list">\n
+INSERT INTO\n
+  stock\n
+VALUES\n
+    <dtml-in prefix="row" expr="row_list">\n
+(\n
+  <dtml-sqlvar expr="row_item[0]" type="int">,\n
+  <dtml-sqlvar expr="row_item[1]" type="int">,\n
+  <dtml-sqlvar expr="row_item[2]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[3]" type="int">,\n
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>, \n
+  <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[7]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[9]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[10]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="int">, \n
+  <dtml-sqlvar expr="row_item[13]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="int">, \n
+  <dtml-sqlvar expr="row_item[15]" type="int">,\n
+  <dtml-sqlvar expr="row_item[16]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[17]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[18]" type="float" optional>,\n
+  <dtml-sqlvar expr="row_item[19]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[20]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[21]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[22]" type="string" optional>\n
+)\n
+<dtml-if sequence-end><dtml-else>,</dtml-if>\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
