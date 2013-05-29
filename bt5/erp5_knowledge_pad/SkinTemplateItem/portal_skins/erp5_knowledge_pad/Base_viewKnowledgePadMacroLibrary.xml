@@ -148,7 +148,7 @@
   </div>\n
 \n
   <div id="rename_tab_dialog" \n
-       tal:condition="active_knowledge_pad"\n
+       tal:condition="python:active_knowledge_pad is not None"\n
        class="toggable_dialog"\n
        tal:define="active_knowledge_pad_relative_url active_knowledge_pad/getRelativeUrl">\n
     <h3 i18n:translate="" i18n:domain="ui"> Rename tab </h3>\n
