@@ -56,31 +56,27 @@ isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0
 \n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
-  filtered_results = []\n
-  append = filtered_results.append\n
+  # call getObject() explicitly so that further getter methods do not\n
+  # invoke getObject().\n
+  results = [x.getObject() for x in results]\n
+
   # in Web Mode we can have a temporary object created based on current language, document by reference\n
   real_context = context.Base_getRealContext()\n
   real_context_url = real_context.getRelativeUrl()\n
   if mode == \'erp5_front\':\n
     # leave only those not having a publication_section as \n
     # this means belonging to root\n
-    for x in results:\n
-      x = x.getObject()\n
-      if x.getPublicationSection() is None and x.getGroup() is None:\n
-        append(x)\n
+    results = filter(lambda x: x.getPublicationSection() is None and \\\n
+                              x.getGroup() is None, results)\n
   elif mode == \'web_front\':\n
     # Web Site must at least one Pad referenced by context\n
-    for x in results:\n
-      x = x.getObject()\n
-      if real_context_url in x.getPublicationSectionList() and x.getGroup() is None:\n
-        append(x)\n
+    results = filter(lambda x: real_context_url in x.getPublicationSectionList() and \\\n
+                              x.getGroup() is None, results)\n
   elif mode == \'web_section\':\n
     # Web Sections, Web Pages can "reuse" tabs\n
-    for x in results:\n
-      x = x.getObject()\n
-      if real_context_url in x.getPublicationSectionList() and x.getGroup() == default_pad_group:\n
-        append(x)\n
-  return filtered_results\n
+    results = filter(lambda x: real_context_url in x.getPublicationSectionList() or \\\n
+                                x.getGroup() == default_pad_group, results)\n
+  return results\n
 \n
 \n
 kw = {\'portal_type\': \'Knowledge Pad\',\n

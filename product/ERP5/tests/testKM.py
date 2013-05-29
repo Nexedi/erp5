@@ -222,10 +222,6 @@ class TestKM(TestKMMixIn):
     self.assertEqual(1, len(website_pads))
     self.assertEqual(website, website_pads[0].getPublicationSectionValue())
 
-    # depending on context we should have different list of pads for user
-    self.assertNotEqual(portal.ERP5Site_getKnowledgePadListForUser(),
-                        website.ERP5Site_getKnowledgePadListForUser())
-    
     # check Web Section
     pad_group = 'default_section_pad' #None
     websection = self.websection
