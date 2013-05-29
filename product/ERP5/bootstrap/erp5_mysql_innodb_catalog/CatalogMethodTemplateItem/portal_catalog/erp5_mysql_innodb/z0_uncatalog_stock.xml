@@ -54,7 +54,7 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-DELETE FROM stock WHERE <dtml-sqltest uid op=eq type=int>
+DELETE FROM stock WHERE <dtml-sqltest uid op=eq type=int multiple>
 
 ]]></string> </value>
         </item>
