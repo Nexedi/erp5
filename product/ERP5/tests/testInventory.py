@@ -2078,6 +2078,56 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
 
+  def stepCreateTwoResourceFullInventoryAtTheDate(self, sequence=None,
+                                                  sequence_list=None, **kw):
+    """ Create Full Inventory at the date' """
+    inventory_list = sequence.get('inventory_list',[])
+    if kw.get('start_date', None) is not None:
+      start_date = kw['start_date']
+    else:
+      start_date = '2013/03/12 00:00:00 GMT+9'
+    if kw.get('inventory1', None) is not None:
+      inventory1 = kw['inventory1']
+    else:
+      inventory_1 = 10
+    if kw.get('inventory2', None) is not None:
+      inventory2 = kw['inventory2']
+    else:
+      inventory2 = 100
+
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=True,
+                   start_date=start_date)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("resource"),
+      inventory = inventory1)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = inventory2)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepCreateTwoResourceFullInventoryAtTheDate1(self, sequence=None,
+                                                   sequence_list=None, **kw):
+    params = dict(start_date=self.two_resource_full_inventory1_start_date,
+                  inventory1=self.two_resource_full_inventory1_inventory_1,
+                  inventory2=self.two_resource_full_inventory1_inventory_2)
+    self.stepCreateTwoResourceFullInventoryAtTheDate(sequence, sequence_list,
+                                                     **params)
+
+  def stepCreateTwoResourceFullInventoryAtTheDate2(self, sequence=None,
+                                                   sequence_list=None, **kw):
+    params = dict(start_date=self.two_resource_full_inventory2_start_date,
+                  inventory1=self.two_resource_full_inventory2_inventory_1,
+                  inventory2=self.two_resource_full_inventory2_inventory_2)
+    self.stepCreateTwoResourceFullInventoryAtTheDate(sequence, sequence_list,
+                                                     **params)
+
+
   def stepTestFullInventoryWithResourceCategory(self,
                                                 sequence=None,
                                                 sequence_list=None,
@@ -2530,6 +2580,20 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            node_uid=node_value.getUid(),
                            resource_uid=resource_value.getUid())
 
+  def stepCheckFullInventoryUpdateWithValidDateOrder(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=0,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=second_resource_value.getUid())
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -3197,6 +3261,46 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_15_FullInventoryUpdateWithValidDateOrder(
+        self, quiet=0, run=run_all_test):
+    """
+    Confirm Full inventory update with a valid start_date order
+
+    The case is:
+    1) full inventory: 2013/02/01,section=A, node=B, resource=X, quantity=15
+                                                     resource=Y, quantity=20
+    2) full inventory: 2013/02/02,section=A, node=B, resource=X, quantity=20
+                                                     resource=Y, quantity=50
+    3) full inventory: 2013/02/10,section=A, node=B, resource=X, quantity=100
+        -> X:100
+           Y:0  # creates a dummy movement with quantity=-50
+    [test]
+    getInventory(resource=X, to_date=2013/02/15) should return 100
+    getInventory(resource=Y, to_date=2013/02/15) should return 0
+    """
+    if not run: return
+
+    self.two_resource_full_inventory1_start_date = '2013/02/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 15
+    self.two_resource_full_inventory1_inventory_2 = 20
+    self.two_resource_full_inventory2_start_date = '2013/02/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 20
+    self.two_resource_full_inventory2_inventory_2 = 50
+    self.full_inventory_start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CheckFullInventoryUpdateWithValidDateOrder \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
