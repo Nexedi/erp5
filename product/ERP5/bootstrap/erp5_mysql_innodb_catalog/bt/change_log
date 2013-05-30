@@ -1,3 +1,6 @@
+2013-05-30 yusei
+* Fix an inventory bug. When there are more than 300 inventories which are cancelled by inventory document, inventory document creates wrong stock records.
+
 2013-05-08 arnaud.fontaine
 * Prevent order_id column value to overflow following changes in Inventory (cf53db4).
 
