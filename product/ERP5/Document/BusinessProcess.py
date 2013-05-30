@@ -478,7 +478,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     result = set()
-    for state in self.getCompletedTradeStateValue(explanation):
+    for state in self.getCompletedTradeStateList(explanation):
       for business_link in state.getPredecessorRelatedValueList():
         if not self.isBusinessLinkCompleted(explanation, business_link):
           result.add(state)
@@ -494,7 +494,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     result = set()
-    for state in self.getCompletedTradeStateValue(explanation):
+    for state in self.getCompletedTradeStateList(explanation):
       for business_link in state.getPredecessorRelatedValueList():
         if not self.isBusinessLinkPartiallyCompleted(explanation, business_link):
           result.add(state)
@@ -814,7 +814,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     for state in self.getTradeStateList():
-      if not state.isTradeStateCompleted(explanation):
+      if not self.isTradeStateCompleted(explanation, state):
         return False
     return True
   
