@@ -2614,6 +2614,78 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            node_uid=node_value.getUid(),
                            resource_uid=second_resource_value.getUid())
 
+  def stepDubleStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table double
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity*2 \0"
+      "COMMIT")
+    self.commit()
+
+  def stepHalfStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table half
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity/2 \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepClearInventoryCache(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Explicitly Clear invenvory cache.
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "DELETE FROM inventory_cache \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepCheckCorruptedCacheHasFixedByReindex(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make sure that corrupted caches are ignored when inventory document
+      are reindexing.
+    """
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           optimise=True,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=100,
+                           optimise__=False,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
+
+  def stepStoreWrongCache(self, sequence=None, sequence_list=None, **kw):
+    """
+      Cache a corrupted stock data.
+    """
+    node_value = sequence.get('node')
+    to_date=DateTime(self.two_resource_full_inventory2_start_date)
+    self.getPortalObject().portal_simulation.getCurrentInventoryList(
+      to_date=to_date,
+      node=node_value.getRelativeUrl(),
+      group_by_variation=1,
+      group_by_sub_variation=1,
+      group_by_resource=1)
+
+
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
       Test the getInventory methods
@@ -3343,80 +3415,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                              for brain in result if brain.inventory != 0]),
                      sorted([(movement.getResourceUid(), movement.getQuantity())
                              for movement in full_inventory_2.getMovementList()]))
-
-  def stepImmediateReindexTheLatestInventory(
-         self, sequence=None, sequence_list=None, **kw):
-    inventory_list = sequence.get('inventory_list')
-    sorted_list = sorted(
-      inventory_list, key=lambda inventory: inventory.getStartDate())
-    latest_inventory = sorted_list[-1]
-    latest_inventory.immediateReindexObject()
-
-  def stepDubleStockValue(
-        self, sequence=None, sequence_list=None, **kw):
-    """
-      Make stock table inconsistent so that we can check that
-      optimisation is well used
-    """
-    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
-      "BEGIN\0"
-      "UPDATE stock SET quantity=quantity*2 \0"
-      "COMMIT")
-    self.commit()
-
-  def stepHalfStockValue(
-        self, sequence=None, sequence_list=None, **kw):
-    """
-      Make stock table inconsistent so that we can check that
-      optimisation is well used
-    """
-    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
-      "BEGIN\0"
-      "UPDATE stock SET quantity=quantity/2 \0"
-      "COMMIT")
-    self.commit()
-
-
-  def stepClearInventoryCache(
-        self, sequence=None, sequence_list=None, **kw):
-    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
-      "BEGIN\0"
-      "DELETE FROM inventory_cache \0"
-      "COMMIT")
-    self.commit()
-
-
-  def stepCheckCorruptedCacheHasFixedByReindex(
-        self, sequence=None, sequence_list=None, **kw):
-    resource_value = sequence.get('resource')
-    node_value = sequence.get('node')
-    section_value = sequence.get('section')
-    self._testGetInventory(expected=100,
-                           optimise=True,
-                           to_date=DateTime(self.full_inventory_start_date_1),
-                           section_uid=section_value.getUid(),
-                           node_uid=node_value.getUid(),
-                           resource_uid=resource_value.getUid())
-    self._testGetInventory(expected=100,
-                           optimise__=False,
-                           to_date=DateTime(self.full_inventory_start_date_1),
-                           section_uid=section_value.getUid(),
-                           node_uid=node_value.getUid(),
-                           resource_uid=resource_value.getUid())
-
-
-  def stepStoreWrongCache(self, sequence=None, sequence_list=None, **kw):
-    """
-      Cache a corrupted stock data.
-    """
-    node_value = sequence.get('node')
-    to_date=DateTime(self.two_resource_full_inventory2_start_date)
-    self.getPortalObject().portal_simulation.getCurrentInventoryList(
-      to_date=to_date,
-      node=node_value.getRelativeUrl(),
-      group_by_variation=1,
-      group_by_sub_variation=1,
-      group_by_resource=1)
 
   @expectedFailure
   def test_16_CorruptedInventoryCacheAndFullInventory(
