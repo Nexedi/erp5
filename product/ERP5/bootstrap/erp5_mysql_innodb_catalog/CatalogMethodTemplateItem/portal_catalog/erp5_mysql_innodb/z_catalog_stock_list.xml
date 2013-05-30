@@ -152,7 +152,7 @@ WHERE\n
     </dtml-if>\n
   </dtml-in>  \n
   <dtml-if "row_list">\n
-INSERT INTO\n
+REPLACE INTO\n
   stock\n
 VALUES\n
     <dtml-in prefix="row" expr="row_list">\n

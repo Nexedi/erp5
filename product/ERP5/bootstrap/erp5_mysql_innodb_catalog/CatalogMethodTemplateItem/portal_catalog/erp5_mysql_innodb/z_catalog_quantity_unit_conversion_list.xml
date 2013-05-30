@@ -48,7 +48,7 @@ DELETE FROM `quantity_unit_conversion` WHERE\n
   <dtml-call "value_list.extend(loop_item.values())">\n
 </dtml-in>\n
 \n
-INSERT INTO `quantity_unit_conversion`\n
+REPLACE INTO `quantity_unit_conversion`\n
 VALUES\n
     <dtml-in "value_list" prefix="loop">\n
 (\n

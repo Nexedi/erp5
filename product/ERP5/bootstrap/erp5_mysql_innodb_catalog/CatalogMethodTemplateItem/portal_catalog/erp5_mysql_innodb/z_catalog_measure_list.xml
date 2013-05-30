@@ -66,7 +66,7 @@ DELETE FROM `measure` WHERE\n
   <dtml-if measure_list>\n
     <dtml-var sql_delimiter>\n
 \n
-INSERT INTO `measure`\n
+REPLACE INTO `measure`\n
 VALUES\n
     <dtml-in measure_list prefix="loop">\n
 (\n
