@@ -264,7 +264,7 @@ def _getPersistentMemcachedServerDict():
   port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
 
-def _createTestPromiseConfigurationFile(promise_path):
+def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=None):
   memcached_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getVolatileMemcachedServerDict()
   kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
@@ -277,6 +277,11 @@ def _createTestPromiseConfigurationFile(promise_path):
   promise_config.set('external_service', 'cloudooo_url', cloudooo_url)
   promise_config.set('external_service', 'memcached_url',memcached_url)
   promise_config.set('external_service', 'kumofs_url', kumofs_url)
+
+  if bt5_repository_path_list is not None:
+    promise_config.add_section('portal_templates')
+    promise_config.set('portal_templates', 'repository', 
+                                   ' '.join(bt5_repository_path_list))
 
   if os.environ.get('TEST_CA_PATH') is not None:
     promise_config.add_section('portal_certificate_authority')
@@ -563,25 +568,33 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
            DeprecationWarning)
       return self.createUserAssignment(user, assignment_kw)
 
+    def _getBusinessRepositoryPathList(self, searchable_business_template_list=None):
+      if searchable_business_template_list is None:
+        searchable_business_template_list = ["erp5_base"]
+
+      template_list = []
+      for bt_id in searchable_business_template_list:
+        bt_template_list = self._getBTPathAndIdList([bt_id])
+        if len(bt_template_list):
+          template_list.append(bt_template_list[0])
+
+      if len(template_list) > 0:
+        return ["/".join(x[0].split("/")[:-1]) for x in template_list]
+
+      return []
+
     def setupAutomaticBusinessTemplateRepository(self, accept_public=True,
                               searchable_business_template_list=None):
      # Try to setup some valid Repository List by reusing ERP5TypeTestCase API.
      # if accept_public we can accept public repository can be set, otherwise
      # we let failure happens.
-     if searchable_business_template_list is None:
-       searchable_business_template_list = ["erp5_base"]
 
      # Assume that the public official repository is a valid repository     
      public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
 
-     template_list = []
-     for bt_id in searchable_business_template_list:
-       bt_template_list = self._getBTPathAndIdList([bt_id])
-       if len(bt_template_list):
-         template_list.append(bt_template_list[0])
-     if len(template_list) > 0:
-       bt5_repository_path_list = ["/".join(x[0].split("/")[:-1])
-                                   for x in template_list]
+     bt5_repository_path_list = self._getBusinessRepositoryPathList(
+                                        searchable_business_template_list)
+     if len(bt5_repository_path_list) > 0:
        if accept_public:
          try:
            self.portal.portal_templates.updateRepositoryBusinessTemplateList(
@@ -955,12 +968,16 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       return ()
 
-    def loadPromise(self):
+    def loadPromise(self, searchable_business_template_list=None):
       """ Create promise configuration file and load it into configuration
+          
       """
+      bt5_repository_path_list = self._getBusinessRepositoryPathList(
+                                        searchable_business_template_list)
+
       promise_path = os.path.join(instancehome, "promise.cfg")
       ZopeTestCase._print('Adding Promise at %s...\n' % promise_path)
-      _createTestPromiseConfigurationFile(promise_path)
+      _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list)
       config.product_config["/%s" % self.getPortalName()] = \
          {"promise_path": promise_path}
 
