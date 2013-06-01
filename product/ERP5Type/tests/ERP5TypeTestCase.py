@@ -265,9 +265,9 @@ def _getPersistentMemcachedServerDict():
   return dict(hostname=hostname, port=port)
 
 def _createTestPromiseConfigurationFile(promise_path):
-  kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
-                             _getVolatileMemcachedServerDict()
   memcached_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getVolatileMemcachedServerDict()
+  kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getPersistentMemcachedServerDict()
   cloudooo_url = "cloudooo://%(hostname)s:%(port)s/" % \
                              _getConversionServerDict()
