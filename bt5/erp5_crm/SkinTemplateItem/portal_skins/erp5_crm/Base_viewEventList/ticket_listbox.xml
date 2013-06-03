@@ -198,7 +198,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: zip(here.getPortalObject().getPortalTicketTypeList(), here.getPortalObject().getPortalTicketTypeList())</string> </value>
+            <value> <string>python: [(pt, pt) for pt in here.getPortalObject().getPortalTicketTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

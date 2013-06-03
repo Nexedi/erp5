@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(pt,pt) for pt in here.getPortalEventTypeList()]</string> </value>
+            <value> <string>python: [(pt, pt) for pt in here.getPortalObject().getPortalEventTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
