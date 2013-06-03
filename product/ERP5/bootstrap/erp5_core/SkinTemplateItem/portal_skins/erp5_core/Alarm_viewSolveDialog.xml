@@ -87,7 +87,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>warning_text</string>
+                        <string>your_warning_text</string>
                       </list>
                     </value>
                 </item>

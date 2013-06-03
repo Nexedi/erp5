@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>warning_text</string> </value>
+            <value> <string>your_warning_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -273,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>.</string> </value>
+                    <value> <string>Warning</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
