@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>description</string>
-                <string>display_width</string>
                 <string>title</string>
               </list>
             </value>
@@ -76,10 +75,6 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Name to be used instead of the Reference</string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
