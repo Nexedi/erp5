@@ -47,6 +47,15 @@ def createFolders(folder):
   if not(os.path.exists(folder)):
     os.makedirs(folder)
 
+def createFile(path, mode, content):
+  f = open(path, mode)
+  if os.path.exists(path):
+    f.write(content)
+    f.close()
+  else:
+    # error
+    pass
+
 class SlapOSControler(object):
 
   def __init__(self, working_directory, config, log):
