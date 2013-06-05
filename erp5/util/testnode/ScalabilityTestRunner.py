@@ -49,37 +49,35 @@ class ScalabilityTestRunner():
     self.worker_nodes = [] # may change between two test_suite
     self.launcher_nodes = [] # may change between two test_suite
     self.master_nodes = [] # doesn't change during all the test
-    self.slave_nodes = [] # doesn't change during all the test 
+    self.slave_nodes = [] # doesn't change during all the test
 
 
-  def _prepareSlapOS(self, software_path_list):
+  def _prepareSlapOS(*args, **kw):
     """
-    Install softwares from list on all nodes wich are involved in the scalability test
+    A proxy to _supply : Install software a software on a specific node
     """ 
-    for computer_guid in self.computer_guid_list:
-      self.slapos_controler.initializeSlapOSControler(
-                                      software_path_list, 
-                                      computer_guid)
+    self.slapos_controler._supply(*args, **kw)
                                               
   def prepareSlapOSForTestNode(self):
     """
-    Install softwares used to run tests (ex : launcher software)
+    Install all softwares used to run tests (ex : launcher software)
     """
-    for computer_guid in self.launcher_nodes['computer_id']:
-      self.slapos_controler._supply(
-                 software_path_list=self.config.get("software_list"),
-                 computer_guid = computer_guid
-              ) 
+    for software_path in self.config.get("software_list"):
+      for computer_guid in self.launcher_nodes['computer_id']:
+        self._prepareSlapOS(software_path, computer_guid) 
 
-  def prepareSlapOSForTestSuite(self, software_path_list):
+  def _extractSoftwarePathList(self, node_test_suite):
+    # TODO : write code
+    return []
+    
+  def prepareSlapOSForTestSuite(self, node_test_suite):
     """
-    Install testsuite's softwares (on worker_nodes)
+    Install all testsuite's softwares (on worker_nodes)
     """
-    for computer_guid in self.worker_nodes['computer_id']:
-      self.slapos_controler._supply(
-                 software_path_list=software_path_list,
-                 computer_guid = computer_guid
-              ) 
+    software_path_list = _extractSoftwarePathList(software_path_list)
+    for software_path in software_path_list:
+      for computer_guid in self.worker_nodes['computer_id']:
+        self._prepareSlapOS(software_path,computer_guid) 
 
   def _cleanUpNodesInformation(self):
     self.worker_nodes = []
@@ -93,5 +91,7 @@ class ScalabilityTestRunner():
   # And if it's not end ans invalidate everything and retry/reloop
 
 
-
+  def runTestSuite(self, node_test_suite, portal_url, log=None):
+    # TODO : write code
+    pass
 

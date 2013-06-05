@@ -336,9 +336,6 @@ branch = %(branch)s
               (test_suite_data,))
           ##/BLOCK OK
           
-          # Here we know what we are (sclability or unit test)
-          
-#          self.prepareSlapOSForTestNode(test_node_slapos)
         
           # Select the good runner
           if True :
@@ -385,15 +382,12 @@ branch = %(branch)s
               ## /BLOCK OK
 
               # Now prepare the installation of SlapOS and create instance
-#              status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
 #              time.sleep(20)
-#              self.runTestSuite(node_test_suite,portal_url)
-
               # For scalability test runTestSuite is a big part
               runner.runTestSuite(node_test_suite,portal_url)
               
