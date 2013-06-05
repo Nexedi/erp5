@@ -39,13 +39,17 @@ import string
 import random
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
+from NodeTestSuite import SlapOSInstance
 from Updater import Updater
 from erp5.util import taskdistribution
 
 class UnitTestRunner(object):
   def __init__(self, testnode):
-    pass
-    
+    self.testnode =  testnode
+    self.test_node_slapos = SlapOSInstance()
+    self.test_node_slapos.edit(working_directory=self.testnode.config['slapos_directory'])
+
+
     
     
     

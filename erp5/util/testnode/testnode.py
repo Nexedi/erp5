@@ -471,8 +471,9 @@ class TestNode(BaseTestNode):
     previous_revision_dict = {}
     revision_dict = {}
     test_result = None
-    test_node_slapos = SlapOSInstance()
-    test_node_slapos.edit(working_directory=self.config['slapos_directory'])
+    
+    runner = UnitTestRunner(self)
+    
     try:
       while True:
         try:
@@ -481,7 +482,6 @@ class TestNode(BaseTestNode):
           self.cleanUp(None)
           remote_test_result_needs_cleanup = False
           begin = time.time()
-          self.prepareSlapOSForTestNode(test_node_slapos)
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
@@ -489,6 +489,11 @@ class TestNode(BaseTestNode):
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
+
+          # Here we know what we are (sclability or unit test)
+          # change the line below to runner.prepareSlapOSForTestNode ..
+          self.prepareSlapOSForTestNode(runner.test_node_slapos)
+
           #Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:

@@ -107,9 +107,6 @@ def main(*args):
   if 'software_list' in config.sections():
     CONFIG['software_list'] = filter(None,
         config.get("software_list", "path_list").split(","))
-
-  # Here : can we know the test type (scalability or unittest) ?
-  # If it's possible, :
-  # testnode = Testnode / ScalabilityTestNode
+  
   testnode = TestNode(logger.info, CONFIG)
   testnode.run()
