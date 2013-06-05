@@ -79,11 +79,10 @@ def deunicodeData(data):
 
 
 
-class BaseTestNode(object):
-  """
-  BaseTestNode doc
-  """
-  def __init__(self, log, config, max_log_time, max_temp_time):
+class TestNode(object):
+
+  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
+               max_temp_time=MAX_TEMP_TIME):
     self.testnode_log = log
     self.log = log
     self.config = config or {}
@@ -304,74 +303,6 @@ branch = %(branch)s
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
-
-
-class ScalabilityTestNode(BaseTestNode):
-  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
-               max_temp_time=MAX_TEMP_TIME):
-    BaseTestNode.__init__(self, log, config, max_log_time, max_temp_time)
-   
-    self.involved_nodes = [] # doesn't change during all the test
-    self.worker_nodes = [] # may change between two test_suite
-    self.launcher_nodes = [] # may change between two test_suite
-    self.master_nodes = [] # doesn't change during all the test
-    self.slave_nodes = [] # doesn't change during all the test 
-
-    # get nodes informations ( ? )
-    # create here the slapos_controler (?)
-    # 
-
-  def cleanUpNodesInformation(self):
-    self.worker_nodes = []
-    self.launcher_nodes = []
-
-  def generateConfigurationList(self, test_suite): 
-    # TODO : implement it 
-    return []
-
-  # TODO : define methods to check if involved nodes are okay etc..
-  # And if it's not end ans invalidate everything and retry/reloop
-
-  def _prepareSlapOS(self, software_path_list):
-    """
-    Install softwares from list on all nodes wich are involved in the scalability test
-    """ 
-    for computer_guid in self.computer_guid_list:
-      self.slapos_controler.initializeSlapOSControler(
-                                      software_path_list, 
-                                      computer_guid)
-                                              
-  def prepareSlapOSForTestNode(self):
-    """
-    Install softwares used to run tests (ex : launcher software)
-    """
-    for computer_guid in self.launcher_nodes['computer_id']:
-      self.slapos_controler._supply(
-                 software_path_list=self.config.get("software_list"),
-                 computer_guid = computer_guid
-              ) 
-
-  def prepareSlapOSForTestSuite(self, software_path_list):
-    """
-    Install testsuite's softwares (on worker_nodes)
-    """
-    for computer_guid in self.worker_nodes['computer_id']:
-      self.slapos_controler._supply(
-                 software_path_list=software_path_list,
-                 computer_guid = computer_guid
-              ) 
-
-
-
-
-# Merge BaseTestNode and TestNode
-
-class TestNode(BaseTestNode):
-
-  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
-               max_temp_time=MAX_TEMP_TIME):
-    BaseTestNode.__init__(self, log, config, max_log_time, max_temp_time)
-
   def run(self):
     
     ## BLOCK OK
@@ -417,19 +348,12 @@ class TestNode(BaseTestNode):
           else :
             runner = UnitTestRunner(self)
 
-          log("OKAYBEN1")
           runner.prepareSlapOSForTestNode(test_node_slapos)
-
-
-          log("OKAYBEN2")
           #Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
           
           for test_suite in test_suite_data:
-            
-            
-            log("OKAYBEN3")
-          
+                      
             ## BLOCK OK
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(

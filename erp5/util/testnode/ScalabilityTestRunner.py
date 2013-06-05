@@ -45,3 +45,53 @@ from erp5.util import taskdistribution
 class ScalabilityTestRunner():
   def __init__(self, testnode):
     self.testnode =  testnode
+    self.involved_nodes = [] # doesn't change during all the test
+    self.worker_nodes = [] # may change between two test_suite
+    self.launcher_nodes = [] # may change between two test_suite
+    self.master_nodes = [] # doesn't change during all the test
+    self.slave_nodes = [] # doesn't change during all the test 
+
+
+  def _prepareSlapOS(self, software_path_list):
+    """
+    Install softwares from list on all nodes wich are involved in the scalability test
+    """ 
+    for computer_guid in self.computer_guid_list:
+      self.slapos_controler.initializeSlapOSControler(
+                                      software_path_list, 
+                                      computer_guid)
+                                              
+  def prepareSlapOSForTestNode(self):
+    """
+    Install softwares used to run tests (ex : launcher software)
+    """
+    for computer_guid in self.launcher_nodes['computer_id']:
+      self.slapos_controler._supply(
+                 software_path_list=self.config.get("software_list"),
+                 computer_guid = computer_guid
+              ) 
+
+  def prepareSlapOSForTestSuite(self, software_path_list):
+    """
+    Install testsuite's softwares (on worker_nodes)
+    """
+    for computer_guid in self.worker_nodes['computer_id']:
+      self.slapos_controler._supply(
+                 software_path_list=software_path_list,
+                 computer_guid = computer_guid
+              ) 
+
+  def _cleanUpNodesInformation(self):
+    self.worker_nodes = []
+    self.launcher_nodes = []
+
+  def _generateConfigurationList(self, test_suite): 
+    # TODO : implement it 
+    return []
+
+  # TODO : define methods to check if involved nodes are okay etc..
+  # And if it's not end ans invalidate everything and retry/reloop
+
+
+
+
