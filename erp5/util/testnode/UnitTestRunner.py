@@ -43,16 +43,108 @@ from NodeTestSuite import SlapOSInstance
 from Updater import Updater
 from erp5.util import taskdistribution
 
-class UnitTestRunner(object):
+class UnitTestRunner():
   def __init__(self, testnode):
-    self.testnode =  testnode
-    self.test_node_slapos = SlapOSInstance()
-    self.test_node_slapos.edit(working_directory=self.testnode.config['slapos_directory'])
+    self.testnode = testnode
+    self.slapos_controler = SlapOSControler.SlapOSControler(
+                                  self.testnode.working_directory,
+                                  self.testnode.config,
+                                  self.testnode.log)
 
+  def _prepareSlapOS(self, working_directory, slapos_instance, log,
+          create_partition=1, software_path_list=None, **kw):
+    """
+    Launch slapos to build software and partitions
+    """
+    slapproxy_log = os.path.join(self.testnode.config['log_directory'],
+                                  'slapproxy.log')
+    log('Configured slapproxy log to %r' % slapproxy_log)
+    reset_software = slapos_instance.retry_software_count > 10
+    if reset_software:
+      slapos_instance.retry_software_count = 0
+    log('testnode, retry_software_count : %r' % \
+             slapos_instance.retry_software_count)
+    self.slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
+       process_manager=self.testnode.process_manager, reset_software=reset_software,
+       software_path_list=software_path_list)
+    self.testnode.process_manager.supervisord_pid_file = os.path.join(\
+         self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
+    method_list= ["runSoftwareRelease"]
+    if create_partition:
+      method_list.append("runComputerPartition")
+    for method_name in method_list:
+      slapos_method = getattr(self.slapos_controler, method_name)
+      status_dict = slapos_method(self.testnode.config,
+                                  environment=self.testnode.config['environment'],
+                                 )
+      if status_dict['status_code'] != 0:
+         slapos_instance.retry = True
+         slapos_instance.retry_software_count += 1
+         raise SubprocessError(status_dict)
+      else:
+         slapos_instance.retry_software_count = 0
+    return status_dict
 
-    
-    
-    
+  def prepareSlapOSForTestNode(self, test_node_slapos):
+    """
+    We will build slapos software needed by the testnode itself,
+    like the building of selenium-runner by default
+    """
+    return self._prepareSlapOS(self.testnode.config['slapos_directory'],
+              test_node_slapos, self.testnode.log, create_partition=0,
+              software_path_list=self.testnode.config.get("software_list"))
+
+  def prepareSlapOSForTestSuite(self, node_test_suite):
+    log = self.testnode.log
+    if log is None:
+      log = self.testnode.log
+    return self._prepareSlapOS(node_test_suite.working_directory,
+              node_test_suite, log,
+              software_path_list=[node_test_suite.custom_profile_path])
+
+  def runTestSuite(self, node_test_suite, portal_url, log=None):
+    config = self.testnode.config
+    parameter_list = []
+    run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
+        self.slapos_controler.instance_root)
+    if not len(run_test_suite_path_list):
+      raise ValueError('No runTestSuite provided in installed partitions.')
+    run_test_suite_path = run_test_suite_path_list[0]
+    run_test_suite_revision = node_test_suite.revision
+    # Deal with Shebang size limitation
+    invocation_list = self.testnode._dealShebang(run_test_suite_path)
+    invocation_list.extend([run_test_suite_path,
+                           '--test_suite', node_test_suite.test_suite,
+                           '--revision', node_test_suite.revision,
+                           '--test_suite_title', node_test_suite.test_suite_title,
+                           '--node_quantity', config['node_quantity'],
+                           '--master_url', portal_url])
+    firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
+        config["slapos_directory"])
+    if len(firefox_bin_list):
+      parameter_list.append('--firefox_bin')
+    xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
+        config["slapos_directory"])
+    if len(xvfb_bin_list):
+      parameter_list.append('--xvfb_bin')
+    supported_paramater_set = self.testnode.process_manager.getSupportedParameterSet(
+                           run_test_suite_path, parameter_list)
+    if '--firefox_bin' in supported_paramater_set:
+      invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
+    if '--xvfb_bin' in supported_paramater_set:
+      invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
+    bt5_path_list = config.get("bt5_path")
+    if bt5_path_list not in ('', None,):
+      invocation_list.extend(["--bt5_path", bt5_path_list])
+    # From this point, test runner becomes responsible for updating test
+    # result. We only do cleanup if the test runner itself is not able
+    # to run.
+    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
+                                 clean=True)
+    self.testnode.process_manager.spawn(*invocation_list,
+                          cwd=node_test_suite.test_suite_directory,
+                          log_prefix='runTestSuite', get_output=False)
+
     
     
     

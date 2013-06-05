@@ -42,8 +42,6 @@ from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
 
-class ScalabilityTestRunner(object):
-  def __init__(self):
-    pass
-    
-    
+class ScalabilityTestRunner():
+  def __init__(self, testnode):
+    self.testnode =  testnode

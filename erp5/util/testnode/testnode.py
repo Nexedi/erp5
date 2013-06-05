@@ -88,6 +88,7 @@ class BaseTestNode(object):
     self.log = log
     self.config = config or {}
     self.process_manager = ProcessManager(log)
+    self.working_directory = config['working_directory']
     self.node_test_suite_dict = {}
     self.file_handler = None
     self.max_log_time = max_log_time
@@ -96,12 +97,12 @@ class BaseTestNode(object):
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
-    installed_reference_set = set(os.listdir(config['working_directory']))
+    installed_reference_set = set(os.listdir(self.working_directory))
     wished_reference_set = set([x['test_suite_reference'] for x in test_suite_data])
     to_remove_reference_set = installed_reference_set.difference(
                                  wished_reference_set)
     for y in to_remove_reference_set:
-      fpath = os.path.join(config['working_directory'],y)
+      fpath = os.path.join(self.working_directory,y)
       self.delNodeTestSuite(y)
       self.log("testnode.checkOldTestSuite, DELETING : %r" % (fpath,))
       if os.path.isdir(fpath):
@@ -149,7 +150,7 @@ class BaseTestNode(object):
         # Absolute path to relative path
         software_config_path = os.path.join(repository_path, profile_path)
         if use_relative_path :
-          from_path = os.path.join(self.config['working_directory'],
+          from_path = os.path.join(self.working_directory,
                                     node_test_suite.reference)
           software_config_path = os.path.relpath(software_config_path, from_path)
 
@@ -163,7 +164,7 @@ extends = %(software_config_path)s
       if not(buildout_section_id is None):
         # Absolute path to relative
         if use_relative_path:
-          from_path = os.path.join(self.config['working_directory'],
+          from_path = os.path.join(self.working_directory,
                                     node_test_suite.reference)
           repository_path = os.path.relpath(repository_path, from_path)
 
@@ -272,6 +273,38 @@ branch = %(branch)s
           self.log("deleting log directory %r" % (folder_path,))
           shutil.rmtree(folder_path)
 
+  def _cleanupTemporaryFiles(self):
+    """
+    buildout seems letting files under /tmp. To avoid regular error of
+    missing disk space, remove old logs
+    """
+    temp_directory = self.config["system_temp_folder"]
+    now = time.time()
+    user_id = os.geteuid()
+    for temp_folder in os.listdir(temp_directory):
+      folder_path = os.path.join(temp_directory, temp_folder)
+      if (temp_folder.startswith("tmp") or
+          temp_folder.startswith("buildout")):
+        try:
+          stat = os.stat(folder_path)
+          if stat.st_uid == user_id and \
+              (now - stat.st_mtime)/86400 > self.max_temp_time:
+            self.log("deleting temp directory %r" % (folder_path,))
+            if os.path.isdir(folder_path):
+              shutil.rmtree(folder_path)
+            else:
+              os.remove(folder_path)
+        except OSError:
+          self.log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
+
+  def cleanUp(self,test_result):
+    log = self.log
+    log('Testnode.cleanUp')
+    self.process_manager.killPreviousRun()
+    self._cleanupLog()
+    self._cleanupTemporaryFiles()
+
+
 
 class ScalabilityTestNode(BaseTestNode):
   def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
@@ -331,152 +364,32 @@ class ScalabilityTestNode(BaseTestNode):
 
 
 
+# Merge BaseTestNode and TestNode
+
 class TestNode(BaseTestNode):
 
   def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
                max_temp_time=MAX_TEMP_TIME):
     BaseTestNode.__init__(self, log, config, max_log_time, max_temp_time)
 
-  def _prepareSlapOS(self, working_directory, slapos_instance, log,
-          create_partition=1, software_path_list=None, **kw):
-    """
-    Launch slapos to build software and partitions
-    """
-    slapproxy_log = os.path.join(self.config['log_directory'],
-                                  'slapproxy.log')
-    log('Configured slapproxy log to %r' % slapproxy_log)
-    reset_software = slapos_instance.retry_software_count > 10
-    if reset_software:
-      slapos_instance.retry_software_count = 0
-    log('testnode, retry_software_count : %r' % \
-             slapos_instance.retry_software_count)
-    self.slapos_controler = SlapOSControler.SlapOSControler(
-      working_directory, self.config, log)
-    self.slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
-       process_manager=self.process_manager, reset_software=reset_software,
-       software_path_list=software_path_list)
-    self.process_manager.supervisord_pid_file = os.path.join(\
-         self.slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
-    method_list= ["runSoftwareRelease"]
-    if create_partition:
-      method_list.append("runComputerPartition")
-    for method_name in method_list:
-      slapos_method = getattr(self.slapos_controler, method_name)
-      status_dict = slapos_method(self.config,
-                                  environment=self.config['environment'],
-                                 )
-      if status_dict['status_code'] != 0:
-         slapos_instance.retry = True
-         slapos_instance.retry_software_count += 1
-         raise SubprocessError(status_dict)
-      else:
-         slapos_instance.retry_software_count = 0
-    return status_dict
-
-  def prepareSlapOSForTestNode(self, test_node_slapos):
-    """
-    We will build slapos software needed by the testnode itself,
-    like the building of selenium-runner by default
-    """
-    return self._prepareSlapOS(self.config['slapos_directory'],
-              test_node_slapos, self.log, create_partition=0,
-              software_path_list=self.config.get("software_list"))
-
-  def prepareSlapOSForTestSuite(self, node_test_suite):
-    log = self.log
-    if log is None:
-      log = self.log
-    return self._prepareSlapOS(node_test_suite.working_directory,
-              node_test_suite, log,
-              software_path_list=[node_test_suite.custom_profile_path])
-
-  def runTestSuite(self, node_test_suite, portal_url, log=None):
-    config = self.config
-    parameter_list = []
-    run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" % \
-        self.slapos_controler.instance_root)
-    if not len(run_test_suite_path_list):
-      raise ValueError('No runTestSuite provided in installed partitions.')
-    run_test_suite_path = run_test_suite_path_list[0]
-    run_test_suite_revision = node_test_suite.revision
-    # Deal with Shebang size limitation
-    invocation_list = self._dealShebang(run_test_suite_path)
-    invocation_list.extend([run_test_suite_path,
-                           '--test_suite', node_test_suite.test_suite,
-                           '--revision', node_test_suite.revision,
-                           '--test_suite_title', node_test_suite.test_suite_title,
-                           '--node_quantity', config['node_quantity'],
-                           '--master_url', portal_url])
-    firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
-        config["slapos_directory"])
-    if len(firefox_bin_list):
-      parameter_list.append('--firefox_bin')
-    xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
-        config["slapos_directory"])
-    if len(xvfb_bin_list):
-      parameter_list.append('--xvfb_bin')
-    supported_paramater_set = self.process_manager.getSupportedParameterSet(
-                           run_test_suite_path, parameter_list)
-    if '--firefox_bin' in supported_paramater_set:
-      invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
-    if '--xvfb_bin' in supported_paramater_set:
-      invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
-    bt5_path_list = config.get("bt5_path")
-    if bt5_path_list not in ('', None,):
-      invocation_list.extend(["--bt5_path", bt5_path_list])
-    # From this point, test runner becomes responsible for updating test
-    # result. We only do cleanup if the test runner itself is not able
-    # to run.
-    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
-                                 clean=True)
-    self.process_manager.spawn(*invocation_list,
-                          cwd=node_test_suite.test_suite_directory,
-                          log_prefix='runTestSuite', get_output=False)
-
-  def _cleanupTemporaryFiles(self):
-    """
-    buildout seems letting files under /tmp. To avoid regular error of
-    missing disk space, remove old logs
-    """
-    temp_directory = self.config["system_temp_folder"]
-    now = time.time()
-    user_id = os.geteuid()
-    for temp_folder in os.listdir(temp_directory):
-      folder_path = os.path.join(temp_directory, temp_folder)
-      if (temp_folder.startswith("tmp") or
-          temp_folder.startswith("buildout")):
-        try:
-          stat = os.stat(folder_path)
-          if stat.st_uid == user_id and \
-              (now - stat.st_mtime)/86400 > self.max_temp_time:
-            self.log("deleting temp directory %r" % (folder_path,))
-            if os.path.isdir(folder_path):
-              shutil.rmtree(folder_path)
-            else:
-              os.remove(folder_path)
-        except OSError:
-          self.log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
-
-  def cleanUp(self,test_result):
-    log = self.log
-    log('Testnode.cleanUp')
-    self.process_manager.killPreviousRun()
-    self._cleanupLog()
-    self._cleanupTemporaryFiles()
-
   def run(self):
+    
+    ## BLOCK OK
     log = self.log
     config = self.config
     slapgrid = None
     previous_revision_dict = {}
     revision_dict = {}
     test_result = None
-    
-    runner = UnitTestRunner(self)
+    test_node_slapos = SlapOSInstance()
+    test_node_slapos.edit(working_directory=self.config['slapos_directory'])
+    ## /BLOCK OK
     
     try:
       while True:
         try:
+          
+          ##BLOCK OK
           node_test_suite = None
           self.log = self.process_manager.log = self.testnode_log
           self.cleanUp(None)
@@ -489,14 +402,28 @@ class TestNode(BaseTestNode):
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
+          ##/BLOCK OK
 
           # Here we know what we are (sclability or unit test)
-          # change the line below to runner.prepareSlapOSForTestNode ..
-          self.prepareSlapOSForTestNode(runner.test_node_slapos)
+          
+#          self.prepareSlapOSForTestNode(test_node_slapos)
+
+          # Select the good runner
+          if True :
+            runner =  UnitTestRunner(self)
+          elif False :
+            runner = ScalabilityTestRunner(self)
+          else :
+            runner = UnitTestRunner(self)
+
+          runner.prepareSlapOSForTestNode(test_node_slapos)
 
           #Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
+          
           for test_suite in test_suite_data:
+            
+            ## BLOCK OK
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
                test_suite["test_suite_reference"])
@@ -517,16 +444,28 @@ class TestNode(BaseTestNode):
                      node_test_suite.project_title)
             remote_test_result_needs_cleanup = True
             log("testnode, test_result : %r" % (test_result, ))
+            ## /BLOCK OK
+            
             if test_result is not None:
+
+              ## BLOCK OK
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
+              ## /BLOCK OK
+
               # Now prepare the installation of SlapOS and create instance
-              status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
+#              status_dict = self.prepareSlapOSForTestSuite(node_test_suite)
+              status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
+              
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
-              time.sleep(20)
-              self.runTestSuite(node_test_suite,portal_url)
+#              time.sleep(20)
+#              self.runTestSuite(node_test_suite,portal_url)
+
+              # For scalability test runTestSuite is a big part
+              runner.runTestSuite(node_test_suite,portal_url)
+              
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
