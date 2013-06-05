@@ -43,7 +43,10 @@ from Updater import Updater
 from erp5.util import taskdistribution
 
 class SlapOSInstance(object):
-
+  """
+  Base of an software instance,
+  store variables used during software installation
+  """
   def __init__(self):
     self.retry_software_count = 0
     self.retry = False
@@ -57,7 +60,9 @@ class SlapOSInstance(object):
     
     
 class NodeTestSuite(SlapOSInstance):
-
+  """
+  
+  """
   def __init__(self, reference):
     super(NodeTestSuite, self).__init__()
     self.reference = reference

@@ -369,9 +369,7 @@ branch = foo
          return []
       
       test_node = self.getTestNode()
-      test_node.slapos_controler = SlapOSControler(
-                                          self.working_directory,
-                                          test_node.config, self.log)
+      runner = UnitTestRunner(test_node)
 
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
@@ -380,7 +378,7 @@ branch = foo
       node_test_suite.revision = 'dummy'
       # Path to the dummy runable
       run_test_suite_path = _createPath(
-          os.path.join(test_node.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+          os.path.join(runner.slapos_controler.instance_root,'a/bin'),'runTestSuite')
 
       def checkRunTestSuiteParameters(additional_parameter_list=None):
         ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
@@ -388,7 +386,7 @@ branch = foo
         runner = UnitTestRunner(test_node)
         runner.runTestSuite(node_test_suite,"http://foo.bar")
         expected_parameter_list = ['%s/a/bin/runTestSuite'
-             %(runner.testnode.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
+             %(runner.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
              'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
              'http://foo.bar']
         if additional_parameter_list:
@@ -504,11 +502,8 @@ branch = foo
     TaskDistributor.startTestSuite = patch_startTestSuite
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
-    test_node = self.getTestNode()
-    test_node_slapos = SlapOSInstance()
-    
+    test_node = self.getTestNode()  
     runner = UnitTestRunner(test_node)
-    
     original_prepareSlapOS = runner._prepareSlapOS
     runner._prepareSlapOS = doNothing
     original_runTestSuite = runner.runTestSuite
@@ -617,7 +612,7 @@ branch = foo
     original_runTestSuite = runner.runTestSuite
     runner.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.run()
+    runner.testnode.run()
     self.assertEquals(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
