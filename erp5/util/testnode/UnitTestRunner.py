@@ -74,9 +74,12 @@ class UnitTestRunner():
       method_list.append("runComputerPartition")
     for method_name in method_list:
       slapos_method = getattr(self.slapos_controler, method_name)
+      log("Before status_dict = slapos_method(...)")
       status_dict = slapos_method(self.testnode.config,
                                   environment=self.testnode.config['environment'],
                                  )
+      log(status_dict)
+      log("After status_dict = slapos_method(...)")
       if status_dict['status_code'] != 0:
          slapos_instance.retry = True
          slapos_instance.retry_software_count += 1

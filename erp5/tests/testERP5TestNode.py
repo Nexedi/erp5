@@ -503,9 +503,14 @@ branch = foo
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()  
+    
+    
+    
     runner = UnitTestRunner(test_node)
     original_prepareSlapOS = runner._prepareSlapOS
     runner._prepareSlapOS = doNothing
+    
+    
     original_runTestSuite = runner.runTestSuite
     runner.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing

@@ -58,29 +58,8 @@ def createFile(path, mode, content):
 
 
 
-class GenericSlapOSControler(object):
-
-  def __init__(self, working_directory, config, log):
-    self.config = config
-    self.software_root = os.path.join(working_directory, 'soft')
-    self.instance_root = os.path.join(working_directory, 'inst')
-    self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
-    self.log = log
-
-  def _resetSoftware(self):
-    pass
-
-  def initializeSlapOSControler(self):
-    pass
-
-  def runSoftwareRelease(self):
-    pass
-
-  def runComputerPartition(self):
-    pass
-
-
-class SlapOSControlerCluster(GenericSlapOSControler):
+# TODO : merge two controler in one (with different method name ?)
+class SlapOSControlerCluster(object):
 
   def __init__(self, working_directory, config,
                log, configuration_path_file):
@@ -91,7 +70,7 @@ class SlapOSControlerCluster(GenericSlapOSControler):
     """
     Supply several softwares from a list on a node
     Ex : 
-    slapos_controler.initializeSlapOSControler(['kvm.cfg', 'ok.cfg'], 'COMP-726')
+    my_controler.initializeSlapOSControler(['kvm.cfg', 'ok.cfg'], 'COMP-726')
     """
     for software_path in software_path_list:
       self._supply(software_path, computer_guid)
@@ -99,7 +78,7 @@ class SlapOSControlerCluster(GenericSlapOSControler):
   def _supply(self, software_url, computer_id):
     """
     Ex :
-    slapos_controler._supply('kvm.cfg', 'COMP-726')
+    my_controler._supply('kvm.cfg', 'COMP-726')
     """
     # TODO : remove return
     return
@@ -126,7 +105,7 @@ class SlapOSControlerCluster(GenericSlapOSControler):
     software_configuration : dict { "_" : "{'toto' : 'titi'}" } 
 
     Ex :
-    slapos_controler._request('Instance16h34Ben',
+    my_controler._request('Instance16h34Ben',
                                'kvm.cfg', 'cluster', { "_" : "{'toto' : 'titi'}" } )
 
     """
@@ -154,10 +133,14 @@ class SlapOSControlerCluster(GenericSlapOSControler):
 
 
 
-class SlapOSControler(GenericSlapOSControler):
+class SlapOSControler(object):
 
   def __init__(self, working_directory, config, log):
-    GenericSlapOSControler.__init__(self, working_directory, config, log)
+    self.config = config
+    self.software_root = os.path.join(working_directory, 'soft')
+    self.instance_root = os.path.join(working_directory, 'inst')
+    self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
+    self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
 
   def _resetSoftware(self):
