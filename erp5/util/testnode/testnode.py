@@ -40,6 +40,9 @@ import random
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
+from NodeTestSuite import NodeTestSuite, SlapOSInstance
+from ScalabilityTestRunner import ScalabilityTestRunner
+from UnitTestRunner import UnitTestRunner
 from erp5.util import taskdistribution
 
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
@@ -56,18 +59,6 @@ class DummyLogger(object):
       'critical', 'fatal'):
        setattr(self, name, func)
 
-class SlapOSInstance(object):
-
-  def __init__(self):
-    self.retry_software_count = 0
-    self.retry = False
-
-  def edit(self, **kw):
-    self.__dict__.update(**kw)
-    self._checkData()
-
-  def _checkData(self):
-    pass
 
 def deunicodeData(data):
   if isinstance(data, list):
@@ -82,63 +73,26 @@ def deunicodeData(data):
       key = deunicodeData(key)
       value = deunicodeData(value)
       new_data[key] = value
+  elif isinstance(data, int):
+    new_data = data
   return new_data
 
-class NodeTestSuite(SlapOSInstance):
 
-  def __init__(self, reference):
-    super(NodeTestSuite, self).__init__()
-    self.reference = reference
 
-  def edit(self, **kw):
-    super(NodeTestSuite, self).edit(**kw)
-
-  def _checkData(self):
-    if getattr(self, "working_directory", None) is not None:
-      if not(self.working_directory.endswith(os.path.sep + self.reference)):
-        self.working_directory = os.path.join(self.working_directory,
-                                             self.reference)
-      SlapOSControler.createFolder(self.working_directory)
-      self.test_suite_directory = os.path.join(
-                                   self.working_directory, "test_suite")
-      self.custom_profile_path = os.path.join(self.working_directory,
-                                 'software.cfg')
-    if getattr(self, "vcs_repository_list", None) is not None:
-      for vcs_repository in self.vcs_repository_list:
-        buildout_section_id = vcs_repository.get('buildout_section_id', None)
-        repository_id = buildout_section_id or \
-                        vcs_repository.get('url').split('/')[-1].split('.')[0]
-        repository_path = os.path.join(self.working_directory,repository_id)
-        vcs_repository['repository_id'] = repository_id
-        vcs_repository['repository_path'] = repository_path
-
-  def createSuiteLog(self):
-    # /srv/slapgrid/slappartXX/srv/var/log/testnode/az-mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
-    alphabets = string.digits + string.letters
-    rand_part = ''.join(random.choice(alphabets) for i in xrange(32))
-    random_suite_folder_id = '%s-%s' % (self.reference, rand_part)
-    suite_log_directory = os.path.join(self.log_directory,
-                                       random_suite_folder_id)
-    SlapOSControler.createFolders(suite_log_directory)
-    self.suite_log_path = os.path.join(suite_log_directory,
-                                       'suite.log')
-    return self.getSuiteLogPath(), random_suite_folder_id
-
-  def getSuiteLogPath(self):
-    return getattr(self,"suite_log_path", None)
-
-class TestNode(object):
-
-  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
-               max_temp_time=MAX_TEMP_TIME):
+class BaseTestNode(object):
+  """
+  BaseTestNode doc
+  """
+  def __init__(self, log, config, max_log_time, max_temp_time):
     self.testnode_log = log
     self.log = log
     self.config = config or {}
     self.process_manager = ProcessManager(log)
     self.node_test_suite_dict = {}
+    self.file_handler = None
     self.max_log_time = max_log_time
     self.max_temp_time = max_temp_time
-    self.file_handler = None
+
 
   def checkOldTestSuite(self,test_suite_data):
     config = self.config
@@ -154,7 +108,7 @@ class TestNode(object):
        shutil.rmtree(fpath)
       else:
        os.remove(fpath)
-
+  
   def getNodeTestSuite(self, reference):
     node_test_suite = self.node_test_suite_dict.get(reference)
     if node_test_suite is None:
@@ -166,7 +120,14 @@ class TestNode(object):
     if self.node_test_suite_dict.has_key(reference):
       self.node_test_suite_dict.pop(reference)
 
-  def constructProfile(self, node_test_suite):
+  def _dealShebang(self,run_test_suite_path):
+    line = open(run_test_suite_path, 'r').readline()
+    invocation_list = []
+    if line[:2] == '#!':
+      invocation_list = line[2:].split()
+    return invocation_list
+
+  def constructProfile(self, node_test_suite, use_relative_path=False):
     config = self.config
     profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
@@ -184,12 +145,28 @@ class TestNode(object):
         profile_path_count += 1
         if profile_path_count > 1:
           raise ValueError(PROFILE_PATH_KEY + ' defined more than once')
+
+        # Absolute path to relative path
+        software_config_path = os.path.join(repository_path, profile_path)
+        if use_relative_path :
+          from_path = os.path.join(self.config['working_directory'],
+                                    node_test_suite.reference)
+          software_config_path = os.path.relpath(software_config_path, from_path)
+
+
         profile_content_list.append("""
 [buildout]
 extends = %(software_config_path)s
-""" %  {'software_config_path': os.path.join(repository_path, profile_path)})
+""" %  {'software_config_path': software_config_path})
 
+      # Construct sections
       if not(buildout_section_id is None):
+        # Absolute path to relative
+        if use_relative_path:
+          from_path = os.path.join(self.config['working_directory'],
+                                    node_test_suite.reference)
+          repository_path = os.path.relpath(repository_path, from_path)
+
         profile_content_list.append("""
 [%(buildout_section_id)s]
 repository = %(repository_path)s
@@ -199,6 +176,7 @@ branch = %(branch)s
    'branch' : vcs_repository.get('branch','master')})
     if not profile_path_count:
       raise ValueError(PROFILE_PATH_KEY + ' not defined')
+    # Write file
     custom_profile = open(node_test_suite.custom_profile_path, 'w')
     # sort to have buildout section first
     profile_content_list.sort(key=lambda x: [x, ''][x.startswith('\n[buildout]')])
@@ -283,6 +261,82 @@ branch = %(branch)s
       updater.checkout()
       node_test_suite.revision = test_result.revision
 
+  def _cleanupLog(self):
+    config = self.config
+    log_directory = self.config['log_directory']
+    now = time.time()
+    for log_folder in os.listdir(log_directory):
+      folder_path = os.path.join(log_directory, log_folder)
+      if os.path.isdir(folder_path):
+        if (now - os.stat(folder_path).st_mtime)/86400 > self.max_log_time:
+          self.log("deleting log directory %r" % (folder_path,))
+          shutil.rmtree(folder_path)
+
+
+class ScalabilityTestNode(BaseTestNode):
+  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
+               max_temp_time=MAX_TEMP_TIME):
+    BaseTestNode.__init__(self, log, config, max_log_time, max_temp_time)
+   
+    self.involved_nodes = [] # doesn't change during all the test
+    self.worker_nodes = [] # may change between two test_suite
+    self.launcher_nodes = [] # may change between two test_suite
+    self.master_nodes = [] # doesn't change during all the test
+    self.slave_nodes = [] # doesn't change during all the test 
+
+    # get nodes informations ( ? )
+    # create here the slapos_controler (?)
+    # 
+
+  def cleanUpNodesInformation(self):
+    self.worker_nodes = []
+    self.launcher_nodes = []
+
+  def generateConfigurationList(self, test_suite): 
+    # TODO : implement it 
+    return []
+
+  # TODO : define methods to check if involved nodes are okay etc..
+  # And if it's not end ans invalidate everything and retry/reloop
+
+  def _prepareSlapOS(self, software_path_list):
+    """
+    Install softwares from list on all nodes wich are involved in the scalability test
+    """ 
+    for computer_guid in self.computer_guid_list:
+      self.slapos_controler.initializeSlapOSControler(
+                                      software_path_list, 
+                                      computer_guid)
+                                              
+  def prepareSlapOSForTestNode(self):
+    """
+    Install softwares used to run tests (ex : launcher software)
+    """
+    for computer_guid in self.launcher_nodes['computer_id']:
+      self.slapos_controler._supply(
+                 software_path_list=self.config.get("software_list"),
+                 computer_guid = computer_guid
+              ) 
+
+  def prepareSlapOSForTestSuite(self, software_path_list):
+    """
+    Install testsuite's softwares (on worker_nodes)
+    """
+    for computer_guid in self.worker_nodes['computer_id']:
+      self.slapos_controler._supply(
+                 software_path_list=software_path_list,
+                 computer_guid = computer_guid
+              ) 
+
+
+
+
+class TestNode(BaseTestNode):
+
+  def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
+               max_temp_time=MAX_TEMP_TIME):
+    BaseTestNode.__init__(self, log, config, max_log_time, max_temp_time)
+
   def _prepareSlapOS(self, working_directory, slapos_instance, log,
           create_partition=1, software_path_list=None, **kw):
     """
@@ -336,13 +390,6 @@ branch = %(branch)s
               node_test_suite, log,
               software_path_list=[node_test_suite.custom_profile_path])
 
-  def _dealShebang(self,run_test_suite_path):
-    line = open(run_test_suite_path, 'r').readline()
-    invocation_list = []
-    if line[:2] == '#!':
-      invocation_list = line[2:].split()
-    return invocation_list
-
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.config
     parameter_list = []
@@ -385,17 +432,6 @@ branch = %(branch)s
     self.process_manager.spawn(*invocation_list,
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
-
-  def _cleanupLog(self):
-    config = self.config
-    log_directory = self.config['log_directory']
-    now = time.time()
-    for log_folder in os.listdir(log_directory):
-      folder_path = os.path.join(log_directory, log_folder)
-      if os.path.isdir(folder_path):
-        if (now - os.stat(folder_path).st_mtime)/86400 > self.max_log_time:
-          self.log("deleting log directory %r" % (folder_path,))
-          shutil.rmtree(folder_path)
 
   def _cleanupTemporaryFiles(self):
     """

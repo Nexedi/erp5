@@ -56,15 +56,109 @@ def createFile(path, mode, content):
     # error
     pass
 
-class SlapOSControler(object):
+
+
+class GenericSlapOSControler(object):
 
   def __init__(self, working_directory, config, log):
     self.config = config
     self.software_root = os.path.join(working_directory, 'soft')
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
-    self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.log = log
+
+  def _resetSoftware(self):
+    pass
+
+  def initializeSlapOSControler(self):
+    pass
+
+  def runSoftwareRelease(self):
+    pass
+
+  def runComputerPartition(self):
+    pass
+
+
+class SlapOSControlerCluster(GenericSlapOSControler):
+
+  def __init__(self, working_directory, config,
+               log, configuration_path_file):
+    GenericSlapOSControler.__init__(self, working_directory, config, log)
+    self.configuration_path_file = configuration_path_file  
+
+  def initializeSlapOSControler(software_path_list=None, computer_guid=None): 
+    """
+    Supply several softwares from a list on a node
+    Ex : 
+    slapos_controler.initializeSlapOSControler(['kvm.cfg', 'ok.cfg'], 'COMP-726')
+    """
+    for software_path in software_path_list:
+      self._supply(software_path, computer_guid)
+
+  def _supply(self, software_url, computer_id):
+    """
+    Ex :
+    slapos_controler._supply('kvm.cfg', 'COMP-726')
+    """
+    # TODO : remove return
+    return
+    self.log('SlapOSControler : _supply')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("configuration_file")
+    parser.add_argument("software_url")
+    parser.add_argument("node")
+    if  os.path.exists(configuration_file_path):
+      args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
+      config = client.Config(args, args.configuration_file)
+      client._supply(args.software_url, args.node, client.init(config))
+    else:
+      raise ValueError("Configuration file not found.")
+
+
+  def _request(self, reference,
+          software_url, software_type, software_configuration, computer_guid=None):
+    """
+    configuration_file_path (slapos acount)
+    reference : instance title
+    software_url
+    software_type : cluster/single
+    software_configuration : dict { "_" : "{'toto' : 'titi'}" } 
+
+    Ex :
+    slapos_controler._request('Instance16h34Ben',
+                               'kvm.cfg', 'cluster', { "_" : "{'toto' : 'titi'}" } )
+
+    """
+    # TODO : remove return
+    return
+    self.log('SlapOSControler : _request')
+
+    filter_kw = None
+    if computer_guid != None:
+      filter_kw = { "computer_guid": computer_guid }
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("configuration_file")
+    args = parser.parse_args([self.configuration_file_path])
+    config = client.Config(args, args.configuration_file)
+    local = client.init(config)
+    partition = local['slap'].registerOpenOrder().request(
+        software_release = software_url,
+        partition_reference = reference,
+        partition_parameter_kw = software_configuration,
+        software_type = software_type,
+        filter_kw = filter_kw)
+    #      print "Instance requested.\nState is : %s." % partition.getState()
+    # Is it possible to have the true state of the instance with getState() ?
+
+
+
+class SlapOSControler(GenericSlapOSControler):
+
+  def __init__(self, working_directory, config, log):
+    GenericSlapOSControler.__init__(self, working_directory, config, log)
+    self.proxy_database = os.path.join(working_directory, 'proxy.db')
 
   def _resetSoftware(self):
     self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %

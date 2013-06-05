@@ -31,7 +31,7 @@ import subprocess
 import sys
 import threading
 
-from testnode import SubprocessError
+from ProcessManager import SubprocessError
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
