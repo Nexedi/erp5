@@ -498,29 +498,32 @@ branch = foo
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
+
+    # Patch
     original_startTestSuite = TaskDistributor.startTestSuite
     TaskDistributor.startTestSuite = patch_startTestSuite
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
+    
+    # TestNode
     test_node = self.getTestNode()  
     
+    # Modify class UnitTestRunner(or more after) method 
+    original_prepareSlapOS = UnitTestRunner._prepareSlapOS
+    original_runTestSuite = UnitTestRunner.runTestSuite
+    UnitTestRunner._prepareSlapOS = doNothing
+    UnitTestRunner.runTestSuite = doNothing
     
-    
-    runner = UnitTestRunner(test_node)
-    original_prepareSlapOS = runner._prepareSlapOS
-    runner._prepareSlapOS = doNothing
-    
-    
-    original_runTestSuite = runner.runTestSuite
-    runner.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    runner.testnode.run()
+    # Inside test_node a runner is created using new UnitTestRunner methods
+    test_node.run()
     self.assertEquals(5, counter)
     time.sleep = original_sleep
+    # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    runner._prepareSlapOS = original_prepareSlapOS
-    runner.runTestSuite = original_runTestSuite
+    UnitTestRunner._prepareSlapOS = original_prepareSlapOS
+    UnitTestRunner.runTestSuite = original_runTestSuite
 
   def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
@@ -611,20 +614,24 @@ branch = foo
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
-    runner = UnitTestRunner(test_node)
-    original_prepareSlapOS = runner._prepareSlapOS
-    runner._prepareSlapOS = doNothing
-    original_runTestSuite = runner.runTestSuite
-    runner.runTestSuite = doNothing
+    # Change UnitTestRunner class methods
+    original_prepareSlapOS = UnitTestRunner._prepareSlapOS
+    UnitTestRunner._prepareSlapOS = doNothing
+    original_runTestSuite = UnitTestRunner.runTestSuite
+    UnitTestRunner.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    runner.testnode.run()
+
+    test_node.run()
+    
     self.assertEquals(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
+
+    # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    runner._prepareSlapOS = original_prepareSlapOS
-    runner.runTestSuite = original_runTestSuite
+    UnitTestRunner._prepareSlapOS = original_prepareSlapOS
+    UnitTestRunner.runTestSuite = original_runTestSuite
 
   def test_16_cleanupLogDirectory(self):
     # Make sure that we are able to cleanup old log folders
