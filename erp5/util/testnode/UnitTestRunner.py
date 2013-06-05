@@ -98,6 +98,9 @@ class UnitTestRunner():
               software_path_list=self.testnode.config.get("software_list"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
+    """
+    Build softwares needed by testsuites
+    """
     log = self.testnode.log
     if log is None:
       log = self.testnode.log
@@ -148,8 +151,9 @@ class UnitTestRunner():
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 
-    
-    
+
+  def getRelativePathUsage(self):
+    return False
     
     
     

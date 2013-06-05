@@ -361,7 +361,7 @@ branch = %(branch)s
             node_test_suite.edit(**test_suite)
             run_software = True
             # Write our own software.cfg to use the local repository
-            self.constructProfile(node_test_suite)
+            self.constructProfile(node_test_suite, runner.getRelativePathUsage())
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             self.getAndUpdateFullRevisionList(node_test_suite)

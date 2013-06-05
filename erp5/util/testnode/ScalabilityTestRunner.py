@@ -95,3 +95,6 @@ class ScalabilityTestRunner():
     # TODO : write code
     pass
 
+
+  def getRelativePathUsage(self):
+    return True
