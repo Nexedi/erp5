@@ -55,12 +55,34 @@ class ScalabilityTestRunner():
     self.master_nodes = [] # doesn't change during all the test
     self.slave_nodes = [] # doesn't change during all the test
     
+    # remaining_software_installation_grid contains at the begining
+    # all the softwares needed for this runner 
+    # The grid looks like :
+    # { "COMP-1234" : ['http://soft1.cfg', 'https:///ipv6:00/soft2.cfg'],
+    #   "COMP-4" : ['http://soft1.cfg', 'https:///ipv6:00/soft3.cfg'],
+    #   "COMP-834" : ['http://soft4.cfg'],
+    #   "COMP-90" : ['http://soft1.cfg', 'https:///ipv6:00/soft2.cfg'],
+    # }
+    # A thread is in charge of checking (by communication with slapOS Master)
+    # if softwares are correctly installed. If a software is correctly installed,
+    # the thread remove the software_url from the grid.
+    # The thread never stop his work until he is not killed.
+    # In an other hand, the runner (here) loop while the grid is not empty.
+    # When the grid is empty, it means that all softwares are installed, so
+    # the runner kills the thread and goes to the next procedure step.
+    
+    # So, it also means that cluster_configuration, cluster_constraint
+    # and the list of availables/involved nodes (=> software repartition)
+    # have to be known to fill the grid.
+    self.remaining_software_installation_grid = {}
+    
 
-  def _prepareSlapOS(*args, **kw):
+  def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
+    # create_partition is kept for compatibility
     """
     A proxy to supply : Install software a software on a specific node
     """ 
-    self.slapos_controler.supply(*args, **kw)
+    self.slapos_controler.supply(software_path, computer_guid, create_partition)
     # TODO : do something with slapOS Master to check if it's ok
     # put it here ?
     # TODO : change the line below
@@ -78,16 +100,15 @@ class ScalabilityTestRunner():
     # TODO : change the line below
     return {'status_code' : 0}   
     
-  def _extractSoftwarePathList(self, node_test_suite):
-    # TODO : write code
-    return []
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install all testsuite's softwares (on worker_nodes)
     """
     # In fact we just need to extract (by knowing the ipv6)
     # softwares ipv6-url ( created during constructProfile(...) )
-    software_path_list = _extractSoftwarePathList(software_path_list)
+    #software_path_list = _extractSoftwarePathList(software_path_list)
+    # TODO : extract software paths (ipv6+local suite path+password?) from node_test_suite
+    software_path_list = []
     for software_path in software_path_list:
       for worker_node in self.worker_nodes:
         self._prepareSlapOS(software_path,worker_node['computer_id']) 

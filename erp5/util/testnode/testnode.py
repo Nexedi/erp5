@@ -304,7 +304,7 @@ branch = %(branch)s
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
-  def run(self):
+  def run(self, my_type_test=None):
     
     ## BLOCK OK
     log = self.log
@@ -339,10 +339,23 @@ branch = %(branch)s
           
         
           # Select the good runner
-          if True :
+          if my_type_test == None:
+            # Default way to determine if it is a slability or unit test
+            # Here parse/get information to
+            # if XXX : runner = UnitTe...
+            # elif YYY : runner = Scal...
+            # else : Raise ...
+            
+            # But for the moment :
             runner = UnitTestRunner(self)
-          else :
+          # Used in testERP5TestNode
+          if my_type_test == 'UnitTest':
+            runner = UnitTestRunner(self)
+          elif my_type_test == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
+          else:
+            raise NotImplementedError
+            
 
           runner.prepareSlapOSForTestNode(test_node_slapos)
           #Clean-up test suites
