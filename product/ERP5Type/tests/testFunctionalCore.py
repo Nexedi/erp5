@@ -69,6 +69,12 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 # manager user and continue other tests as a user created in
                 # that test.
                 'erp5_web_ui_test',
+
+                # Accounting Module list from erp5_accounting still uses movement table
+                # TODO: merge erp5_accounting_alternate_catalog in
+                # erp5_accounting and update those tests
+                # (erp5_accounting_alternate_catalog does not provide stat columns)
+                'erp5_movement_table_catalog',
                 )
 
 def test_suite():

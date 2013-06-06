@@ -486,7 +486,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(getattr(cell, \'section_mark\', \'\') ==\'source\' and cell.getStartDate()) or cell.getStopDate()</string> </value>
+            <value> <string>python: cell.operation_date and cell.operation_date.toZone(cell.getObject().getStopDate().timezone())</string> </value>
         </item>
       </dictionary>
     </pickle>
