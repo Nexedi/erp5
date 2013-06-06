@@ -45,39 +45,54 @@ from erp5.util import taskdistribution
 class ScalabilityTestRunner():
   def __init__(self, testnode):
     self.testnode =  testnode
+    self.slapos_controler = SlapOSControler.SlapOSControler(
+                                  self.testnode.working_directory,
+                                  self.testnode.config,
+                                  self.testnode.log)
     self.involved_nodes = [] # doesn't change during all the test
     self.worker_nodes = [] # may change between two test_suite
     self.launcher_nodes = [] # may change between two test_suite
     self.master_nodes = [] # doesn't change during all the test
     self.slave_nodes = [] # doesn't change during all the test
-
+    
 
   def _prepareSlapOS(*args, **kw):
     """
-    A proxy to _supply : Install software a software on a specific node
+    A proxy to supply : Install software a software on a specific node
     """ 
-    self.slapos_controler._supply(*args, **kw)
-                                              
-  def prepareSlapOSForTestNode(self):
+    self.slapos_controler.supply(*args, **kw)
+    # TODO : do something with slapOS Master to check if it's ok
+    # put it here ?
+    # TODO : change the line below
+    return {'status_code' : 0}                                          
+  
+  def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
     Install all softwares used to run tests (ex : launcher software)
     """
-    for software_path in self.config.get("software_list"):
-      for computer_guid in self.launcher_nodes['computer_id']:
-        self._prepareSlapOS(software_path, computer_guid) 
-
+    software_path_list = []
+    software_path_list.append(self.testnode.config.get("software_list"))
+    for software_path in software_path_list:
+      for launcher_node in self.launcher_nodes:
+        self._prepareSlapOS(software_path, launcher_node['computer_id']) 
+    # TODO : change the line below
+    return {'status_code' : 0}   
+    
   def _extractSoftwarePathList(self, node_test_suite):
     # TODO : write code
     return []
-    
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install all testsuite's softwares (on worker_nodes)
     """
+    # In fact we just need to extract (by knowing the ipv6)
+    # softwares ipv6-url ( created during constructProfile(...) )
     software_path_list = _extractSoftwarePathList(software_path_list)
     for software_path in software_path_list:
-      for computer_guid in self.worker_nodes['computer_id']:
-        self._prepareSlapOS(software_path,computer_guid) 
+      for worker_node in self.worker_nodes:
+        self._prepareSlapOS(software_path,worker_node['computer_id']) 
+    # TODO : change the line below
+    return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
     self.worker_nodes = []
@@ -93,6 +108,8 @@ class ScalabilityTestRunner():
 
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     # TODO : write code
+    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
+                                 clean=True)
     pass
 
 

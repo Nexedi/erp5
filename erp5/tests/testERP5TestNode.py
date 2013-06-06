@@ -21,6 +21,8 @@ import time
 import types
 import re
 
+USE_UNIT_TEST_RUNNER = True
+
 class ERP5TestNode(TestCase):
 
   def setUp(self):
@@ -369,7 +371,14 @@ branch = foo
          return []
       
       test_node = self.getTestNode()
-      runner = UnitTestRunner(test_node)
+      
+      
+      if USE_UNIT_TEST_RUNNER:
+        RunnerClass = UnitTestRunner
+      else:
+        RunnerClass = ScalabilityTestRunner
+        
+      runner = RunnerClass(test_node)
 
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
@@ -383,12 +392,21 @@ branch = foo
       def checkRunTestSuiteParameters(additional_parameter_list=None):
         ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
         ProcessManager.spawn = get_parameters
-        runner = UnitTestRunner(test_node)
+        if USE_UNIT_TEST_RUNNER:
+          RunnerClass = UnitTestRunner
+        else:
+          RunnerClass = ScalabilityTestRunner
+        runner = RunnerClass(test_node)
         runner.runTestSuite(node_test_suite,"http://foo.bar")
-        expected_parameter_list = ['%s/a/bin/runTestSuite'
+
+        if USE_UNIT_TEST_RUNNER:
+          expected_parameter_list = ['%s/a/bin/runTestSuite'
              %(runner.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
              'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
              'http://foo.bar']
+        else:
+          expected_parameter_list = []
+             
         if additional_parameter_list:
           expected_parameter_list.extend(additional_parameter_list)
         self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
@@ -412,7 +430,13 @@ branch = foo
   def test_10_prepareSlapOS(self):
     test_node = self.getTestNode()
     test_node_slapos = SlapOSInstance()
-    runner = UnitTestRunner(test_node)
+
+    if USE_UNIT_TEST_RUNNER:
+      RunnerClass = UnitTestRunner
+    else:
+      RunnerClass = ScalabilityTestRunner
+    runner = RunnerClass(test_node)
+    
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
     status_dict = {"status_code" : 0}
@@ -428,17 +452,29 @@ branch = foo
                          "args": [x for x in args],
                           "kw": kw})
         return {"status_code": self.status_code}
-    SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
-    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
-    SlapOSControler.runComputerPartition = Patch("runComputerPartition")
+    
+    if USE_UNIT_TEST_RUNNER:
+      SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
+      SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
+      SlapOSControler.runComputerPartition = Patch("runComputerPartition")
+      method_list_for_prepareSlapOSForTestNode = ["initializeSlapOSControler",
+                                                   "runSoftwareRelease"]
+      method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
+                                 "runSoftwareRelease", "runComputerPartition"]
+    else:
+      SlapOSControler.runComputerPartition = Patch("supply")
+      method_list_for_prepareSlapOSForTestNode = ["supply"]
+      method_list_for_prepareSlapOSForTestSuite = ["supply"]
+      
     
     runner.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease"],
+    
+    
+    self.assertEquals(method_list_for_prepareSlapOSForTestNode,
                       [x["method_name"] for x in call_list])
     call_list = []
     runner.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease",
-                       "runComputerPartition"],
+    self.assertEquals(method_list_for_prepareSlapOSForTestSuite,
                       [x["method_name"] for x in call_list])
     call_list = []
     SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
@@ -499,6 +535,11 @@ branch = foo
     time.sleep = doNothing
     self.generateTestRepositoryList()
 
+    if USE_UNIT_TEST_RUNNER:
+        RunnerClass = UnitTestRunner
+    else:
+        RunnerClass = ScalabilityTestRunner
+
     # Patch
     original_startTestSuite = TaskDistributor.startTestSuite
     TaskDistributor.startTestSuite = patch_startTestSuite
@@ -509,10 +550,10 @@ branch = foo
     test_node = self.getTestNode()  
     
     # Modify class UnitTestRunner(or more after) method 
-    original_prepareSlapOS = UnitTestRunner._prepareSlapOS
-    original_runTestSuite = UnitTestRunner.runTestSuite
-    UnitTestRunner._prepareSlapOS = doNothing
-    UnitTestRunner.runTestSuite = doNothing
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+    original_runTestSuite = RunnerClass.runTestSuite
+    RunnerClass._prepareSlapOS = doNothing
+    RunnerClass.runTestSuite = doNothing
     
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
@@ -522,8 +563,8 @@ branch = foo
     # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    UnitTestRunner._prepareSlapOS = original_prepareSlapOS
-    UnitTestRunner.runTestSuite = original_runTestSuite
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
 
   def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
@@ -606,6 +647,11 @@ branch = foo
         self.assertEquals(1, len([x for x in suite_log.readlines() \
                               if x.find("Activated logfile")>=0]))
 
+    if USE_UNIT_TEST_RUNNER:
+        RunnerClass = UnitTestRunner
+    else:
+        RunnerClass = ScalabilityTestRunner
+
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -615,10 +661,10 @@ branch = foo
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
     # Change UnitTestRunner class methods
-    original_prepareSlapOS = UnitTestRunner._prepareSlapOS
-    UnitTestRunner._prepareSlapOS = doNothing
-    original_runTestSuite = UnitTestRunner.runTestSuite
-    UnitTestRunner.runTestSuite = doNothing
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+    RunnerClass._prepareSlapOS = doNothing
+    original_runTestSuite = RunnerClass.runTestSuite
+    RunnerClass.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
 
     test_node.run()
@@ -630,8 +676,8 @@ branch = foo
     # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    UnitTestRunner._prepareSlapOS = original_prepareSlapOS
-    UnitTestRunner.runTestSuite = original_runTestSuite
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
 
   def test_16_cleanupLogDirectory(self):
     # Make sure that we are able to cleanup old log folders
@@ -684,8 +730,11 @@ branch = foo
       SlapOSControler.initializeSlapOSControler
     initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
-    runner = UnitTestRunner(test_node)
-    
+    if USE_UNIT_TEST_RUNNER:
+      RunnerClass = UnitTestRunner
+    else:
+      RunnerClass = ScalabilityTestRunner
+    runner = RunnerClass(test_node)    
     node_test_suite = test_node.getNodeTestSuite('foo')
     init_call_kw_list = []
     def initializeSlapOSControler(self, **kw):

@@ -73,16 +73,16 @@ class SlapOSControlerCluster(object):
     my_controler.initializeSlapOSControler(['kvm.cfg', 'ok.cfg'], 'COMP-726')
     """
     for software_path in software_path_list:
-      self._supply(software_path, computer_guid)
+      self.supply(software_path, computer_guid)
 
-  def _supply(self, software_url, computer_id):
+  def supply(self, software_url, computer_id):
     """
     Ex :
-    my_controler._supply('kvm.cfg', 'COMP-726')
+    my_controler.supply('kvm.cfg', 'COMP-726')
     """
     # TODO : remove return
     return
-    self.log('SlapOSControler : _supply')
+    self.log('SlapOSControler : supply')
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
     parser.add_argument("software_url")
@@ -90,7 +90,7 @@ class SlapOSControlerCluster(object):
     if  os.path.exists(configuration_file_path):
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
       config = client.Config(args, args.configuration_file)
-      client._supply(args.software_url, args.node, client.init(config))
+      client.supply(args.software_url, args.node, client.init(config))
     else:
       raise ValueError("Configuration file not found.")
 

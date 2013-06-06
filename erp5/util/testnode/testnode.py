@@ -92,6 +92,7 @@ class TestNode(object):
     self.file_handler = None
     self.max_log_time = max_log_time
     self.max_temp_time = max_temp_time
+    self.url_access = "https://[0::0]:0123" # Ipv6 + port of the node
 
 
   def checkOldTestSuite(self,test_suite_data):
@@ -340,10 +341,8 @@ branch = %(branch)s
           # Select the good runner
           if True :
             runner = UnitTestRunner(self)
-          elif False :
-            runner = ScalabilityTestRunner(self)
           else :
-            runner = UnitTestRunner(self)
+            runner = ScalabilityTestRunner(self)
 
           runner.prepareSlapOSForTestNode(test_node_slapos)
           #Clean-up test suites
@@ -389,7 +388,7 @@ branch = %(branch)s
               # a reliable way to check if they are up or not ...
 #              time.sleep(20)
               # For scalability test runTestSuite is a big part
-              runner.runTestSuite(node_test_suite,portal_url)
+              runner.runTestSuite(node_test_suite, portal_url)
               
               # break the loop to get latest priorities from master
               break
