@@ -70,7 +70,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                          'erp5_jquery_ui',
                          'erp5_ingestion_mysql_innodb_catalog',
                          'erp5_dms',
-                         'erp5_accounting',
                          'erp5_crm',
                          'erp5_simplified_invoicing',
                          'erp5_trade_knowledge_pad',

@@ -1,10 +1,4 @@
 <key_list>
- <key>accounting_transaction_line_node_uid | stock/node_uid/z_related_accounting_transaction_stock_line</key>
- <key>accounting_transaction_line_total_price | stock/total_price/z_related_accounting_transaction_stock_line</key>
- <key>accounting_transaction_mirror_section_title | catalog/title/z_related_accounting_transaction_mirror_section</key>
- <key>accounting_transaction_payment_title | catalog/title/z_related_accounting_transaction_payment</key>
- <key>accounting_transaction_project_title | catalog/title/z_related_accounting_transaction_project</key>
- <key>accounting_transaction_section_title | catalog/title/z_related_accounting_transaction_section</key>
  <key>preferred_gap_id | category,catalog/id/z_related_preferred_gap</key>
  <key>preferred_gap_strict_membership_id | category,catalog/id/z_related_strict_membership_preferred_gap</key>
 </key_list>
