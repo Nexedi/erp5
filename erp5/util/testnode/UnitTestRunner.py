@@ -151,22 +151,5 @@ class UnitTestRunner():
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 
-
   def getRelativePathUsage(self):
     return False
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

@@ -154,7 +154,6 @@ class SlapOSControler(object):
     os.mkdir(self.software_root)
     os.chmod(self.software_root, 0750)
 
-
   def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
         reset_software=False, software_path_list=None):
     self.process_manager = process_manager

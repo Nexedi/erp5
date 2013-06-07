@@ -54,40 +54,30 @@ class ScalabilityTestRunner():
     self.launcher_nodes = [] # may change between two test_suite
     self.master_nodes = [] # doesn't change during all the test
     self.slave_nodes = [] # doesn't change during all the test
-    
-    # remaining_software_installation_grid contains at the begining
-    # all the softwares needed for this runner 
-    # The grid looks like :
-    # { "COMP-1234" : ['http://soft1.cfg', 'https:///ipv6:00/soft2.cfg'],
-    #   "COMP-4" : ['http://soft1.cfg', 'https:///ipv6:00/soft3.cfg'],
-    #   "COMP-834" : ['http://soft4.cfg'],
-    #   "COMP-90" : ['http://soft1.cfg', 'https:///ipv6:00/soft2.cfg'],
-    # }
-    # A thread is in charge of checking (by communication with slapOS Master)
-    # if softwares are correctly installed. If a software is correctly installed,
-    # the thread remove the software_url from the grid.
-    # The thread never stop his work until he is not killed.
-    # In an other hand, the runner (here) loop while the grid is not empty.
-    # When the grid is empty, it means that all softwares are installed, so
-    # the runner kills the thread and goes to the next procedure step.
-    
-    # So, it also means that cluster_configuration, cluster_constraint
-    # and the list of availables/involved nodes (=> software repartition)
-    # have to be known to fill the grid.
-    self.remaining_software_installation_grid = {}
-    
 
+    self.remaining_software_installation_grid = {}
+    # Protection to prevent installation of softwares after checking
+    self.still_supply_to_request = True
+    
+  def checkingSoftwareGrid(self):
+      self.still_supply_to_request = False
+      # Here we can 
+      
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
     """
     A proxy to supply : Install software a software on a specific node
-    """ 
-    self.slapos_controler.supply(software_path, computer_guid, create_partition)
-    # TODO : do something with slapOS Master to check if it's ok
-    # put it here ?
-    # TODO : change the line below
-    return {'status_code' : 0}                                          
-  
+    """
+    if self.still_supply_to_request == True :
+      if not(computer_guid in self.remaining_software_installation_grid):
+        # Add computer_guid to the grid if it isn't
+        self.remaining_software_installation_grid[computer_guid] = []
+      self.remaining_software_installation_grid[computer_guid].append(software_path)
+      self.slapos_controler.supply(software_path, computer_guid, create_partition)
+      return {'status_code' : 0}                                          
+    else:
+      raise ValueError("Too late to supply now. ('self.still_supply_to_request' is False)")
+      
   def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
     Install all softwares used to run tests (ex : launcher software)
@@ -126,13 +116,11 @@ class ScalabilityTestRunner():
   # TODO : define methods to check if involved nodes are okay etc..
   # And if it's not end ans invalidate everything and retry/reloop
 
-
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     # TODO : write code
     SlapOSControler.createFolder(node_test_suite.test_suite_directory,
                                  clean=True)
     pass
-
 
   def getRelativePathUsage(self):
     return True

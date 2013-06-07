@@ -746,6 +746,8 @@ branch = foo
     pass
   def test_scalability_10_prepareSlapOS(self, my_test_type='ScalabilityTest'):
     # TODO : write own scalability test
+    # This case test may be dispensable on ScalabilityTest case
+    # so..
     pass
   def test_scalability_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type)
