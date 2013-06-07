@@ -193,19 +193,36 @@ class SQLBase(Queue):
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    select = activity_tool.SQLBase_selectReservedMessageList
-    if group_method_id:
-      reserve = limit - 1
-    else:
-      result = select(table=self.sql_table, count=limit,
-                      processing_node=processing_node)
-      reserve = limit - len(result)
-    if reserve:
-      activity_tool.SQLBase_reserveMessageList(table=self.sql_table,
-        count=reserve, processing_node=processing_node, to_date=date,
-        group_method_id=group_method_id)
-      result = select(table=self.sql_table,
-                      processing_node=processing_node, count=limit)
+    assert limit
+    # Do not check already-assigned messages when trying to reserve more
+    # activities, because in such case we will find one reserved activity.
+    result = activity_tool.SQLBase_selectReservedMessageList(
+      table=self.sql_table,
+      count=limit,
+      processing_node=processing_node,
+      group_method_id=group_method_id,
+    )
+    limit -= len(result)
+    if limit:
+      reservable = activity_tool.SQLBase_getReservableMessageList(
+        table=self.sql_table,
+        count=limit,
+        processing_node=processing_node,
+        to_date=date,
+        group_method_id=group_method_id,
+      )
+      if reservable:
+        activity_tool.SQLBase_reserveMessageList(
+          uid=[x.uid for x in reservable],
+          table=self.sql_table,
+          processing_node=processing_node,
+        )
+        # DC.ZRDB.Results.Results does not implement concatenation
+        # Implement an imperfect (but cheap) concatenation. Do not update
+        # __items__ nor _data_dictionary.
+        assert result._names == reservable._names, (result._names,
+          reservable._names)
+        result._data += reservable._data
     return result
 
   def makeMessageListAvailable(self, activity_tool, uid_list):
