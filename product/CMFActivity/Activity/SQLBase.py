@@ -132,11 +132,10 @@ class SQLBase(Queue):
 
   def _getPriority(self, activity_tool, method, default):
     result = method()
-    assert len(result) == 1
-    priority = result[0]['priority']
-    if priority is None:
-      priority = default
-    return priority
+    if not result:
+      return default
+    assert len(result) == 1, len(result)
+    return result[0]['priority']
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
