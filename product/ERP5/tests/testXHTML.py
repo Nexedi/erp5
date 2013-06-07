@@ -386,7 +386,7 @@ class TestXHTML(ERP5TypeTestCase):
     error_list = []
     for document in self.portal.contentValues():
       if document.portal_type.endswith(' Module'):
-        if document.title not in document.list(reset=1):
+        if document.getTranslatedTitle() not in document.list(reset=1):
           error_list.append(document.id)
     self.assertEqual([], error_list)
 
