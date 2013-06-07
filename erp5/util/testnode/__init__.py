@@ -78,7 +78,8 @@ def main(*args):
               'git_binary','zip_binary','node_quantity','test_node_title',
               'ipv4_address','ipv6_address','test_suite_master_url',
               'slapgrid_partition_binary','slapgrid_software_binary',
-              'slapproxy_binary', 'httpd_ip', 'httpd_port'):
+              'slapproxy_binary', 'httpd_ip', 'httpd_port', 'computer_id',
+              'server_url'):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
