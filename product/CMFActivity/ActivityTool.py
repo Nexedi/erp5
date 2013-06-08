@@ -1063,7 +1063,6 @@ class ActivityTool (Folder, UniqueObject):
     def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
       if not is_initialized:
         self.initialize()
-      self.getActivityBuffer()
       if isinstance(active_process, str):
         active_process = self.unrestrictedTraverse(active_process)
       return ActiveWrapper(self, object, activity, active_process, kw,
