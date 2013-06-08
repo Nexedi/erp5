@@ -96,17 +96,21 @@ class SQLDict(SQLBase):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    # BBB: deprecated
     return self.generateMessageUID(m) in activity_buffer.getUidSet(self)
 
   def registerMessage(self, activity_buffer, activity_tool, m):
+    message_id = self.generateMessageUID(m)
+    uid_set = activity_buffer.getUidSet(self)
+    if message_id in uid_set:
+      return
+    uid_set.add(message_id)
     message_list = activity_buffer.getMessageList(self)
     message_list.append(m)
-    uid_set = activity_buffer.getUidSet(self)
-    uid_set.add(self.generateMessageUID(m))
-    m.is_registered = 1
+    m.is_registered = True
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
-    m.is_registered = 0 # This prevents from inserting deleted messages into the queue
+    m.is_registered = False # This prevents from inserting deleted messages into the queue
     class_name = self.__class__.__name__
     uid_set = activity_buffer.getUidSet(self)
     uid_set.discard(self.generateMessageUID(m))

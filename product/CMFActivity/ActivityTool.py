@@ -170,6 +170,7 @@ class Message(BaseMessage):
   processing = None
   traceback = None
   oid = None
+  is_registered = False
 
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw, request=None, portal_activities=None):
     if isinstance(obj, str):

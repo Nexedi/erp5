@@ -239,16 +239,19 @@ class Queue(object):
     pass
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    # BBB: deprecated
     message_list = activity_buffer.getMessageList(self)
     return m in message_list
 
   def registerMessage(self, activity_buffer, activity_tool, m):
     message_list = activity_buffer.getMessageList(self)
+    if m in message_list:
+      return
     message_list.append(m)
-    m.is_registered = 1
+    m.is_registered = True
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
-    m.is_registered = 0
+    m.is_registered = False
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     message_list = activity_buffer.getMessageList(self)

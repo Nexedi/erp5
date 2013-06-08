@@ -93,13 +93,10 @@ class ActivityBuffer(TM):
 
   def deferredQueueMessage(self, activity_tool, activity, message):
     self._register(activity_tool)
-    # Activity is called to prevent queuing some messages (useful for example
-    # to prevent reindexing objects multiple times)
-    if not activity.isMessageRegistered(self, activity_tool, message):
+    assert not message.is_registered, message
+    activity.registerMessage(self, activity_tool, message)
+    if message.is_registered:
       self.queued_activity.append((activity, message))
-      # We register queued messages so that we can
-      # unregister them
-      activity.registerMessage(self, activity_tool, message)
 
   def sortKey(self, *ignored):
     """Activities must be finished before databases commit transactions."""
