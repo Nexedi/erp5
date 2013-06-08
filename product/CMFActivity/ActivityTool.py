@@ -171,13 +171,14 @@ class Message(BaseMessage):
   traceback = None
   oid = None
 
-  def __init__(self, obj, active_process, activity_kw, method_id, args, kw, request=None):
+  def __init__(self, obj, active_process, activity_kw, method_id, args, kw, request=None, portal_activities=None):
     if isinstance(obj, str):
       self.object_path = tuple(obj.split('/'))
-      activity_creation_trace = False
     else:
       self.object_path = obj.getPhysicalPath()
-      activity_creation_trace = obj.getPortalObject().portal_activities.activity_creation_trace
+      if portal_activities is None:
+        # BBB
+        portal_activities = obj.getPortalObject().portal_activities
       try:
         self.oid = aq_base(obj)._p_oid
         # Note that it's too early to get the OID of a newly created object,
@@ -194,7 +195,7 @@ class Message(BaseMessage):
     self.method_id = method_id
     self.args = args
     self.kw = kw
-    if activity_creation_trace and format_list is not None:
+    if getattr(portal_activities, 'activity_creation_trace', False):
       # Save current traceback, to make it possible to tell where a message
       # was generated.
       # Strip last stack entry, since it will always be the same.
@@ -449,8 +450,9 @@ class Method:
 
   def __call__(self, *args, **kw):
     passive_self = self.__passive_self
-    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id, args, kw, self.__request)
     portal_activities = self.__portal_activities
+    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id,
+      args, kw, self.__request, portal_activities)
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
@@ -1276,7 +1278,8 @@ class ActivityTool (Folder, UniqueObject):
         self.initialize()
       self.getActivityBuffer()
       activity_dict[activity].queueMessage(aq_inner(self),
-        Message(path, active_process, activity_kw, method_id, args, kw))
+        Message(path, active_process, activity_kw, method_id, args, kw,
+          portal_activities=self))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageInvoke' )
     def manageInvoke(self, object_path, method_id, REQUEST=None):
