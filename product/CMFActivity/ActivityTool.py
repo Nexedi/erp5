@@ -1033,12 +1033,23 @@ class ActivityTool (Folder, UniqueObject):
         Intermediate level is unconditionaly created if non existant because
         chances are it will be used in the instance life.
       """
-      # Safeguard: make sure we are wrapped in  acquisition context before
-      # using our path as an activity tool instance-wide identifier.
-      assert getattr(self, 'aq_self', None) is not None
-      my_instance_key = self.getPhysicalPath()
-      my_thread_key = get_ident()
+      # XXX: using a volatile attribute to cache getPhysicalPath result.
+      # This cache may need invalidation if all the following is
+      # simultaneously true:
+      # - ActivityTool instances can be moved in object tree
+      # - moved instance is used to get access to its activity buffer
+      # - another instance is put in the place of the original, and used to
+      #   access its activity buffer
+      # ...which seems currently unlikely, and as such is left out.
+      try:
+        my_instance_key = self._v_physical_path
+      except AttributeError:
+        # Safeguard: make sure we are wrapped in acquisition context before
+        # using our path as an activity tool instance-wide identifier.
+        assert getattr(self, 'aq_self', None) is not None
+        self._v_physical_path = my_instance_key = self.getPhysicalPath()
       thread_activity_buffer = global_activity_buffer[my_instance_key]
+      my_thread_key = get_ident()
       try:
         return thread_activity_buffer[my_thread_key]
       except KeyError:
