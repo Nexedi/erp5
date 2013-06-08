@@ -32,6 +32,7 @@ import threading
 import sys
 from types import StringType
 import re
+from collections import defaultdict
 from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
@@ -140,9 +141,8 @@ def activity_timing_method(method, args, kw):
 # Here go ActivityBuffer instances
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
-global_activity_buffer = {}
-from thread import get_ident, allocate_lock
-global_activity_buffer_lock = allocate_lock()
+global_activity_buffer = defaultdict(dict)
+from thread import get_ident
 
 def registerActivity(activity):
   # Must be rewritten to register
@@ -1032,26 +1032,12 @@ class ActivityTool (Folder, UniqueObject):
         is True, create one.
         Intermediate level is unconditionaly created if non existant because
         chances are it will be used in the instance life.
-        Lock is held when checking for intermediate level existance
-        because:
-         - intermediate level dict must not be created in 2 threads at the
-           same time, since one creation would destroy the existing one.
-        It's released after that step because:
-         - lower level access is at thread scope, thus by definition there
-           can be only one access at a time to a key
-         - GIL protects us when accessing python instances
       """
       # Safeguard: make sure we are wrapped in  acquisition context before
       # using our path as an activity tool instance-wide identifier.
       assert getattr(self, 'aq_self', None) is not None
       my_instance_key = self.getPhysicalPath()
       my_thread_key = get_ident()
-      global_activity_buffer_lock.acquire()
-      try:
-        if my_instance_key not in global_activity_buffer:
-          global_activity_buffer[my_instance_key] = {}
-      finally:
-        global_activity_buffer_lock.release()
       thread_activity_buffer = global_activity_buffer[my_instance_key]
       try:
         return thread_activity_buffer[my_thread_key]
