@@ -172,26 +172,22 @@ class Message(BaseMessage):
   oid = None
   is_registered = False
 
-  def __init__(self, obj, active_process, activity_kw, method_id, args, kw, request=None, portal_activities=None):
-    if isinstance(obj, str):
-      self.object_path = tuple(obj.split('/'))
-    else:
-      self.object_path = obj.getPhysicalPath()
-      if portal_activities is None:
-        # BBB
-        portal_activities = obj.getPortalObject().portal_activities
-      try:
-        self.oid = aq_base(obj)._p_oid
-        # Note that it's too early to get the OID of a newly created object,
-        # so at this point, self.oid may still be None.
-      except AttributeError:
-        pass
-    if active_process is not None:
-      self.active_process = active_process.getPhysicalPath()
-      self.active_process_uid = active_process.getUid()
-    if activity_kw.get('serialization_tag', False) is None:
-      # Remove serialization_tag if it's None.
-      del activity_kw['serialization_tag']
+  def __init__(
+      self,
+      url,
+      oid,
+      active_process,
+      active_process_uid,
+      activity_kw,
+      method_id,
+      args, kw,
+      request=None,
+      portal_activities=None,
+    ):
+    self.object_path = url
+    self.oid = oid
+    self.active_process = active_process
+    self.active_process_uid = active_process_uid
     self.activity_kw = activity_kw
     self.method_id = method_id
     self.args = args
@@ -441,28 +437,42 @@ Named Parameters: %r
 class Method(object):
   __slots__ = (
     '__portal_activities',
-    '__passive_self',
+    '__passive_url',
+    '__passive_oid',
     '__activity',
     '__active_process',
+    '__active_process_uid',
     '__kw',
     '__method_id',
     '__request',
   )
 
-  def __init__(self, portal_activities, passive_self, activity, active_process, kw, method_id, request):
+  def __init__(self, portal_activities, passive_url, passive_oid, activity,
+      active_process, active_process_uid, kw, method_id, request):
     self.__portal_activities = portal_activities
-    self.__passive_self = passive_self
+    self.__passive_url = passive_url
+    self.__passive_oid = passive_oid
     self.__activity = activity
     self.__active_process = active_process
+    self.__active_process_uid = active_process_uid
     self.__kw = kw
     self.__method_id = method_id
     self.__request = request
 
   def __call__(self, *args, **kw):
-    passive_self = self.__passive_self
     portal_activities = self.__portal_activities
-    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id,
-      args, kw, self.__request, portal_activities)
+    m = Message(
+      url=self.__passive_url,
+      oid=self.__passive_oid,
+      active_process=self.__active_process,
+      active_process_uid=self.__active_process_uid,
+      activity_kw=self.__kw,
+      method_id=self.__method_id,
+      args=args,
+      kw=kw,
+      request=self.__request,
+      portal_activities=portal_activities,
+    )
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
@@ -473,38 +483,45 @@ allow_class(Method)
 class ActiveWrapper(object):
   __slots__ = (
     '__portal_activities',
-    '__passive_self',
+    '__passive_url',
+    '__passive_oid',
     '__activity',
     '__active_process',
+    '__active_process_uid',
     '__kw',
     '__request',
   )
   # Shortcut security lookup (avoid calling __getattr__)
   __parent__ = None
 
-  def __init__(self, portal_activities, passive_self, activity, active_process, kw, request):
+  def __init__(self, portal_activities, url, oid, activity, active_process,
+      active_process_uid, kw, request):
     # second parameter can be an object or an object's path
     self.__portal_activities = portal_activities
-    self.__passive_self = passive_self
+    self.__passive_url = url
+    self.__passive_oid = oid
     self.__activity = activity
     self.__active_process = active_process
+    self.__active_process_uid = active_process_uid
     self.__kw = kw
     self.__request = request
 
   def __getattr__(self, name):
     return Method(
       self.__portal_activities,
-      self.__passive_self,
+      self.__passive_url,
+      self.__passive_oid,
       self.__activity,
       self.__active_process,
+      self.__active_process_uid,
       self.__kw,
       name,
       self.__request,
     )
 
   def __repr__(self):
-    return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
-                                   self.__passive_self)
+    return '<%s at 0x%x to %s>' % (self.__class__.__name__, id(self),
+                                   self.__passive_url)
 
 # True when activities cannot be executing any more.
 has_processed_shutdown = False
@@ -1088,9 +1105,29 @@ class ActivityTool (Folder, UniqueObject):
     def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
       if not is_initialized:
         self.initialize()
-      if isinstance(active_process, str):
-        active_process = self.unrestrictedTraverse(active_process)
-      return ActiveWrapper(self, object, activity, active_process, kw,
+      if active_process is None:
+        active_process_uid = None
+      elif isinstance(active_process, str):
+        # TODO: deprecate
+        active_process_uid = self.unrestrictedTraverse(active_process).getUid()
+      else:
+        active_process_uid = active_process.getUid()
+        active_process = active_process.getPhysicalPath()
+      if isinstance(object, str):
+        oid = None
+        url = tuple(object.split('/'))
+      else:
+        try:
+          oid = aq_base(object)._p_oid
+          # Note that it's too early to get the OID of a newly created object,
+          # so at this point, self.oid may still be None.
+        except AttributeError:
+          pass
+        url = object.getPhysicalPath()
+      if kw.get('serialization_tag', False) is None:
+        del kw['serialization_tag']
+      return ActiveWrapper(self, url, oid, activity,
+                           active_process, active_process_uid, kw,
                            getattr(self, 'REQUEST', None))
 
     def getRegisteredMessageList(self, activity):

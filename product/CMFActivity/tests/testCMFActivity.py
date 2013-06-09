@@ -1690,26 +1690,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       delattr(Organisation, 'modifySQLAndFail')
 
-  def test_85_MessagePathMustBeATuple(self, quiet=0, run=run_all_test):
-    """
-      Message property 'object_path' must be a tuple, whatever it is generated from.
-      Possible path sources are:
-       - bare string
-       - object
-    """
-    if not run: return
-    if not quiet:
-      message = '\nCheck that message property \'object_path\' is a tuple, whatever it is generated from.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    def check(value):
-      message = Message(value, None, {}, 'dummy', (), {})
-      self.assertTrue(isinstance(message.object_path, tuple))
-    # Bare string
-    check('/foo/bar')
-    # Object
-    check(self.getPortalObject().person_module)
-
   def test_86_ActivityToolInvokeGroupFailureDoesNotCommitCMFActivitySQLConnectionSQLDict(self, quiet=0, run=run_all_test):
     """
       Check that CMFActivity SQL connection is rollback if activity_tool.invokeGroup raises.
