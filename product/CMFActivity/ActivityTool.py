@@ -467,22 +467,27 @@ class ActiveWrapper:
 
   def __init__(self, portal_activities, passive_self, activity, active_process, kw, request):
     # second parameter can be an object or an object's path
-    self.__dict__['__portal_activities'] = portal_activities
-    self.__dict__['__passive_self'] = passive_self
-    self.__dict__['__activity'] = activity
-    self.__dict__['__active_process'] = active_process
-    self.__dict__['__kw'] = kw
-    self.__dict__['__request'] = request
+    self.__portal_activities = portal_activities
+    self.__passive_self = passive_self
+    self.__activity = activity
+    self.__active_process = active_process
+    self.__kw = kw
+    self.__request = request
 
-  def __getattr__(self, id):
-    return Method(self.__dict__['__portal_activities'],
-                  self.__dict__['__passive_self'], self.__dict__['__activity'],
-                  self.__dict__['__active_process'],
-                  self.__dict__['__kw'], id, self.__dict__['__request'])
+  def __getattr__(self, name):
+    return Method(
+      self.__portal_activities,
+      self.__passive_self,
+      self.__activity,
+      self.__active_process,
+      self.__kw,
+      name,
+      self.__request,
+    )
 
   def __repr__(self):
     return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
-                                   self.__dict__['__passive_self'])
+                                   self.__passive_self)
 
 # True when activities cannot be executing any more.
 has_processed_shutdown = False
