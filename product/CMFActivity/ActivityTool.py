@@ -459,6 +459,9 @@ class Method:
 allow_class(Method)
 
 class ActiveWrapper:
+  # Shortcut security lookup (avoid calling __getattr__)
+  __parent__ = None
+
   def __init__(self, portal_activities, passive_self, activity, active_process, kw, request):
     # second parameter can be an object or an object's path
     self.__dict__['__portal_activities'] = portal_activities
