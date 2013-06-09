@@ -438,7 +438,16 @@ Named Parameters: %r
   def getExecutionState(self):
     return self.is_executed
 
-class Method:
+class Method(object):
+  __slots__ = (
+    '__portal_activities',
+    '__passive_self',
+    '__activity',
+    '__active_process',
+    '__kw',
+    '__method_id',
+    '__request',
+  )
 
   def __init__(self, portal_activities, passive_self, activity, active_process, kw, method_id, request):
     self.__portal_activities = portal_activities
@@ -461,7 +470,15 @@ class Method:
 
 allow_class(Method)
 
-class ActiveWrapper:
+class ActiveWrapper(object):
+  __slots__ = (
+    '__portal_activities',
+    '__passive_self',
+    '__activity',
+    '__active_process',
+    '__kw',
+    '__request',
+  )
   # Shortcut security lookup (avoid calling __getattr__)
   __parent__ = None
 
