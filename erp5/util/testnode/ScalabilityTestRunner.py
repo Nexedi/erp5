@@ -49,12 +49,8 @@ class ScalabilityTestRunner():
                                   self.testnode.working_directory,
                                   self.testnode.config,
                                   self.testnode.log)
-    self.involved_nodes = [] # doesn't change during all the test
-    self.worker_nodes = [] # may change between two test_suite
-    self.launcher_nodes = [] # may change between two test_suite
-    self.master_nodes = [] # doesn't change during all the test
-    self.slave_nodes = [] # doesn't change during all the test
-
+    # {'COMPX' : ['soft_path1.cfg', 'soft_path2.cfg'],
+    #  'COMPY' : ['soft_path1.cfg'], ... }
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.still_supply_to_request = True

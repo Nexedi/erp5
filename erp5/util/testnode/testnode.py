@@ -316,14 +316,13 @@ branch = %(branch)s
     test_node_slapos = SlapOSInstance()
     test_node_slapos.edit(working_directory=self.config['slapos_directory'])
     ## /BLOCK OK
-   
+      
     print "computer_id:"
     print config['computer_id']
     print "server_url:"
     print config['server_url']
     time.sleep(30)
 
- 
     try:
       while True:
         try:
@@ -338,35 +337,41 @@ branch = %(branch)s
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
+          
+    
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
           ##/BLOCK OK
           
-        
-          # Select the good runner
-          if my_type_test == None:
-            # Default way to determine if it is a slability or unit test
-            # Here parse/get information to
-            # if XXX : runner = UnitTe...
-            # elif YYY : runner = Scal...
-            # else : Raise ...
-            
-            # But for the moment :
-            runner = UnitTestRunner(self)
-          # Used in testERP5TestNode
+          if my_test_type == None:
+            # TODO : implement this method for each distributor
+            # (just UnitTestDistributor should be sufficient)
+            try:
+              my_test_type = portal.getTestType()
+            except:
+              log("testnode, error during requesting getTestType() method \
+from the distributor.")
+              raise NotImplementedError
+              
+
+          # Select runner according to the test type
           if my_type_test == 'UnitTest':
             runner = UnitTestRunner(self)
           elif my_type_test == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
           else:
+            log("testnode, Runner type '%s' not implemented.", %(my_type_test))
             raise NotImplementedError
             
-
-          runner.prepareSlapOSForTestNode(test_node_slapos)
-          #Clean-up test suites
-          self.checkOldTestSuite(test_suite_data)
+          
+          # difference master/slave
+          # master get test_suites, slave get nothing
+          if len(test_suite_data) > 1:
+            runner.prepareSlapOSForTestNode(test_node_slapos)
+            #Clean-up test suites
+            self.checkOldTestSuite(test_suite_data)
           
           for test_suite in test_suite_data:
                       
