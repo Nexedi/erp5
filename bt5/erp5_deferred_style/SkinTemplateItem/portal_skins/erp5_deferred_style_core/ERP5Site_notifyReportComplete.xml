@@ -57,8 +57,8 @@ portal.portal_notifications.activate(queue=\'SQLQueue\').sendMessage(\n
   subject=subject,\n
   message=message,\n
   message_text_format=\'text/plain\',\n
-  notifier_list=(\'Site Message\',),\n
-  store_as_event=True,\n
+  notifier_list=(\'Mail Message\',),\n
+  store_as_event=False,\n
   attachment_list=attachment_list,\n
 )\n
 </string> </value>
