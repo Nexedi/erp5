@@ -436,47 +436,47 @@ Named Parameters: %r
 
 class Method(object):
   __slots__ = (
-    '__portal_activities',
-    '__passive_url',
-    '__passive_oid',
-    '__activity',
-    '__active_process',
-    '__active_process_uid',
-    '__kw',
-    '__method_id',
-    '__request',
+    '_portal_activities',
+    '_passive_url',
+    '_passive_oid',
+    '_activity',
+    '_active_process',
+    '_active_process_uid',
+    '_kw',
+    '_method_id',
+    '_request',
   )
 
   def __init__(self, portal_activities, passive_url, passive_oid, activity,
       active_process, active_process_uid, kw, method_id, request):
-    self.__portal_activities = portal_activities
-    self.__passive_url = passive_url
-    self.__passive_oid = passive_oid
-    self.__activity = activity
-    self.__active_process = active_process
-    self.__active_process_uid = active_process_uid
-    self.__kw = kw
-    self.__method_id = method_id
-    self.__request = request
+    self._portal_activities = portal_activities
+    self._passive_url = passive_url
+    self._passive_oid = passive_oid
+    self._activity = activity
+    self._active_process = active_process
+    self._active_process_uid = active_process_uid
+    self._kw = kw
+    self._method_id = method_id
+    self._request = request
 
   def __call__(self, *args, **kw):
-    portal_activities = self.__portal_activities
+    portal_activities = self._portal_activities
     m = Message(
-      url=self.__passive_url,
-      oid=self.__passive_oid,
-      active_process=self.__active_process,
-      active_process_uid=self.__active_process_uid,
-      activity_kw=self.__kw,
-      method_id=self.__method_id,
+      url=self._passive_url,
+      oid=self._passive_oid,
+      active_process=self._active_process,
+      active_process_uid=self._active_process_uid,
+      activity_kw=self._kw,
+      method_id=self._method_id,
       args=args,
       kw=kw,
-      request=self.__request,
+      request=self._request,
       portal_activities=portal_activities,
     )
     if portal_activities.activity_tracking:
-      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
+      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
-      portal_activities, activity_dict[self.__activity], m)
+      portal_activities, activity_dict[self._activity], m)
 
 allow_class(Method)
 
