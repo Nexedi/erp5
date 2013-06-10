@@ -67,6 +67,7 @@
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
+              is_sample          python: getattr(here, \'is_sample\', False);\n
               current_page       python: int(here.current_page) + 1;\n
               current_page_max   python: listbox_max_lines * current_page;\n
               current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n

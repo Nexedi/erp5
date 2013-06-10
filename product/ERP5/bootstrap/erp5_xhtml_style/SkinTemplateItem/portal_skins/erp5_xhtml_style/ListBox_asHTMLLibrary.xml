@@ -150,6 +150,7 @@
   <span class="listbox-current-page-total-number"\n
         tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)"\n
         i18n:translate="" i18n:domain="ui">\n
+    <tal:block tal:condition="is_sample" tal:replace="python: \'sample of\'" i18n:translate="" i18n:domain="ui" i18n:name="sample"></tal:block>\n
     <tal:block tal:replace="total_line" i18n:name="number">0</tal:block> records\n
   </span>\n
 \n

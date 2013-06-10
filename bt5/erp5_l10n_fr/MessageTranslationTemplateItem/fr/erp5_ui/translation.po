@@ -57,9 +57,6 @@ msgstr "${min_quantity} <= Quantité < ${max_quantity}"
 msgid "${month_name} ${year}"
 msgstr "${month_name} ${year}"
 
-msgid "${number} records"
-msgstr "${number} enregistrements "
-
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
 
@@ -71,6 +68,9 @@ msgstr "${portal_type} créé avec succès."
 
 msgid "${portal_type} updated successfully."
 msgstr "${portal_type} mis à jour avec succès."
+
+msgid "${sample} ${number} records"
+msgstr "${sample} ${number} enregistrements "
 
 msgid "${tax_category_title} (Amount or Percent)"
 msgstr "${tax_category_title} (Montant ou Taux)"
@@ -12458,6 +12458,9 @@ msgstr "Quantité"
 
 msgid "quantity of the inventory"
 msgstr "quantité de l'inventaire"
+
+msgid "sample of"
+msgstr "un extrait de"
 
 msgid "script used to do localized calculs"
 msgstr "Script utilisé pour faire certains calculs."
