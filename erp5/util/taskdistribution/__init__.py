@@ -462,11 +462,11 @@ class TaskDistributor(RPCRetry):
       self._retryRPC('subscribeNode', (node_title,computer_guid,))
 
 
-    def generateConfiguration(self, test_suite):
+    def generateConfiguration(self, test_suite_title):
       """
-        Generates a configguration from a test_suite
+        Generates a configguration from a test_suite_title
       """
-      self._retryRPC('generateConfiguration', (test_suite,))
+      self._retryRPC('generateConfiguration', (test_suite_title,))
 
 
 class DummyTaskDistributionTool(object):
