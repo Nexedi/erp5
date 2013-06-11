@@ -513,7 +513,9 @@ branch = foo
     RunnerClass = self.returnGoodClassRunner(my_type_test)
     # Patch
     original_startTestSuite = TaskDistributor.startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
     TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = doNothing
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     # TestNode
@@ -531,6 +533,7 @@ branch = foo
     # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
+    TaskDistributionTool.subscribeNode = original_subscribeNode
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
@@ -620,7 +623,9 @@ branch = foo
     time.sleep = doNothing
     self.generateTestRepositoryList()
     original_startTestSuite = TaskDistributor.startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
     TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = patch_subscribeNode
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
@@ -637,6 +642,7 @@ branch = foo
     # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
+    TaskDistributionTool.subscribeNode = original_subscribeNode
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
