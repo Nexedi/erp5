@@ -157,7 +157,7 @@ class ERP5TestNode(TestCase):
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
     return commit_dict
 
-  def test_01_getDelNodeTestSuite(self, my_test_type='UnitTest'):
+  def test_01_getDelNodeTestSuite(self, my_type_test='UnitTest'):
     """
     We should be able to get/delete NodeTestSuite objects inside test_node
     """
@@ -170,7 +170,7 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
 
-  def test_02_NodeTestSuiteWorkingDirectory(self, my_test_type='UnitTest'):
+  def test_02_NodeTestSuiteWorkingDirectory(self, my_type_test='UnitTest'):
     """
     Make sure we extend the working path with the node_test_suite reference
     """
@@ -182,7 +182,7 @@ class ERP5TestNode(TestCase):
     self.assertEquals("%s/foo/test_suite" % self.working_directory,
                       node_test_suite.test_suite_directory)
 
-  def test_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='UnitTest'):
+  def test_03_NodeTestSuiteCheckDataAfterEdit(self, my_type_test='UnitTest'):
     """
     When a NodeTestSuite instance is edited, the method _checkData
     analyse properties and add new ones
@@ -198,7 +198,7 @@ class ERP5TestNode(TestCase):
                      "%s/rep1" % node_test_suite.working_directory]
     self.assertEquals(expected_list, repository_path_list)
 
-  def test_04_constructProfile(self, my_test_type='UnitTest'):
+  def test_04_constructProfile(self, my_type_test='UnitTest'):
     """
     Check if the software profile is correctly generated
     """
@@ -224,7 +224,7 @@ branch = foo
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_05_getAndUpdateFullRevisionList(self, my_test_type='UnitTest'):
+  def test_05_getAndUpdateFullRevisionList(self, my_type_test='UnitTest'):
     """
     Check if we clone correctly repositories and get right revisions
     """
@@ -248,7 +248,7 @@ branch = foo
     for vcs_repository in node_test_suite.vcs_repository_list:
       self.assertTrue(os.path.exists(vcs_repository['repository_path']))
 
-  def test_05b_changeRepositoryBranch(self, my_test_type='UnitTest'):
+  def test_05b_changeRepositoryBranch(self, my_type_test='UnitTest'):
     """
     It could happen that the branch is changed for a repository. Testnode must
     be able to reset correctly the branch
@@ -283,7 +283,7 @@ branch = foo
     output = call("git branch".split()).strip()
     self.assertTrue("* bar" in output.split('\n'))
 
-  def test_06_checkRevision(self, my_test_type='UnitTest'):
+  def test_06_checkRevision(self, my_type_test='UnitTest'):
     """
     Check if we are able to restore older commit hash if master decide so
     """
@@ -320,7 +320,7 @@ branch = foo
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
 
-  def test_07_checkExistingTestSuite(self, my_test_type='UnitTest'):
+  def test_07_checkExistingTestSuite(self, my_type_test='UnitTest'):
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
@@ -336,7 +336,7 @@ branch = foo
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_08_getSupportedParamaterSet(self, my_test_type='UnitTest'):
+  def test_08_getSupportedParamaterSet(self, my_type_test='UnitTest'):
     original_spawn = ProcessManager.spawn
     try:
       def get_help(self, *args, **kw):
@@ -353,7 +353,7 @@ branch = foo
     finally:
       ProcessManager.spawn = original_spawn
 
-  def test_09_runTestSuite(self, my_test_type='UnitTest'):
+  def test_09_runTestSuite(self, my_type_test='UnitTest'):
     """
     Check parameters passed to runTestSuite
     Also make sure that --firefox_bin and --xvfb_bin are passed when needed
@@ -377,7 +377,7 @@ branch = foo
          return []
       
       test_node = self.getTestNode()
-      RunnerClass = self.returnGoodClassRunner(my_test_type)
+      RunnerClass = self.returnGoodClassRunner(my_type_test)
       runner = RunnerClass(test_node)
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
@@ -390,7 +390,7 @@ branch = foo
       def checkRunTestSuiteParameters(additional_parameter_list=None):
         ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
         ProcessManager.spawn = get_parameters
-        RunnerClass = self.returnGoodClassRunner(my_test_type)
+        RunnerClass = self.returnGoodClassRunner(my_type_test)
         runner = RunnerClass(test_node)
         runner.runTestSuite(node_test_suite,"http://foo.bar")
         expected_parameter_list = ['%s/a/bin/runTestSuite'
@@ -416,10 +416,10 @@ branch = foo
       ProcessManager.getSupportedParameterSet = original_getSupportedParameter
       ProcessManager.spawn = original_spawn
 
-  def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
+  def test_10_prepareSlapOS(self, my_type_test='UnitTest'):
     test_node = self.getTestNode()
     test_node_slapos = SlapOSInstance()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = self.returnGoodClassRunner(my_type_test)
     runner = RunnerClass(test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
@@ -457,7 +457,7 @@ branch = foo
     self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
                      node_test_suite)
 
-  def test_11_run(self, my_test_type='UnitTest'):
+  def test_11_run(self, my_type_test='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
     test_self = self
@@ -510,7 +510,7 @@ branch = foo
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = self.returnGoodClassRunner(my_type_test)
     # Patch
     original_startTestSuite = TaskDistributor.startTestSuite
     TaskDistributor.startTestSuite = patch_startTestSuite
@@ -525,7 +525,7 @@ branch = foo
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
-    test_node.run(my_test_type)
+    test_node.run(my_type_test)
     self.assertEquals(5, counter)
     time.sleep = original_sleep
     # Restore old class methods
@@ -534,7 +534,7 @@ branch = foo
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_12_spawn(self, my_test_type='UnitTest'):
+  def test_12_spawn(self, my_type_test='UnitTest'):
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
@@ -544,7 +544,7 @@ branch = foo
     # it will be automatically killed
     self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
 
-  def test_13_SlaposControlerResetSoftware(self, my_test_type='UnitTest'):
+  def test_13_SlaposControlerResetSoftware(self, my_type_test='UnitTest'):
     test_node = self.getTestNode()
     controler = SlapOSControler(self.working_directory,
                                 test_node.config, self.log)
@@ -556,7 +556,7 @@ branch = foo
     controler._resetSoftware()
     self.assertEquals([], os.listdir(controler.software_root))
 
-  def test_14_createFolder(self, my_test_type='UnitTest'):
+  def test_14_createFolder(self, my_type_test='UnitTest'):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
@@ -571,7 +571,7 @@ branch = foo
     createFolder(folder, clean=True)
     self.assertEquals(False, os.path.exists(to_drop_path))
 
-  def test_15_suite_log_directory(self, my_test_type='UnitTest'):
+  def test_15_suite_log_directory(self, my_type_test='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
     test_self = self
@@ -615,7 +615,7 @@ branch = foo
         self.assertEquals(1, len([x for x in suite_log.readlines() \
                               if x.find("Activated logfile")>=0]))
 
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = self.returnGoodClassRunner(my_type_test)
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -630,7 +630,7 @@ branch = foo
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.run(my_test_type)
+    test_node.run(my_type_test)
     self.assertEquals(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
@@ -640,7 +640,7 @@ branch = foo
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_16_cleanupLogDirectory(self, my_test_type='UnitTest'):
+  def test_16_cleanupLogDirectory(self, my_type_test='UnitTest'):
     # Make sure that we are able to cleanup old log folders
     test_node = self.getTestNode()
     def check(file_list):
@@ -661,7 +661,7 @@ branch = foo
     test_node._cleanupLog()
     check(set(['a_file']))
 
-  def test_17_cleanupTempDirectory(self, my_test_type='UnitTest'):
+  def test_17_cleanupTempDirectory(self, my_type_test='UnitTest'):
     # Make sure that we are able to cleanup old temp folders
     test_node = self.getTestNode()
     temp_directory = self.system_temp_folder
@@ -683,7 +683,7 @@ branch = foo
     test_node._cleanupTemporaryFiles()
     check(set(['something']))
 
-  def test_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='UnitTest'):
+  def test_18_resetSoftwareAfterManyBuildFailures(self, my_type_test='UnitTest'):
     """
     Check that after several building failures that the software is resetted
     """
@@ -691,7 +691,7 @@ branch = foo
       SlapOSControler.initializeSlapOSControler
     initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = self.returnGoodClassRunner(my_type_test)
     runner = RunnerClass(test_node)    
     node_test_suite = test_node.getNodeTestSuite('foo')
     init_call_kw_list = []
@@ -723,47 +723,47 @@ branch = foo
       initial_initializeSlapOSControler
     SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
 
-  def test_scalability_01_getDelNodeTestSuite(self, my_test_type='ScalabilityTest'):
-    self.test_01_getDelNodeTestSuite(my_test_type)
-  def test_scalability_02_NodeTestSuiteWorkingDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_02_NodeTestSuiteWorkingDirectory(my_test_type)
-  def test_scalability_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='ScalabilityTest'):
-    self.test_03_NodeTestSuiteCheckDataAfterEdit(my_test_type)
-  def test_scalability_04_constructProfile(self, my_test_type='ScalabilityTest'):
-    self.test_04_constructProfile(my_test_type)
-  def test_scalability_05_getAndUpdateFullRevisionList(self, my_test_type='ScalabilityTest'):
-    self.test_05_getAndUpdateFullRevisionList(my_test_type)
-  def test_scalability_05b_changeRepositoryBranch(self, my_test_type='ScalabilityTest'):
-    self.test_05b_changeRepositoryBranch(my_test_type)
-  def test_scalability_06_checkRevision(self, my_test_type='ScalabilityTest'):
-    self.test_06_checkRevision(my_test_type)
-  def test_scalability_07_checkExistingTestSuite(self, my_test_type='ScalabilityTest'):
-    self.test_07_checkExistingTestSuite(my_test_type)
-  def test_scalability_08_getSupportedParamaterSet(self, my_test_type='ScalabilityTest'):
-    self.test_08_getSupportedParamaterSet(my_test_type)
-  def test_scalability_09_runTestSuite(self, my_test_type='ScalabilityTest'):
+  def test_scalability_01_getDelNodeTestSuite(self, my_type_test='ScalabilityTest'):
+    self.test_01_getDelNodeTestSuite(my_type_test)
+  def test_scalability_02_NodeTestSuiteWorkingDirectory(self, my_type_test='ScalabilityTest'):
+    self.test_02_NodeTestSuiteWorkingDirectory(my_type_test)
+  def test_scalability_03_NodeTestSuiteCheckDataAfterEdit(self, my_type_test='ScalabilityTest'):
+    self.test_03_NodeTestSuiteCheckDataAfterEdit(my_type_test)
+  def test_scalability_04_constructProfile(self, my_type_test='ScalabilityTest'):
+    self.test_04_constructProfile(my_type_test)
+  def test_scalability_05_getAndUpdateFullRevisionList(self, my_type_test='ScalabilityTest'):
+    self.test_05_getAndUpdateFullRevisionList(my_type_test)
+  def test_scalability_05b_changeRepositoryBranch(self, my_type_test='ScalabilityTest'):
+    self.test_05b_changeRepositoryBranch(my_type_test)
+  def test_scalability_06_checkRevision(self, my_type_test='ScalabilityTest'):
+    self.test_06_checkRevision(my_type_test)
+  def test_scalability_07_checkExistingTestSuite(self, my_type_test='ScalabilityTest'):
+    self.test_07_checkExistingTestSuite(my_type_test)
+  def test_scalability_08_getSupportedParamaterSet(self, my_type_test='ScalabilityTest'):
+    self.test_08_getSupportedParamaterSet(my_type_test)
+  def test_scalability_09_runTestSuite(self, my_type_test='ScalabilityTest'):
     # TODO : write own scalability test
     pass
-  def test_scalability_10_prepareSlapOS(self, my_test_type='ScalabilityTest'):
+  def test_scalability_10_prepareSlapOS(self, my_type_test='ScalabilityTest'):
     # TODO : write own scalability test
     # This case test may be dispensable on ScalabilityTest case
     # so..
     pass
-  def test_scalability_11_run(self, my_test_type='ScalabilityTest'):
-    self.test_11_run(my_test_type)
-  def test_scalability_12_spawn(self, my_test_type='ScalabilityTest'):
-    self.test_12_spawn(my_test_type)
-  def test_scalability_13_SlaposControlerResetSoftware(self, my_test_type='ScalabilityTest'):
-    self.test_13_SlaposControlerResetSoftware(my_test_type)
-  def test_scalability_14_createFolder(self, my_test_type='ScalabilityTest'):
-    self.test_14_createFolder(my_test_type)
-  def test_scalability_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
-    self.test_15_suite_log_directory(my_test_type)
-  def test_scalability_16_cleanupLogDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_16_cleanupLogDirectory(my_test_type)
-  def test_scalability_17_cleanupTempDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_17_cleanupTempDirectory(my_test_type)
-  def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='ScalabilityTest'):
+  def test_scalability_11_run(self, my_type_test='ScalabilityTest'):
+    self.test_11_run(my_type_test)
+  def test_scalability_12_spawn(self, my_type_test='ScalabilityTest'):
+    self.test_12_spawn(my_type_test)
+  def test_scalability_13_SlaposControlerResetSoftware(self, my_type_test='ScalabilityTest'):
+    self.test_13_SlaposControlerResetSoftware(my_type_test)
+  def test_scalability_14_createFolder(self, my_type_test='ScalabilityTest'):
+    self.test_14_createFolder(my_type_test)
+  def test_scalability_15_suite_log_directory(self, my_type_test='ScalabilityTest'):
+    self.test_15_suite_log_directory(my_type_test)
+  def test_scalability_16_cleanupLogDirectory(self, my_type_test='ScalabilityTest'):
+    self.test_16_cleanupLogDirectory(my_type_test)
+  def test_scalability_17_cleanupTempDirectory(self, my_type_test='ScalabilityTest'):
+    self.test_17_cleanupTempDirectory(my_type_test)
+  def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_type_test='ScalabilityTest'):
     # TODO : write own scalability test
     pass
   #TODO : add more test for scalability case

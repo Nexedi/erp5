@@ -360,15 +360,13 @@ from the distributor.")
           log("Type of current test is %s" %(my_type_test,))
           
           
-          # difference master/slave
-          # master get test_suites, slave get nothing
-          if len(test_suite_data) > 1:
+          # master gets test_suites, slaves get nothing
+          if (len(test_suite_data) > 1) or (my_type_test == 'UnitTest'):
             runner.prepareSlapOSForTestNode(test_node_slapos)
             #Clean-up test suites
             self.checkOldTestSuite(test_suite_data)
           
           for test_suite in test_suite_data:
-                      
             ## BLOCK OK
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
