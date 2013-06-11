@@ -28,13 +28,11 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-     _getConversionServerDict
 import urlnorm # This library is imported to detect lack of
                # urlnorm availibility in python environment
 
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-# test files' home
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
@@ -94,11 +92,6 @@ class TestWebCrawler(ERP5TypeTestCase):
     if system_preference is None:
       system_preference = portal_preferences.newContent(id=self.system_pref_id,
                                                portal_type='System Preference')
-    conversion_dict = _getConversionServerDict()
-    system_preference.\
-                   setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    system_preference.\
-                    setPreferredOoodocServerPortNumber(conversion_dict['port'])
     system_preference.setPreferredDocumentFilenameRegularExpression(
                                                    FILENAME_REGULAR_EXPRESSION)
     system_preference.setPreferredDocumentReferenceRegularExpression(

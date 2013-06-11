@@ -33,10 +33,9 @@ import os
 
 
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-                                                       _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -94,7 +93,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
     self.createCategories()
-    self.setDefaultSitePreference()
 
     #Overwrite immediateReindexObject() with a crashing method
     def crashingMethod(self):
@@ -119,15 +117,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       for category_id in category_list:
         o = self.category_tool.group.newContent(portal_type='Category',
                                                 id=category_id)
-
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
-    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
-      default_pref.enable()
-    return default_pref
 
   def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, 
                                  **kw):

@@ -61,8 +61,11 @@ class TestAuoLogout(ERP5TypeTestCase):
     self.login(self.manager_username)
     
     # setup short auto-logout period
-    portal.portal_preferences.default_site_preference.setPreferredMaxUserInactivityDuration(5)
-    portal.portal_preferences.default_site_preference.enable()    
+    preference = self.portal.portal_preferences[
+                        self.getDefaultSitePreferenceId()]
+    preference.setPreferredMaxUserInactivityDuration(5)
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
     self.tic()
 
   def test_01_AutoLogout(self):

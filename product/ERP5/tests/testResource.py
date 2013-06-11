@@ -84,8 +84,8 @@ class TestResource(ERP5TypeTestCase):
       preference = portal_preferences.newContent(portal_type='System Preference',
                                 title='Default Site Preference',
                                 id='test_site_preference')
-      if preference.getPreferenceState() == 'disabled':
-        preference.enable()
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
 
     preference.setPreferredApparelModelVariationBaseCategoryList(('size', 'industrial_phase',))
     preference.setPreferredApparelClothVariationBaseCategoryList(('size',))

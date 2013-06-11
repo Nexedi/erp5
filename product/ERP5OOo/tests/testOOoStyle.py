@@ -28,10 +28,9 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
-     _getConversionServerDict
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 import httplib
 
@@ -52,8 +51,6 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   def afterSetUp(self):
     if not self.skin:
       raise NotImplementedError('Subclasses must define skin')
-
-    self.setDefaultSitePreference()
 
     gender = self.portal.portal_categories.gender
     if 'male' not in gender.objectIds():
@@ -84,15 +81,6 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     # make sure selections are empty
     name = 'person_module_selection'
     self.portal.portal_selections.setSelectionFor(name, Selection(name))
-
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
-    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
-      default_pref.enable()
-    return default_pref
 
   def publish(self, *args, **kw):
     kw['handle_errors'] = not debug

@@ -114,7 +114,6 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref = self.portal.portal_preferences.default_site_preference
     pref.setPreferredTelephoneDefaultCountryNumber('33')
     pref.setPreferredTelephoneDefaultAreaNumber('2')
-    pref.enable()
     tel.fromText(coordinate_text='11111111')
     self.assertEquals('+33(0)2-11111111',tel.asText())
 
@@ -124,7 +123,6 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref = self.portal.portal_preferences.default_site_preference
     pref.setPreferredTelephoneDefaultCountryNumber('')
     pref.setPreferredTelephoneDefaultAreaNumber('')
-    pref.enable()
     tel.fromText(coordinate_text='+11 1 11111111')
     tel.fromText(coordinate_text='+22333445555')
     self.assertEquals('+(0)-22333445555',tel.asText())
@@ -317,7 +315,6 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     pref = self.portal.portal_preferences.default_site_preference
     pref.setPreferredTelephoneDefaultCountryNumber('')
     pref.setPreferredTelephoneDefaultAreaNumber('')
-    pref.enable()
     tel.fromText(coordinate_text='12345678')
     self.assertEquals('+(0)-12345678',tel.asText())
 
