@@ -469,6 +469,13 @@ class TaskDistributor(RPCRetry):
       self._retryRPC('generateConfiguration', (test_suite_title,))
 
 
+    def isValidatedMaster(self, test_node_title):
+      """
+        Returns True or False if the testnode is the master
+      """
+      self._retryRPC('isValidatedMaster', (test_node_title,))
+
+
 class DummyTaskDistributionTool(object):
     """
     Fake remote server.

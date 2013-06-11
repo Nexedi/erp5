@@ -358,12 +358,10 @@ from the distributor.")
             raise NotImplementedError
           log("Type of current test is %s" %(my_test_type,))
           
-          
           # master gets test_suites, slaves get nothing
-          if (len(test_suite_data) > 1) or (my_test_type == 'UnitTest'):
-            runner.prepareSlapOSForTestNode(test_node_slapos)
-            #Clean-up test suites
-            self.checkOldTestSuite(test_suite_data)
+          runner.prepareSlapOSForTestNode(test_node_slapos)
+          #Clean-up test suites
+          self.checkOldTestSuite(test_suite_data)
           
           for test_suite in test_suite_data:
             ## BLOCK OK

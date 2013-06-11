@@ -78,13 +78,16 @@ class ScalabilityTestRunner():
     """
     We will build slapos software needed by the testnode itself,
     """
-    software_path_list = []
-    software_path_list.append(self.testnode.config.get("software_list"))
-    for software_path in software_path_list:
-      for launcher_node in self.launcher_nodes:
-        self._prepareSlapOS(software_path, launcher_node['computer_id']) 
-    # TODO : change the line below
-    return {'status_code' : 0}   
+    if self.portal_test_suite.isValidatedMaster(self.config['test_node_title']):
+      software_path_list = []
+      software_path_list.append(self.testnode.config.get("software_list"))
+      for software_path in software_path_list:
+        for launcher_node in self.launcher_nodes:
+          self._prepareSlapOS(software_path, launcher_node['computer_id']) 
+      # TODO : change the line below
+      return {'status_code' : 0}   
+    else:
+      return {'status_code' : 0} 
     
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
