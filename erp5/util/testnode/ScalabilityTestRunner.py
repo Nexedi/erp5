@@ -94,7 +94,15 @@ class ScalabilityTestRunner():
     # softwares ipv6-url ( created during constructProfile(...) )
     #software_path_list = _extractSoftwarePathList(software_path_list)
     # TODO : extract software paths (ipv6+local suite path+password?) from node_test_suite
-    self.test_suite_portal.generateConfiguration(node_test_suite)
+    print node_test_suite
+    print node_test_suite
+    print node_test_suite
+    print node_test_suite
+    print node_test_suite
+    
+    
+
+#    self.test_suite_portal.generateConfiguration(node_test_suite)
   
     software_path_list = []
     for software_path in software_path_list:
