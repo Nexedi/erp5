@@ -956,6 +956,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
         bt.install(light_install=light_install,
                    object_to_update=install_kw,
+                   update_catalog=bt.isCatalogUpdatable(),
                    update_translation=1)
         # Release locks
         self.commit()
