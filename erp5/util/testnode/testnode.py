@@ -316,9 +316,6 @@ branch = %(branch)s
     test_node_slapos = SlapOSInstance()
     test_node_slapos.edit(working_directory=self.config['slapos_directory'])
     ## /BLOCK OK
-      
-    print config['computer_id']
-    print config['server_url']
 
     try:
       while True:
