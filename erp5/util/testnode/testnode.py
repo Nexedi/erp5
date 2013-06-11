@@ -348,12 +348,12 @@ branch = %(branch)s
               (test_suite_data,))
           ##/BLOCK OK
           
-          if my_test_type == None:
+          if my_type_test == None:
             # TODO : implement this method for each distributor
             # into nexedi/master-erp5..
             # (just UnitTestDistributor should be sufficient)
             try:
-              my_test_type = portal.getTestType()
+              my_type_test = portal.getTestType()
             except:
               log("testnode, error during requesting getTestType() method \
 from the distributor.")
