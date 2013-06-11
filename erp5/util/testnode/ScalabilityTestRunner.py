@@ -100,7 +100,7 @@ class ScalabilityTestRunner():
     self.launchable = test_configuration['launchable']
     if self.launchable == False:
       self.log("Test suite %s is not launchable with the current \
-cluster configuration.", %(node_test_suite.test_suite_title,))
+cluster configuration." %(node_test_suite.test_suite_title,))
       # wich code to return ?
       return {'status_code' : 1}
     involved_nodes = test_configuration['involved_nodes']
