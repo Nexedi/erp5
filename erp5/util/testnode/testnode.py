@@ -330,10 +330,8 @@ branch = %(branch)s
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
-          
           self.test_suite_portal = test_suite_portal
           test_suite_portal.subscribeNode(config['test_node_title'], config['computer_id'])        
-          
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
@@ -350,7 +348,6 @@ branch = %(branch)s
               log("testnode, error during requesting getTestType() method \
 from the distributor.")
               raise NotImplementedError
-              
 
           # Select runner according to the test type
           if my_type_test == 'UnitTest':
@@ -360,7 +357,8 @@ from the distributor.")
           else:
             log("testnode, Runner type not implemented.", my_type_test)
             raise NotImplementedError
-            
+          log("Current test is a : %s" %(my_type_test,))
+          
           
           # difference master/slave
           # master get test_suites, slave get nothing
