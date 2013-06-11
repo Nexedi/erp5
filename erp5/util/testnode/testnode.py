@@ -332,9 +332,8 @@ branch = %(branch)s
           begin = time.time()
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
-          
-          
-          
+          print portal_url
+          print portal.getTestType()
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           
           
