@@ -334,8 +334,6 @@ branch = %(branch)s
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           print portal_url
-          print portal.getTitle()
-          print test_suite_portal.getTitle()
           print test_suite_portal.getTestType()
           
           
