@@ -75,6 +75,8 @@ class ERP5TestNode(TestCase):
     config["test_suite_master_url"] = None
     config["test_node_title"] = "Foo-Test-Node"
     config["system_temp_folder"] = self.system_temp_folder
+    config["computer_id"] = "COMP-TEST"
+    config["server_url"] = "http://foo.bar"
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
