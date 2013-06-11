@@ -455,6 +455,13 @@ class TaskDistributor(RPCRetry):
       result = self._retryRPC('getTestType')
       return result
 
+    def subscribeNode(self, node_title, computer_guid):
+      """
+        Susbscribes node with the node title and the computer guid.
+      """
+      self._retryRPC('subscribeNode', (node_title,computer_guid,))
+
+
 
 class DummyTaskDistributionTool(object):
     """
