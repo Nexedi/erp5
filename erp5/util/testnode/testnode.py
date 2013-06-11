@@ -317,11 +317,8 @@ branch = %(branch)s
     test_node_slapos.edit(working_directory=self.config['slapos_directory'])
     ## /BLOCK OK
       
-    print "computer_id:"
     print config['computer_id']
-    print "server_url:"
     print config['server_url']
-    time.sleep(30)
 
     try:
       while True:
@@ -336,6 +333,9 @@ branch = %(branch)s
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           self.portal = portal
+          
+          portal.subscribeNode(config['test_node_title'], config['computer_id'])
+          
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
