@@ -347,6 +347,7 @@ branch = %(branch)s
           
           if my_test_type == None:
             # TODO : implement this method for each distributor
+            # into nexedi/master-erp5..
             # (just UnitTestDistributor should be sufficient)
             try:
               my_test_type = portal.getTestType()

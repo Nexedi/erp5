@@ -116,6 +116,8 @@ class ScalabilityTestRunner():
     # TODO : write code
     SlapOSControler.createFolder(node_test_suite.test_suite_directory,
                                  clean=True)
+    # create ResultLine for each loop
+    
     pass
 
   def getRelativePathUsage(self):
