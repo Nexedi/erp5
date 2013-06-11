@@ -357,7 +357,7 @@ from the distributor.")
           else:
             log("testnode, Runner type not implemented.", my_type_test)
             raise NotImplementedError
-          log("Current test is a : %s" %(my_type_test,))
+          log("Type of current test is %s" %(my_type_test,))
           
           
           # difference master/slave
