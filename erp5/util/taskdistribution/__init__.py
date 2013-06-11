@@ -448,6 +448,14 @@ class TaskDistributor(RPCRetry):
       result = self._retryRPC('startTestSuite',(node_title,))
       return result
 
+    def getTestType(self):
+      """
+        Return the Test Type
+      """
+      result = self._retryRPC('getTestType')
+      return result
+
+
 class DummyTaskDistributionTool(object):
     """
     Fake remote server.
