@@ -94,16 +94,21 @@ class ScalabilityTestRunner():
     # softwares ipv6-url ( created during constructProfile(...) )
     #software_path_list = _extractSoftwarePathList(software_path_list)
     # TODO : extract software paths (ipv6+local suite path+password?) from node_test_suite
-    print node_test_suite.test_suite_title
-    print node_test_suite.test_suite_title
-    print node_test_suite.test_suite_title
-    print node_test_suite.test_suite_title
-    print node_test_suite.test_suite_title
 
+    test_configuration = self.test_suite_portal.generateConfiguration()
+    self.involved_nodes = test_configuration['involved_nodes']
+    self.launchable = test_configuration['launchable']
+    if self.launchable == False:
+      self.log("Test suite %s is not launchable with the current \
+cluster configuration.", %(node_test_suite.test_suite_title,))
+      # wich code to return ?
+      return {'status_code' : 1}
+    involved_nodes = test_configuration['involved_nodes']
+    configuration_list = test_configuration['configuration_list']
+    #launcher_nodes = test_configuration['launcher_nodes']
+  
     
-    
-
-#    self.test_suite_portal.generateConfiguration(node_test_suite)
+  
   
     software_path_list = []
     for software_path in software_path_list:
