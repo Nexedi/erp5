@@ -342,25 +342,25 @@ branch = %(branch)s
           # into nexedi/master-erp5..
           # (just UnitTestDistributor should be sufficient)
           try:
-            my_type_test = test_suite_portal.getTestType()
+            my_test_type = test_suite_portal.getTestType()
           except:
             log("testnode, error during requesting getTestType() method \
 from the distributor.")
             raise NotImplementedError
 
           # Select runner according to the test type
-          if my_type_test == 'UnitTest':
+          if my_test_type == 'UnitTest':
             runner = UnitTestRunner(self)
-          elif my_type_test == 'ScalabilityTest':
+          elif my_test_type == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
           else:
-            log("testnode, Runner type not implemented.", my_type_test)
+            log("testnode, Runner type not implemented.", my_test_type)
             raise NotImplementedError
-          log("Type of current test is %s" %(my_type_test,))
+          log("Type of current test is %s" %(my_test_type,))
           
           
           # master gets test_suites, slaves get nothing
-          if (len(test_suite_data) > 1) or (my_type_test == 'UnitTest'):
+          if (len(test_suite_data) > 1) or (my_test_type == 'UnitTest'):
             runner.prepareSlapOSForTestNode(test_node_slapos)
             #Clean-up test suites
             self.checkOldTestSuite(test_suite_data)
