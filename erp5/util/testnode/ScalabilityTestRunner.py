@@ -78,7 +78,7 @@ class ScalabilityTestRunner():
     """
     We will build slapos software needed by the testnode itself,
     """
-    if self.portal_test_suite.isValidatedMaster(self.config['test_node_title']):
+    if self.test_suite_portal.isValidatedMaster(self.config['test_node_title']):
       software_path_list = []
       software_path_list.append(self.testnode.config.get("software_list"))
       for software_path in software_path_list:
