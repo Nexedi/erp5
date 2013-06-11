@@ -332,11 +332,17 @@ branch = %(branch)s
           begin = time.time()
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
-          self.portal = portal
           
-          portal.subscribeNode(config['test_node_title'], config['computer_id'])
+          
           
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
+          
+          
+          
+          self.test_suite_portal = test_suite_portal
+          test_suite_portal.subscribeNode(config['test_node_title'], config['computer_id'])
+          
+          
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
