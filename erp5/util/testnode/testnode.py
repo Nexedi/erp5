@@ -304,7 +304,7 @@ branch = %(branch)s
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
-  def run(self, my_type_test=None):
+  def run(self):
     
     ## BLOCK OK
     log = self.log
@@ -338,16 +338,15 @@ branch = %(branch)s
               (test_suite_data,))
           ##/BLOCK OK
           
-          if my_type_test == None:
-            # TODO : implement this method for each distributor
-            # into nexedi/master-erp5..
-            # (just UnitTestDistributor should be sufficient)
-            try:
-              my_type_test = test_suite_portal.getTestType()
-            except:
-              log("testnode, error during requesting getTestType() method \
+          # TODO : implement this method for each distributor
+          # into nexedi/master-erp5..
+          # (just UnitTestDistributor should be sufficient)
+          try:
+            my_type_test = test_suite_portal.getTestType()
+          except:
+            log("testnode, error during requesting getTestType() method \
 from the distributor.")
-              raise NotImplementedError
+            raise NotImplementedError
 
           # Select runner according to the test type
           if my_type_test == 'UnitTest':

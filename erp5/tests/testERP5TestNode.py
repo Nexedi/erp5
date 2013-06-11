@@ -460,6 +460,8 @@ branch = foo
   def test_11_run(self, my_type_test='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
+    def patch_getTestType(self):
+        return my_type_test
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -514,8 +516,10 @@ branch = foo
     # Patch
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     # TestNode
@@ -527,13 +531,14 @@ branch = foo
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
-    test_node.run(my_type_test)
+    test_node.run()
     self.assertEquals(5, counter)
     time.sleep = original_sleep
     # Restore old class methods
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
@@ -577,6 +582,8 @@ branch = foo
   def test_15_suite_log_directory(self, my_type_test='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
+    def patch_getTestType(self):
+        return my_type_test
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -624,8 +631,10 @@ branch = foo
     self.generateTestRepositoryList()
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
@@ -635,7 +644,7 @@ branch = foo
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
-    test_node.run(my_type_test)
+    test_node.run()
     self.assertEquals(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
@@ -643,6 +652,7 @@ branch = foo
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
