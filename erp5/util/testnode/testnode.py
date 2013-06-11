@@ -333,12 +333,10 @@ branch = %(branch)s
           self.cleanUp(None)
           remote_test_result_needs_cleanup = False
           begin = time.time()
-          
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
+          self.portal = portal
           test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
-          
-    
           test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
@@ -363,7 +361,7 @@ from the distributor.")
           elif my_type_test == 'ScalabilityTest':
             runner = ScalabilityTestRunner(self)
           else:
-            log("testnode, Runner type '%s' not implemented.", %(my_type_test))
+            log("testnode, Runner type not implemented.", my_type_test)
             raise NotImplementedError
             
           

@@ -76,7 +76,7 @@ class ScalabilityTestRunner():
       
   def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
-    Install all softwares used to run tests (ex : launcher software)
+    We will build slapos software needed by the testnode itself,
     """
     software_path_list = []
     software_path_list.append(self.testnode.config.get("software_list"))
@@ -88,7 +88,7 @@ class ScalabilityTestRunner():
     
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
-    Install all testsuite's softwares (on worker_nodes)
+    Install all testsuite's software
     """
     # In fact we just need to extract (by knowing the ipv6)
     # softwares ipv6-url ( created during constructProfile(...) )
@@ -96,8 +96,8 @@ class ScalabilityTestRunner():
     # TODO : extract software paths (ipv6+local suite path+password?) from node_test_suite
     software_path_list = []
     for software_path in software_path_list:
-      for worker_node in self.worker_nodes:
-        self._prepareSlapOS(software_path,worker_node['computer_id']) 
+      for involved_node in self.involved_nodes:
+        self._prepareSlapOS(software_path, involved_node['computer_id']) 
     # TODO : change the line below
     return {'status_code' : 0}
 
