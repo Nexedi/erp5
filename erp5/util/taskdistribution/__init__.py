@@ -464,7 +464,7 @@ class TaskDistributor(RPCRetry):
 
     def generateConfiguration(self, test_suite_title):
       """
-        Generates a configguration from a test_suite_title
+        Generates a configuration from a test_suite_title
       """
       self._retryRPC('generateConfiguration', (test_suite_title,))
 
