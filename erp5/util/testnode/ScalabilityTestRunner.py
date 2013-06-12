@@ -55,7 +55,7 @@ class ScalabilityTestRunner():
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
-    self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate)
+    SlapOSControler.createSlaposConfigurationFileAccount(key,certificate)
     
     # {'COMPX' : ['soft_path1.cfg', 'soft_path2.cfg'],
     #  'COMPY' : ['soft_path1.cfg'], ... }
