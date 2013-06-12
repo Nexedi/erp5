@@ -68,9 +68,9 @@ class SlapOSControler(object):
     self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
 
-  def createSlaposConfigurationFileAccount(key, certificate):
+  def createSlaposConfigurationFileAccount(self, key, certificate, config, log):
     # Create "slapos_account" directory in the "slapos_directory"
-    slapos_account_directory = os.path.join(self.config['slapos_directory'], "slapos_account")
+    slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
     SlapOSControler.createFolder(slapos_account_directory)
     # Create slapos-account files
     slapos_account_key_path = os.path.join(slapos_account_directory, "key")
@@ -78,12 +78,15 @@ class SlapOSControler(object):
     configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
     configuration_file_value = "[slapos]\nmaster_url = %s\n\
   [slapconsole]\ncert_file = %s\nkey_file = %s" %(
-                                  self.config['server_url'],
+                                  config['server_url'],
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
     SlapOSControler.createFile(slapos_account_key_path, "w", key)
+    log("% created.", slapos_account_key_path)
     SlapOSControler.createFile(slapos_account_certificate_path, "w", certificate)
+    log("% created.", slapos_account_certificate_path)
     SlapOSControler.createFile(configuration_file_path, "w", configuration_file_value)
+    log("% created.", configuration_file_path)
     self.configuration_file_path = configuration_file_path
 
   def supply(self, software_url, computer_id, remove=False):
