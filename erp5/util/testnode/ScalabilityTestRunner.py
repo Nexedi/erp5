@@ -111,7 +111,7 @@ class ScalabilityTestRunner():
                                 node_test_suite.test_suite_title)))
     print "test_configuration:"
     print test_configuration
-    self.involved_nodes = test_configuration['involved_nodes']
+    self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
     self.launchable = test_configuration['launchable']
     self.error_message = test_configuration['error_message']
 
@@ -122,28 +122,28 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
 
       # wich code to return ?
       return {'status_code' : 1}
-    involved_nodes = test_configuration['involved_nodes']
+    involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
     configuration_list = test_configuration['configuration_list']
-    launcher_nodes = test_configuration['launcher_nodes']
+    launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
   
-    print "laucher_nodes:"
-    print launcher_nodes
-    print "involved_nodes:"
-    print involved_nodes
+    print "launcher_nodes_computer_guid:"
+    print launcher_nodes_computer_guid
+    print "involved_nodes_computer_guid:"
+    print involved_nodes_computer_guid
     print "configuration_list:"
     print configuration_list
     
   
     software_path_list = []
     for software_path in software_path_list:
-      for involved_node in self.involved_nodes:
-        self._prepareSlapOS(software_path, involved_node['computer_id']) 
+      for computer_guid in self.involved_nodes_computer_guid:
+        self._prepareSlapOS(software_path, computer_guid) 
     # TODO : change the line below
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
-    self.worker_nodes = []
-    self.launcher_nodes = []
+    self.involved_nodes_computer_guid = []
+    self.launcher_nodes_computer_guid = []
 
   def _generateConfigurationList(self, test_suite): 
     # TODO : implement it 
