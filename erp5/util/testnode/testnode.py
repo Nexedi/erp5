@@ -77,7 +77,8 @@ def deunicodeData(data):
       key = deunicodeData(key)
       value = deunicodeData(value)
       new_data[key] = value
-  else new_data = data
+  else:
+    new_data = data
   return new_data
 
 
