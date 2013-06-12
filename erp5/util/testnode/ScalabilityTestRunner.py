@@ -37,11 +37,12 @@ import shutil
 import logging
 import string
 import random
+import testnodeUtils
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
-from testnode import deunicodeData
+
 
 
 class ScalabilityTestRunner():
@@ -104,7 +105,7 @@ class ScalabilityTestRunner():
     print "...isValidatedMaster(..):"
     print self.testnode.test_suite_portal.isValidatedMaster(
                            self.testnode.config['test_node_title'])
-    test_configuration = deunicodeData(
+    test_configuration = testnodeUtils.deunicodeData(
                            json.loads(
                               self.testnode.test_suite_portal.generateConfiguration(
                                 node_test_suite.test_suite_title)))

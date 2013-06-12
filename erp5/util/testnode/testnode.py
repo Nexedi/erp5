@@ -37,6 +37,7 @@ import shutil
 import logging
 import string
 import random
+import testnodeUtils
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -44,6 +45,7 @@ from NodeTestSuite import NodeTestSuite, SlapOSInstance
 from ScalabilityTestRunner import ScalabilityTestRunner
 from UnitTestRunner import UnitTestRunner
 from erp5.util import taskdistribution
+
 
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
@@ -58,30 +60,6 @@ class DummyLogger(object):
     for name in ('trace', 'debug', 'info', 'warn', 'warning', 'error',
       'critical', 'fatal'):
        setattr(self, name, func)
-
-
-def deunicodeData(data):
-  if isinstance(data, int):
-    new_data = data
-  elif isinstance(data, str):
-    new_data = data
-  elif isinstance(data, list):
-    new_data = []
-    for sub_data in data:
-      new_data.append(deunicodeData(sub_data))
-  elif isinstance(data, unicode):
-    new_data = data.encode('utf8')
-  elif isinstance(data, dict):
-    new_data = {}
-    for key, value in data.iteritems():
-      key = deunicodeData(key)
-      value = deunicodeData(value)
-      new_data[key] = value
-  else:
-    new_data = data
-  return new_data
-
-
 
 class TestNode(object):
 
@@ -337,7 +315,7 @@ branch = %(branch)s
           self.test_suite_portal.subscribeNode(config['test_node_title'], config['computer_id'])        
           
           test_suite_json =  self.test_suite_portal.startTestSuite(config['test_node_title'])
-          test_suite_data = deunicodeData(json.loads(test_suite_json))
+          test_suite_data = testnodeUtils.deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
           ##/BLOCK OK
