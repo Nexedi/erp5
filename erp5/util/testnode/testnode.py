@@ -75,6 +75,8 @@ def deunicodeData(data):
       new_data[key] = value
   elif isinstance(data, int):
     new_data = data
+  elif isinstance(data, str):
+    new_data = str(data)
   return new_data
 
 
@@ -338,7 +340,7 @@ branch = %(branch)s
           ##/BLOCK OK
           
           
-          print self.test_suite_portal.getFooFooFoo()
+          print deunicodeData(self.test_suite_portal.getFooFooFoo())
           
           
           # TODO : implement this method for each distributor
