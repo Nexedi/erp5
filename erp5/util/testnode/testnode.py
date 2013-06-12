@@ -335,14 +335,18 @@ branch = %(branch)s
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
           self.test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           self.test_suite_portal.subscribeNode(config['test_node_title'], config['computer_id'])        
+          
+          
+          print deunicodeData(self.test_suite_portal.getFooFooFoo())
+          
+          time.sleep(12)
+          
           test_suite_json =  self.test_suite_portal.startTestSuite(config['test_node_title'])
           test_suite_data = deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
           ##/BLOCK OK
           
-          
-          print deunicodeData(self.test_suite_portal.getFooFooFoo())
           
           
           # TODO : implement this method for each distributor
