@@ -102,8 +102,10 @@ class ScalabilityTestRunner():
     print "...isValidatedMaster(..):"
     print self.testnode.test_suite_portal.isValidatedMaster(
                            self.testnode.config['test_node_title'])
-    test_configuration = self.testnode.test_suite_portal.generateConfiguration(
-                                       node_test_suite.test_suite_title)
+    test_configuration = deunicodeData(
+                           json.loads(
+                              self.testnode.test_suite_portal.generateConfiguration(
+                                node_test_suite.test_suite_title)))
     print "test_configuration:"
     print test_configuration
     self.involved_nodes = test_configuration['involved_nodes']
