@@ -70,6 +70,7 @@ class ScalabilityTestRunner():
         self.remaining_software_installation_grid[computer_guid] = []
       self.remaining_software_installation_grid[computer_guid].append(software_path)
       self.slapos_controler.supply(software_path, computer_guid, create_partition)
+      # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.still_supply_to_request' is False)")

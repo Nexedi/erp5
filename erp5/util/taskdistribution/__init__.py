@@ -475,6 +475,12 @@ class TaskDistributor(RPCRetry):
       """
       self._retryRPC('isValidatedMaster', (test_node_title,))
 
+    def getFooFooFoo(self):
+      """
+        Returns "FooFooFoo"
+      """
+      self._retryRPC('getFooFooFoo')
+
 
 class DummyTaskDistributionTool(object):
     """
