@@ -466,20 +466,20 @@ class TaskDistributor(RPCRetry):
       """
         Generates a configuration from a test_suite_title
       """
-      self._retryRPC('generateConfiguration', (test_suite_title,))
+      return self._retryRPC('generateConfiguration', (test_suite_title,))
 
 
     def isValidatedMaster(self, test_node_title):
       """
         Returns True or False if the testnode is the master
       """
-      self._retryRPC('isValidatedMaster', (test_node_title,))
+      return self._retryRPC('isValidatedMaster', (test_node_title,))
 
     def getFooFooFoo(self):
       """
         Returns "FooFooFoo"
       """
-      self._retryRPC('getFooFooFoo')
+      return self._retryRPC('getFooFooFoo')
 
 
 class DummyTaskDistributionTool(object):
