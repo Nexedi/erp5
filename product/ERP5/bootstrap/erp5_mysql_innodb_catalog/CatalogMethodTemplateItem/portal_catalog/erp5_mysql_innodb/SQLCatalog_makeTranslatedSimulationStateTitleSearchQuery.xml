@@ -63,6 +63,14 @@ return AndQuery(Query(translated_simulation_state_title__=value),\n
             <value> <string>value</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>SQLCatalog_makeTranslatedSimulationStateTitleSearchQuery</string> </value>
         </item>
