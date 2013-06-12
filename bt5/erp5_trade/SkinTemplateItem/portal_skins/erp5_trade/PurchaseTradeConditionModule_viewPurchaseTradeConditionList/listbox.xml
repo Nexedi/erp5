@@ -169,8 +169,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>destination_section</string>
-                          <string>Destination Section</string>
+                          <string>trade_condition_type</string>
+                          <string>Trade Condition Type</string>
                         </tuple>
                         <tuple>
                           <string>incoterm</string>
@@ -226,8 +226,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>destination_section</string>
-                          <string>Destination Section</string>
+                          <string>trade_condition_type</string>
+                          <string>Trade Condition Type</string>
                         </tuple>
                         <tuple>
                           <string>incoterm</string>
