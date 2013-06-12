@@ -459,11 +459,13 @@ branch = foo
     self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
                      node_test_suite)
 
-  def test_11_run(self, my_test_type='UnitTest'):
+  def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
         pass
-    def patch_getTestType(self):
+    def patch_getTestType(self, *args, **kw):
         return my_test_type
+    def patch_isValidatedMaster(self, *args, **kw):
+        return (grade == 'master')
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -472,12 +474,17 @@ branch = foo
     def patch_startTestSuite(self,test_node_title):
       global counter
       config_list = []
+      # Sclalability slave testnode is not directly in charge of testsuites
+      if my_test_type == 'ScalabilityTest' and grade == 'slave':
+        count += 5
+        return []
+          
       def _checkExistingTestSuite(reference_set):
         test_self.assertEquals(set(reference_set),
-                    set(os.listdir(test_node.working_directory)))
+                  set(os.listdir(test_node.working_directory)))
         for x in reference_set:
           test_self.assertTrue(os.path.exists(os.path.join(
-                               test_node.working_directory,x)),True)
+                             test_node.working_directory,x)),True)
       if counter == 0:
         config_list.append(test_self.getTestSuiteData(reference='foo')[0])
         config_list.append(test_self.getTestSuiteData(reference='bar')[0])
@@ -516,12 +523,16 @@ branch = foo
     self.generateTestRepositoryList()
     RunnerClass = self.returnGoodClassRunner(my_test_type)
     # Patch
+    if my_test_type == 'ScalabilityTest':
+      original_isValidatedMaster = TaskDistributor.isValidatedMaster
+      TaskDistributor.isValidatedMaster = patch_isValidatedMaster
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
+    
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     # TestNode
@@ -537,6 +548,8 @@ branch = foo
     self.assertEquals(5, counter)
     time.sleep = original_sleep
     # Restore old class methods
+    if my_test_type == 'ScalabilityTest':
+      TaskDistributor.isValidatedMaster = original_isValidatedMaster
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -584,7 +597,7 @@ branch = foo
   def test_15_suite_log_directory(self, my_test_type='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
-    def patch_getTestType(self):
+    def patch_getTestType(self, *args, **kw):
         return my_test_type
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
@@ -767,8 +780,10 @@ branch = foo
     # This case test may be dispensable on ScalabilityTest case
     # so..
     pass
-  def test_scalability_11_run(self, my_test_type='ScalabilityTest'):
-    self.test_11_run(my_test_type)
+  def test_scalability_as_master_11_run(self, my_test_type='ScalabilityTest'):
+    self.test_11_run(my_test_type, grade='master')
+  def test_scalability_as_slave_11_run(self, my_test_type='ScalabilityTest'):
+    self.test_11_run(my_test_type, grade='slave')
   def test_scalability_12_spawn(self, my_test_type='ScalabilityTest'):
     self.test_12_spawn(my_test_type)
   def test_scalability_13_SlaposControlerResetSoftware(self, my_test_type='ScalabilityTest'):
