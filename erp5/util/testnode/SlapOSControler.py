@@ -82,11 +82,11 @@ class SlapOSControler(object):
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
     createFile(slapos_account_key_path, "w", key)
-    log("% created.", slapos_account_key_path)
+    log("% created." %(str(slapos_account_key_path)))
     createFile(slapos_account_certificate_path, "w", certificate)
-    log("% created.", slapos_account_certificate_path)
+    log("% created." %(str(slapos_account_certificate_path)))
     createFile(configuration_file_path, "w", configuration_file_value)
-    log("% created.", configuration_file_path)
+    log("% created." %(str(configuration_file_path)))
     self.configuration_file_path = configuration_file_path
 
   def supply(self, software_url, computer_id, remove=False):
