@@ -100,6 +100,8 @@ class ScalabilityTestRunner():
     
     test_configuration = self.testnode.test_suite_portal.generateConfiguration(
                                        node_test_suite.test_suite_title)
+    print "test_configuration:"
+    print test_configuration
     self.involved_nodes = test_configuration['involved_nodes']
     self.launchable = test_configuration['launchable']
     if self.launchable == False:
