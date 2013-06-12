@@ -102,19 +102,19 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>state_var</string>
-                          <string>Variable</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>workflow_state</string>
-                          <string>State ID</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>relative_url</string>
-                          <string>Relative URL</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
