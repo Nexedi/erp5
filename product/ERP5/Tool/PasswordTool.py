@@ -40,6 +40,7 @@ from hashlib import md5
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Globals import PersistentMapping
+from BTrees.OOBTree import OOBTree
 from urllib import urlencode
 
 class PasswordTool(BaseTool):
@@ -60,12 +61,11 @@ class PasswordTool(BaseTool):
 
 
   _expiration_day = 1
-  _password_request_dict = {}
 
   def __init__(self, id=None):
     if id is None:
       id = self.__class__.id
-    self._password_request_dict = PersistentMapping()
+    self._password_request_dict = OOBTree()
     # XXX no call to BaseTool.__init__ ?
     # BaseTool.__init__(self, id)
 
@@ -77,13 +77,10 @@ class PasswordTool(BaseTool):
 
     # generate a random string
     key = self._generateUUID()
-    # XXX before r26093, _password_request_dict was initialized by an OOBTree and
-    # replaced by a dict on each request, so if it's data structure is not up
-    # to date, we update it if needed
-    if not isinstance(self._password_request_dict, PersistentMapping):
-      LOG('ERP5.PasswordTool', INFO, 'Updating password_request_dict to'
-                                     ' PersistentMapping')
-      self._password_request_dict = PersistentMapping()
+    if isinstance(self._password_request_dict, PersistentMapping):
+      LOG('ERP5.PasswordTool', INFO, 'Migrating password_request_dict to'
+                                     ' OOBTree')
+      self._password_request_dict = OOBTree(self._password_request_dict)
 
     # register request
     self._password_request_dict[key] = (user_login, expiration_date)
