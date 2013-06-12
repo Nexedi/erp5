@@ -52,6 +52,11 @@ class ScalabilityTestRunner():
                                   self.testnode.working_directory,
                                   self.testnode.config,
                                   self.testnode.log)
+    # Create the slapos account configuration file and dir
+    key = self.testnode.test_suite_portal.getSlaposAccountKey()
+    certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
+    self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate)
+    
     # {'COMPX' : ['soft_path1.cfg', 'soft_path2.cfg'],
     #  'COMPY' : ['soft_path1.cfg'], ... }
     self.remaining_software_installation_grid = {}
@@ -125,14 +130,6 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
     involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
     configuration_list = test_configuration['configuration_list']
     launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-  
-    print "launcher_nodes_computer_guid:"
-    print launcher_nodes_computer_guid
-    print "involved_nodes_computer_guid:"
-    print involved_nodes_computer_guid
-    print "configuration_list:"
-    print configuration_list
-    
   
     software_path_list = []
     for software_path in software_path_list:

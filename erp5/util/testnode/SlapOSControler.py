@@ -67,8 +67,24 @@ class SlapOSControler(object):
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
-    #self.configuration_path_file = self.config['configuration_path_file'] 
-    self.configuration_path_file = ""
+
+  def createSlaposConfigurationFileAccount(key, certificate):
+    # Create "slapos_account" directory in the "slapos_directory"
+    slapos_account_directory = os.path.join(self.config['slapos_directory'], "slapos_account")
+    SlapOSControler.createFolder(slapos_account_directory)
+    # Create slapos-account files
+    slapos_account_key_path = os.path.join(slapos_account_directory, "key")
+    slapos_account_certificate_path = os.path.join(slapos_account_directory, "certificate")
+    configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
+    configuration_file_value = "[slapos]\nmaster_url = %s\n\
+  [slapconsole]\ncert_file = %s\nkey_file = %s" %(
+                                  self.config['server_url'],
+                                  slapos_account_certificate_path,
+                                  slapos_account_key_path)
+    SlapOSControler.createFile(slapos_account_key_path, "w", key)
+    SlapOSControler.createFile(slapos_account_certificate_path, "w", certificate)
+    SlapOSControler.createFile(configuration_file_path, "w", configuration_file_value)
+    self.configuration_file_path = configuration_file_path
 
   def supply(self, software_url, computer_id, remove=False):
     """
@@ -77,6 +93,7 @@ class SlapOSControler(object):
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
     # TODO : remove return
+    print "Ben:I GONNE SEARCH MY SLAPOS CONFIG FILE THERE : %s" %self.configuration_file_path
     return
     self.log('SlapOSControler : supply')
     parser = argparse.ArgumentParser()

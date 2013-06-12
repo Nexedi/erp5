@@ -475,6 +475,18 @@ class TaskDistributor(RPCRetry):
       """
       return self._retryRPC('isValidatedMaster', (test_node_title,))
 
+    def getSlaposAccountKey(self):
+      """
+        Returns the slapos account key related to the distributor
+      """
+      return self._retryRPC('getSlaposAccountKey')
+    
+    def getSlaposAccountCertificate(self):
+      """
+        Returns the slapos account certificate related to the distributor
+      """
+      return self._retryRPC('getSlaposAccountCertificate')
+      
     def getFooFooFoo(self):
       """
         Returns "FooFooFoo"
