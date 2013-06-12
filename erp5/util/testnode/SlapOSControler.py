@@ -71,7 +71,7 @@ class SlapOSControler(object):
   def createSlaposConfigurationFileAccount(self, key, certificate, config, log):
     # Create "slapos_account" directory in the "slapos_directory"
     slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
-    SlapOSControler.createFolder(slapos_account_directory)
+    createFolder(slapos_account_directory)
     # Create slapos-account files
     slapos_account_key_path = os.path.join(slapos_account_directory, "key")
     slapos_account_certificate_path = os.path.join(slapos_account_directory, "certificate")
@@ -81,11 +81,11 @@ class SlapOSControler(object):
                                   config['server_url'],
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
-    SlapOSControler.createFile(slapos_account_key_path, "w", key)
+    createFile(slapos_account_key_path, "w", key)
     log("% created.", slapos_account_key_path)
-    SlapOSControler.createFile(slapos_account_certificate_path, "w", certificate)
+    createFile(slapos_account_certificate_path, "w", certificate)
     log("% created.", slapos_account_certificate_path)
-    SlapOSControler.createFile(configuration_file_path, "w", configuration_file_value)
+    createFile(configuration_file_path, "w", configuration_file_value)
     log("% created.", configuration_file_path)
     self.configuration_file_path = configuration_file_path
 
