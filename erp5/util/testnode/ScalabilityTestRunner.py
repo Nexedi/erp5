@@ -41,6 +41,8 @@ from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
+from testnode import deunicodeData
+
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
