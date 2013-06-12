@@ -1,3 +1,6 @@
+2013-06-12 yusei
+* Replace a zsqlmethod for translated_simulation_state_title with python script to add an extra condition to where expression. This helps mysql optimizer to make a better plan. Without it mysql optimizer may make a bad plan to join catalog and translation and causes bad performance problem.
+
 2013-05-30 yusei
 * Fix an inventory bug. When there are more than 300 inventories which are cancelled by inventory document, inventory document creates wrong stock records.
 

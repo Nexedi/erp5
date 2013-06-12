@@ -3,4 +3,5 @@
  <key>full_text | SQLCatalog_makeFullTextQuery</key>
  <key>quick_search_text | SQLCatalog_makeQuickSearchQuery</key>
  <key>search_text | SQLCatalog_makeSearchTextQuery</key>
+ <key>translated_simulation_state_title | SQLCatalog_makeTranslatedSimulationStateTitleSearchQuery</key>
 </key_list>
