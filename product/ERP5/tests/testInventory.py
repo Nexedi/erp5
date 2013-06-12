@@ -2685,6 +2685,52 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       group_by_sub_variation=1,
       group_by_resource=1)
 
+  def stepCheckGetInveotoryGoesToCache(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Get inventory then store the inventory_cache record
+      thanks to the at_date parameter
+    """
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    at_date = DateTime('2013/06/11 00:00:00 GMT+9')
+    self._testGetInventory(
+      expected=15,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+    self._testGetInventory(
+      expected=20,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=second_resource_value.getUid(),
+      at_date=at_date)
+
+  def stepCheckInventoryCacheIsClearedAfterAddingInventory(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Check that older invetory_cache is cleared.
+    """
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    at_date = DateTime('2013/06/11 02:00:00 GMT+9')
+    self._testGetInventory(
+      expected=30,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+    self._testGetInventory(
+      expected=50,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=second_resource_value.getUid(),
+      at_date=at_date)
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -3517,6 +3563,52 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        CreateFullInventoryAtTheDate1 \
                        Tic \
                        CheckFullInventoryUpdateWithValidDateOrder \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_18_InventoryDocumentAndInventoryCache(
+        self, quiet=0, run=run_all_test):
+    """
+    Check that inventory caches that are older than inventory stock movements
+    are cleared.
+
+    The case is:
+    1) full inventory: 2013/05/01,section=A, node=B, resource=X, quantity=15
+                                                     resource=Y, quantity=20
+    [test]
+    2) getInventory(section=A, node=B, resource=X, at_date=2013/06/11 00:00)
+         => should return 15
+       getInventory(section=A, node=B, resource=Y, at_date=2013/06/11 00:00)
+         => should return 20
+
+    3) full inventory: 2013/05/02,section=A, node=B, resource=X, quantity=30
+                                                     resource=Y, quantity=50
+
+    [test]
+    4) getInventory(section=A, node=B, resource=X, at_date=2013/06/11 02:00)
+       => should return 30
+    4) getInventory(section=A, node=B, resource=Y, at_date=2013/06/11 02:00)
+       => should return 50
+    """
+    if not run: return
+
+    self.two_resource_full_inventory1_start_date = '2013/05/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 15
+    self.two_resource_full_inventory1_inventory_2 = 20
+    self.two_resource_full_inventory2_start_date = '2013/05/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 30
+    self.two_resource_full_inventory2_inventory_2 = 50
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       CheckGetInveotoryGoesToCache \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CheckInventoryCacheIsClearedAfterAddingInventory \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
