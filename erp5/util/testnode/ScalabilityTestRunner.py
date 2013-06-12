@@ -113,18 +113,26 @@ class ScalabilityTestRunner():
     print test_configuration
     self.involved_nodes = test_configuration['involved_nodes']
     self.launchable = test_configuration['launchable']
+    self.error_message = test_configuration['error_message']
 
     if self.launchable == False:
-      self.testnode.log("Test suite %s is not launchable with the current \
-cluster configuration." %(node_test_suite.test_suite_title,))
+      self.testnode.log("Test suite %s is not actually launchable with \
+the current cluster configuration." %(node_test_suite.test_suite_title,))
+      self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
+
       # wich code to return ?
       return {'status_code' : 1}
     involved_nodes = test_configuration['involved_nodes']
     configuration_list = test_configuration['configuration_list']
-    #launcher_nodes = test_configuration['launcher_nodes']
+    launcher_nodes = test_configuration['launcher_nodes']
   
+    print "laucher_nodes:"
+    print launcher_nodes
+    print "involved_nodes:"
+    print involved_nodes
+    print "configuration_list:"
+    print configuration_list
     
-  
   
     software_path_list = []
     for software_path in software_path_list:
