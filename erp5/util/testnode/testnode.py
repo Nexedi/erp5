@@ -337,6 +337,10 @@ branch = %(branch)s
               (test_suite_data,))
           ##/BLOCK OK
           
+          
+          print self.test_suite_portal.getFooFooFoo()
+          
+          
           # TODO : implement this method for each distributor
           # into nexedi/master-erp5..
           # (just UnitTestDistributor should be sufficient)
