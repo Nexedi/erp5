@@ -462,10 +462,19 @@ branch = foo
   def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
         pass
+    # Used in case of 'ScalabilityTest'
     def patch_getTestType(self, *args, **kw):
-        return my_test_type
+      return my_test_type
+    def patch_getSlaposAccountKey(self, *args, **kw):
+      return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+      return "Certificate"
+    def patch_generateConfiguration(self, *args, **kw):
+      return '{"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
+"launchable": false}'
     def patch_isValidatedMaster(self, *args, **kw):
-        return (grade == 'master')
+      return (grade == 'master')
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -476,7 +485,6 @@ branch = foo
       config_list = []
       # Sclalability slave testnode is not directly in charge of testsuites
       if my_test_type == 'ScalabilityTest' and grade == 'slave':
-        count += 5
         return []
           
       def _checkExistingTestSuite(reference_set):
@@ -523,8 +531,14 @@ branch = foo
     self.generateTestRepositoryList()
     RunnerClass = self.returnGoodClassRunner(my_test_type)
     # Patch
-    if my_test_type == 'ScalabilityTest':
+    if my_test_type == "ScalabilityTest":
+      original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+      original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+      original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isValidatedMaster = TaskDistributor.isValidatedMaster
+      TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+      TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isValidatedMaster = patch_isValidatedMaster
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
@@ -545,10 +559,18 @@ branch = foo
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
     test_node.run()
-    self.assertEquals(5, counter)
+    # Doesn't have to install sofwtare themself
+    if my_test_type == 'ScalabilityTest' and grade == 'slave' :
+      self.assertEquals(0, counter)
+    else :
+      self.assertEquals(5, counter)
+
     time.sleep = original_sleep
     # Restore old class methods
-    if my_test_type == 'ScalabilityTest':
+    if my_test_type == "ScalabilityTest":
+      TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+      TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isValidatedMaster = original_isValidatedMaster
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
@@ -594,20 +616,22 @@ branch = foo
     createFolder(folder, clean=True)
     self.assertEquals(False, os.path.exists(to_drop_path))
 
-  def test_15_suite_log_directory(self, my_test_type='UnitTest'):
+  def test_15_suite_log_directory(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
-        pass
+      pass
     # Used in case of 'ScalabilityTest'
     def patch_getTestType(self, *args, **kw):
-        return my_test_type
+      return my_test_type
     def patch_getSlaposAccountKey(self, *args, **kw):
-        return "key"
+      return "key"
     def patch_getSlaposAccountCertificate(self, *args, **kw):
-        return "key"
+      return "Certificate"
     def patch_generateConfiguration(self, *args, **kw):
-        return '{"configuration_list": [], "involved_nodes_computer_guid"\
+      return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
 "launchable": false}'
+    def patch_isValidatedMaster(self, *args, **kw):
+      return (grade == 'master')
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -657,9 +681,11 @@ branch = foo
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_generateConfiguration = TaskDistributor.generateConfiguration
+      original_isValidatedMaster = TaskDistributor.isValidatedMaster
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
+      TaskDistributor.isValidatedMaster = patch_isValidatedMaster
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -684,6 +710,7 @@ branch = foo
       TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = original_generateConfiguration
+      TaskDistributor.isValidatedMaster = original_isValidatedMaster
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -810,8 +837,10 @@ branch = foo
     self.test_13_SlaposControlerResetSoftware(my_test_type)
   def test_scalability_14_createFolder(self, my_test_type='ScalabilityTest'):
     self.test_14_createFolder(my_test_type)
-  def test_scalability_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
-    self.test_15_suite_log_directory(my_test_type)
+  def test_scalability_as_master_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
+    self.test_15_suite_log_directory(my_test_type, grade='master')
+  def test_scalability_as_slave_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
+    self.test_15_suite_log_directory(my_test_type, grade='slave')
   def test_scalability_16_cleanupLogDirectory(self, my_test_type='ScalabilityTest'):
     self.test_16_cleanupLogDirectory(my_test_type)
   def test_scalability_17_cleanupTempDirectory(self, my_test_type='ScalabilityTest'):
