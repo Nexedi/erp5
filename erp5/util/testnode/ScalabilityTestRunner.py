@@ -104,23 +104,12 @@ class ScalabilityTestRunner():
     Return True if all softwares are not installed, otherwise return False
     """
     # Remove from grid installed software entries
-    print "self.remaining_software_installation_grid:"
-    print self.remaining_software_installation_grid
-
     for computer_guid,v in self.remaining_software_installation_grid.items():
       for software_url in v:
         if self.isSoftwareReleaseReady(software_url, computer_guid):
           self.remaining_software_installation_grid[computer_guid].remove(software_url)
         if len(self.remaining_software_installation_grid[computer_guid])==0:
           del self.remaining_software_installation_grid[computer_guid]
-
-
-    # Remove from grid installed software entries
-    print "AFTER self.remaining_software_installation_grid:"
-    print self.remaining_software_installation_grid
-    print "len(self.remaining_software_installation_grid) > 0:"
-    print len(self.remaining_software_installation_grid) > 0
-
     # Not empty grid means that all softwares are not installed
     return len(self.remaining_software_installation_grid) > 0
           
@@ -164,11 +153,8 @@ class ScalabilityTestRunner():
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
       # Waiting until all softwares are installed
-
-      print "waiting vlaue:"
-      print max_time <= time.time()-start_time
       while ( self.remainSoftwareToInstall() 
-         and (max_time >= (time.time()-start_time))):
+         and (max_time > (time.time()-start_time))):
         self.testnode.log("Master testnode is waiting\
   for the end of all software installation.")
         time.sleep(15)
