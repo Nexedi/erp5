@@ -85,7 +85,7 @@ def MessageCatalog_getNotTranslatedMessageDict(self):
   not_translated_message_dict = {}
   messages = MessageCatalog_getMessageDict(self)
   for k,v in messages.iteritems():
-    if not len(v):
+    if not len(v) or not len(filter(lambda x:x, v.values())):
       not_translated_message_dict[k] = v
   return not_translated_message_dict
 
