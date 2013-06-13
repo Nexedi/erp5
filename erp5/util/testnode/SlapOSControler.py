@@ -70,7 +70,7 @@ class SlapOSControler(object):
     self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
 
-  def createSlaposConfigurationFileAccount(self, key, certificate, config, log):
+  def createSlaposConfigurationFileAccount(self, key, certificate, config):
     # Create "slapos_account" directory in the "slapos_directory"
     slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
     createFolder(slapos_account_directory)
@@ -84,11 +84,11 @@ class SlapOSControler(object):
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
     createFile(slapos_account_key_path, "w", key)
-    log("%s created." %(str(slapos_account_key_path)))
+    self.log("%s created." %(str(slapos_account_key_path)))
     createFile(slapos_account_certificate_path, "w", certificate)
-    log("%s created." %(str(slapos_account_certificate_path)))
+    self.log("%s created." %(str(slapos_account_certificate_path)))
     createFile(configuration_file_path, "w", configuration_file_value)
-    log("%s created." %(str(configuration_file_path)))
+    self.log("%s created." %(str(configuration_file_path)))
     self.configuration_file_path = configuration_file_path
 
   def supply(self, software_url, computer_id, state="available"):
@@ -97,8 +97,8 @@ class SlapOSControler(object):
     Ex :
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
-    return
     self.log('SlapOSControler : supply')
+    return
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
     parser.add_argument("software_url")

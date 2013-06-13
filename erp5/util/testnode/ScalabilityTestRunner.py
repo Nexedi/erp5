@@ -57,7 +57,7 @@ class ScalabilityTestRunner():
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
-                                    self.testnode.config, self.testnode.log)
+                                    self.testnode.config)
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
@@ -176,7 +176,7 @@ class ScalabilityTestRunner():
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
         self.testnode.log("Master testnode is waiting\
-  for the end of all software installation (for %ss).",
+ for the end of all software installation (for %ss).",
           str(int(time.time()-start_time)))
         time.sleep(interval_time)
       # We were wainting for too long time, that's a failure.
