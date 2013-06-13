@@ -42,7 +42,8 @@ from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
-
+# for dummy slapos answer
+import signal
 
 
 class ScalabilityTestRunner():
@@ -62,7 +63,10 @@ class ScalabilityTestRunner():
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
-      
+    
+    # Used to simulate SlapOS answer
+    self.last_slapos_answer = []
+    
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
     """
@@ -91,15 +95,27 @@ class ScalabilityTestRunner():
 #      software_path_list.append(self.testnode.config.get("software_list"))
     return {'status_code' : 0} 
 
+  # For dummy slapos answer
+  # Press ctrl+c to simulate an (positive) answer from sapos master
+  def _getSignal(self, signal, frame):
+    self.last_slapos_answer.append(True)
+  def _prepareDummySlapOSAnswer(self):
+    signal.signal(signal.SIGINT, self._getSignal)
+  def simulateSlapOSAnswer(self):
+    if len(self.last_slapos_answer)==0:
+      return False
+    else:
+      return self.last_slapos_answer.pop()
+  # /For dummy slapos answer
+    
   def isSoftwareReleaseReady(self, software_url, computer_guid):
     """
     Return true if the specified software on the specified node is installed.
     This method should communicates with SlapOS Master.
     """
-    # TODO : implement this method
-    # -> communication with SlapOS master
-    # todo : simulate slapOS Master answer
-    return False
+    # TODO : implement -> communication with SlapOS master
+    # this simulate a SlapOS answer
+    return self.simulateSlapOSAnswer()
       
   def remainSoftwareToInstall(self):
     """
@@ -153,6 +169,8 @@ class ScalabilityTestRunner():
           self._prepareSlapOS(software_path, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
+
+      _prepareDummySlapOSAnswer()
       # Waiting until all softwares are installed
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
