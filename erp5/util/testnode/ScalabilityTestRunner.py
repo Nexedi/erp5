@@ -101,6 +101,7 @@ class ScalabilityTestRunner():
     signal.signal(signal.SIGINT, self._getSignal)
   def _comeBackFromDummySlapOS(self):
     print "Dummy slapOS answer disabled, don't press crtl+c anymore."
+    # use SIG_USR (kill)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
     if len(self.last_slapos_answer)==0:
@@ -184,6 +185,7 @@ class ScalabilityTestRunner():
       self._comeBackFromDummySlapOS()
       if self.remainSoftwareToInstall() :
         return {'status_code' : 1}
+    self.testnode.log("Softwares installed")
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):

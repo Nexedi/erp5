@@ -47,7 +47,7 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository2)
     def log(*args,**kw):
       for arg in args:
-        print "TESTNODE LOG : %r" % (arg,)
+        print "TESTNODE LOG : %r, %r" % (arg, kw)
     self.log = log
 
   def returnGoodClassRunner(self, test_type):
@@ -597,8 +597,17 @@ branch = foo
   def test_15_suite_log_directory(self, my_test_type='UnitTest'):
     def doNothing(self, *args, **kw):
         pass
+    # Used in case of 'ScalabilityTest'
     def patch_getTestType(self, *args, **kw):
         return my_test_type
+    def patch_getSlaposAccountKey(self, *args, **kw):
+        return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+        return "key"
+    def patch_generateConfiguration(self, *args, **kw):
+        return '{"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
+"launchable": false}'
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -644,6 +653,13 @@ branch = foo
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
+    if my_test_type == "ScalabilityTest":
+      original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+      original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+      original_generateConfiguration = TaskDistributor.generateConfiguration
+      TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+      TaskDistributor.generateConfiguration = patch_generateConfiguration
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -664,6 +680,10 @@ branch = foo
     checkTestSuite(test_node)
     time.sleep = original_sleep
     # Restore old class methods
+    if my_test_type == "ScalabilityTest":
+      TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+      TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
