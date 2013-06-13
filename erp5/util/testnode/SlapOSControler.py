@@ -101,7 +101,7 @@ class SlapOSControler(object):
     parser.add_argument("configuration_file")
     parser.add_argument("software_url")
     parser.add_argument("node")
-    if os.path.exists(configuration_file_path):
+    if os.path.exists(self.configuration_file_path):
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
       config = client.Config(args, args.configuration_file)
       try:
