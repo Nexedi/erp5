@@ -97,6 +97,7 @@ class SlapOSControler(object):
     Ex :
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
+    state = "available"
     self.log('SlapOSControler : supply')
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
@@ -112,8 +113,8 @@ class SlapOSControler(object):
          #client.do_supply(software_url, computer_id, 
 #         client.init(config).shorthandSupply(args.software_url, args.node, client.init(config), remove=remove)
          local = client.init(config)
-         local['supply'](software_url, computer_id, state=remove)
-         self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, remove))
+         local['supply'](software_url, computer_id, state=state)
+         self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
       except:
         self.log("SlapOSControler.supply, \
                  exception in registerOpenOrder", exc_info=sys.exc_info())
