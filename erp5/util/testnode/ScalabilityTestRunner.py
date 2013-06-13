@@ -68,7 +68,7 @@ class ScalabilityTestRunner():
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
     """
-    A proxy to supply : Install software a software on a specific node
+    A proxy to supply : Install a software on a specific node
     """
     self.testnode.log("TESTNODE SUPPLY : %s %s", software_path, computer_guid)
     if self.authorize_supply == True :
@@ -90,85 +90,73 @@ class ScalabilityTestRunner():
                            self.testnode.config['test_node_title']):
 #      software_path_list = []
 #      software_path_list.append(self.testnode.config.get("software_list"))
-#      for software_path in software_path_list:
-#        for launcher_node in self.????_nodes:
-#          self._prepareSlapOS(software_path, launcher_node['computer_id']) 
-      # TODO : change the line below
-      return {'status_code' : 0}   
-    else:
-      return {'status_code' : 0} 
+    return {'status_code' : 0} 
 
-
-  def isRemainingSoftwareToInstall(self):
+  def remainSoftwareToInstall(self):
+      # Check SlapOS Master to know if softwares are ready
+      # and remove from self.remaining_software_installation_grid
+      # installed softwares.
       print self.remaining_software_installation_grid
-      
-      return False
-      # Here we can 
+      return True
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
-    Install all testsuite's software
+    Install testsuite softwares
     """
-    # In fact we just need to extract (by knowing the ipv6)
-    # softwares ipv6-url ( created during constructProfile(...) )
-    #software_path_list = _extractSoftwarePathList(software_path_list)
-    # TODO : extract software paths (ipv6+local suite path+password?) from node_test_suite
-    print "...isValidatedMaster(..):"
-    print self.testnode.test_suite_portal.isValidatedMaster(
-                           self.testnode.config['test_node_title'])
-    test_configuration = testnodeUtils.deunicodeData(
-                           json.loads(
-                              self.testnode.test_suite_portal.generateConfiguration(
-                                node_test_suite.test_suite_title)))
-    print "test_configuration:"
-    print test_configuration
-    self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
-    self.launchable = test_configuration['launchable']
-    self.error_message = test_configuration['error_message']
+    # Define how many time this method can take
+    max_time = 3600*10 # 10 hours
+    start_time = time.time()
+    # 
+    if self.testnode.test_suite_portal.isValidatedMaster(
+                           self.testnode.config['test_node_title']):
+        # Get from ERP5 Master the configuration of the cluster for the test
+        test_configuration = testnodeUtils.deunicodeData(
+                               json.loads(
+                                  self.testnode.test_suite_portal.generateConfiguration(
+                                    node_test_suite.test_suite_title)))
+        self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
+        self.launchable = test_configuration['launchable']
+        self.error_message = test_configuration['error_message']
+        if self.launchable == False:
+          self.testnode.log("Test suite %s is not actually launchable with \
+    the current cluster configuration." %(node_test_suite.test_suite_title,))
+          self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
 
-    if self.launchable == False:
-      self.testnode.log("Test suite %s is not actually launchable with \
-the current cluster configuration." %(node_test_suite.test_suite_title,))
-      self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
-
-      # wich code to return ?
-      return {'status_code' : 1}
-    involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
-    configuration_list = test_configuration['configuration_list']
-    launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-  
-    software_path_list = []
-    software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
-    for software_path in software_path_list:
-      for computer_guid in self.involved_nodes_computer_guid:
-        self._prepareSlapOS(software_path, computer_guid) 
-    # From the line below we would not supply any more softwares
-    self.authorize_supply = False
-    # Here a loop while softwares are not all installed
-    while self.isRemainingSoftwareToInstall() == False:
-        self.testnode.log("Master testnode is waiting\
- for the end of all software installation.")
-        time.sleep(15)
-    
+          # wich code to return ?
+          return {'status_code' : 1}
+        involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
+        configuration_list = test_configuration['configuration_list']
+        launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
+      
+        software_path_list = []
+        # Here add the ipv6 url reachable from master profile
+        software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
+        # Ask for softwares installation
+        for software_path in software_path_list:
+          for computer_guid in self.involved_nodes_computer_guid:
+            self._prepareSlapOS(software_path, computer_guid) 
+        # From the line below we would not supply any more softwares
+        self.authorize_supply = False
+        # Waiting until all softwares are installed
+        while (self.remainSoftwareToInstall() == True)
+           and (max_time <= time.time()-start_time):
+            self.testnode.log("Master testnode is waiting\
+     for the end of all software installation.")
+            time.sleep(15)
+        # We were wainting for too long time, that's a failure.
+        if self.isRemainingSoftwareToInstall() == False:
+          return {'status_code' : 1}
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
     self.launcher_nodes_computer_guid = []
 
-  def _generateConfigurationList(self, test_suite): 
-    # TODO : implement it 
-    return []
-
-  # TODO : define methods to check if involved nodes are okay etc..
-  # And if it's not end ans invalidate everything and retry/reloop
-
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     # TODO : write code
     SlapOSControler.createFolder(node_test_suite.test_suite_directory,
                                  clean=True)
-    # create ResultLine for each loop
-    
+    # create ResultLine for each loop    
     pass
 
   def getRelativePathUsage(self):

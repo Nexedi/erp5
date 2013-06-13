@@ -8,6 +8,8 @@ def deunicodeData(data):
     new_data = data
   elif isinstance(data, str):
     new_data = data
+  elif isinstance(data, bool):
+    new_data = data
   elif isinstance(data, list):
     new_data = []
     for sub_data in data:
