@@ -57,13 +57,11 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config, self.testnode.log)
-    
     # {'COMPX' : ['soft_path1.cfg', 'soft_path2.cfg'],
     #  'COMPY' : ['soft_path1.cfg'], ... }
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
-    
       
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
@@ -94,6 +92,10 @@ class ScalabilityTestRunner():
     return {'status_code' : 0} 
 
   def isSoftwareReleaseReady(self, software_url, computer_guid):
+    """
+    Return true if the specified software on the specified node is installed.
+    This method should communicates with SlapOS Master.
+    """
     # TODO : implement this method
     # -> communication with SlapOS master
     # todo : simulate slapOS Master answer
@@ -101,7 +103,7 @@ class ScalabilityTestRunner():
       
   def remainSoftwareToInstall(self):
     """
-    Return True if all softwares are not installed, otherwise return False
+    Return True if it remains softwares to install, otherwise return False
     """
     # Remove from grid installed software entries
     for computer_guid,v in self.remaining_software_installation_grid.items():
@@ -121,7 +123,7 @@ class ScalabilityTestRunner():
     max_time = 3600*10*1.0 # 10 hours
     interval_time = 30
     start_time = time.time()
-    # 
+    # Only master testnode must order software installation
     if self.testnode.test_suite_portal.isValidatedMaster(
             self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
@@ -137,13 +139,11 @@ class ScalabilityTestRunner():
         self.testnode.log("Test suite %s is not actually launchable with \
   the current cluster configuration." %(node_test_suite.test_suite_title,))
         self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
-
-        # wich code to return ?
+        # error : wich code to return ?
         return {'status_code' : 1}
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
       launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-    
       software_path_list = []
       # Here add the ipv6 url reachable from master profile
       software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
@@ -179,4 +179,8 @@ class ScalabilityTestRunner():
     pass
 
   def getRelativePathUsage(self):
+    """
+    Used by the method testnode.constructProfile() to know
+    if the software.cfg have to use relative path or not.
+    """
     return True
