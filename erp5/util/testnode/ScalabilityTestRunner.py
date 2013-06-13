@@ -142,7 +142,7 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
     # From the line below we would not supply any more softwares
     self.authorize_supply = False
     # Here a loop while softwares are not all installed
-    while isRemainingSoftwareToInstall() == False:
+    while self.isRemainingSoftwareToInstall() == False:
         self.testnode.log("Master testnode is waiting\
  for the end of all software installation.")
         time.sleep(4)
