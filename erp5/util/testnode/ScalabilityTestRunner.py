@@ -70,9 +70,9 @@ class ScalabilityTestRunner():
     """
     A proxy to supply : Install a software on a specific node
     """
-    self.testnode.log("TESTNODE SUPPLY : %s %s", software_path, computer_guid)
+    self.testnode.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
-      if not(computer_guid in self.remaining_software_installation_grid):
+      if not computer_guid in self.remaining_software_installation_grid:
         # Add computer_guid to the grid if it isn't
         self.remaining_software_installation_grid[computer_guid] = []
       self.remaining_software_installation_grid[computer_guid].append(software_path)
@@ -94,26 +94,27 @@ class ScalabilityTestRunner():
     return {'status_code' : 0} 
 
   def isSoftwareReleaseReady(self, software_url, computer_guid):
-      # TODO : implement this method
-      # -> communication with SlapOS master
-      
-      # todo : simulate slapOS Master answer
-      
-      return False
+    # TODO : implement this method
+    # -> communication with SlapOS master
+    # todo : simulate slapOS Master answer
+    return False
       
   def remainSoftwareToInstall(self):
-      """
-      Return True if all softwares are installed, otherwise return False
-      """
-      # Remove from grid installed software entries
-      for computer_guid,v in self.remaining_software_installation_grid:
-          for software_url in v:
-              if isSoftwareReleaseReady(software_url, computer_guid):
-                  self.remaining_software_installation_grid[computer_guid].remove(software_url)
-          if len(self.remaining_software_installation_grid[computer_guid])==0:
-            del self.remaining_software_installation_grid[computer_guid]
-      # Empty grid means that all softwares are installed
-      return len(self.remaining_software_installation_grid)==0
+    """
+    Return True if all softwares are installed, otherwise return False
+    """
+    # Remove from grid installed software entries
+    print "self.remaining_software_installation_grid:"
+    print self.remaining_software_installation_grid
+
+    for computer_guid,v in self.remaining_software_installation_grid:
+      for software_url in v:
+        if isSoftwareReleaseReady(software_url, computer_guid):
+          self.remaining_software_installation_grid[computer_guid].remove(software_url)
+        if len(self.remaining_software_installation_grid[computer_guid])==0:
+          del self.remaining_software_installation_grid[computer_guid]
+    # Empty grid means that all softwares are installed
+    return len(self.remaining_software_installation_grid)==0
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -124,44 +125,45 @@ class ScalabilityTestRunner():
     start_time = time.time()
     # 
     if self.testnode.test_suite_portal.isValidatedMaster(
-                           self.testnode.config['test_node_title']):
-        # Get from ERP5 Master the configuration of the cluster for the test
-        test_configuration = testnodeUtils.deunicodeData(
-                               json.loads(
-                                  self.testnode.test_suite_portal.generateConfiguration(
-                                    node_test_suite.test_suite_title)))
-        self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
-        self.launchable = test_configuration['launchable']
-        self.error_message = test_configuration['error_message']
-        if not self.launchable:
-          self.testnode.log("Test suite %s is not actually launchable with \
-    the current cluster configuration." %(node_test_suite.test_suite_title,))
-          self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
+            self.testnode.config['test_node_title']):
+      # Get from ERP5 Master the configuration of the cluster for the test
+      test_configuration = testnodeUtils.deunicodeData(
+          json.loads(self.testnode.test_suite_portal.generateConfiguration(
+                      node_test_suite.test_suite_title)
+                    )
+        )
+      self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
+      self.launchable = test_configuration['launchable']
+      self.error_message = test_configuration['error_message']
+      if not self.launchable:
+        self.testnode.log("Test suite %s is not actually launchable with \
+  the current cluster configuration." %(node_test_suite.test_suite_title,))
+        self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
 
-          # wich code to return ?
-          return {'status_code' : 1}
-        involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
-        configuration_list = test_configuration['configuration_list']
-        launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-      
-        software_path_list = []
-        # Here add the ipv6 url reachable from master profile
-        software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
-        # Ask for softwares installation
-        for software_path in software_path_list:
-          for computer_guid in self.involved_nodes_computer_guid:
-            self._prepareSlapOS(software_path, computer_guid) 
-        # From the line below we would not supply any more softwares
-        self.authorize_supply = False
-        # Waiting until all softwares are installed
-        while ( self.remainSoftwareToInstall() 
-           and (max_time <= time.time()-start_time)):
-            self.testnode.log("Master testnode is waiting\
-     for the end of all software installation.")
-            time.sleep(15)
-        # We were wainting for too long time, that's a failure.
-        if self.remainSoftwareToInstall() :
-          return {'status_code' : 1}
+        # wich code to return ?
+        return {'status_code' : 1}
+      involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
+      configuration_list = test_configuration['configuration_list']
+      launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
+    
+      software_path_list = []
+      # Here add the ipv6 url reachable from master profile
+      software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
+      # Ask for softwares installation
+      for software_path in software_path_list:
+        for computer_guid in self.involved_nodes_computer_guid:
+          self._prepareSlapOS(software_path, computer_guid) 
+      # From the line below we would not supply any more softwares
+      self.authorize_supply = False
+      # Waiting until all softwares are installed
+      while ( self.remainSoftwareToInstall() 
+         and (max_time <= time.time()-start_time)):
+        self.testnode.log("Master testnode is waiting\
+  for the end of all software installation.")
+        time.sleep(15)
+      # We were wainting for too long time, that's a failure.
+      if self.remainSoftwareToInstall() :
+        return {'status_code' : 1}
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
