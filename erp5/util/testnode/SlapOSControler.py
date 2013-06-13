@@ -104,7 +104,8 @@ class SlapOSControler(object):
     parser.add_argument("node")
     if os.path.exists(self.configuration_file_path):
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
-      config = client.Config(args, args.configuration_file)
+      config = client.Config()
+      config.setConfig(args, args.configuration_file)
       try:
         client.supply(args.software_url, args.node, client.init(config), remove=remove)
       except:
