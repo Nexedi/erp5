@@ -79,7 +79,7 @@ class SlapOSControler(object):
     slapos_account_certificate_path = os.path.join(slapos_account_directory, "certificate")
     configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
     configuration_file_value = "[slapos]\nmaster_url = %s\n\
-  [slapconsole]\ncert_file = %s\nkey_file = %s" %(
+[slapconsole]\ncert_file = %s\nkey_file = %s" %(
                                   config['server_url'],
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
