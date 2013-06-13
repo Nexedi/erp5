@@ -107,7 +107,7 @@ class ScalabilityTestRunner():
     print "self.remaining_software_installation_grid:"
     print self.remaining_software_installation_grid
 
-    for computer_guid,v in self.remaining_software_installation_grid:
+    for computer_guid,v in self.remaining_software_installation_grid.items():
       for software_url in v:
         if isSoftwareReleaseReady(software_url, computer_guid):
           self.remaining_software_installation_grid[computer_guid].remove(software_url)
