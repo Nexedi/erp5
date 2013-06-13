@@ -138,6 +138,7 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
     launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
   
     software_path_list = []
+    software_path_list.append("my_ipv6_reachable_profile.cfg")
     for software_path in software_path_list:
       for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(software_path, computer_guid) 
