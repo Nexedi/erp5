@@ -145,7 +145,7 @@ class ScalabilityTestRunner():
      for the end of all software installation.")
             time.sleep(15)
         # We were wainting for too long time, that's a failure.
-        if self.isRemainingSoftwareToInstall() == False:
+        if self.remainSoftwareToInstall() == True:
           return {'status_code' : 1}
     return {'status_code' : 0}
 
