@@ -58,12 +58,9 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config, self.testnode.log)
-    # {'COMPX' : ['soft_path1.cfg', 'soft_path2.cfg'],
-    #  'COMPY' : ['soft_path1.cfg'], ... }
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
-    
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     
@@ -95,8 +92,7 @@ class ScalabilityTestRunner():
 #      software_path_list.append(self.testnode.config.get("software_list"))
     return {'status_code' : 0} 
 
-  # For dummy slapos answer
-  # Press ctrl+c to simulate an (positive) answer from sapos master
+  # Dummy slapos answering
   def _getSignal(self, signal, frame):
     self.testnode.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
@@ -111,7 +107,7 @@ class ScalabilityTestRunner():
       return False
     else:
       return self.last_slapos_answer.pop()
-  # /For dummy slapos answer
+  # /Dummy slapos answering
     
   def isSoftwareReleaseReady(self, software_url, computer_guid):
     """
