@@ -156,7 +156,8 @@ class ScalabilityTestRunner():
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
         self.testnode.log("Master testnode is waiting\
-  for the end of all software installation.")
+  for the end of all software installation (%ss).",
+          str(round(time.time()-start_time)))
         time.sleep(15)
       # We were wainting for too long time, that's a failure.
       if self.remainSoftwareToInstall() :
