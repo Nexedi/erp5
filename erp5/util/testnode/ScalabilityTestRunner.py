@@ -119,6 +119,7 @@ class ScalabilityTestRunner():
     """
     # Define how many time this method can take
     max_time = 3600*10*1.0 # 10 hours
+    interval_time = 30
     start_time = time.time()
     # 
     if self.testnode.test_suite_portal.isValidatedMaster(
@@ -156,9 +157,9 @@ class ScalabilityTestRunner():
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
         self.testnode.log("Master testnode is waiting\
-  for the end of all software installation (%ss).",
+  for the end of all software installation (for %ss).",
           str(int(time.time()-start_time)))
-        time.sleep(15)
+        time.sleep(interval_time)
       # We were wainting for too long time, that's a failure.
       if self.remainSoftwareToInstall() :
         return {'status_code' : 1}
