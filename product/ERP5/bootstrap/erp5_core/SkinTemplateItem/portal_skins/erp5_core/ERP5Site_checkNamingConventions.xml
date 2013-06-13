@@ -134,7 +134,7 @@ def checkField(folder, form, field):\n
       path += \'/listbox\'\n
       for x in \'columns\', \'all_columns\':\n
         for id, title in field.get_value(x):\n
-          error_message += checkTitle(path, x, title, field)\n
+          error_message += checkTitle(path, x, title, field, form)\n
       if a not in (None, "portal_catalog", "searchFolder", "objectValues",\n
                    "contentValues", "ListBox_initializeFastInput"):\n
         if not a.endswith(\'List\'):\n
@@ -155,15 +155,15 @@ titlecase_sub = re.compile(r"[A-Za-z]+(\'[A-Za-z]+)?").sub\n
 titlecase_repl = lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower()\n
 titlecase = lambda s: titlecase_sub(titlecase_repl, s)\n
 \n
-def checkTitle(path, id, title, field=None):\n
+def checkTitle(path, id, title, field=None, form=None):\n
   """\n
     Generic function that test the validity of a title.\n
   """\n
   error_message = \'\'\n
-\n
-  if (field is not None and not field.get_value(\'hidden\') and \\\n
-   (title is None or len(title.strip()) == 0)) or (field is None and (title is None or len(title.strip()) == 0)):\n
-    return "%s : %s : can\'t be empty\\n" % (path, id)\n
+  if form is not None and form.pt != \'form_dialog\' or form is None:\n
+    if (field is not None and not field.get_value(\'hidden\') and \\\n
+     (title is None or len(title.strip()) == 0)) or (field is None and (title is None or len(title.strip()) == 0)):\n
+      return "%s : %s : can\'t be empty\\n" % (path, id)\n
 \n
   for c in title:\n
     if c.lower() not in ALLOWED_CHARS:\n
