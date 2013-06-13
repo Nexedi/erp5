@@ -91,13 +91,12 @@ class SlapOSControler(object):
     log("%s created." %(str(configuration_file_path)))
     self.configuration_file_path = configuration_file_path
 
-  def supply(self, software_url, computer_id, remove=False):
+  def supply(self, software_url, computer_id, state="available"):
     """
     Request the installation of a software release on a specific node
     Ex :
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
-    state = "available"
     self.log('SlapOSControler : supply')
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
@@ -106,15 +105,11 @@ class SlapOSControler(object):
     if os.path.exists(self.configuration_file_path):
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
       config = client.Config()
-#      config = client.ClientConfig(args, args.configuration_file)
       config.setConfig(args, args.configuration_file)
       try:
-#        client.do_supply(args.software_url, args.node, client.init(config), remove=remove)
-         #client.do_supply(software_url, computer_id, 
-#         client.init(config).shorthandSupply(args.software_url, args.node, client.init(config), remove=remove)
          local = client.init(config)
-         local['supply'](software_url, computer_id)
-         self.log('SlapOSControler : supply %s %s' %(software_url, computer_id))
+         local['supply'](software_url, computer_id, state)
+         self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
       except:
         self.log("SlapOSControler.supply, \
                  exception in registerOpenOrder", exc_info=sys.exc_info())
@@ -128,7 +123,7 @@ class SlapOSControler(object):
     Ex :
     my_controler.destroy('kvm.cfg', 'COMP-726')
     """
-    self.supply(self, software_url, computer_id, remove=True)
+    self.supply(self, software_url, computer_id, state="destroyed")
     
   def request(self, reference,
           software_url, software_type, software_configuration, computer_guid=None):
