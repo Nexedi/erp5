@@ -70,6 +70,7 @@ class ScalabilityTestRunner():
     """
     A proxy to supply : Install software a software on a specific node
     """
+    self.testnode.log("TESTNODE SUPPLY : %s %s", software_path, computer_guid)
     if self.authorize_supply == True :
       if not(computer_guid in self.remaining_software_installation_grid):
         # Add computer_guid to the grid if it isn't
@@ -100,6 +101,7 @@ class ScalabilityTestRunner():
 
   def isRemainingSoftwareToInstall(self):
       print self.remaining_software_installation_grid
+      
       return False
       # Here we can 
           
@@ -145,7 +147,7 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
     while self.isRemainingSoftwareToInstall() == False:
         self.testnode.log("Master testnode is waiting\
  for the end of all software installation.")
-        time.sleep(4)
+        time.sleep(15)
     
     return {'status_code' : 0}
 
