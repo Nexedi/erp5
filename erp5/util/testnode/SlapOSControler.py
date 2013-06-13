@@ -105,9 +105,13 @@ class SlapOSControler(object):
     if os.path.exists(self.configuration_file_path):
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
       config = client.Config()
-      config.setConfig(args, args.configuration_file)
+      config = client.ClientConfig(args, args.configuration_file)
+      #config.setConfig(args, args.configuration_file)
       try:
-        client.supply(args.software_url, args.node, client.init(config), remove=remove)
+#        client.do_supply(args.software_url, args.node, client.init(config), remove=remove)
+         #client.do_supply(software_url, computer_id, 
+#         client.init(config).shorthandSupply(args.software_url, args.node, client.init(config), remove=remove)
+         client.init(config).shorthandSupply(software_url, computer_id, state=remove)
       except:
         self.log("SlapOSControler.supply, \
                  exception in registerOpenOrder", exc_info=sys.exc_info())
