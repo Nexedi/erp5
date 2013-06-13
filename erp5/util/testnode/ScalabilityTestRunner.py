@@ -118,7 +118,8 @@ class ScalabilityTestRunner():
     # Remove from grid installed software entries
     print "AFTER self.remaining_software_installation_grid:"
     print self.remaining_software_installation_grid
-
+    print "len(self.remaining_software_installation_grid) > 0:"
+    print len(self.remaining_software_installation_grid) > 0
 
     # Not empty grid means that all softwares are not installed
     return len(self.remaining_software_installation_grid) > 0
