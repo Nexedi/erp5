@@ -101,7 +101,7 @@ class ScalabilityTestRunner():
       
   def remainSoftwareToInstall(self):
     """
-    Return True if all softwares are installed, otherwise return False
+    Return True if all softwares are not installed, otherwise return False
     """
     # Remove from grid installed software entries
     print "self.remaining_software_installation_grid:"
@@ -113,15 +113,22 @@ class ScalabilityTestRunner():
           self.remaining_software_installation_grid[computer_guid].remove(software_url)
         if len(self.remaining_software_installation_grid[computer_guid])==0:
           del self.remaining_software_installation_grid[computer_guid]
-    # Empty grid means that all softwares are installed
-    return len(self.remaining_software_installation_grid)==0
+
+
+    # Remove from grid installed software entries
+    print "AFTER self.remaining_software_installation_grid:"
+    print self.remaining_software_installation_grid
+
+
+    # Not empty grid means that all softwares are not installed
+    return len(self.remaining_software_installation_grid) > 0
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install testsuite softwares
     """
     # Define how many time this method can take
-    max_time = 3600*10 # 10 hours
+    max_time = 3600*10*1.0 # 10 hours
     start_time = time.time()
     # 
     if self.testnode.test_suite_portal.isValidatedMaster(
