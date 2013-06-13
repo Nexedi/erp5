@@ -95,9 +95,6 @@ class SlapOSControler(object):
     Ex :
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
-    # TODO : remove return
-    print "Ben:I GONNE SEARCH MY SLAPOS CONFIG FILE THERE : %s" %self.configuration_file_path
-    return
     self.log('SlapOSControler : supply')
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
