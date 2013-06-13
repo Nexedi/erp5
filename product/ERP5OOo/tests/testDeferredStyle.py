@@ -39,7 +39,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   skin = content_type = None
   recipient_email_address = 'invalid@example.com'
   attachment_file_extension = ''
-  format = ''
   username = 'bob'
   password = 'bobpwd'
   # the weird '<' char is to force quoting of the first name on the e-mail
@@ -84,8 +83,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
     response = self.publish(
-        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&format=%s'
-        % (self.portal.getId(), self.skin, self.format), '%s:%s' % (self.username, self.password))
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -103,12 +102,9 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.assertEquals('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
-        if self.format == '':
-          error_list = Validator().validate(data)
-          if error_list:
-            self.fail(''.join(error_list))
-        elif self.format == 'pdf':
-          self.assertTrue(data.startswith('%PDF'))
+        error_list = Validator().validate(data)
+        if error_list:
+          self.fail(''.join(error_list))
         break
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
@@ -120,9 +116,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
         '/%s/person_module/pers/Base_callDialogMethod?deferred_portal_skin=%s&'
         'dialog_method=Person_view&dialog_id=Person_view&'
-        'deferred_style:int=1&format=%s&junk=%s'  % (self.portal.getId(),
+        'deferred_style:int=1&junk=%s'  % (self.portal.getId(),
                                            self.skin,
-                                           self.format,
                                            'X' * 2000),
         '%s:%s' % (self.username, self.password))
     self.tic()
@@ -141,12 +136,9 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         self.assertEquals('attachment; filename="%s"' % expected_file_name,
                           part.get('Content-Disposition'))
         data = part.get_payload(decode=True)
-        if self.format == '':
-          error_list = Validator().validate(data)
-          if error_list:
-            self.fail(''.join(error_list))
-        elif self.format == 'pdf':
-          self.assertTrue(data.startswith('%PDF'))
+        error_list = Validator().validate(data)
+        if error_list:
+          self.fail(''.join(error_list))
         break
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
@@ -157,42 +149,16 @@ class TestODSDeferredStyle(TestDeferredStyle):
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
   attachment_file_extension = '.ods'
 
-class TestODSDeferredStyleFormatXLSX(TestDeferredStyle):
-  skin = 'ODS'
-  content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  attachment_file_extension = '.xlsx'
-  format = 'xlsx'
-
-class TestODSDeferredStyleFormatPDF(TestDeferredStyle):
-  skin = 'ODS'
-  content_type = 'application/pdf'
-  attachment_file_extension = '.pdf'
-  format = 'pdf'
 
 class TestODTDeferredStyle(TestDeferredStyle):
   skin = 'ODT'
   content_type = 'application/vnd.oasis.opendocument.text'
   attachment_file_extension = '.odt'
 
-class TestODTDeferredStyleFormatDOCX(TestDeferredStyle):
-  skin = 'ODT'
-  content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  attachment_file_extension = '.docx'
-  format = 'docx'
-
-class TestODTDeferredStyleFormatPDF(TestDeferredStyle):
-  skin = 'ODT'
-  content_type = 'application/pdf'
-  attachment_file_extension = '.pdf'
-  format = 'pdf'
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
-  suite.addTest(unittest.makeSuite(TestODSDeferredStyleFormatXLSX))
-  suite.addTest(unittest.makeSuite(TestODSDeferredStyleFormatPDF))
   suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
-  suite.addTest(unittest.makeSuite(TestODTDeferredStyleFormatDOCX))
-  suite.addTest(unittest.makeSuite(TestODTDeferredStyleFormatPDF))
   return suite
 

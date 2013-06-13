@@ -29,7 +29,9 @@
 
 import unittest
 import transaction
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+     _getConversionServerDict
 
 
 class TestERP5WebWithCRM(ERP5TypeTestCase):
@@ -56,6 +58,21 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.setSystemPreference()
     user = self.createUser('robby')
     self.createUserAssignment(user, {})
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    conversion_dict = _getConversionServerDict()
+    preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))

@@ -34,8 +34,9 @@ from lxml import etree
 
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing import ZopeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+     _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5.Document.Document import ConversionError
 
@@ -108,9 +109,19 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    self.setDefaultSitePreference()
     self.web_page_module = self.portal.web_page_module
     self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
+
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
+      default_pref.enable()
+    return default_pref
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))

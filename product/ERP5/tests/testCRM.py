@@ -29,9 +29,10 @@
 import unittest
 import os
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -956,6 +957,9 @@ class TestCRMMailSend(BaseTestCRM):
 
     # set preference
     default_pref = self.portal.portal_preferences.default_site_preference
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':
