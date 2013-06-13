@@ -88,6 +88,7 @@ class ScalabilityTestRunner():
     """
     if self.testnode.test_suite_portal.isValidatedMaster(
                            self.testnode.config['test_node_title']):
+      pass
 #      software_path_list = []
 #      software_path_list.append(self.testnode.config.get("software_list"))
     return {'status_code' : 0} 
