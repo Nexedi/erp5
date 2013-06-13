@@ -152,4 +152,8 @@ class UnitTestRunner():
                           log_prefix='runTestSuite', get_output=False)
 
   def getRelativePathUsage(self):
+    """
+    Used by the method testnode.constructProfile() to know
+    if the software.cfg have to use relative path or not.
+    """
     return False
