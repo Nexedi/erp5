@@ -111,7 +111,8 @@ class SlapOSControler(object):
 #        client.do_supply(args.software_url, args.node, client.init(config), remove=remove)
          #client.do_supply(software_url, computer_id, 
 #         client.init(config).shorthandSupply(args.software_url, args.node, client.init(config), remove=remove)
-         client.init(config).shorthandSupply(software_url, computer_id, state=remove)
+         local = client.init(config)
+         local['supply'].(software_url, computer_id, state=remove)
       except:
         self.log("SlapOSControler.supply, \
                  exception in registerOpenOrder", exc_info=sys.exc_info())
