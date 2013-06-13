@@ -64,7 +64,7 @@ class ScalabilityTestRunner():
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
     
-    # Used to simulate SlapOS answer
+    # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
@@ -101,9 +101,11 @@ class ScalabilityTestRunner():
     self.testnode.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
+    print "Dummy slapOS answer enabled, press crtl+c to simulate SlapOS (positive) answer."
     signal.signal(signal.SIGINT, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    print "Dummy slapOS answer disabled, don't press crtl+c anymore."
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
     if len(self.last_slapos_answer)==0:
       return False
