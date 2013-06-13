@@ -34,6 +34,7 @@ import shutil
 import sys
 import glob
 import argparse
+from slapos import client
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
