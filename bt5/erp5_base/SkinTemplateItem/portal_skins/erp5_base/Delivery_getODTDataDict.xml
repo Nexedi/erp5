@@ -163,7 +163,8 @@ def unicodeDict(d):\n
 \n
 for line in getSubLineList(context):\n
   prod_desc = line.getResource() is not None and \\\n
-           line.getResourceValue().getDescription() or line.getResourceTitle()\n
+           line.getResourceValue().getDescription() or (\n
+    request.get(\'international_form\') and line.getResourceTitle() or line.getResourceTranslatedTitle() )\n
   if use_line_title:\n
     desc = (line.getTitle(), )\n
   else:\n
@@ -194,7 +195,8 @@ for line in getSubLineList(context):\n
       display_id = \'translated_title\'\n
       if request.get(\'international_form\'):\n
         display_id = \'title\'\n
-      desc = (\', \'.join([x[0] for x in line.getVariationCategoryItemList(display_id=display_id)]),)\n
+      variation_description = \', \'.join([x[0] for x in line.getVariationCategoryItemList(display_id=display_id)])\n
+      desc = (\'%s %s\' % (desc[0], variation_description), )\n
     is_tax=0\n
     portal_preferences = context.getPortalObject().portal_preferences\n
     if portal_preferences.getPreferredTaxUseList()==[] :\n
