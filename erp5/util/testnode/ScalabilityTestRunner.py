@@ -164,6 +164,9 @@ class ScalabilityTestRunner():
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
       # Waiting until all softwares are installed
+
+      print "waiting vlaue:"
+      print max_time <= time.time()-start_time)
       while ( self.remainSoftwareToInstall() 
          and (max_time <= time.time()-start_time)):
         self.testnode.log("Master testnode is waiting\
