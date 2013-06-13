@@ -108,7 +108,7 @@ class SlapOSControler(object):
       config.setConfig(args, args.configuration_file)
       try:
          local = client.init(config)
-         local['supply'](software_url, computer_id, state)
+         local['supply'](software_url, computer_id)
          self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
       except:
         self.log("SlapOSControler.supply, \
