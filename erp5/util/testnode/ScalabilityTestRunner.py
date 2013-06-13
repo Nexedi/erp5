@@ -168,7 +168,7 @@ class ScalabilityTestRunner():
       print "waiting vlaue:"
       print max_time <= time.time()-start_time
       while ( self.remainSoftwareToInstall() 
-         and (max_time <= (time.time()-start_time))):
+         and (max_time >= (time.time()-start_time))):
         self.testnode.log("Master testnode is waiting\
   for the end of all software installation.")
         time.sleep(15)
