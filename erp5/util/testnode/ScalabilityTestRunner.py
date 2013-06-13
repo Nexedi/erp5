@@ -170,7 +170,7 @@ class ScalabilityTestRunner():
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
 
-      _prepareDummySlapOSAnswer()
+      self._prepareDummySlapOSAnswer()
       # Waiting until all softwares are installed
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
