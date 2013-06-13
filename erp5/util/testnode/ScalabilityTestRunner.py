@@ -76,7 +76,7 @@ class ScalabilityTestRunner():
         # Add computer_guid to the grid if it isn't
         self.remaining_software_installation_grid[computer_guid] = []
       self.remaining_software_installation_grid[computer_guid].append(software_path)
-      self.slapos_controler.supply(software_path, computer_guid, create_partition)
+      self.slapos_controler.supply(software_path, computer_guid)
       # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
