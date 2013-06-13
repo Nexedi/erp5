@@ -62,18 +62,15 @@ class ScalabilityTestRunner():
     #  'COMPY' : ['soft_path1.cfg'], ... }
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
-    self.still_supply_to_request = True
+    self.authorize_supply = True
     
-  def checkingSoftwareGrid(self):
-      self.still_supply_to_request = False
-      # Here we can 
       
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
     """
     A proxy to supply : Install software a software on a specific node
     """
-    if self.still_supply_to_request == True :
+    if self.authorize_supply == True :
       if not(computer_guid in self.remaining_software_installation_grid):
         # Add computer_guid to the grid if it isn't
         self.remaining_software_installation_grid[computer_guid] = []
@@ -82,7 +79,7 @@ class ScalabilityTestRunner():
       # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
-      raise ValueError("Too late to supply now. ('self.still_supply_to_request' is False)")
+      raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
       
   def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
@@ -99,7 +96,13 @@ class ScalabilityTestRunner():
       return {'status_code' : 0}   
     else:
       return {'status_code' : 0} 
-    
+
+
+  def isRemainingSoftwareToInstall(self):
+      print self.remaining_software_installation_grid
+      return False
+      # Here we can 
+          
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install all testsuite's software
@@ -136,7 +139,14 @@ the current cluster configuration." %(node_test_suite.test_suite_title,))
     for software_path in software_path_list:
       for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(software_path, computer_guid) 
-    # TODO : change the line below
+    # From the line below we would not supply any more softwares
+    self.authorize_supply = False
+    # Here a loop while softwares are not all installed
+    while isRemainingSoftwareToInstall() == False:
+        self.testnode.log("Master testnode is waiting\
+ for the end of all software installation.")
+        time.sleep(4)
+    
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
