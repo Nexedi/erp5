@@ -139,8 +139,8 @@ class ScalabilityTestRunner():
         # From the line below we would not supply any more softwares
         self.authorize_supply = False
         # Waiting until all softwares are installed
-        while (self.remainSoftwareToInstall() == True)
-           and (max_time <= time.time()-start_time):
+        while ((self.remainSoftwareToInstall() == True)
+           and (max_time <= time.time()-start_time)):
             self.testnode.log("Master testnode is waiting\
      for the end of all software installation.")
             time.sleep(15)
