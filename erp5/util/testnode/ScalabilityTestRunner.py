@@ -101,6 +101,8 @@ class ScalabilityTestRunner():
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
     signal.signal(signal.SIGINT, self._getSignal)
+  def _comeBackFromDummySlapOS(self):
+    signal.signal(signal.SIGINT, SIG_IGN)
   def simulateSlapOSAnswer(self):
     if len(self.last_slapos_answer)==0:
       return False
@@ -169,7 +171,7 @@ class ScalabilityTestRunner():
           self._prepareSlapOS(software_path, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
-
+      # TODO : remove the line below wich simulate an answer from slapos master
       self._prepareDummySlapOSAnswer()
       # Waiting until all softwares are installed
       while ( self.remainSoftwareToInstall() 
@@ -179,6 +181,8 @@ class ScalabilityTestRunner():
           str(int(time.time()-start_time)))
         time.sleep(interval_time)
       # We were wainting for too long time, that's a failure.
+      # TODO : remove the line below wich simulate an answer from slapos master
+      self._comeBackFromDummySlapOS()
       if self.remainSoftwareToInstall() :
         return {'status_code' : 1}
     return {'status_code' : 0}
