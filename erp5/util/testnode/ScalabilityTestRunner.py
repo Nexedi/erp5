@@ -98,11 +98,12 @@ class ScalabilityTestRunner():
   # For dummy slapos answer
   # Press ctrl+c to simulate an (positive) answer from sapos master
   def _getSignal(self, signal, frame):
+    self.testnode.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
     signal.signal(signal.SIGINT, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    signal.signal(signal.SIGINT, SIG_IGN)
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
   def simulateSlapOSAnswer(self):
     if len(self.last_slapos_answer)==0:
       return False
