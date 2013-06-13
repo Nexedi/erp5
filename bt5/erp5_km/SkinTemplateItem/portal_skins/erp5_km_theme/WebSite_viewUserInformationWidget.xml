@@ -61,7 +61,7 @@
 <tal:block tal:condition="not:is_anonymous_user">\n
   <a id="login-logout-link" \n
      href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
-    i18n:translate="" i18n:domain="ui"\n
+    i18n:domain="ui"\n
     title="Log out"\n
     i18n:attributes="title"\n
     tal:content="user_name"/>\n
