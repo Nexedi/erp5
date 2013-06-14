@@ -163,10 +163,10 @@ class ScalabilityTestRunner():
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
-
       if ( os.path.lexists(self.ofuscated_link_path) or
            os.path.exists(self.ofuscated_link_path) ) :
              os.remove(self.ofuscated_link_path)
+      self.testnode.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
       os.symlink(path_to_suite, self.ofuscated_link_path)
 
 
