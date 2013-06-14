@@ -187,7 +187,7 @@ class ScalabilityTestRunner():
       configuration_list = test_configuration['configuration_list']
       launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       software_path_list = []
-      # Here ipv6 url reachable from master profile
+      # Construct the ipv6 obfuscated url of the software profile reachable from outside
       self.reachable_profile = os.path.join(
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_port2'],
         self.random_path, "software.cfg")
