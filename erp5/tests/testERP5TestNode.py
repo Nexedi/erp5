@@ -67,7 +67,7 @@ class ERP5TestNode(TestCase):
     # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "git"
-    config["slapos_directory"] = self.working_directory
+    config["slapos_directory"] = self.slapos_directory
     config["working_directory"] = self.working_directory
     config["node_quantity"] = 3
     config["test_suite_directory"] = self.test_suite_directory

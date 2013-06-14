@@ -155,6 +155,22 @@ class ScalabilityTestRunner():
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
       self.random_path = test_configuration['random_path']
+
+      # create an obfuscated link to the testsuite directory
+      self.ofuscated_link_path = os.path.join(
+                      self.testnode.config['link_to_testsuite_directory'],
+                      self.random_path)
+      path_to_suite = os.path.join(
+                      self.testnode.config['working_directory'],
+                      node_test_suite.reference)
+
+      if ( os.path.lexists(self.ofuscated_link_path) or
+           os.path.exists(self.ofuscated_link_path) ) :
+             os.remove(self.ofuscated_link_path)
+      os.symlink(path_to_suite, self.ofuscated_link_path)
+
+
+      
       if not self.launchable:
         self.testnode.log("Test suite %s is not actually launchable with \
   the current cluster configuration." %(node_test_suite.test_suite_title,))
