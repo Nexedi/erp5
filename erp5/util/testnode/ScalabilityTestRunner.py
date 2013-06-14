@@ -187,8 +187,13 @@ class ScalabilityTestRunner():
       configuration_list = test_configuration['configuration_list']
       launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       software_path_list = []
-      # Here add the ipv6 url reachable from master profile
-      software_path_list.append("http://foo.bar/It_is_a_test_for_scalability_test/My_unreachable_profile.cfg")
+      # Here ipv6 url reachable from master profile
+      self.reachable_profile = os.path.join(
+        "https://",self.testnode['httpd_ip']+":"+self.testnode['httpd_port2'],
+        self.random_path, "software.cfg")
+      self.testnode.log("Software reachable profile path is : %s "
+                              %(self.reachable_profile,))
+      software_path_list.append(self.reachable_profile)
       # Ask for softwares installation
       for software_path in software_path_list:
         for computer_guid in self.involved_nodes_computer_guid:
