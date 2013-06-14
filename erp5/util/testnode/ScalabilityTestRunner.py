@@ -159,12 +159,16 @@ class ScalabilityTestRunner():
       # create an obfuscated link to the testsuite directory
       self.testnode.log("self.testnode.config['link_to_testsuite_directory']\
  : %s" %(self.testnode.config['link_to_testsuite_directory']))
-      self.ofuscated_link_path = os.path.join(
-                      self.testnode.config['link_to_testsuite_directory'],
-                      self.random_path)
+      self.testnode.log("self.random_path\
+ : %s" %(self.random_path))
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
+      self.testnode.log("path_to_suite\
+ : %s" %(path_to_suite))
+      self.ofuscated_link_path = os.path.join(
+                      self.testnode.config['link_to_testsuite_directory'],
+                      self.random_path)
       if ( os.path.lexists(self.ofuscated_link_path) or
            os.path.exists(self.ofuscated_link_path) ) :
              os.remove(self.ofuscated_link_path)
