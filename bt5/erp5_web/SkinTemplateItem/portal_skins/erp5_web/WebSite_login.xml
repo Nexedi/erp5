@@ -46,7 +46,7 @@
              isAnon here/portal_membership/isAnonymousUser|nothing;">\n
     <tal:block tal:condition="isAnon">\n
       <tal:block tal:define="dummy python: response.expireCookie(\'__ac\', path=\'/\');\n
-                 url python: \'%s?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'Login and/or password is incorrect.\'));\n
+                 url python: \'%s/login_form?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'Login and/or password is incorrect.\'));\n
                  url python: came_from and  \'%s&amp;came_from=%s\' % (url, came_from) or url;\n
                  dummy python: response.redirect(url);" />\n
     </tal:block>\n
