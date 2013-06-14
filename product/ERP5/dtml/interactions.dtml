@@ -36,7 +36,11 @@
      <br />
    </dtml-if>
    <dtml-if portal_type_filter>
-     Filter: &dtml-portal_type_filter;
+     Portal Type Filter: &dtml-portal_type_filter;
+     <br />
+   </dtml-if>
+   <dtml-if portal_type_group_filter>
+     Portal Type Group Filter: &dtml-portal_type_group_filter;
      <br />
    </dtml-if>
    <dtml-if method_id>

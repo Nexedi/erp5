@@ -678,6 +678,56 @@ context.setTitle('Bar')
     self.assertEqual('validated', self.organisation.getValidationState())
     self.assertEqual('titi', self.organisation.getDescription())
 
+  def test_portal_type_filter(self):
+    self.createInteractionWorkflow()
+    self.getWorkflowTool().setChainForPortalTypes(
+                  ['Bank Account'],'test_workflow, validation_workflow')
+    self.interaction.setProperties(
+            'default',
+            # only for bank accounts
+            portal_type_filter=['Bank Account'],
+            method_id='getReference',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = "context = sci[\'object\']\n" +\
+           "context.setDescription('modified')"
+    self.script.ZPythonScript_edit(params, body)
+
+    bank_account = self.organisation.newContent(
+      portal_type='Bank Account')
+    self.assertEqual('', bank_account.getDescription())
+
+    self.organisation.getReference()
+    self.assertEqual('', self.organisation.getDescription())
+
+    bank_account.getReference()
+    self.assertEqual('modified', bank_account.getDescription())
+
+  def test_portal_type_group_filter(self):
+    self.createInteractionWorkflow()
+    self.getWorkflowTool().setChainForPortalTypes(
+                  ['Bank Account'],'test_workflow, validation_workflow')
+    self.interaction.setProperties(
+            'default',
+            # only for payment nodes portal type group (ie. bank account)
+            portal_type_group_filter=['payment_node'],
+            method_id='getReference',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = "context = sci[\'object\']\n" +\
+           "context.setDescription('modified')"
+    self.script.ZPythonScript_edit(params, body)
+
+    bank_account = self.organisation.newContent(
+      portal_type='Bank Account')
+    self.assertEqual('', bank_account.getDescription())
+
+    self.organisation.getReference()
+    self.assertEqual('', self.organisation.getDescription())
+
+    bank_account.getReference()
+    self.assertEqual('modified', bank_account.getDescription())
+
 
 
 def test_suite():
