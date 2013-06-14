@@ -39,6 +39,7 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
     os.mkdir(self.test_suite_directory)
+    os.mkdir(self.link_to_testsuite_directory)
     os.mkdir(self.environment)
     os.mkdir(self.system_temp_folder)
     os.makedirs(self.log_directory)
@@ -474,7 +475,7 @@ branch = foo
     def patch_generateConfiguration(self, *args, **kw):
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false}'
+"launchable": false, "random_path" : "azertyuiop"}'
     def patch_isValidatedMaster(self, *args, **kw):
       return (grade == 'master')
     test_self = self
@@ -631,7 +632,7 @@ branch = foo
     def patch_generateConfiguration(self, *args, **kw):
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false}'
+"launchable": false, "random_path" : "azertyuiop"}'
     def patch_isValidatedMaster(self, *args, **kw):
       return (grade == 'master')
     test_self = self
