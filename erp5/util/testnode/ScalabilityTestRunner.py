@@ -58,6 +58,7 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
+                              
     self.remaining_software_installation_grid = {}
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
@@ -153,6 +154,7 @@ class ScalabilityTestRunner():
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
+      self.random_path = test_configuration['random_path']
       if not self.launchable:
         self.testnode.log("Test suite %s is not actually launchable with \
   the current cluster configuration." %(node_test_suite.test_suite_title,))

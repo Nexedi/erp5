@@ -49,6 +49,9 @@ def createFolders(folder):
   if not(os.path.exists(folder)):
     os.makedirs(folder)
 
+def isDir(folder):
+  return os.path.isdir(folder)
+
 def createFile(path, mode, content):
   f = open(path, mode)
   if os.path.exists(path):
