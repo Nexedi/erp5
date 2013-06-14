@@ -189,7 +189,7 @@ class ScalabilityTestRunner():
       software_path_list = []
       # Here ipv6 url reachable from master profile
       self.reachable_profile = os.path.join(
-        "https://",self.testnode['httpd_ip']+":"+self.testnode['httpd_port2'],
+        "https://",self.testnode.config['httpd_ip']+":"+self.testnode.config['httpd_port2'],
         self.random_path, "software.cfg")
       self.testnode.log("Software reachable profile path is : %s "
                               %(self.reachable_profile,))

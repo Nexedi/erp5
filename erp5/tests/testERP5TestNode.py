@@ -79,7 +79,9 @@ class ERP5TestNode(TestCase):
     config["system_temp_folder"] = self.system_temp_folder
     config["computer_id"] = "COMP-TEST"
     config["server_url"] = "http://foo.bar"
-    config["link_to_testsuite_directory"] = self.link_to_testsuite_directory
+    config["httpd_ip"] = "[1234:5678:9101:1121:3141:5161:7181:9202]"
+    config["httpd_port2"] = "9080"
+    
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
@@ -832,6 +834,7 @@ branch = foo
     pass
   def test_scalability_as_master_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type, grade='master')
+  # TODO : add a test with master and a launchable testsuite -> patch a lot of methods
   def test_scalability_as_slave_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type, grade='slave')
   def test_scalability_12_spawn(self, my_test_type='ScalabilityTest'):

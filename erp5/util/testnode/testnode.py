@@ -308,8 +308,6 @@ branch = %(branch)s
     try:
       while True:
         try:
-          
-          ##BLOCK OK
           node_test_suite = None
           self.log = self.process_manager.log = self.testnode_log
           self.cleanUp(None)
@@ -324,20 +322,15 @@ branch = %(branch)s
           test_suite_data = testnodeUtils.deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
-          ##/BLOCK OK
-          
-          
-          
+
           # TODO : implement this method for each distributor
           # into nexedi/master-erp5..
-          # (just UnitTestDistributor should be sufficient)
           try:
             my_test_type = self.test_suite_portal.getTestType()
           except:
             log("testnode, error during requesting getTestType() method \
 from the distributor.")
             raise NotImplementedError
-
           # Select runner according to the test type
           if my_test_type == 'UnitTest':
             runner = UnitTestRunner(self)
@@ -347,14 +340,12 @@ from the distributor.")
             log("testnode, Runner type not implemented.", my_test_type)
             raise NotImplementedError
           log("Type of current test is %s" %(my_test_type,))
-          
-          # master gets test_suites, slaves get nothing
+          # master testnode gets test_suites, slaves get nothing
           runner.prepareSlapOSForTestNode(test_node_slapos)
-          #Clean-up test suites
+          # Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
           
           for test_suite in test_suite_data:
-            ## BLOCK OK
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
                test_suite["test_suite_reference"])
@@ -375,25 +366,18 @@ from the distributor.")
                      node_test_suite.project_title)
             remote_test_result_needs_cleanup = True
             log("testnode, test_result : %r" % (test_result, ))
-            ## /BLOCK OK
             
             if test_result is not None:
-
-              ## BLOCK OK
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
-              ## /BLOCK OK
-
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
-#              time.sleep(20)
-              # For scalability test runTestSuite is a big part
+              time.sleep(20)
               runner.runTestSuite(node_test_suite, portal_url)
-              
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
