@@ -28,48 +28,42 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
+import Products.ERP5
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager
-import Products.ERP5Type
 from Products.ERP5Type.Workflow import addWorkflowByType
 
 class TestInteractionWorkflow(ERP5TypeTestCase):
-
-  # Different variables used for this test
-  run_all_test = 1
   portal_type = 'Organisation'
 
   def getTitle(self):
-    """
-    """
     return "Interaction Workflow"
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 
-  def afterSetUp(self):
-    self.login()
-
   def beforeTearDown(self):
+    transaction.abort()
+    self.tic()
     Organisation = Products.ERP5.Document.Organisation.Organisation
     Organisation.security.names.pop('doSomethingStupid', None)
     if hasattr(Organisation, 'doSomethingStupid'):
       delattr(Organisation, 'doSomethingStupid')
     if hasattr(Organisation, 'doSomethingStupid__roles__'):
       delattr(Organisation, 'doSomethingStupid__roles__')
+    # delete workflows
+    workflow_tool = self.getWorkflowTool()
+    if 'test_workflow' in workflow_tool.objectIds():
+      workflow_tool.manage_delObjects(['test_workflow'])
+    _aq_reset()
+    self.tic()
 
-  def login(self, quiet=0):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager', 'Assignor'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
-
-  def createData(self):
+  def afterSetUp(self):
     def doSomethingStupid(self,value,**kw):
-      """
+      """A patched method
       """
       self.setDescription(value)
     Organisation = Products.ERP5.Document.Organisation.Organisation
@@ -79,7 +73,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation_module = self.getOrganisationModule()
     self.organisation = organisation_module.newContent(
                           portal_type = self.portal_type)
-    self.organisation.immediateReindexObject()
 
   def _createInteractionWorkflowWithId(self, wf_id):
     wf_tool = self.getWorkflowTool()
@@ -122,40 +115,27 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
                   [self.portal_type],'test_workflow, validation_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
-  def test_01(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('No Interactions')
-    self.createData()
+  def test_no_interactions(self):
     organisation = self.organisation
     organisation.edit()
     self.assertEqual(organisation.getDescription(),'')
 
-  def test_02(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions On Edit')
+  def test_edit_interaction(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
             method_id='edit',
             after_script_name=('afterEdit',))
-    #body = "sci.object.setDescription('toto')"
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.edit()
     self.assertEqual(organisation.getDescription(),'toto')
 
-  def test_03(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage(
-        'Interactions, Edit Set Description and also After Script')
+  def test_interaction_on_edit(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -165,16 +145,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "context.setDescription('toto')"
     params = 'sci,**kw'
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.edit(description='tutu')
     self.assertEqual(organisation.getDescription(),'toto')
 
-  def test_04(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Automatic Workflow Method')
+  def test_interaction_on_method(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -184,17 +160,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "context.setDescription('toto')"
     params = 'sci,**kw'
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.doSomethingStupid('tutu')
     self.assertEqual(organisation.getDescription(),'toto')
 
-  def test_05(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage(
-        'Interactions, Automatic Workflow Method With Extra Base Category')
+  def test_interaction_on_category_setter(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -204,16 +175,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "context.setDescription('toto')"
     params = 'sci,**kw'
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.setSizeList(['size/1','size/2'])
     self.assertEqual(organisation.getDescription(),'toto')
 
-  def test_06(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Check If There Is Only One Call')
+  def test_interaction_executed_once(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -224,17 +191,13 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "description = context.getDescription()\n" +\
            "context.setDescription(description + 'a')"
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.edit()
     self.assertEqual(organisation.getDescription(),'a')
     organisation.edit()
     self.assertEqual(organisation.getDescription(),'aa')
 
-  def test_07(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Check If The Return Value Is Not Altered')
+  def test_returned_value(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -244,19 +207,14 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     body = "context = sci.object\n" +\
            "return 3\n"
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     dummy_bank_account = organisation.newContent(
           portal_type='Bank Account',
           id='dummy_bank_account')
-    self.assertNotEquals(dummy_bank_account, None)
     self.assertNotEquals(dummy_bank_account, 3)
     self.assertEqual(dummy_bank_account.getPortalType(), 'Bank Account')
 
-  def test_08(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Check If Multiple method_id Can Be Hooked')
+  def test_multiple_methods(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -267,18 +225,13 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "description = context.getDescription()\n" +\
            "context.setDescription(description + 'a')"
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setCorporateName('corp')
     self.assertEqual(organisation.getDescription(),'a')
     organisation.setActivityCode('acode')
     self.assertEqual(organisation.getDescription(),'aa')
 
-  def test_09(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Check if the same method_id '\
-                      'can be hooked by two Interactions')
+  def test_same_method_two_interactions(self):
     self.createInteractionWorkflowWithTwoInteractions()
     self.interactionA.setProperties(
             'afterEditA',
@@ -296,7 +249,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
 
-    self.createData()
     organisation = self.organisation
     organisation.edit()
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
@@ -307,11 +259,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 
-  def test_10(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, check if multiple scripts can be '
-                      'called')
+  def test_multiple_scripts(self):
     self.createInteractionWorkflowWithTwoInteractions()
     self.interactionA.setProperties(
             'afterEdit',
@@ -325,7 +273,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
 
-    self.createData()
     organisation = self.organisation
     organisation.edit()
     self.assert_(organisation.getDescription() in ('ab', 'ba'),
@@ -336,12 +283,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
 
-  def test_11(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage(
-        'Interactions, Test that the private accessor is called')
-
+  def test_private_accessor(self):
     self.createInteractionWorkflowWithTwoInteractions()
     self.interactionA.setProperties(
             'afterEditA',
@@ -359,7 +301,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
 
-    self.createData()
     organisation = self.organisation
     organisation._baseSetVatCode('x')
     organisation.setDescription('x')
@@ -370,13 +311,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEqual(organisation.getVatCode(),'foo')
     self.assertEqual(organisation.getDescription(),'bara')
 
-  def test_12(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage(
-        'Interactions, Test that the private accessor is called, '
-        'when using an Acquired Property')
-
+  def test_private_accessor_on_acquired_property(self):
     self.createInteractionWorkflowWithTwoInteractions()
     self.interactionA.setProperties(
             'afterEditA',
@@ -396,7 +331,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.scriptA.ZPythonScript_edit(params, body)
     self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
 
-    self.createData()
     organisation = self.organisation
     organisation._baseSetDefaultEmailText('x')
     organisation.setVatCode('x')
@@ -407,11 +341,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEqual(organisation.getVatCode(),'fooa')
     self.assertEqual(organisation.getDefaultEmailText(),'bar')
 
-  def test_13(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Interactions, Check that edit does not detect the '
-          'property modified in interaction script as modified by user')
+  def test_edit_modied_property(self):
+    # Check that edit does not detect the property modified in interaction
+    # script as modified by user
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -424,7 +356,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
            "  vat_code = ''\n" +\
            "context.setVatCode(vat_code + 'a')"
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setTitle('foo')
     organisation.setVatCode('bar')
@@ -454,10 +385,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertEqual(organisation.getVatCode(),'bara')
 
 
-  def test_14_BeforeScriptParameters(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Before Script Parameters')
+  def test_BeforeScriptParameters(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -473,16 +401,12 @@ result = kwargs.get('workflow_method_result', None)
 context.setDescription('%s,%s,%s' % (d, args, result))
 """
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     value = organisation.getProperty('description', d='toto')
     self.assertEqual(value, "toto,('description',),None")
 
-  def test_15_AfterScriptParameters(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('After Script Parameters')
+  def test_AfterScriptParameters(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
@@ -498,17 +422,13 @@ result = kwargs.get('workflow_method_result', None)
 context.setDescription('%s,%s,%s' % (d, args, result))
 """
     self.script.ZPythonScript_edit(params,body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.getProperty('description', d='toto')
     value = organisation.getDescription()
     self.assertEqual(value, "toto,('description',),bad")
 
-  def test_16_BeforeCommitParameters(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Before Commit Script Parameters')
+  def test_BeforeCommitParameters(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'beforeCommit',
@@ -524,7 +444,6 @@ result = kwargs.get('workflow_method_result', None)
 context.setDescription('%s,%s,%s' % (d, args, result))
 """
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
     self.assertEqual(organisation.getDescription(), 'bad')
@@ -536,10 +455,13 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.login()
     self.assertEqual(organisation.getDescription(), "toto,('description',),bad")
 
-  def test_17_activity_interaction(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Later Script (In activity)')
+    # Delete the organisation, because this test modifies the objects each time
+    # getProperty is called, which creates an infinite loop during indexing
+    self.getOrganisationModule().manage_delObjects([self.organisation.getId()])
+    self.commit()
+
+  def test_activity_interaction(self):
+    # Tests for Later Script (in activity)
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'editObject',
@@ -552,7 +474,6 @@ context = sci['object']
 context.setTitle('Bar')
 """
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     organisation.setTitle('Foo')
     organisation.setGroupValue(organisation)
@@ -562,10 +483,7 @@ context.setTitle('Bar')
     self.tic()
     self.assertEqual(organisation.getTitle(), 'Bar')
 
-  def test_18_no_temp_object(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Skips Temp Objects')
+  def test_skip_temp_object(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'editObject',
@@ -578,7 +496,6 @@ context = sci['object']
 context.setTitle('Bar')
 """
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     temp = organisation.asContext()
     temp.setTitle('Foo')
@@ -595,10 +512,7 @@ context.setTitle('Bar')
     temp.setGroupValue(None)
     self.assertEqual(temp.getTitle(), 'Foo')
 
-  def test_19_temp_object_doesnt_skip_normal(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Skips Temp Objects, but run in normal objects in the same transaction')
+  def test_temp_object_doesnt_skip_normal(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'editObject',
@@ -612,7 +526,6 @@ context = sci['object']
 context.setTitle('Bar')
 """
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     organisation.setTitle('Foo')
     temp = organisation.asContext()
@@ -633,10 +546,7 @@ context.setTitle('Bar')
     # while still not changing the temp object
     self.assertEqual(temp.getTitle(), 'Foo')
 
-  def test_20_temp_object_does_skip_normal(self, quiet=0, run=run_all_test):
-    if not run: return
-    if not quiet:
-      self.logMessage('Runs on temp Objects and skip normal objects')
+  def test_temp_object_does_skip_normal(self):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'editObject',
@@ -650,7 +560,6 @@ context = sci['object']
 context.setTitle('Bar')
 """
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     organisation = self.organisation
     organisation.setTitle('Foo')
     temp = organisation.asContext()
@@ -689,7 +598,6 @@ context.setTitle('Bar')
     call_list = self.portal.REQUEST['call_list'] = []
     self.script.ZPythonScript_edit('sci',
         'container.REQUEST["call_list"].append(1)')
-    self.createData()
     organisation = self.organisation
     # all methods matching set.* regular expression are matched
     organisation.setDescription('')
@@ -715,7 +623,6 @@ context.setTitle('Bar')
             method_id='nonExistantMethod',
             after_script_name=('afterEdit',))
     self.script.ZPythonScript_edit('sci', '')
-    self.createData()
     # the default security is "Access contents information"
     self.organisation.manage_permission(
                       'Access contents information', ['Role1'], 0)
@@ -731,7 +638,6 @@ context.setTitle('Bar')
             method_id='setDescription',
             after_script_name=('afterEdit',))
     self.script.ZPythonScript_edit('sci', '')
-    self.createData()
     # This rely on the fact that 'setDescription' is protected with 'Modify
     # portal content'
     self.organisation.manage_permission(
@@ -754,12 +660,10 @@ context.setTitle('Bar')
             method_id='doSomethingStupid',
             after_script_name=('afterEdit',))
     self.script.ZPythonScript_edit('sci', '')
-    self.createData()
 
     self.assertEqual(self.organisation.doSomethingStupid__roles__, ())
 
   def test_wrap_workflow_transition(self):
-    self.logMessage('Wrap workflow transition')
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'default',
@@ -769,11 +673,12 @@ context.setTitle('Bar')
     body = "context = sci[\'object\']\n" +\
            "context.setDescription('titi')"
     self.script.ZPythonScript_edit(params, body)
-    self.createData()
     self.assertEqual('', self.organisation.getDescription())
     self.portal.portal_workflow.doActionFor(self.organisation, 'validate_action')
     self.assertEqual('validated', self.organisation.getValidationState())
     self.assertEqual('titi', self.organisation.getDescription())
+
+
 
 def test_suite():
   suite = unittest.TestSuite()
