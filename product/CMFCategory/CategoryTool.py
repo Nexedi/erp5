@@ -585,8 +585,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category_list = [base_category]
       else:
         category_list = base_category
-      if not isinstance(spec, (tuple, list)):
-        spec = [spec]
+      if isinstance(spec, str):
+        spec = (spec,)
+      elif isinstance(spec, list):
+        spec = tuple(spec)
       spec_len = len(spec)
       for path in self._getCategoryList(context):
         # LOG('getCategoryMembershipList',0,str(path))
@@ -815,7 +817,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       append = result.append
       # Make sure spec is a list or tuple
       if isinstance(spec, str):
-        spec = [spec]
+        spec = (spec,)
+      elif isinstance(spec, list):
+        spec = tuple(spec)
       spec_len = len(spec)
       # Filter categories
       if getattr(aq_base(context), 'categories', _marker) is not _marker:
@@ -930,7 +934,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if spec is ():
         spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
       if isinstance(spec, str):
-        spec = [spec]
+        spec = (spec,)
+      elif isinstance(spec, list):
+        spec = tuple(spec)
 
       if isinstance(acquired_portal_type, str):
         acquired_portal_type = [acquired_portal_type]
