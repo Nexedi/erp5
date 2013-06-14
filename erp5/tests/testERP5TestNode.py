@@ -27,6 +27,7 @@ class ERP5TestNode(TestCase):
     self._temp_dir = tempfile.mkdtemp()
     self.working_directory = os.path.join(self._temp_dir, 'testnode')
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
+    self.link_to_testsuite_directory = os.path.join(self._temp_dir, 'link_to_testsuite_directory')
     self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
     self.environment = os.path.join(self._temp_dir,'environment')
     self.log_directory = os.path.join(self._temp_dir,'var/log/testnode')
@@ -77,6 +78,7 @@ class ERP5TestNode(TestCase):
     config["system_temp_folder"] = self.system_temp_folder
     config["computer_id"] = "COMP-TEST"
     config["server_url"] = "http://foo.bar"
+    config["link_to_testsuite_directory"] = self.link_to_testsuite_directory
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
