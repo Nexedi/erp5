@@ -49,6 +49,7 @@ from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse
 from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
 from Products.ERP5SyncML.Transport.File import FileTransport
 from Products.ERP5SyncML.Transport.Mail import MailTransport
+from Products.ERP5SyncML.Transport.ERP5 import ERP5Transport
 from Products.ERP5SyncML.SyncMLConstant import MAX_LEN, ADD_ACTION, \
     REPLACE_ACTION
 from Products.ERP5SyncML.XMLSyncUtils import cutXML
@@ -58,6 +59,7 @@ transport_scheme_dict = {
   "https" : HTTPTransport(),
   "file" : FileTransport(),
   "mail" : MailTransport(),
+  "erp5" : ERP5Transport(),
   }
 
 syncml_logger = getLogger('ERP5SyncML')
