@@ -665,6 +665,7 @@ class EmailDocument(TextDocument):
     if attachment_list is None:
       attachment_list = []
     document_type_list = self.getPortalDocumentTypeList()
+    embedded_attachment_list = []
     for attachment in self.getAggregateValueList():
       mime_type = None
       content = None
@@ -704,7 +705,7 @@ class EmailDocument(TextDocument):
       if not isinstance(content, str):
         content = str(content)
 
-      attachment_list.append({'mime_type':mime_type,
+      embedded_attachment_list.append({'mime_type':mime_type,
                               'content':content,
                               'name':attachment.getReference()}
                              )
@@ -713,14 +714,24 @@ class EmailDocument(TextDocument):
     for to_url in to_url_list:
       mime_message = buildEmailMessage(from_url=from_url, to_url=to_url,
                                        msg=body, subject=subject,
-                                       attachment_list=attachment_list,
+                                       attachment_list=(attachment_list + embedded_attachment_list),
                                        additional_headers=additional_headers)
       mail_message = mime_message.as_string()
       self.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
     # Save one of mail messages.
     if mail_message is not None:
-      self.setData(mail_message)
+      if len(embedded_attachment_list):
+        # do not store aggregated documents in Email document
+        # to avoid duplicate data
+        tmp_mime_message = buildEmailMessage(from_url=from_url, to_url=to_url,
+                                             msg=body, subject=subject,
+                                             attachment_list=attachment_list,
+                                             additional_headers=additional_headers)
+        tmp_mail_message = mime_message.as_string()
+        self.setData(tmp_mail_message)
+      else:
+        self.setData(mail_message)
 
     # Only for debugging purpose
     if download:

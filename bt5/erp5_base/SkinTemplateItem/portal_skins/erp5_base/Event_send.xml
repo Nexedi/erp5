@@ -110,7 +110,18 @@ if download or not use_activity:\n
       attachment_list=attachment_list,\n
       embedded_file_list=embedded_file_list)\n
 \n
-    context.edit(data=mail_message)\n
+    if len(embedded_file_list):\n
+      # do not store aggregated documents in Email document\n
+      # to avoid duplicate data\n
+      tmp_mail_message = context.Base_createMailMessageAsString(from_url,\n
+        to_url,\n
+        subject,\n
+        body,\n
+        content_type,\n
+        attachment_list=attachment_list)\n
+      context.setData(tmp_mail_message)\n
+    else:\n
+      context.setData(mail_message)\n
     if not use_activity:\n
       context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
 \n
