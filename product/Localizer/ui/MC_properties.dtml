@@ -24,6 +24,21 @@
       </td>
     </tr>
     <tr>
+      <th align="right">
+        <dtml-var "gettext('Policy')">
+      </th>
+      <td>
+        <select name="policy">
+          <dtml-in get_policies prefix=sequence>
+            <option value="<dtml-var "sequence_item[0]">"
+                    <dtml-if "policy == sequence_item[0]">selected</dtml-if>>
+              <dtml-var "sequence_item[1]">
+            </option>
+          </dtml-in>
+        </select>
+      </td>
+    </tr>
+    <tr>
       <th></th>
       <td>
         <input type="submit" value=" <dtml-var "gettext('Save changes')"> ">

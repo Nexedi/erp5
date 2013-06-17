@@ -27,6 +27,7 @@ from hashlib import md5
 from re import compile
 from time import gmtime, strftime, time
 from urllib import quote
+from traceback import format_list, extract_stack
 
 # Import from polib
 import polib
@@ -44,6 +45,7 @@ from zope.component import getSiteManager
 from zope.i18n import interpolate
 from zope.i18n.interfaces import ITranslationDomain
 from zope.interface import implements
+from zLOG import LOG, INFO
 
 # Import from Localizer
 from interfaces import IMessageCatalog
@@ -161,10 +163,16 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     security = ClassSecurityInfo()
 
 
+    POLICY_ADD_FALSE = 0
+    POLICY_ADD_TRUE = 1
+    POLICY_ADD_LOG = 2
+
+
     def __init__(self, id, title, sourcelang, languages):
         self.id = id
 
         self.title = title
+        self.policy = self.POLICY_ADD_TRUE
 
         # Language Manager data
         self._languages = tuple(languages)
@@ -260,7 +268,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declarePublic('gettext')
-    def gettext(self, message, lang=None, add=1, default=None):
+    def gettext(self, message, lang=None, add=None, default=None):
         """Returns the message translation from the database if available.
 
         If add=1, add any unknown message to the database.
@@ -280,7 +288,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         message = self.get_message_key(message) or to_unicode(message)
 
         # Add it if it's not in the dictionary
-        if add and not self._messages.has_key(message) and message:
+        if add is None:
+            add = getattr(self, 'policy', self.POLICY_ADD_TRUE)
+        if add != self.POLICY_ADD_FALSE and not self._messages.has_key(message) and message:
+            if add == self.POLICY_ADD_LOG:
+                LOG('New entry added to message catalog %s :' % self.id,  INFO, '%s\n%s' % (message, ''.join(format_list(extract_stack()[:-1]))))
             self._messages[message] = PersistentMapping()
 
         # Get the string
@@ -485,10 +497,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
     security.declareProtected('View management screens', 'manage_properties')
-    def manage_properties(self, title, REQUEST=None, RESPONSE=None):
+    def manage_properties(self, title, policy, REQUEST=None, RESPONSE=None):
         """Change the Message Catalog properties.
         """
         self.title = title
+        self.policy = int(policy)
 
         if RESPONSE is not None:
             RESPONSE.redirect('manage_propertiesForm')
@@ -541,6 +554,19 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
     security.declareProtected('View management screens', 'manage_Import_form')
     manage_Import_form = LocalDTMLFile('ui/MC_Import_form', globals())
+
+
+    security.declarePublic('get_policies')
+    def get_policies(self):
+        """ """
+        if not hasattr(self, 'policy'):
+            self.policy = self.POLICY_ADD_TRUE
+        policies = [
+            [self.POLICY_ADD_FALSE, "Never add new entries automatically"],
+            [self.POLICY_ADD_TRUE, "Add new entries automatically if missing"],
+            [self.POLICY_ADD_LOG, "Add new entries automatically if missing and log the backtrace"],
+        ]
+        return policies
 
 
     security.declarePublic('get_charsets')
