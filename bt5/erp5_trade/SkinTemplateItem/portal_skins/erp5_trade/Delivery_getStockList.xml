@@ -80,13 +80,14 @@ def getOrderStr(movement_list, resource_value):\n
 \n
   return order_str\n
 \n
+\n
 movement_dict = {}\n
 for movement in context.getMovementList():\n
-  movement_dict_key = movement.getResourceUid(), tuple(sorted(movement.getVariationCategoryList()))\n
-  if movement_dict_key in movement_dict:\n
-    movement_dict[movement_dict_key].append(movement)\n
-  else:\n
-    movement_dict[movement_dict_key] = [movement]\n
+  resource_value = movement.getResourceValue(portal_type=context.getPortalProductTypeList())\n
+  if resource_value is not None:\n
+    movement_dict_key = resource_value.getUid(), tuple(sorted(movement.getVariationCategoryList()))\n
+    movement_dict.setdefault(movement_dict_key, []).append(movement)\n
+\n
 \n
 line_list = []\n
 order_dict = {}\n
@@ -108,8 +109,6 @@ if movement_dict:\n
   for movement_list in movement_dict.values():\n
     for movement in movement_list:\n
       resource_value = movement.getResourceValue()\n
-      if resource_value is None:\n
-        continue\n
 \n
       temp_movement = movement.asContext(getCurrentInventory=str,\n
                                          getAvailableInventory=str,\n
