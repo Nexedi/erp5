@@ -86,7 +86,7 @@ class ScalabilityTestRunner():
     """
     We will build slapos software needed by the testnode itself,
     """
-    if self.testnode.test_suite_portal.isValidatedMaster(
+    if self.testnode.test_suite_portal.isMasterTestnode(
                            self.testnode.config['test_node_title']):
       pass
 #      software_path_list = []
@@ -143,7 +143,7 @@ class ScalabilityTestRunner():
     interval_time = 30
     start_time = time.time()
     # Only master testnode must order software installation
-    if self.testnode.test_suite_portal.isValidatedMaster(
+    if self.testnode.test_suite_portal.isMasterTestnode(
             self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = testnodeUtils.deunicodeData(

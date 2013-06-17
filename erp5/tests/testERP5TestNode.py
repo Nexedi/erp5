@@ -478,7 +478,7 @@ branch = foo
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
 "launchable": false, "random_path" : "azertyuiop"}'
-    def patch_isValidatedMaster(self, *args, **kw):
+    def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
@@ -540,11 +540,11 @@ branch = foo
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_generateConfiguration = TaskDistributor.generateConfiguration
-      original_isValidatedMaster = TaskDistributor.isValidatedMaster
+      original_isMasterTestnode = TaskDistributor.isMasterTestnode
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
-      TaskDistributor.isValidatedMaster = patch_isValidatedMaster
+      TaskDistributor.isMasterTestnode = patch_isMasterTestnode
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -576,7 +576,7 @@ branch = foo
       TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = original_generateConfiguration
-      TaskDistributor.isValidatedMaster = original_isValidatedMaster
+      TaskDistributor.isMasterTestnode = original_isMasterTestnode
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -635,7 +635,7 @@ branch = foo
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
 "launchable": false, "random_path" : "azertyuiop"}'
-    def patch_isValidatedMaster(self, *args, **kw):
+    def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
@@ -686,11 +686,11 @@ branch = foo
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_generateConfiguration = TaskDistributor.generateConfiguration
-      original_isValidatedMaster = TaskDistributor.isValidatedMaster
+      original_isMasterTestnode = TaskDistributor.isMasterTestnode
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
-      TaskDistributor.isValidatedMaster = patch_isValidatedMaster
+      TaskDistributor.isMasterTestnode = patch_isMasterTestnode
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -715,7 +715,7 @@ branch = foo
       TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = original_generateConfiguration
-      TaskDistributor.isValidatedMaster = original_isValidatedMaster
+      TaskDistributor.isMasterTestnode = original_isMasterTestnode
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode

@@ -469,11 +469,11 @@ class TaskDistributor(RPCRetry):
       return self._retryRPC('generateConfiguration', (test_suite_title,))
 
 
-    def isValidatedMaster(self, test_node_title):
+    def isMasterTestnode(self, test_node_title):
       """
         Returns True or False if the testnode is the master
       """
-      return self._retryRPC('isValidatedMaster', (test_node_title,))
+      return self._retryRPC('isMasterTestnode', (test_node_title,))
 
     def getSlaposAccountKey(self):
       """
