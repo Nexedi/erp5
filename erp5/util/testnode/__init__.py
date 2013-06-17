@@ -75,7 +75,7 @@ def main(*args):
   config.readfp(parsed_argument.configuration_file[0])
   for key in ('slapos_directory','working_directory','test_suite_directory',
               'log_directory','run_directory', 'srv_directory', 'proxy_host',
-              'link_to_testsuite_directory',
+              'software_directory',
               'proxy_port', 'git_binary','zip_binary','node_quantity',
               'test_node_title', 'ipv4_address','ipv6_address','test_suite_master_url',
               'slapgrid_partition_binary','slapgrid_software_binary',
@@ -84,7 +84,7 @@ def main(*args):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
-      'log_directory', 'run_directory', 'srv_directory', 'link_to_testsuite_directory'):
+      'log_directory', 'run_directory', 'srv_directory', 'software_directory'):
     d = CONFIG[key]
     if not os.path.isdir(d):
       raise ValueError('Directory %r does not exists.' % d)

@@ -59,7 +59,9 @@ class ScalabilityTestRunner():
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
                               
+
     self.remaining_software_installation_grid = {}
+    
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
     # Used to simulate SlapOS answer (used as a queue)
@@ -165,8 +167,8 @@ class ScalabilityTestRunner():
         return {'status_code' : 1}
 
       # create an obfuscated link to the testsuite directory
-      self.testnode.log("self.testnode.config['link_to_testsuite_directory']\
- : %s" %(self.testnode.config['link_to_testsuite_directory']))
+      self.testnode.log("self.testnode.config['software_directory']\
+ : %s" %(self.testnode.config['software_directory']))
       self.testnode.log("self.random_path\
  : %s" %(self.random_path))
       path_to_suite = os.path.join(
@@ -175,7 +177,7 @@ class ScalabilityTestRunner():
       self.testnode.log("path_to_suite\
  : %s" %(path_to_suite))
       self.ofuscated_link_path = os.path.join(
-                      self.testnode.config['link_to_testsuite_directory'],
+                      self.testnode.config['software_directory'],
                       self.random_path)
       if ( not os.path.lexists(self.ofuscated_link_path) and
            os.path.exists(self.ofuscated_link_path) ) :
