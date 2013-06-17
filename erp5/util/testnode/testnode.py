@@ -299,12 +299,6 @@ branch = %(branch)s
     test_node_slapos.edit(working_directory=self.config['slapos_directory'])
     ## /BLOCK OK
 
-    time.sleep(5)
-    print config['link_to_testsuite_directory']
-    print config['link_to_testsuite_directory']
-    print config['link_to_testsuite_directory']
-    print config['link_to_testsuite_directory']
-
     try:
       while True:
         try:
