@@ -1,3 +1,6 @@
+2013-06-17 arnaud.fontaine
+* Fix banking tests (Followup of 'Fix an inventory bug').
+
 2007-11-06 aurel
 * add issue date on check operation line
 
