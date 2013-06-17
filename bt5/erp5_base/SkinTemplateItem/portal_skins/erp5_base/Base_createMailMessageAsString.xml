@@ -55,6 +55,7 @@
 else:\n
   mail_template = context.Event_viewMimeMessage\n
 \n
+attachment_list = attachment_list[:]\n
 for embedded_file in embedded_file_list:\n
   mime_type, content = embedded_file.getMimeTypeAndContent()\n
   name = embedded_file.getFilename()\n
