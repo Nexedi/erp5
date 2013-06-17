@@ -56,8 +56,9 @@
 \n
   Pretty messages are provided to the user.\n
 """\n
-translateString =  context.Base_translateString\n
-form_data = context.REQUEST.form\n
+portal = context.getPortalObject()\n
+translateString =  portal.Base_translateString\n
+form_data = portal.REQUEST.form\n
 \n
 if clone:\n
   portal_type = context.getPortalType()\n
@@ -65,10 +66,12 @@ else:\n
   portal_type = form_data[\'clone_portal_type\']\n
 \n
 # We copy contents in place if possible\n
-directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
-allowed_type_list = directory.getVisibleAllowedContentTypeList()\n
-is_user_allowed_copy_or_move = context.Base_checkPermission(context.getRelativeUrl(), \'Copy or Move\')\n
-if portal_type not in allowed_type_list or not is_user_allowed_copy_or_move:\n
+try:\n
+  directory = context.aq_explicit.original_container\n
+except AttributeError:\n
+  directory = context.getParentValue()\n
+if not (portal_type in directory.getVisibleAllowedContentTypeList() and\n
+        portal.portal_membership.checkPermission(\'Copy or Move\', context)):\n
   if batch_mode:\n
     return None\n
   else:\n
@@ -90,7 +93,10 @@ if web_mode:\n
 # Standard cloning method\n
 if clone:\n
   # Copy and paste the object\n
-  original_id = getattr(context, \'original_id\', None) or context.getId()\n
+  try:\n
+    original_id = context.aq_explicit.original_id\n
+  except AttributeError:\n
+    original_id = context.getId()\n
   # This is required for objects acquired in Web Section\n
   clipboard = directory.manage_copyObjects(ids=[original_id])\n
   context.REQUEST.set(\'__cp\', clipboard) # CopySupport is using this to set\n
