@@ -59,8 +59,8 @@ class ScalabilityTestRunner():
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
                               
-
-    self.remaining_software_installation_grid = {}
+    
+    self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
@@ -74,10 +74,7 @@ class ScalabilityTestRunner():
     """
     self.testnode.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
-      if not computer_guid in self.remaining_software_installation_grid:
-        # Add computer_guid to the grid if it isn't
-        self.remaining_software_installation_grid[computer_guid] = []
-      self.remaining_software_installation_grid[computer_guid].append(software_path)
+      self.remaining_software_installation_dict[computer_guid] = software_path
       self.slapos_controler.supply(software_path, computer_guid)
       # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
@@ -104,7 +101,7 @@ class ScalabilityTestRunner():
 late a SlapOS (positive) answer." %(str(os.getpid()),)
     signal.signal(signal.SIGTERM, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    print "Dummy slapOS answer disabled"
+    print "Dummy slapOS answer disabled, please don't send more signals."
     # use SIG_USR (kill)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
@@ -128,14 +125,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
     Return True if it remains softwares to install, otherwise return False
     """
     # Remove from grid installed software entries
-    for computer_guid,v in self.remaining_software_installation_grid.items():
-      for software_url in v:
-        if self.isSoftwareReleaseReady(software_url, computer_guid):
-          self.remaining_software_installation_grid[computer_guid].remove(software_url)
-        if len(self.remaining_software_installation_grid[computer_guid])==0:
-          del self.remaining_software_installation_grid[computer_guid]
+    for computer_guid, software_path in self.remaining_software_installation_dict.items():
+      if self.isSoftwareReleaseReady(software_path, computer_guid):
+        del self.remaining_software_installation_dict[computer_guid]
     # Not empty grid means that all softwares are not installed
-    return len(self.remaining_software_installation_grid) > 0
+    return len(self.remaining_software_installation_dict) > 0
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -227,7 +221,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
     self.launcher_nodes_computer_guid = []
-    self.remaining_software_installation_grid = {}
+    self.remaining_software_installation_dict = {}
     self.authorize_supply = True
 
   def runTestSuite(self, node_test_suite, portal_url, log=None):
