@@ -77,6 +77,7 @@ DCWorkflowGraph.getObjectTitle = getObjectTitle
 from Products.DCWorkflowGraph.config import bin_search_path, DOT_EXE
 from tempfile import NamedTemporaryFile
 from zLOG import LOG, WARNING
+import subprocess
 
 def getGraph(self, wf_id="", format="png", REQUEST=None):
   """show a workflow as a graph, copy from:
@@ -91,10 +92,10 @@ def getGraph(self, wf_id="", format="png", REQUEST=None):
   match Japanese font or to use Unifont which supports many code points.
   """
   try:
-    pot = DCWorkflowGraph.getPOT(self, wf_id, REQUEST)
+    pot = self.getPOT(wf_id, REQUEST)
   except TypeError:
     # DCWorkflowGraph < 0.4
-    pot = DCWorkflowGraph.getPOT(self, wf_id)
+    pot = self.getPOT(wf_id)
   try:
     encoding = self.portal_properties.site_properties.getProperty(
       'default_charset', 'utf-8')
@@ -113,10 +114,15 @@ def getGraph(self, wf_id="", format="png", REQUEST=None):
 
     if format != 'dot':
       with NamedTemporaryFile(suffix='.%s' % format) as outfile:
-        os.system('%s -Nfontname="IPAexGothic" -Nfontsize=10 '
-                  '-Efontname="IPAexGothic" -Efontsize=10 -T%s '
-                  '-o %s %s' % (DCWorkflowGraph.bin_search(DOT_EXE),
-                                format, outfile, infile))
+        subprocess.call((DCWorkflowGraph.bin_search(DOT_EXE),
+                         '-Nfontname="IPAexGothic"',
+                         '-Nfontsize=10',
+                         '-Efontname="IPAexGothic"',
+                         '-Efontsize=10',
+                         '-T%s' % format,
+                         '-o',
+                         outfile.name,
+                         infile.name))
 
         result = outfile.read()
 
@@ -134,5 +140,8 @@ def getGraph(self, wf_id="", format="png", REQUEST=None):
 
   return result
 
+DCWorkflowGraph.getGraph = getGraph
+
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 DCWorkflowDefinition.getGraph = getGraph
+DCWorkflowDefinition.getPOT = DCWorkflowGraph.getPOT
