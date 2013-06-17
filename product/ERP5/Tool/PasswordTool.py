@@ -55,10 +55,8 @@ class PasswordTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainPasswordTool', _dtmldir )
-
+  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
+  manage_overview = DTMLFile('explainPasswordTool', _dtmldir)
 
   _expiration_day = 1
 
