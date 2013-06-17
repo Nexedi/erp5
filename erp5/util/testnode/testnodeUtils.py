@@ -4,13 +4,7 @@ import shutil
 import string
 
 def deunicodeData(data):
-  if isinstance(data, int):
-    new_data = data
-  elif isinstance(data, str):
-    new_data = data
-  elif isinstance(data, bool):
-    new_data = data
-  elif isinstance(data, list):
+  if isinstance(data, list):
     new_data = []
     for sub_data in data:
       new_data.append(deunicodeData(sub_data))

@@ -49,17 +49,18 @@ import signal
 class ScalabilityTestRunner():
   def __init__(self, testnode):
     self.testnode =  testnode
+    self.log = self.testnode.log
+    
     self.slapos_controler = SlapOSControler.SlapOSControler(
                                   self.testnode.working_directory,
                                   self.testnode.config,
-                                  self.testnode.log)
+                                  self.log)
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
                               
-    
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking
@@ -72,7 +73,7 @@ class ScalabilityTestRunner():
     """
     A proxy to supply : Install a software on a specific node
     """
-    self.testnode.log("testnode, supply : %s %s", software_path, computer_guid)
+    self.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
       self.remaining_software_installation_dict[computer_guid] = software_path
       self.slapos_controler.supply(software_path, computer_guid)
@@ -94,7 +95,7 @@ class ScalabilityTestRunner():
 
   # Dummy slapos answering
   def _getSignal(self, signal, frame):
-    self.testnode.log("Dummy SlapOS Master answer received.")
+    self.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
     print "Dummy slapOS answer enabled, send signal to %s (=PID) to simu\
@@ -155,21 +156,21 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
 
       # Avoid the test if it is not launchable
       if not self.launchable:
-        self.testnode.log("Test suite %s is not actually launchable with \
+        self.log("Test suite %s is not actually launchable with \
   the current cluster configuration." %(node_test_suite.test_suite_title,))
-        self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
+        self.log("ERP5 Master indicates : %s" %(self.error_message,))
         # error : wich code to return ?
         return {'status_code' : 1}
 
       # create an obfuscated link to the testsuite directory
-      self.testnode.log("self.testnode.config['software_directory']\
+      self.log("self.testnode.config['software_directory']\
  : %s" %(self.testnode.config['software_directory']))
-      self.testnode.log("self.randomized_path\
+      self.log("self.randomized_path\
  : %s" %(self.randomized_path))
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
-      self.testnode.log("path_to_suite\
+      self.log("path_to_suite\
  : %s" %(path_to_suite))
       self.ofuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
@@ -181,7 +182,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
         except :
           raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
           
-      self.testnode.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
+      self.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
       
 
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
@@ -192,7 +193,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
       self.reachable_profile = os.path.join(
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
         self.randomized_path, "software.cfg")
-      self.testnode.log("Software reachable profile path is : %s "
+      self.log("Software reachable profile path is : %s "
                               %(self.reachable_profile,))
       software_path_list.append(self.reachable_profile)
       # Ask for softwares installation
@@ -206,7 +207,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
       # Waiting until all softwares are installed
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
-        self.testnode.log("Master testnode is waiting\
+        self.log("Master testnode is waiting\
  for the end of all software installation (for %ss).",
           str(int(time.time()-start_time)))
         time.sleep(interval_time)
@@ -215,7 +216,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),)
       self._comeBackFromDummySlapOS()
       if self.remainSoftwareToInstall() :
         return {'status_code' : 1}
-    self.testnode.log("Softwares installed")
+    self.log("Softwares installed")
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):

@@ -475,9 +475,9 @@ branch = foo
     def patch_getSlaposAccountCertificate(self, *args, **kw):
       return "Certificate"
     def patch_generateConfiguration(self, *args, **kw):
-      return '{"configuration_list": [], "involved_nodes_computer_guid"\
-: [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false, "randomized_path" : "azertyuiop"}'
+      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
+"launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
     test_self = self
@@ -490,7 +490,10 @@ branch = foo
       config_list = []
       # Sclalability slave testnode is not directly in charge of testsuites
       if my_test_type == 'ScalabilityTest' and grade == 'slave':
-        return []
+        if counter == 5:
+          raise StopIteration
+        counter += 1
+        return json.dumps([])
           
       def _checkExistingTestSuite(reference_set):
         test_self.assertEquals(set(reference_set),
@@ -564,12 +567,7 @@ branch = foo
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
     test_node.run()
-    # Doesn't have to install sofwtare themself
-    if my_test_type == 'ScalabilityTest' and grade == 'slave' :
-      self.assertEquals(0, counter)
-    else :
-      self.assertEquals(5, counter)
-
+    self.assertEquals(5, counter)
     time.sleep = original_sleep
     # Restore old class methods
     if my_test_type == "ScalabilityTest":
@@ -632,11 +630,11 @@ branch = foo
     def patch_getSlaposAccountCertificate(self, *args, **kw):
       return "Certificate"
     def patch_generateConfiguration(self, *args, **kw):
-      return '{"configuration_list": [], "involved_nodes_computer_guid"\
-: [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false, "randomized_path" : "azertyuiop"}'
+      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
+"launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
-      return (grade == 'master')
+      return grade == 'master'
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -854,4 +852,85 @@ branch = foo
   def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='ScalabilityTest'):
     # TODO : write own scalability test
     pass
-  #TODO : add more test for scalability case
+
+  def test_zzzz_scalability_19_xxxx(self):
+    def patch_createTestResult(self, revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      test_result_path = os.path.join(test_result_path_root, test_title)
+      result =  TestResultProxy(self._proxy, self._retry_time,
+                self._logger, test_result_path, node_title, revision)
+      return result
+    global startTestSuiteDone
+    startTestSuiteDone = False
+    def patch_startTestSuite(self,test_node_title):
+      config_list = []
+      global startTestSuiteDone
+      if not startTestSuiteDone:
+        startTestSuiteDone = True
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
+        config_list.append(test_self.getTestSuiteData(reference='bar')[0])
+      else:
+        raise StopIteration
+      return json.dumps(config_list)
+    def patch_isMasterTestnode(self, *args, **kw):
+      return True
+    def patch_generateConfiguration(self, *args, **kw):
+      return json.dumps({"configuration_list": [{"ok":"ok"}], "involved_nodes_computer_guid"\
+: ["COMP1", "COMP2", "COMP3"], "error_message": "No error.", "launcher_nodes_computer_guid": ["COMP1"], \
+"launchable": False, "randomized_path" : "azertyuiop"})
+    def doNothing(self, *args, **kw):
+        pass
+    def patch_getSlaposAccountKey(self, *args, **kw):
+      return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+      return "Certificate"
+    def patch_getTestType(self, *args, **kw):
+      return "ScalabilityTest"
+    test_self = self
+    test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
+    os.makedirs(test_result_path_root)
+    self.generateTestRepositoryList()
+    # Select the good runner to modify
+    RunnerClass = self.returnGoodClassRunner('ScalabilityTest')
+    # Patch methods
+    original_sleep = time.sleep
+    original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+    original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+    original_generateConfiguration = TaskDistributor.generateConfiguration
+    original_isMasterTestnode = TaskDistributor.isMasterTestnode
+    original_startTestSuite = TaskDistributor.startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
+    original_createTestResult = TaskDistributionTool.createTestResult
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+    original_runTestSuite = RunnerClass.runTestSuite
+    original_supply = SlapOSControler.supply
+    #
+    time.sleep = doNothing
+    TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+    TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+    TaskDistributor.generateConfiguration = patch_generateConfiguration
+    TaskDistributor.isMasterTestnode = patch_isMasterTestnode
+    TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType    
+    TaskDistributionTool.createTestResult = patch_createTestResult
+    RunnerClass._prepareSlapOS = doNothing
+    RunnerClass.runTestSuite = doNothing
+    SlapOSControler.supply = doNothing
+    # Run
+    test_node = self.getTestNode()  
+    test_node.run()
+    # Restore methods
+    TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+    TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+    TaskDistributor.generateConfiguration = original_generateConfiguration
+    TaskDistributor.isMasterTestnode = original_isMasterTestnode
+    TaskDistributor.startTestSuite = original_startTestSuite
+    TaskDistributionTool.createTestResult = original_createTestResult
+    TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
+    SlapOSControler.supply = original_supply
+    time.sleep =original_sleep
