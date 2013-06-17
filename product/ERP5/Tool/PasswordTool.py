@@ -253,15 +253,15 @@ class PasswordTool(BaseTool):
     return self.reset_password_form(REQUEST=REQUEST)
 
 
-  def removeExpiredRequests(self, **kw):
+  def removeExpiredRequests(self):
     """
     Browse dict and remove expired request
     """
     current_date = DateTime()
-    for key, (login, date) in self._password_request_dict.items():
+    password_request_dict = self._password_request_dict
+    for key, (_, date) in password_request_dict.items():
       if date < current_date:
-        self._password_request_dict.pop(key)
-
+        del password_request_dict[key]
 
   def changeUserPassword(self, password, password_key, password_confirm=None,
                          user_login=None, REQUEST=None, **kw):
