@@ -156,6 +156,14 @@ class ScalabilityTestRunner():
       self.error_message = test_configuration['error_message']
       self.random_path = test_configuration['random_path']
 
+      # Avoid the test if it is not launchable
+      if not self.launchable:
+        self.testnode.log("Test suite %s is not actually launchable with \
+  the current cluster configuration." %(node_test_suite.test_suite_title,))
+        self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
+        # error : wich code to return ?
+        return {'status_code' : 1}
+
       # create an obfuscated link to the testsuite directory
       self.testnode.log("self.testnode.config['link_to_testsuite_directory']\
  : %s" %(self.testnode.config['link_to_testsuite_directory']))
@@ -169,20 +177,16 @@ class ScalabilityTestRunner():
       self.ofuscated_link_path = os.path.join(
                       self.testnode.config['link_to_testsuite_directory'],
                       self.random_path)
-      if ( os.path.lexists(self.ofuscated_link_path) or
+      if ( not os.path.lexists(self.ofuscated_link_path) and
            os.path.exists(self.ofuscated_link_path) ) :
-             os.remove(self.ofuscated_link_path)
+        try :
+          os.symlink(path_to_suite, self.ofuscated_link_path)
+        except :
+          raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
+          
       self.testnode.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
-      os.symlink(path_to_suite, self.ofuscated_link_path)
-
-
       
-      if not self.launchable:
-        self.testnode.log("Test suite %s is not actually launchable with \
-  the current cluster configuration." %(node_test_suite.test_suite_title,))
-        self.testnode.log("ERP5 Master indicates : %s" %(self.error_message,))
-        # error : wich code to return ?
-        return {'status_code' : 1}
+
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
       launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
