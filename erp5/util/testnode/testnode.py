@@ -404,11 +404,10 @@ from the distributor.")
           node_test_suite.retry = True
           continue
         except:
-            log("Errror")
-            ex_type, ex, tb = sys.exc_info()
-            traceback.print_tb(tb)
-            log("erp5testnode exception", exc_info=sys.exc_info())
-            raise
+          ex_type, ex, tb = sys.exc_info()
+          traceback.print_tb(tb)
+          log("erp5testnode exception", exc_info=sys.exc_info())
+          raise
         now = time.time()
         self.cleanUp(test_result)
         if (now-begin) < 120:

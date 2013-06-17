@@ -69,6 +69,7 @@ class ERP5TestNode(TestCase):
     config["git_binary"] = "git"
     config["slapos_directory"] = self.slapos_directory
     config["working_directory"] = self.working_directory
+    config["software_directory"] = self.software_directory
     config["node_quantity"] = 3
     config["test_suite_directory"] = self.test_suite_directory
     config["environment"] = self.environment
@@ -877,7 +878,7 @@ branch = foo
     def patch_generateConfiguration(self, *args, **kw):
       return json.dumps({"configuration_list": [{"ok":"ok"}], "involved_nodes_computer_guid"\
 : ["COMP1", "COMP2", "COMP3"], "error_message": "No error.", "launcher_nodes_computer_guid": ["COMP1"], \
-"launchable": False, "randomized_path" : "azertyuiop"})
+"launchable": True, "randomized_path" : "azertyuiop"})
     def doNothing(self, *args, **kw):
         pass
     def patch_getSlaposAccountKey(self, *args, **kw):
