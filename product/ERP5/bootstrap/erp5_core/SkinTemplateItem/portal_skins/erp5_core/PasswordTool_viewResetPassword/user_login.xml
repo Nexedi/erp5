@@ -282,7 +282,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not(getattr(preferences, \'getPreferredAskLoginOnPasswordRecovery\', None) is not None and not(preferences.getPreferredAskLoginOnPasswordRecovery()))</string> </value>
+            <value> <string>python: getattr(preferences, \'getPreferredAskLoginOnPasswordRecovery\', lambda: False)()</string> </value>
         </item>
       </dictionary>
     </pickle>
