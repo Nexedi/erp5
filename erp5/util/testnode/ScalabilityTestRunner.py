@@ -156,7 +156,7 @@ class ScalabilityTestRunner():
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
-      self.random_path = test_configuration['random_path']
+      self.randomized_path = test_configuration['randomized_path']
 
       # Avoid the test if it is not launchable
       if not self.launchable:
@@ -169,8 +169,8 @@ class ScalabilityTestRunner():
       # create an obfuscated link to the testsuite directory
       self.testnode.log("self.testnode.config['software_directory']\
  : %s" %(self.testnode.config['software_directory']))
-      self.testnode.log("self.random_path\
- : %s" %(self.random_path))
+      self.testnode.log("self.randomized_path\
+ : %s" %(self.randomized_path))
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
@@ -178,7 +178,7 @@ class ScalabilityTestRunner():
  : %s" %(path_to_suite))
       self.ofuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
-                      self.random_path)
+                      self.randomized_path)
       if ( not os.path.lexists(self.ofuscated_link_path) and
            os.path.exists(self.ofuscated_link_path) ) :
         try :
@@ -196,7 +196,7 @@ class ScalabilityTestRunner():
       # Construct the ipv6 obfuscated url of the software profile reachable from outside
       self.reachable_profile = os.path.join(
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-        self.random_path, "software.cfg")
+        self.randomized_path, "software.cfg")
       self.testnode.log("Software reachable profile path is : %s "
                               %(self.reachable_profile,))
       software_path_list.append(self.reachable_profile)

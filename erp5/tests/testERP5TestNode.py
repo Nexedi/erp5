@@ -477,7 +477,7 @@ branch = foo
     def patch_generateConfiguration(self, *args, **kw):
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false, "random_path" : "azertyuiop"}'
+"launchable": false, "randomized_path" : "azertyuiop"}'
     def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
     test_self = self
@@ -634,7 +634,7 @@ branch = foo
     def patch_generateConfiguration(self, *args, **kw):
       return '{"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": {}, \
-"launchable": false, "random_path" : "azertyuiop"}'
+"launchable": false, "randomized_path" : "azertyuiop"}'
     def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
     test_self = self
