@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from tempfile import mktemp
 import os
 from Products.DCWorkflowGraph.config import DOT_EXE
-from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search
+from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
 
 from Globals import PersistentMapping
 from Acquisition import aq_base
@@ -143,26 +143,9 @@ class Workflow(XMLObject):
   ## Graph ##
   ############
 
-  def getGraph(self, format="gif", REQUEST=None, *args, **kw):
-      """
-      show a workflow as a graph, copy from:
-      "OpenFlowEditor":http://www.openflow.it/wwwopenflow/Download/OpenFlowEditor_0_4.tgz
-      """
-      pot = self.getPOT()
-      infile = mktemp('.dot')
-      f = open(infile, 'w')
-      f.write(pot)
-      f.close()
-      outfile = mktemp('.%s' % format)
-      os.system('%s -T%s -o %s %s' % (bin_search(DOT_EXE), format, outfile, infile))
-      out = open(outfile, 'rb')
-      result = out.read()
-      out.close()
-      os.remove(infile)
-      os.remove(outfile)
-      return result
+  getGraph = getGraph
 
-  def getPOT(self):
+  def getPOT(self, *args, **kwargs):
       """
       get the pot, copy from:
       "dcworkfow2dot.py":http://awkly.org/Members/sidnei/weblog_storage/blog_27014
