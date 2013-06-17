@@ -100,12 +100,13 @@ class ScalabilityTestRunner():
     self.testnode.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
-    print "Dummy slapOS answer enabled, press crtl+c to simulate SlapOS (positive) answer."
-    signal.signal(signal.SIGINT, self._getSignal)
+    print "Dummy slapOS answer enabled, send signal to %s (=PID) to simu\
+late a SlapOS (positive) answer." %(str(os.getpid()),)
+    signal.signal(signal.SIGTERM, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    print "Dummy slapOS answer disabled, don't press crtl+c anymore."
+    print "Dummy slapOS answer disabled"
     # use SIG_USR (kill)
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
     if len(self.last_slapos_answer)==0:
       return False
