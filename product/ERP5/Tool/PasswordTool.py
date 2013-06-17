@@ -61,11 +61,8 @@ class PasswordTool(BaseTool):
   _expiration_day = 1
 
   def __init__(self, id=None):
-    if id is None:
-      id = self.__class__.id
+    super(PasswordTool, self).__init__(id)
     self._password_request_dict = OOBTree()
-    # XXX no call to BaseTool.__init__ ?
-    # BaseTool.__init__(self, id)
 
   security.declareProtected('Manage users', 'getResetPasswordKey')
   def getResetPasswordKey(self, user_login, expiration_date=None):
