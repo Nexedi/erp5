@@ -65,6 +65,7 @@ class ScalabilityTestRunner():
     
     # Protection to prevent installation of softwares after checking
     self.authorize_supply = True
+    self.authorize_request = False
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     
@@ -81,6 +82,29 @@ class ScalabilityTestRunner():
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
+      return {'status_code' : 1}     
+
+  
+  def _createInstance(self, software_path, software_configuration, test_suite_title):
+    """
+    Launch instance
+    """
+    if self.authorize_request:
+      instance_title = "Scalability-"
+      instance_title += "("+test_suite_title+")-"
+      instance_title += str(self.involved_nodes_computer_guid).replace("'","")
+      instance_title += "-"
+      instance_title += testnodeUtils.generateRandomString(6)
+      self.log("testnode, request : %s", instance_title)
+      self.slapos_controler.request(instance_title, software_path,
+                             "scalability", {"_" : software_configuration})
+
+      self.authorize_request = False
+      return {'status_code' : 0}                                          
+    else :
+      raise ValueError("Softwares release not ready yet to launch instan\
+ces or already launched.")
+      return {'status_code' : 1}  
       
   def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
@@ -220,7 +244,19 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._comeBackFromDummySlapOS()
       if self.remainSoftwareToInstall() :
         return {'status_code' : 1}
-    self.log("Softwares installed")
+      self.authorize_request = True
+      self.log("Softwares installed")
+
+      try:
+        # Launch instance
+        self._createInstance(self.reachable_profile, configuration_list[0],
+                              node_test_suite.test_suite_title)
+        self.log("Scalability instance requested")
+      except:
+        self.log("Unable to launch instance")
+        raise ValueError("Unable to launch instance")
+        return {'status_code' : 1}
+        
     return {'status_code' : 0}
 
   def _cleanUpNodesInformation(self):
@@ -228,6 +264,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self.launcher_nodes_computer_guid = []
     self.remaining_software_installation_dict = {}
     self.authorize_supply = True
+    self.authorize_request = False
 
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     # TODO : write code

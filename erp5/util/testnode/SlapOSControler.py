@@ -130,8 +130,8 @@ class SlapOSControler(object):
     """
     configuration_file_path (slapos acount)
     reference : instance title
-    software_url
-    software_type : cluster/single
+    software_url : software path/url
+    software_type : scalability
     software_configuration : dict { "_" : "{'toto' : 'titi'}" } 
 
     Ex :
@@ -140,19 +140,19 @@ class SlapOSControler(object):
 
     """
     # TODO : remove return
-    return
     self.log('SlapOSControler : _request')
     filter_kw = None
     if computer_guid != None:
       filter_kw = { "computer_guid": computer_guid }
-    if os.path.exists(configuration_file_path):
+    if os.path.exists(self.configuration_file_path):
       parser = argparse.ArgumentParser()
       parser.add_argument("configuration_file")
       args = parser.parse_args([self.configuration_file_path])
-      config = client.Config(args, args.configuration_file)
-      local = client.init(config)
+      config = client.Config()
+      config.setConfig(args, args.configuration_file)
       try:
-        partition = local['slap'].registerOpenOrder().request(
+        local = client.init(config)
+        partition = local['request'](
           software_release = software_url,
           partition_reference = reference,
           partition_parameter_kw = software_configuration,
