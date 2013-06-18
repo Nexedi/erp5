@@ -98,11 +98,11 @@ class ScalabilityTestRunner():
     self.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
-    print "Dummy slapOS answer enabled, send signal to %s (kill -10 %s) to simu\
-late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),)
+    self.log("Dummy slapOS answer enabled, send signal to %s (kill -10 %s) to simu\
+late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     signal.signal(signal.SIGUSR1, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    print "Dummy slapOS answer disabled, please don't send more signals."
+    self.log("Dummy slapOS answer disabled, please don't send more signals.")
     # use SIG_USR (kill)
     signal.signal(signal.SIGUSR1, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
@@ -138,7 +138,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),)
     """
     # Define how many time this method can take
     max_time = 3600*10*1.0 # 10 hours
-    interval_time = 30
+    interval_time = 60
     start_time = time.time()
     # Only master testnode must order software installation
     if self.testnode.test_suite_portal.isMasterTestnode(
@@ -208,8 +208,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),)
       while ( self.remainSoftwareToInstall() 
          and (max_time > (time.time()-start_time))):
         self.log("Master testnode is waiting\
- for the end of all software installation (for %ss).",
-          str(int(time.time()-start_time)))
+ for the end of all software installation (for %ss) PID=%s.",
+          str(int(time.time()-start_time)), str(os.getpid()))
         time.sleep(interval_time)
       # We were wainting for too long time, that's a failure.
       # TODO : remove the line below wich simulate an answer from slapos master

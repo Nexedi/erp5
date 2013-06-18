@@ -855,6 +855,8 @@ branch = foo
     pass
 
   def test_zzzz_scalability_19_xxxx(self):
+    # TODO : fill the dummy slapos answer
+    # by patching isSoftwareReleaseReady method.
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       test_result_path = os.path.join(test_result_path_root, test_title)
