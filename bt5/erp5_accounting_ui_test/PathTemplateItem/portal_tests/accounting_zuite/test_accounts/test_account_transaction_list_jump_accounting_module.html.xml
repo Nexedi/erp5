@@ -103,7 +103,7 @@ Test Account Transaction List then jump to accounting module.\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
