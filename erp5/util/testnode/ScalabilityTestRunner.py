@@ -84,17 +84,24 @@ class ScalabilityTestRunner():
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
       return {'status_code' : 1}     
 
-  
-  def _createInstance(self, software_path, software_configuration, test_suite_title):
+  def _generateInstancetitle(self, test_suite_title):
+    """
+    Generate an instance title using various parameter
+    TODO : add some verification (to don't use unexisting variables)
+    """
+    instance_title = "Scalability-"
+    instance_title += "("+test_suite_title+")-"
+    instance_title += str(self.involved_nodes_computer_guid).replace("'","")
+    instance_title += "-"
+    instance_title += testnodeUtils.generateRandomString(6)
+    return instance_title
+    
+  def _createInstance(self, software_path, software_configuration, instance_title):
     """
     Launch instance
     """
     if self.authorize_request:
-      instance_title = "Scalability-"
-      instance_title += "("+test_suite_title+")-"
-      instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-      instance_title += "-"
-      instance_title += testnodeUtils.generateRandomString(6)
+      software_configuration['launcher-partition-list'] = self.launcher_nodes_computer_guid
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
                              "scalability", {"_" : software_configuration})
@@ -249,8 +256,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       try:
         # Launch instance
+        instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
         self._createInstance(self.reachable_profile, configuration_list[0],
-                              node_test_suite.test_suite_title)
+                              instance_title)
         self.log("Scalability instance requested")
       except:
         self.log("Unable to launch instance")
