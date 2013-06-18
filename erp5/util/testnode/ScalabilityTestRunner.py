@@ -179,7 +179,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
            os.path.exists(self.ofuscated_link_path) ) :
         try :
           os.symlink(path_to_suite, self.ofuscated_link_path)
+          self.log("testnode, Symbolic link (%s->%s) created."
+                   %(self.ofuscated_link_path, path_to_suite))
         except :
+          self.log("testnode, Unable to create symbolic link to the testsuite.")
           raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
           
       self.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
