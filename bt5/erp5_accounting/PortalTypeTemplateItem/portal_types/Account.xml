@@ -107,9 +107,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>content_translation</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
