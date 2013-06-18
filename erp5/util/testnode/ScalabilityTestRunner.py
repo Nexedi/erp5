@@ -101,11 +101,11 @@ class ScalabilityTestRunner():
     Launch instance
     """
     if self.authorize_request:
-      software_configuration['launcher-partition-list'] = self.launcher_nodes_computer_guid
+      config = software_configuration.copy()
+      config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
-                             "scalability", {"_" : software_configuration})
-
+                             "scalability", {"_" : config})
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else :
