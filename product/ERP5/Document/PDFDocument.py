@@ -141,7 +141,7 @@ class PDFDocument(Image):
       content_information = self.getContentInformation()
       page_count = int(content_information.get('Pages', 0))
       for page_number in range(page_count):
-        src_mimetype, png_data = self.convert(
+        src_mimetype, png_data = self._convert(
             'png', quality=100, resolution=300,
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
@@ -234,13 +234,10 @@ class PDFDocument(Image):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
+    """Returns the information about the PDF document with pdfinfo.
     """
-    Returns the information about the PDF document with
-    pdfinfo.
-
-    NOTE: XXX check that command exists and was executed
-    successfully
-    """
+    if not self.hasData():
+      return dict()
     try:
       return self._content_information.copy()
     except AttributeError:
@@ -277,7 +274,7 @@ class PDFDocument(Image):
       else:
         try:
           pdf_file = PdfFileReader(tmp)
-          for info_key, info_value in pdf_file.getDocumentInfo().iteritems():
+          for info_key, info_value in (pdf_file.getDocumentInfo() or {}).iteritems():
             info_key = info_key.lstrip("/")
             if isinstance(info_value, unicode):
               info_value = info_value.encode("utf-8")

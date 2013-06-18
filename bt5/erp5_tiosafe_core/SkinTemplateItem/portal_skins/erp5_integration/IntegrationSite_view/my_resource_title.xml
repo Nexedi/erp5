@@ -97,7 +97,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Default Resource When Unknown</string> </value>
+                    <value> <string>Default Resource when Unknown</string> </value>
                 </item>
               </dictionary>
             </value>

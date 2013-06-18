@@ -1063,7 +1063,8 @@ class BasicStructure:
 
     #recovering selection if necessary
     if self.selection is None:
-      self.selection = Selection(params={}, default_sort_on=self.sort)
+      self.selection = Selection(self.selection_name, params={},
+                                 default_sort_on=self.sort)
 
     self.selection.edit(default_sort_on=self.sort)
     self.getSelectionTool().setSelectionSortOrder(self.selection_name,\

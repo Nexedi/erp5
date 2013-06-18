@@ -96,7 +96,11 @@ class Inventory(Delivery):
     sql_catalog_id = kw.pop("sql_catalog_id", None)
     disable_archive = kw.pop("disable_archive", 0)
 
-    if self.getSimulationState() in self.getPortalDraftOrderStateList():
+    draft_state_list = list(self.getPortalDraftOrderStateList())
+    # we need reindex when cancelling inventories
+    if 'cancelled' in draft_state_list:
+      draft_state_list.remove('cancelled')
+    if self.getSimulationState() in draft_state_list:
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql

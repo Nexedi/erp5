@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>default</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
                 <string>columns</string>
+                <string>default</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -171,6 +172,37 @@
                         <tuple>
                           <string>Resource</string>
                           <string>Resource</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5Site_viewSaleResourceList/listbox</string>
+                          <string>Sales</string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5Site_viewInternalResourceList/listbox</string>
+                          <string>Internal</string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5Site_viewPurchaseResourceList/listbox</string>
+                          <string>Purchase</string>
+                        </tuple>
+                        <tuple>
+                          <string>ProductModule_viewProductList/listbox</string>
+                          <string>Products</string>
+                        </tuple>
+                        <tuple>
+                          <string>ServiceModule_viewServiceList/listbox</string>
+                          <string>Services</string>
                         </tuple>
                       </list>
                     </value>

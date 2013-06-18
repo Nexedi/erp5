@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Mailbox maximum size (messages)</string> </value>
+                    <value> <string>Mailbox Maximum Size (Messages)</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

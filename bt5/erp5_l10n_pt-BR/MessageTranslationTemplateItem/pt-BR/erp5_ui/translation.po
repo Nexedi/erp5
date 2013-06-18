@@ -1411,11 +1411,8 @@ msgstr "Pacotes"
 msgid "Content"
 msgstr "Conteúdo"
 
-msgid "Content format"
+msgid "Content Format"
 msgstr "Formato do Conteúdo"
-
-msgid "Content format of a document in ERP5"
-msgstr "Formato do conteúdo de um document no ERP5"
 
 msgid "Contents"
 msgstr "Conteúdo"
@@ -2907,9 +2904,6 @@ msgstr "Estilo de HTML"
 
 msgid "I forgot my password!"
 msgstr "Esqueci minha senha!"
-
-msgid "ID"
-msgstr "ID"
 
 msgid "Identification"
 msgstr "Identificação"

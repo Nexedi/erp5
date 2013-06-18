@@ -83,7 +83,18 @@ mail_message = context.Base_createMailMessageAsString(from_url,\n
 event.sendMailHostMessage(mail_message)\n
 \n
 if not event.hasData():\n
-  event.setData(mail_message)\n
+  if len(embedded_file_list):\n
+    # do not store aggregated documents in Email document\n
+    # to avoid duplicate data\n
+    tmp_mail_message = context.Base_createMailMessageAsString(from_url,\n
+      to_url,\n
+      subject,\n
+      body,\n
+      content_type,\n
+      attachment_list=attachment_list)\n
+    event.setData(tmp_mail_message)\n
+  else:\n
+    event.setData(mail_message)\n
 </string> </value>
         </item>
         <item>

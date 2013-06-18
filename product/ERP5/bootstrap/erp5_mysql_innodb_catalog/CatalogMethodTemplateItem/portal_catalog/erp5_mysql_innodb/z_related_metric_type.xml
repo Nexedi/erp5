@@ -54,7 +54,7 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.resource_uid = resource.uid
+<dtml-var table_0>.resource_uid = stock.resource_uid
 
 ]]></string> </value>
         </item>

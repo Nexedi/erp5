@@ -1072,8 +1072,10 @@ class ListBoxRenderer:
 
     # Create a selection, if not present, with the default sort order.
     if selection is None:
-      selection = Selection(params = dict(self.getDefaultParamList()), default_sort_on = self.getDefaultSortColumnList())
-      selection = selection.__of__(selection_tool)
+      selection = Selection(selection_name,
+                            params=dict(self.getDefaultParamList()),
+                            default_sort_on=self.getDefaultSortColumnList(),
+                           ).__of__(selection_tool)
     # Or make sure all sort arguments are valid.
     else:
       # Reset the selection, if specified.
@@ -2058,11 +2060,12 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
-        new_param_dict = param_dict.copy()
-        new_param_dict['brain'] = current_section.object_list[offset]
-        new_param_dict['list_index'] = index
-        new_param_dict['total_size'] = self.total_size
-        row_css_class_name = self.getRowCSSClassName(**new_param_dict)
+        row_css_class_name = self.getRowCSSClassName(
+          brain=current_section.object_list[offset],
+          field=self.field,
+          list_index=index,
+          total_size=self.total_size,
+          **param_dict)
         line = line_class(renderer = self,
                           obj = current_section.object_list[offset],
                           index = index,
@@ -2604,8 +2607,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     
     # Make it sure to store the current selection, only if a list method is defined.
     list_method = self.getListMethod()
-    selection = self.getSelection()
     if list_method is not None:
+      selection = self.getSelection()
       method_path = '%s/%s' % (getPath(self.getContext()), self.getListMethodName())
       list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
       selection_index = self.getSelectionIndex()

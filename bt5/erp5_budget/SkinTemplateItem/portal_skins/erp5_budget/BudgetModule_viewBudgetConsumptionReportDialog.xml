@@ -107,6 +107,8 @@
                     <value>
                       <list>
                         <string>your_validation_state</string>
+                        <string>your_budget_type</string>
+                        <string>your_specialise</string>
                       </list>
                     </value>
                 </item>

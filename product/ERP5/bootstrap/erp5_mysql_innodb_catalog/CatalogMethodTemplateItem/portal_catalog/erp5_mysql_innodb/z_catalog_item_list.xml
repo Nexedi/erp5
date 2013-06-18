@@ -82,7 +82,7 @@ WHERE\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(movement_list) > 0">\n
-INSERT INTO\n
+REPLACE INTO\n
   item\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n

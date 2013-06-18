@@ -204,7 +204,7 @@
             <tal:block tal:condition="python: isinstance(value, DateTime)">\n
               <tal:block tal:define="field python: editable_fields.get(column_id, None);">\n
                 <tal:block tal:condition="python: field is None">\n
-                  <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                  <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);\n
                                                     table:style-name string:${style_prefix}date;"\n
                                     table:style-name="date"\n
                                     office:value-type="date">\n
@@ -214,7 +214,7 @@
                 <tal:block tal:condition="python: field is not None">\n
                   <tal:block tal:condition="python:field.meta_type==\'DateTimeField\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'DateTimeField\')">\n
                     <tal:block tal:condition="python:field.get_value(\'date_only\')">\n
-                      <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                      <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);\n
                                       table:style-name string:${style_prefix}date;"\n
                                       table:style-name="date"\n
                                       office:value-type="date">\n
@@ -222,7 +222,7 @@
                       </table:table-cell>\n
                     </tal:block>\n
                     <tal:block tal:condition="python:field.get_value(\'date_only\')==0">\n
-                      <table:table-cell tal:attributes="office:date-value python: value.strftime(\'%Y-%m-%dT%H:%M:%S\');\n
+                      <table:table-cell tal:attributes="office:date-value python: context.ERP5Site_formatDateForODF(value);\n
                                       table:style-name string:${style_prefix}date_with_time;"\n
                                       table:style-name="date_with_time"\n
                                       office:value-type="date">\n

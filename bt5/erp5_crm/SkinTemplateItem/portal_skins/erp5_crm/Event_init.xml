@@ -63,14 +63,12 @@ short_portal_type = type_definition.getShortTitle()\n
 if not short_portal_type:\n
   short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
 \n
-id_group = (\'reference\', short_portal_type)\n
-default = 1\n
-new_id = portal.portal_ids.generateNewId(id_group=id_group, default=default)\n
+new_id = portal.portal_ids.generateNewId(id_group=repr((\'reference\', short_portal_type)), default=1)\n
 reference = \'%s-%s\' % (short_portal_type, new_id)\n
 \n
 # Set preferred text format and reference\n
-context.edit(content_type=context.portal_preferences.getPreferredTextFormat(),\n
-             reference=reference)\n
+context.setContentType(context.portal_preferences.getPreferredTextFormat())\n
+context.setReference(reference)\n
 </string> </value>
         </item>
         <item>

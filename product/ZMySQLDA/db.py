@@ -270,7 +270,7 @@ class DB(TM):
             c = self._query('SHOW COLUMNS FROM %s' % table_name)
         except Exception:
             return ()
-        join = str.join
+        from string import join
         r=[]
         for Field, Type, Null, Key, Default, Extra in c.fetch_row(0):
             info = {}

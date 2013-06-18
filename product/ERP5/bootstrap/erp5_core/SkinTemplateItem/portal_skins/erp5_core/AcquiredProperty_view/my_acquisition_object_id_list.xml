@@ -12,7 +12,6 @@
               <list>
                 <string>description</string>
                 <string>title</string>
-                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -92,14 +91,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Acquisition Object ID</string> </value>
-                </item>
-                <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
                 </item>
               </dictionary>
             </value>

@@ -2335,7 +2335,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     module_id = sequence.get('module_id')
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
-    bt.edit(template_local_roles_list=[module_id])
+    bt.edit(template_local_role_list=[module_id])
 
   def stepCheckLocalRolesExists(self, sequence=None, **kw):
     """
@@ -3084,7 +3084,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
     self.assertEqual(len(ptype_ids), 2)
-    bt.edit(template_portal_type_roles_list=ptype_ids)
+    bt.edit(template_portal_type_role_list=ptype_ids)
 
   def stepCheckPortalTypeRoleExists(self, sequence=None, **kw):
     """
@@ -6609,12 +6609,17 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sql_catalog.sql_catalog_security_uid_columns = (
       ' | security_uid',
       'Alternate | alternate_security_uid',
+      'Another | another_security_uid',
     )
-    # add category
+    # add categories
     self.portal.portal_categories.local_role_group.newContent(
-      portal_type='Category', 
-      reference = 'Alternate',
-      id = 'Alternate')
+      portal_type='Category',
+      reference='Alternate',
+      id='Alternate')
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category',
+      reference='Another',
+      id='Another')
 
     types_tool = self.portal.portal_types
     object_type = types_tool.newContent('Geek Object', 'Base Type',
@@ -6630,11 +6635,18 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       portal_type='Geek Object', id='1')
 
     # simulate role assignment
-    new_object.__ac_local_roles__ = dict(group=['Assignee'])
-    initial___ac_local_roles_group_id_dict__ = dict(Alternate=set([('group', 'Assignee')]))
+    new_object.__ac_local_roles__ = dict(group=['Assignee', 'Assignor'],
+                                         another_group=['Assignee'])
+    initial___ac_local_roles_group_id_dict__ = dict(
+      Alternate=set([('group', 'Assignee')]),
+      Another=set([('group', 'Assignor'),
+                   ('another_group', 'Assignee')])).copy()
     new_object.__ac_local_roles_group_id_dict__ = initial___ac_local_roles_group_id_dict__
     self.tic()
 
+    # the role information defined here does not match the assigned roles that
+    # we simulated above, but we just want to test that an exported role
+    # information can be imported back
     object_type.newContent(portal_type='Role Information',
                            local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),
                            role_name_list=('Assignee', ))
@@ -6642,7 +6654,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title=self.id(),
-                          template_local_roles_list=('geek_module/1',),
+                          template_local_role_list=('geek_module/1',),
                           template_path_list=('geek_module/1',),
                           template_portal_type_role_list=('Geek Object',),)
 
@@ -6666,13 +6678,19 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt.install()
     try:
       role, = object_type.getRoleInformationList()
-      self.assertEquals(self.portal.portal_categories.local_role_group.Alternate, 
+      self.assertEquals(self.portal.portal_categories.local_role_group.Alternate,
                         role.getLocalRoleGroupValue())
       path = self.portal.geek_module['1']
-      self.assertEquals([('group', ['Assignee'],)], [item for item in
-            path.__ac_local_roles__.items() if item[1] != ['Owner']])
+      self.assertEquals(sorted([
+        ('another_group', ['Assignee']),
+        ('group', ['Assignee', 'Assignor']),
+        ]), sorted([item for item in
+            path.__ac_local_roles__.items() if item[1] != ['Owner']]))
       self.assertEquals(initial___ac_local_roles_group_id_dict__,
         path.__ac_local_roles_group_id_dict__)
+      # make sure we can reindexing the object works
+      path.recursiveImmediateReindexObject()
+      self.tic()
     finally:
       # restore state
       sql_catalog.sql_catalog_security_uid_columns = \

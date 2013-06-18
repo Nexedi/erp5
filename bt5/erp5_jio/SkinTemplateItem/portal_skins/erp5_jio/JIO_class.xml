@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import json, hashlib\n
+#from Products.ERP5Type.Log import log\n
+\n
+class FakeDocument():\n
+  def getObject(self): return self\n
+  def hasProperty(self, property_id): return False\n
+\n
+class JioErp5Only():\n
+  def getDocumentAttachment(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json.get("_id"))\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
+    raise KeyError("Missing attachment")\n
+\n
+  def getDocumentMetadata(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json.get("_id"))\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
+    document_dict = tool.getDocumentProperties(document)\n
+    tool.stringifyDictDateValue(document_dict)\n
+    document_dict["workflow_history"] = [v for v in document.workflow_history]\n
+    return document_dict\n
+\n
+class JioGeneric():\n
+  "Processes generic jIO requests"\n
+  def __init__(self):\n
+    self.simple_conversion_dict = {\n
+      "content_type": "format",\n
+      "effective_date": "posted_date",\n
+      "portal_type": "type",\n
+      "contributor_list": "contributor",\n
+      "subject_list": "subject",\n
+      "categories_list": "category"\n
+    }\n
+    # order deny, allow\n
+    # deny from all\n
+    self.allowed_property_id_dict = ["title", "short_title", "description",\n
+                                     "language", "reference", "version",\n
+                                     "format", "posted_date", "type",\n
+                                     "contributor", "subject", "category"]\n
+    self.local_attachment_key = "local_attachment_dict"\n
+\n
+  def getDocumentAttachment(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json.get("_id"))\n
+    except AttributeError: raise ValueError("Bad document id")\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
+    document_dict = tool.getDocumentProperties(document)\n
+    if metadata_json.get("_attachment") == "body" and \\\n
+      "text_content" in document_dict:\n
+      return document_dict["text_content"]\n
+    elif document_dict.get(self.local_attachment_key) is not None and \\\n
+         metadata_json.get("_attachment") in \\\n
+         document_dict.get(self.local_attachment_key):\n
+      return document_dict[self.local_attachment_key][\n
+        metadata_json["_attachment"]]["data"]\n
+    raise KeyError("Missing attachment")\n
+\n
+  def getDocumentMetadata(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json.get("_id"))\n
+    except AttributeError: raise ValueError("Bad document id")\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
+    document_dict = tool.getDocumentProperties(document)\n
+    real_document_dict = {}\n
+    # get attachments metas\n
+    if document_dict.get("text_content") is not None:\n
+      real_document_dict["_attachments"] = tool.dictFusion(\n
+        real_document_dict.get("_attachments"), {\n
+          "body": {\n
+            "length": len(document_dict["text_content"]),\n
+            "content_type": document_dict.get("content_type")\n
+          }\n
+        }\n
+      )\n
+    if document_dict.get(self.local_attachment_key) is not None:\n
+      tmp = {}\n
+      for k, v in document_dict[self.local_attachment_key].items():\n
+        tmp[k] = {\n
+          "length": len(document_dict[self.local_attachment_key][k]["data"]),\n
+          "content_type": document_dict[self.local_attachment_key][k][\n
+            "content_type"]\n
+        }\n
+      real_document_dict["_attachments"] = tool.dictFusion(\n
+        real_document_dict.get("_attachments"), tmp);\n
+    while True:\n
+      try: k, v = document_dict.popitem()\n
+      except KeyError: break\n
+      if v is None or (\n
+          isinstance(v, (tuple, list, str, unicode)) and len(v) == 0):\n
+        continue\n
+      if k in self.simple_conversion_dict:\n
+        k = self.simple_conversion_dict.get(k)\n
+      if k in self.allowed_property_id_dict:\n
+        try: v.time\n
+        except AttributeError: pass\n
+        else: v = str(v)\n
+        if k == "text_content":\n
+          real_document_dict["_attachments"] = {\n
+            "body": {\n
+              "length": len(v)\n
+            }\n
+          }\n
+        elif k == "category" and isinstance(v, list):\n
+          # specific process for relation metadata_key\n
+          relation_list = []\n
+          for i, s in enumerate(v):\n
+            if s.startswith("follow_up/"):\n
+              relation_list.append(v.pop(i))\n
+          if len(relation_list) > 0:\n
+            real_document_dict["relation"] = relation_list\n
+        real_document_dict[k] = v\n
+    real_document_dict["_id"] = metadata_json["_id"]\n
+    real_document_dict["type"] = document.getPortalType()\n
+    return real_document_dict\n
+\n
+  def updateDocumentMetadataEditKw(self, metadata_json,\n
+                                   document=FakeDocument()):\n
+    edit_kw = {}\n
+    while True:\n
+      try: meta_key, meta_value = metadata_json.popitem()\n
+      except KeyError: break\n
+      doc_key = meta_key\n
+      for erp5_key, jio_key in self.simple_conversion_dict.iteritems():\n
+        if jio_key == meta_key:\n
+          doc_key = erp5_key\n
+          break\n
+      if meta_key in self.allowed_property_id_dict:\n
+        if meta_value is None and document.hasProperty(doc_key) or \\\n
+           meta_value is not None:\n
+          edit_kw[doc_key] = meta_value\n
+        if meta_key == "category" and metadata_json.get("relation") is not None:\n
+          if isinstance(metadata_json["relation"], tuple):\n
+            edit_kw[doc_key] = edit_kw[doc_key] + metadata_json["relation"]\n
+          else:\n
+            edit_kw[doc_key] = edit_kw[doc_key] + (metadata_json["relation"],)\n
+    return edit_kw\n
+\n
+  def putDocumentAttachment(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    document = tool.getDocumentFromUrl(metadata_json["_id"]).getObject()\n
+    if metadata_json.get("_attachment") == "body":\n
+      document.edit(text_content=metadata_json.get("_data"))\n
+    else:\n
+      edit_kw = {self.local_attachment_key:\n
+                 document.getProperty(self.local_attachment_key)}\n
+      if edit_kw.get(self.local_attachment_key) is None:\n
+        edit_kw[self.local_attachment_key] = {}\n
+      edit_kw[self.local_attachment_key][metadata_json.get("_attachment")] = {\n
+        "content_type": metadata_json.get("_mimetype"),\n
+        "data": metadata_json.get("_data")}\n
+      document.edit(**edit_kw)\n
+    return {"ok": True, "id": metadata_json["_id"],\n
+            "attachment": metadata_json.get("_attachment")}\n
+\n
+  def putDocumentMetadata(self, metadata_json, overwrite=True):\n
+    doc_id = metadata_json.get("_id")\n
+    document = None\n
+    try: document = tool.getDocumentFromUrl(doc_id)\n
+    except AttributeError: pass\n
+    except ValueError: pass\n
+    except KeyError: pass\n
+    if document is not None:\n
+      if not overwrite:\n
+        raise LookupError("Document already exists")\n
+      # document exists\n
+      document.getObject().edit(\n
+        **self.updateDocumentMetadataEditKw(metadata_json, document=document))\n
+    else:\n
+      if "_id" in metadata_json:\n
+        tool.newDocumentFromUrl(\n
+          metadata_json["_id"],\n
+          self.updateDocumentMetadataEditKw(metadata_json))\n
+      elif "type" in metadata_json:\n
+        try:\n
+          document = tool.newDocumentFromType(\n
+            metadata_json["type"],\n
+            self.updateDocumentMetadataEditKw(metadata_json))\n
+          doc_id = tool.getUrlFromDocument(document)\n
+        except ValueError:\n
+          raise ValueError("Bad type")\n
+      else:\n
+        raise TypeError("Type missing")\n
+    return {"ok": True, "id": doc_id}\n
+\n
+  def removeDocument(self, metadata_json):\n
+    tool.checkMetadata(metadata_json)\n
+    try: document = tool.getDocumentFromUrl(metadata_json["_id"])\n
+    except AttributeError: raise ValueError("Bad document id")\n
+    except ValueError: raise LookupError("Missing document")\n
+    except KeyError: raise LookupError("Missing document")\n
+    document_id = document.getId()\n
+    document.getParentValue.manage_delObjects(ids=[document_id])\n
+    return {"ok": True, "id": document_id}\n
+\n
+  def removeAttachment(self, document, data_dict):\n
+    document = document.getObject()\n
+    edit_kw = {}\n
+    if data_dict.get("_attachment") == "body.html":\n
+      edit_kw[self.mode["attachment_data_key"]] = None\n
+    document.edit(**edit_kw)\n
+\n
+class JioTool():\n
+  # TODO doc strings\n
+  def createBadRequestDict(self, message, reason):\n
+    return {\n
+      "status": 405,\n
+      "statusText": "Bad Request",\n
+      "error": "bad_request",\n
+      "message": message,\n
+      "reason": reason\n
+    }\n
+\n
+  def createNotFoundDict(self, message, reason):\n
+    return {\n
+      "status": 404,\n
+      "statusText": "Not Found",\n
+      "error": "not_found",\n
+      "message": message,\n
+      "reason": reason\n
+    }\n
+\n
+  def createConflictDict(self, message, reason):\n
+    return {\n
+      "status": 409,\n
+      "statusText": "Conflict",\n
+      "error": "conflict",\n
+      "message": message,\n
+      "reason": reason\n
+    }\n
+\n
+  def jsonDeepCopy(self, json_dict):\n
+    "Clones the JSON object in deep and returns the clone"\n
+    return json.loads(json.dumps(json_dict))\n
+\n
+  def checkMetadata(self, metadata_json):\n
+    "Check if the id of the metadata is good"\n
+    if metadata_json.get("_id") is None or metadata_json.get("_id") == "":\n
+      raise ValueError("Bad document id")\n
+\n
+  def getUrlFromDocument(self, document):\n
+    return "/" + context.getPortalObject().\\\n
+      getDefaultModule(document.getPortalType()).getId() + "/" + \\\n
+      document.getProperty("id")\n
+\n
+  def getDocumentFromUrl(self, url):\n
+    "Return an ERP5 document from an url. ex: \'/web_page_module/2\'"\n
+    url = url.split("/")\n
+    if len(url) != 3 or url[0] != "":\n
+      raise ValueError("Wrong URL")\n
+    url = url[1:]\n
+    return context.getPortalObject()[url[0]][url[1]] # throws KeyError\n
+\n
+  def newDocumentFromUrl(self, url, edit_kw={}):\n
+    "Create a new document from an url. ex: \'/web_page_module/<num>\'"\n
+    url = url.split("/")\n
+    if len(url) < 2 or url[0] != "":\n
+      raise ValueError("Wrong URL")\n
+    try: edit_kw["id"] = int(url[2])\n
+    except ValueError: raise ValueError("Wrong URL")\n
+    return context.getPortalObject()[url[1]].newContent(**edit_kw)\n
+\n
+  def newDocumentFromType(self, portal_type, edit_kw={}):\n
+    "Create a new document from a portal_type. ex: \'Web Page\'"\n
+    return context.getPortalObject().getDefaultModule(portal_type).\\\n
+      newContent(**edit_kw)\n
+\n
+  def getDocumentProperties(self, document):\n
+    document = document.getObject()\n
+    document_dict = {}\n
+    for property_definition in document.getPropertyMap():\n
+      property_id = property_definition["id"]\n
+      document_dict[property_id] = document.getProperty(property_id)\n
+    return document_dict\n
+\n
+  def recursiveEncodeToUtf8(self, obj):\n
+    if isinstance(obj, (str, unicode)):\n
+      return obj.encode("utf-8")\n
+    elif isinstance(obj, list):\n
+      return [self.recursiveEncodeToUtf8(x) for x in obj]\n
+    elif isinstance(obj, tuple):\n
+      return tuple((self.recursiveEncodeToUtf8(x) for x in obj))\n
+    elif isinstance(obj, dict):\n
+      return dict(((k.encode("utf-8"), self.recursiveEncodeToUtf8(v)) \\\n
+                   for k, v in obj.iteritems()))\n
+\n
+  def jsonUtf8Loads(self, json_str):\n
+    return self.recursiveEncodeToUtf8(json.loads(json_str))\n
+\n
+  def stringifyDictDateValue(self, obj_dict):\n
+    for k, v in obj_dict.items():\n
+      try: v.time\n
+      except AttributeError: pass\n
+      else: obj_dict[k] = str(v)\n
+\n
+  def formatMetadataToPut(self, metadata_json):\n
+    for k, v in metadata_json.iteritems():\n
+      if isinstance(v, list):\n
+        metadata_json[k] = tuple(v)\n
+    return metadata_json\n
+\n
+  def dictFusion(self, *dict_tuple):\n
+    result = {}\n
+    for dicti in dict_tuple:\n
+      if dicti is not None:\n
+        for k, v in dicti.items():\n
+          result[k] = v\n
+    return result\n
+\n
+  def __init__(self, mode="generic"):\n
+    self.mode_dict = {\n
+      "generic": JioGeneric,\n
+      "erp5_only": JioErp5Only\n
+    }\n
+    self.setMode(mode)\n
+\n
+  def setMode(self, mode):\n
+    self.jio = self.mode_dict[mode]()\n
+\n
+  def getDocumentMetadata(self, metadata_json):\n
+    return self.jio.getDocumentMetadata(metadata_json)\n
+\n
+  def getDocumentAttachment(self, metadata_json):\n
+    return self.jio.getDocumentAttachment(metadata_json)\n
+\n
+  def putDocumentMetadata(self, metadata_json, overwrite=True):\n
+    return self.jio.putDocumentMetadata(\n
+      self.formatMetadataToPut(\n
+        self.recursiveEncodeToUtf8(\n
+          self.jsonDeepCopy(metadata_json))), overwrite=overwrite)\n
+\n
+  def putDocumentAttachment(self, attachment_json):\n
+    return self.jio.putDocumentAttachment(attachment_json)\n
+\n
+  def removeDocument(self, metadata_json):\n
+    return self.jio.removeDocument(metadata_json)\n
+\n
+  def sendSuccess(self, param):\n
+    return json.dumps({"err": None, "response": param})\n
+\n
+  def sendError(self, param):\n
+    return json.dumps({"err": param, "response": None})\n
+\n
+  # def getDocumentListFromId(self, id):\n
+  #   kw = {"portal_type":"Web Page"}\n
+  #   kw[self.mode["id_key"]] = id\n
+  #   return context.portal_catalog(**kw)\n
+\n
+  # def getAllDocsFromDocumentList(self, document_list, include_docs=False):\n
+  #   rows = []\n
+  #   if include_docs is True:\n
+  #     for document in document_list:\n
+  #       id = document.getProperty(self.mode["id_key"])\n
+  #       if id is not None:\n
+  #         rows.append({"id": id, "key": id, "value": {}, "doc": self.getMetadataFromDocument(document)})\n
+  #   else:\n
+  #     for document in document_list:\n
+  #       id = document.getProperty(self.mode["id_key"])\n
+  #       if id is not None:\n
+  #         rows.append({"id": id, "key": id, "value": {}})\n
+  #   return {"total_rows": len(rows), "rows": rows}\n
+\n
+  # def setDocumentId(self, document, id):\n
+  #   document.getObject().setProperty(self.mode["id_key"], id)\n
+\n
+tool = JioTool(**kw)\n
+return tool\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>JIO_class</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

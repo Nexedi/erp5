@@ -201,4 +201,8 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
     # this(accessor_holder is on-memory object and is kept beyond transaction)
     # then ConnectionStateError occurs after a long time.
     import copy
-    accessor_holder.constraints.append(copy.deepcopy(self.aq_base))
+    constraint_definition = copy.deepcopy(self.aq_base)
+    # note the relative url of this constraint to display it later in
+    # checkConsistency messages
+    constraint_definition.relative_url = self.getRelativeUrl()
+    accessor_holder.constraints.append(constraint_definition)

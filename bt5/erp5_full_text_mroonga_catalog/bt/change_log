@@ -1,3 +1,6 @@
+2013-04-04 Kazuhiko
+* defer fulltext index in a lower priority activity.
+
 2012-01-30 Kazuhiko
 * engine name is mroonga instead of groonga since mroonga-1.20.
 

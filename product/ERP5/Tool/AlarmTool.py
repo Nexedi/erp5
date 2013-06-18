@@ -30,7 +30,8 @@ import time
 import threading
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, \
+        newSecurityManager, setSecurityManager
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -128,14 +129,18 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       We will look at all alarms and see if they should be activated,
       if so then we will activate them.
     """
-    for alarm in self.getAlarmList(to_active=1):
-      if alarm is not None:
-        user = alarm.getWrappedOwner()
-        newSecurityManager(self.REQUEST, user)
-        if alarm.isActive() or not alarm.isEnabled():
-          # do nothing if already active, or not enabled
-          continue
-        alarm.activeSense()
+    security_manager = getSecurityManager()
+    try:
+      for alarm in self.getAlarmList(to_active=1):
+        if alarm is not None:
+          user = alarm.getWrappedOwner()
+          newSecurityManager(self.REQUEST, user)
+          if alarm.isActive() or not alarm.isEnabled():
+            # do nothing if already active, or not enabled
+            continue
+          alarm.activeSense()
+    finally:
+      setSecurityManager(security_manager)
 
   security.declarePrivate('process_timer')
   def process_timer(self, interval, tick, prev="", next=""):

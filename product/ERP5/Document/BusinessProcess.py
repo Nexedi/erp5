@@ -214,9 +214,9 @@ class BusinessProcess(Path, XMLObject):
     """
     if trade_phase is not None:
       if isinstance(trade_phase, basestring):
-        trade_phase = set((trade_phase,))
+        trade_phase = frozenset((trade_phase,))
       else:
-        trade_phase = set(trade_phase)
+        trade_phase = frozenset(trade_phase)
     kw.setdefault('portal_type', self.getPortalBusinessLinkTypeList())
     kw.setdefault('sort_on', 'int_index')
     original_business_link_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
@@ -231,7 +231,7 @@ class BusinessProcess(Path, XMLObject):
       if (successor is not _marker and
           business_link.getSuccessor() != successor):
         continue # Filter our business link which successor does not match
-      if trade_phase is not None and not trade_phase.intersection(
+      if trade_phase is not None and trade_phase.isdisjoint(
                                    business_link.getTradePhaseList()):
         continue # Filter our business link which trade phase does not match
       business_link_list.append(business_link)
@@ -478,7 +478,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     result = set()
-    for state in self.getCompletedTradeStateValue(explanation):
+    for state in self.getCompletedTradeStateList(explanation):
       for business_link in state.getPredecessorRelatedValueList():
         if not self.isBusinessLinkCompleted(explanation, business_link):
           result.add(state)
@@ -494,7 +494,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     result = set()
-    for state in self.getCompletedTradeStateValue(explanation):
+    for state in self.getCompletedTradeStateList(explanation):
       for business_link in state.getPredecessorRelatedValueList():
         if not self.isBusinessLinkPartiallyCompleted(explanation, business_link):
           result.add(state)
@@ -674,11 +674,13 @@ class BusinessProcess(Path, XMLObject):
     update_property_method -- 
     """
     if not trade_phase:
-      trade_phase = amount.getTradePhase()
+      trade_phase = amount.getTradePhaseList()
       if not trade_phase:
         raise ValueError("%s: a trade_phase must be defined on the " \
                          "Amount or provided to getTradePhaseMovementList" %
                           amount.getRelativeUrl())
+    elif isinstance(trade_phase, basestring):
+      trade_phase = trade_phase,
 
     # Build a list of temp movements
     from Products.ERP5Type.Document import newTempSimulationMovement
@@ -686,14 +688,15 @@ class BusinessProcess(Path, XMLObject):
     id_index = 0
     base_id = amount.getId()
     if update_property_dict is None: update_property_dict = {}
+    filter_trade_phase = frozenset(trade_phase).intersection
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
       movement = newTempSimulationMovement(trade_model_path,
         '%s_%s' % (base_id, id_index), notify_workflow=False)
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
+      trade_phase = filter_trade_phase(trade_model_path.getTradePhaseList())
       try:
-        kw['trade_phase'], = \
-          set(trade_phase).intersection(trade_model_path.getTradePhaseList())
+        kw['trade_phase'], = trade_phase
       except ValueError:
         pass
       kw.update(update_property_dict)
@@ -811,7 +814,7 @@ class BusinessProcess(Path, XMLObject):
                    Applied Rule which implicitely defines a simulation subtree
     """
     for state in self.getTradeStateList():
-      if not state.isTradeStateCompleted(explanation):
+      if not self.isTradeStateCompleted(explanation, state):
         return False
     return True
   

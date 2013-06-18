@@ -29,8 +29,8 @@ from Products.ERP5.Document.MovementGroup import MovementGroup
 
 class TitleMovementGroup(MovementGroup):
   """
-  The purpose of MovementGroup is to define how movements are grouped,
-  and how values are updated from simulation movements.
+  This movement group is used to group movements that have the same
+  title.
   """
   meta_type = 'ERP5 Title Movement Group'
   portal_type = 'Title Movement Group'

@@ -50,9 +50,7 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple>
-                <string>region</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -71,7 +69,9 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: (\'Category\',)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>

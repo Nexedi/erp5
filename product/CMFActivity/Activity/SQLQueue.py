@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
-from Queue import VALID, INVALID_PATH
-from Products.CMFActivity.Errors import ActivityFlushError
+from Products.CMFActivity.ActivityTool import Message, registerActivity
 from ZODB.POSException import ConflictError
 from SQLBase import SQLBase, sort_message_key
 from zExceptions import ExceptionFormatter
@@ -51,7 +49,6 @@ class SQLQueue(SQLBase):
     because use of OOBTree.
   """
   sql_table = 'message_queue'
-  merge_duplicate = False
 
   def prepareQueueMessageList(self, activity_tool, message_list):
     registered_message_list = [m for m in message_list if m.is_registered]
@@ -74,7 +71,7 @@ class SQLQueue(SQLBase):
       for m in message_list:
         m.order_validation_text = x = self.getOrderValidationText(m)
         processing_node_list.append(0 if x == 'none' else -1)
-      dumped_message_list = map(self.dumpMessage, message_list)
+      dumped_message_list = map(Message.dump, message_list)
       activity_tool.SQLQueue_writeMessageList(
         uid_list=uid_list,
         path_list=path_list,
@@ -99,63 +96,6 @@ class SQLQueue(SQLBase):
       if len(result) > 0:
         return result[0].message_count > 0
     return 0
-
-  def flush(self, activity_tool, object_path, invoke=0, method_id=None, commit=0, **kw):
-    """
-      object_path is a tuple
-    """
-    delMessage = getattr(activity_tool, 'SQLBase_delMessage', None)
-    if delMessage is not None:
-      #return # Do nothing here to precent overlocking
-      path = '/'.join(object_path)
-      # Parse each message in registered
-      for m in activity_tool.getRegisteredMessageList(self):
-        if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-          if invoke:
-            # First Validate
-            validate_value = m.validate(self, activity_tool)
-            if validate_value is VALID:
-              activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
-                # The message no longer exists
-                raise ActivityFlushError, (
-                    'Could not evaluate %s on %s' % (m.method_id , path))
-            elif validate_value is INVALID_PATH:
-              # The message no longer exists
-              raise ActivityFlushError, (
-                  'The document %s does not exist' % path)
-            else:
-              raise ActivityFlushError, (
-                  'Could not validate %s on %s' % (m.method_id , path))
-          activity_tool.unregisterMessage(self, m)
-      # Parse each message in SQL queue
-      result = self._getMessageList(activity_tool, processing=0, path=path,
-        **({'method_id': method_id} if method_id else {}))
-      for line in result:
-        path = line.path
-        method_id = line.method_id
-        m = self.loadMessage(line.message, uid=line.uid, line=line)
-        if invoke:
-          # First Validate (only if message is marked as new)
-          if line.processing_node == -1:
-            validate_value = m.validate(self, activity_tool)
-          else:
-            validate_value = VALID
-          if validate_value is VALID:
-            activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-            if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
-              # The message no longer exists
-              raise ActivityFlushError, (
-                  'Could not evaluate %s on %s' % (method_id , path))
-          elif validate_value is INVALID_PATH:
-            # The message no longer exists
-            raise ActivityFlushError, (
-                'The document %s does not exist' % path)
-          else:
-            raise ActivityFlushError, (
-                'Could not validate %s on %s' % (m.method_id , path))
-      if result:
-        delMessage(table=self.sql_table, uid=[line.uid for line in result])
 
   def countMessage(self, activity_tool, tag=None, path=None,
                    method_id=None, message_uid=None, **kw):
@@ -187,7 +127,7 @@ class SQLQueue(SQLBase):
     if dumpMessageList is not None:
       result = dumpMessageList()
       for line in result:
-        m = self.loadMessage(line.message, uid=line.uid, line=line)
+        m = Message.load(line.message, uid=line.uid, line=line)
         message_list.append(m)
     return message_list
 
@@ -208,7 +148,7 @@ class SQLQueue(SQLBase):
         validation_text_dict = {'none': 1}
         message_dict = {}
         for line in result:
-          message = self.loadMessage(line.message, uid=line.uid, line=line)
+          message = Message.load(line.message, uid=line.uid, line=line)
           if not hasattr(message, 'order_validation_text'): # BBB
             message.order_validation_text = self.getOrderValidationText(message)
           self.getExecutableMessageList(activity_tool, message, message_dict,
@@ -262,7 +202,7 @@ class SQLQueue(SQLBase):
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:
-        m = self.loadMessage(line.message,
+        m = Message.load(line.message,
                              line=line,
                              uid=line.uid,
                              date=line.date,

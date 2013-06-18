@@ -1,4 +1,8 @@
 <hidden_content_type_list>
+ <portal_type id="Campaign">
+  <item>Event Path</item>
+  <item>Outcome Path</item>
+ </portal_type>
  <portal_type id="Event Module">
   <item>Acknowledgement</item>
  </portal_type>

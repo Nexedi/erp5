@@ -130,7 +130,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     self.width = width
     self._setContentType(content_type or 'application/unknown')
 
-  def _upradeImage(self):
+  def _upgradeImage(self):
     """
       This method upgrades internal data structures is required
     """
@@ -159,7 +159,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
       Tries to get the width from the image data.
     """
-    self._upradeImage()
+    self._upgradeImage()
     if self.hasData() and not self.width:
       self._update_image_info()
     return self.width
@@ -169,7 +169,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
       Tries to get the height from the image data.
     """
-    self._upradeImage()
+    self._upgradeImage()
     if self.hasData() and not self.height:
       self._update_image_info()
     return self.height
@@ -177,7 +177,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
   def getContentType(self, default=_MARKER):
     """Original photo content_type."""
-    self._upradeImage()
+    self._upgradeImage()
     if self.hasData() and not self.hasContentType():
       self._update_image_info()
     if default is _MARKER:
@@ -311,7 +311,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   @fill_args_from_request('display', 'quality', 'resolution', 'frame')
   def index_html(self, REQUEST, *args, **kw):
     """Return the image data."""
-    self._upradeImage()
+    self._upgradeImage()
     return Document.index_html(self, REQUEST, *args, **kw)
 
   #
@@ -320,7 +320,7 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   def _resize(self, quality, width, height, format, resolution, frame):
     """Resize and resample photo."""
-    parameter_list = ['convert', '-colorspace', 'sRGB',
+    parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
                                  '-quality', str(quality),
                                  '-geometry', '%sx%s' % (width, height)]
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:

@@ -57,17 +57,17 @@
             <value> <string encoding="cdata"><![CDATA[
 
 if "files" in context.REQUEST.keys():\n
-  files = context.REQUEST["files"]\n
+  files = context.REQUEST["files"];\n
 else:\n
-  files = None\n
+  files = None;\n
 \n
 return \'\'\'\n
     var tree = null;\n
     var business_template;\n
     var is_expanded=false;\n
     var is_showing_unmodified=false;\n
-    var ie  = document.all\n
-    var ns6 = document.getElementById&&!document.all\n
+    var ie  = document.all;\n
+    var ns6 = document.getElementById&&!document.all;\n
     var isMenu  = false ;\n
     var menuSelObj = null ;\n
     var overpopupmenu = false;\n
@@ -83,42 +83,44 @@ return \'\'\'\n
     }\n
 \n
     function showObject() {\n
+      var splash;\n
       if (ns4) {\n
-        var splash = document.splashScreen;\n
+        splash = document.splashScreen;\n
 \tsplash.visibility = "visible";\n
       }\n
       if (ie4) {\n
-        var splash = document.all.splashScreen;\n
+        splash = document.all.splashScreen;\n
 \tsplash.style.visibility = "visible";\n
       }\n
       if (upLevel){\n
-        var splash = document.getElementById("splashScreen");\n
+        splash = document.getElementById("splashScreen");\n
         splash.style.visibility = "visible";\n
       }\n
     }\n
 \n
      function hideObject() {\n
+       var splash;\n
        if (ns4) {\n
-         var splash = document.splashScreen;\n
+         splash = document.splashScreen;\n
 \t splash.visibility = "hide";\n
        }\n
        if (ie4) {\n
-         var splash = document.all.splashScreen;\n
+         splash = document.all.splashScreen;\n
 \t splash.style.visibility = "hidden";\n
        }\n
        if (upLevel){\n
-         var splash = document.getElementById("splashScreen");\n
+         splash = document.getElementById("splashScreen");\n
          splash.style.visibility = "hidden";\n
        }\n
      }\n
 \n
     function preLoadImages(){\n
-      var imSrcAr = new \n
-      Array(\'document.png\',\'iconCheckAll.gif\',\'line2.gif\',\'minus2.gif\',\'minus5.gif\',\'plus2.gif\',\'plus5.gif\',\'folder_open.png\',\'iconCheckGray.gif\',\'line3.gif\',\'minus3.gif\',\'minus_ar.gif\',\'plus3.gif\',\'plus_ar.gif\',\'folder.png\',\'line1.gif\',\'line4.gif\',\'minus4.gif\',\'minus.gif\',\'plus4.gif\',\'plus.gif\',\'iconUnCheckAll.gif\', \'blank.gif\')\n
+      var imSrcAr = new\n
+      Array(\'document.png\',\'iconCheckAll.gif\',\'line2.gif\',\'minus2.gif\',\'minus5.gif\',\'plus2.gif\',\'plus5.gif\',\'folder_open.png\',\'iconCheckGray.gif\',\'line3.gif\',\'minus3.gif\',\'minus_ar.gif\',\'plus3.gif\',\'plus_ar.gif\',\'folder.png\',\'line1.gif\',\'line4.gif\',\'minus4.gif\',\'minus.gif\',\'plus4.gif\',\'plus.gif\',\'iconUnCheckAll.gif\', \'blank.gif\');\n
       var imAr = new Array(0);\n
       for(var i=0;i<imSrcAr.length;i++){\n
               imAr[imAr.length] = new Image();\n
-              imAr[imAr.length-1].src = \'ERP5VCS_imgs/\'+imSrcAr[i]\n
+              imAr[imAr.length-1].src = \'ERP5VCS_imgs/\'+imSrcAr[i];\n
       }\n
     }\n
 \n
@@ -128,11 +130,11 @@ return \'\'\'\n
       tree=new dhtmlXTreeObject(document.getElementById(\'treebox1\'),\'100%%\',\'100%%\',0);\n
       tree.setImagePath(\'ERP5VCS_imgs/\');\n
       tree.setDragHandler();\n
-      tree.enableCheckBoxes(true)\n
+      tree.enableCheckBoxes(true);\n
       tree.enableThreeStateCheckboxes(true);\n
-      tree.enableDragAndDrop(false)\n
-      tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract:int=\' + do_extract, hideObject)\n
-      tree.setOnClickHandler(showMenu)\n
+      tree.enableDragAndDrop(false);\n
+      tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract:int=\' + do_extract, hideObject);\n
+      tree.setOnClickHandler(showMenu);\n
     }\n
         \n
     function expandCollapse(){\n
@@ -148,9 +150,8 @@ return \'\'\'\n
     function showNormalFiles(){\n
       showObject();\n
       is_expanded = false;\n
-      is_showing_unmodified = 1 - is_showing_unmodified\n
-      tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract:int=0&show_unmodified:int=\'\n
-                   + is_showing_unmodified, hideObject);\n
+      is_showing_unmodified = 1 - is_showing_unmodified;\n
+      tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract:int=0&show_unmodified:int=\'+ is_showing_unmodified, hideObject);\n
       tree.refreshItem(0);\n
     }\n
         \n
@@ -172,13 +173,16 @@ return \'\'\'\n
 \n
       for(i=0;i<filesCheckedArray.length; ++i){\n
         if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
-          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+          nbRemoved = nbRemoved+1;\n
+          FilesRemovedArray[nbRemoved]=filesCheckedArray[i];\n
         }else{\n
           if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
-            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+            nbAdded = nbAdded+1;\n
+            FilesAddedArray[nbAdded]=filesCheckedArray[i];\n
           }else\n
           if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
-            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
+            nbModified = nbModified+1;\n
+            FilesModifiedArray[nbModified]=filesCheckedArray[i];\n
           }\n
         }\n
       }\n
@@ -190,31 +194,33 @@ return \'\'\'\n
       for(i=0;i<filesPartiallyCheckedArray.length; ++i){\n
         // useless for removed directories\n
         if(tree.getItemColor(filesPartiallyCheckedArray[i])==\'green\'){\n
-          FilesAddedArray[nbAdded++]=filesPartiallyCheckedArray[i];\n
+          nbAdded = nbAdded+1;\n
+          FilesAddedArray[nbAdded]=filesPartiallyCheckedArray[i];\n
         }else\n
         if(tree.getItemColor(filesPartiallyCheckedArray[i])==\'orange\'){\n
-          FilesModifiedArray[nbModified++]=filesPartiallyCheckedArray[i];\n
+          nbModified = nbModified+1;\n
+          FilesModifiedArray[nbModified]=filesPartiallyCheckedArray[i];\n
         }\n
       }\n
-      if(nbModified!=0){\n
+      if(nbModified!==0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
       }else{\n
         filesModified=\'none\';\n
       }\n
       form.modified.value=filesModified;\n
-      if(nbAdded!=0){\n
+      if(nbAdded!==0){\n
         filesAdded=FilesAddedArray.join(\',\');\n
       }else{\n
         filesAdded=\'none\';\n
       }\n
       form.added.value=filesAdded;\n
-      if(nbRemoved!=0){\n
+      if(nbRemoved!==0){\n
         filesRemoved=FilesRemovedArray.reverse().join(\',\');\n
       }else{\n
         filesRemoved=\'none\';\n
       }\n
       form.removed.value=filesRemoved;\n
-      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+      if (nbRemoved===0 && nbAdded===0 && nbModified===0) {\n
         alert(\'Nothing to commit !\');\n
       } else {\n
         submitAction(form,\'BusinessTemplate_doVcsCommit\');\n
@@ -239,35 +245,38 @@ return \'\'\'\n
       }\n
       for(i=0;i<filesCheckedArray.length; ++i){\n
         if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
-          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+          nbRemoved = nbRemoved+1;\n
+          FilesRemovedArray[nbRemoved]=filesCheckedArray[i];\n
         }else{\n
           if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
-            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+            nbAdded = nbAdded+1;\n
+            FilesAddedArray[nbAdded]=filesCheckedArray[i];\n
           }else\n
           if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
-            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
+            nbModified = nbModified+1;\n
+            FilesModifiedArray[nbModified]=filesCheckedArray[i];\n
           }\n
         }\n
       }\n
-      if(nbModified!=0){\n
+      if(nbModified!==0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
       }else{\n
         filesModified=\'none\';\n
       }\n
       form.modified.value=filesModified;\n
-      if(nbAdded!=0){\n
+      if(nbAdded!==0){\n
         filesAdded=FilesAddedArray.join(\',\');\n
       }else{\n
         filesAdded=\'none\';\n
       }\n
       form.added.value=filesAdded;\n
-      if(nbRemoved!=0){\n
+      if(nbRemoved!==0){\n
         filesRemoved=FilesRemovedArray.join(\',\');\n
       }else{\n
         filesRemoved=\'none\';\n
       }\n
       form.removed.value=filesRemoved;\n
-      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+      if (nbRemoved===0 && nbAdded===0 && nbModified===0) {\n
         alert("Nothing to revert !");\n
       } else {\n
         if(confirm(\'Are you sure you want to revert changes?\')){\n
@@ -293,35 +302,38 @@ return \'\'\'\n
       }\n
       for(i=0;i<filesCheckedArray.length; ++i){\n
         if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
-          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+          nbRemoved = nbRemoved+1;\n
+          FilesRemovedArray[nbRemoved]=filesCheckedArray[i];\n
         }else{\n
           if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
-            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+            nbAdded = nbAdded+1;\n
+            FilesAddedArray[nbAdded]=filesCheckedArray[i];\n
           }else\n
           if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
-            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
+            nbModified = nbModified+1;\n
+            FilesModifiedArray[nbModified]=filesCheckedArray[i];\n
           }\n
         }\n
       }\n
-      if(nbModified!=0){\n
+      if(nbModified!==0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
       }else{\n
         filesModified=\'none\';\n
       }\n
       form.modified.value=filesModified;\n
-      if(nbAdded!=0){\n
+      if(nbAdded!==0){\n
         filesAdded=FilesAddedArray.join(\',\');\n
       }else{\n
         filesAdded=\'none\';\n
       }\n
       form.added.value=filesAdded;\n
-      if(nbRemoved!=0){\n
+      if(nbRemoved!==0){\n
         filesRemoved=FilesRemovedArray.join(\',\');\n
       }else{\n
         filesRemoved=\'none\';\n
       }\n
       form.removed.value=filesRemoved;\n
-      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+      if (nbRemoved===0 && nbAdded===0 && nbModified===0) {\n
         alert(\'Nothing to diff !\');\n
       } else {\n
         submitAction(form,\'BusinessTemplate_viewVcsDiff\');\n
@@ -333,7 +345,7 @@ return \'\'\'\n
       var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;\n
       if( isMenu )\n
       {\n
-        if( overpopupmenu == false )\n
+        if( overpopupmenu === false )\n
         {\n
           isMenu = false ;\n
           overpopupmenu = false;\n

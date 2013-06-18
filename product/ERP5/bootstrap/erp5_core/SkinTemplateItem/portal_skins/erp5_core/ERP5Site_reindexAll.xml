@@ -58,6 +58,12 @@ if clear_catalog:\n
   catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
   catalog.manage_catalogClear()\n
 \n
+# disable alarms while we are reindexing\n
+is_subscribed = portal.portal_alarms.isSubscribed()\n
+if clear_catalog:\n
+  if is_subscribed:\n
+    portal.portal_alarms.unsubscribe()\n
+\n
 # Reindex person module\n
 print "#### Indexing person_module, stage 1 ####"\n
 person_module=getattr(portal, \'person_module\', None)\n
@@ -232,6 +238,11 @@ context.portal_simulation.activate(\n
       ).InventoryModule_reindexMovementList(\n
                             sql_catalog_id=sql_catalog_id,\n
                             final_activity_tag=\'last_inventory_activity\')\n
+\n
+# restore alarm node \n
+if clear_catalog and is_subscribed:\n
+  portal.portal_alarms.activate(after_tag=(\'inventory\', \'module\', \'inventory\', \'simulation\', \'person_stage_1\',\n
+                                           \'group_person_stage_1\', \'last_inventory_activity\', \'document\')).subscribe()\n
 \n
 if final_activity_tag is not None:\n
   # Start a dummy activity which will get discarded when all started activities\n

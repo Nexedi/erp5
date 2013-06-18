@@ -27,6 +27,7 @@
 ##############################################################################
 
 import zope.interface
+from Acquisition import aq_base
 
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.ObjectMessage import ObjectMessage
@@ -36,7 +37,7 @@ class ConsistencyMessage(ObjectMessage):
   """
   Consistency Message is used for notifications to user after checkConsistency.
   """
-  
+
   zope.interface.implements( interfaces.IConsistencyMessage, )
 
   def __init__(self, constraint, object_relative_url='',
@@ -47,6 +48,16 @@ class ConsistencyMessage(ObjectMessage):
     ObjectMessage.__init__(self, object_relative_url, message, mapping)
     self.description = constraint.description
     self.class_name = constraint.__class__.__name__
+    # keep track of the relative URL of the constraint to have it included in
+    # the message
+    constraint_relative_url = getattr(aq_base(constraint), 'relative_url', None)
+    if not constraint_relative_url:
+      try:
+        constraint_relative_url = constraint.getRelativeUrl()
+      except AttributeError:
+        constraint_relative_url = constraint.id
+    self.constraint_relative_url = constraint_relative_url
+
     self.__dict__.update(kw)
 
   def __getitem__(self, key):
@@ -66,8 +77,9 @@ class ConsistencyMessage(ObjectMessage):
       return self.getTranslatedMessage()
 
   def __repr__(self):
-    return "<ERP5Type.ConsistencyMessage for %s on %s (message: %s)>" % (
-        self.class_name, self.object_relative_url, self.getTranslatedMessage())
-      
+    return "<ERP5Type.ConsistencyMessage for %s %s on %s (message: %s)>" % (
+        self.class_name, self.constraint_relative_url,
+        self.object_relative_url, self.getTranslatedMessage())
+
 
 allow_class(ConsistencyMessage)

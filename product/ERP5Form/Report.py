@@ -338,7 +338,8 @@ class ReportSection:
         portal_selections.pushSelection(selection_name)
       else:
         if portal_selections.getSelectionFor(selection_name) is None:
-          portal_selections.setSelectionFor(selection_name, Selection())
+          portal_selections.setSelectionFor(selection_name,
+                                            Selection(selection_name))
 
       if self.selection_report_list is not None:
         selection = portal_selections.getSelectionFor(selection_name,

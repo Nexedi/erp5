@@ -1350,9 +1350,6 @@ msgstr "IBAN"
 msgid "IBAN Key"
 msgstr "Klucz IBAN"
 
-msgid "ID"
-msgstr "ID"
-
 msgid "ID of the currency. Be aware that changing this ID will reindex all related objects."
 msgstr "ID waluty. Miej na uwadze fakt, że zmiana ID spowoduje reindeksację wszystkich obiektów."
 

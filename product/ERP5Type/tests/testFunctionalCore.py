@@ -42,7 +42,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
         return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
                 'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_jquery', 'erp5_jquery_ui', 'erp5_xhtml_jquery_style',
+                'erp5_jquery', 'erp5_jquery_ui',
                 'erp5_knowledge_pad',
                 'erp5_pdm',
                 'erp5_simulation',
@@ -69,12 +69,6 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 # manager user and continue other tests as a user created in
                 # that test.
                 'erp5_web_ui_test',
-
-                # Accounting Module list from erp5_accounting still uses movement table
-                # TODO: merge erp5_accounting_alternate_catalog in
-                # erp5_accounting and update those tests
-                # (erp5_accounting_alternate_catalog does not provide stat columns)
-                'erp5_movement_table_catalog',
                 )
 
 def test_suite():

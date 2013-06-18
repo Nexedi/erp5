@@ -24,7 +24,6 @@ standardize\r\n
 omit_simulation\r\n
 omit_input\r\n
 omit_output\r\n
-section_filtered\r\n
 input_simulation_state:list\r\n
 output_simulation_state:list\r\n
 group_by_expression\r\n
@@ -78,12 +77,6 @@ SELECT\n
   SUM(stock.quantity) AS total_quantity,\n
   SUM(stock.total_price) AS total_price,\n
 </dtml-if>\n
-  COUNT(DISTINCT node.title) AS node_title,\n
-  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
-  COUNT(DISTINCT section.title) AS section_title,\n
-  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
-  COUNT(DISTINCT resource.title) AS resource_title,\n
-  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
   COUNT(DISTINCT stock.variation_text) AS variation_text,\n
   MAX(stock.resource_uid) AS resource_uid,\n
   COUNT(DISTINCT stock.uid) AS stock_uid,\n
@@ -91,8 +84,6 @@ SELECT\n
 \n
 FROM\n
   stock\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>\n
-      JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
@@ -102,7 +93,6 @@ FROM\n
     <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
   <dtml-if selection_report>,\n
     <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -110,11 +100,8 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
-  AND node.uid = stock.node_uid\n
-  AND resource.uid = stock.resource_uid\n
-\n
 <dtml-if omit_simulation>\n
-  AND catalog.portal_type != \'Simulation Movement\'\n
+  AND stock.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 \n
 <dtml-if omit_input>\n

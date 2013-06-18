@@ -432,7 +432,6 @@ omit_input\r\n
 omit_output\r\n
 omit_asset_increase\r\n
 omit_asset_decrease\r\n
-section_filtered\r\n
 initial_running_total_quantity\r\n
 initial_running_total_price\r\n
 input_simulation_state:list\r\n
@@ -510,24 +509,17 @@ SELECT\n
   stock.project_uid AS project_uid,\n
   stock.funding_uid AS funding_uid,\n
   stock.payment_request_uid AS payment_request_uid,\n
-  node.uid AS node_uid,\n
-  node.title AS node_title,\n
-  node.relative_url AS node_relative_url,\n
-  section.uid AS section_uid,\n
-  section.title AS section_title,\n
-  section.relative_url AS section_relative_url\n
+  stock.node_uid AS node_uid,\n
+  stock.section_uid AS section_uid\n
 FROM\n
   stock\n
-  <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
-        JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
-  <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>\n
-  , catalog as node, catalog as resource\n
+  <dtml-if selection_domain><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias=\'domain_category\')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>\n
+  <dtml-if selection_report><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report, category_table_alias=\'report_category\')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>\n
 \n
 WHERE\n
   1 = 1\n
@@ -535,11 +527,8 @@ WHERE\n
   AND <dtml-var where_expression>\n
 </dtml-if>\n
 \n
-  AND node.uid = stock.node_uid\n
-  AND resource.uid = stock.resource_uid\n
-\n
 <dtml-if omit_simulation>\n
-  AND catalog.portal_type != \'Simulation Movement\'\n
+  AND stock.portal_type != \'Simulation Movement\'\n
 </dtml-if>\n
 <dtml-if only_accountable>\n
   AND stock.is_accountable\n
@@ -607,15 +596,15 @@ WHERE\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=\'stock\', join_column=\'node_uid\')">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias=\'domain_category\', join_table=\'stock\', join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">\n
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, category_table_alias=\'report_category\', strict_membership=1)">\n
 </dtml-if>\n
 \n
 <dtml-if group_by_expression>\n
 GROUP BY\n
-    <dtml-var group_by_expression>\n
+  <dtml-var group_by_expression>\n
 </dtml-if>\n
 \n
 <dtml-if order_by_expression>\n

@@ -85,7 +85,7 @@ def MessageCatalog_getNotTranslatedMessageDict(self):
   not_translated_message_dict = {}
   messages = MessageCatalog_getMessageDict(self)
   for k,v in messages.iteritems():
-    if not len(v):
+    if not len(v) or not len(filter(lambda x:x, v.values())):
       not_translated_message_dict[k] = v
   return not_translated_message_dict
 
@@ -135,3 +135,12 @@ def checkConversionToolAvailability(self):
     result.edit(detail=message)
   result.edit(severity=severity)
   active_process.activateResult(result)
+
+def runPyflakes(script_code, script_path):
+  from pyflakes.api import check
+  from pyflakes import reporter
+  from StringIO import StringIO
+  stream = StringIO()
+  check(script_code, script_path, reporter.Reporter(stream, stream))
+  return stream.getvalue()
+

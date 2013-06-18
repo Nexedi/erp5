@@ -62,7 +62,7 @@ if pieces[-1] == \'list\':\n
   pieces.pop()\n
 \n
 # can it be translated title, or something else?\n
-if pieces[-1] == \'title\':\n
+if pieces[-1] in (\'title\', \'reference\'):\n
   idx = -1\n
 else:\n
   idx = -2\n

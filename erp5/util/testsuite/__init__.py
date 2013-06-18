@@ -112,6 +112,16 @@ class TestSuite(object):
     \)
     """, re.DOTALL | re.VERBOSE)
 
+  SUB_STATUS_RE = re.compile(
+      r"""SUB\s+RESULT:\s+(?P<all_tests>\d+)\s+Tests,\s+
+      (?P<failures>\d+)\s+Failures\s*
+      \(?
+        (skipped=(?P<skips>\d+),?\s*)?
+        (expected\s+failures=(?P<expected_failures>\d+),?\s*)?
+        (unexpected\s+successes=(?P<unexpected_successes>\d+),?\s*)?
+      \)?
+      """,
+      re.DOTALL | re.VERBOSE)
 
   mysql_db_count = 1
   allow_restart = False
@@ -239,13 +249,22 @@ class EggTestSuite(TestSuite):
       status_dict.update(duration=float(groupdict['seconds']),
                          test_count=int(groupdict['all_tests']))
     search = self.STATUS_RE.search(test_log)
-    if search:
-      groupdict = search.groupdict()
-      status_dict.update(error_count=int(groupdict['errors'] or 0),
+    def updateStatusDictWithGroup(groupdict):
+      status_dict.update(error_count=int(groupdict.get('errors') or 0),
                          failure_count=int(groupdict['failures'] or 0)
                                  +int(groupdict['unexpected_successes'] or 0),
                          skip_count=int(groupdict['skips'] or 0)
                                    +int(groupdict['expected_failures'] or 0))
+    if search:
+      groupdict = search.groupdict()
+      updateStatusDictWithGroup(groupdict)
+    # In case the test is used to launch another one (like functional test),
+    # look for results inside stderr
+    sub_search = self.SUB_STATUS_RE.search(status_dict['stdout'])
+    if sub_search:
+      groupdict = sub_search.groupdict()
+      updateStatusDictWithGroup(groupdict)
+      status_dict.update(test_count=int(groupdict['all_tests']))
     return status_dict
 
   def getTestList(self):

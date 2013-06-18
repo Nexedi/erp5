@@ -67,7 +67,6 @@ portal_entity_type_list = portal.getPortalEntityTypeList()\n
 logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 start_date = DateTime()\n
 \n
-person = None\n
 organisation = None\n
 if logged_in_user_value is not None:\n
   person = logged_in_user_value.getRelativeUrl()\n
@@ -75,7 +74,6 @@ if logged_in_user_value is not None:\n
 \n
 person_relative_url = None\n
 organisation_relative_url = None\n
-follow_up = None\n
 if context.getPortalType() in portal_entity_type_list:\n
   if context.getPortalType() == \'Person\':\n
     person_relative_url = context.getRelativeUrl()\n
@@ -86,15 +84,18 @@ if context.getPortalType() in portal_entity_type_list:\n
 else:\n
   follow_up = context.getRelativeUrl()\n
 \n
+# XXX if source or destination is explicitcy choosen, what should be\n
+# source_section or destination_section ???\n
+\n
 if direction == \'outgoing\':\n
-  source_url = person\n
+  source_url = source or person\n
   source_section_url = organisation\n
-  destination_url = person_relative_url or organisation_relative_url\n
+  destination_url = destination or person_relative_url or organisation_relative_url\n
   destination_section_url = organisation_relative_url\n
 elif direction == \'incoming\':\n
-  source_url = person_relative_url or organisation_relative_url\n
+  source_url = source or person_relative_url or organisation_relative_url\n
   source_section_url = organisation_relative_url\n
-  destination_url = person\n
+  destination_url = destination or person\n
   destination_section_url = organisation\n
 else:\n
   raise NotImplementedError, \'The specified direction is not handled: %r\' % (direction,)\n
@@ -115,6 +116,11 @@ event_kw = {\n
 # Create event\n
 module = portal.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
+\n
+if notification_message:\n
+  event.Event_setTextContentFromNotificationMessage(\n
+     reference=notification_message)\n
+\n
 if not keep_draft:\n
   if direction == \'incoming\':\n
     # Support event_workflow and event_simulation_workflow\n
@@ -135,7 +141,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, keep_draft=False, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, source=None, destination=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

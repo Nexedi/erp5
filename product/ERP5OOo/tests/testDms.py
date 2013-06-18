@@ -48,6 +48,7 @@
 import unittest
 import time
 import StringIO
+from subprocess import Popen, PIPE
 from cgi import FieldStorage
 
 import ZPublisher.HTTPRequest
@@ -265,7 +266,6 @@ class TestDocument(TestDocumentMixin):
       image = Image.open(filename)
       image_size = image.size
     except ImportError:
-      from subprocess import Popen, PIPE
       identify_output = Popen(['identify', filename],
                               stdout=PIPE).communicate()[0]
       image_size = tuple(map(lambda x:int(x),
@@ -892,6 +892,19 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
+
+    document = portal.document_module.newContent(
+                   portal_type = 'Presentation',)
+    # searchable text is empty by default
+    self.assertEquals('', document.SearchableText())
+    # it contains title
+    document.setTitle('foo')
+    self.assertEquals('foo', document.SearchableText())
+    # and description
+    document.setDescription('bar')
+    self.assertTrue('bar' in document.SearchableText(),
+      document.SearchableText())
+
   def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
@@ -1310,6 +1323,12 @@ class TestDocument(TestDocumentMixin):
     content_information = document.getContentInformation()
     self.assertEquals('1', content_information['Pages'])    
 
+  def test_empty_PDF_content_information(self):
+    document = self.portal.document_module.newContent(portal_type='PDF')
+    content_information = document.getContentInformation()
+    # empty PDF have no content information
+    self.assertEquals(dict(), content_information)
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
@@ -1342,6 +1361,15 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
+    self.assertEquals('ERP5 is a free software\n\n', document.asText())
+
+  def test_MonochromeImageResize(self):
+    upload_file = makeFileUpload('monochrome_sample.tiff')
+    document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.assertEquals('Image', document.getPortalType())
+    resized_image = document.convert(format='png', display='small')[1]
+    identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
+    self.assertFalse('1-bit' in identify_output)
     self.assertEquals('ERP5 is a free software\n\n', document.asText())
 
   def test_Base_showFoundText(self):
@@ -1850,7 +1878,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertEquals(result_list, [])
 
   def test_conversionCache_reseting(self):
-    """Chack that modifying a document with edit method,
+    """Check that modifying a document with edit method,
     compute a new cache key and refresh cached conversions.
     """
     web_page_portal_type = 'Web Page'

@@ -110,8 +110,7 @@ class CaptchasDotNet:
           var image = document.getElementById ('%(id)s');
           image.onerror = function() {return captchas_image_error (image);};
           image.onload = function() {return captchas_image_loaded (image);};
-          image.timeout 
-            = window.setTimeout(
+          image.timeout = window.setTimeout(
                "captchas_image_error (document.getElementById ('%(id)s'))",
                10000);
           image.src = image.src;

@@ -66,6 +66,12 @@ response = module.newContent(portal_type=response_event_portal_type,\n
                              follow_up_list=context.getFollowUpList(),\n
                              content_type=context.getContentType())\n
 \n
+if response_event_notification_message:\n
+  response.Event_setTextContentFromNotificationMessage(\n
+     reference=response_event_notification_message,\n
+      substitution_method_parameter_dict=dict(reply_body=context.getReplyBody(),\n
+                                              reply_subject=context.getReplySubject()))\n
+\n
 message = portal.Base_translateString(\'Response Created.\')\n
 if response_workflow_action == \'send\':\n
   # use doActionFor to initialise workflow variable\n
@@ -82,7 +88,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, **kw</string> </value>
+            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, response_event_notification_message=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

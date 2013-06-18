@@ -284,9 +284,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if anonymous_uid is not None:
         self.REQUEST.response.setCookie('anonymous_uid', anonymous_uid,
                                         path='/')
-      if selection_object != None:
-        # Set the name so that this selection itself can get its own name.
-        selection_object.edit(name=selection_name)
+      assert selection_object is None or selection_name == selection_object.name
 
       if self.getSelectionFor(selection_name) != selection_object:
         self._setSelectionToContainer(selection_name, selection_object)
@@ -317,7 +315,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection_object is not None:
         selection_object.edit(params=params)
       else:
-        selection_object = Selection(params=params)
+        selection_object = Selection(selection_name, params=params)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionDomainDictFor')
@@ -353,7 +351,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection_object:
         selection_object.edit(checked_uids=checked_uids)
       else:
-        selection_object = Selection(checked_uids=checked_uids)
+        selection_object = Selection(selection_name, checked_uids=checked_uids)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'updateSelectionCheckedUidList')
@@ -1062,7 +1060,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       # Get the selection
       selection = self.getSelectionFor(selection_name, REQUEST)
       if selection is None:
-        selection = Selection()
+        selection = Selection(selection_name)
         self.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
       if listbox_display_mode == 'FlatListMode':
@@ -1443,7 +1441,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def pushSelection(self, selection_name):
       selection = self.getSelectionFor(selection_name)
       # a temporary selection is kept in transaction.
-      temp_selection = Selection()
+      temp_selection = Selection(selection_name)
       if selection:
         temp_selection.__dict__.update(selection.__dict__)
       self.getTemporarySelectionDict()\

@@ -1,4 +1,8 @@
 <allowed_content_type_list>
+ <portal_type id="Campaign">
+  <item>Event Path</item>
+  <item>Outcome Path</item>
+ </portal_type>
  <portal_type id="Campaign Module">
   <item>Campaign</item>
  </portal_type>

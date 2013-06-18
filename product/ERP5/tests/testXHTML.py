@@ -32,25 +32,27 @@ import os
 import popen2
 import urllib
 
+from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5 import __file__ as ERP5PackagePath
 from Products.CMFCore.utils import getToolByName
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from xml.dom import minidom
 
-from glob import glob
 
-#
-# Test Setting
-#
 INSTANCE_HOME = os.environ['INSTANCE_HOME']
 bt5_base_path = os.environ.get('erp5_tests_bt5_path',
                                os.path.join(INSTANCE_HOME, 'bt5'))
 bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
                                    'bootstrap')
+# if Products.ERP5 is a git checkout, then this folder will contain bt5s
+repository_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
+                                   '..', '..', 'bt5')
+bt5_search_path_list = '%s,%s,%s' % (
+  bt5_base_path,
+  bootstrap_base_path,
+  repository_base_path)
 
 # some forms have intentionally empty listbox selections like RSS generators
 FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
@@ -95,7 +97,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_jquery',
       'erp5_web',
       'erp5_dms',
-
+      'erp5_email_reader',
       'erp5_commerce',
       'erp5_credential',
 
@@ -129,6 +131,30 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
                                        # reviewed. Many bt like erp5_project are
                                        # using obsolete field library of trade
+      'erp5_xhtml_style',
+      'erp5_jquery_plugin_svg_editor',
+      'erp5_jquery_plugin_spinbtn',
+      'erp5_jquery_plugin_jquerybbq',
+      'erp5_jquery_plugin_svgicon',
+      'erp5_jquery_plugin_jgraduate',
+      'erp5_jquery_plugin_hotkey',
+      'erp5_jquery_plugin_elastic',
+      'erp5_jquery_plugin_colorpicker',
+      'erp5_jquery_plugin_jqchart',
+      'erp5_jquery_plugin_sheet',
+      'erp5_jquery_plugin_mbmenu',
+      'erp5_jquery_plugin_wdcalendar',
+      'erp5_xinha_editor',
+      'erp5_svg_editor',
+      'erp5_jquery_sheet_editor',
+      'erp5_web_ung_core',
+      'erp5_web_ung_theme',
+      'erp5_web_ung_role',
+      'erp5_ui_test',
+      'erp5_web_ung_ui_test',
+      'erp5_l10n_fr', # install at least one localization business template
+                      # because some language switching widgets are only
+                      # present if there is more than one available language.
     )
 
   def afterSetUp(self):
@@ -144,7 +170,8 @@ class TestXHTML(ERP5TypeTestCase):
     portal_preferences = getToolByName(self.portal, 'portal_preferences')
     portal_workflow = getToolByName(self.portal, 'portal_workflow')
     default_site_preference = portal_preferences.default_site_preference
-    portal_workflow.doActionFor(default_site_preference, 'enable_action')
+    if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
+      default_site_preference.enable()
 
   def changeSkin(self, skin_name):
     """
@@ -256,16 +283,46 @@ class TestXHTML(ERP5TypeTestCase):
                      "Repeated listbox selection names:\n" +
                      portal_skins.SkinsTool_checkDuplicateSelectionName())
     
+  def test_javascript_lint(self):
+    skins_tool = self.portal.portal_skins
+    path_list = []
+    for script_path, script in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['File','DTML Method','DTML Document'], search_sub=1):
+      is_required_check_path = True
+      ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor']
+      ignore_files = ['require.js','require.min.js','wz_dragdrop.js']
+      if script_path.endswith('.js'):
+        for ignore_bt_name in ignore_bts:
+          if  script_path.startswith(ignore_bt_name):
+            is_required_check_path = False
+        for ignore_file in ignore_files:
+          if  script_path.endswith(ignore_file):
+            is_required_check_path = False
+        if is_required_check_path:
+          path_list.append(script_path)
+    def jsl(check_path):
+      body = self.publish(check_path).getBody()
+      try:
+        stdout, stderr = Popen(['jsl', '-stdin', '-nologo', '-nosummary'],
+                               stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True).communicate(body)
+      except OSError, e:
+        raise OSError, '%r\n%r' % (os.environ, e)
+      self.assertEquals(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
+    portal_skins_path = '%s/portal_skins' % self.portal.getId()
+    for path in path_list:
+      check_path = '%s/%s' % (portal_skins_path, path)
+      jsl(check_path)
+
   def test_PythonScriptSyntax(self):
     """ 
     Check that Python Scripts syntax is correct.
     """
-    skins_tool = self.portal.portal_skins
-    for script_path, script in skins_tool.ZopeFind(
-              skins_tool, obj_metatypes=['Script (Python)'], search_sub=1):
-      if script.errors!=():
-        # we need to add script id as well in test failure
-        self.assertEquals('%s : %s' %(script_path, script.errors), ())
+    for tool in (self.portal.portal_skins, self.portal.portal_workflow):
+      for script_path, script in tool.ZopeFind(
+                tool, obj_metatypes=['Script (Python)'], search_sub=1):
+        if script.errors!=():
+          # we need to add script id as well in test failure
+          self.assertEquals('%s : %s' %(script_path, script.errors), ())
 
   def test_SkinItemId(self):
     """ 
@@ -332,7 +389,7 @@ class TestXHTML(ERP5TypeTestCase):
     error_list = []
     for document in self.portal.contentValues():
       if document.portal_type.endswith(' Module'):
-        if document.title not in document.list(reset=1):
+        if document.getTranslatedTitle() not in document.list(reset=1):
           error_list.append(document.id)
     self.assertEqual([], error_list)
 
@@ -365,11 +422,22 @@ class W3Validator(object):
     line_number, col_number, error description
     """
     result_list_list = []
-    xml_doc = minidom.parseString(result)
+    try:
+      xml_doc = minidom.parseString(result)
+    except:
+      import sys
+      print >> sys.stderr, "Could not parse result:\n%s" % result
+      raise
     for severity in 'm:error', 'm:warning':
       result_list = []
       for error in xml_doc.getElementsByTagName(severity):
         result = []
+
+        # Ignore warning about using direct input mode (W28)
+        messageid_list = error.getElementsByTagName('m:messageid')
+        if messageid_list and messageid_list[0].firstChild.nodeValue == 'W28':
+          continue
+
         for name in 'm:line', 'm:col', 'm:message':
           element_list = error.getElementsByTagName(name)
           if element_list:
@@ -422,14 +490,12 @@ class TidyValidator(object):
           location_list = data[0].split(' ')
           line = location_list[1]
           column = location_list[3]
-          error = True
           message = data[1].split(': ')[1]
           error_list.append((line, column, message))
         elif data[1].startswith('Warning: '):
           location_list = data[0].split(' ')
           line = location_list[1]
           column = location_list[3]
-          warning = True
           message = data[1].split(': ')[1]
           warning_list.append((line, column, message))
     return (error_list, warning_list)
@@ -497,9 +563,9 @@ def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
                                   bt_name=bt_name))
   return testMethod
 
-def testPortalTypeViewRecursivly(validator, module_id, business_template_info, 
-    business_template_info_list, portal_type_list, portal_type_path_dict, 
-    base_path, tested_portal_type_list):
+def testPortalTypeViewRecursivly(test_class, validator, module_id,
+    business_template_info, business_template_info_list, portal_type_list,
+    portal_type_path_dict, base_path, tested_portal_type_list):
   '''
   This function go on all portal_type recursivly if the portal_type could 
   contain other portal_types and make a test for all view that have action
@@ -542,7 +608,7 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                           str(portal_type).replace(' ','_'), # can be unicode
                           view_name))
           method.__name__ = method_name
-          setattr(TestXHTML, method_name, method)
+          setattr(test_class, method_name, method)
           module_id = backuped_module_id
           business_template_info = backuped_business_template_info
 
@@ -567,7 +633,8 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
           new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
         else:
           new_portal_type_path_dict[pt] = pt 
-      testPortalTypeViewRecursivly(validator=validator,
+      testPortalTypeViewRecursivly(test_class=test_class,
+                       validator=validator,
                        module_id=module_id, 
                        business_template_info=backuped_business_template_info, 
                        business_template_info_list=business_template_info_list,
@@ -576,37 +643,26 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                        base_path=next_base_path,
                        tested_portal_type_list=tested_portal_type_list)
 
-
-def addTestMethodDynamically(validator, target_business_templates):
+def addTestMethodDynamically(test_class, validator, target_business_templates):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
 
   for i in target_business_templates:
-    business_template = os.path.join(bt5_base_path, i)
-
-    # Look for business templates, they can be:
-    #  .bt5 files in $INSTANCE_HOME/bt5/
-    #  directories in $INSTANCE_HOME/
-    #  directories in $INSTANCE_HOME/bt5/*/
-    #  directories in $INSTANCE_HOME/Products/ERP5/bootstrap/
-    if not ( os.path.exists(business_template) or
-        os.path.exists('%s.bt5' % business_template)):
-      # try in $INSTANCE_HOME/bt5/*/
-      business_template_glob_list = glob('%s/*/%s' % (bt5_base_path, i))
-      if business_template_glob_list:
-        business_template = business_template_glob_list[0]
-      else:
-        # try in $INSTANCE_HOME/Products/ERP5/bootstrap
-        business_template = os.path.join(bootstrap_base_path,i) 
-
-    if os.path.isdir(business_template):
-      business_template_info = BusinessTemplateInfoDir(business_template)
-    elif os.path.isfile(business_template+'.bt5'):
-      business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
+    for bt5_search_path in bt5_search_path_list.split(','):
+      business_template = os.path.join(bt5_search_path, i)
+      business_template_info = None
+      if (os.path.exists(business_template) or
+          os.path.exists('%s.bt5' % business_template)):
+        if os.path.isdir(business_template):
+          business_template_info = BusinessTemplateInfoDir(business_template)
+        elif os.path.isfile(business_template+'.bt5'):
+          business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
+      if business_template_info is not None:
+        business_template_info_list.append(business_template_info)
+        break
     else:
-      raise KeyError, "Can't find the business template: %s" % i
-    business_template_info_list.append(business_template_info)
+      raise KeyError, "Can't find business template %s" % i
 
   tested_portal_type_list = []
   for business_template_info in business_template_info_list:
@@ -615,7 +671,8 @@ def addTestMethodDynamically(validator, target_business_templates):
             business_template_info.allowed_content_types.get(module_portal_type, [])
       portal_type_path_dict = {}
       portal_type_path_dict = dict(map(None,portal_type_list,portal_type_list))
-      testPortalTypeViewRecursivly(validator=validator,
+      testPortalTypeViewRecursivly(test_class=test_class,
+                       validator=validator,
                        module_id=module_id, 
                        business_template_info=business_template_info, 
                        business_template_info_list=business_template_info_list,
@@ -660,7 +717,7 @@ def test_suite():
   if validator is not None:
     # add erp5_core to the list here to not return it
     # on getBusinessTemplateList call
-    addTestMethodDynamically(validator,
+    addTestMethodDynamically(TestXHTML, validator,
       ('erp5_core',) + TestXHTML.getBusinessTemplateList())
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))

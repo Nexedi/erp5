@@ -196,7 +196,8 @@ for delivery in delivery_list:\n
         payment_mode=movement.getPaymentModeTranslatedTitle(),\n
         mirror_section_title=movement.getDestinationSectionTitle(),\n
         mirror_payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
-        mirror_section_region_title=movement.getDestinationRegionTranslatedTitle(),\n
+        mirror_section_region_title=movement.getDestinationSection() and\n
+          movement.getDestinationSectionValue().getRegionTranslatedTitle(),\n
         function_title=getTitle(movement.getSourceFunctionValue()),\n
         function_reference=movement.getSourceFunctionReference(),\n
         project_title=getTitle(movement.getSourceProjectValue()),\n
@@ -245,7 +246,8 @@ for delivery in delivery_list:\n
         payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
         payment_mode=movement.getPaymentModeTranslatedTitle(),\n
         mirror_section_title=movement.getSourceSectionTitle(),\n
-        mirror_section_region_title=movement.getSourceRegionTranslatedTitle(),\n
+        mirror_section_region_title=movement.getSourceSection() and\n
+          movement.getSourceSectionValue().getRegionTranslatedTitle(),\n
         mirror_payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
         function_title=getTitle(movement.getDestinationFunctionValue()),\n
         function_reference=movement.getDestinationFunctionReference(),\n

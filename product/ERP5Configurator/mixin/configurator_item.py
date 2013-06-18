@@ -101,6 +101,7 @@ class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
 
     folder = self.portal_skins.manage_addProduct['OFSP'].manage_addFolder(folder_id)
     # Register on all skin selections.
+    raise NotImplementedError
 
   def _createZODBPythonScript(self, container, script_id, script_params,
                             script_content):

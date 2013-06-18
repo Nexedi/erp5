@@ -50,14 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>selection_name = context.REQUEST.get(\'list_selection_name\', None)\n
-listbox_uid =context.REQUEST.get(\'listbox_uid\', None)\n
-uids = context.REQUEST.get(\'uids\', None)\n
+            <value> <string>portal = context.getPortalObject()\n
+get = portal.REQUEST.get\n
+selection_name = get(\'list_selection_name\')\n
 \n
-if selection_name is not None:\n
-  context.portal_selections.updateSelectionCheckedUidList(listbox_uid = listbox_uid,\n
-                                                     uids=uids,\n
-                                                     selection_name=selection_name)\n
+if isinstance(selection_name, basestring):\n
+  portal.portal_selections.updateSelectionCheckedUidList(\n
+    selection_name, get(\'listbox_uid\'), get(\'uids\'))\n
 </string> </value>
         </item>
         <item>

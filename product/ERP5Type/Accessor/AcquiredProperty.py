@@ -28,7 +28,7 @@
 
 from Acquisition import aq_base
 from ZPublisher.HTTPRequest import FileUpload
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
+from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter, Tester as BaseTester
 from Products.ERP5Type.PsycoWrapper import psyco
 from zLOG import LOG
 
@@ -199,4 +199,87 @@ class Setter(BaseSetter):
       return (o, )
 
 DefaultSetter = Setter
+
+class Tester(BaseTester):
+    """
+      Tests if an attribute value exists
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self,  id, key, property_type, portal_type, acquired_property,
+                        acquisition_base_category,
+                        acquisition_portal_type,
+                        acquisition_accessor_id,
+                        acquisition_copy_value,
+                        acquisition_mask_value,
+                        storage_id=None,
+                        alt_accessor_id = None,
+                        acquisition_object_id=None,
+                        is_list_type = 0,
+                        is_tales_type = 0
+                  ):
+      if type(portal_type) == type('a'): portal_type = (portal_type, )
+      self._id = id
+      self.__name__ = id
+      self._key = key
+      self._property_type = property_type
+      self._portal_type = portal_type
+      self._null = type_definition[property_type]['null']
+
+      # These values are hashed by _get*AcquiredProperty: to be
+      # hashable, they need to be converted to tuples
+      if isinstance(acquisition_base_category, list):
+        acquisition_base_category = tuple(acquisition_base_category)
+      if isinstance(acquisition_portal_type, list):
+        acquisition_portal_type = tuple(acquisition_portal_type)
+      if isinstance(acquisition_object_id, list):
+        acquisition_object_id = tuple(acquisition_object_id)
+      if isinstance(alt_accessor_id, list):
+        alt_accessor_id = tuple(alt_accessor_id)
+
+      self._acquisition_base_category = acquisition_base_category
+      self._acquisition_portal_type = acquisition_portal_type
+      self._acquisition_accessor_id = acquisition_accessor_id
+      self._acquisition_copy_value = acquisition_copy_value
+      self._acquisition_mask_value = acquisition_mask_value
+      self._acquired_property = acquired_property
+      if storage_id is None:
+        storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
+      self._storage_id = storage_id
+      self._alt_accessor_id = alt_accessor_id
+      self._acquisition_object_id = acquisition_object_id
+      self._is_list_type = is_list_type
+      self._is_tales_type = is_tales_type
+
+    def __call__(self, instance, *args, **kw):
+      if self._storage_id:
+        # If this property is supposed to be stored as a content subobject,
+        # then we consider that if the subobject does not exist then the
+        # property is not set, even if it is acquired from another document.
+        o = instance._getOb(self._storage_id, None)
+        if o is None:
+          return False
+      value = instance._getDefaultAcquiredProperty(self._key, None, self._null,
+            base_category=self._acquisition_base_category,
+            portal_type=self._acquisition_portal_type,
+            accessor_id=self._acquisition_accessor_id,
+            copy_value=self._acquisition_copy_value,
+            mask_value=self._acquisition_mask_value,
+            storage_id=self._storage_id,
+            alt_accessor_id=self._alt_accessor_id,
+            acquisition_object_id=self._acquisition_object_id,
+            is_list_type=self._is_list_type,
+            is_tales_type=self._is_tales_type,
+            checked_permission=kw.get('checked_permission', None)
+            )
+      if value is not None:
+        return value.hasProperty(self._acquired_property)
+      return False
 

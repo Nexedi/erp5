@@ -98,6 +98,12 @@ accounts.\n
 </tr>\n
 <!-- }}} -->\n
 \n
+<!-- Force clearing cache -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_caches/manage_clearAllCache</td>\n
+  <td></td>\n
+</tr>\n
 <!-- Add a new accounting transaction and check this invalidated account cannot\n
 be selected {{{ -->\n
 <tr>\n

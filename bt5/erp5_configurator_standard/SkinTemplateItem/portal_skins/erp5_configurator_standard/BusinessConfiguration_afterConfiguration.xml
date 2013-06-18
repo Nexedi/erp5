@@ -62,7 +62,7 @@ isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
 \n
 if business_template is not None:\n
   # update role settings for modules which exists already\n
-  for portal_type in business_template.getTemplatePortalTypeRolesList():\n
+  for portal_type in business_template.getTemplatePortalTypeRoleList():\n
     module_list = portal.contentValues(\n
                     filter=dict(portal_type=portal_type))\n
     for module in module_list:\n

@@ -72,7 +72,7 @@ WHERE\n
 <dtml-call expr="category_list.append((uid[loop_item], uid_item[0], uid_item[1], uid_item[2]))">\n
 </dtml-in></dtml-if></dtml-let></dtml-if></dtml-in>\n
 <dtml-if expr="category_list">\n
-INSERT INTO category VALUES\n
+REPLACE INTO category VALUES\n
 <dtml-in prefix="loop" expr="category_list">\n
 (<dtml-sqlvar expr="loop_item[0]" type="int">, <dtml-sqlvar expr="loop_item[1]" type="int">, <dtml-sqlvar expr="loop_item[2]" type="int">, <dtml-sqlvar expr="loop_item[3]" type="int">)<dtml-if sequence-end><dtml-else>,</dtml-if>\n
 </dtml-in>\n

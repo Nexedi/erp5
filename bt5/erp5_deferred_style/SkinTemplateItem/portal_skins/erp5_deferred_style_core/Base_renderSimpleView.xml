@@ -59,30 +59,26 @@ request.form.update(request_form)\n
 if skin_name and skin_name != \'None\': # make_query serializes None as \'None\'\n
   portal.portal_skins.changeSkin(skin_name)\n
 \n
-report_data = getattr(context, deferred_style_dialog_method)(**params)\n
+with portal.Localizer.translationContext(localizer_language):\n
+  report_data = getattr(context, deferred_style_dialog_method)(**params)\n
 \n
-attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
-                        \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\' filename=\')][0]\n
-if attachment_name.startswith(\'"\'):\n
-  attachment_name = attachment_name[1:]\n
-if attachment_name.endswith(\'"\'):\n
-  attachment_name = attachment_name[:-1]\n
-attachment_list = (\n
-  {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
-   \'content\': \'%s\' % report_data,\n
-   \'name\': attachment_name},)\n
+  attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
+                          \'content-disposition\') or \'\').split(\';\')\n
+                        if x.startswith(\' filename=\')][0]\n
+  if attachment_name.startswith(\'"\'):\n
+    attachment_name = attachment_name[1:]\n
+  if attachment_name.endswith(\'"\'):\n
+    attachment_name = attachment_name[:-1]\n
+  attachment_list = (\n
+    {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
+     \'content\': \'%s\' % report_data,\n
+     \'name\': attachment_name},)\n
 \n
-# XXX Use notification message to improve message content\n
-portal.portal_notifications.sendMessage(\n
-  recipient=user_name,\n
-  subject=str(attachment_name.rsplit(\'.\', 1)[0]),\n
-  message=str(translateString(\'Your report is attached.\\n\')),\n
-  message_text_format=\'text/plain\',\n
-  notifier_list=(\'Mail Message\',),\n
-  store_as_event=False,\n
-  attachment_list=attachment_list,\n
-  )\n
+  portal.ERP5Site_notifyReportComplete(\n
+    user_name=user_name,\n
+    subject=str(translateString(attachment_name.rsplit(\'.\', 1)[0])),\n
+    message=\'\',\n
+    attachment_list=attachment_list)\n
 </string> </value>
         </item>
         <item>

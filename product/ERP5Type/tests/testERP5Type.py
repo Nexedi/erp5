@@ -398,10 +398,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                             portal_type = "Person"), [person_object] )
         self.assertEquals( category_object.getRegionRelatedTitleList(
                             portal_type = "Person"), [person_title] )
+        self.assertEquals( category_object.getRegionRelatedTitleSet(
+                            portal_type = "Person"), [person_title] )
         self.assertEquals( category_object.getRegionRelatedList(
                             portal_type = "Person"), [person_relative_url] )
         self.assertEquals( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [person_id] )
+        self.assertEquals( category_object.getRegionRelatedIdSet(
+                            portal_type = "Person"), [person_id] )
+
       def checkRelationUnset(self):
         self.commit()
         person_object.reindexObject()
@@ -695,8 +700,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(person.getRegionList(), ['alpha', 'beta'])
       person.setRegionList(['beta', 'alpha', 'alpha'])
       self.assertEquals(person.getRegionList(), ['beta', 'alpha', 'alpha'])
+      # at this point the person have a default region set to the first item in
+      # the list.
+      self.assertEquals(person.getDefaultRegion(), 'beta')
       person.setRegionSet(['alpha', 'beta', 'alpha'])
       self.assertEquals(person.getRegionList(), ['beta', 'alpha'])
+      # calling a set setter did not change the default region
+      self.assertEquals(person.getDefaultRegion(), 'beta')
+
       person.setDefaultRegion('alpha')
       self.assertEquals(person.getDefaultRegion(), 'alpha')
       self.assertEquals(sorted(person.getRegionSet()), ['alpha', 'beta'])
@@ -2433,6 +2444,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       self.assertEquals('Alpha', doc.getRegionTranslatedTitle())
       # the value of the category title is translated with erp5_content
+      self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
+
+      self.portal.Localizer.erp5_content._translated = []
+      self.assertEquals(['Alpha'], doc.getRegionTranslatedTitleList())
       self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
 
       self.portal.Localizer.erp5_content._translated = []

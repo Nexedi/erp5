@@ -54,7 +54,7 @@
 # accounting lines when a Payment Transaction is cloned.\n
 for line in context.getMovementList(\n
         portal_type=context.getPortalAccountingMovementTypeList()):\n
-  line.setAggregate()\n
+  line.setAggregate(None)\n
 </string> </value>
         </item>
         <item>

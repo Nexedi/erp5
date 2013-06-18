@@ -11,7 +11,7 @@
 #
 ##############################################################################
 
-from inspect import getargspec
+from inspect import getargs
 from Products.ExternalMethod.ExternalMethod import *
 
 if 1:
@@ -106,10 +106,10 @@ if 1:
         except TypeError, v:
             tb=sys.exc_info()[2]
             try:
-                func_args, func_varargs, _, func_defaults = getargspec(f)
+                func_args, func_varargs, _ = getargs(f.func_code)
                 by_kw = set(kw)
-                if func_defaults:
-                    by_kw.update(func_args[-len(func_defaults):])
+                if f.func_defaults:
+                    by_kw.update(func_args[-len(f.func_defaults):])
                 if func_args[0] == 'self' and 'self' not in kw and (
                         func_varargs or len(set(func_args[len(args):]
                             ).difference(by_kw)) == 1):

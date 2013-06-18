@@ -715,7 +715,7 @@ class ProxyField(ZMIField):
 
     field = self
     proxy_field = self.getTemplateField()
-    REQUEST = get_request()
+    REQUEST = kw.get('REQUEST', get_request())
     if proxy_field is not None and REQUEST is not None:
       field = REQUEST.get(
         'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),

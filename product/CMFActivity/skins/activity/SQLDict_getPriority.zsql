@@ -9,9 +9,10 @@ class_file:
 </dtml-comment>
 <params>
 </params>
-SELECT MIN(`priority`) AS `priority` FROM
+SELECT `priority` FROM
   message
 WHERE
   processing_node = 0
   AND date <= UTC_TIMESTAMP()
-
+ORDER BY priority
+LIMIT 1

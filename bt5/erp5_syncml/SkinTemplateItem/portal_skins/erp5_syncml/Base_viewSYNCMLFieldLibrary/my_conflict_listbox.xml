@@ -84,15 +84,15 @@
                         </tuple>
                         <tuple>
                           <string>property_id</string>
-                          <string>property_id</string>
+                          <string>Property ID</string>
                         </tuple>
                         <tuple>
                           <string>local_value</string>
-                          <string>local_value</string>
+                          <string>Local Value</string>
                         </tuple>
                         <tuple>
                           <string>remote_value</string>
-                          <string>remote_value</string>
+                          <string>Remote Value</string>
                         </tuple>
                       </list>
                     </value>

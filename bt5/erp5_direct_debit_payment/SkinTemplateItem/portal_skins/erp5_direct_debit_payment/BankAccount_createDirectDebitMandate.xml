@@ -65,7 +65,7 @@ return direct_debit_mandate.Base_redirect(\'view\',\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>destination, start_date</string> </value>
+            <value> <string>destination, start_date, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

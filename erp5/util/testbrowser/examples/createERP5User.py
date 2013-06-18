@@ -27,8 +27,6 @@ except ValueError:
 
 # Create a browser instance
 browser = Browser(url, username, password)
-browser.open()
-browser.mainForm.submitLogin()
 
 erp5_role_tuple = ('Assignee',
                    'Assignor',
@@ -45,6 +43,11 @@ post_data_format = "submit=Add&roles:list=Manager&roles:list=Owner&name=" \
 
 # TODO: Because of post() not wrapped properly
 zope_url = url.rsplit('/', 2)[0]
+
+import base64
+browser.mech_browser.addheaders.append(
+    ('Authorization',
+     'Basic %s' % base64.encodestring('%s:%s' % (username, password))))
 
 for index in range(user_nbr):
   new_username = "%s%d" % (new_username_prefix, index)

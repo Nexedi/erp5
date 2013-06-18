@@ -3056,7 +3056,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             if not k:
               continue
           type_role_dict[k] = v
-        type_role_list.append(type_role_dict)
+        if 'id' in type_role_dict:
+          type_role_list.append(type_role_dict)
       type_role_list.sort(key=lambda x: (x.get('title'), x['object_id'],))
 
   # Function to generate XML Code Manually
@@ -4019,13 +4020,15 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if self._is_already_migrated(object_list):
       ObjectTemplateItem.install(self, context, **kw)
-      self.portal_components.reset(force=True, reset_portal_type=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
 
   def afterUninstall(self, already_migrated=False):
     if already_migrated:
-      self.portal_components.reset(force=True, reset_portal_type=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
 
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
@@ -4568,15 +4571,14 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     if local_roles_group_id_dict:
       # local roles group id dict (not included by default to be stable with
       # old bts)
-      xml_data += '\n <local_roles_group_id>'
-      for principal, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
-        xml_data += "\n  <principal id='%s'>" % escape(principal)
-        for local_roles_group_id in local_roles_group_id_list:
-          for item in local_roles_group_id:
-            xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
-                escape(item)
-        xml_data += "\n  </principal>"
-      xml_data += '\n </local_roles_group_id>'
+      xml_data += '\n <local_role_group_ids>'
+      for local_role_group_id, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
+        xml_data += "\n  <local_role_group_id id='%s'>" % escape(local_role_group_id)
+        for principal, role in sorted(local_roles_group_id_list):
+          xml_data += "\n    <principal id='%s'>%s</principal>" % \
+                (escape(principal), escape(role))
+        xml_data += "\n  </local_role_group_id>"
+      xml_data += '\n </local_role_group_ids>'
 
     xml_data += '\n</local_roles_item>'
     if isinstance(xml_data, unicode):
@@ -4605,10 +4607,11 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
     # local roles group id
     local_roles_group_id_dict = {}
-    for principal in xml.findall('//principal'):
-      local_roles_group_id_dict[principal.get('id')] = set([tuple(
-        [group_id.text for group_id in
-            principal.findall('./local_roles_group_id')])])
+    for local_role_group_id in xml.findall('//local_role_group_id'):
+      role_set = set()
+      for principal in local_role_group_id.findall('./principal'):
+        role_set.add((principal.get('id'), principal.text))
+      local_roles_group_id_dict[local_role_group_id.get('id')] = role_set
     self._objects['local_roles/%s' % (file_name[:-4],)] = (
       local_roles_dict, local_roles_group_id_dict)
 
@@ -4655,6 +4658,9 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(path, None)
       if obj is not None:
         setattr(obj, '__ac_local_roles__', {})
+        if getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
+                    None) is not None:
+          delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
 class BusinessTemplate(XMLObject):
@@ -5155,13 +5161,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
             item.install(self, force=force, object_to_update=object_to_update, 
                                trashbin=trashbin, installed_bt=installed_bt)
 
-      # update catalog if necessary
-      if update_catalog is _MARKER and force and self.isCatalogUpdatable():
-        # override update_catalog parameter only if value
-        # is not explicitely passed.
-        update_catalog = 1
-      elif update_catalog is _MARKER:
-        update_catalog = 0
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
@@ -5848,14 +5847,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       wtool = self.getPortalObject().portal_workflow
       ttool = self.getPortalObject().portal_types
-      bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
-      bt_hidden_content_type_list = list(getattr(self, 'template_portal_type_hidden_content_type', []) or [])
-      bt_property_sheet_list = list(getattr(self, 'template_portal_type_property_sheet', []) or [])
-      bt_base_category_list = list(getattr(self, 'template_portal_type_base_category', []) or [])
-      bt_action_list = list(getattr(self, 'template_action_path', []) or [])
+      bt_allowed_content_type_list = list(
+        self.getTemplatePortalTypeAllowedContentTypeList())
+      bt_hidden_content_type_list = list(
+        self.getTemplatePortalTypeHiddenContentTypeList())
+      bt_property_sheet_list = list(
+        self.getTemplatePortalTypePropertySheetList())
+      bt_base_category_list = list(
+        self.getTemplatePortalTypeBaseCategoryList())
+      bt_action_list = list(self.getTemplateActionPathList())
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
-      bt_portal_type_roles_list =  list(getattr(self, 'template_portal_type_roles', []) or [])
-      bt_wf_chain_list = list(getattr(self, 'template_portal_type_workflow_chain', []) or [])
+      bt_portal_type_roles_list = list(self.getTemplatePortalTypeRoleList())
+      bt_wf_chain_list = list(self.getTemplatePortalTypeWorkflowChainList())
 
       for id in bt_portal_types_id_list:
         portal_type = ttool.getTypeInfo(id)
@@ -5919,14 +5922,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_action_list.sort()
       bt_wf_chain_list.sort()
 
-      self.setProperty('template_portal_type_workflow_chain', bt_wf_chain_list)
-      self.setProperty('template_portal_type_roles', bt_portal_type_roles_list)
-      self.setProperty('template_portal_type_allowed_content_type', bt_allowed_content_type_list)
-      self.setProperty('template_portal_type_hidden_content_type', bt_hidden_content_type_list)
-      self.setProperty('template_portal_type_property_sheet', bt_property_sheet_list)
-      self.setProperty('template_portal_type_base_category', bt_base_category_list)
-      self.setProperty('template_action_path', bt_action_list)
-      return
+      self.setTemplatePortalTypeWorkflowChainList(bt_wf_chain_list)
+      self.setTemplatePortalTypeRoleList(bt_portal_type_roles_list)
+      self.setTemplatePortalTypeAllowedContentTypeList(bt_allowed_content_type_list)
+      self.setTemplatePortalTypeHiddenContentTypeList(bt_hidden_content_type_list)
+      self.setTemplatePortalTypePropertySheetList(bt_property_sheet_list)
+      self.setTemplatePortalTypeBaseCategoryList(bt_base_category_list)
+      self.setTemplateActionPathList(bt_action_list)
 
 
     def guessPortalTypes(self, **kw):

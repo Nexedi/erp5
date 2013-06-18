@@ -1,6 +1,6 @@
 API Documentation
 -----------------
 
-You can generate the API documentation using ``epydoc'':
+You can generate the API documentation using `epydoc`::
 
-$ epydoc src/erp5
+  $ epydoc src/erp5

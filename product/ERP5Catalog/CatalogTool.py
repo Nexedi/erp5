@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
@@ -132,14 +133,13 @@ class IndexableObjectWrapper(object):
         optimized_role_set = set()
         # First parse optimized roles and build optimized_role_set
         for role_definition_group, user_and_role_list in local_roles_group_id_group_id.items():
-          try:
-            group_allowed_set = allowed_by_local_roles_group_id[role_definition_group]
-          except KeyError:
-            allowed_by_local_roles_group_id[role_definition_group] = group_allowed_set = set()
+          group_allowed_set = allowed_by_local_roles_group_id.setdefault(
+            role_definition_group, set())
           for user, role in user_and_role_list:
-            prefix = 'user:' + user
-            group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
-            optimized_role_set.add((user, role))
+            if role in allowed_role_set:
+              prefix = 'user:' + user
+              group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
+              optimized_role_set.add((user, role))
 
         # Then parse other roles
         for user, roles in localroles.iteritems():
@@ -154,10 +154,8 @@ class IndexableObjectWrapper(object):
                 user_view_permission_role_dict[role] = user
             elif role in allowed_role_set:
               for group in local_roles_group_id_group_id.get(user, ('', )):
-                try:
-                  group_allowed_set = allowed_by_local_roles_group_id[group]
-                except KeyError:
-                   allowed_by_local_roles_group_id[group] = group_allowed_set = set()
+                group_allowed_set = allowed_by_local_roles_group_id.setdefault(
+                  group, set())
                 if (user, role) not in optimized_role_set:
                   # add only if not already added to optimized_role_set to avoid polluting indexation table
                   group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
@@ -526,15 +524,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             # dtml instead ? ... yes, but how to be bw compatible ?
             allowedRolesAndUsers = [sqlquote(role) for role in allowedRolesAndUsers]
 
-            security_uid_dict = dict()
+            security_uid_dict = defaultdict(list)
             for brain in method(security_roles_list=allowedRolesAndUsers):
-              try:
-                local_roles_group_id = brain.local_roles_group_id
-              except AttributeError:
-                # backwards compatability in cases when catalog use default schema
-                local_roles_group_id = ''
-              security_uid_dict.setdefault(local_roles_group_id,
-                  []).append(brain.uid)
+              security_uid_dict[getattr(brain, 'local_roles_group_id', '')
+                ].append(brain.uid)
 
           security_uid_cache[cache_key] = security_uid_dict
       else:

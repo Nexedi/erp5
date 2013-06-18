@@ -11,9 +11,9 @@ from subprocess import Popen, PIPE
 from sendMail import sendMail
 import atexit
 
-print "DEPRECATION WARNNING: This command 'runFunctionalTest' is Deprecated, " + \
+print "DEPRECATION WARNING: This command 'runFunctionalTest' is Deprecated, " + \
       "you should use ERP5TypeFunctionalTestCase and runUnitTest instead." + \
-      "You can take a look at testFuncionalCore.py"
+      "You can take a look at testFunctionalCore.py"
 
 __doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
 
@@ -26,7 +26,7 @@ Options:
   --smtp_host=hostname       specify SMTP server
   -s, --stdout               print the results on stdout instead of sending
                              results by email (unless email_to_address is also
-                             passed explictly)
+                             passed explicitly)
   -d, --debug                run firefox on current DISPLAY instead of on Xvfb
   --host                     the hostname of this ERP5 instance
   --port                     the port of this ERP5 instance
@@ -37,7 +37,7 @@ Options:
   --email_subject            the email subject to be sent
   --xvfb_display=STRING      Define a xvfb display to be used.
 Notes:
-  * You need to prepepare first test environment by using following command:
+  * You need to prepare first test environment by using following command:
   ./runUnitTest.py --save prepareFunctionalTest.py
 """
 

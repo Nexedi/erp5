@@ -45,7 +45,7 @@ from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request,\
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 from AccessControl import Unauthorized
 import zope.interface
 from Products.PythonScripts.Utility import allow_class
@@ -453,11 +453,11 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     lista_latest = {}
     for o in lista.keys():
       lista_latest[o.getLatestVersionValue()] = True # get latest versions avoiding duplicates again
-    if lista_latest.has_key(self):
-      lista_latest.pop(self) # remove this document
-    if lista_latest.has_key(self.getLatestVersionValue()):
-      # remove last version of document itself from related documents
-      lista_latest.pop(self.getLatestVersionValue())
+
+    # remove this document
+    lista_latest.pop(self, None)
+    # remove last version of document itself from related documents
+    lista_latest.pop(self.getLatestVersionValue(), None)
 
     return lista_latest.keys()
 
@@ -478,7 +478,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     if not self.getReference():
       return self
     catalog = self.getPortalObject().portal_catalog
-    kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
+    kw = dict(reference=self.getReference(),
+              sort_on=(('version', 'descending', 'SIGNED'),))
     if language is not None:
       kw['language'] = language
     result_list = catalog(**kw)
@@ -542,7 +543,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
               reference=self.getReference(),
               version=self.getVersion(),
               language=self.getLanguage(),
-              validation_state="!=cancelled")
+              query=NegatedQuery(Query(validation_state=('cancelled', 'deleted'))))
     catalog = self.getPortalObject().portal_catalog
     self_count = catalog.unrestrictedCountResults(uid=self.getUid(), **kw)[0][0]
     count = catalog.unrestrictedCountResults(**kw)[0][0]
@@ -595,12 +596,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     document = self
     if self.getReference():
+      invalid_validation_state_list = ('archived', 'cancelled', 'deleted')
       catalog = self.getPortalObject().portal_catalog
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
-                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"),
+                query=NegatedQuery(Query(validation_state=invalid_validation_state_list)),
                 sort_on='creation_date')
+
       if self.getVersion():
         kw['version'] = self.getVersion()
       if self.getLanguage():
@@ -614,7 +617,12 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
            o.getVersion() == self.getVersion() and\
            o.getLanguage() == self.getLanguage():
           existing_document = o.getObject()
-          break
+          if existing_document.getValidationState() not in \
+            invalid_validation_state_list:
+            break
+      else:
+        existing_document = None
+
       # We found an existing document to update
       if existing_document is not None:
         document = existing_document
@@ -662,9 +670,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     catalog = self.getPortalObject().portal_catalog
     result_list = catalog.unrestrictedSearchResults(
                                       reference=self.getReference(),
-                                      sort_on=(('creation_date', 
+                                      sort_on=(('creation_date',
                                                 'ascending'),))
-    # XXX this should be security-unaware - delegate to script with proxy roles
     if result_list:
       return result_list[0].getLanguage()
     return

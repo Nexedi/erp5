@@ -2508,11 +2508,8 @@ msgstr "Mise en page du contenu"
 msgid "Content Translation Workflow"
 msgstr "Workflow de traduction"
 
-msgid "Content format"
+msgid "Content Format"
 msgstr "Format du contenu"
-
-msgid "Content format of a document in ERP5"
-msgstr "Renseigne sur le format du contenu d'un document."
 
 msgid "Content of a document in ERP5"
 msgstr "Montre le contenu d'une page."
@@ -5073,9 +5070,6 @@ msgstr "J'ai oublié mon mot de passe !"
 
 msgid "IBAN Key"
 msgstr "Clé IBAN"
-
-msgid "ID"
-msgstr "ID"
 
 msgid "ID of a page template or form which defines the rendering layout for contents"
 msgstr "la mise en page qui permet d'afficher le contenu de la page."

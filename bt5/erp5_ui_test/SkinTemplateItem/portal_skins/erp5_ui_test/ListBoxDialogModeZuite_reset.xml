@@ -59,7 +59,7 @@ for name in (\'foo_module\', \'bar_module\'):\n
   module.setLastId(1)\n
 \n
 # Reset the foo module listbox\n
-form = context.Foo_selectBarDialog\n
+form = context.Foo_viewSelectBarDialog\n
 \n
 default_columns = \'\\n\'.join(( \'id | ID\'\n
                             , \'title | Title\'\n

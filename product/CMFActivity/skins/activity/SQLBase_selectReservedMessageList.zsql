@@ -9,6 +9,7 @@ class_file:
 </dtml-comment>
 <params>table
 processing_node
+group_method_id
 count</params>
 SELECT
   *
@@ -16,6 +17,9 @@ FROM
   <dtml-var table>
 WHERE
   processing_node = <dtml-sqlvar processing_node type="int">
+<dtml-if expr="group_method_id is not None">
+  AND group_method_id = <dtml-sqlvar group_method_id type="string">
+</dtml-if>
 <dtml-if expr="count is not None">
   LIMIT <dtml-sqlvar count type="int">
 </dtml-if>

@@ -29,9 +29,7 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 
@@ -39,15 +37,11 @@ class TestPasswordTool(ERP5TypeTestCase):
   """
   Test reset of password
   """
-  run_all_test = 1
-  quiet = 1
-
   def getBusinessTemplateList(self):
     return ('erp5_base', )
 
   def getTitle(self):
     return "Password Tool"
-
 
   def afterSetUp(self):
     self.portal.email_from_address = 'site@example.invalid'
@@ -168,7 +162,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
 
-
   def stepGoToRandomAddress(self, sequence=None, sequence_list=None, **kw):
     """
     Call method that change the password
@@ -182,7 +175,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password_key=key)
     # reset cache
     self.portal.portal_caches.clearAllCache()
-
 
   def stepGoToRandomAddressWithBadUserName(self, sequence=None, sequence_list=None, **kw):
     """
@@ -198,7 +190,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     # reset cache
     self.portal.portal_caches.clearAllCache()
 
-
   def stepGoToRandomAddressTwice(self, sequence=None, sequence_list=None, **kw):
     """
     As we already change password, this must npot work anylonger
@@ -211,7 +202,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     # reset cache
     self.portal.portal_caches.clearAllCache()
 
-
   def stepGoToBadRandomAddress(self, sequence=None, sequence_list=None, **kw):
     """
     Try to reset a password with bad random part
@@ -222,7 +212,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password_key="toto")
     # reset cache
     self.portal.portal_caches.clearAllCache()
-
 
 
   def stepModifyExpirationDate(self, sequence=None, sequence_list=None, **kw):
@@ -250,7 +239,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     self.assertEqual(len(self.portal.portal_password._password_request_dict), 0)
 
-
   def stepLogout(self, sequence=None, sequence_list=None, **kw):
     """
     Logout
@@ -258,12 +246,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.logout()
 
   # tests
-  def test_01_checkPasswordTool(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Password Tool'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_01_checkPasswordTool(self):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
@@ -282,15 +265,9 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'CheckUserNotLoginWithFormerPassword ' \
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-
-  def test_02_checkPasswordToolDateExpired(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test no login reset if date expired'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_02_checkPasswordToolDateExpired(self):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
@@ -303,15 +280,9 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-
-  def test_03_checkPasswordToolAlarm(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test alarm remove expired request'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_03_checkPasswordToolAlarm(self):
     sequence_list = SequenceList()
     sequence_string = 'CheckPasswordToolExists '  \
                       'AddUser Tic ' \
@@ -326,7 +297,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_two_concurrent_password_reset(self):
     personA = self.portal.person_module.newContent(portal_type="Person",
@@ -380,7 +351,6 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self._assertUserExists('userA', 'newA')
     self._assertUserExists('userB', 'newB')
-
 
   def test_login_with_trailing_space(self):
     person = self.portal.person_module.newContent(portal_type="Person",
@@ -455,7 +425,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 
-
 class TestPasswordToolWithCRM(TestPasswordTool):
   """
   Test reset of password
@@ -466,7 +435,6 @@ class TestPasswordToolWithCRM(TestPasswordTool):
 
   def getTitle(self):
     return "Password Tool with CRM"
-
 
 def test_suite():
   suite = unittest.TestSuite()

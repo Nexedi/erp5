@@ -57,10 +57,16 @@ for rule in portal.portal_rules.objectValues():\n
   if rule.getValidationState() != \'validated\':\n
     rule.validate()\n
 \n
-# open all accounts\n
+# open all accounts, and clear cache if we have validated some new accounts\n
+validated = False\n
 for account in portal.account_module.objectValues():\n
   if account.getValidationState() != \'validated\':\n
     account.validate()\n
+    validated = True\n
+\n
+if validated:\n
+  portal.portal_caches.clearCache(cache_factory_list=(\'erp5_content_long\', ))\n
+\n
 \n
 # validate third parties and set them a dummy region, because it\'s required\n
 for entity in ( portal.organisation_module.objectValues() +\n
@@ -73,14 +79,16 @@ for entity in ( portal.organisation_module.objectValues() +\n
 # XXX\n
 \n
 # enable preference\n
-pref = portal.portal_preferences.accounting_zuite_preference\n
+ptool = portal.portal_preferences\n
+pref = ptool.accounting_zuite_preference\n
 if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   # we have to \'own\' the preference for the test\n
   ptool = portal.portal_preferences\n
   # pref.setId(\'old_accounting_zuite_preference\')\n
   cb = ptool.manage_copyObjects([\'accounting_zuite_preference\'])\n
-  # FIXME: how could this work ???\n
-  ptool.manage_pasteObjects(cb)\n
+  pasted, = ptool.manage_pasteObjects(cb)\n
+  pref = ptool[pasted[\'new_id\']]\n
+  \n
 pref.edit(preferred_accounting_transaction_at_date=None)\n
 pref.edit(preferred_accounting_transaction_from_date=None)\n
 pref.edit(preferred_account_number_method=None)\n
@@ -101,6 +109,10 @@ stool.setSelectionFor(\'grouping_reference_fast_input_selection\', None)\n
 stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_input\', None)\n
 stool.setSelectionFor(\'entity_transaction_selection\', None)\n
 stool.setSelectionFor(\'account_module_selection\', None)\n
+\n
+# set sort order on accounting module\n
+stool.setSelectionParamsFor(\'accounting_selection\', dict()) # (this recreates selection)\n
+stool.setSelectionSortOrder(\'accounting_selection\', sort_on=((\'operation_date\', \'ascending\'),))\n
 \n
 # set sort order and columns on account module\n
 stool.setSelectionParamsFor(\'account_module_selection\', dict()) # (this recreates selection)\n

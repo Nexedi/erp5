@@ -90,7 +90,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     ## Update BT5
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj is not None:
-      bt5_obj.edit(template_portal_type_roles_list=portal_type_role_dict.keys())
+      bt5_obj.edit(template_portal_type_role_list=portal_type_role_dict.keys())
 
   def checkSpreadSheetConsistency(self):
     """Check that the spread sheet is consistent with categories spreadsheet.

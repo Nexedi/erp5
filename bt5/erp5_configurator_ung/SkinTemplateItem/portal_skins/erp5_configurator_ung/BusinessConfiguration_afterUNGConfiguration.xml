@@ -79,7 +79,7 @@ bt5 = portal.portal_catalog.getResultValue(portal_type="Business Template",\n
                                            title="erp5_web_ung_role")\n
 \n
 if bt5 is not None:\n
-  for portal_type in bt5.getTemplatePortalTypeRolesList():\n
+  for portal_type in bt5.getTemplatePortalTypeRoleList():\n
     module_list = portal.contentValues(filter=dict(portal_type=portal_type))\n
     portal_type_object = portal.portal_catalog.getResultValue(portal_type="Base Type",\n
                                                               id=portal_type)\n

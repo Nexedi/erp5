@@ -29,8 +29,8 @@ from Products.ERP5.Document.MovementGroup import MovementGroup
 
 class BaseVariantMovementGroup(MovementGroup):
   """
-  The purpose of MovementGroup is to define how movements are grouped,
-  and how values are updated from simulation movements.
+  This movement group is used to group movements that have the same
+  base category list, without assining it.
   """
   meta_type = 'ERP5 Base Variant Movement Group'
   portal_type = 'Base Variant Movement Group'

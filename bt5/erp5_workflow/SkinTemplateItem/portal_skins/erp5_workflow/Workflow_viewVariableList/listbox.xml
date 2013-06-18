@@ -94,7 +94,7 @@
                         </tuple>
                         <tuple>
                           <string>automatic_update</string>
-                          <string>Update On Every Transition</string>
+                          <string>Update on every Transition</string>
                         </tuple>
                       </list>
                     </value>

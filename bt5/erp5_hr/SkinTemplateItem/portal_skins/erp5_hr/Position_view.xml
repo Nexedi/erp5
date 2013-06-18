@@ -53,6 +53,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -77,11 +78,22 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_person</string>
+                        <string>listbox_start_date</string>
+                        <string>listbox_stop_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_career_subordination_title</string>
+                        <string>my_agent_title</string>
+                        <string>my_subordination_title</string>
                         <string>my_career_role</string>
                         <string>my_career_grade</string>
                         <string>my_career_function</string>

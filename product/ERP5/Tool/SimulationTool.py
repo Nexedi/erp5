@@ -715,8 +715,7 @@ class SimulationTool(BaseTool):
       column_value_dict.set('funding_uid', funding_uid)
       column_value_dict.set('payment_request_uid', payment_request_uid)
       column_value_dict.set('function_uid', function_uid)
-      if column_value_dict.set('section_uid', section_uid):
-        sql_kw['section_filtered'] = 1
+      column_value_dict.set('section_uid', section_uid)
       column_value_dict.set('node_uid', node_uid)
       column_value_dict.set('mirror_node_uid', mirror_node_uid)
       column_value_dict.set('mirror_section_uid', mirror_section_uid)
@@ -731,8 +730,7 @@ class SimulationTool(BaseTool):
 
       sql_kw['transformed_uid'] = self._generatePropertyUidList(transformed_resource)
 
-      if column_value_dict.setUIDList('section_uid', section):
-        sql_kw['section_filtered'] = 1
+      column_value_dict.setUIDList('section_uid', section)
       column_value_dict.setUIDList('mirror_section_uid', mirror_section)
       column_value_dict.setUIDList('variation_text', variation_text,
                                    as_text=1)
@@ -749,9 +747,7 @@ class SimulationTool(BaseTool):
       related_key_dict.setUIDList('payment_request_category_uid', payment_request_category)
       related_key_dict.setUIDList('function_category_uid', function_category)
       related_key_dict.setUIDList('payment_category_uid', payment_category)
-      if related_key_dict.setUIDList('section_category_uid',
-                                     section_category):
-        sql_kw['section_filtered'] = 1
+      related_key_dict.setUIDList('section_category_uid', section_category)
       related_key_dict.setUIDList('mirror_section_category_uid',
                                   mirror_section_category)
       # category strict membership
@@ -769,9 +765,8 @@ class SimulationTool(BaseTool):
                                   function_category_strict_membership)
       related_key_dict.setUIDList('payment_category_strict_membership_uid',
                                   payment_category_strict_membership)
-      if related_key_dict.setUIDList('section_category_strict_membership_uid',
-                                     section_category_strict_membership):
-        sql_kw['section_filtered'] = 1
+      related_key_dict.setUIDList('section_category_strict_membership_uid',
+                                  section_category_strict_membership)
       related_key_dict.setUIDList(
         'mirror_section_category_strict_membership_uid',
         mirror_section_category_strict_membership)

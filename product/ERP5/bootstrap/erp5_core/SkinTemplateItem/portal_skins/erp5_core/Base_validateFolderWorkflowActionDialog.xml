@@ -50,12 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if len([choice for choice in editor.values() if choice[\'workflow_action\']]) == 1:\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+choosen = [choice for choice in editor.values() if choice[\'workflow_action\']]\n
+if len(choosen) == 1:\n
   return True\n
 \n
-from Products.ERP5Type.Message import translateString\n
 # XXX listbox validator does not show the validation failed message, so use portal status message instead\n
-container.REQUEST.set(\'portal_status_message\', translateString("You must select one action."))\n
+if len(choosen) == 0:\n
+  container.REQUEST.set(\'portal_status_message\', translateString("You must select one action."))\n
+else:
+  container.REQUEST.set(\'portal_status_message\', translateString("You must select only one action."))\n
 return False\n
 </string> </value>
         </item>

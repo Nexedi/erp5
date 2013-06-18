@@ -118,22 +118,7 @@ Test Accounting module listbox supports deleting\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
-<!-- check amounts for stats -->\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[8]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyFloat</td>\n
-  <td>\n
-//tr[@class=\'listbox_stat_line listbox-stat-line\']/td[9]\n
-</td>\n
-  <td>20000.00</td>\n
-</tr>\n
-<!-- }}} -->\n
+\n
 \n
 <!-- Confirm deletion and check redirection -->\n
 <tr>\n
@@ -152,8 +137,7 @@ Test Accounting module listbox supports deleting\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

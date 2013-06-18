@@ -27,10 +27,17 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from zLOG import LOG
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+
+
+class treenode(defaultdict):
+
+  def __init__(self):
+    defaultdict.__init__(self, self.__class__)
+
 
 class ExplanationCache:
   """ExplanationCache provides a central access to 
@@ -51,7 +58,7 @@ class ExplanationCache:
     """
     # Define share properties
     self.explanation = explanation
-    self.portal_catalog = getToolByName(explanation, 'portal_catalog')
+    self.portal_catalog = explanation.getPortalObject().portal_catalog
     self.simulation_movement_cache = {} # Simulation Movement Cache
     self.explanation_uid_cache = []
     self.explanation_path_pattern_cache = []
@@ -103,50 +110,33 @@ class ExplanationCache:
     a explanation.
     """
     # Return cache if defined
-    if self.explanation_path_pattern_cache:
-      return self.explanation_path_pattern_cache
+    result = self.explanation_path_pattern_cache
+    if not result:
+      prefix = self.portal_catalog.getPortalObject().getPath() + '/'
 
-    # Helper method to update path_dict with
-    # each key which forms the pay of the simulation_movement
-    path_dict = {}
-    def updatePathDict(simulation_movement):
-      local_path_dict = path_dict
-      container_path = simulation_movement.getParentValue().getPhysicalPath()
-      simulation_movement_id = simulation_movement.getId()
-      insert_movement = True
-      for path_id in container_path:
-        local_path_dict = local_path_dict.setdefault(path_id, {})
-        if not isinstance(local_path_dict, dict):
-          # A movement was already inserted
-          insert_movement = False
-          break
-      if insert_movement:
-        local_path_dict[simulation_movement_id] = simulation_movement
-
-    # For each delivery movement
-    for movement in self._getDeliveryMovementList():
-      # For each simulation movement
-      for simulation_movement in movement.getDeliveryRelatedValueList():
-        updatePathDict(simulation_movement)
-    
-    # Build result by browsing path_dict and
-    # assembling path '/erp5/portal_simulation/1/34/23/43/%'
-    result = []
-    def browsePathDict(prefix, local_path_dict):
-      for key, value in local_path_dict.items():
-        if not isinstance(value, dict):
-          # We have a real root
-          result.append('%s/%s' % (prefix, key))
-          result.append(('%s/%s/%%' % (prefix, key)).replace('_', r'\_'))
-          # XXX-JPS here we must add all parent movements XXX-JPS
+      # path_dict is typically like this:
+      #  {'portal_simulation': {'3': {'4': None}}}
+      path_dict = treenode()
+      simulation_movement_list = []
+      for movement in self._getDeliveryMovementList():
+        simulation_movement_list += movement.getDeliveryRelatedList()
+      simulation_movement_list.sort()
+      # Now it's sorted, we'll process parents before their children.
+      for simulation_movement in simulation_movement_list:
+        local_path_dict = path_dict
+        container_path = simulation_movement.split('/')
+        simulation_movement_id = container_path.pop()
+        for path_id in container_path:
+          local_path_dict = local_path_dict[path_id]
+          if local_path_dict is None:
+            break # A movement was already inserted
         else:
-          browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
-
-    # path_dict is typically like this:
-    #  {'': {'erp5': {'portal_simulation': {'3': {'4': <SimulationMovement at /erp5/portal_simulation/3/4>}}}}}
-    if path_dict:
-      browsePathDict('', path_dict[''])
-    self.explanation_path_pattern_cache = result
+          # We have a real root
+          local_path_dict[simulation_movement_id] = None
+          simulation_movement = prefix + simulation_movement
+          result.append(simulation_movement)
+          result.append(simulation_movement.replace('_', r'\_')  + '/%')
+          # XXX-JPS here we must add all parent movements XXX-JPS
     return result
 
   def getBusinessLinkRelatedSimulationMovementValueList(self, business_link):
@@ -210,13 +200,10 @@ class ExplanationCache:
         # portal_simulation/91/1/1/1/1/1 testing_folder/17
         #if kw.get('explanation_uid', None) is None:
         #  kw['explanation_uid'] = self.getRootExplanationUidList()
-        catalog_kw = kw.copy()
-        if catalog_kw.has_key('trade_phase'):
-          catalog_kw['trade_phase_relative_url'] = catalog_kw['trade_phase']
-          del catalog_kw['trade_phase']
-        self.simulation_movement_cache[kw_tuple] = \
-               self.portal_catalog(portal_type="Simulation Movement",
-                                   **catalog_kw)
+        if 'trade_phase' in kw:
+          kw['trade_phase_relative_url'] = kw.pop('trade_phase')
+        self.simulation_movement_cache[kw_tuple] = self.portal_catalog(
+          portal_type="Simulation Movement", **kw)
         
     return self.simulation_movement_cache[kw_tuple]
 
@@ -252,42 +239,56 @@ class ExplanationCache:
       return new_business_process
 
     # Build a list of path patterns which apply to current business_link
-    path_list = self.getSimulationPathPatternList()
-    path_list = [x for x in path_list if x[-1] != '%'] # Remove trailing %
-    path_set = set()
+    path_list = iter(self.getSimulationPathPatternList())
+    path_dict = dict((x, path_list.next()) for x in path_list)
+    # path_dict is like this;
+    # {'/erp5/portal_simulation/3/4': r'/erp5/portal\_simulation/3/4/%'}
+    path_list = []
     for simulation_movement in \
         self.getBusinessLinkRelatedSimulationMovementValueList(business_link):
       simulation_path = simulation_movement.getPath()
-      for path in path_list:
-        if simulation_path.startswith(path):
-          # Only keep a path pattern which matches current simulation movement
-          path_set.add(path)
-          path_set.add("%s/%%" % path.replace('_', r'\_'))
+      if simulation_path in path_dict:
+        path = simulation_path
+      else:
+        for path in path_dict:
+          if simulation_path.startswith(path) and \
+             simulation_path[len(path)] == '/':
+            break
+        else:
+          continue
+      # Only keep a path pattern which matches current simulation movement
+      path_list.append(path)
+      path_list.append(path_dict.pop(path))
 
-    # Lookup in cache based on path_tuple
-    path_tuple = tuple(path_set) # XXX-JPS is the order guaranteed here ?
-    new_business_process = self.closure_cache.get(path_tuple, None)
-    if new_business_process is not None:
-      self.closure_cache[business_link] = new_business_process
-      return new_business_process
-
-    # Build a new closure business process
-    def hasMatchingMovement(business_link):
-      return len(self.getSimulationMovementValueList(path=path_tuple, 
-                                  causality_uid=business_link.getUid()))      
-
-    module = business_process.getPortalObject().business_process_module # XXX-JPS
-    new_business_process = module.newContent(portal_type="Business Process", 
-                                                                        temp_object=True) # XXX-JPS is this really OK with union business processes
-    i = 0
-    for business_link in business_process.getBusinessLinkValueList():
-      if hasMatchingMovement(business_link):
-        i += 1
-        id = 'closure_path_%s' % i
-        new_business_process._setOb(id, business_link.asContext(id=id))
+    # Lookup in cache based on path_list
+    path_list.sort()
+    path_list = tuple(path_list)
+    new_business_process = self.closure_cache.get(path_list)
+    if new_business_process is None:
+      business_link_list = []
+      new_business_process = business_process
+      for x in business_process.getBusinessLinkValueList():
+        if self.getSimulationMovementValueList(path=path_list,
+                                               causality_uid=x.getUid()):
+          # We have matching movements.
+          business_link_list.append(x)
+        else:
+          new_business_process = None
+      if new_business_process is None:
+        # Build a new closure business process.
+        # Initially, business_process is often the result of
+        # asComposedDocument() and business_process.getParentValue() is not a
+        # module where newContent() allows creation of Business Processes.
+        # XXX-JPS is this really OK with union business processes
+        from Products.ERP5Type.Document import newTempBusinessProcess
+        new_business_process = newTempBusinessProcess(
+          self.explanation, 'closure_business_process')
+        for i, x in enumerate(business_link_list):
+          id = 'closure_path_%s' % i
+          new_business_process._setOb(id, x.asContext(id=id))
+      self.closure_cache[path_list] = new_business_process
 
     self.closure_cache[business_link] = new_business_process
-    self.closure_cache[path_tuple] = new_business_process
     return new_business_process
 
   def getUnionBusinessProcess(self):

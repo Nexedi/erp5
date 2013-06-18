@@ -73,7 +73,7 @@ def getAccountingPeriodStartDateForSectionCategory(section_category, date):\n
                                          \'started\', \'stopped\',\n
                                          \'closing\', \'delivered\'):\n
         continue\n
-      if ap.getStartDate() <= date <= ap.getStopDate():\n
+      if ap.getStartDate().earliestTime() <= date <= ap.getStopDate().latestTime():\n
         period_start_date = ap.getStartDate().earliestTime()\n
     if period_start_date:\n
       break\n

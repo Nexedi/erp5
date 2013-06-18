@@ -1810,14 +1810,19 @@ class Base( CopyContainer,
   # categories
   def _setValue(self, id, target, spec=(), filter=None, portal_type=(), keep_default=1,
                                   checked_permission=None):
-    start_string = "%s/" % id
-    start_string_len = len(start_string)
+    getRelativeUrl = self.getPortalObject().portal_url.getRelativeUrl
+    def cleanupCategory(path):
+      # prevent duplicating base categories and storing "portal_categories/"
+      for start_string in ("%s/" % id, "portal_categories/"):
+        if path.startswith(start_string):
+          path = path[len(start_string):]
+      return path
+
     if target is None :
       path = target
     elif isinstance(target, str):
       # We have been provided a string
       path = target
-      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
     elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
@@ -1825,15 +1830,13 @@ class Base( CopyContainer,
         if isinstance(target_item, str):
           path = target_item
         else:
-          path = target_item.getRelativeUrl()
-        if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
-        path_list += [path]
+          path = getRelativeUrl(target_item)
+        path_list.append(cleanupCategory(path))
       path = path_list
     else:
       # We have been provided an object
-      # Find the object
-      path = target.getRelativeUrl()
-      if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
+      path = cleanupCategory(getRelativeUrl(target))
+
     self._setCategoryMembership(id, path, spec=spec, filter=filter, portal_type=portal_type,
                                 base=0, keep_default=keep_default,
                                 checked_permission=checked_permission)
@@ -2200,9 +2203,6 @@ class Base( CopyContainer,
 
   security.declareProtected( Permissions.View, 'getBaseCategoryValues' )
   getBaseCategoryValues = getBaseCategoryValueList
-
-  def _cleanupCategories(self):
-    self._getCategoryTool()._cleanupCategories()
 
   # Category testing
   security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
@@ -3020,10 +3020,13 @@ class Base( CopyContainer,
         # so use definition of 'Base Type' for searchable methods & properties
         portal_type = self.portal_types.getTypeInfo('Base Type')
       searchable_text_method_id_list = []
+
       # generated from properties methods and add explicitly defined method_ids as well 
       for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
-        method_id = convertToUpperCase(searchable_text_property_id)
-        searchable_text_method_id_list.extend(['get%s' %method_id])
+        if self.hasProperty(searchable_text_property_id):
+          method_id = convertToUpperCase(searchable_text_property_id)
+          searchable_text_method_id_list.extend(['get%s' %method_id])
+
       searchable_text_method_id_list.extend(portal_type.getSearchableTextMethodIdList())
       for method_id in searchable_text_method_id_list:
         # XXX: how to exclude exclude acquisition (not working)
@@ -3039,7 +3042,7 @@ class Base( CopyContainer,
             else:
               searchable_text_list.append(method_value)
       searchable_text = ' '.join([str(x) for x in searchable_text_list])
-      return searchable_text
+      return searchable_text.strip()
 
   # Compatibility with CMF Catalog / CPS sites
   SearchableText = getSearchableText

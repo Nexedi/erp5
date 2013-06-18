@@ -85,6 +85,7 @@ class TestCRM(BaseTestCRM):
             'erp5_core_proxy_field_legacy',
             'erp5_base',
             'erp5_ingestion',
+            'erp5_pdm',
             'erp5_crm',)
 
   def test_Event_getQuantity(self):
@@ -97,6 +98,12 @@ class TestCRM(BaseTestCRM):
       event.setQuantity(321)
       self.assertEquals(321, event.getQuantity())
 
+  def test_Event_isMovement(self):
+    event_module = self.portal.event_module
+    for portal_type in self.portal.getPortalEventTypeList():
+      event = event_module.newContent(portal_type=portal_type)
+      self.assertTrue(event.isMovement(),
+        "%s is not a movement" % portal_type)
 
   def test_Event_CreateRelatedEvent(self):
     # test workflow to create a related event from responded event
@@ -155,7 +162,7 @@ class TestCRM(BaseTestCRM):
                              title='Incoming Title',
                              description='New Desc')
       self.tic()
-      new_event = ticket.getFollowUpRelatedValueList()[0]
+      new_event, = ticket.getFollowUpRelatedValueList(portal_type=ptype)
       self.assertEquals('stopped', new_event.getSimulationState())
 
       # outgoing
@@ -164,8 +171,8 @@ class TestCRM(BaseTestCRM):
                                         title='Outgoing Title',
                                         description='New Desc')
       self.tic()
-      new_event = [event for event in ticket.getFollowUpRelatedValueList() if\
-                   event.getTitle() == 'Outgoing Title'][0]
+      new_event, = [event for event in ticket.getFollowUpRelatedValueList(portal_type=ptype) if\
+                   event.getTitle() == 'Outgoing Title']
       self.assertEquals('planned', new_event.getSimulationState())
 
   def test_Ticket_CreateRelatedEventUnauthorized(self):
@@ -415,6 +422,7 @@ class TestCRM(BaseTestCRM):
     resource_list = [category.getRelativeUrl() \
                                       for category in resource.contentValues()]
     resource_list.append(person.getRelativeUrl())
+    # XXX this preference is obsolete, this is now based on use category
     system_preference.setPreferredEventResourceList(resource_list)
     self.tic()
     # Then create One event and play with it
@@ -439,6 +447,107 @@ class TestCRM(BaseTestCRM):
     self.assertTrue(event.getResource() in\
                        [item[1] for item in event.Event_getResourceItemList()])
 
+  def test_EventPath(self):
+    """
+      Check that configuring the Event Path on Campaign, all events are
+      created according to the domain selected
+    """
+    skin_folder = self.portal.portal_skins.custom
+    mapping_method_id = "NotificationMessage_getSubstitutionMappingDictFromEvent"
+    portal = self.portal
+    notification_message_reference = 'campaign-Event.Path'
+    service = portal.service_module.newContent(portal_type='Service')
+    resource = portal.notification_message_module.newContent(
+        reference=notification_message_reference,
+        content_type="text/html",
+        portal_type="Notification Message",
+        specialise_value=service,
+        text_content_substitution_mapping_method_id=mapping_method_id,
+        text_content="Hello ${destination_title}")
+    resource.validate()
+    sender = portal.person_module.newContent(portal_type="Person",
+        reference='sender', first_name='Sender')
+    first_user = portal.person_module.newContent(portal_type="Person",
+        reference='validated_user', first_name="First User")
+    first_user.validate()
+    organisation = portal.organisation_module.newContent(portal_type="Organisation",
+        title="Dummy SA")
+    organisation.validate()
+    base_domain = portal.portal_domains.newContent(portal_type="Base Domain",
+      id='event_path_domain')
+    person_domain = base_domain.newContent(portal_type="Domain",
+      title="All Customers")
+    person_domain.setCriterionPropertyList(['portal_type', 'validation_state'])
+    person_domain.setCriterion('portal_type', identity=['Person'])
+    person_domain.setCriterion('validation_state', identity=['validated'])
+    organisation_domain = base_domain.newContent(portal_type="Domain",
+      title="All Organisations")
+    organisation_domain.setCriterionPropertyList(['portal_type'])
+    organisation_domain.setCriterion('portal_type', identity=['Organisation'])
+
+    campaign = self.portal.campaign_module.newContent(portal_type="Campaign",
+        default_event_path_event_portal_type="Mail Message",
+        default_event_path_destination="portal_domains/%s" % person_domain.getRelativeUrl(),
+        default_event_path_source=sender.getRelativeUrl(),
+        default_event_path_resource=resource.getRelativeUrl())
+    self.tic()
+    campaign.Ticket_createEventFromDefaultEventPath()
+    self.tic()
+    event_list = [event for event in campaign.getFollowUpRelatedValueList()
+      if event.getPortalType() != 'Mail Message']
+    self.assertEquals(event_list, [])
+    event_list = campaign.getFollowUpRelatedValueList(portal_type='Mail Message')
+    self.assertNotEquals(event_list, [])
+    destination_list = map(lambda x: x.getDestinationValue(), event_list)
+    self.assertEquals(destination_list, [first_user])
+    mail_message = event_list[0]
+    self.assertEquals(sender.getRelativeUrl(), mail_message.getSource())
+    self.assertEquals(mail_message.getTextContent(), "Hello %s\n" % first_user.getTitle())
+    self.assertEquals(mail_message.getResourceValue(), service)
+
+    campaign = portal.campaign_module.newContent(portal_type="Campaign",
+        default_event_path_event_portal_type="Visit",
+        default_event_path_destination='portal_domains/%s' % organisation_domain.getRelativeUrl(),
+        default_event_path_source=sender.getRelativeUrl(),
+        default_event_path_resource=resource.getRelativeUrl())
+    self.tic()
+    campaign.Ticket_createEventFromDefaultEventPath()
+    self.tic()
+    event_list = [event for event in campaign.getFollowUpRelatedValueList()
+      if event.getPortalType() != 'Visit']
+    self.assertEquals([], event_list)
+    event_list = campaign.getFollowUpRelatedValueList(portal_type='Visit')
+    self.assertNotEquals([], event_list)
+    destination_uid_list = map(lambda x: x.getDestinationUid(), event_list)
+    self.assertEquals([organisation.getUid()], destination_uid_list)
+
+    resource_value_list = map(lambda x: x.getResourceValue(), event_list)
+    self.assertEquals([service], resource_value_list)
+
+  def test_OutcomePath(self):
+    service = self.portal.service_module.newContent(portal_type='Service')
+    currency = self.portal.currency_module.newContent(portal_type='Currency')
+
+    campaign = self.portal.campaign_module.newContent(portal_type="Campaign")
+    campaign.setDefaultOutcomePathQuantity(3)
+    campaign.setDefaultOutcomePathQuantityUnit('unit/piece')
+    campaign.setDefaultOutcomePathResourceValue(service)
+    campaign.setDefaultOutcomePathPrice(4)
+    campaign.setDefaultOutcomePathPriceCurrency(currency.getRelativeUrl())
+
+    self.assertEquals(3*4, campaign.getDefaultOutcomePathTotalPrice())
+
+    self.assertEquals(3, campaign.getDefaultOutcomePathQuantity())
+    self.assertEquals('unit/piece', campaign.getDefaultOutcomePathQuantityUnit())
+    self.assertEquals(service.getRelativeUrl(),
+      campaign.getDefaultOutcomePathResource())
+    self.assertEquals(4, campaign.getDefaultOutcomePathPrice())
+    self.assertEquals(currency.getRelativeUrl(),
+      campaign.getDefaultOutcomePathPriceCurrency())
+
+    outcome_path = campaign._getOb('default_outcome_path')
+    self.assertEquals('Outcome Path', outcome_path.getPortalType())
+
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
   """
@@ -452,6 +561,7 @@ class TestCRMMailIngestion(BaseTestCRM):
             'erp5_base',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_pdm',
             'erp5_crm',
             )
 

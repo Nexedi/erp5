@@ -115,7 +115,6 @@
                         <string>my_view_mode_destination_section_title</string>
                         <string>my_view_mode_source_section_title</string>
                         <string>my_report_mode_at_date</string>
-                        <string>my_report_mode_site_title</string>
                         <string>my_view_mode_listbox_variation_category_item_list</string>
                         <string>my_view_mode_quantity_unit</string>
                         <string>my_view_mode_resource_title</string>
@@ -233,7 +232,7 @@
                         <string>my_dialog_mode_negative_stock</string>
                         <string>my_dialog_mode_positive_stock</string>
                         <string>my_dialog_mode_zero_stock</string>
-                        <string>my_dialog_mode_site</string>
+                        <string>my_dialog_mode_node_category</string>
                         <string>my_dialog_mode_listbox_container_quantity</string>
                         <string>my_dialog_mode_container_count</string>
                         <string>my_dialog_mode_container_type</string>
@@ -304,6 +303,7 @@
                         <string>my_view_mode_listbox_read_only_effective_date</string>
                         <string>my_view_mode_listbox_read_only_expiration_date</string>
                         <string>my_view_mode_preferred_tax_use_list</string>
+                        <string>my_report_mode_node_category</string>
                       </list>
                     </value>
                 </item>

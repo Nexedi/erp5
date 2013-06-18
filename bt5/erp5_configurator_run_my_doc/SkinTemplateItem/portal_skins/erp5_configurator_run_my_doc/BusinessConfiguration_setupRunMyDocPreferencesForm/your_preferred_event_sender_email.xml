@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>What email address should be used as From email address for automatically generated emails?</string> </value>
+                    <value> <string>What Email Address should be Used as from Email Address for Automatically Generated Emails?</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

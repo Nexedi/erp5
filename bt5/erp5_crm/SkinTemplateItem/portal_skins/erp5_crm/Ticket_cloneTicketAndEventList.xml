@@ -51,24 +51,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-event_list = context.getFollowUpRelatedValueList(portal_type=portal.getPortalEventTypeList(), checked_permission=\'View\')\n
 \n
+new_ticket = context.Base_createCloneDocument(form_id=None, batch_mode=True)\n
 \n
-new_ticket = context.Base_createCloneDocument(form_id=None, clone=1, batch_mode=1)\n
-new_ticket_url = new_ticket.getRelativeUrl()\n
+portal.portal_catalog.searchAndActivate(\n
+  portal_type=portal.getPortalEventTypeList(),\n
+  default_follow_up_uid=context.getUid(),\n
+  method_id=\'Event_clone\',\n
+  method_kw=dict(follow_up_relative_url=new_ticket.getRelativeUrl()))\n
 \n
-for event in event_list:\n
-  new_event = event.Base_createCloneDocument(form_id=None, clone=1, batch_mode=1)\n
-  new_event.setFollowUp(new_ticket_url)\n
-\n
-portal_status_message = context.Base_translateString(\'Ticket and events are cloned.\')\n
+portal_status_message = portal.Base_translateString(\'Events are beeing cloned in the background.\')\n
 keep_items = {\'portal_status_message\':portal_status_message}\n
-new_ticket.Base_redirect(form_id=\'view\', keep_items=keep_items)\n
+new_ticket.Base_redirect(form_id=form_id, keep_items=keep_items)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

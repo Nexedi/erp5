@@ -12,138 +12,142 @@
 #
 ##############################################################################
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
-from DateTime import DateTime
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Message import translateString
 from ComputedAttribute import ComputedAttribute
 
-class InventoryBrain(ZSQLBrain):
+class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
+  """A brain that supports accessing computed attributes using __getitem__
+  protocol.
   """
-    Global analysis (all variations and categories)
-  """
-  # Stock management
-  def getInventory(self, at_date=None, ignore_variation=0,
-                   simulation_state=None, **kw):
-    if isinstance(simulation_state, str):
-      simulation_state = [simulation_state]
-    result = self.Resource_zGetInventory(
-                      resource_uid=[self.resource_uid],
-                      to_date=at_date, omit_simulation=0,
-                      section_category=self.getPortalDefaultSectionCategory(),
-                      simulation_state=simulation_state)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
+  def __init__(self):
+    # __getitem__ returns the computed attribute directly, but if we access
+    # brain['node_title'] we expect to have the attribute after computation,
+    # not the ComputedAttribute attribue instance. Defining a __getitem__
+    # method on that class is not enough, because the brain class is not
+    # directly this class but a class created on the fly that also inherits
+    # from Record which already defines a __getitem__ method.
+    # We cannot patch the instance, because Record does not allow this kind of
+    # mutation, but as the class is created on the fly, for each query, it's
+    # safe to patch the class. See Shared/DC/ZRDB/Results.py for more detail.
+    # A Records holds a list of r instances, only the first __init__ needs to
+    # do this patching.
+    if not hasattr(self.__class__, '__super__getitem__'):
+      self.__class__.__super__getitem__ = self.__class__.__getitem__
+      self.__class__.__getitem__ =\
+        ComputedAttributeGetItemCompatibleMixin.__getitem__
 
-  def getCurrentInventory(self):
-    """
-      Returns current inventory
-    """
-    return self.getInventory(
-        simulation_state=self.getPortalCurrentInventoryStateList(),
-        ignore_variation=1)
+  # ComputedAttribute compatibility for __getitem__
+  def __getitem__(self, name):
+    item = self.__super__getitem__(name)
+    if isinstance(item, ComputedAttribute):
+      return item.__of__(self)
+    return item
 
-  def getFutureInventory(self):
-    """
-      Returns current inventory
-    """
-    return self.getInventory(
-                   ignore_variation=1,
-                   simulation_state= \
-                       list(self.getPortalFutureInventoryStateList())+ \
-                       list(self.getPortalReservedInventoryStateList())+ \
-                       list(self.getPortalCurrentInventoryStateList()))
-
-  def getAvailableInventory(self):
-    """
-      Returns current inventory
-    """
-    at_date=DateTime()
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory( 
-                    resource_uid=[self.resource_uid], ignore_variation=1,
-                    omit_simulation=1, omit_input=1,
-                    section_category=self.getPortalDefaultSectionCategory(),
-                    simulation_state= \
-                        self.getPortalReservedInventoryStateList())
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
-
-  def getQuantityUnit(self, **kw):
-    try:
-      resource = self.portal_categories.unrestrictedTraverse(
-                                      self.resource_relative_url)
-      return resource.getQuantityUnit()
-    except AttributeError:
-      return ''
-
-class InventoryListBrain(ZSQLBrain):
+class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
   """
     Lists each variation
   """
-
   # Stock management
   def getInventory(self, **kw):
-    """
-    Returns the inventory
-    """
     simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getInventory(
-                   node=self.node_relative_url,
+                   node_uid=self.node_uid,
                    variation_text=self.variation_text,
-                   resource=self.resource_relative_url, **kw)
+                   resource_uid=self.resource_uid, **kw)
 
   def getCurrentInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getCurrentInventory(
-                             node=self.node_relative_url,
+                             node_uid=self.node_uid,
                              variation_text=self.variation_text,
-                             resource=self.resource_relative_url, **kw)
+                             resource_uid=self.resource_uid, **kw)
 
   def getFutureInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self,'portal_simulation')
     return simulation_tool.getFutureInventory(
-                              node=self.node_relative_url,
+                              node_uid=self.node_uid,
                               variation_text=self.variation_text,
-                              resource=self.resource_relative_url, **kw)
+                              resource_uid=self.resource_uid, **kw)
 
   def getAvailableInventory(self,**kw):
-    """
-      Returns current inventory
-    """
     simulation_tool = getToolByName(self,'portal_simulation')
     return simulation_tool.getAvailableInventory(
-                             node=self.node_relative_url,
+                             node_uid=self.node_uid,
                              variation_text=self.variation_text,
-                             resource=self.resource_relative_url, **kw)
+                             resource_uid=self.resource_uid, **kw)
 
   def getQuantityUnit(self, **kw):
-    try:
-      resource = self.portal_categories.unrestrictedTraverse(
-                                           self.resource_relative_url)
+    resource = self.getResourceValue()
+    if resource is not None:
       return resource.getQuantityUnit()
-    except AttributeError:
-      return ''
+
+  def _getObjectByUid(self, uid):
+    uid_cache = getTransactionalVariable().setdefault(
+                    'InventoryBrain.uid_cache', {None: None})
+    try:
+      return uid_cache[uid]
+    except KeyError:
+      result_list = self.portal_catalog(uid=uid, limit=1,
+        select_dict=dict(title=None, relative_url=None))
+      result = None
+      if result_list:
+        result = result_list[0]
+      uid_cache[uid] = result
+      return result
+
+  def getSectionValue(self):
+    return self._getObjectByUid(self.section_uid)
+
+  def getSectionTitle(self):
+    section = self.getSectionValue()
+    if section is not None:
+      return section.title
+  section_title = ComputedAttribute(getSectionTitle, 1)
+
+  def getSectionRelativeUrl(self):
+    section = self.getSectionValue()
+    if section is not None:
+      return section.relative_url
+  section_relative_url = ComputedAttribute(getSectionRelativeUrl, 1)
+
+  def getNodeValue(self):
+    return self._getObjectByUid(self.node_uid)
+
+  def getNodeTitle(self):
+    node = self.getNodeValue()
+    if node is not None:
+      return node.title
+  node_title = ComputedAttribute(getNodeTitle, 1)
+
+  def getNodeRelativeUrl(self):
+    node = self.getNodeValue()
+    if node is not None:
+      return node.relative_url
+  node_relative_url = ComputedAttribute(getNodeRelativeUrl, 1)
+
+  def getResourceValue(self):
+    return self._getObjectByUid(self.resource_uid)
+
+  def getResourceTitle(self):
+    resource = self.getResourceValue()
+    if resource is not None:
+      return resource.title
+  resource_title = ComputedAttribute(getResourceTitle, 1)
+
+  def getResourceRelativeUrl(self):
+    resource = self.getResourceValue()
+    if resource is not None:
+      return resource.relative_url
+  resource_relative_url = ComputedAttribute(getResourceRelativeUrl, 1)
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
     """
+    resource = self.getResourceValue()
     if cname_id in ('getExplanationText', 'getExplanation', ):
       o = self.getObject()
       if o is not None:
@@ -154,16 +158,11 @@ class InventoryListBrain(ZSQLBrain):
           # with the inventory's uid. Then they are their own explanation.
           explanation = o
         if explanation is not None:
-          return '%s/%s' % (
-                  self.portal_url.getPortalObject().absolute_url(),
-                  explanation.getRelativeUrl())
-      else:
-        return ''
-    elif getattr(self, 'resource_relative_url', None) is not None:
+          return explanation.absolute_url()
+      return ''
+    elif resource is not None:
       # A resource is defined, so try to display the movement list
-      resource = self.portal_categories.unrestrictedTraverse(
-                              self.resource_relative_url)
-      form_name = 'Resource_viewMovementHistory'
+      form_id = 'Resource_viewMovementHistory'
       query_kw = {
         'variation_text': self.variation_text,
         'selection_name': selection_name,
@@ -214,7 +213,7 @@ class InventoryListBrain(ZSQLBrain):
         }
       query_kw.update(query_kw_update)
       return '%s/%s?%s&reset=1' % ( resource.absolute_url(),
-                                    form_name,
+                                    form_id,
                                     make_query(**query_kw) )
 
     # default case, if it's a movement, return link to the explanation of this
@@ -223,22 +222,8 @@ class InventoryListBrain(ZSQLBrain):
     if document.isMovement():
       explanation = document.getExplanationValue()
       if explanation is not None:
-        return '%s/%s' % (
-                self.portal_url.getPortalObject().absolute_url(),
-                explanation.getRelativeUrl())
+        return explanation.absolute_url()
     return ''
-
-  def getAggregateListText(self):
-    aggregate_list = self.Resource_zGetAggregateList(
-                                   explanation_uid = self.explanation_uid,
-                                   node_uid = self.node_uid,
-                                   section_uid = self.section_uid,
-                                   variation_text = self.variation_text,
-                                   resource_uid = self.resource_uid)
-    result = []
-    for o in aggregate_list:
-      result.append(o.relative_url)
-    return '<br>'.join(result)
 
   def getExplanationText(self):
     # Returns an explanation of the movement
@@ -289,68 +274,12 @@ class TrackingListBrain(InventoryListBrain):
         return self.date.toZone(timezone)
     return self.date
 
-class DeliveryListBrain(InventoryListBrain):
-  """
-    Lists each variation
-  """
-
-  # Stock management
-  def getInventory(self, at_date=None, ignore_variation=0, 
-                   simulation_state=None, **kw):
-    if isinstance(simulation_state, str):
-      simulation_state = [simulation_state]
-    where_expression = getattr(self, 'where_expression', None)
-    result = self.Resource_zGetInventory(
-                    resource_uid = [self.resource_uid],
-                    to_date=at_date,
-                    section_category = self.getPortalDefaultSectionCategory(),
-                    variation_text = self.variation_text,
-                    simulation_state = simulation_state,
-                    where_expression = where_expression)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
-
-  def getAvailableInventory(self):
-    """
-      Returns current inventory at current date
-    """
-    at_date = DateTime()
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory(
-                resource_uid = [self.resource_uid],
-                omit_simulation = 1, omit_input = 1,
-                section_category = self.getPortalDefaultSectionCategory(),
-                variation_text = self.variation_text,
-                simulation_state = self.getPortalReservedInventoryStateList())
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
-
-  def getInventoryAtDate(self):
-    """
-      Returns inventory at the date provided by the SQL method
-    """
-    at_date=self.at_date
-    return self.getInventory(
-            at_date=at_date, ignore_variation=0, 
-            simulation_state= \
-                      list(self.getPortalFutureInventoryStateList()) + \
-                      list(self.getPortalReservedInventoryStateList()) + \
-                      list(self.getPortalCurrentInventoryStateList()))
-
 
 class MovementHistoryListBrain(InventoryListBrain):
   """Brain for getMovementHistoryList
   """
   def __init__(self):
+    InventoryListBrain.__init__(self)
     if not self.date:
       return
     # convert the date in the movement's original timezone.
@@ -359,7 +288,7 @@ class MovementHistoryListBrain(InventoryListBrain):
     obj = self.getObject()
     if obj is not None:
       timezone = None
-      if self.node_relative_url == obj.getSource():
+      if self.node_uid == obj.getSourceUid():
         start_date = obj.getStartDate()
         if start_date is not None:
           timezone = start_date.timezone()
@@ -369,6 +298,18 @@ class MovementHistoryListBrain(InventoryListBrain):
           timezone = stop_date.timezone()
       if timezone is not None:
         self.date = self.date.toZone(timezone)
+
+  def getListItemUrl(self, cname_id, selection_index, selection_name):
+    """Returns the URL for column `cname_id`. Used by ListBox
+    Here we just want a link to the explanation of movement.
+    """
+    document = self.getObject()
+    if document.isMovement():
+      explanation = document.getExplanationValue()
+      if explanation is not None:
+        return explanation.absolute_url()
+    return ''
+
 
   def _debit(self):
     if self.getObject().isCancellationAmount():

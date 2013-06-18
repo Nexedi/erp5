@@ -97,6 +97,7 @@
                         <string>listbox_title</string>
                         <string>listbox_start_date</string>
                         <string>listbox_default_birthplace_address_city</string>
+                        <string>listbox_default_birthplace_city</string>
                       </list>
                     </value>
                 </item>

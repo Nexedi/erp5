@@ -32,7 +32,8 @@ import threading
 import sys
 from types import StringType
 import re
-
+from collections import defaultdict
+from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
@@ -140,9 +141,8 @@ def activity_timing_method(method, args, kw):
 # Here go ActivityBuffer instances
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
-global_activity_buffer = {}
-from thread import get_ident, allocate_lock
-global_activity_buffer_lock = allocate_lock()
+global_activity_buffer = defaultdict(dict)
+from thread import get_ident
 
 def registerActivity(activity):
   # Must be rewritten to register
@@ -169,25 +169,30 @@ class Message(BaseMessage):
   is_executed = MESSAGE_NOT_EXECUTED
   processing = None
   traceback = None
+  oid = None
+  is_registered = False
 
-  def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
-    if isinstance(obj, str):
-      self.object_path = tuple(obj.split('/'))
-      activity_creation_trace = False
-    else:
-      self.object_path = obj.getPhysicalPath()
-      activity_creation_trace = obj.getPortalObject().portal_activities.activity_creation_trace
-    if active_process is not None:
-      self.active_process = active_process.getPhysicalPath()
-      self.active_process_uid = active_process.getUid()
-    if activity_kw.get('serialization_tag', False) is None:
-      # Remove serialization_tag if it's None.
-      del activity_kw['serialization_tag']
+  def __init__(
+      self,
+      url,
+      oid,
+      active_process,
+      active_process_uid,
+      activity_kw,
+      method_id,
+      args, kw,
+      request=None,
+      portal_activities=None,
+    ):
+    self.object_path = url
+    self.oid = oid
+    self.active_process = active_process
+    self.active_process_uid = active_process_uid
     self.activity_kw = activity_kw
     self.method_id = method_id
     self.args = args
     self.kw = kw
-    if activity_creation_trace and format_list is not None:
+    if getattr(portal_activities, 'activity_creation_trace', False):
       # Save current traceback, to make it possible to tell where a message
       # was generated.
       # Strip last stack entry, since it will always be the same.
@@ -195,7 +200,6 @@ class Message(BaseMessage):
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
     self.request_info = {}
-    request = getattr(obj, 'REQUEST', None)
     if request is not None:
       if 'SERVER_URL' in request.other:
         self.request_info['SERVER_URL'] = request.other['SERVER_URL']
@@ -207,6 +211,14 @@ class Message(BaseMessage):
           request.environ['HTTP_ACCEPT_LANGUAGE']
       self.request_info['_script'] = list(request._script)
 
+  @staticmethod
+  def load(s, **kw):
+    self = loads(s)
+    self.__dict__.update(kw)
+    return self
+
+  dump = dumps
+
   def getGroupId(self):
     get = self.activity_kw.get
     group_method_id = get('group_method_id', '')
@@ -216,29 +228,38 @@ class Message(BaseMessage):
 
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
-    return activity_tool.unrestrictedTraverse(self.object_path)
+    try:
+      obj = activity_tool.unrestrictedTraverse(self.object_path)
+    except KeyError:
+      LOG('CMFActivity', WARNING, "Message dropped (no object found at path %r)"
+          % (self.object_path,), error=sys.exc_info())
+      self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
+    else:
+      if self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None):
+        raise ValueError("OID mismatch for %r" % obj)
+      return obj
 
   def getObjectList(self, activity_tool):
-    """return the list of object that can be expanded from this message."""
-    object_list = []
-    try:
-      object_list.append(self.getObject(activity_tool))
-    except KeyError:
-      pass
-    else:
-      if self.hasExpandMethod():
-        expand_method_id = self.activity_kw['expand_method_id']
-        # FIXME: how to pass parameters?
-        object_list = getattr(object_list[0], expand_method_id)()
-    return object_list
-
-  def hasExpandMethod(self):
-    """return true if the message has an expand method.
+    """return the list of object that can be expanded from this message
     An expand method is used to expand the list of objects and to turn a
     big recursive transaction affecting many objects into multiple
     transactions affecting only one object at a time (this can prevent
     duplicated method calls)."""
-    return self.activity_kw.has_key('expand_method_id')
+    obj = self.getObject(activity_tool)
+    if obj is None:
+      return ()
+    if 'expand_method_id' in self.activity_kw:
+      return getattr(obj, self.activity_kw['expand_method_id'])()
+    return obj,
+
+  def getObjectCount(self, activity_tool):
+    if 'expand_method_id' in self.activity_kw:
+      try:
+        obj = activity_tool.unrestrictedTraverse(self.object_path)
+        return len(getattr(obj, self.activity_kw['expand_method_id'])())
+      except StandardError:
+        pass
+    return 1
 
   def changeUser(self, user_name, activity_tool):
     """restore the security context for the calling user."""
@@ -280,39 +301,21 @@ class Message(BaseMessage):
   def __call__(self, activity_tool):
     try:
       obj = self.getObject(activity_tool)
-    except KeyError:
-      exc_info = sys.exc_info()
-      LOG('CMFActivity', ERROR,
-          'Message failed in getting an object from the path %r'
-          % (self.object_path,), error=exc_info)
-      self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
-                             context=activity_tool)
-    else:
-      try:
+      if obj is not None:
         old_security_manager = getSecurityManager()
         try:
           # Change user if required (TO BE DONE)
           # We will change the user only in order to execute this method
           self.changeUser(self.user_name, activity_tool)
-          try:
-            # XXX: There is no check to see if user is allowed to access
-            # that method !
-            method = getattr(obj, self.method_id)
-          except Exception:
-            exc_info = sys.exc_info()
-            LOG('CMFActivity', ERROR,
-                'Message failed in getting a method %r from an object %r'
-                % (self.method_id, obj), error=exc_info)
-            method = None
-            self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
-                                   context=activity_tool)
+          # XXX: There is no check to see if user is allowed to access
+          #      that method !
+          method = getattr(obj, self.method_id)
+          # Store site info
+          setSite(activity_tool.getParentValue())
+          if activity_tool.activity_timing_log:
+            result = activity_timing_method(method, self.args, self.kw)
           else:
-            # Store site info
-            setSite(activity_tool.getParentValue())
-            if activity_tool.activity_timing_log:
-              result = activity_timing_method(method, self.args, self.kw)
-            else:
-              result = method(*self.args, **self.kw)
+            result = method(*self.args, **self.kw)
         finally:
           setSecurityManager(old_security_manager)
 
@@ -322,8 +325,8 @@ class Message(BaseMessage):
               activity_tool.unrestrictedTraverse(self.active_process),
               result, obj)
           self.setExecutionState(MESSAGE_EXECUTED)
-      except:
-        self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
+    except:
+      self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
@@ -338,9 +341,7 @@ class Message(BaseMessage):
     email_from_name = portal.getProperty('email_from_name',
                        portal.getProperty('email_from_address'))
     fail_count = self.line.retry + 1
-    if self.getExecutionState() == MESSAGE_NOT_EXECUTABLE:
-      message = "Not executable activity"
-    elif retry:
+    if retry:
       message = "Pending activity already failed %s times" % fail_count
     else:
       message = "Activity failed"
@@ -371,7 +372,7 @@ Named Parameters: %r
 
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
-    obj= self.getObject(activity_tool)
+    obj = activity_tool.unrestrictedTraverse(self.object_path)
     old_security_manager = getSecurityManager()
     try:
       # Change user if required (TO BE DONE)
@@ -410,7 +411,7 @@ Named Parameters: %r
     """
     assert is_executed in (MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, MESSAGE_NOT_EXECUTABLE)
     self.is_executed = is_executed
-    if is_executed != MESSAGE_EXECUTED:
+    if is_executed == MESSAGE_NOT_EXECUTED:
       if not exc_info:
         exc_info = sys.exc_info()
       if self.on_error_callback is not None:
@@ -433,46 +434,94 @@ Named Parameters: %r
   def getExecutionState(self):
     return self.is_executed
 
-class Method:
+class Method(object):
+  __slots__ = (
+    '_portal_activities',
+    '_passive_url',
+    '_passive_oid',
+    '_activity',
+    '_active_process',
+    '_active_process_uid',
+    '_kw',
+    '_method_id',
+    '_request',
+  )
 
-  def __init__(self, passive_self, activity, active_process, kw, method_id):
-    self.__passive_self = passive_self
-    self.__activity = activity
-    self.__active_process = active_process
-    self.__kw = kw
-    self.__method_id = method_id
+  def __init__(self, portal_activities, passive_url, passive_oid, activity,
+      active_process, active_process_uid, kw, method_id, request):
+    self._portal_activities = portal_activities
+    self._passive_url = passive_url
+    self._passive_oid = passive_oid
+    self._activity = activity
+    self._active_process = active_process
+    self._active_process_uid = active_process_uid
+    self._kw = kw
+    self._method_id = method_id
+    self._request = request
 
   def __call__(self, *args, **kw):
-    passive_self = self.__passive_self
-    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    portal_activities = passive_self.getPortalObject().portal_activities
+    portal_activities = self._portal_activities
+    m = Message(
+      url=self._passive_url,
+      oid=self._passive_oid,
+      active_process=self._active_process,
+      active_process_uid=self._active_process_uid,
+      activity_kw=self._kw,
+      method_id=self._method_id,
+      args=args,
+      kw=kw,
+      request=self._request,
+      portal_activities=portal_activities,
+    )
     if portal_activities.activity_tracking:
-      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
+      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
-      portal_activities, activity_dict[self.__activity], m)
+      portal_activities, activity_dict[self._activity], m)
 
 allow_class(Method)
 
-class ActiveWrapper:
-  # XXX: maybe we should accept and forward an 'activity_tool' parameter,
-  #      so that Method:
-  #      - does not need to search it again
-  #      - a string can be passed as first parameter to ActiveWrapper
+class ActiveWrapper(object):
+  __slots__ = (
+    '__portal_activities',
+    '__passive_url',
+    '__passive_oid',
+    '__activity',
+    '__active_process',
+    '__active_process_uid',
+    '__kw',
+    '__request',
+  )
+  # Shortcut security lookup (avoid calling __getattr__)
+  __parent__ = None
 
-  def __init__(self, passive_self, activity, active_process, kw):
-    self.__dict__['__passive_self'] = passive_self
-    self.__dict__['__activity'] = activity
-    self.__dict__['__active_process'] = active_process
-    self.__dict__['__kw'] = kw
+  def __init__(self, portal_activities, url, oid, activity, active_process,
+      active_process_uid, kw, request):
+    # second parameter can be an object or an object's path
+    self.__portal_activities = portal_activities
+    self.__passive_url = url
+    self.__passive_oid = oid
+    self.__activity = activity
+    self.__active_process = active_process
+    self.__active_process_uid = active_process_uid
+    self.__kw = kw
+    self.__request = request
 
-  def __getattr__(self, id):
-    return Method(self.__dict__['__passive_self'], self.__dict__['__activity'],
-                  self.__dict__['__active_process'],
-                  self.__dict__['__kw'], id)
+  def __getattr__(self, name):
+    return Method(
+      self.__portal_activities,
+      self.__passive_url,
+      self.__passive_oid,
+      self.__activity,
+      self.__active_process,
+      self.__active_process_uid,
+      self.__kw,
+      name,
+      self.__request,
+    )
 
   def __repr__(self):
-    return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
-                                   self.__dict__['__passive_self'])
+    return '<%s at 0x%x to %s>' % (self.__class__.__name__, id(self),
+                                   self.__passive_url)
 
 # True when activities cannot be executing any more.
 has_processed_shutdown = False
@@ -1025,27 +1074,24 @@ class ActivityTool (Folder, UniqueObject):
         is True, create one.
         Intermediate level is unconditionaly created if non existant because
         chances are it will be used in the instance life.
-        Lock is held when checking for intermediate level existance
-        because:
-         - intermediate level dict must not be created in 2 threads at the
-           same time, since one creation would destroy the existing one.
-        It's released after that step because:
-         - lower level access is at thread scope, thus by definition there
-           can be only one access at a time to a key
-         - GIL protects us when accessing python instances
       """
-      # Safeguard: make sure we are wrapped in  acquisition context before
-      # using our path as an activity tool instance-wide identifier.
-      assert getattr(self, 'aq_self', None) is not None
-      my_instance_key = self.getPhysicalPath()
-      my_thread_key = get_ident()
-      global_activity_buffer_lock.acquire()
+      # XXX: using a volatile attribute to cache getPhysicalPath result.
+      # This cache may need invalidation if all the following is
+      # simultaneously true:
+      # - ActivityTool instances can be moved in object tree
+      # - moved instance is used to get access to its activity buffer
+      # - another instance is put in the place of the original, and used to
+      #   access its activity buffer
+      # ...which seems currently unlikely, and as such is left out.
       try:
-        if my_instance_key not in global_activity_buffer:
-          global_activity_buffer[my_instance_key] = {}
-      finally:
-        global_activity_buffer_lock.release()
+        my_instance_key = self._v_physical_path
+      except AttributeError:
+        # Safeguard: make sure we are wrapped in acquisition context before
+        # using our path as an activity tool instance-wide identifier.
+        assert getattr(self, 'aq_self', None) is not None
+        self._v_physical_path = my_instance_key = self.getPhysicalPath()
       thread_activity_buffer = global_activity_buffer[my_instance_key]
+      my_thread_key = get_ident()
       try:
         return thread_activity_buffer[my_thread_key]
       except KeyError:
@@ -1056,14 +1102,33 @@ class ActivityTool (Folder, UniqueObject):
         thread_activity_buffer[my_thread_key] = buffer
         return buffer
 
-    security.declarePrivate('activateObject')
-    def activateObject(self, object, activity, active_process, **kw):
+    def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
       if not is_initialized:
         self.initialize()
-      self.getActivityBuffer()
-      if isinstance(active_process, str):
-        active_process = self.unrestrictedTraverse(active_process)
-      return ActiveWrapper(object, activity, active_process, kw)
+      if active_process is None:
+        active_process_uid = None
+      elif isinstance(active_process, str):
+        # TODO: deprecate
+        active_process_uid = self.unrestrictedTraverse(active_process).getUid()
+      else:
+        active_process_uid = active_process.getUid()
+        active_process = active_process.getPhysicalPath()
+      if isinstance(object, str):
+        oid = None
+        url = tuple(object.split('/'))
+      else:
+        try:
+          oid = aq_base(object)._p_oid
+          # Note that it's too early to get the OID of a newly created object,
+          # so at this point, self.oid may still be None.
+        except AttributeError:
+          pass
+        url = object.getPhysicalPath()
+      if kw.get('serialization_tag', False) is None:
+        del kw['serialization_tag']
+      return ActiveWrapper(self, url, oid, activity,
+                           active_process, active_process_uid, kw,
+                           getattr(self, 'REQUEST', None))
 
     def getRegisteredMessageList(self, activity):
       activity_buffer = self.getActivityBuffer(create_if_not_found=False)
@@ -1189,21 +1254,11 @@ class ActivityTool (Folder, UniqueObject):
         # alternate method is used to segregate objects which cannot be grouped.
         alternate_method_id = m.activity_kw.get('alternate_method_id')
         try:
-          obj = m.getObject(self)
-        except KeyError:
-          exc_info = sys.exc_info()
-          LOG('CMFActivity', ERROR,
-              'Message failed in getting an object from the path %r'
-              % (m.object_path,), error=exc_info)
-          m.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info, context=self)
-          continue
-        try:
-          if m.hasExpandMethod():
-            subobject_list = m.getObjectList(self)
-          else:
-            subobject_list = (obj,)
+          object_list = m.getObjectList(self)
+          if object_list is None:
+            continue
           message_dict[m] = expanded_object_list = []
-          for subobj in subobject_list:
+          for subobj in object_list:
             if merge_duplicate:
               path = subobj.getPath()
               if path in path_set:
@@ -1283,7 +1338,8 @@ class ActivityTool (Folder, UniqueObject):
         self.initialize()
       self.getActivityBuffer()
       activity_dict[activity].queueMessage(aq_inner(self),
-        Message(path, active_process, activity_kw, method_id, args, kw))
+        Message(path, active_process, activity_kw, method_id, args, kw,
+          portal_activities=self))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageInvoke' )
     def manageInvoke(self, object_path, method_id, REQUEST=None):
@@ -1322,7 +1378,7 @@ class ActivityTool (Folder, UniqueObject):
       self.flush(object_path,method_id=method_id,invoke=0)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
-          self.absolute_url(), 'view'))
+          self.absolute_url(), 'manageActivities'))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageDelete' )
     def manageDelete(self, message_uid_list, activity, REQUEST=None):

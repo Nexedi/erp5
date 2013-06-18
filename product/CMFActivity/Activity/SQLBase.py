@@ -33,12 +33,12 @@ from Shared.DC.ZRDB.Results import Results
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
-  MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
-from Products.CMFActivity.ActiveObject import (
-  INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
+  Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
+from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
-from Queue import Queue, VALIDATION_ERROR_DELAY
+from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
+from Products.CMFActivity.Errors import ActivityFlushError
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -56,15 +56,22 @@ def sqltest_dict():
       column = name
     column_op = "%s %s " % (column, op)
     def render(value, render_string):
-      if value is None: # XXX: see comment in SQLBase._getMessageList
-        assert op == '='
-        return column + " IS NULL"
       if isinstance(value, no_quote_type):
         return column_op + str(value)
       if isinstance(value, DateTime):
         value = value.toZone('UTC').ISO()
-      assert isinstance(value, basestring), value
-      return column_op + render_string(value)
+      if isinstance(value, basestring):
+        return column_op + render_string(value)
+      assert op == "=", value
+      if value is None: # XXX: see comment in SQLBase._getMessageList
+        return column + " IS NULL"
+      for x in value:
+        if isinstance(x, no_quote_type):
+          render_string = str
+        elif isinstance(x, DateTime):
+          value = (x.toZone('UTC').ISO() for x in value)
+        return "%s IN (%s)" % (column, ', '.join(map(render_string, value)))
+      return "0"
     sqltest_dict[name] = render
   _('active_process_uid')
   _('group_method_id')
@@ -115,7 +122,7 @@ class SQLBase(Queue):
     if type(result) is str: # src__ == 1
       return result,
     class_name = self.__class__.__name__
-    return [self.loadMessage(line.message,
+    return [Message.load(line.message,
                              activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
@@ -125,11 +132,10 @@ class SQLBase(Queue):
 
   def _getPriority(self, activity_tool, method, default):
     result = method()
-    assert len(result) == 1
-    priority = result[0]['priority']
-    if priority is None:
-      priority = default
-    return priority
+    if not result:
+      return default
+    assert len(result) == 1, len(result)
+    return result[0]['priority']
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
@@ -187,19 +193,36 @@ class SQLBase(Queue):
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    select = activity_tool.SQLBase_selectReservedMessageList
-    if group_method_id:
-      reserve = limit - 1
-    else:
-      result = select(table=self.sql_table, count=limit,
-                      processing_node=processing_node)
-      reserve = limit - len(result)
-    if reserve:
-      activity_tool.SQLBase_reserveMessageList(table=self.sql_table,
-        count=reserve, processing_node=processing_node, to_date=date,
-        group_method_id=group_method_id)
-      result = select(table=self.sql_table,
-                      processing_node=processing_node, count=limit)
+    assert limit
+    # Do not check already-assigned messages when trying to reserve more
+    # activities, because in such case we will find one reserved activity.
+    result = activity_tool.SQLBase_selectReservedMessageList(
+      table=self.sql_table,
+      count=limit,
+      processing_node=processing_node,
+      group_method_id=group_method_id,
+    )
+    limit -= len(result)
+    if limit:
+      reservable = activity_tool.SQLBase_getReservableMessageList(
+        table=self.sql_table,
+        count=limit,
+        processing_node=processing_node,
+        to_date=date,
+        group_method_id=group_method_id,
+      )
+      if reservable:
+        activity_tool.SQLBase_reserveMessageList(
+          uid=[x.uid for x in reservable],
+          table=self.sql_table,
+          processing_node=processing_node,
+        )
+        # DC.ZRDB.Results.Results does not implement concatenation
+        # Implement an imperfect (but cheap) concatenation. Do not update
+        # __items__ nor _data_dictionary.
+        assert result._names == reservable._names, (result._names,
+          reservable._names)
+        result._data += reservable._data
     return result
 
   def makeMessageListAvailable(self, activity_tool, uid_list):
@@ -214,7 +237,7 @@ class SQLBase(Queue):
     # do not merge anything
     def load(line):
       uid = line.uid
-      m = self.loadMessage(line.message, uid=uid, line=line)
+      m = Message.load(line.message, uid=uid, line=line)
       return m, uid, ()
     return load
 
@@ -270,7 +293,7 @@ class SQLBase(Queue):
           # Count the number of objects to prevent too many objects.
           cost = m.activity_kw.get('group_method_cost', .01)
           assert 0 < cost <= 1, (self.sql_table, uid)
-          count = len(m.getObjectList(activity_tool))
+          count = m.getObjectCount(activity_tool)
           # this is heuristic (messages with same group_method_id
           # are likely to have the same group_method_cost)
           limit = int(1. / cost + 1 - count)
@@ -286,7 +309,7 @@ class SQLBase(Queue):
                 uid_to_duplicate_uid_list_dict[uid] += uid_list
                 continue
               uid_to_duplicate_uid_list_dict[uid] = uid_list
-              cost += len(m.getObjectList(activity_tool)) * \
+              cost += m.getObjectCount(activity_tool) * \
                       m.activity_kw.get('group_method_cost', .01)
               message_list.append(m)
               if cost >= 1:
@@ -334,7 +357,7 @@ class SQLBase(Queue):
       if group_method_id not in (None, ""):
         method  = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
-                self.merge_duplicate)
+                hasattr(self, 'generateMessageUID'))
         activity_runtime_environment = ActivityRuntimeEnvironment(None)
       else:
         method = activity_tool.invoke
@@ -407,7 +430,6 @@ class SQLBase(Queue):
     final_error_uid_list = []
     make_available_uid_list = []
     notify_user_list = []
-    non_executable_message_list = []
     executed_uid_list = deletable_uid_list
     if uid_to_duplicate_uid_list_dict is not None:
       for m in message_list:
@@ -453,12 +475,14 @@ class SQLBase(Queue):
           except:
             self._log(WARNING, 'Failed to reactivate %r' % uid)
         make_available_uid_list.append(uid)
-      else:
-        # Internal CMFActivity error: the message can not be executed because
-        # something is missing (context object cannot be found, method cannot
-        # be accessed on object).
-        non_executable_message_list.append(uid)
-        notify_user_list.append((m, False))
+      else: # MESSAGE_NOT_EXECUTABLE
+        # 'path' does not point to any object. Activities are normally flushed
+        # (without invoking them) when an object is deleted, but this is only
+        # an optimisation. There is no efficient and reliable way to do such
+        # this, because a concurrent and very long transaction may be about to
+        # activate this object, without conflict.
+        # So we have to clean up any remaining activity.
+        deletable_uid_list.append(uid)
     if deletable_uid_list:
       try:
         self._retryOnLockError(activity_tool.SQLBase_delMessage,
@@ -482,13 +506,6 @@ class SQLBase(Queue):
       except:
         self._log(ERROR, 'Failed to set message to error state for %r'
                          % final_error_uid_list)
-    if non_executable_message_list:
-      try:
-        activity_tool.SQLBase_assignMessage(table=self.sql_table,
-          uid=non_executable_message_list, processing_node=VALIDATE_ERROR_STATE)
-      except:
-        self._log(ERROR, 'Failed to set message to invalid path state for %r'
-                         % non_executable_message_list)
     if make_available_uid_list:
       try:
         self.makeMessageListAvailable(activity_tool=activity_tool,
@@ -504,3 +521,47 @@ class SQLBase(Queue):
       # Notification failures must not cause this method to raise.
       self._log(WARNING,
         'Exception during notification phase of finalizeMessageExecution')
+
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+    """
+      object_path is a tuple
+    """
+    path = '/'.join(object_path)
+    if invoke:
+      invoked = set()
+      def invoke(message):
+        try:
+          key = self.generateMessageUID(message)
+          if key in invoked:
+            return
+          invoked.add(key)
+        except AttributeError:
+          pass
+        line = getattr(message, 'line', None)
+        validate_value = VALID if line and line.processing_node != -1 else \
+                         message.validate(self, activity_tool)
+        if validate_value == VALID:
+          # Try to invoke the message - what happens if invoke calls flushActivity ??
+          activity_tool.invoke(message)
+          if message.getExecutionState() != MESSAGE_EXECUTED:
+            raise ActivityFlushError('Could not invoke %s on %s'
+                                     % (message.method_id, path))
+        elif validate_value is INVALID_PATH:
+          raise ActivityFlushError('The document %s does not exist' % path)
+        else:
+          raise ActivityFlushError('Could not validate %s on %s'
+                                   % (message.method_id, path))
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (
+         method_id is None or method_id == m.method_id):
+        if invoke:
+          invoke(m)
+        activity_tool.unregisterMessage(self, m)
+    uid_list = []
+    for line in self._getMessageList(activity_tool, path=path, processing=0,
+        **({'method_id': method_id} if method_id else {})):
+      uid_list.append(line.uid)
+      if invoke:
+        invoke(Message.load(line.message, uid=line.uid, line=line))
+    if uid_list:
+      activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)

@@ -82,8 +82,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
     # make sure selections are empty
-    self.portal.portal_selections.setSelectionFor(
-                        'person_module_selection', Selection())
+    name = 'person_module_selection'
+    self.portal.portal_selections.setSelectionFor(name, Selection(name))
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference

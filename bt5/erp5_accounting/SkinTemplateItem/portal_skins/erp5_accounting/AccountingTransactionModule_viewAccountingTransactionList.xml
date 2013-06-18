@@ -70,14 +70,14 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_credit</string>
-                        <string>listbox_debit</string>
-                        <string>listbox_delivery_mirror_section_title</string>
-                        <string>listbox_operation_date</string>
-                        <string>listbox_delivery_mirror_section_title_with_link</string>
-                        <string>listbox_total_net_price</string>
                         <string>listbox_total_price</string>
-                        <string>listbox_delivery_own_section_title</string>
+                        <string>listbox_accounting_transaction_section_title</string>
+                        <string>listbox_accounting_transaction_mirror_section_title</string>
+                        <string>listbox_accounting_transaction_payment_title</string>
+                        <string>listbox_accounting_transaction_project_title</string>
+                        <string>listbox_operation_date</string>
+                        <string>listbox_total_credit</string>
+                        <string>listbox_total_debit</string>
                       </list>
                     </value>
                 </item>

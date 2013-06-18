@@ -50,15 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from DateTime import DateTime\n
 \n
 # params\n
 section_title = \'My Organisation\'\n
-business_process = \'business_process_module/erp5_default_business_process\'\n
 portal = context.getPortalObject()\n
 accounting_module = portal.accounting_module\n
 year = 2005\n
 default_date = DateTime(year, 01, 01)\n
+\n
+business_process = portal.portal_catalog.getResultValue(\n
+  reference=(\'default_erp5_business_process\', # erp5_configurator\n
+             \'erp5_default_business_process\'), # erp5_simulation_test\n
+  portal_type=\'Business Process\').getRelativeUrl()\n
 \n
 # if the previous test didn\'t change input data, no need to recreate content\n
 current_script_data_id = \'%s_month_count_%s_draft_%s_state_%s_payment_%s\' % (\n
@@ -77,6 +83,8 @@ if 1:\n
                     \'sale_packing_list_module\',\n
                     \'portal_simulation\', ]:\n
     module = portal[module_id]\n
+    if len(module) > 200:\n
+      raise ValueError("Do not run this on production !!!")\n
     module.manage_delObjects(list(module.objectIds()))\n
 \n
 def getAccountByTitle(title):\n
@@ -96,14 +104,7 @@ def getOrganisationByTitle(title):\n
   return document_list[0]\n
 section = getOrganisationByTitle(section_title)\n
 \n
-def getCurrencyByReference(reference):\n
-  document_list = [x.getObject().getRelativeUrl() for x in\n
-    portal.portal_catalog(portal_type=\'Currency\',\n
-                          reference=reference)]\n
-  assert len(document_list) == 1, \\\n
-      \'%d currency with reference "%s"\' % (len(document_list), reference)\n
-  return document_list[0]\n
-euro_resource = getCurrencyByReference(\'EUR\')\n
+euro_resource = \'currency_module/euro\'\n
 \n
 def getBankAccountByTitle(title):\n
   document_list = [x.getObject().getRelativeUrl() for x in\n
@@ -321,7 +322,9 @@ accounting_module.setProperty(\'current_content_script\',\n
 # test depends on this\n
 return "Accounting Transactions Created."\n
 # vim: syntax=python\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

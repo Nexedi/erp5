@@ -95,6 +95,7 @@ class EntireQuery(object):
                              implicit_join=self.implicit_join,
                             )
       self.column_map = column_map
+    if 1:
       for extra_column in self.extra_column_list:
         table, column = extra_column.replace('`', '').split('.')
         if table != self.catalog_table_name:

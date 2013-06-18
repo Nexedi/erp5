@@ -74,6 +74,7 @@ def getAssignmentDict(username):\n
     result[\'function_list\'].extend([x for x in assignment.getFunctionList() if x not in result[\'function_list\']])\n
     result[\'site_list\'].extend([x for x in assignment.getSiteList() if x not in result[\'site_list\']])\n
     result[\'destination_trade_relative_url\'] = assignment.getDestinationTradeRelativeUrl()\n
+    result[\'destination_relative_url\'] = assignment.getDestinationRelativeUrl()\n
   return result\n
 \n
 person_relative_url = person.getRelativeUrl()\n

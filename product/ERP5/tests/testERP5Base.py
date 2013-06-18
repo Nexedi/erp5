@@ -397,6 +397,21 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     organisation = sequence.get('organisation')
 
+    self.assertFalse(organisation.hasDefaultAddress())
+    self.assertFalse(organisation.hasDefaultAddressCoordinateText())
+    self.assertFalse(organisation.hasDefaultAddressRegion())
+    self.assertFalse(organisation.hasDefaultAddressCity())
+
+    self.assertFalse(organisation.hasDefaultTelephone())
+    self.assertFalse(organisation.hasDefaultTelephoneCoordinateText())
+    self.assertFalse(organisation.hasDefaultFax())
+    self.assertFalse(organisation.hasDefaultFaxCoordinateText())
+
+    self.assertFalse(organisation.hasDefaultEmail())
+    self.assertFalse(organisation.hasDefaultEmailText())
+    self.assertFalse(organisation.hasDefaultEmailCoordinateText())
+    self.assertFalse(organisation.hasDefaultEmailUrlString())
+
     region = self.getCategoryDictList(base_category='region')[0]
     region_path   = region["category_relative_url"]
     region_title  = region["title"]
@@ -444,20 +459,28 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals( organisation.getDefaultTelephoneText()
                      , default_telephone.asText()
                      )
-                     
+    self.assertTrue(organisation.hasDefaultTelephone())
+    self.assertTrue(organisation.hasDefaultTelephoneCoordinateText())
+
     self.failUnless('default_fax' in organisation.contentIds())
     default_fax = organisation.default_fax
     self.assertEquals(default_fax.getPortalType(), 'Fax')
     self.assertEquals( organisation.getDefaultFaxText()
                      , default_fax.asText()
                      )
-    
+    self.assertTrue(organisation.hasDefaultFax())
+    self.assertTrue(organisation.hasDefaultFaxCoordinateText())
+
     self.failUnless('default_email' in organisation.contentIds())
     default_email = organisation.default_email
     self.assertEquals(default_email.getPortalType(), 'Email')
     self.assertEquals( organisation.getDefaultEmailText()
                      , default_email.asText()
                      )
+    self.assertTrue(organisation.hasDefaultEmail())
+    self.assertTrue(organisation.hasDefaultEmailText())
+    self.assertTrue(organisation.hasDefaultEmailCoordinateText())
+    self.assertTrue(organisation.hasDefaultEmailUrlString())
 
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1326,11 +1349,13 @@ class TestERP5Base(ERP5TypeTestCase):
 
     person = self.portal.person_module.newContent(portal_type='Person')
     self.assertEquals(None, person.getDefaultEmailCoordinateText())
+    self.assertFalse(person.hasDefaultEmailCoordinateText())
 
     # On persons, Email is acquired from the default carreer
     person.setDefaultCareerSubordinationValue(organisation)
     self.assertEquals('organisation@example.com',
       person.getDefaultEmailCoordinateText())
+    self.assertFalse(person.hasDefaultEmailCoordinateText())
 
     # we can set different values on the person address without modifying
     # organisation address
@@ -1338,6 +1363,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('person@example.com', person.getDefaultEmailCoordinateText())
     self.assertEquals('organisation@example.com',
       organisation.getDefaultEmailCoordinateText())
+    self.assertTrue(person.hasDefaultEmailCoordinateText())
 
   def test_alternate_email_acquisition(self):
     organisation = \

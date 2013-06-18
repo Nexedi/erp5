@@ -349,7 +349,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       old_delivery = None
     if old_delivery is None:
       # from scratch
-      new_delivery_id = str(delivery_module.generateNewId())
       delivery = super(SimulatedDeliveryBuilder, self)._createDelivery(
         delivery_module, movement_list, activate_kw)
       # Interactions will usually trigger reindexing of related SM when

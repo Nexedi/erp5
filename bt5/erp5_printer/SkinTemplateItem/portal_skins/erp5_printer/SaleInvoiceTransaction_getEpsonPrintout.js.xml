@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts58844315.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SaleInvoiceTransaction_getEpsonPrintout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//if the price number length > 13 use the Scientific notation,\n
+//if the length==11,12,13 , just need to remove the number after Decimal point\n
+function priceControl(price,builder){\n
+  var content=parseFloat(price).toFixed(2);\n
+  var content_len=content.length;\n
+  if(content_len>13)\n
+    content=parseFloat(content).toExponential(4);\n
+  else if(content_len>10&&content_len<14)\n
+    content=parseInt(content);\n
+  builder.addText(content);\n
+}\n
+\n
+function printInvoiceOnEpson(){\n
+  // create print data builder object\n
+  var builder = new epson.ePOSBuilder();\n
+\n
+  // initialize (ank mode, smoothing)\n
+  builder.addTextLang(\'en\').addTextSmooth(true);\n
+\n
+  //add logo\n
+  builder.addTextAlign(builder.ALIGN_CENTER);\n
+  var canvas = $(\'#canvas\')[0];\n
+  var context = canvas.getContext(\'2d\');\n
+  context.drawImage($(\'#company_logo\')[0], 0, 0, 330, 75);\n
+  builder.addImage(context, 0, 0, 330, 75);\n
+  builder.addFeed();\n
+\n
+  //add company information\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  $("#company-info div").each(function(){\n
+      builder.addText($(this).text());\n
+      builder.addFeed();\n
+  });\n
+\n
+  //add products information\n
+  builder.addTextSize(2, 1);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addText($.trim($("#invoice_information_title").text()));\n
+  builder.addTextSize(1, 1);\n
+  builder.addFeedLine(2);\n
+  $("#invoice_information_detail div").each(function(){\n
+    $(this).find("span").each(function(i){\n
+      if(i==0){\n
+        builder.addTextStyle(false, false, true);\n
+        builder.addTextAlign(builder.ALIGN_LEFT);\n
+        builder.addText($.trim($(this).text()));\n
+      }\n
+      else{\n
+        builder.addTextStyle(false, false, false);\n
+        builder.addTextPosition(350);\n
+        builder.addText($.trim($(this).text()));\n
+      }   \n
+    });\n
+    builder.addFeed();\n
+  });\n
+  builder.addFeed();\n
+\n
+  //add products line\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextFont(builder.FONT_C);\n
+  builder.addTextStyle(false, false, true);\n
+  $("#invoice_line thead tr").each(function(j){\n
+    var textPosition=0;\n
+    $(this).find("th").each(function(i){\n
+      builder.addTextPosition(textPosition);\n
+      builder.addText($.trim($(this).text()));\n
+      switch(i)\n
+      {\n
+      case 0:\n
+        textPosition+=100;\n
+        break;\n
+      case 1:\n
+        textPosition+=100;        \n
+        break;\n
+      case 2:\n
+        textPosition+=125;       \n
+        break;\n
+      case 3:\n
+        textPosition+=60;\n
+        break;\n
+      }        \n
+    });\n
+  });\n
+  builder.addFeed();\n
+  builder.addTextStyle(false, false, false);\n
+  $("#invoice_line tbody tr").each(function(){\n
+    var textPosition=0;\n
+    $(this).find("td").each(function(i){\n
+        builder.addTextPosition(textPosition);\n
+        switch(i)\n
+        {\n
+        case 0:\n
+          var content=$.trim($(this).text());\n
+          content_len=content.length;\n
+          if(content_len>8)\n
+            content=content.substr(0,2)+"..."+content.substr(content_len-4,3)\n
+          builder.addText(content);\n
+          textPosition+=100;\n
+          break;\n
+        case 1:\n
+          var content=parseFloat($.trim($(this).text())).toFixed(1);\n
+          var content_len=content.length;\n
+          if(content_len>10)\n
+            content=parseFloat(content).toExponential(2);\n
+          else if(content_len>8&&content_len<11)\n
+            content=parseInt(content);\n
+          builder.addText(content);\n
+          textPosition+=100;\n
+          break;\n
+        case 2:\n
+          priceControl($.trim($(this).text()),builder)\n
+          textPosition+=125;\n
+          break;\n
+        case 3:\n
+          var content=$.trim($(this).text());\n
+          var content_len=content.length;\n
+          content=content.substr(0,5);\n
+          builder.addText(content);\n
+          textPosition+=60;\n
+          break;\n
+        case 4:\n
+          priceControl($.trim($(this).text()),builder)\n
+          break;\n
+        }\n
+    });\n
+    builder.addFeed();\n
+  });\n
+\n
+  //add total excluding tax price\n
+  builder.addTextPosition(360);\n
+  builder.addText("===========");\n
+  builder.addFeed();\n
+  builder.addTextSize(1, 2);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextPosition(130);\n
+  builder.addText($.trim($("#total_without_tax tr th").text()));\n
+  builder.addTextPosition(385);\n
+  priceControl($.trim($("#total_without_tax tr td").text()),builder)\n
+  builder.addFeedLine(4);\n
+\n
+  //add the tax line\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextFont(builder.FONT_C);\n
+  builder.addTextStyle(false, false, true);\n
+  $("#tax thead tr").each(function(j){\n
+    var textPosition=100;\n
+    $(this).find("th").each(function(i){\n
+      builder.addTextPosition(textPosition);\n
+      builder.addText($.trim($(this).text()));\n
+      switch(i)\n
+      {\n
+      case 0:\n
+        textPosition+=60;\n
+        break;\n
+      case 1:\n
+        textPosition+=125;\n
+        break;\n
+      case 2:\n
+        textPosition+=100;\n
+        break;\n
+      }\n
+    });\n
+  });\n
+  builder.addFeed();\n
+  builder.addTextStyle(false, false, false);\n
+  $("#tax tbody tr").each(function(){\n
+    var textPosition=100;\n
+    $(this).find("td").each(function(i){\n
+        builder.addTextPosition(textPosition);\n
+        switch(i)\n
+        {\n
+        case 0:\n
+          builder.addText($.trim($(this).text()));\n
+          textPosition+=60;\n
+          break;\n
+        case 1:\n
+          priceControl($.trim($(this).text()),builder);\n
+          textPosition+=125;\n
+          break;\n
+        case 2:\n
+          builder.addText($.trim($(this).text()));\n
+          textPosition+=100;\n
+          break;\n
+        case 3:\n
+          priceControl($.trim($(this).text()),builder);\n
+          break;\n
+        }\n
+    });\n
+    builder.addFeed();\n
+  });\n
+  builder.addFeed();\n
+\n
+  //add total excluding tax price\n
+  builder.addTextPosition(360);\n
+  builder.addText("===========");\n
+  builder.addFeed();\n
+  builder.addTextSize(1, 2);\n
+  builder.addTextStyle(false, false, true);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  builder.addTextPosition(130);\n
+  builder.addText($.trim($("#total_price tr th").text()));\n
+  builder.addTextPosition(385);\n
+  priceControl($.trim($("#total_price tr td").text()),builder)\n
+  builder.addFeedLine(4);\n
+\n
+  // append date and time\n
+  builder.addTextSize(1, 1);\n
+  builder.addTextAlign(builder.ALIGN_LEFT);\n
+  var now = new Date();\n
+  builder.addText(now.toDateString() + \' \' + now.toTimeString().slice(0, 8) + \'\\n\');\n
+\n
+  // append paper cutting\n
+  builder.addCut(); \n
+\n
+  // create print object\n
+  var url = \'http://\' + \'192.168.192.168\' + \'/cgi-bin/epos/service.cgi?devid=\' + \'local_printer\' + \'&timeout=\' + \'10000\';\n
+  var epos = new epson.ePOSPrint(url);\n
+\n
+  // register callback function\n
+  epos.onreceive = function (res) {\n
+    // print failure\n
+    if (!res.success) {\n
+      console.log("no response")\n
+    }\n
+  }\n
+\n
+  // register callback function\n
+  epos.onerror = function (err) {\n
+    console.log("error")\n
+  }\n
+\n
+  // send\n
+  epos.send(builder.toString());\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6931</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

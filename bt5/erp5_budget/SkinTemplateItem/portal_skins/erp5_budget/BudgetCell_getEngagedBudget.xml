@@ -50,10 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw = dict()\n
-budget = context.getParentValue().getParentValue()\n
+            <value> <string>line = context.getParentValue()\n
+budget = line.getParentValue()\n
 budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
-if budget_model is not None:\n
+if budget_model is None:\n
+  kw = {}\n
+else:\n
   kw = budget_model.getInventoryQueryDict(context)\n
 \n
 if from_date:\n
@@ -61,14 +63,16 @@ if from_date:\n
 if at_date:\n
   kw[\'at_date\'] = at_date\n
 \n
-kw.setdefault(\'explanation_simulation_state\', context.getPortalReservedInventoryStateList() \\\n
-                                            + context.getPortalCurrentInventoryStateList() \\\n
-                                            + context.getPortalTransitInventoryStateList())\n
+portal = budget.getPortalObject()\n
+kw.setdefault(\'stock_explanation_simulation_state\',\n
+              portal.getPortalReservedInventoryStateList() +\n
+              portal.getPortalCurrentInventoryStateList() +\n
+              portal.getPortalTransitInventoryStateList())\n
 \n
 # XXX use getBudgetConsumptionMethod ?\n
 if src__:\n
-  return \'-- %s\\n%s\' % (kw, context.portal_simulation.getCurrentInventoryAssetPrice(src__=src__, **kw))\n
-return (context.portal_simulation.getInventoryAssetPrice(**kw) or 0) * context.getParentValue().BudgetLine_getConsumptionSign()\n
+  return \'-- %s\\n%s\' % (kw, portal.portal_simulation.getCurrentInventoryAssetPrice(src__=src__, **kw))\n
+return (portal.portal_simulation.getInventoryAssetPrice(**kw) or 0) * line.BudgetLine_getConsumptionSign()\n
 </string> </value>
         </item>
         <item>

@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.34 (2013-04-11)
+-------------------
+
+ * erp5.util.testsuite:
+
+  - allow to define sub results in tests, like we do for selenium
+    [Sebastien Robin]
+
 0.4.33 (2013-03-14)
 -------------------
 
@@ -113,28 +121,28 @@ Changes
   - do not run test suites on deleted branches
 
 0.4.20 (2012-12-19)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
   - Make sure to kill grandchilds when killing a process [Sebastien Robin]
 
 0.4.19 (2012-12-17)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
   - Fixed undefined variable [Sebastien Robin]
 
 0.4.18 (2012-12-14)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
   - Solve ascii issues when deleting software [Sebastien Robin]
 
 0.4.17 (2012-12-10)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -142,7 +150,7 @@ Changes
   - Add more unit tests [Pere Cortes]
 
 0.4.16 (2012-11-14)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -151,7 +159,7 @@ Changes
   - add unit for runTestSuite [Pere Cortes]
 
 0.4.15 (2012-11-07)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -160,7 +168,7 @@ Changes
   - ask wich test has priority to master more often [Sebastien Robin]
 
 0.4.14 (2012-11-05)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -171,7 +179,7 @@ Changes
   - handle another possible error with master [Sebastien Robin]
 
 0.4.13 (2012-10-31)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -181,7 +189,7 @@ Changes
     simplicity and readability [Sebastien Robin]
 
 0.4.12 (2012-10-25)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -189,7 +197,7 @@ Changes
     suite by the master [Sebastien Robin] 
 
 0.4.11 (2012-10-22)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -197,7 +205,7 @@ Changes
     of the work by the master [Pere Cortes], [Sebastien Robin] 
 
 0.4.10 (2012-10-01)
-------------------
+-------------------
 
  * erp5.util.testnode:
 
@@ -265,7 +273,7 @@ Changes
   - New module [Vincent Pelletier]
 
 0.4.3 (2012-04-24)
-----------------
+------------------
 
  * erp5.util.testnode:
 
@@ -275,7 +283,7 @@ Changes
     test run
 
 0.4.2 (2012-04-11)
-----------------
+------------------
 
  * erp5.util.testnode:
 
@@ -288,7 +296,7 @@ Changes
     allow relaunching test without restarting testnode
 
 0.4.1 (2012-02-29)
-----------------
+------------------
 
  * erp5.util.testnode:
 

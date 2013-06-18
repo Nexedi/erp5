@@ -50,6 +50,16 @@ class TextConvertableMixin:
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'asRawText')
+  def asRawText(self, **kw):
+    """
+    Converts the current document to plain text without substitution
+    """
+    kw.pop('format', None)
+    mime, data = self.convert(format='txt', substitute=False, **kw)
+    return str(data)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'asTextContent')
   def asTextContent(self, **kw):
     """

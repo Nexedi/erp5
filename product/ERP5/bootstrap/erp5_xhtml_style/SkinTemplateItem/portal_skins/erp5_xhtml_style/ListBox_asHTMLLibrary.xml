@@ -106,7 +106,8 @@
     <!-- Normal mode -->\n
     <input type="text"\n
            title="Global Search"\n
-           i18n:domain="ui" i18n:attributes="value; title" \n
+           i18n:domain="ui" \n
+           i18n:attributes="title" \n
            tal:attributes="value search_text;\n
                            name global_search_column;\n
                            onkeypress string: submitFormOnEnter(event, this.form, \'${global_search_column_script}\');"/>\n
@@ -123,7 +124,8 @@
     <input tal:define="params python: {\'%s:method\' %global_search_column_script:\'\',\'%s\' %global_search_column:\'this.value\'};"\n
            type="text"\n
            title="Global Search"\n
-           i18n:domain="ui" i18n:attributes="value; title"\n
+           i18n:domain="ui" \n
+           i18n:attributes="title"\n
            tal:attributes=\'value search_text;\n
                            name global_search_column;\n
                            onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
@@ -353,12 +355,20 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
+            <key> <string>expand</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ListBox_asHTMLLibrary</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
             <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

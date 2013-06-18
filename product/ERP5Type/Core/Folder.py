@@ -222,11 +222,29 @@ class FolderMixIn(ExtensionClass.Base):
     node_list = list(activity_tool.getNodeList())
     current_node = activity_tool.getCurrentNode()
     try:
-      node_number = node_list.index(current_node)
+      node_number = node_list.index(current_node) + 1
     except ValueError:
       # Not a processing node
-      node_number = 111
+      node_number = 0
     return "%03d-%s" %(node_number, self._generateRandomId())
+
+  def _generatePerDayNodeNumberId(self):
+    """
+    Generate id base on date and node number, useful for import and mass
+    creation of objects inside a module using activities. We also append
+    random id.
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    node_list = list(activity_tool.getNodeList())
+    current_node = activity_tool.getCurrentNode()
+    try:
+      node_number = node_list.index(current_node) + 1
+    except ValueError:
+      # Not a processing node
+      node_number = 0
+    current_date = DateTime().strftime('%Y%m%d')
+    my_id = self._generateRandomId()
+    return "%s.%03d-%s" %(current_date, node_number, my_id)
 
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
@@ -238,7 +256,6 @@ class FolderMixIn(ExtensionClass.Base):
 
       Permission is view because we may want to add content to a folder
       without changing the folder content itself.
-      XXX
     """
     my_id = None
     if id_group is None:
@@ -255,7 +272,7 @@ class FolderMixIn(ExtensionClass.Base):
         # default value of id_generator and force safe fallback in this case.
         idGenerator = getattr(self, id_generator, None)
         if idGenerator is None:
-          idGenerator = self._generateNextId
+          raise ValueError("Could not find id_generator %r" % (id_generator,))
       else:
         idGenerator = self._generateNextId
       my_id = idGenerator()

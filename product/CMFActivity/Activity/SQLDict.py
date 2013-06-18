@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
-from Queue import VALID, INVALID_PATH
-from Products.CMFActivity.Errors import ActivityFlushError
+from Products.CMFActivity.ActivityTool import Message, registerActivity
 import sys
 #from time import time
 from SQLBase import SQLBase, sort_message_key
@@ -51,7 +49,6 @@ class SQLDict(SQLBase):
     because use of OOBTree.
   """
   sql_table = 'message'
-  merge_duplicate = True
 
   # Transaction commit methods
   def prepareQueueMessageList(self, activity_tool, message_list):
@@ -76,7 +73,7 @@ class SQLDict(SQLBase):
         #      schema, and much code can be merged into SQLBase.
         order_validation_text_list.append(x)
         processing_node_list.append(0 if x == 'none' else -1)
-      dumped_message_list = map(self.dumpMessage, message_list)
+      dumped_message_list = map(Message.dump, message_list)
       # The uid_list also is store in the ZODB
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
         id_generator='uid', id_group='portal_activity',
@@ -99,17 +96,21 @@ class SQLDict(SQLBase):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    # BBB: deprecated
     return self.generateMessageUID(m) in activity_buffer.getUidSet(self)
 
   def registerMessage(self, activity_buffer, activity_tool, m):
+    message_id = self.generateMessageUID(m)
+    uid_set = activity_buffer.getUidSet(self)
+    if message_id in uid_set:
+      return
+    uid_set.add(message_id)
     message_list = activity_buffer.getMessageList(self)
     message_list.append(m)
-    uid_set = activity_buffer.getUidSet(self)
-    uid_set.add(self.generateMessageUID(m))
-    m.is_registered = 1
+    m.is_registered = True
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
-    m.is_registered = 0 # This prevents from inserting deleted messages into the queue
+    m.is_registered = False # This prevents from inserting deleted messages into the queue
     class_name = self.__class__.__name__
     uid_set = activity_buffer.getUidSet(self)
     uid_set.discard(self.generateMessageUID(m))
@@ -131,7 +132,7 @@ class SQLDict(SQLBase):
       uid = line.uid
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
-        m = self.loadMessage(line.message, uid=uid, line=line)
+        m = Message.load(line.message, uid=uid, line=line)
         merge_parent = m.activity_kw.get('merge_parent')
         try:
           if merge_parent:
@@ -157,7 +158,7 @@ class SQLDict(SQLBase):
                 line = result[0]
                 key = line.path, method_id
                 uid = line.uid
-                m = self.loadMessage(line.message, uid=uid, line=line)
+                m = Message.load(line.message, uid=uid, line=line)
             # return unreserved similar children
             result = activity_tool.SQLDict_selectChildMessageList(
               path=line.path,
@@ -204,77 +205,6 @@ class SQLDict(SQLBase):
         return result[0].message_count > 0
     return 0
 
-  def flush(self, activity_tool, object_path, invoke=0, method_id=None, commit=0, **kw):
-    """
-      object_path is a tuple
-    """
-    path = '/'.join(object_path)
-    # LOG('Flush', 0, str((path, invoke, method_id)))
-    method_dict = {}
-    readUidList = getattr(activity_tool, 'SQLDict_readUidList', None)
-    if readUidList is not None:
-      # Parse each message in registered
-      for m in activity_tool.getRegisteredMessageList(self):
-        if m.object_path == object_path and (method_id is None or method_id == m.method_id):
-          #if not method_dict.has_key(method_id or m.method_id):
-          if not method_dict.has_key(m.method_id):
-            method_dict[m.method_id] = 1 # Prevents calling invoke twice
-            if invoke:
-              # First Validate
-              validate_value = m.validate(self, activity_tool)
-              if validate_value is VALID:
-                activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-                if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
-                  # The message no longer exists
-                  raise ActivityFlushError, (
-                      'Could not evaluate %s on %s' % (m.method_id , path))
-              elif validate_value is INVALID_PATH:
-                # The message no longer exists
-                raise ActivityFlushError, (
-                    'The document %s does not exist' % path)
-              else:
-                raise ActivityFlushError, (
-                    'Could not validate %s on %s' % (m.method_id , path))
-          activity_tool.unregisterMessage(self, m)
-      # Parse each message in SQL dict
-      result = self._getMessageList(activity_tool, processing=0, path=path,
-        **({'method_id': method_id} if method_id else {}))
-      for line in result:
-        path = line.path
-        line_method_id = line.method_id
-        if not method_dict.has_key(line_method_id):
-          # Only invoke once (it would be different for a queue)
-          # This is optimisation with the goal to process objects on the same
-          # node and minimize network traffic with ZEO server
-          method_dict[line_method_id] = 1
-          m = self.loadMessage(line.message, uid=line.uid, line=line)
-          if invoke:
-            # First Validate (only if message is marked as new)
-            if line.processing_node == -1:
-              validate_value = m.validate(self, activity_tool)
-            else:
-              validate_value = VALID
-#             LOG('SQLDict.flush validate_value',0,validate_value)
-            if validate_value is VALID:
-              activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
-                # The message no longer exists
-                raise ActivityFlushError, (
-                    'Could not evaluate %s on %s' % (m.method_id , path))
-            elif validate_value is INVALID_PATH:
-              # The message no longer exists
-              raise ActivityFlushError, (
-                  'The document %s does not exist' % path)
-            else:
-              raise ActivityFlushError, (
-                  'Could not validate %s on %s' % (m.method_id , path))
-
-      if result:
-        uid_list = readUidList(path=path, method_id=method_id)
-        if uid_list:
-          activity_tool.SQLBase_delMessage(table=self.sql_table,
-                                           uid=[x.uid for x in uid_list])
-
   def dumpMessageList(self, activity_tool):
     # Dump all messages in the table.
     message_list = []
@@ -282,7 +212,7 @@ class SQLDict(SQLBase):
     if dumpMessageList is not None:
       result = dumpMessageList()
       for line in result:
-        m = self.loadMessage(line.message, uid=line.uid, line=line)
+        m = Message.load(line.message, uid=line.uid, line=line)
         message_list.append(m)
     return message_list
 
@@ -294,7 +224,7 @@ class SQLDict(SQLBase):
       validated_count = 0
       while 1:
         result = self._getMessageList(activity_tool, processing_node=-1,
-                                      to_date=now_date, processing=0,
+                                      to_date=now_date,
                                       offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
@@ -303,7 +233,7 @@ class SQLDict(SQLBase):
         validation_text_dict = {'none': 1}
         message_dict = {}
         for line in result:
-          message = self.loadMessage(line.message, uid=line.uid, line=line)
+          message = Message.load(line.message, uid=line.uid, line=line)
           if not hasattr(message, 'order_validation_text'): # BBB
             message.order_validation_text = line.order_validation_text
           self.getExecutableMessageList(activity_tool, message, message_dict,
@@ -381,7 +311,7 @@ class SQLDict(SQLBase):
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:
-        m = self.loadMessage(line.message,
+        m = Message.load(line.message,
                              line=line,
                              uid=line.uid,
                              date=line.date,

@@ -21,10 +21,7 @@
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>sort_columns</string>
-                <string>stat_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
-                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -123,23 +120,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -158,7 +143,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery_own_section_title</string>
+                          <string>accounting_transaction_section_title</string>
                           <string>Own Section</string>
                         </tuple>
                         <tuple>
@@ -178,12 +163,12 @@
                           <string>Destination Reference</string>
                         </tuple>
                         <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
+                          <string>accounting_transaction_project_title</string>
+                          <string>Project</string>
                         </tuple>
                         <tuple>
-                          <string>destination_project_title</string>
-                          <string>Client Project</string>
+                          <string>accounting_transaction_payment_title</string>
+                          <string>Section Bank Account</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -194,16 +179,8 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title_with_link</string>
-                          <string>Third Party (with Link)</string>
-                        </tuple>
-                        <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_net_price</string>
-                          <string>Total Net Price</string>
                         </tuple>
                         <tuple>
                           <string>causality_title</string>
@@ -216,6 +193,14 @@
                         <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -235,7 +220,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
+                          <string>accounting_transaction_mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -259,11 +244,11 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
+                          <string>total_debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>total_credit</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -302,8 +287,8 @@
                           <string>delivery_own_section_title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
-                          <string>delivery_mirror_section_title</string>
+                          <string>accounting_transaction_mirror_section_title</string>
+                          <string>accounting_transaction_mirror_section_title</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
@@ -390,11 +375,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_own_section_title</string>
+                          <string>accounting_transaction_section_title</string>
                           <string>Own Section</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
+                          <string>accounting_transaction_mirror_section_title</string>
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
@@ -455,92 +440,13 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>operation_date</string>
-                          <string>operation_date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>operation_date</string>
-                          <string>Accounting Operation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Invoice Number</string>
-                        </tuple>
-                        <tuple>
-                          <string>specific_reference</string>
-                          <string>Transaction Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Client Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>causality_title</string>
-                          <string>Packing List</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_causality_state_title</string>
-                          <string>Causality State</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>owner_title</string>
-                          <string>Owner</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>debit</string>
-                          <string>AccountingTransactionModule_statSourceDebit</string>
-                        </tuple>
-                        <tuple>
-                          <string>credit</string>
-                          <string>AccountingTransactionModule_statSourceCredit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>stat_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -550,17 +456,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Accounting Transactions</string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>delivery_mirror_section_title_with_link</string>
-                          <string>AccountingTransaction_getThirdPartyUrl</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>
@@ -628,19 +523,6 @@
         <item>
             <key> <string>method_name</string> </key>
             <value> <string>AccountingTransactionModule_getAccountingTransactionList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>

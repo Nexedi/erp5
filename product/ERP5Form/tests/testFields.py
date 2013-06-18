@@ -739,7 +739,7 @@ class TestProxyField(ERP5TypeTestCase):
     # we can render
     proxy_field.render()
     # and validate
-    self.container.Base_view.validate_all_to_request(dict())
+    self.container.Base_view.validate_all_to_request(self.portal.REQUEST)
     
   def test_manage_edit_surcharged_xmlrpc(self):
     # manage_edit_surcharged_xmlrpc is a method to edit proxyfields

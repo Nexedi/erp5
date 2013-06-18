@@ -20,18 +20,19 @@ Changelog
 
 2010-08-13 Nicolas Delaby
 -------------------------
-small Bug fix.
-Add option to export outpout into file
-This option take precedence over mailing support.
+- Small bug fix.
+- Add option to export outpout into file
+- This option take precedence over mailing support.
 
 2010-08-04 Nicolas Delaby
 -------------------------
-Bug fix in status_search_in_wget_regex
-Enhance output report (fetch all errors per url)
-Add 2 options to check Urls
-  prohibited_file_name_list
-  prohibited_folder_name_list
+- Bug fix in status_search_in_wget_regex
+- Enhance output report (fetch all errors per url)
+- Add 2 options to check Urls:
+
+  - prohibited_file_name_list
+  - prohibited_folder_name_list
 
 2010-08-03 Nicolas Delaby
 -------------------------
-First release
+- First release

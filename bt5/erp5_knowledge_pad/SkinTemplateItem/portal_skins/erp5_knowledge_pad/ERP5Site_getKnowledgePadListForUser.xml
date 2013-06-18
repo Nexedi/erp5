@@ -56,6 +56,10 @@ isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0
 \n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
+  # call getObject() explicitly so that further getter methods do not\n
+  # invoke getObject().\n
+  results = [x.getObject() for x in results]\n
+
   # in Web Mode we can have a temporary object created based on current language, document by reference\n
   real_context = context.Base_getRealContext()\n
   real_context_url = real_context.getRelativeUrl()\n
@@ -99,9 +103,11 @@ active_pad, results = \\\n
 if active_pad is not None and active_pad.getValidationState() != \'deleted\':\n
   found = False\n
   new_results = []\n
+  active_pad_path = active_pad.getPath()\n
   for brain in results:\n
     new_results.append(brain)\n
-    if brain.getObject() == active_pad: found = True\n
+    if brain.getPath() == active_pad_path:\n
+      found = True\n
   results = new_results\n
   if not found:\n
     # append it only if not from Catalog results\n

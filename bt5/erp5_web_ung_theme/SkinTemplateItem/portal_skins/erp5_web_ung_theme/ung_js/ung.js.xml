@@ -40,21 +40,22 @@ $.fn.outerHTML = function() {\n
         $t.unwrap();\n
         return content;\n
     }\n
-}\n
+};\n
 \n
 function getCurrentObjectUrl(){\n
   return window.location.href.split("?")[0];\n
 }\n
 \n
 function toogleLoading(is_toogle, _message) {\n
+  var loading_wrapper;\n
   if (is_toogle) {\n
-    var loading_wrapper = $("#loading-wrapper").first();\n
+    loading_wrapper = $("#loading-wrapper").first();\n
     toogleLoading.prototype.old_loading_message = loading_wrapper.find(\'p\')[0].textContent;\n
     loading_wrapper.find(\'p\')[0].textContent = _message;\n
     loading_wrapper.show();\n
   }\n
   else {\n
-    var loading_wrapper = $("#loading-wrapper").first();\n
+    loading_wrapper = $("#loading-wrapper").first();\n
     loading_wrapper.hide();\n
     loading_wrapper.find(\'p\')[0].textContent = toogleLoading.prototype.old_loading_message;\n
   }\n
@@ -66,7 +67,7 @@ function changeLanguage(language){\n
      async: false,\n
      success: function(){\n
        window.location.reload();\n
-     },\n
+     }\n
   });\n
 }\n
 \n
@@ -74,7 +75,7 @@ function getPortalTypeFromContext(){\n
   var response = $.ajax({\n
                     url: "getPortalType",\n
                     method: "GET",\n
-                    async: false,\n
+                    async: false\n
                 }).responseText;\n
   return response;\n
 }\n
@@ -95,7 +96,7 @@ function getUrlParameterList(){\n
 function getObjectPropertyValue(method_name){\n
   return $.ajax({\n
             url: method_name,\n
-            async: false,\n
+            async: false\n
          }).responseText;\n
 }\n
 \n
@@ -146,7 +147,7 @@ function setObjectPropertyValue(method_name, value, parameter){\n
         type: "POST",\n
         url: method_name,\n
         data: parameter + "=" + value,\n
-        async: false,\n
+        async: false\n
   });\n
   return true;\n
 }\n
@@ -160,7 +161,7 @@ function changeCheckBoxValue(value){\n
 function waitCreateUNGUser(paramStr){\n
   $.get("ERP5Site_checkIfUserExist?" + paramStr, {}, function(data, textStatus, xhr){\n
      data = jQuery.parseJSON(data);\n
-     if (data.response == true){\n
+     if (data.response === true){\n
        clearTimeout();\n
        window.location.reload();\n
      }\n
@@ -214,7 +215,7 @@ function displayLoginForm(){\n
           return false;\n
         }\n
         $.getJSON(\'ERPSite_createUNGUser?\' + $("form#create-user").serialize(), function(response){\n
-          if (response == null){\n
+          if (response === null){\n
             displayFormMessage(formHash.login_name + " is not available, please try another...", 3500);\n
             return false;\n
           }\n
@@ -223,7 +224,9 @@ function displayLoginForm(){\n
             var paramStr = "reference=" + formHash.login_name;\n
             setTimeout(waitCreateUNGUser(paramStr), 2000);\n
           }\n
+          return true;\n
         });\n
+        return true;\n
       });\n
     });\n
   });\n
@@ -231,7 +234,7 @@ function displayLoginForm(){\n
 \n
 function reloadLoginPage(event){\n
   event.preventDefault();\n
-  if ($("div#main-content").html() == null){\n
+  if ($("div#main-content").html() === null){\n
     displayLoginForm();\n
   }\n
   if ($("table#create-new-user").css("display") != "none"){\n
@@ -243,41 +246,41 @@ function reloadLoginPage(event){\n
 \n
 function displayDocumentTitle(title){\n
   var document_title = title;\n
-  document_title == null ? document_title = getObjectPropertyValue("getTitle"): null;\n
+  document_title === null ? document_title = getObjectPropertyValue("getTitle"): null;\n
   if (document_title.length > 30){\n
     $("a[name=\'document_title\']").html(document_title.substring(0,30) + "...");\n
   }\n
   else{\n
     $("a[name=\'document_title\']").html(document_title);\n
-  };\n
+  }\n
 }\n
 \n
 // XXX: refactor to upgrade performance of \'updateListboxSelection\' function\n
 function updateListboxSelection() {\n
   var data_params = $(\'form#main_form\').serializeArray();\n
-  $(\'input[name="knowledge_pad_module_ung_knowledge_pad_ung_docs_listbox_content_listbox_uid:list"]\')\n
-    .each(function() {\n
-      data_params.push({\'name\': \'listbox_uid:list\',\n
-                        \'value\': this.value,}\n
-      );\n
-    })\n
+  $(\'input[name="knowledge_pad_module_ung_knowledge_pad_ung_docs_listbox_content_listbox_uid:list"]\').each(function() {\n
+      data_params.push({\n
+        \'name\': \'listbox_uid:list\',\n
+        \'value\': this.value\n
+      });\n
+    });\n
   $.ajax({\n
         async: false,\n
         type: \'POST\',\n
         url: \'Base_updateListboxSelection\',\n
-        data: $.param(data_params),\n
+        data: $.param(data_params)\n
   });\n
 }\n
 \n
 $().ready(function(){\n
   $("p.clear").remove();\n
-  if ($("a#login").html() != null){\n
+  if ($("a#login").html() !== null){\n
     displayLoginForm();\n
     return 0;\n
   }\n
-  if ($("div.gadget-column").length == 0) {\n
+  if ($("div.gadget-column").length === 0) {\n
     parameterList = getUrlParameterList();\n
-    if (parameterList.hasOwnProperty("upload_document") == true){\n
+    if (parameterList.hasOwnProperty("upload_document") === true){\n
       $("a[name=\'document_title\'], a[name=\'document_state\'], div.header-right, div.content").hide();\n
       $("a#loading_message").show();\n
       setTimeout(checkConversion(), 1000);\n
@@ -303,6 +306,7 @@ $().ready(function(){\n
             });\n
           });\n
           break;\n
+        default: break;\n
       }\n
       displayDocumentTitle(null);\n
     }\n
@@ -313,10 +317,10 @@ $().ready(function(){\n
   });\n
   $("tbody tr td.listbox-table-domain-tree-cell a").each(function(){\n
     if ($(this).text().length == 16){\n
-      $(this).css("padding-right", "82px")\n
+      $(this).css("padding-right", "82px");\n
     }\n
     if ($(this).text().length > 16){\n
-      $(this).css("padding-right", "24px")\n
+      $(this).css("padding-right", "24px");\n
     }\n
   });\n
 \n
@@ -330,7 +334,7 @@ $().ready(function(){\n
              data: "action_name=" + action_name,\n
              success: function(){\n
                window.location.reload();\n
-             },\n
+             }\n
       });\n
     });\n
     if ($("a[name=\'document_state\']").text() == "Draft") {\n
@@ -340,13 +344,13 @@ $().ready(function(){\n
         event.preventDefault();\n
         $.ajax({\n
                url: \'WebPage_shareDocument\',\n
-               async: false,\n
+               async: false\n
         });\n
         location.reload();\n
       });\n
-    };\n
+    }\n
     $("div.action_menu li ul").css("height", $("div.action_menu li ul li").length * 25.3 + "px");\n
-  };\n
+  }\n
 \n
   $("#edit_document").dialog({\n
     autoOpen: false,\n
@@ -375,14 +379,14 @@ $().ready(function(){\n
       },\n
       Cancel: function() {\n
         $(this).dialog("close");\n
-      },\n
+      }\n
     }\n
   });\n
   $("#upload_document").dialog({\n
     autoOpen: false,\n
     height: 116,\n
     width: 346,\n
-    modal: true,\n
+    modal: true\n
   });\n
   $("div.gadget-listbox").dialog({\n
     autoOpen: false,\n
@@ -395,11 +399,11 @@ $().ready(function(){\n
          $("table#gadget-table tbody tr td input").each(function(){\n
            if (this.checked){\n
              gadgetIdList.push($(this).attr("id"));\n
-           };\n
+           }\n
          });\n
-         if (gadgetIdList.length == 0){\n
+         if (gadgetIdList.length === 0){\n
            $(this).dialog("close");\n
-         };\n
+         }\n
          var tabTitle = $("div#tabs ul li.tab_selected span").html();\n
          $.ajax({\n
            type: "post",\n
@@ -409,7 +413,7 @@ $().ready(function(){\n
              window.location.reload();\n
            }\n
          });\n
-      },\n
+      }\n
     }\n
   });\n
   $("div#preference_dialog").dialog({\n
@@ -424,51 +428,44 @@ $().ready(function(){\n
         $.ajax({\n
           async: false,\n
           url: ungPreferencePath + "/Base_edit",\n
-          data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle",\n
+          data: erp5PreferenceArgument + "&form_id=Preference_viewHtmlStyle"\n
         });\n
         var ungPreferenceArgument = $("form#ung_preference").serialize();\n
         $.ajax({\n
           async: false,\n
           url: ungPreferencePath + "/Base_edit",\n
-          data: ungPreferenceArgument + "&form_id=UNGPreference_view",\n
+          data: ungPreferenceArgument + "&form_id=UNGPreference_view"\n
         });\n
         location.reload();\n
       },\n
       Cancel: function() {\n
         $(this).dialog("close");\n
-      },\n
+      }\n
     }\n
   });\n
-  $("p#more_properties")\n
-    .click(function(){\n
+  $("p#more_properties").click(function(){\n
       $("div#more_property").show();\n
       $("p#hide_properties").show();\n
       $("div#edit_document fieldset").animate({"height": "186px"}, "slow");\n
-      $("div.ui-dialog").animate({"top": "50px"}, "slow")\n
-                        .animate({"height": "255px"}, "slow");\n
+      $("div.ui-dialog").animate({"top": "50px"}, "slow").animate({"height": "255px"}, "slow");\n
       $("div#edit_document").animate({"height": "183px"}, "slow");\n
-      $("div#edit_document fieldset input").css("margin", "0")\n
-                                           .css("width", "60%");\n
-      $("div#edit_document fieldset label").css("float", "left")\n
-                                           .css("width", "35%");\n
+      $("div#edit_document fieldset input").css("margin", "0").css("width", "60%");\n
+      $("div#edit_document fieldset label").css("float", "left").css("width", "35%");\n
       $("div#more_property input").css("width", "47%");\n
       $("p#more_properties").hide();\n
     });\n
-  $("p#hide_properties")\n
-    .click(function(){\n
+  $("p#hide_properties").click(function(){\n
       $("div#more_property").hide();\n
       $("p#more_properties").show();\n
       $("p#hide_properties").hide();\n
-      $("div#edit_document fieldset input").css("width", "95%")\n
-                                           .css("margin-top", "14px");\n
+      $("div#edit_document fieldset input").css("width", "95%").css("margin-top", "14px");\n
       $("div#edit_document fieldset").animate({"height": "69px"}, "slow");\n
       $("div.ui-dialog").animate({"height": "148px"}, "slow");\n
       $("div#edit_document").animate({"height": "78px"}, "slow");\n
   });\n
-  $("a#settings")\n
-    .click(function(event){\n
+  $("a#settings").click(function(event){\n
       event.preventDefault();\n
-      if ($("div#preference_dialog").html() == ""){\n
+      if ($("div#preference_dialog").html() === ""){\n
         $.ajax({\n
           url: "Base_getPreferencePathList",\n
           async: false,\n
@@ -503,8 +500,7 @@ $().ready(function(){\n
       $("div#preference_dialog").dialog("open");\n
     });\n
 \n
-  $("button#change_state")\n
-    .click(function(event){\n
+  $("button#change_state").click(function(event){\n
       event.preventDefault();\n
       $("div#change_state_dialog").html(\'\');\n
       // update portal selections\n
@@ -514,10 +510,10 @@ $().ready(function(){\n
         url: \'erp5/Folder_viewWorkflowActionDialog\',\n
         data: {selection_name: $(\'input[name=list_selection_name]\').val(),\n
                form_id: $(\'input[name=gadget_form_id]\').val(),\n
-               editable_mode: 1,\n
+               editable_mode: 1\n
               },\n
         success: function(data2) {\n
-          folder_workflow_action_dialog_data = data2\n
+          folder_workflow_action_dialog_data = data2;\n
           $("div#change_state_dialog").append("<form id=\'change_state_form\'>" +\n
                                               "<div class=\'change_state_dialog\'>" +\n
                                               "<table class=\'listbox listbox-table\'>" +\n
@@ -550,8 +546,8 @@ $().ready(function(){\n
         var folder_workflow_data = $(folder_workflow_action_dialog_data).find(\'input[type="hidden"]\').serializeArray();\n
         var change_state_data = $(\'form#change_state_form\').serializeArray();\n
         var merge = {};\n
-        $.map(folder_workflow_data, function(n,i){merge[n.name] = n.value});\n
-        $.map(change_state_data, function(n,i){merge[n.name] = n.value});\n
+        $.map(folder_workflow_data, function(n,i){merge[n.name] = n.value;});\n
+        $.map(change_state_data, function(n,i){merge[n.name] = n.value;});\n
         merge[\'form_id\'] = \'WebSection_viewUNGDocumentList\';\n
         $.ajax({\n
           async: false,\n
@@ -560,7 +556,7 @@ $().ready(function(){\n
           success: function(result){\n
             var form_data = $(result).find(\'input[type="hidden"]\').serializeArray();\n
             var merge2 = {};\n
-            $.map(form_data, function(n,i){merge2[n.name] = n.value});\n
+            $.map(form_data, function(n,i){merge2[n.name] = n.value;});\n
             $.ajax({\n
               async: false,\n
               url: \'web_site_module\' + "/Base_callDialogMethod",\n
@@ -575,19 +571,18 @@ $().ready(function(){\n
       },\n
       Cancel: function() {\n
         $( this ).dialog("close");\n
-      },\n
+      }\n
     }\n
   });\n
 \n
-  $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click()});\n
+  $("button.ui-button, span.ui-icon").click(function(){$("p#hide_properties").click();});\n
   $("input#submit_document").click(function(event){\n
-    if (document.getElementById("upload-file").value == ""){\n
+    if (document.getElementById("upload-file").value === ""){\n
       event.preventDefault();\n
       $("span#no-input-file").show();\n
     }\n
   });\n
-  $("a[name=\'document_title\']")\n
-    .click(function(){\n
+  $("a[name=\'document_title\']").click(function(){\n
       $("div#more_property").hide();\n
       $("p#hide_properties").hide();\n
       var document_title = getObjectPropertyValue("getTitle");\n
@@ -601,7 +596,7 @@ $().ready(function(){\n
       $("input#language.language").attr("value", getObjectPropertyValue("getLanguage"));\n
       $("input#sort_index.sort_index").attr("value", getObjectPropertyValue("getIntIndex"));\n
       var subjectList = jQuery.parseJSON(getObjectPropertyValue(\'getSubjectList\').replace(/\'/g,\'"\'));\n
-      if (subjectList != null) {\n
+      if (subjectList !== null) {\n
         $("textarea#keyword_list").attr("value", subjectList.join("\\n"));\n
       } else {\n
         $("textarea#keyword_list").attr("value", "");\n
@@ -614,8 +609,8 @@ $().ready(function(){\n
   });\n
   $("span#knowledge_pad_module_8_titlean").text("1");\n
   if ($("#tab-list-container #tabs ul li").length > 2) {\n
-    $("li#add_new_tab_dialog_link.tab").hide()\n
-  };\n
+    $("li#add_new_tab_dialog_link.tab").hide();\n
+  }\n
   $("div#add_new_gadget_link a#add-gadgets").removeAttr("onclick");\n
   $("div#add_new_gadget_link a#add-gadgets").click(function(event){\n
     event.preventDefault();\n
@@ -623,26 +618,7 @@ $().ready(function(){\n
     $.getJSON("WebSection_getGadgetPathList", function(to_parse_data){\n
       gadgetList = jQuery(to_parse_data);\n
       gadgetList.each(function(){\n
-        $("div.gadget-listbox table#gadget-table")\n
-          .append($(\'<tr>\')\n
-              .append($(\'<td>\')\n
-                  .append($(\'<input>\')\n
-                      .attr(\'type\', \'checkbox\')\n
-                      .attr(\'id\', this.id)\n
-                  )\n
-              )\n
-             .append($(\'<td>\')\n
-                 .append($(\'<a>\')\n
-                     .text(this.title)\n
-                 )\n
-             )\n
-             .append($(\'<td>\')\n
-                  .append($(\'<img>\')\n
-                      .attr(\'src\', this.image_url)\n
-                      .text(this.title)\n
-                  )\n
-             )\n
-          );\n
+        $("div.gadget-listbox table#gadget-table").append($(\'<tr>\').append($(\'<td>\').append($(\'<input>\').attr(\'type\', \'checkbox\').attr(\'id\', this.id))).append($(\'<td>\').append($(\'<a>\').text(this.title))).append($(\'<td>\').append($(\'<img>\').attr(\'src\', this.image_url).text(this.title))));\n
         });\n
     });\n
     $("div.gadget-listbox").dialog("open");\n
@@ -653,18 +629,17 @@ $().ready(function(){\n
     $("div.listbox-tree, div.gadget-action div.front_pad").css("width", "79%");\n
     $("td.listbox-table-domain-tree-cell a").css("padding-right", "25px");\n
     $("div.header-right").css("width", "52.3%");\n
-  };\n
+  }\n
   $("a.tree-open").parent().parent().css("background-color", "#BBCCFF");\n
-  if (window.location.href.match("^http.*\\/unfoldDomain") != null){\n
-    $("a.document").css("text-decoration", "none")\n
-                   .css("color", "#000");\n
+  if (window.location.href.match("^http.*\\/unfoldDomain") !== null){\n
+    $("a.document").css("text-decoration", "none").css("color", "#000");\n
   }\n
   var h3Tag = $("div#page_wrapper div h3");\n
   if (h3Tag.text().replace(/^\\s+/,\'\').replace(/\\s+$/,\'\') == "Your tab is empty."){\n
     h3Tag.hide();\n
   }\n
 \n
-  if (!$("div.gadget-column").length == 0) {\n
+  if (!$("div.gadget-column").length === 0) {\n
     // render main document listbox\n
     $.ajax({\n
       async: false,\n
@@ -672,22 +647,22 @@ $().ready(function(){\n
       data: {pad_relative_url: \'knowledge_pad_module/ung_knowledge_pad\', mode: \'web_front\'},\n
       dataType: \'json\',\n
       success: function(data){\n
-        external_data = data\n
-        var data_html = $(data.body)[0]\n
+        external_data = data;\n
+        var data_html = $(data.body)[0];\n
         //var data_script = $(data.body)[1].text\n
-        var data_script = data.javascript\n
+        var data_script = data.javascript;\n
 \n
-        ung_listbox_container = $(\'div#main_listbox-container\')\n
+        ung_listbox_container = $(\'div#main_listbox-container\');\n
         // fill body\n
         ung_listbox_container.html(data_html);\n
         // attach listener\n
-        ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox)\n
+        ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox);\n
         // eval script to update listbox\n
-        eval(data_script)\n
+        eval(data_script);\n
         // remove class \'portal-column\' from main listbox\n
         // (as it should not interfere in user\'s box layout)\n
         // updateServerBoxColumnLayout method uses \'div.portal-column\' as selector\n
-        ung_listbox_container.find(\'div.portal-column\')[0].className = \'\'\n
+        ung_listbox_container.find(\'div.portal-column\')[0].className = \'\';\n
 \n
         configureUNGSearch(data_script);\n
 \n
@@ -699,26 +674,26 @@ $().ready(function(){\n
 });\n
 \n
 function configureUNGSearch(data_script) {\n
-  ung_listbox_updater_call = data_script\n
+  ung_listbox_updater_call = data_script;\n
   $(\'input#search_button\').click(function(event){\n
     event.preventDefault();\n
-    var searched_text = $(\'input[name="field_your_search_text"]\').val()\n
+    var searched_text = $(\'input[name="field_your_search_text"]\').val();\n
 \n
     // keep old function to call\n
     var originalUpdater = updater;\n
     // overwrite (shadowing) to change \'params\' param on the fly\n
     updater = function() {\n
       // \'params\' is the fifth param, so treat it\n
-      params = arguments[4]\n
-      params[\'SearchableText\'] = searched_text\n
+      params = arguments[4];\n
+      params[\'SearchableText\'] = searched_text;\n
       originalUpdater.apply(this, arguments);\n
-    }\n
+    };\n
     // eval script\n
-    eval(data_script)\n
+    eval(data_script);\n
 \n
     // restore old function\n
     updater = originalUpdater;\n
-  })\n
+  });\n
 }\n
 \n
 function wrapUpdater() {\n
@@ -740,7 +715,7 @@ function wrappedUpdater() {\n
       additional_request_params[element_name] = new Array();\n
     }\n
     additional_request_params[element_name].push(element_value);\n
-  })\n
+  });\n
   originalUpdater.apply(this, arguments);\n
 }\n
 \n
@@ -761,7 +736,7 @@ function checkUNGListbox() {\n
 \n
     // re-attach listener\n
     ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox);\n
-  };\n
+  }\n
 }\n
 \n
 function separateUNGListboxGadgetFields() {\n
@@ -790,7 +765,7 @@ function separateUNGListboxGadgetFields() {\n
   }\n
 \n
   // remove \'listbox-title\' from header\n
-  $(\'div.listbox-title\').remove()\n
+  $(\'div.listbox-title\').remove();\n
 \n
   // detach css of listbox-tree\n
   var listboxTreeHeight = data.find("div.listbox-tree").css("height").replace("px", "");\n
@@ -802,10 +777,10 @@ function separateUNGListboxGadgetFields() {\n
     window.location.reload();\n
     return false;\n
   }\n
-  if (parseInt(listboxTreeHeight) > parseInt(domainTreeHeight)){\n
+  if (parseInt(listboxTreeHeight,10) > parseInt(domainTreeHeight,10)){\n
     data.find("div.listbox-tree").css("height", data.find("div.listbox-domain-tree-container").css("height"));\n
   }\n
-  if (parseInt(domainTreeHeight) > 233) {\n
+  if (parseInt(domainTreeHeight,10) > 233) {\n
     data.find("div.listbox-tree").css("overflow-y", "scroll");\n
   }\n
 \n
@@ -813,7 +788,7 @@ function separateUNGListboxGadgetFields() {\n
   var listbox_tree_div = data.find("div.listbox-tree").outerHTML();\n
   data.find("div.listbox-tree").remove();\n
   // XXX: improve this behaviour of replacing\n
-  file_listbox_tree = $(\'div.file-quick-search\').find(\'div.listbox-tree\')\n
+  file_listbox_tree = $(\'div.file-quick-search\').find(\'div.listbox-tree\');\n
   if (file_listbox_tree.length >= 1) {\n
     file_listbox_tree.replaceWith(listbox_tree_div);\n
   } else {\n
@@ -840,6 +815,7 @@ function separateUNGListboxGadgetFields() {\n
     event.preventDefault();\n
     changeCheckBoxValue(false);\n
   });\n
+  return true;\n
 }\n
 \n
 function configureRefreshButton() {\n
@@ -850,23 +826,23 @@ function configureRefreshButton() {\n
     // overwrite (shadowing) to change \'params\' param on the fly\n
     updater = function() {\n
       // \'params\' is the fifth param, so treat it\n
-      params = arguments[4]\n
-      params[\'reset:int\'] = 1\n
+      params = arguments[4];\n
+      params[\'reset:int\'] = 1;\n
       originalUpdater.apply(this, arguments);\n
-    }\n
+    };\n
     // eval script\n
-    eval(ung_listbox_updater_call)\n
+    eval(ung_listbox_updater_call);\n
 \n
     // restore old function\n
     updater = originalUpdater;\n
-  })\n
+  });\n
 }\n
 \n
 function setPortalStatusMessage(status_message) {\n
     //display warning\n
-    status_message_tag = $(\'div.portal_status_message\')\n
-    status_message_tag.css("font-weight", "bold")\n
-    status_message_tag.text(status_message)\n
+    status_message_tag = $(\'div.portal_status_message\');\n
+    status_message_tag.css("font-weight", "bold");\n
+    status_message_tag.text(status_message);\n
 }\n
 
 

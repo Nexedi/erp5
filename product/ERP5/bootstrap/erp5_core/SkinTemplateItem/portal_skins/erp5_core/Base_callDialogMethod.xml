@@ -269,7 +269,7 @@ if (not(can_redirect) or len(url_params_string) > 2000):\n
     # XXX unless we are in Folder_modifyWorkflowStatus which validates again !\n
     if dialog_method != \'Folder_modifyWorkflowStatus\':\n
       for key in list(request.keys()):\n
-        if key.startswith(\'field\') or key.startswith(\'subfield\'):\n
+        if str(key).startswith(\'field\') or str(key).startswith(\'subfield\'):\n
           request.form.pop(key, None)\n
 \n
   # If we cannot redirect, then call the form directly.\n

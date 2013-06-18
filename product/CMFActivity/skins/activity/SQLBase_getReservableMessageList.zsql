@@ -1,0 +1,47 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:0
+max_cache:0
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table
+processing_node
+to_date
+count
+group_method_id
+</params>
+SELECT
+  *
+FROM
+  <dtml-var table>
+WHERE
+  processing_node=0
+  AND date <= <dtml-sqlvar to_date type="datetime">
+  <dtml-if expr="group_method_id is not None">
+    AND group_method_id = <dtml-sqlvar group_method_id type="string">
+  </dtml-if>
+ORDER BY
+<dtml-comment>
+  During normal operation, sorting by date (as 2nd criteria) is fairer
+  for users and reduce the probability to do the same work several times
+  (think of an object that is modified several times in a short period of time).
+  However, current implementation is not optimal when reindexing a whole site
+  with several mount points (to different ZEO servers), because modules may not
+  be processed in parallel. If you want to speed up ERP5Site_reindexAll,
+  consider:
+  - ordering by 'priority, RAND()' temporarily;
+  - or better, hack ERP5Site_reindexAll so that all reindex messages have
+    identical/random dates (hint: add optional parameter to Folder_reindexAll
+    and Folder_reindexObjectList in order to forward a date from
+    ERP5Site_reindexAll, e.g. current date would work if MySQL
+    shuffles enough lines with same priority/date).
+  - or even better, use NEO <http://www.neoppod.org/>
+  For higher concurrency than 10 or 20 nodes of activity, it might be required
+  to add a random start point to reduce the risk of MySQL locks.
+</dtml-comment>
+  priority, date
+LIMIT <dtml-sqlvar count type="int">
+FOR UPDATE

@@ -430,6 +430,10 @@ class AcquiredProperty(StandardProperty):
     '_baseGetDefault%s': AcquiredPropertyAccessor.DefaultGetter,
   }
 
+  _acquisition_base_category_acquired_property_id_tester_definition_dict = {
+    'has%s': AcquiredPropertyAccessor.Tester,
+  }
+
   _acquisition_base_category_acquired_property_id_setter_definition_dict = {
     '_set%s': AcquiredPropertyAccessor.Setter,
     '_baseSet%s': AcquiredPropertyAccessor.Setter,
@@ -457,21 +461,29 @@ class AcquiredProperty(StandardProperty):
       property_dict['multivalued'],
       property_dict['elementary_type'] == 'tales')
 
-    composed_id = "%s_%s" % (property_dict['reference'], aq_id)
+    for composed_id in ("%s_%s" % (property_dict['reference'], aq_id),
+                        "default_%s_%s" % (property_dict['reference'], aq_id)):
 
-    cls._applyDefinitionFormatDictOnAccessorHolder(
-      composed_id,
-      cls._acquisition_base_category_acquired_property_id_getter_definition_dict,
-      accessor_holder,
-      acquired_property_id_argument_list,
-      property_dict['read_permission'])
+      cls._applyDefinitionFormatDictOnAccessorHolder(
+        composed_id,
+        cls._acquisition_base_category_acquired_property_id_getter_definition_dict,
+        accessor_holder,
+        acquired_property_id_argument_list,
+        property_dict['read_permission'])
 
-    cls._applyDefinitionFormatDictOnAccessorHolder(
-      composed_id,
-      cls._acquisition_base_category_acquired_property_id_setter_definition_dict,
-      accessor_holder,
-      acquired_property_id_argument_list,
-      property_dict['write_permission'])
+      cls._applyDefinitionFormatDictOnAccessorHolder(
+        composed_id,
+        cls._acquisition_base_category_acquired_property_id_tester_definition_dict,
+        accessor_holder,
+        acquired_property_id_argument_list,
+        property_dict['read_permission'])
+
+      cls._applyDefinitionFormatDictOnAccessorHolder(
+        composed_id,
+        cls._acquisition_base_category_acquired_property_id_setter_definition_dict,
+        accessor_holder,
+        acquired_property_id_argument_list,
+        property_dict['write_permission'])
 
   _content_type_acquired_property_id_getter_definition_dict = {
     'get%s': ContentProperty.Getter

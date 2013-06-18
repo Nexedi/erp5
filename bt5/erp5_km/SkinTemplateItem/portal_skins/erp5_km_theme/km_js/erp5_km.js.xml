@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21283797.18</string> </value>
+            <value> <string>ts67858535.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -65,7 +65,7 @@ function toggleHiddenFormatDialogSelection(){\n
 }\n
 \n
 function requestPasswordReset(script_name){\n
-  $("#reference").attr("value", $("#__ac_name").val()) \n
+  $("#reference").attr("value", $("#__ac_name").val());\n
   // reset __ac_name & __ac_password in case they have been filled by browser\n
   $("#__ac_name").attr("value", "");\n
   $("#__ac_password").attr("value", "");\n
@@ -73,7 +73,7 @@ function requestPasswordReset(script_name){\n
   main_form = $("#main_form");\n
   main_form.attr("action", script_name);\n
   main_form.submit();\n
-};\n
+}\n
 \n
 //enable or disable right side search result preview\n
 var show_preview=false;\n
@@ -84,7 +84,7 @@ function togglePreview(dom_id,path){\n
   /* \n
   Enable or disable right preview in search mode listbox style. \n
   */\n
-  listbox_container = $("#"+dom_id).parents("div.listbox-container")\n
+  listbox_container = $("#"+dom_id).parents("div.listbox-container");\n
   if(!$("#listbox-preview").length){\n
     // init only once per listbox\n
     listbox_container.append(\'<div id="listbox-preview"><img src="ajax-loader.gif" title="Loading" alt="Loading" /><p>Loading...</p> </div>\');\n
@@ -103,13 +103,13 @@ function formatPreview(dom_id, path){\n
   */\n
   popup = $("#listbox-preview");\n
   dom_object = $("#"+dom_id);\n
-  parent_row = dom_object.parents("tr").first()\n
+  parent_row = dom_object.parents("tr").first();\n
   row_object = dom_object.parents("tr").first();\n
   class_name = row_object.attr("class"); \n
   class_name = class_name.replace("listbox-data-line-","");\n
   class_name = class_name.replace("DataA","");\n
   class_name = class_name.replace("DataB","");\n
-  row_index = parseInt(class_name);\n
+  row_index = parseInt(class_name, 10);\n
   //calculate current row offset relative to listbox\'s table.tbody\n
   offset = parent_row.position("tbody").top - $("tr.listbox-data-line-0").position("tbody").top;\n
   popup.css("top", offset + "px");\n
@@ -142,7 +142,7 @@ function showPopik(dom_id, path){\n
     popup_html = $("#hidden_popup_listbox_"+dom_id).html();\n
     popup.html(popup_html);\n
     popup.show();\n
-    return\n
+    return;\n
   }\n
   // we must request popup info with another request\n
   popup_html = popup_local_dict[dom_id];\n
@@ -170,7 +170,7 @@ function initialize_form(){\n
           $(\'input\').keypress(function(e) {\n
             if(e.which == 10 || e.which == 13) {$("#input-save-edit").click();}\n
           });\n
-      })\n
+      });\n
    }\n
  }\n
 \n
@@ -224,10 +224,10 @@ function initialize_form(){\n
 //   if(pdf_preview_navigation.length){\n
 //     \n
 //     // XXX: set hooks\n
-//     $("div.pdf-preview-navigation a img.first").parent("a").click(loadThumbnail);\n
-//     $("div.pdf-preview-navigation a img.previous").parent("a").click(loadThumbnail);\n
-//     $("div.pdf-preview-navigation a img.next").parent("a").click(loadThumbnail);\n
-//     $("div.pdf-preview-navigation a img.last").parent("a").click(loadThumbnail);    \n
+//    // $("div.pdf-preview-navigation a img.first").parent("a").click(loadThumbnail);\n
+//    // $("div.pdf-preview-navigation a img.previous").parent("a").click(loadThumbnail);\n
+//    // $("div.pdf-preview-navigation a img.next").parent("a").click(loadThumbnail);\n
+//    // $("div.pdf-preview-navigation a img.last").parent("a").click(loadThumbnail);    \n
 // \n
 //   }\n
 // }\n
@@ -248,19 +248,19 @@ function highlight_search_word(){\n
   /*\n
     Use referer to get search text (if coming from GET search page) and highlight found words.\n
   */\n
-  query_array = queryStringToArray(document.referrer)\n
-  search_text = query_array["search_text"]\n
+  query_array = queryStringToArray(document.referrer);\n
+  search_text = query_array["search_text"];\n
   if (search_text!=undefined){\n
-    document_body = $("#main_content div.document div.page")\n
-    headline = $("#main_content div.document span.headline")\n
-    title = $("#wrapper_headline div.header_title")\n
+    document_body = $("#main_content div.document div.page");\n
+    headline = $("#main_content div.document span.headline");\n
+    title = $("#wrapper_headline div.header_title");\n
     // multiple words\n
-    search_word_list = search_text.split("%20")\n
+    search_word_list = search_text.split("%20");\n
     for(var i=0; i<search_word_list.length; i++) {\n
-      if (search_word_list[i] != \'\') {\n
-        document_body.highlight(search_word_list[i], "highlight")\n
-        headline.highlight(search_word_list[i], "highlight")\n
-        title.highlight(search_word_list[i], "highlight")\n
+      if (search_word_list[i] !== \'\') {\n
+        document_body.highlight(search_word_list[i], "highlight");\n
+        headline.highlight(search_word_list[i], "highlight");\n
+        title.highlight(search_word_list[i], "highlight");\n
       }\n
       \n
     }\n
@@ -279,7 +279,7 @@ $(document).ready(initialize_form);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8419</int> </value>
+            <value> <int>8444</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

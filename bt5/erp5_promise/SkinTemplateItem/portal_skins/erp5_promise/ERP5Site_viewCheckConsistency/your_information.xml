@@ -219,7 +219,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>You has activities running in background, it is hightly recommended wait them finish.</string> </value>
+                    <value> <string>You have activities running in the background, it is highly recommended to wait for them to finish.</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

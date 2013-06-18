@@ -658,7 +658,9 @@ class ColumnMap(object):
     # table aliases should cause some of these table definitions to be
     # collapsed into others.
     assert self._setMinimalTableDefinition()
-    Join = (column in self.left_join_list) and LeftJoin or InnerJoin
+    Join = (column in self.left_join_list or
+     (not self.implicit_join and column in self.registry.get(DEFAULT_GROUP_ID, ())))\
+      and LeftJoin or InnerJoin
     join_definition = Join(self.table_definition, right_side,
                            condition=condition)
     self.table_definition = join_definition

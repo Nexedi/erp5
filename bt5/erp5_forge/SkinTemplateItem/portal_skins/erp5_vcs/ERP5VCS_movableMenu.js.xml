@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45611277.21</string> </value>
+            <value> <string>ts68192545.48</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -89,9 +89,10 @@ function Window(el) {\n
 \n
   mapName = this.titleBarButtons.useMap.substr(1);\n
   mapList = document.getElementsByTagName("MAP");\n
-  for (i = 0; i \074 mapList.length; i++)\n
+  for (i = 0; i \074 mapList.length; i++){\n
     if (mapList[i].name == mapName)\n
       this.titleBarMap = mapList[i];\n
+  }\n
 \n
   // Save colors.\n
 \n
@@ -134,9 +135,10 @@ function Window(el) {\n
   this.clientArea.parentWindow = this;\n
   this.clientArea.onclick      = winClientAreaClick;\n
 \n
-  for (i = 0; i \074 this.titleBarMap.childNodes.length; i++)\n
+  for (i = 0; i \074 this.titleBarMap.childNodes.length; i++){\n
     if (this.titleBarMap.childNodes[i].tagName == "AREA")\n
       this.titleBarMap.childNodes[i].parentWindow = this;\n
+  }\n
 \n
   // Calculate the minimum width and height values for resizing\n
   // and fix any initial display problems.\n
@@ -147,7 +149,7 @@ function Window(el) {\n
   // the window.\n
 \n
   initLt = this.frame.style.left;\n
-  initWd = parseInt(this.frame.style.width);\n
+  initWd = parseInt(this.frame.style.width,10);\n
   this.frame.style.right = -this.titleBarText.offsetWidth + "px";\n
 \n
   // For IE, start calculating the value to use when setting\n
@@ -323,7 +325,7 @@ function winMakeActive() {\n
     this.clientArea.style.overflow = "auto";\n
   if (this.inactiveButtonsImage)\n
     this.titleBarButtons.src = this.activeButtonsImage;\n
-  this.frame.style.zIndex = ++winCtrl.maxzIndex;\n
+  this.frame.style.zIndex = winCtrl.maxzIndex + 1;\n
   winCtrl.active = this;\n
 }\n
 \n
@@ -459,7 +461,7 @@ function winResizeCursorSet(event) {\n
     xOff = event.layerX;\n
     yOff = event.layerY;\n
   }\n
-  winCtrl.resizeDirection = ""\n
+  winCtrl.resizeDirection = "";\n
   if (yOff \074= winCtrl.resizeCornerSize)\n
     winCtrl.resizeDirection += "n";\n
   else if (yOff \076= this.parentWindow.frame.offsetHeight - winCtrl.resizeCornerSize)\n
@@ -471,7 +473,7 @@ function winResizeCursorSet(event) {\n
 \n
   // If not on window edge, restore cursor and exit.\n
 \n
-  if (winCtrl.resizeDirection == "") {\n
+  if (winCtrl.resizeDirection === "") {\n
     this.onmouseout(event);\n
     return;\n
   }\n
@@ -668,7 +670,7 @@ function winFindByClassName(el, className) {\n
 \n
   for (i = 0; i \074 el.childNodes.length; i++) {\n
     tmp = winFindByClassName(el.childNodes[i], className);\n
-    if (tmp != null)\n
+    if (tmp !== null)\n
       return tmp;\n
   }\n
 \n
@@ -703,9 +705,10 @@ function winInit() {\n
   // Initialize windows and build list.\n
 \n
   elList = document.getElementsByTagName("DIV");\n
-  for (var i = 0; i \074 elList.length; i++)\n
+  for (var i = 0; i \074 elList.length; i++){\n
     if (elList[i].className == "window")\n
       winList[elList[i].id] = new Window(elList[i]);\n
+  }\n
 }\n
 // run initialization code after page loads.\n
 //window.onload = winInit;\n
@@ -718,7 +721,7 @@ function winInit() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18649</int> </value>
+            <value> <int>18672</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

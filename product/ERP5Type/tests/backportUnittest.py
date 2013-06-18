@@ -176,12 +176,12 @@ class TestCase(unittest.TestCase):
         """Skip this test."""
         raise SkipTest(reason)
 
-    def defaultTestResult(self):
-        return TestResult()
+if not hasattr(unittest.TestResult, 'addSkip'): # BBB: Python < 2.7
 
-class TestResult(unittest.TestResult):
+    unittest.TestResult._orig_init__ = unittest.TestResult.__init__.im_func
+
     def __init__(self):
-        super(TestResult, self).__init__()
+        self._orig_init__()
         self.skipped = []
         self.expectedFailures = []
         self.unexpectedSuccesses = []
@@ -199,13 +199,10 @@ class TestResult(unittest.TestResult):
         """Called when a test was expected to fail, but succeed."""
         self.unexpectedSuccesses.append(test)
 
+    for f in __init__, addSkip, addExpectedFailure, addUnexpectedSuccess:
+        setattr(unittest.TestResult, f.__name__, f)
 
-class _TextTestResult(unittest._TextTestResult, TestResult):
-    def __init__(self, stream, descriptions, verbosity):
-        # BACK: nice diamond!
-        #   unittest.TestResult.__init__ is called twice here
-        unittest._TextTestResult.__init__(self, stream, descriptions, verbosity)
-        TestResult.__init__(self)
+class _TextTestResult(unittest._TextTestResult):
 
     def wasSuccessful(self):
         "Tells whether or not this result was a success"
