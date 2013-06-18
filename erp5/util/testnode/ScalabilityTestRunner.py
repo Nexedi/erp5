@@ -102,13 +102,14 @@ class ScalabilityTestRunner():
     """
     if self.authorize_request:
       config = software_configuration.copy()
-      config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
+      #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
+      config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
                              "scalability", {"_" : config})
       self.authorize_request = False
       return {'status_code' : 0}                                          
-    else :
+    else:
       raise ValueError("Softwares release not ready yet to launch instan\
 ces or already launched.")
       return {'status_code' : 1}  
