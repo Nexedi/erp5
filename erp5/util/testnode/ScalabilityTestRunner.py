@@ -175,8 +175,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.ofuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
                       self.randomized_path)
+      
       if ( not os.path.lexists(self.ofuscated_link_path) and
-           os.path.exists(self.ofuscated_link_path) ) :
+           not os.path.exists(self.ofuscated_link_path) ) :
         try :
           os.symlink(path_to_suite, self.ofuscated_link_path)
           self.log("testnode, Symbolic link (%s->%s) created."
