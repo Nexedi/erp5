@@ -222,7 +222,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
-      launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
+      self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       software_path_list = []
       # Construct the ipv6 obfuscated url of the software profile reachable from outside
       self.reachable_profile = os.path.join(
