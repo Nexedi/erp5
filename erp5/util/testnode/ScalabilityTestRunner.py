@@ -93,7 +93,7 @@ class ScalabilityTestRunner():
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
     instance_title += "-"
-    instance_title += testnodeUtils.generateRandomString(6)
+    instance_title += time.strftime('%d/%m/%y_%H:%M:%S',time.localtime())
     return instance_title
     
   def _createInstance(self, software_path, software_configuration, instance_title):
