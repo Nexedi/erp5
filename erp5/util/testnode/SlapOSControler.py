@@ -98,7 +98,6 @@ class SlapOSControler(object):
     my_controler.supply('kvm.cfg', 'COMP-726')
     """
     self.log('SlapOSControler : supply')
-    return
     parser = argparse.ArgumentParser()
     parser.add_argument("configuration_file")
     parser.add_argument("software_url")
