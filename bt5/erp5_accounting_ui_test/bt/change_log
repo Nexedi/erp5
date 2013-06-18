@@ -1,3 +1,6 @@
+2013-06-18 arnaud.fontaine
+* Default Accounting Transaction Module sorting has been removed (8f9bc61) for performance reasons, so fix improved listbox sort feature accordingly. This fixes testFunctionalCore failures.
+
 2008-06-16 yusei
 * Update accounting_zuite/test_account_module/test_account_module_domain_tree.html
 for the recent changes of domain tree.

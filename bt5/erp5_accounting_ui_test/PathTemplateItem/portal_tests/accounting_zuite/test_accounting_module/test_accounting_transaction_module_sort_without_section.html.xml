@@ -80,6 +80,11 @@ Test sort for Accounting module main listbox, without section\n
 <!-- sort by title {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
