@@ -119,7 +119,7 @@ stool.setSelectionParamsFor(\'account_module_selection\', dict()) # (this recrea
 stool.setSelectionSortOrder(\'account_module_selection\', sort_on=((\'preferred_gap_id\', \'ascending\'),))\n
 stool.setSelectionColumns(\'account_module_selection\',\n
     [(\'preferred_gap_id\', \'GAP Number\'),\n
-     (\'title\', \'Account Name\'),\n
+     (\'translated_title\', \'Account Name\'),\n
      (\'translated_validation_state_title\', \'State\'),\n
      (\'AccountModule_getAccountingTransactionCount\', \'Count\'),\n
      (\'debit\', \'Debit\'),\n
