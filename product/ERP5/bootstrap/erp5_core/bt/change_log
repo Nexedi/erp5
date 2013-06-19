@@ -1,3 +1,6 @@
+2013-06-19 arnaud.fontaine
+* Add 'does' to the closed-class words list in naming convention checking script.
+
 2012-10-19 yusei
 * Redirect to view form with a nice message if selected workflow action is not available. To show a workflow dialog which absolutely fail is not good.
 
