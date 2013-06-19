@@ -36,6 +36,7 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from Selection import Selection, DomainSelection
 from Tool.SelectionTool import createFolderMixInPageSelectionMethod
 from Products.ERP5Type.Utils import getPath
+from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
@@ -2285,10 +2286,11 @@ class ListBoxRendererLine:
                 property_id = sql
 
               try:
-                original_value = obj.getProperty(property_id, _marker)
-                if original_value is _marker:
-                  raise AttributeError, property_id
-                processed_value = original_value
+                accessor_name = 'get%s' % UpperCase(property_id)
+                # Make sure the object have the attribute, and this is not
+                # acquired, but still get the attribute on the acquisition wrapper
+                getattr(aq_base(obj), accessor_name)
+                processed_value = original_value = getattr(obj, accessor_name)
               except AttributeError:
                 original_value = getattr(obj, property_id, None)
                 processed_value = original_value
