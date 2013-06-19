@@ -102,6 +102,8 @@ class ScalabilityTestRunner():
     """
     if self.authorize_request:
       config = software_configuration.copy()
+      # Add here zope partition into launcher node to
+      # watch activities etc... ?
       #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
       config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
       self.log("testnode, request : %s", instance_title)
