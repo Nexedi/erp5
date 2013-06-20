@@ -189,27 +189,6 @@ if not hasattr(unittest.TestResult, 'addSkip'): # BBB: Python < 2.7
     def addSkip(self, test, reason):
         """Called when a test is skipped."""
         self.skipped.append((test, reason))
-
-    def addExpectedFailure(self, test, err):
-        """Called when an expected failure/error occured."""
-        self.expectedFailures.append(
-            (test, self._exc_info_to_string(err, test)))
-
-    def addUnexpectedSuccess(self, test):
-        """Called when a test was expected to fail, but succeed."""
-        self.unexpectedSuccesses.append(test)
-
-    for f in __init__, addSkip, addExpectedFailure, addUnexpectedSuccess:
-        setattr(unittest.TestResult, f.__name__, f)
-
-class _TextTestResult(unittest._TextTestResult):
-
-    def wasSuccessful(self):
-        "Tells whether or not this result was a success"
-        return not (self.failures or self.errors or self.unexpectedSuccesses)
-
-    def addSkip(self, test, reason):
-        super(_TextTestResult, self).addSkip(test, reason)
         if self.showAll:
             self.stream.writeln("skipped %s" % repr(reason))
         elif self.dots:
@@ -217,7 +196,9 @@ class _TextTestResult(unittest._TextTestResult):
             self.stream.flush()
 
     def addExpectedFailure(self, test, err):
-        super(_TextTestResult, self).addExpectedFailure(test, err)
+        """Called when an expected failure/error occured."""
+        self.expectedFailures.append(
+            (test, self._exc_info_to_string(err, test)))
         if self.showAll:
             self.stream.writeln("expected failure")
         elif self.dots:
@@ -225,12 +206,31 @@ class _TextTestResult(unittest._TextTestResult):
             self.stream.flush()
 
     def addUnexpectedSuccess(self, test):
-        super(_TextTestResult, self).addUnexpectedSuccess(test)
+        """Called when a test was expected to fail, but succeed."""
+        self.unexpectedSuccesses.append(test)
         if self.showAll:
             self.stream.writeln("unexpected success")
         elif self.dots:
             self.stream.write("u")
             self.stream.flush()
+
+    for f in __init__, addSkip, addExpectedFailure, addUnexpectedSuccess:
+        setattr(unittest.TestResult, f.__name__, f)
+
+    def getDescription(self, test):
+        doc_first_line = test.shortDescription()
+        if self.descriptions and doc_first_line:
+            return '\n'.join((str(test), doc_first_line))
+        else:
+            return str(test)
+
+    unittest._TextTestResult.getDescription = getDescription
+
+class _TextTestResult(unittest._TextTestResult):
+
+    def wasSuccessful(self):
+        "Tells whether or not this result was a success"
+        return not (self.failures or self.errors or self.unexpectedSuccesses)
 
     def printErrors(self):
         if self.dots or self.showAll:
