@@ -733,6 +733,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       bt5_path = os.environ.get('erp5_tests_bt5_path')
       if bt5_path:
         bt5_path_list = bt5_path.split(',')
+        bt5_path_list += [ os.path.join(path, "*") for path in bt5_path_list ]
       else:
         bt5_path = os.path.join(instancehome, 'bt5')
         bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
