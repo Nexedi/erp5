@@ -252,11 +252,11 @@ var addOnChangeEventHandler = function() {\n
   $("#master div").each(function(i) {\n
     if ($(this).attr("class") == "input") {\n
         $(this).children().each(function() {\n
-          if ($(this).prop("tagName") == "INPUT" ||\n
-              $(this).prop("tagName") == "SELECT" ||\n
-              $(this).prop("tagName") == "TEXTAREA") {\n
+          if ($(this).attr("tagName") == "INPUT" ||\n
+              $(this).attr("tagName") == "SELECT" ||\n
+              $(this).attr("tagName") == "TEXTAREA") {\n
               if ($(this).val() == "update..." ||\n
-                  ($(this).prop("tagName") == "INPUT" &&\n
+                  ($(this).attr("tagName") == "INPUT" &&\n
                   $(this).attr("type") == \'submit\')) {\n
                // this is a relation field wheel or a submit form button\n
              this.onclick = function() { changed = false;};\n
@@ -267,7 +267,7 @@ var addOnChangeEventHandler = function() {\n
             }\n
           } \n
           /* Listbox or MatrixBox */\n
-          if ($(this).prop("tagName") == "DIV" && (\n
+          if ($(this).attr("tagName") == "DIV" && (\n
               $(this).attr("class") == "listbox-container" ||\n
               $(this).attr("class") == "MatrixContent")) {\n
             $(this).find(\'td\').each(function(){\n
@@ -295,7 +295,7 @@ var rewriteIndentedSelect = function() {\n
 \n
     $("#master select").each(function() {\n
       $(this).children().each(function() {\n
-        if ($(this).prop("tagName") != "OPTION") {\n
+        if ($(this).attr("tagName") != "OPTION") {\n
           return non-false;\n
         }\n
         text = $(this).html();\n
