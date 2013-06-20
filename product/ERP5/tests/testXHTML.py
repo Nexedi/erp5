@@ -693,8 +693,8 @@ validator = None
 # tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
 # create the validator object
 if validator_to_use == 'w3c':
-  default = '/usr/share/w3c-markup-validator/cgi-bin:/usr/lib/cgi-bin'
-  validator_path_list = os.environ.get('CGI_PATH', default).split(os.pathsep)
+  validator_path_list = os.environ.get('CGI_PATH',
+    '/usr/lib/cgi-bin:/usr/lib/cgi-bin/w3c-markup-validator').split(os.pathsep)
   for path in validator_path_list:
     validator_path = os.path.join(path, 'check')
     if os.path.exists(validator_path):
