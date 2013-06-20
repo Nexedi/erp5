@@ -50,8 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># wf_id is a bad argument name. But I will keep this for backward compatibility.\n
-# wf_id : the id of workflow. It can be string, list or tuple.\n
+            <value> <string>"""Returns the state item list of a given workflow.\n
+wf_id : the id of workflow. It can be string, list or tuple.\n
+\n
+This script is deprecated, it is much recommended to use\n
+ERP5Site_getWorkflowStateItemList by passing the portal type instead.\n
+"""\n
 \n
 Base_translateString = context.Base_translateString\n
 \n

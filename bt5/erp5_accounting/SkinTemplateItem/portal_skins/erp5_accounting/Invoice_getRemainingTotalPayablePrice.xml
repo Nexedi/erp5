@@ -82,7 +82,8 @@ portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
 \n
 if simulation_state is None:\n
-  state_list = [x[1] for x in context.Base_getTranslatedAccountingWorkflowStateItemList()]\n
+  state_list = [x[1] for x in context.ERP5Site_getWorkflowStateItemList(\n
+            portal_type=\'Accounting Transaction\', state_var=\'simulation_state\')]\n
   simulation_state = [x for x in state_list\n
                       if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
 \n

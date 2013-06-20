@@ -55,7 +55,8 @@
 from Products.PythonScripts.standard import Object\n
 request = container.REQUEST\n
 portal = context.getPortalObject()\n
-state_item_list=[x[1] for x in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'event_simulation_workflow\')]\n
+state_item_list=[x[1] for x in portal.ERP5Site_getWorkflowStateItemList(\n
+     portal_type=portal.getPortalEventTypeList(), state_var=\'simulation_state\')]\n
 #remove deteted state\n
 if \'deleted\' in state_item_list:\n
   state_item_list.remove(\'deleted\')\n
