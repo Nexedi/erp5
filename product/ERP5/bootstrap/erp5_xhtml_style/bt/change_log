@@ -1,3 +1,6 @@
+2013-6-20 yusei
+* Fix erp5.js to keep it compatible with jquery 1.4. .prop() is available after jquery 1.6.
+
 2012-10-16 yusei
 * Improve error handling on Workflow_statusModify. If divergence is solved by other user, then show a nice message.
 
