@@ -375,14 +375,20 @@ branch = %(branch)s
     if '--xvfb_bin' in supported_paramater_set:
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
     bt5_path_list = []
+    self.config.log("Attention !!!")
     if config.get("bt5_path"):
+      self.config.log("1 - PASSED !!!")
       bt5_path_list.append(config.get("bt5_path"))
     if hasattr(node_test_suite,'additional_bt5_repository_id'):
+      self.config.log("1 (bis) - PASSED !!!")
       additional_bt5_path = os.path.join(
               node_test_suite.working_directory,
               node_test_suite.additional_bt5_repository_id)
       bt5_path_list.append(additional_bt5_path)
+      self.config.log("additional_bt5_path : %s" %(additional_bt5_path))
+    
     if len(bt5_path_list) > 0:
+      self.config.log("2 - PASSED !!! (%s)" %(str(bt5_path_list)))
       invocation_list.extend(["--bt5_path", bt5_path_list])
     # From this point, test runner becomes responsible for updating test
     # result. We only do cleanup if the test runner itself is not able
