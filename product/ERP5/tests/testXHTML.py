@@ -35,24 +35,9 @@ import urllib
 from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5 import __file__ as ERP5PackagePath
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 from xml.dom import minidom
-
-
-INSTANCE_HOME = os.environ['INSTANCE_HOME']
-bt5_base_path = os.environ.get('erp5_tests_bt5_path',
-                               os.path.join(INSTANCE_HOME, 'bt5'))
-bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
-                                   'bootstrap')
-# if Products.ERP5 is a git checkout, then this folder will contain bt5s
-repository_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
-                                   '..', '..', 'bt5')
-bt5_search_path_list = '%s,%s,%s' % (
-  bt5_base_path,
-  bootstrap_base_path,
-  repository_base_path)
 
 # some forms have intentionally empty listbox selections like RSS generators
 FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
@@ -648,29 +633,19 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
 
-  for i in target_business_templates:
-    for bt5_search_path in bt5_search_path_list.split(','):
-      business_template = os.path.join(bt5_search_path, i)
-      business_template_info = None
-      if (os.path.exists(business_template) or
-          os.path.exists('%s.bt5' % business_template)):
-        if os.path.isdir(business_template):
-          business_template_info = BusinessTemplateInfoDir(business_template)
-        elif os.path.isfile(business_template+'.bt5'):
-          business_template_info = BusinessTemplateInfoTar(business_template+'.bt5')
-      if business_template_info is not None:
-        business_template_info_list.append(business_template_info)
-        break
+  for url, _ in ERP5TypeTestCase._getBTPathAndIdList(target_business_templates):
+    if os.path.isdir(url):
+      business_template_info = BusinessTemplateInfoDir(url)
     else:
-      raise KeyError, "Can't find business template %s" % i
+      business_template_info = BusinessTemplateInfoTar(url)
+    business_template_info_list.append(business_template_info)
 
   tested_portal_type_list = []
   for business_template_info in business_template_info_list:
     for module_id, module_portal_type in business_template_info.modules.items():
       portal_type_list = [module_portal_type, ] + \
             business_template_info.allowed_content_types.get(module_portal_type, [])
-      portal_type_path_dict = {}
-      portal_type_path_dict = dict(map(None,portal_type_list,portal_type_list))
+      portal_type_path_dict = dict(zip(portal_type_list, portal_type_list))
       testPortalTypeViewRecursivly(test_class=test_class,
                        validator=validator,
                        module_id=module_id, 
@@ -693,8 +668,8 @@ validator = None
 # tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
 # create the validator object
 if validator_to_use == 'w3c':
-  default = '/usr/share/w3c-markup-validator/cgi-bin:/usr/lib/cgi-bin'
-  validator_path_list = os.environ.get('CGI_PATH', default).split(os.pathsep)
+  validator_path_list = os.environ.get('CGI_PATH',
+    '/usr/lib/cgi-bin:/usr/lib/cgi-bin/w3c-markup-validator').split(os.pathsep)
   for path in validator_path_list:
     validator_path = os.path.join(path, 'check')
     if os.path.exists(validator_path):
