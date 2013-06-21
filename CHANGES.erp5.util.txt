@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.35 (2013-06-21)
+-------------------
+
+ * erp5.util.testsuite:
+
+  - Fix additional_bt5_repository_id into testnode.py
+    [Benjamin Blanc]
+
 0.4.34 (2013-04-11)
 -------------------
 
