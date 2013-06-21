@@ -1,2 +1,5 @@
 2011-07-13 aurel :
+* Add field on PaymentTransactionGroup_view to display the source_administration property
+
+2011-07-13 aurel :
 * initial version
