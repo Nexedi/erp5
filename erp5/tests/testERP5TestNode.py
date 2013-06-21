@@ -545,19 +545,21 @@ branch = foo
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
+      original_updateInstanceXML = RunnerClass._updateInstanceXML
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
+      RunnerClass._updateInstanceXML = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
+    original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
-    
-    original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
+
     # TestNode
     test_node = self.getTestNode()  
     # Modify class UnitTestRunner(or more after) method 
@@ -576,6 +578,7 @@ branch = foo
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
+      RunnerClass._updateInstanceXML = original_updateInstanceXML
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -688,12 +691,14 @@ branch = foo
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_supply = SlapOSControler.supply
       original_request = SlapOSControler.request
+      original_updateInstanceXML = RunnerClass._updateInstanceXML
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       SlapOSControler.supply = doNothing
       SlapOSControler.request = doNothing
+      RunnerClass._updateInstanceXML = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -721,6 +726,7 @@ branch = foo
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       SlapOSControler.supply =original_supply
       SlapOSControler.request = original_request
+      SlapOSControler._updateInstanceXML = original_updateInstanceXML
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -915,6 +921,8 @@ branch = foo
     original_runTestSuite = RunnerClass.runTestSuite
     original_supply = SlapOSControler.supply
     original_request = SlapOSControler.request
+    original_updateInstanceXML = SlapOSControler._updateInstanceXML
+
     #
     time.sleep = doNothing
     TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
@@ -929,6 +937,7 @@ branch = foo
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.supply = doNothing
     SlapOSControler.request = doNothing
+    SlapOSControler._updateInstanceXML = doNothing
     # Run
     test_node = self.getTestNode()  
     test_node.run()
@@ -945,4 +954,5 @@ branch = foo
     RunnerClass.runTestSuite = original_runTestSuite
     SlapOSControler.supply = original_supply
     SlapOSControler.request = original_request
+    SlapOSControler._updateInstanceXML = original_updateInstanceXML
     time.sleep =original_sleep

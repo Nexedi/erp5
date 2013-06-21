@@ -165,6 +165,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         del self.remaining_software_installation_dict[computer_guid]
     # Not empty grid means that all softwares are not installed
     return len(self.remaining_software_installation_dict) > 0
+
+  def _updateInstanceXML(self, software_path, computer_guid, xml):
+    """
+    Just a proxy to SlapOSControler.updateInstanceXML.
+    """
+    self.slapos_controler.updateInstanceXML(software_path, computer_guid, xml)
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -263,6 +269,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self._createInstance(self.reachable_profile, configuration_list[0],
                               instance_title)
         self.log("Scalability instance requested")
+        time.sleep(15)
+        self.log("Trying to update instance XML...")
+        time.sleep(2)
+        try:
+          self._updateInstanceXML(self.reachable_profile, "COMP-1564", configuration_list[1])
+          self.log("Instance XML updated...")
+        except:
+          raise ValueError("Unable to update instance XML")
+          return {'status_code' : 1}
+        
       except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
