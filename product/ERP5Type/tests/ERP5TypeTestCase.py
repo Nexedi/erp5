@@ -226,13 +226,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
 
-    def shortDescription(self):
-      description = str(self)
-      doc = self._testMethodDoc
-      if doc and doc.split("\n")[0].strip():
-        description += ', ' + doc.split("\n")[0].strip()
-      return description
-
     def getRevision(self):
       erp5_path = os.path.join(instancehome, 'Products', 'ERP5')
       try:
