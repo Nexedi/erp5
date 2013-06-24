@@ -854,14 +854,12 @@ def setDefaultClassProperties(property_holder):
         )
       }
 
-from Globals import Persistent, PersistentMapping
 
 def importLocalDocument(class_id, path=None, class_path=None):
   """Imports a document class and registers it in ERP5Type Document
   repository ( Products.ERP5Type.Document )
   """
   import Products.ERP5Type.Document
-  import Permissions
 
   if class_path:
     assert path is None

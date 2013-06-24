@@ -31,11 +31,11 @@ from hashlib import md5
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5SyncML.Utils import PdataHelper
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 _MARKER = []
 
@@ -50,7 +50,6 @@ class SyncMLSignature(XMLObject):
   """
   meta_type = 'ERP5 Signature'
   portal_type = 'SyncML Signature'
-
   isIndexable = ConstantGetter('isIndexable', value=False)
 
   security = ClassSecurityInfo()

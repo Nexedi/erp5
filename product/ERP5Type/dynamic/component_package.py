@@ -31,7 +31,6 @@
 from __future__ import absolute_import
 
 import sys
-import threading
 
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type.Base import Base

@@ -65,7 +65,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
       subscription.sendModifications()  # Worfklow action
 
     syncml_response = None
-    tag = subscription_path = subscription.getRelativeUrl()
+    tag = subscription.getRelativeUrl()
 
     # Do action according to synchronization state
     if subscription.getSynchronizationState() == "initializing":
@@ -257,7 +257,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'subscription_path' : subscription.getRelativeUrl(),
       }
     pref = getSite().portal_preferences
-    count = subscription.getAndActivate(
+    subscription.getAndActivate(
       callback="sendSyncCommand",
       method_kw=method_kw,
       activate_kw=activate_kw,
