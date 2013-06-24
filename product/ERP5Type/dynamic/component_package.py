@@ -31,11 +31,10 @@
 from __future__ import absolute_import
 
 import sys
-import threading
 
 from Products.ERP5.ERP5Site import getSite
 from types import ModuleType
-from zLOG import LOG, INFO, BLATHER
+from zLOG import LOG, BLATHER
 
 class ComponentVersionPackage(ModuleType):
   """
