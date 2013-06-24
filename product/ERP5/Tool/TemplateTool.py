@@ -878,15 +878,19 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
-    @transactional_cached(lambda self, bt: bt)
     def getDependencyList(self, bt):
       """
        Return the list of missing dependencies for a business
        template, given a tuple : (repository, id)
       """
-      # We do not take into consideration the dependencies
-      # for meta business templates
-      if bt[0] != 'meta':
+      # use by using "self" on transactional_cached decorator
+      # breaks ERP5Site creation due aq_base.
+      @transactional_cached(lambda bt: (bt))
+      def _getDependency(bt):
+        # We do not take into consideration the dependencies
+        # for meta business templates
+        if bt[0] == 'meta':
+          return []
         result_list = []
         for repository, property_dict_list in self.repository_dict.items():
           if repository == bt[0]:
@@ -916,7 +920,7 @@ class TemplateTool (BaseTool):
                     except BusinessTemplateIsMeta:
                       provider_list = self.getProviderList(dependency)
                       for provider in provider_list:
-                        if self.getInstalledBusinessTemplate(provider) is not None:
+                        if self.portal_templates.getInstalledBusinessTemplate(provider) is not None:
                           bt_dep = self.getLastestBTOnRepos(provider)
                           break
                       if bt_dep is None:
@@ -928,7 +932,8 @@ class TemplateTool (BaseTool):
                     result_list.append(bt_dep)
                 return result_list
         raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
-      return []
+
+      return _getDependency(bt)
 
     def findProviderInBTList(self, provider_list, bt_list):
       """
