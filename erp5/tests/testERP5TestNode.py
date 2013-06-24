@@ -80,7 +80,7 @@ class ERP5TestNode(TestCase):
     config["system_temp_folder"] = self.system_temp_folder
     config["computer_id"] = "COMP-TEST"
     config["server_url"] = "http://foo.bar"
-    config["httpd_ip"] = "[1234:5678:9101:1121:3141:5161:7181:9202]"
+    config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
     
     return TestNode(self.log, config)
