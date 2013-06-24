@@ -34,7 +34,6 @@ import sys
 import threading
 
 from Products.ERP5.ERP5Site import getSite
-from Products.ERP5Type.Base import Base
 from types import ModuleType
 from zLOG import LOG, INFO, BLATHER
 
@@ -43,6 +42,8 @@ class ComponentVersionPackage(ModuleType):
   Component Version package (erp5.component.XXX.VERSION)
   """
   __path__ = []
+
+from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 class ComponentDynamicPackage(ModuleType):
   """
@@ -65,6 +66,7 @@ class ComponentDynamicPackage(ModuleType):
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
+  __lock = ImportLock()
 
   def __init__(self, namespace, portal_type):
     super(ComponentDynamicPackage, self).__init__(namespace)
@@ -105,7 +107,7 @@ class ComponentDynamicPackage(ModuleType):
       # objectValues should not be used for a large number of objects, but
       # this is only done upon reset, moreover using the Catalog is too risky
       # as it lags behind and depends upon objects being reindexed
-      with Base.aq_method_lock:
+      with self.__lock:
         for component in component_tool.objectValues(portal_type=self._portal_type):
           # Only consider modified or validated states as state transition will
           # be handled by component_validation_workflow which will take care of
@@ -308,7 +310,7 @@ class ComponentDynamicPackage(ModuleType):
     Make sure that loading module is thread-safe using aq_method_lock to make
     sure that modules do not disappear because of an ongoing reset
     """
-    with Base.aq_method_lock:
+    with self.__lock:
       return self.__load_module(fullname)
 
   def reset(self, sub_package=None):
