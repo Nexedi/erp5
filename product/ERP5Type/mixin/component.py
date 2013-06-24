@@ -383,7 +383,4 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     # straightaway as there should be no error
     new_component.validate()
 
-    # Remove now useless Component on filesystem
-    os.remove(path)
-
     return new_component
