@@ -56,7 +56,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_trade_proxy_field_legacy', 'erp5_trade_ui_test', 'erp5_ace_editor',
       'erp5_authentication_policy', 'erp5_bearer_token', 'erp5_bespin',
       'erp5_certificate_authority', 'erp5_code_mirror', 'erp5_computer_immobilisation',
-      'erp5_core_component', 'erp5_credential_oauth2', 'erp5_data_protection', 'erp5_data_set',
+      'erp5_credential_oauth2', 'erp5_data_protection', 'erp5_data_set',
       'erp5_development_wizard', 'erp5_dhtml_style', 'erp5_direct_debit_payment',
       'erp5_rss_style', 'erp5_discussion', 'erp5_tax_resource', 'erp5_discount_resource',
       'erp5_email_reader', 'erp5_external_account', 'erp5_forum_tutorial',
