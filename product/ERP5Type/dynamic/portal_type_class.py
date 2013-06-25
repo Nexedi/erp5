@@ -318,9 +318,7 @@ def synchronizeDynamicModules(context, force=False):
     last_sync = cookie
 
   import erp5
-
-  Base.aq_method_lock.acquire()
-  try:
+  with Base.aq_method_lock:
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.
@@ -388,9 +386,6 @@ def synchronizeDynamicModules(context, force=False):
       # exception is catched later and re-raised as a BadRequest
       import traceback; traceback.print_exc()
       raise
-
-  finally:
-    Base.aq_method_lock.release()
 
   # It's okay for classes to keep references to old methods - maybe.
   # but we absolutely positively need to clear the workflow chains
