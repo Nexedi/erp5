@@ -360,6 +360,7 @@ class TestResultProxyProxy(TestResultProxy):
       TestResultProxy.__init__(proxy, retry_time, logger, test_result_path,
                 node_title, revision)
 
+
 class ServerProxy(xmlrpclib.ServerProxy):
 
     def __init__(self, *args, **kw):
@@ -496,13 +497,6 @@ class TaskDistributor(RPCRetry):
         Returns the slapos account certificate related to the distributor
       """
       return self._retryRPC('getSlaposAccountCertificate')
-      
-    def getFooFooFoo(self):
-      """
-        Returns "FooFooFoo"
-      """
-      return self._retryRPC('getFooFooFoo')
-
 
 class DummyTaskDistributionTool(object):
     """
