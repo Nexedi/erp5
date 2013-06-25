@@ -8,6 +8,8 @@ import sys
 import multiprocessing
 import errno
 
+import logging
+import logging.handlers
 from .argument import ArgumentType
 from .performance_tester import PerformanceTester
 from erp5.util import taskdistribution
@@ -23,18 +25,30 @@ class ScalabilityTest(object):
     print 'self.count: %s' %(str(self.count))
     
 class ScalabilityLauncher(object):
-  def __init__(self, namespace=None):
-    if not namespace:
-      self.__argumentNamespace = self._parseArguments(argparse.ArgumentParser(
+  def __init__(self):
+    # Parse arguments
+    self.__argumentNamespace = self._parseArguments(argparse.ArgumentParser(
           description='Run ERP5 benchmarking scalability suites.'))
-    else:
-      self.__argumentNamespace = namespace
+    # Create Logger
+    logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
+    formatter = logging.Formatter(logger_format)
+    logging.basicConfig(level=logging.INFO,
+                     format=logger_format)
+    logger = logging.getLogger('scalability_launcher')
+    logger.addHandler(logging.NullHandler())
+    file_handler = logging.handlers.RotatingFileHandler(
+        filename=self.__argumentNamespace.log_path,
+        maxBytes=20000000, backupCount=4)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    self.log = logger.info
 
-    # Here make a connection with erp5 master
-    portal_url = __argumentNamespace.test_result_url
-    result = taskdistribution.TestResultProxyProxy(portal_url, 1.0,
-                self._logger, __argumentNamespace.test_result_url,
-                __argumentNamespace.node_title, __argumentNamespace.revision)      
+
+    
+    # Proxy to with erp5 master test_result
+    result = taskdistribution.TestResultProxyProxy(self.__argumentNamespace.portal_url,
+              1.0, logger, self.__argumentNamespace.test_result_url,
+              self.__argumentNamespace.node_title, self.__argumentNamespace.revision)  
 
   @staticmethod
   def _addParserArguments(parser):
@@ -43,7 +57,7 @@ class ScalabilityLauncher(object):
                         metavar='ERP5_URL',
                         help='Main url of ERP5 instance to test')
 
-    parser.add_argument('--erp5-test-result-url',
+    parser.add_argument('--test-result-url',
                         metavar='ERP5_TEST_RESULT_URL',
                         help='ERP5 URL to find test results corresponding '
                              'to the current running test_suite')
@@ -56,6 +70,14 @@ class ScalabilityLauncher(object):
                         metavar='NODE_TITLE',
                         help='Title of the testnode which is running this'
                               'launcher')
+                              
+    parser.add_argument('--portal-url',
+                        metavar='PORTAL_URL',
+                        help='Url to connect to ERP5 Master portal')
+                        
+    parser.add_argument('--log-path',
+                        metavar='LOG_PATH',
+                        help='Log Path')
    
   @staticmethod
   def _checkParsedArguments(namespace):
@@ -94,7 +116,7 @@ class ScalabilityLauncher(object):
     start_time = time.time()
     error_message_set, exit_status = set(), 0
     
-    print self.__argumentNamespace.erp5_test_result_url
+    print self.__argumentNamespace.test_result_url
     print self.__argumentNamespace.erp5_url
     print self.__argumentNamespace.revision
     print self.__argumentNamespace.node_title

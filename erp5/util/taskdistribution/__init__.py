@@ -356,8 +356,14 @@ class TestResultProxyProxy(TestResultProxy):
     """
     def __init__(self, portal_url, retry_time, logger, test_result_path,
                 node_title, revision):
-      proxy = ServerProxy(portal_url, allow_none=True)
-      TestResultProxy.__init__(proxy, retry_time, logger, test_result_path,
+      try:
+        proxy = ServerProxy(
+                portal_url,
+                allow_none=True,
+            ).portal_task_distribution
+      except:
+        raise ValueError("Cannot instanciate ServerProxy")
+      TestResultProxy(proxy, retry_time, logger, test_result_path,
                 node_title, revision)
 
 
