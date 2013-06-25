@@ -1,4 +1,7 @@
 2013-06-25 arnaud.fontaine
+* ZODB Components: Migration must be all or nothing to avoid partial modifications of bt5 properties.
+
+2013-06-25 arnaud.fontaine
 * ZODB Components: Fix bootstrap of migrated bt5s.
 
 2013-06-24 arnaud.fontaine
