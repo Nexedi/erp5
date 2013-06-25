@@ -350,6 +350,16 @@ class TestResultProxy(RPCRetry):
         if self._watcher_thread is not None:
           self._watcher_thread.join()
 
+class TestResultProxyProxy(TestResultProxy):
+    """
+    A wrapper/proxy to TestResultProxy
+    """
+    def __init__(self, portal_url, retry_time, logger, test_result_path,
+                node_title, revision):
+      proxy = ServerProxy(portal_url, allow_none=True)
+      TestResultProxy.__init__(proxy, retry_time, logger, test_result_path,
+                node_title, revision)
+
 class ServerProxy(xmlrpclib.ServerProxy):
 
     def __init__(self, *args, **kw):

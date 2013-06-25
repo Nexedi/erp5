@@ -29,7 +29,12 @@ class ScalabilityLauncher(object):
           description='Run ERP5 benchmarking scalability suites.'))
     else:
       self.__argumentNamespace = namespace
+
     # Here make a connection with erp5 master
+    portal_url = __argumentNamespace.test_result_url
+    result = taskdistribution.TestResultProxyProxy(portal_url, 1.0,
+                self._logger, __argumentNamespace.test_result_url,
+                __argumentNamespace.node_title, __argumentNamespace.revision)      
 
   @staticmethod
   def _addParserArguments(parser):
