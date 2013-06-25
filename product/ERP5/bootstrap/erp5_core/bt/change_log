@@ -1,3 +1,6 @@
+2013-06-25 arnaud.fontaine
+* ZODB Components: Fix bootstrap of migrated bt5s.
+
 2013-06-24 arnaud.fontaine
 * Meaningless to remove ZODB Components migrated from FS. This will not work when there are several nodes anyway, so just display a message to the user.
 

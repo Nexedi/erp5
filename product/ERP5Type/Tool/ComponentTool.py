@@ -35,6 +35,7 @@ import sys
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from AccessControl.Permission import Permission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -60,6 +61,51 @@ class ComponentTool(BaseTool):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def __init__(self, *args, **kwargs):
+    """
+    Except 'Access *', 'View*' and 'WebDAV' permissions (Acquired) and 'Reset
+    dynamic classes' (Manager, required to reset Components), everything
+    requires Developer Role.
+
+    Another solution would be to load it from XML as it was previously done,
+    but from a security point of view, it's better to forbid everything and
+    allows only some.
+
+    XXX-arnau: Really all 'Access *' and 'View*'? nothing else?
+    """
+    obj = BaseTool.__init__(self, *args, **kwargs)
+    for permission_tuple in self.ac_inherited_permissions(1):
+      name = permission_tuple[0]
+      value = permission_tuple[1]
+      if name == 'Reset dynamic classes':
+        p = Permission(name, value, self)
+        p.setRoles(('Manager',))
+      elif not (name.startswith('Access ') or
+                name.startswith('View') or
+                name.startswith('WebDAV')):
+        p = Permission(name, value, self)
+        p.setRoles(('Developer',))
+
+    return obj
+
+  def _isBootstrapRequired(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+
+    XXX-arnau: Only bt5 items for now
+    """
+    return False
+
+  def _bootstrap(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+
+    XXX-arnau: Only bt5 items for now
+    """
+    pass
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self,
