@@ -242,6 +242,16 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         'type':'string'},
       { 'id':'description',
         'type':'text'},
+      # setProperty cannot be used for this property as it is a property
+      # pointing to _version_priority_list and valid_property_id doesn't
+      # accept property name starting with '_'. The property getter always
+      # returns at least erp5 version.
+      #
+      # Also, it must not be a local property as it is stored in ZODB and
+      # would not be displayed 'Properties' tab with old sites, thus could not
+      # be edited.
+      { 'id': 'version_priority_list',
+        'type': 'lines' }
       )
   title = ''
   description = ''
@@ -1748,13 +1758,6 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
-
-    # setProperty cannot be used for this property as it is a property object
-    # to _version_priority_list and valid_property_id doesn't accept property
-    # name starting with '_'. The property getter always returns at least erp5
-    # version so it only needs to be added to local properties
-    p._local_properties = getattr(self, '_local_properties', ()) + \
-        ({'id': 'version_priority_list', 'type': 'lines'},)
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',
