@@ -109,8 +109,8 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>source_administration</string>
-                          <string>Payment Transaction Owner</string>
+                          <string>source_administration_title</string>
+                          <string>Payment Transaction Manager</string>
                         </tuple>
                       </list>
                     </value>
