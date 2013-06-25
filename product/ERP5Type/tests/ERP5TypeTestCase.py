@@ -218,6 +218,21 @@ def _parse_args(self, *args, **kw):
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
 
+def addUserToDeveloperRole(user_name):
+  config = getConfiguration()
+  product_config = getattr(config, 'product_config', None)
+  if product_config is None:
+    product_config = config.product_config = {}
+
+  if product_config.get('erp5') is None:
+    class DummyDeveloperConfig(object):
+      pass
+    dummy_developer_config = DummyDeveloperConfig()
+    dummy_developer_config.developer_list = [user_name]
+    product_config['erp5'] = dummy_developer_config
+  elif user_name not in product_config['erp5'].developer_list:
+    product_config['erp5'].developer_list.append(user_name)
+
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
@@ -1003,6 +1018,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                           'Assignor', 'Author', 'Auditor', 'Associate'], [])
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
             newSecurityManager(None, user)
+
+            # bt5s contain ZODB Components which can be only installed if the
+            # user has Developer Role
+            addUserToDeveloperRole('ERP5TypeTestCase')
+
             # Add ERP5 Site
             reindex = 1
             if hot_reindexing:

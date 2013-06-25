@@ -41,7 +41,6 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
-from Products.ERP5Type.tests.testDynamicClassGeneration import TestDeveloperMixin
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
@@ -58,7 +57,7 @@ from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor):
+class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',

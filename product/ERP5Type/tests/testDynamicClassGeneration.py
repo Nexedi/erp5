@@ -1244,31 +1244,7 @@ from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from App.config import getConfiguration
 
-class TestDeveloperMixin:
-
-  def login(self, user_name='ERP5TypeTestCase', quiet=0):
-    """
-    Make sure that the test user has Developer Role, otherwise the user cannot
-    do anything on Components...
-    """
-    config = getConfiguration()
-    product_config = getattr(config, 'product_config', None)
-    if product_config is None:
-      product_config = config.product_config = {}
-
-    if product_config.get('erp5') is None:
-      class DummyDeveloperConfig(object):
-        pass
-      dummy_developer_config = DummyDeveloperConfig()
-      dummy_developer_config.developer_list = [user_name]
-      product_config['erp5'] = dummy_developer_config
-
-    elif user_name not in product_config['erp5'].developer_list:
-      product_config['erp5'].developer_list.append(user_name)
-
-    return ERP5TypeTestCase.login(self, user_name, quiet)
-
-class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
+class _TestZodbComponent(SecurityTestCase):
   """
   Abstract class which defined convenient methods used by any Component Test
   and tests ran for all Component Test classes
