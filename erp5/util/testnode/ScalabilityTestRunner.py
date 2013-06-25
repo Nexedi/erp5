@@ -95,17 +95,30 @@ class ScalabilityTestRunner():
     instance_title += "-"
     instance_title += time.strftime('%d/%m/%y_%H:%M:%S',time.localtime())
     return instance_title
-    
-  def _createInstance(self, software_path, software_configuration, instance_title):
+
+  def _generateInstanceXML(self, software_path, software_configuration,
+                      test_result):
     """
-    Launch instance
+    Generate a complete scalability instance XML configuration
+    """
+    config = software_configuration.copy()
+    # Add here zope partition into launcher node to
+    # watch activities etc... ? or do it into buildout ?
+    #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
+    config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
+    config.update({'scalability-launcher-title':'MyTestNodeTitle'})
+    config.update({'test-result-path':test_result.test_result_path})
+    config.update({'test-suite-revision':test_result.revision})
+    return config
+  
+  def _createInstance(self, software_path, software_configuration, instance_title,
+                      test_result):
+    """
+    Create scalability instance
     """
     if self.authorize_request:
-      config = software_configuration.copy()
-      # Add here zope partition into launcher node to
-      # watch activities etc... ?
-      #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
-      config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
+      config = _generateInstanceXML(software_path, software_configuration,
+                                    instance_title, test_result)
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
                              "scalability", {"_" : config})
@@ -170,6 +183,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Just a proxy to SlapOSControler.updateInstanceXML.
     """
+    # use _generateInstanceXML...;
     self.slapos_controler.updateInstanceXML(software_path, computer_guid, xml)
           
   def prepareSlapOSForTestSuite(self, node_test_suite):
@@ -267,7 +281,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         # Launch instance
         instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
         self._createInstance(self.reachable_profile, configuration_list[0],
-                              instance_title)
+                              instance_title, node_test_suite.test_result)
         self.log("Scalability instance requested")
         time.sleep(15)
         self.log("Trying to update instance XML...")

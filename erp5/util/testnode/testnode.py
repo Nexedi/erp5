@@ -379,6 +379,7 @@ from the distributor.")
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               time.sleep(20)
+              node_test_suite.test_result = test_result
               runner.runTestSuite(node_test_suite, portal_url)
               # break the loop to get latest priorities from master
               break
