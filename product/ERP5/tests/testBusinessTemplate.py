@@ -7204,11 +7204,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  # Specific to ZODB Components *only*
-  def getBusinessTemplateList(self):
-    return (super(TestDocumentTemplateItem, self).getBusinessTemplateList() +
-            ('erp5_core_component',))
-
   component_module = DocumentComponent._getDynamicModuleNamespace()
   component_portal_type = DocumentComponent.portal_type
 
