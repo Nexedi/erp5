@@ -360,10 +360,10 @@ class TestResultProxyProxy(TestResultProxy):
         proxy = ServerProxy(
                 portal_url,
                 allow_none=True,
-            ).portal_task_distribution
+            ).test_result_module
       except:
         raise ValueError("Cannot instanciate ServerProxy")
-      TestResultProxy(proxy, retry_time, logger, test_result_path,
+      TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,
                 node_title, revision)
 
 

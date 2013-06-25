@@ -42,11 +42,9 @@ class ScalabilityLauncher(object):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     self.log = logger.info
-
-
     
     # Proxy to with erp5 master test_result
-    result = taskdistribution.TestResultProxyProxy(self.__argumentNamespace.portal_url,
+    self.test_result = taskdistribution.TestResultProxyProxy(self.__argumentNamespace.portal_url,
               1.0, logger, self.__argumentNamespace.test_result_url,
               self.__argumentNamespace.node_title, self.__argumentNamespace.revision)  
 
@@ -100,6 +98,8 @@ class ScalabilityLauncher(object):
     """
     Update state of a test_result_line
     """
+    # TODO : set a line per count value and use setState (?)
+    # 
     pass
 
   def _getNextTest(self):
@@ -112,20 +112,19 @@ class ScalabilityLauncher(object):
     return next_test
 
   def run(self):
+    self.log("Scalability Launcher started")
     max_time = 10 
     start_time = time.time()
     error_message_set, exit_status = set(), 0
+
+
+    self.log("%s", self.test_result.isAlive())
     
-    print self.__argumentNamespace.test_result_url
-    print self.__argumentNamespace.erp5_url
-    print self.__argumentNamespace.revision
-    print self.__argumentNamespace.node_title
-      
     while time.time()-start_time < max_time:
       current_test = self._getNextTest()
       current_test.dump()
       time.sleep(2)
-
+      
     return error_message_set, exit_status
 
 def main():
