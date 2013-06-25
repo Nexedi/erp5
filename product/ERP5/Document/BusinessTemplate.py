@@ -4791,6 +4791,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     # This is a global variable
     # Order is important for installation
     # We want to have:
+    #  * workflow and portal_type* before ZODB Component {Document,Extension...}
     #  * path after module, because path can be module content
     #  * path after categories, because path can be categories content
     #  * path after portal types roles so that roles in the current bt can be used
@@ -4802,6 +4803,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _item_name_list = [
       '_registered_version_priority_selection_item',
       '_workflow_item',
+      '_portal_type_item',
+      #'_portal_type_workflow_chain_item',
+      '_portal_type_allowed_content_type_item',
+      '_portal_type_hidden_content_type_item',
+      '_portal_type_property_sheet_item',
+      '_portal_type_base_category_item',
       '_product_item',
       '_document_item',
       '_property_sheet_item',
@@ -4812,12 +4819,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_tool_item',
       '_message_translation_item',
       '_site_property_item',
-      '_portal_type_item',
-      #'_portal_type_workflow_chain_item',
-      '_portal_type_allowed_content_type_item',
-      '_portal_type_hidden_content_type_item',
-      '_portal_type_property_sheet_item',
-      '_portal_type_base_category_item',
       '_category_item',
       '_module_item',
       '_portal_type_roles_item',

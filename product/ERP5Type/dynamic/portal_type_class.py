@@ -332,8 +332,9 @@ def synchronizeDynamicModules(context, force=False):
       migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
+      from Products.ERP5Type.Tool.ComponentTool import ComponentTool
       try:
-        for tool_class in TypesTool, PropertySheetTool:
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
