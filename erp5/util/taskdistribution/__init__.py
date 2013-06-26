@@ -202,6 +202,10 @@ class TestResultProxy(RPCRetry):
             self._test_result_path, self._node_title, self._revision, id(self))
 
     @property
+    def test_result_path(self):
+        return self._test_result_path
+
+    @property
     def revision(self):
         return self._revision
 
@@ -360,7 +364,7 @@ class TestResultProxyProxy(TestResultProxy):
         proxy = ServerProxy(
                 portal_url,
                 allow_none=True,
-            ).test_result_module
+            )
       except:
         raise ValueError("Cannot instanciate ServerProxy")
       TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,

@@ -117,8 +117,8 @@ class ScalabilityTestRunner():
     Create scalability instance
     """
     if self.authorize_request:
-      config = _generateInstanceXML(software_path, software_configuration,
-                                    instance_title, test_result)
+      config = self._generateInstanceXML(software_path, software_configuration,
+                                    test_result)
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
                              "scalability", {"_" : config})
@@ -207,7 +207,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
       self.randomized_path = test_configuration['randomized_path']
-
       # Avoid the test if it is not launchable
       if not self.launchable:
         self.log("Test suite %s is not actually launchable with \
@@ -215,21 +214,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self.log("ERP5 Master indicates : %s" %(self.error_message,))
         # error : wich code to return ?
         return {'status_code' : 1}
-
       # create an obfuscated link to the testsuite directory
-      self.log("self.testnode.config['software_directory']\
- : %s" %(self.testnode.config['software_directory']))
-      self.log("self.randomized_path\
- : %s" %(self.randomized_path))
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
-      self.log("path_to_suite\
- : %s" %(path_to_suite))
       self.ofuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
                       self.randomized_path)
-      
       if ( not os.path.lexists(self.ofuscated_link_path) and
            not os.path.exists(self.ofuscated_link_path) ) :
         try :
@@ -239,12 +230,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         except :
           self.log("testnode, Unable to create symbolic link to the testsuite.")
           raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
-          
       self.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
-      
-
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
+      node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       software_path_list = []
       # Construct the ipv6 obfuscated url of the software profile reachable from outside
@@ -276,43 +265,48 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         return {'status_code' : 1}
       self.authorize_request = True
       self.log("Softwares installed")
-
-      try:
+      """      try:
+      """
         # Launch instance
-        instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
-        self._createInstance(self.reachable_profile, configuration_list[0],
-                              instance_title, node_test_suite.test_result)
-        self.log("Scalability instance requested")
-        time.sleep(15)
-        self.log("Trying to update instance XML...")
-        time.sleep(2)
-        try:
-          self._updateInstanceXML(self.reachable_profile, "COMP-1564", configuration_list[1])
-          self.log("Instance XML updated...")
-        except:
-          raise ValueError("Unable to update instance XML")
-          return {'status_code' : 1}
-        
-      except:
+      instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
+      self._createInstance(self.reachable_profile, configuration_list[0],
+                            instance_title, node_test_suite.test_result)
+      self.log("Scalability instance requested")
+      """      except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
-        return {'status_code' : 1}
-        
+        return {'status_code' : 1} # Unbale to launch instance
+      """
+      return {'status_code' : 1} # Unable to continue due to not realizable configuration
     return {'status_code' : 0}
 
+  def runTestSuite(self, node_test_suite, portal_url):
+    configuration_list = node_test_suite.configuration_list
+    test_list = [ configuration_list.index(configuration)
+                  for configuration in configuration_list ]
+    # create test_result
+    test_result_proxy = self.testnode.portal.createTestResult(
+      node_test_suite.revision, test_list,
+      self.testnode.config['test_node_title'],
+      True, node_test_suite.test_suite_title,
+      node_test_suite.project_title)
+  
+    count = 0
+    for configuration in configuration_list:
+      # Start only the current test
+      exclude_list=[x for x in test_list if x!=test_list[count]]
+      count += 1
+      test_result_line_proxy = test_result_proxy.start(exclude_list)
+      self.log("Test for count : %d is in a running state." %count)
+      # create result line
+    return {'status_code' : 0}
+    
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
     self.launcher_nodes_computer_guid = []
     self.remaining_software_installation_dict = {}
     self.authorize_supply = True
     self.authorize_request = False
-
-  def runTestSuite(self, node_test_suite, portal_url, log=None):
-    # TODO : write code
-    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
-                                 clean=True)
-    # create ResultLine for each loop    
-    pass
 
   def getRelativePathUsage(self):
     """

@@ -290,8 +290,6 @@ branch = %(branch)s
     self._cleanupTemporaryFiles()
 
   def run(self):
-    
-    ## BLOCK OK
     log = self.log
     config = self.config
     slapgrid = None
@@ -300,7 +298,6 @@ branch = %(branch)s
     test_result = None
     test_node_slapos = SlapOSInstance()
     test_node_slapos.edit(working_directory=self.config['slapos_directory'])
-    ## /BLOCK OK
     try:
       while True:
         try:
@@ -311,15 +308,13 @@ branch = %(branch)s
           begin = time.time()
           portal_url = config['test_suite_master_url']
           portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
+          self.portal = portal
           self.test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
           self.test_suite_portal.subscribeNode(config['test_node_title'], config['computer_id'])                  
-
           test_suite_json =  self.test_suite_portal.startTestSuite(config['test_node_title'])
-
           test_suite_data = testnodeUtils.deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
-
           # TODO : implement this method for each distributor
           # into nexedi/master-erp5..
           try:
@@ -340,11 +335,7 @@ from the distributor.")
           # master testnode gets test_suites, slaves get nothing
           runner.prepareSlapOSForTestNode(test_node_slapos)
           # Clean-up test suites
-          
           self.checkOldTestSuite(test_suite_data)
-
-
-                
           for test_suite in test_suite_data:
             remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
@@ -366,20 +357,16 @@ from the distributor.")
                      node_test_suite.project_title)
             remote_test_result_needs_cleanup = True
             log("testnode, test_result : %r" % (test_result, ))
-
             if test_result is not None:
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
-
+              node_test_suite.edit(test_result=test_result)
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
-
-                
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
-              time.sleep(20)
-              node_test_suite.test_result = test_result
+              #time.sleep(20)
               runner.runTestSuite(node_test_suite, portal_url)
               # break the loop to get latest priorities from master
               break

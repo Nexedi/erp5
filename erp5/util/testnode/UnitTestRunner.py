@@ -139,6 +139,7 @@ class UnitTestRunner():
       invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
     if '--xvfb_bin' in supported_paramater_set:
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
+    # TODO : include testnode correction ( b111682f14890bf )
     bt5_path_list = config.get("bt5_path")
     if bt5_path_list not in ('', None,):
       invocation_list.extend(["--bt5_path", bt5_path_list])

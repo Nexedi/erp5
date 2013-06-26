@@ -113,18 +113,19 @@ class ScalabilityLauncher(object):
 
   def run(self):
     self.log("Scalability Launcher started")
-    max_time = 10 
+    max_time = 10
     start_time = time.time()
     error_message_set, exit_status = set(), 0
 
-
-    self.log("%s", self.test_result.isAlive())
+    #self.log("%s", self.test_result.isAlive())
     
     while time.time()-start_time < max_time:
       current_test = self._getNextTest()
       current_test.dump()
       time.sleep(2)
       
+      # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
+        
     return error_message_set, exit_status
 
 def main():
