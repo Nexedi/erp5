@@ -7415,6 +7415,66 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepUseCurrentBusinessTemplateForInstall(self, sequence=None, **kw):
+    sequence.edit(import_bt=sequence.get('current_bt'))
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb(self):
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyAndMigrateDocumentBusinessTemplate
+      CheckDocumentMigration
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      SaveBusinessTemplate
+      RemoveBusinessTemplate
+      RemoveZodbDocument
+      CheckDocumentExists
+      CheckZodbDocumentRemoved
+
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentRemoved
+      CheckZodbDocumentExistsAndValidated
+
+      UseExportBusinessTemplate
+      CheckReplacedInstallationState
+      UseImportBusinessTemplate
+
+      UninstallBusinessTemplate
+      RemoveAllTrashBins
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckZodbDocumentRemoved
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 class TestConstraintTemplateItem(TestDocumentTemplateItem):
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
@@ -7555,6 +7615,9 @@ TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefor
 
 TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
     skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb)
 
 def test_suite():
   suite = unittest.TestSuite()
