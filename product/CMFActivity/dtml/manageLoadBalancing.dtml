@@ -134,6 +134,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <i>(disabled)</i> value. Activity nodes will receive no more activity
         when <i>Distributing node</i> is disabled.
       </p>
+ 
+      <dtml-if expr="(_.len(getProcessingNodeList()) > 1) and (getDistributingNode() in getProcessingNodeList())">
+        <div class="form-label" style="color: #F00">Warning: Distributing node is a processing node.</div>
+        <p class="form-help">
+         For better performances it is recommended to not process activities on
+         the distributing node. Otherwise, it may distribute activities too
+         slowly and starve the other processing nodes.
+        </p>
+      </dtml-if>
     </td>
   </tr>
   <tr>
@@ -197,6 +206,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
        obsolete nodes. If non-existent nodes are present in the
        <i>Processing node</i> list, activities will get balanced to those
        nodes and never be executed.
+      </p>
+      <p class="form-help">
+       <b>Important note:</b>Adding or removing processing nodes while
+       activities are processed causes undefined behaviour.
       </p>
     </td>
   </tr>
