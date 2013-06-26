@@ -1343,7 +1343,7 @@ class _TestZodbComponent(SecurityTestCase):
                       fromlist=[self._getComponentModuleName()],
                       level=0)
 
-  def testValidateInvalidate(self):
+  def testValidateInvalidateDelete(self):
     """
     The new Component should only be in erp5.component.XXX when validated,
     otherwise it should not be importable at all
@@ -1363,6 +1363,17 @@ class _TestZodbComponent(SecurityTestCase):
     test_component.validate()
     self.tic()
     self.assertModuleImportable('TestValidateInvalidateComponent')
+
+    test_component.invalidate()
+    self.tic()
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+
+    self.portal.portal_workflow.doActionFor(test_component, 'delete_action')
+    self.tic()
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+    self.assertEqual([o for o in self.portal.portal_components.contentValues()
+                      if o.getReference() == 'TestValidateInvalidateComponent'],
+                     [])
 
   def testReferenceWithReservedKeywords(self):
     """
