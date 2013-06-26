@@ -138,6 +138,30 @@ class TestResultLineProxy(RPCRetry):
     def name(self):
         return self._name
 
+    def isRunning(self):
+        """
+        Return : boolean 
+        """
+        return bool(self._retryRPC('isTestCaseRunning', [self._test_result_line_path]))
+        
+    def isFailed(self):
+        """
+        Return : boolean 
+        """
+        return bool(self._retryRPC('isTestCaseFailed', [self._test_result_line_path]))
+
+    def isCompleted(self):
+        """
+        Return : boolean 
+        """
+        return bool(self._retryRPC('isTestCaseCompleted', [self._test_result_line_path]))
+        
+    def isCancelled(self):
+        """
+        Return : boolean 
+        """
+        return bool(self._retryRPC('isTestCaseCancelled', [self._test_result_line_path]))
+
     def stop(self, test_count=None, error_count=None, failure_count=None,
             skip_count=None, duration=None, date=None, command=None,
             stdout=None, stderr=None, html_test_result=None, **kw):

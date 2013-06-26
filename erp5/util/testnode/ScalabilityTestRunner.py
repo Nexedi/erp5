@@ -298,7 +298,32 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
       self.log("Test for count : %d is in a running state." %count)
-      # create result line
+      while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
+        time.sleep(10)
+        pass
+      if test_result_line_proxy.isCompleted():
+        self.log("Test completed.")
+        pass
+      elif not test_result_proxy.isAlive():
+        self.log("Test cancelled.")
+        # Here do somethig with instances
+        raise ValueError("Test cancelled")
+      elif test_result_line_proxy.isFailed():
+        self.log("Test failed.")
+        # Here do somethig with instances
+        raise ValueError("Test failed")
+      elif test_result_line_proxy.isCancelled():
+        self.log("Test cancelled.")
+        # Here do somethig with instances
+        raise ValueError("Test has been cancelled")
+      elif test_result_line_proxy.isRunning():
+        self.log("Test always running after max time elapsed.")
+        # Here do somethig with instances
+        raise ValueError("Max time for this test case is elapsed.")
+      else:
+        self.log("Test in a undeterminated state.")
+        raise ValueError("Test case is in an undeterminated state")
+        
     return {'status_code' : 0}
     
   def _cleanUpNodesInformation(self):
