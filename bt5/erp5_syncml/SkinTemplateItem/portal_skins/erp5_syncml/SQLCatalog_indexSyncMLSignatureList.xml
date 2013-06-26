@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Utils import UpperCase\n
+from ZODB.POSException import ConflictError\n
+\n
+method = context.z_catalog_syncml_signature_list\n
+property_list = method.arguments_src.split()\n
+parameter_dict = {}\n
+failed_path_list = []\n
+restrictedTraverse = context.getPortalObject().restrictedTraverse\n
+subscription = restrictedTraverse(subscription_path)\n
+for path in path_list:\n
+  obj = restrictedTraverse(path, None)\n
+  try:\n
+    tmp_dict = {}\n
+    for property in property_list:\n
+      if property == "validation_state":\n
+        try:\n
+          value = getattr(obj, \'get%s\' % UpperCase(property))()\n
+        except AttributeError:\n
+          # Data from source has no state\n
+          value = ""\n
+      elif property == "gid" and subscription_path:          \n
+        # Call specific method to compute GID on source data\n
+        value = subscription.getGidFromObject(obj)\n
+      elif property == "gid":\n
+        # Signature GID is defined as its ID\n
+        value = getattr(obj, \'getId\')()\n
+      else:\n
+        value = getattr(obj, \'get%s\' % UpperCase(property))()\n
+      tmp_dict[property] = value\n
+  except ConflictError:\n
+    raise\n
+  except Exception, e:\n
+    raise\n
+    exception = e\n
+    failed_path_list.append(path)\n
+  else:\n
+    for property, value in tmp_dict.items():\n
+      parameter_dict.setdefault(property, []).append(value)\n
+\n
+if len(failed_path_list):\n
+  if len(parameter_dict):\n
+    # reregister activity for failed objects only\n
+    activate_kw.update(activity=\'SQLQueue\', priority=5)\n
+    context.activate(**activate_kw).SQLCatalog_indexSyncMLSignatureList(path_list=failed_path_list)\n
+  else:\n
+    # if all objects are failed one, just raise an exception to avoid infinite loop.\n
+    raise AttributeError, \'exception %r raised in indexing %r\' % (exception, failed_path_list)\n
+\n
+if parameter_dict:\n
+  return method(**parameter_dict)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>path_list, subscription_path=None, activate_kw=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_indexSyncMLSignatureList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

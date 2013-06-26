@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>gid\r\n
+path\r\n
+validation_state\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_catalog_syncml_signature_list</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+DELETE FROM\n
+  syncml\n
+WHERE\n
+<dtml-in path>\n
+  path=<dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+</dtml-in>\n
+;\n
+<dtml-var "\'\\0\'">\n
+INSERT INTO\n
+  syncml\n
+VALUES\n
+<dtml-in prefix="loop" expr="_.range(_.len(path))">\n
+(\n
+  <dtml-sqlvar expr="gid[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="path[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="validation_state[loop_item]" type="string">\n
+)<dtml-unless sequence-end>,</dtml-unless>\n
+</dtml-in>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
