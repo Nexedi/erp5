@@ -55,10 +55,9 @@ class ScalabilityLauncher(object):
                         metavar='ERP5_URL',
                         help='Main url of ERP5 instance to test')
 
-    parser.add_argument('--test-result-url',
-                        metavar='ERP5_TEST_RESULT_URL',
-                        help='ERP5 URL to find test results corresponding '
-                             'to the current running test_suite')
+    parser.add_argument('--test-result-path',
+                        metavar='ERP5_TEST_RESULT_PATH',
+                        help='ERP5 relative path of the test result')
                              
     parser.add_argument('--revision',
                         metavar='REVISION',
@@ -69,9 +68,9 @@ class ScalabilityLauncher(object):
                         help='Title of the testnode which is running this'
                               'launcher')
                               
-    parser.add_argument('--portal-url',
-                        metavar='PORTAL_URL',
-                        help='Url to connect to ERP5 Master portal')
+    parser.add_argument('--test-suite-master-url',
+                        metavar='TEST_SUITE_MASTER_URL',
+                        help='Url to connect to the ERP5 Master testsuite taskditributor')
                         
     parser.add_argument('--log-path',
                         metavar='LOG_PATH',
@@ -117,6 +116,14 @@ class ScalabilityLauncher(object):
     start_time = time.time()
     error_message_set, exit_status = set(), 0
 
+    test_result = taskdistribution.TestResultProxyProxy(
+                        self.__argumentNamespace.test_suite_master_url,
+                        1.0, self.log,
+                        self.__argumentNamespace.test_result_path,
+                        self.__argumentNamespace.node_title,
+                        self.__argumentNamespace.revision
+                      )
+                          
     #self.log("%s", self.test_result.isAlive())
     
     while time.time()-start_time < max_time:

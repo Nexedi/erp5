@@ -382,17 +382,26 @@ class TestResultProxyProxy(TestResultProxy):
     """
     A wrapper/proxy to TestResultProxy
     """
-    def __init__(self, portal_url, retry_time, logger, test_result_path,
+    def __init__(self, test_suite_master_url, retry_time, logger, test_result_path,
                 node_title, revision):
       try:
         proxy = ServerProxy(
                 portal_url,
                 allow_none=True,
-            )
+            ).portal_task_distribution
       except:
         raise ValueError("Cannot instanciate ServerProxy")
       TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,
                 node_title, revision)
+
+    def getNextTestResultLinePath(self):
+        """
+        A proxy to getNextTestResultLinePath
+        Return the relative path of the test with the running state
+        """
+        return bool(self._retryRPC('getNextTestResultLinePath', [self._test_result_path]))
+      
+
 
 
 class ServerProxy(xmlrpclib.ServerProxy):
