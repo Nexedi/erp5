@@ -182,13 +182,12 @@ def getPaymentConditionText(paysheet):\n
           date)\n
   return \'\'\n
 \n
-gross_salary = getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
+base_contribution = \'base_contribution/base_amount/payroll/report/salary/gross\'\n
+gross_salary = getMovementTotalPriceFromCategory(base_contribution,\n
     contribution_share=\'contribution_share/employee\')\n
-\n
-year_to_date_gross_salary = paysheet.PaySheetTransaction_getYearToDateSlice()\n
-year_to_date_slice_a = paysheet.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_a\')\n
-year_to_date_slice_b = paysheet.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_b\')\n
+year_to_date_gross_salary = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution)\n
+year_to_date_slice_a = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, \'salary_range/france/tranche_a\')\n
+year_to_date_slice_b = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, \'salary_range/france/tranche_b\')\n
 \n
 worked_hour_count = paysheet.getWorkTimeAnnotationLineQuantity(0)\n
 year_to_date_worked_hour_count = worked_hour_count + \\\n
@@ -208,8 +207,8 @@ year_to_date_bonus_worked_hour_amount = portal.PaySheetTransaction_getYearToDate
     base_contribution=\'base_contribution/base_amount/payroll/report/overtime\', \\\n
     contribution_share=\'contribution_share/employee\') or 0\n
 \n
-year_to_date_taxable_net_salary = portal.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=paysheet, base_contribution_list=\'payroll/report/salary/net\') + salaire_net_imposable\n
+year_to_date_taxable_net_salary = paysheet.PaySheetTransaction_getYearToDateSlice(\n
+    \'base_contribution/base_amount/payroll/base/income_tax\')\n
 \n
 def unicodeDict(d):\n
   for k, v in d.items():\n
