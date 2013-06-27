@@ -70,7 +70,7 @@ setup(name=name,
           'scalability_tester_erp5 = '\
             'erp5.util.benchmark.scalability_tester:main [scalability_tester]',
           'scalability_launcher_erp5 = '\
-            'erp5.util.benchmark.scalability_launcher:main',
+            'erp5.util.scalability.scalability_launcher:main',
           'generate_erp5_tester_report = '\
             'erp5.util.benchmark.report:generateReport [benchmark-report]',
           'web_checker_utility = erp5.util.webchecker:web_checker_utility'
