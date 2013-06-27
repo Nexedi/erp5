@@ -23,13 +23,17 @@ path</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+BEGIN\n
+<dtml-var sql_delimiter>\n
 SELECT path \n
 FROM syncml\n
 WHERE\n
  gid in (<dtml-in gid_list><dtml-sqlvar sequence-item type="string">\n
              <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
 AND\n
-  path like <dtml-sqlvar path type="string">
+  path like <dtml-sqlvar path type="string">\n
+<dtml-var sql_delimiter>\n
+COMMIT
 
 ]]></string> </value>
         </item>

@@ -22,6 +22,8 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+BEGIN\n
+<dtml-var sql_delimiter>\n
 REPLACE INTO\n
   syncml (`path`, `gid`)\n
 VALUES\n
@@ -31,7 +33,8 @@ VALUES\n
   <dtml-sqlvar expr="gid[loop_item]" type="string">\n
 )<dtml-unless sequence-end>,</dtml-unless>\n
 </dtml-in>\n
-
+<dtml-var sql_delimiter>\n
+COMMIT
 
 ]]></string> </value>
         </item>

@@ -22,9 +22,13 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+BEGIN\n
+<dtml-var sql_delimiter>\n
 DELETE FROM syncml\n
 WHERE\n
-  path like <dtml-sqlvar path type="string">
+  path like <dtml-sqlvar path type="string">\n
+<dtml-var sql_delimiter>\n
+COMMIT
 
 ]]></string> </value>
         </item>
