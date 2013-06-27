@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_unindex_data</string> </value>
+            <value> <string>z_unindex_syncml_data</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>

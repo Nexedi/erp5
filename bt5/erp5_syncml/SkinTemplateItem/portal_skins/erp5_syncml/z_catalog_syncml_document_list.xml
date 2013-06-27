@@ -8,10 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>gid\r\n
-path\r\n
-validation_state\r\n
-</string> </value>
+            <value> <string encoding="base64">Z2lkDQpwYXRoDQo=</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -19,28 +16,19 @@ validation_state\r\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_catalog_syncml_signature_list</string> </value>
+            <value> <string>z_catalog_syncml_document_list</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-DELETE FROM\n
-  syncml\n
-WHERE\n
-<dtml-in path>\n
-  path=<dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
-</dtml-in>\n
-;\n
-<dtml-var "\'\\0\'">\n
-INSERT INTO\n
-  syncml\n
+REPLACE INTO\n
+  syncml (`path`, `gid`)\n
 VALUES\n
 <dtml-in prefix="loop" expr="_.range(_.len(path))">\n
 (\n
-  <dtml-sqlvar expr="gid[loop_item]" type="string">,\n
   <dtml-sqlvar expr="path[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="validation_state[loop_item]" type="string">\n
+  <dtml-sqlvar expr="gid[loop_item]" type="string">\n
 )<dtml-unless sequence-end>,</dtml-unless>\n
 </dtml-in>\n
 

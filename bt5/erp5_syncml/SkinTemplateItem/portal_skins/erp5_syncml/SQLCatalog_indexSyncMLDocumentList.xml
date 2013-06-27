@@ -53,7 +53,7 @@
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
 from ZODB.POSException import ConflictError\n
 \n
-method = context.z_catalog_syncml_signature_list\n
+method = context.z_catalog_syncml_document_list\n
 property_list = method.arguments_src.split()\n
 parameter_dict = {}\n
 failed_path_list = []\n
@@ -64,13 +64,7 @@ for path in path_list:\n
   try:\n
     tmp_dict = {}\n
     for property in property_list:\n
-      if property == "validation_state":\n
-        try:\n
-          value = getattr(obj, \'get%s\' % UpperCase(property))()\n
-        except AttributeError:\n
-          # Data from source has no state\n
-          value = ""\n
-      elif property == "gid" and subscription_path:          \n
+      if property == "gid" and subscription_path:          \n
         # Call specific method to compute GID on source data\n
         value = subscription.getGidFromObject(obj)\n
       elif property == "gid":\n
@@ -108,7 +102,7 @@ if parameter_dict:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_indexSyncMLSignatureList</string> </value>
+            <value> <string>SQLCatalog_indexSyncMLDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>
