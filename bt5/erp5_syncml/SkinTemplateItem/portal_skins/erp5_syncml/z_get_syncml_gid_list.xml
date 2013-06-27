@@ -14,11 +14,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>min_gid\r\n
+            <value> <string>strict_min_gid\r\n
+min_gid\r\n
 max_gid\r\n
 path\r\n
-first_call\r\n
-last_call\r\n
 limit\r\n
 </string> </value>
         </item>
@@ -65,19 +64,14 @@ SELECT \n
 FROM syncml\n
 WHERE\n
   path like <dtml-sqlvar path type="string">\n
-<dtml-if min_gid>\n
-  <dtml-if first_call>\n
-    /* Do nothing here */\n
-  <dtml-else>\n
-    AND gid >= <dtml-sqlvar min_gid type="string">\n
-  </dtml-if>\n
+<dtml-if strict_min_gid>\n
+  AND gid > <dtml-sqlvar strict_min_gid type="string">\n
 </dtml-if>\n
-<dtml-if max_gid>\n
-  <dtml-if last_call>\n
-    /* Do nothing here */\n
-  <dtml-else>\n
-    AND gid <= <dtml-sqlvar max_gid type="string">\n
-  </dtml-if>\n
+<dtml-if min_gid>\n
+  AND gid >= <dtml-sqlvar min_gid type="string">\n
+</dtml-if>\n
+<dtml-if strict_max_gid>\n
+  AND gid <= <dtml-sqlvar strict_max_gid type="string">\n
 </dtml-if>\n
 ORDER BY gid\n
 <dtml-if limit>\n

@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
 from ZODB.POSException import ConflictError\n
-\n
+# XXX à refaire pour optimisation\n
 method = context.z_catalog_syncml_document_list\n
 property_list = method.arguments_src.split()\n
 parameter_dict = {}\n
@@ -64,14 +64,23 @@ for path in path_list:\n
   try:\n
     tmp_dict = {}\n
     for property in property_list:\n
-      if property == "gid" and subscription_path:          \n
-        # Call specific method to compute GID on source data\n
-        value = subscription.getGidFromObject(obj)\n
-      elif property == "gid":\n
-        # Signature GID is defined as its ID\n
-        value = getattr(obj, \'getId\')()\n
+      if subscription_path:\n
+        if property == "gid":          \n
+          # Call specific method to compute GID on source data\n
+          value = subscription.getGidFromObject(obj)\n
+        elif property == "data":\n
+          conduit = subscription.getConduit()\n
+          value = conduit.getXMLFromObjectWithId(obj,\n
+                           xml_mapping=subscription.getXmlBindingGeneratorMethodId(),\n
+                           context_document=subscription.getPath())\n
+        else:\n
+          value = getattr(obj, \'get%s\' % UpperCase(property))()                           \n
       else:\n
-        value = getattr(obj, \'get%s\' % UpperCase(property))()\n
+        if property == "gid":\n
+          # Signature GID is defined as its ID\n
+          value = getattr(obj, \'getId\')()\n
+        else:\n
+          value = getattr(obj, \'get%s\' % UpperCase(property))()\n
       tmp_dict[property] = value\n
   except ConflictError:\n
     raise\n
