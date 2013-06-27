@@ -433,8 +433,17 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     request = self.portal.REQUEST
     website = self.setupWebSite()
+    path = website.absolute_url_path()
+    response = self.publish(path)
+    self.assertTrue(response.getHeader('x-cache-headers-set-by'),
+                    'CachingPolicyManager: /erp5/caching_policy_manager')
+
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
+    path = web_section.absolute_url_path()
+    response = self.publish(path)
+    self.assertTrue(response.getHeader('x-cache-headers-set-by'),
+                    'CachingPolicyManager: /erp5/caching_policy_manager')
 
     # unauthenticated
     document_portal_type = 'Text'

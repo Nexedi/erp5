@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
@@ -199,6 +200,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         We use REQUEST parameters so that they are reset for every
         Web transaction and can be accessed from widgets. 
       """
+      _setCacheHeaders(_ViewEmulator().__of__(self), {})
       # Register current web site physical path for later URL generation
       if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:
         self.REQUEST[self.web_section_key] = self.getPhysicalPath()
