@@ -29,7 +29,7 @@
             <value> <string>CREATE TABLE `syncml` (\n
   `path` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT \'\',\n
   `gid` varchar(255) COLLATE utf8_unicode_ci DEFAULT \'\',\n
-  `data` LONGBLOB COLLATE utf8_unicode_ci DEFAULT NULL,\n
+  `data` LONGBLOB NULL,\n
   PRIMARY KEY (`path`),\n
   KEY `gid` (`gid`,`path`)\n
 ) ENGINE=InnoDB;\n
