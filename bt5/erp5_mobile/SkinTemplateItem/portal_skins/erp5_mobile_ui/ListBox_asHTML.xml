@@ -80,8 +80,8 @@
           tal:define="selected_domain_path here/getSelectedDomainPath">\n
           <div>\n
             <div valign="top">\n
-              <select name="domain_root_url" onChange="submitAction(this.form, \'context/portal_selections/setDomainRoot\')"\n
-                tal:attributes="onChange string:submitAction(this.form, \'${context_url}/portal_selections/setDomainRoot\')">\n
+              <select name="domain_root_url" onchange="submitAction(this.form, \'context/portal_selections/setDomainRoot\')"\n
+                tal:attributes="onchange string:submitAction(this.form, \'${context_url}/portal_selections/setDomainRoot\')">\n
                 <tal:block tal:repeat="c here/getDomainRootList">\n
                   <option value="base_domain"\n
                     tal:define="path python: c[0]; title python: c[1]"\n
@@ -138,13 +138,13 @@
                  <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">\n
                  <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">\n
                  <br />\n
-                 <span tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onClick string:simple_aff(this.id)" class="div_short_mode" i18n:translate="" i18n:domain="ui">Toggle Detailed Mode</span>\n
+                 <span tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onclick string:simple_aff(this.id)" class="div_short_mode" i18n:translate="" i18n:domain="ui">Toggle Detailed Mode</span>\n
 \n
               <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
-                  onChange="submitAction(this.form, \'context/${field_id}_setPage\')"\n
+                  onchange="submitAction(this.form, \'context/${field_id}_setPage\')"\n
                   tal:define="lines here/getMaxLineNumber"\n
                   tal:attributes="id string:${field_id}_page_selection;\n
-                                  onChange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
+                                  onchange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
                   i18n:domain="ui" i18n:attributes="title">\n
                   <option value="0"\n
                     tal:repeat="p python: range(0, here.total_pages)"\n
@@ -195,8 +195,8 @@
               <div tal:condition="is_report_tree_mode"\n
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle;">\n
                 <select name="report_root_url"\n
-                  onChange="submitAction(this.form, \'context/portal_selections/setReportRoot\')"\n
-                  tal:attributes="onChange string:submitAction(this.form, \'${context_url}/portal_selections/setReportRoot\')">\n
+                  onchange="submitAction(this.form, \'context/portal_selections/setReportRoot\')"\n
+                  tal:attributes="onchange string:submitAction(this.form, \'${context_url}/portal_selections/setReportRoot\')">\n
                   <tal:block tal:repeat="c here/getReportRootList">\n
                     <option value="base_domain"\n
                       tal:define="path python: c[0]; title python: c[1]"\n
@@ -231,7 +231,7 @@
               </tal:block>\n
                <div name="selection_mui" style="padding-bottom: 5px;">\n
 \n
-                    <select id="select_search_field" onChange="javascript: showSearchSelectedColumn();" name="select_search_field">\n
+                    <select id="select_search_field" onchange="javascript: showSearchSelectedColumn();" name="select_search_field">\n
                       <tal:block tal:repeat="valueX search_value_list">\n
                         <tal:block tal:define="\n
                                      aliasX python: valueX[0];\n

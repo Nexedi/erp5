@@ -41,7 +41,7 @@
       \074span id="favourites" class="favourites"\076\n
 \n
         \074select name="select_favorite"\n
-                onChange="submitAction(this.form,\'Base_doFavorite\')"\076\n
+                onchange="submitAction(this.form,\'Base_doFavorite\')"\076\n
           \074option selected="selected" value=""\n
                   i18n:translate="" i18n:domain="ui"\076My Favourites\074/option\076\n
         \074/select\076\n
@@ -59,7 +59,7 @@
       \074span id="modules" class="modules"\076\n
 \n
         \074select name="select_module"\n
-                onChange="submitAction(this.form,\'Base_doModule\')"\076\n
+                onchange="submitAction(this.form,\'Base_doModule\')"\076\n
 \n
           \074option selected="selected" value="" i18n:translate="" i18n:domain="ui"\076Modules\074/option\076\n
         \074/select\076\n
@@ -76,7 +76,7 @@
     \074span class="second"\076\n
       \074span id="language" class="language"\076\n
         \074select name="select_language"\n
-                onChange="submitAction(this.form,\'Base_doLanguage\')"\076\n
+                onchange="submitAction(this.form,\'Base_doLanguage\')"\076\n
 \n
           \074option value=""\n
                   i18n:translate="" i18n:domain="ui"\076My Language\074/option\076\n

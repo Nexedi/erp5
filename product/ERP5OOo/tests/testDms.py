@@ -1633,7 +1633,7 @@ class TestDocument(TestDocumentMixin):
           alert("da");
         </script>
         <a href="javascript:DosomethingNasty()">Link</a>
-        <a onClick="javascript:DosomethingNasty()">Another Link</a>
+        <a onclick="javascript:DosomethingNasty()">Another Link</a>
         <p>éàèù</p>
         <p class="Th&#232;mes Thèmes">Th&#232;mes Thèmes</p>
       </body>
@@ -1668,7 +1668,7 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('javascript' not in safe_html)
     self.assertTrue('alert("da");' not in safe_html)
     self.assertTrue('javascript:DosomethingNasty()' not in safe_html)
-    self.assertTrue('onClick' not in safe_html)
+    self.assertTrue('onclick' not in safe_html)
 
     # Check that outputed entire html is safe
     entire_html = web_page.asEntireHTML()
@@ -1684,7 +1684,7 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('javascript' not in entire_html)
     self.assertTrue('alert("da");' not in entire_html)
     self.assertTrue('javascript:DosomethingNasty()' not in entire_html)
-    self.assertTrue('onClick' not in entire_html)
+    self.assertTrue('onclick' not in entire_html)
 
     # now check converted value is stored in cache
     format = 'html'

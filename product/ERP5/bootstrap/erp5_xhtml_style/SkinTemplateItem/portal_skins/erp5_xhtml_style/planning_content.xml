@@ -67,8 +67,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
             <tal:block tal:repeat="nb python:range(3)"> &nbsp; <!-- Adding spaces --> </tal:block>\n
             \n
             <b tal:replace="nothing"><!-- report path selection --></b>\n
-            <select name="report_root_url" onChange="submitAction(this.form,\'/setReportRoot\')"\n
-                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
+            <select name="report_root_url" onchange="submitAction(this.form,\'/setReportRoot\')"\n
+                    tal:attributes="onchange string:submitAction(this.form,\'${address}/setReportRoot\')">\n
               <tal:block tal:condition="python:basic.selection is None"\n
                          tal:define="global selection_report_path python:basic.report_root_list[0][0]" />\n
               <tal:block tal:condition="python:basic.selection is not None"\n
@@ -111,9 +111,9 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
                      tal:attributes="src string:${address}/images/1leftarrowv.png" />\n
             </tal:block>\n
             <select name="list_start" title="Change Page" size="1"\n
-                    onChange=""\n
+                    onchange=""\n
                     tal:condition="python:basic.report_axis_info[\'bound_page_total\'] &gt; 1"\n
-                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setPage\')">\n
+                    tal:attributes="onchange string:submitAction(this.form,\'${address}/setPage\')">\n
               <tal:block tal:repeat="current_page_number python:range(basic.report_axis_info[\'bound_page_total\']+1)[1:]">\n
                 <tal:block tal:condition="python:current_page_number==basic.report_axis_info[\'bound_page_current\']">\n
                   <b tal:replace="nothing"> actual page is selected </b>\n
@@ -148,8 +148,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
 \n
             <tal:block tal:repeat="nb python:range(1)"> &nbsp; </tal:block>\n
 \n
-           <select name="lane_path" onChange="submitAction(this.form,\'/setLanePath\')"\n
-                    tal:attributes="onChange string:submitAction(this.form,\'${address}/setLanePath\')">\n
+           <select name="lane_path" onchange="submitAction(this.form,\'/setLanePath\')"\n
+                    tal:attributes="onchange string:submitAction(this.form,\'${address}/setLanePath\')">\n
               <tal:block tal:condition="python:basic.selection is None"\n
                          tal:define="global selection_report_path python:basic.lane_root_list[0][0]" />\n
               <tal:block tal:condition="python:basic.selection is not None"\n

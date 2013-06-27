@@ -95,7 +95,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
            </div>\n
 \n
 <!--         <div class="aff_options">\n
-          <a class="list_mode link" title="List Mode" onClick="affOptions()">\n
+          <a class="list_mode link" title="List Mode" onclick="affOptions()">\n
               <span class="mobil" i18n:translate="" i18n:domain="ui"> < Options ></span> \n
           </a>\n
          </div>   -->\n
@@ -113,7 +113,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   \n
               <div id="actions">\n
                 <select name="select_action"\n
-                        tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
+                        tal:attributes="onchange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
                   <option selected="selected" value=""\n
                           i18n:translate="" i18n:domain="ui">Action...\n
                   </option>\n

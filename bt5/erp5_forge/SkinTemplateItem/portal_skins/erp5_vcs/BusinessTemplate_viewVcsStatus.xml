@@ -88,16 +88,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <tr><td>\n
           <table style="width: 80px;" cellspacing="0" cellpadding="0">\n
             <tr>\n
-              <td id="item2" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="viewDiff(1,document.getElementById(\'main_form\'))">Diff</td>\n
+              <td id="item2" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onclick="viewDiff(1,document.getElementById(\'main_form\'))">Diff</td>\n
             </tr>\n
             <tr>\n
-              <td id="item3" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="log()">  History</td>\n
+              <td id="item3" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onclick="log()">  History</td>\n
             </tr>\n
             <tr>\n
-              <td id="item4" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="commit(1,document.getElementById(\'main_form\'))">Commit</td>\n
+              <td id="item4" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onclick="commit(1,document.getElementById(\'main_form\'))">Commit</td>\n
             </tr>\n
             <tr>\n
-              <td id="item5" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="revert(1,document.getElementById(\'main_form\'))">Revert</td>\n
+              <td id="item5" style="text-align: center;" onMouseOver="this.style.backgroundColor=\'#dae6e6\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onclick="revert(1,document.getElementById(\'main_form\'))">Revert</td>\n
             </tr>\n
           </table>\n
         </td></tr>\n

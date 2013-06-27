@@ -132,7 +132,7 @@
 \n
         <!-- Select domain node -->\n
         <select name="domain_root_url"\n
-                tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
+                tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
           <tal:block tal:repeat="c here/getDomainRootList">\n
             <option value="base_domain"\n
                     tal:define="path python: c[0]; title python: c[1]"\n
@@ -246,7 +246,7 @@
             <th tal:condition="is_report_tree_mode"\n
                 class="listbox-table-report-tree-selection-cell">\n
               <select name="report_root_url"\n
-                      tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
+                      tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
                 <tal:block tal:repeat="c here/getReportRootList">\n
                   <option value="base_domain"\n
                           tal:define="path python: c[0]; title python: c[1]"\n

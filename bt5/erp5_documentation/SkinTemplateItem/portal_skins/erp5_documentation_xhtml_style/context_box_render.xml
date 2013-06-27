@@ -42,7 +42,7 @@
   <tal:block metal:define-macro="master">\n
     <span id="jump" metal:define-macro="jump">\n
       <select name="select_jump"\n
-              tal:attributes="onChange string:submitAction(this.form,\'Base_doJump\')">\n
+              tal:attributes="onchange string:submitAction(this.form,\'Base_doJump\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Jump...</option>\n
         <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -62,7 +62,7 @@
 \n
     <span id="action" metal:define-macro="action">\n
       <select name="select_action"\n
-              onChange="submitAction(this.form,\'Base_doAction\')">\n
+              onchange="submitAction(this.form,\'Base_doAction\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Action...</option>\n
         <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[]">\n

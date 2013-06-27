@@ -66,7 +66,7 @@
                      }.get(dialog_category, \'Select\')"\n
                      i18n:translate="" i18n:domain="ui"></label>\n
               <select name="select_dialog" id="dialog_selector"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
+                      tal:attributes="onchange string:submitAction(this.form,\'Base_doDialog\')">\n
 \n
                 <tal:block tal:repeat="action dialog_actions">\n
                   <option tal:attributes="value action/url;\n

@@ -44,7 +44,7 @@
     <span class="first">\n
       <span id="favourites" class="favourites">\n
         <select name="select_favorite"\n
-                onChange="submitAction(this.form,\'Base_doFavorite\')"\n
+                onchange="submitAction(this.form,\'Base_doFavorite\')"\n
                 tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
                 user_actions actions/user;">\n
           <option selected="selected" value=""\n
@@ -81,7 +81,7 @@
       <span class="separator"><!--separator--></span>\n
       <span id="modules" class="modules">\n
         <select name="select_module"\n
-                onChange="submitAction(this.form,\'Base_doModule\')"\n
+                onchange="submitAction(this.form,\'Base_doModule\')"\n
                 tal:define="module_list here/ERP5Site_getModuleItemList;">\n
           <option selected="selected" value="" i18n:translate="" i18n:domain="ui">Modules</option>\n
           <option tal:repeat="module module_list"\n
@@ -101,7 +101,7 @@
       <span id="language" class="language">\n
         <select name="select_language"\n
                 tal:define="language_list python:portal.portal_preferences.getPreference(\'preferred_user_interface_language_list\', None)"\n
-                onChange="submitAction(this.form,\'Base_doLanguage\')">\n
+                onchange="submitAction(this.form,\'Base_doLanguage\')">\n
           <option value=""\n
                   i18n:translate="" i18n:domain="ui">My Language</option>\n
           <tal:block tal:repeat="language python:portal.Localizer.get_languages_map()">\n
