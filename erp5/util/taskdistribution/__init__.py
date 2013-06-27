@@ -378,6 +378,18 @@ class TestResultProxy(RPCRetry):
         if self._watcher_thread is not None:
           self._watcher_thread.join()
 
+    def stop(self):
+        """
+        
+        """
+        return self._retryRPC('stopTest', [self._test_result_path])
+        
+    def fail(self):
+        """
+        
+        """
+        return self._retryRPC('failTest', [self._test_result_path])
+        
 class TestResultProxyProxy(TestResultProxy):
     """
     A wrapper/proxy to TestResultProxy
@@ -412,6 +424,7 @@ class TestResultProxyProxy(TestResultProxy):
         
         """
         return self._retryRPC('stopTestCase', [test_result_line_path])
+      
       
 
 

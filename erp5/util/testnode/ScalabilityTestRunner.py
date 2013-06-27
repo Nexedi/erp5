@@ -301,41 +301,58 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
+
+      # Possible ? :
       # No more test to run
       if test_result_line_proxy == None :
-        # Hum normal ?
         self.log("Already tested.")
-        # Clean up 
-        return {'status_code' : 0}
+        error = ValueError("Test already tested.")
+        break;
+        
         
       self.log("Test for count : %d is in a running state." %count)
       while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
         time.sleep(15)
         pass
+
+      # Check test case state
       if test_result_line_proxy.isCompleted():
-        self.log("Test completed.")
-        pass
+        self.log("Test case completed.")
+        error = None
       elif not test_result_proxy.isAlive():
         self.log("Test cancelled.")
         # Here do somethig with instances
-        raise ValueError("Test cancelled")
+        error = ValueError("Test cancelled")
+        break;
       elif test_result_line_proxy.isFailed():
         self.log("Test failed.")
         # Here do somethig with instances
-        raise ValueError("Test failed")
+        error = ValueError("Test failed")
+        break;
       elif test_result_line_proxy.isCancelled():
         self.log("Test cancelled.")
         # Here do somethig with instances
-        raise ValueError("Test has been cancelled")
+        error = ValueError("Test has been cancelled")
+        break;
       elif test_result_line_proxy.isRunning():
         self.log("Test always running after max time elapsed.")
         # Here do somethig with instances
-        raise ValueError("Max time for this test case is elapsed.")
+        error = ValueError("Max time for this test case is elapsed.")
+        break;
       else:
         self.log("Test in a undeterminated state.")
-        raise ValueError("Test case is in an undeterminated state")
+        error = ValueError("Test case is in an undeterminated state")
+        break;
 
-    # todo : something like test_result_line_proxy.stop()
+    
+    # Here delete intances
+    
+    if error != None:
+      test_result_proxy.fail()
+      raise error
+    else:
+      test_result_proxy.stop()
+
     return {'status_code' : 0}
     
   def _cleanUpNodesInformation(self):

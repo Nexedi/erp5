@@ -128,6 +128,8 @@ class ScalabilityLauncher(object):
       else:
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
+        time.sleep(5)
+        self.log("Test Case %s is finish" %(current_test.title))
         current_test.stop()
         self.log("Test Case Stopped")
       
