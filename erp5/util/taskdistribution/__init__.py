@@ -386,7 +386,7 @@ class TestResultProxyProxy(TestResultProxy):
                 node_title, revision):
       try:
         proxy = ServerProxy(
-                portal_url,
+                test_suite_master_url,
                 allow_none=True,
             ).portal_task_distribution
       except:
@@ -394,12 +394,24 @@ class TestResultProxyProxy(TestResultProxy):
       TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,
                 node_title, revision)
 
-    def getNextTestResultLinePath(self):
+    def getNextTestCase(self):
         """
-        A proxy to getNextTestResultLinePath
+        A proxy to getNextTestCase
         Return the relative path of the test with the running state
         """
-        return bool(self._retryRPC('getNextTestResultLinePath', [self._test_result_path]))
+        return self._retryRPC('getNextTestCase', [self._test_result_path])
+      
+    def cancelTestCase(self, test_result_line_path):
+        """
+        
+        """
+        return self._retryRPC('cancelTestCase', [test_result_line_path])
+      
+    def stopTestCase(self, test_result_line_path):
+        """
+        
+        """
+        return self._retryRPC('stopTestCase', [test_result_line_path])
       
 
 

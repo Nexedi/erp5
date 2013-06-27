@@ -109,7 +109,7 @@ class ScalabilityTestRunner():
     config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
     config.update({'test-suite-revision':test_result.revision})
-    config.update({'test-suite-master-url':self.config['test_suite_master_url']})
+    config.update({'test-suite-master-url':self.testnode.config['test_suite_master_url']})
     return config
   
   def _createInstance(self, software_path, software_configuration, instance_title,
@@ -301,6 +301,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
+      # No more test to run
+      if test_result_line_proxy == None :
+        # Hum normal ?
+        self.log("Already tested.")
+        # Clean up 
+        return {'status_code' : 0}
+        
       self.log("Test for count : %d is in a running state." %count)
       while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
         time.sleep(15)
@@ -327,7 +334,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       else:
         self.log("Test in a undeterminated state.")
         raise ValueError("Test case is in an undeterminated state")
-      
+
+    # todo : something like test_result_line_proxy.stop()
     return {'status_code' : 0}
     
   def _cleanUpNodesInformation(self):

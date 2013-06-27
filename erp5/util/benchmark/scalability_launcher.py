@@ -7,22 +7,26 @@ import time
 import sys
 import multiprocessing
 import errno
-
+import json
 import logging
 import logging.handlers
 from .argument import ArgumentType
 from .performance_tester import PerformanceTester
 from erp5.util import taskdistribution
+from erp5.util.testnode import testnodeUtils
 
 class ScalabilityTest(object):
-  def __init__(self, title, count):
-    self.title = title
-    self.count = count
+  def __init__(self, data, test_result):
+    self.__dict__ = {}
+    self.__dict__.update(data)
+    self.test_result = test_result
+
+  def stop(self):
+    self.test_result.stopTestCase(self.relative_path)
     
-  def dump(self):
-    print '<ScalabilityTest>'
-    print 'self.title: %s' %(str(self.title))
-    print 'self.count: %s' %(str(self.count))
+  def cancel(self):
+    self.test_result.cancelTestCase(self.relative_path)
+    
     
 class ScalabilityLauncher(object):
   def __init__(self):
@@ -44,10 +48,13 @@ class ScalabilityLauncher(object):
     self.log = logger.info
     
     # Proxy to with erp5 master test_result
-    self.test_result = taskdistribution.TestResultProxyProxy(self.__argumentNamespace.portal_url,
-              1.0, logger, self.__argumentNamespace.test_result_url,
-              self.__argumentNamespace.node_title, self.__argumentNamespace.revision)  
-
+    self.test_result = taskdistribution.TestResultProxyProxy(
+                        self.__argumentNamespace.test_suite_master_url,
+                        1.0, self.log,
+                        self.__argumentNamespace.test_result_path,
+                        self.__argumentNamespace.node_title,
+                        self.__argumentNamespace.revision
+                      )
   @staticmethod
   def _addParserArguments(parser):
     # Mandatory arguments
@@ -93,46 +100,37 @@ class ScalabilityLauncher(object):
     """
     pass
 
-  def updateTestResultLineStatus(self, state):
+  def getNextTest(self):
     """
-    Update state of a test_result_line
+    Return a ScalabilityTest with current running test case informations,
+    or None if no test_case ready
     """
-    # TODO : set a line per count value and use setState (?)
-    # 
-    pass
-
-  def _getNextTest(self):
-    """
-    Get testsuite parameters
-    """
-    title = "My Sweet Title"
-    count = 1
-    next_test = ScalabilityTest(title, count)
+    data = self.test_result.getNextTestCase()
+    if data == None :
+      return None
+    decoded_data = testnodeUtils.deunicodeData(json.loads(
+                  data
+                ))
+    next_test = ScalabilityTest(decoded_data, self.test_result)
     return next_test
 
   def run(self):
     self.log("Scalability Launcher started")
-    max_time = 10
+    max_time = 36000
     start_time = time.time()
     error_message_set, exit_status = set(), 0
-
-    test_result = taskdistribution.TestResultProxyProxy(
-                        self.__argumentNamespace.test_suite_master_url,
-                        1.0, self.log,
-                        self.__argumentNamespace.test_result_path,
-                        self.__argumentNamespace.node_title,
-                        self.__argumentNamespace.revision
-                      )
-                          
-    #self.log("%s", self.test_result.isAlive())
-    
+                              
     while time.time()-start_time < max_time:
-      current_test = self._getNextTest()
-      current_test.dump()
-      time.sleep(2)
+      current_test = self.getNextTest()
+      if current_test == None:
+        self.log("No Test Case Ready")
+        time.sleep(5)
+      else:
+        # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
+        self.log("Test Case %s is running..." %(current_test.title))
+        current_test.stop()
+        self.log("Test Case Stopped")
       
-      # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
-        
     return error_message_set, exit_status
 
 def main():
