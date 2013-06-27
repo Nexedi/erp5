@@ -63,19 +63,23 @@ SELECT \n
 FROM syncml\n
 WHERE\n
   path like <dtml-sqlvar path type="string">\n
-<dtml-if first_call>\n
-  /* Do nothing here */\n
-<dtml-else>\n
-  AND gid >= <dtml-sqlvar min_gid type="string">\n
+<dtml-if min_gid>\n
+  <dtml-if first_call>\n
+    /* Do nothing here */\n
+  <dtml-else>\n
+    AND gid >= <dtml-sqlvar min_gid type="string">\n
+  </dtml-if>\n
 </dtml-if>\n
-<dtml-if last_call>\n
-  /* Do nothing here */\n
-<dtml-else>\n
-  AND gid <= <dtml-sqlvar max_gid type="string">\n
+<dtml-if max_gid>\n
+  <dtml-if last_call>\n
+    /* Do nothing here */\n
+  <dtml-else>\n
+    AND gid <= <dtml-sqlvar max_gid type="string">\n
+  </dtml-if>\n
 </dtml-if>\n
 ORDER BY gid\n
 <dtml-if limit>\n
-LIMIT <dtml-var limit>\n
+  LIMIT <dtml-var limit>\n
 </dtml-if>
 
 ]]></string> </value>
