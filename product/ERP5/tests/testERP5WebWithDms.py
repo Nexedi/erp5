@@ -474,7 +474,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                           if policy[0] == 'unauthenticated'][0]
       self.assertEquals(response.getHeader('Content-Type'), 'image/png')
       self.assertEquals(response.getHeader('Cache-Control'),
-                        'max-age=%s' % policy[1].getMaxAgeSecs())
+                        'max-age=%s, public' % policy[1].getMaxAgeSecs())
 
   def test_07_TestDocumentViewBehaviour(self):
     """All Documents shared the same downloading behaviour
