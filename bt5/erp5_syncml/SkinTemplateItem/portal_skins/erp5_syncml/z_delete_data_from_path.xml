@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>gid</string> </value>
+            <value> <string>path</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_delete_data_from_gid</string> </value>
+            <value> <string>z_delete_data_from_path</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
@@ -26,7 +26,7 @@ BEGIN\n
 <dtml-var sql_delimiter>\n
 DELETE FROM syncml\n
 WHERE\n
-  gid = <dtml-sqlvar gid type="string">\n
+  path = <dtml-sqlvar path type="string">\n
 <dtml-var sql_delimiter>\n
 COMMIT
 
