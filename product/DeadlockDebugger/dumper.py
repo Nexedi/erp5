@@ -70,6 +70,7 @@ def dump_threads():
             code = f.f_code
             if code is DB._query.func_code:
               mysql_info = str(f.f_locals['query'])
+              break
             f = f.f_back
         except ImportError:
           pass
