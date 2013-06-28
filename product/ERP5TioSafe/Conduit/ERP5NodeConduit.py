@@ -69,15 +69,15 @@ class ERP5NodeConduit(TioSafeBaseConduit):
     we can filter person based on the plugin they came from
     """
     site = self.getIntegrationSite(kw['domain'])
-    default_stc = site.getSourceTrade()
     # try to find the corresponding STC
-    stc_list = object.getPortalObject().sale_trade_condition_module.searchFolder(title="%s %s" %(site.getReference(), object.getTitle()),
-                                                                                validation_state="validated"
-                                                                                )
+    stc_list = object.getPortalObject().sale_trade_condition_module.searchFolder(
+      title="%s %s" %(site.getReference(), object.getTitle()),
+      validation_state="validated")
     if len(stc_list) == 0:
       self._createSaleTradeCondition(object, **kw)
     elif len(stc_list) > 1:
-      raise ValueError, "Multiple trade condition (%s) retrieve for %s" %([x.path for x in stc_list], object.getTitle())
+      raise ValueError, "Multiple trade condition (%s) retrieved for %s" \
+      % ([x.path for x in stc_list], object.getTitle())
     else:
       stc = stc_list[0].getObject()
       stc.edit(
