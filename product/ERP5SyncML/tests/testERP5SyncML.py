@@ -44,6 +44,7 @@ from Products.ERP5SyncML.Document import SyncMLSubscription
 from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin \
      as TestMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from _mysql_exceptions import OperationalError
 
 class TestERP5SyncMLMixin(TestMixin):
 
@@ -98,6 +99,8 @@ class TestERP5SyncMLMixin(TestMixin):
   def afterSetUp(self):
     """Setup."""
     self.login()
+    self.portal.z_drop_syncml()
+    self.portal.z_create_syncml()
     # This test creates Person inside Person, so we modifiy type information to
     # allow anything inside Person (we'll cleanup on teardown)
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
@@ -228,6 +231,7 @@ class TestERP5SyncMLMixin(TestMixin):
       result = portal_sync.processClientSynchronization(subscription.getPath())
       self.tic()
       nb_message += 1
+    self.tic()
     return nb_message
 
   def synchronizeWithBrokenMessage(self, id):
@@ -948,6 +952,8 @@ return [context[%r]]
     person_server.manage_delObjects(self.id1)
     person_client1 = self.getPersonClient1()
     person_client1.manage_delObjects(self.id2)
+    # import ipdb
+    # ipdb.set_trace()
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
@@ -1543,7 +1549,7 @@ return [context[%r]]
     self.assertEquals(client_person.getLastName(), self.last_name1)
 
     # reset for refresh sync
-    # after synchronize, the client object retrieve value of server
+    # after synchronization, the client retrieves value from server
     self.resetSignaturePublicationAndSubscription()
     self.synchronize(self.sub_id1)
 

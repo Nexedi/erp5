@@ -145,9 +145,10 @@ class EngineMixin(object):
         signature = domain.getSignatureFromGid(object_gid)
         if status['status_code'] == resolveSyncmlStatusCode('success'):
           if signature:
+            domain.z_delete_data_from_path(path=signature.getPath())
             domain._delObject(signature.getId())
           else:
-            raise ValueError("Found no signature to delete")
+            raise ValueError("Found no signature to delete for gid %s" %(object_gid,))
         else:
           raise ValueError("Unknown status code : %r" % (status['status_code'],))
         syncml_logger.error("\tObject deleted %s" %
@@ -191,10 +192,8 @@ class EngineMixin(object):
     if subscription.getAuthenticationState() != 'logged_in':
       # Workflow action
       subscription.login()
-    if subscription.getSyncmlAlertCode() not in ("one_way_from_server",
-                                                 "refresh_from_server_only"):
-      # Reset signature only if client send its modification to server
-      subscription.initialiseSynchronization()
+
+    subscription.indexSourceData(client=True)
 
     # Create the package 1
     syncml_response = SyncMLResponse()
@@ -301,7 +300,9 @@ class EngineMixin(object):
                               'one_way_from_server',
                               'refresh_from_client_only',
                               'one_way_from_client'):
-      # XXX Why re-editing here ?
+      # Make sure we update configuration based on publication data
+      # so that manual edition is propagated
+      # XXX Must check all properties that must be setted
       subscriber.setXmlBindingGeneratorMethodId(
         publication.getXmlBindingGeneratorMethodId())
       subscriber.setConduitModuleId(publication.getConduitModuleId())

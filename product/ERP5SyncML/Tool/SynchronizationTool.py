@@ -399,13 +399,14 @@ class SynchronizationTool(BaseTool):
 
     return str(syncml_response)
 
+
+  # As engines are not zodb objects, the tool acts as a placeholder for methods
+  # that need to be called in activities
   def applySyncCommand(self, subscription_path, response_message_id,
                        activate_kw, **kw):
     """
     This methods is intented to be called by asynchronous engine in activity to
     apply sync commands for a subset of data
-    As engines are not zodb object, the tool acts as a placeholder for method
-    that need to be called in activities
     """
     subscription = self.restrictedTraverse(subscription_path)
     assert subscription is not None, "Impossible to find subscription %s" \
@@ -437,13 +438,11 @@ class SynchronizationTool(BaseTool):
 
 
 
-  def sendSyncCommand(self, id_list, message_id, subscription_path,
-                      activate_kw, is_final_message=False):
+  def sendSyncCommand(self, gid_list, message_id, subscription_path,
+                      activate_kw, first_call=False, last_call=False):
     """
     This methods is intented to be called by asynchronous engine in activity to
     send sync commands for a subset of data
-    As engines are not zodb object, the tool acts as a placeholder for method
-    that need to be called in activities
     """
     subscription = self.restrictedTraverse(subscription_path)
     assert subscription is not None, "Impossible to find subscription %s" \
@@ -457,17 +456,14 @@ class SynchronizationTool(BaseTool):
       source=subscription.getSubscriptionUrlString())
     syncml_response.addBody()
 
-
     subscription._getSyncMLData(
       syncml_response=syncml_response,
-      id_list=id_list,
+      gid_list=gid_list,
+      first_call=first_call,
+      last_call=last_call,
       )
 
-    if is_final_message:
-      # Notify that all modifications were sent
-      syncml_response.addFinal()
-
-    # Send the message in activity to prevent recomputing data in case of
+    # Send the message in activity to prevent recomputation of data in case of
     # transport failure
     # activate_kw["group_method_id"] = None
     # activate_kw["group_method_cost"] = .05

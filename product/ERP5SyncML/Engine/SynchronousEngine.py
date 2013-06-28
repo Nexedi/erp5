@@ -29,6 +29,7 @@ from logging import getLogger
 
 from Products.ERP5SyncML.Engine.EngineMixin import EngineMixin
 from Products.ERP5SyncML.SyncMLConstant import SynchronizationError
+from Products.ERP5.ERP5Site import getSite
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -81,13 +82,12 @@ class SyncMLSynchronousEngine(EngineMixin):
         # We only get data from server
         finished = True
       else:
-        finished = subscription._getSyncMLData(
-          syncml_response=syncml_response,
-          )
+        finished = subscription._getSyncMLData(syncml_response=syncml_response,
+                                               min_gid=None, max_gid=None)
         syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
       if finished:
         # Add deleted objets
-        subscription._getDeletedData(syncml_response=syncml_response)
+        #subscription._getDeletedData(syncml_response=syncml_response)
         # Notify that all modifications were sent
         syncml_response.addFinal()
         # Will then start processing sync commands from server
@@ -191,10 +191,8 @@ class SyncMLSynchronousEngine(EngineMixin):
         if syncml_request.isFinal:
           # Server will now send its modifications
           subscriber.sendModifications()
-          if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
-                                                     "refresh_from_client_only"):
-            # Reset signature only if we have to check modifications on server side
-            subscriber.initialiseSynchronization()
+          # Run indexation only once client has sent its modifications
+          subscriber.indexSourceData()
 
       # Do not continue in elif, as sending modifications is done in the same
       # package as sending notifications
@@ -205,11 +203,11 @@ class SyncMLSynchronousEngine(EngineMixin):
           # We only get data from client
           finished = True
         else:
-          finished = subscriber._getSyncMLData(
-            syncml_response=syncml_response)
+          finished = subscriber._getSyncMLData(syncml_response=syncml_response,
+                                               min_gid=None, max_gid=None)
         syncml_logger.info("-> Server sendind data, finished %s" % (finished,))
         if finished:
-          subscriber._getDeletedData(syncml_response=syncml_response)
+          #subscriber._getDeletedData(syncml_response=syncml_response)
           syncml_response.addFinal()
           subscriber.waitNotifications()
           # Do not go into finished here as we must wait for

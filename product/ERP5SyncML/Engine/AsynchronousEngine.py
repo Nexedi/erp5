@@ -78,7 +78,10 @@ class SyncMLAsynchronousEngine(EngineMixin):
         syncml_response = self._generateBaseResponse(subscription)
         syncml_response.addFinal()
       else:
-        self.runGetAndActivate(subscription=subscription, tag=tag)
+        # Make sure it is launched after indexation step
+        self.runGetAndActivate(subscription=subscription, tag=tag,
+                               after_method_id=("getAndIndex",
+                                                "SQLCatalog_indexSyncMLSignatureList"))
         syncml_logger.info("X-> Client is sendind modification in activities")
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
@@ -163,10 +166,10 @@ class SyncMLAsynchronousEngine(EngineMixin):
 
       # Apply command & send modifications
       # Apply status about object send & synchronized if any
-      sync_status_counter = self._readStatusList(syncml_request, subscriber,
+      self._readStatusList(syncml_request, subscriber,
                                                  generate_alert=True)
       syncml_response = None
-      tag = subscription_path = subscriber.getRelativeUrl()
+      tag = subscriber.getRelativeUrl()
       after_method_id = None
       if subscriber.getSynchronizationState() == "sending_modifications":
         if syncml_request.isFinal:
@@ -202,15 +205,13 @@ class SyncMLAsynchronousEngine(EngineMixin):
         if syncml_request.isFinal:
           # Server then sends its modifications
           subscriber.sendModifications()
-          # Now that everything is ok, init sync information
-          if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
-                                                     "refresh_from_client_only"):
-            # Reset signature only if we have to check modifications on server side
-            subscriber.initialiseSynchronization()
-
+          # Run indexation only once client have sent its modifications
+          subscriber.indexSourceData()
           # Start to send modification only once we have processed
           # all message from client
-          after_method_id='processServerSynchronization',
+          after_method_id=('processServerSynchronization',
+                           'SQLCatalog_indexSyncMLDocumentList')
+          # XXX after tag might also be required to make sure all data are indexed
           tag = (tag, "%s_reset" % subscriber.getPath(),)
       # Do not continue in elif, as sending modifications is done in the same
       # package as sending notifications
@@ -242,10 +243,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
                           after_tag=tag).sendMessage(
                             xml=str(syncml_response))
 
-
   def runGetAndActivate(self, subscription, tag, after_method_id=None):
     """
-    Generate tag and method parameter and call the getAndActivate method
+    Launch the browsing of GID that will call the generation of syncml commands
     """
     activate_kw = {
       'activity' : 'SQLQueue',
@@ -253,20 +253,16 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'tag' :tag,
       'priority' :ACTIVITY_PRIORITY
       }
-    method_kw = {
-      'subscription_path' : subscription.getRelativeUrl(),
-      }
     pref = getSite().portal_preferences
     subscription.getAndActivate(
       callback="sendSyncCommand",
-      method_kw=method_kw,
       activate_kw=activate_kw,
       packet_size=pref.getPreferredDocumentRetrievedPerActivityCount(),
       activity_count=pref.getPreferredRetrievalActivityCount(),
       )
-    # Then get deleted document
-    # this will send also the final message of this sync part
-    subscription.activate(after_tag=tag)._getDeletedData()
+    # then send the final message of this sync part
+    subscription.activate(after_tag=tag,
+                          priority=ACTIVITY_PRIORITY+1)._sendFinalMessage()
     return True
 
 
