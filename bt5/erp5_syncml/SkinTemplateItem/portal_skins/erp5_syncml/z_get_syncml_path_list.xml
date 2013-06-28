@@ -59,11 +59,13 @@ BEGIN\n
 SELECT path \n
 FROM syncml\n
 WHERE\n
- gid >= <dtml-sqlvar min_gid type="string">\n
-AND\n
- gid <= <dtml-sqlvar max_gid type="string">\n
-AND\n
   path like <dtml-sqlvar path type="string">\n
+<dtml-if min_gid>\n
+  AND gid >= <dtml-sqlvar min_gid type="string">\n
+</dtml-if>\n
+<dtml-if max_gid>\n
+  AND gid <= <dtml-sqlvar max_gid type="string">\n
+</dtml-if>\n
 <dtml-var sql_delimiter>\n
 COMMIT
 
