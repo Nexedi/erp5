@@ -90,7 +90,7 @@
           <tr>\n
             <td valign="top">\n
               <select name="domain_root_url"\n
-                tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
+                tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
                 <tal:block tal:repeat="c here/getDomainRootList">\n
                   <option value="base_domain"\n
                     tal:define="path python: c[0]; title python: c[1]"\n
@@ -217,7 +217,7 @@
                     tal:define="lines here/getMaxLineNumber"\n
                     tal:attributes="id string:${field_id}_page_selection;\n
                                     name string:${field_id}_list_start;\n
-                                    onChange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
+                                    onchange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
                     i18n:domain="ui" i18n:attributes="title">\n
                     <option value="0"\n
                       tal:repeat="p python: range(0, here.total_pages)"\n
@@ -256,7 +256,7 @@
                     tal:define="params python: {field_id+\'_setPage:method\':\'\',\'list_start\':\'this.value\'};\n
                                 lines here/getMaxLineNumber" \n
                     tal:attributes=\'id string:${field_id}_page_selection;\n
-                                    onChange python: real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")\'\n
+                                    onchange python: real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")\'\n
                     i18n:domain="ui" i18n:attributes="title">\n
                     <option value="0"\n
                       tal:repeat="p python: range(0, here.total_pages)"\n
@@ -288,7 +288,7 @@
               <td tal:condition="is_report_tree_mode"\n
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle">\n
                 <select name="report_root_url"\n
-                  tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
+                  tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
                   <tal:block tal:repeat="c here/getReportRootList">\n
                     <option value="base_domain"\n
                       tal:define="path python: c[0]; title python: c[1]"\n

@@ -49,7 +49,7 @@
       <span class="first">\n
         <span id="favourites">\n
           <select name="select_favorite"\n
-                  onChange="submitAction(this.form,\'Base_doFavorite\')"\n
+                  onchange="submitAction(this.form,\'Base_doFavorite\')"\n
                   tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
                   user_actions actions/user;">\n
             <option selected="selected" value=""\n
@@ -87,7 +87,7 @@
   \n
         <span id="modules">\n
           <select name="select_module"\n
-                  onChange="submitAction(this.form,\'Base_doModule\')"\n
+                  onchange="submitAction(this.form,\'Base_doModule\')"\n
                   tal:define="module_list here/ERP5Site_getModuleItemList;">\n
             <option selected="selected" value="" i18n:translate="" i18n:domain="ui">Modules</option>\n
             <option tal:repeat="module module_list"\n
@@ -100,7 +100,7 @@
   \n
         <span id="language">\n
           <select name="select_language"\n
-                  onChange="submitAction(this.form,\'Base_doLanguage\')">\n
+                  onchange="submitAction(this.form,\'Base_doLanguage\')">\n
             <option value=""\n
                     i18n:translate="" i18n:domain="ui">My Language</option>\n
             <option tal:repeat="language python: here.Localizer.get_languages_map()"\n

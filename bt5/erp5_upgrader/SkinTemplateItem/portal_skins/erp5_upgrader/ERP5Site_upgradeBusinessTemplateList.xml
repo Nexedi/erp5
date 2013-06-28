@@ -76,11 +76,12 @@ reinstallable_bt5_id_list = signature.get(\'reinstallable_bt5_id_list\', signatu
 before_triggered_bt5_id_dict = signature.get(\'before_triggered_bt5_id_dict\', {})\n
 after_triggered_bt5_id_dict = signature.get(\'after_triggered_bt5_id_dict\', {})\n
 update_catalog_bt5_id_list = signature.get(\'update_catalog_bt5_id_list\', [])\n
+not_upgradable_id_list = signature.get(\'not_upgradable_id_list\', [])\n
 \n
 bt5_id_list = dict([(x, True) for x in list(required_bt5_id_list) + \\\n
                                        list(upgradable_bt5_id_list) + \\\n
                                        list(reinstallable_bt5_id_list) \\\n
-                    if x in available_bt5_id_list]).keys()\n
+                    if x in available_bt5_id_list and x not in not_upgradable_id_list]).keys()\n
 \n
 # sort by dependencies\n
 bt5_list = [portal_templates.decodeRepositoryBusinessTemplateUid(x.uid) for x in \\\n

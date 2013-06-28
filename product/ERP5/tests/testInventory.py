@@ -2530,6 +2530,207 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            node_uid=node_value.getUid(),
                            resource_uid=resource_value.getUid())
 
+  def stepCreateTwoResourceFullInventory(self,
+                                         sequence=None,
+                                         sequence_list=None,
+                                         **kw):
+    """ Create a full Inventory which includes two inventory lines """
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=True)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("first_resource"),
+      inventory = 10)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = 100)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepCreateTwoResourceFullInventoryAtTheDate(self, sequence=None,
+                                                  sequence_list=None, **kw):
+    """ Create Full Inventory at the date' """
+    inventory_list = sequence.get('inventory_list',[])
+    if kw.get('start_date', None) is not None:
+      start_date = kw['start_date']
+    else:
+      start_date = '2013/03/12 00:00:00 GMT+9'
+    if kw.get('inventory1', None) is not None:
+      inventory1 = kw['inventory1']
+    else:
+      inventory_1 = 10
+    if kw.get('inventory2', None) is not None:
+      inventory2 = kw['inventory2']
+    else:
+      inventory2 = 100
+
+    inventory = self.createInventory(sequence=sequence)
+    inventory_list = sequence.get('inventory_list',[])
+    inventory.edit(full_inventory=True,
+                   start_date=start_date)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("resource"),
+      inventory = inventory1)
+    inventory_line = inventory.newContent(
+      portal_type = self.inventory_line_portal_type,
+      resource_value = sequence.get("second_resource"),
+      inventory = inventory2)
+    inventory.deliver()
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+
+  def stepCreateTwoResourceFullInventoryAtTheDate1(self, sequence=None,
+                                                   sequence_list=None, **kw):
+    params = dict(start_date=self.two_resource_full_inventory1_start_date,
+                  inventory1=self.two_resource_full_inventory1_inventory_1,
+                  inventory2=self.two_resource_full_inventory1_inventory_2)
+    self.stepCreateTwoResourceFullInventoryAtTheDate(sequence, sequence_list,
+                                                     **params)
+
+  def stepCreateTwoResourceFullInventoryAtTheDate2(self, sequence=None,
+                                                   sequence_list=None, **kw):
+    params = dict(start_date=self.two_resource_full_inventory2_start_date,
+                  inventory1=self.two_resource_full_inventory2_inventory_1,
+                  inventory2=self.two_resource_full_inventory2_inventory_2)
+    self.stepCreateTwoResourceFullInventoryAtTheDate(sequence, sequence_list,
+                                                     **params)
+
+  def stepCheckFullInventoryUpdateWithValidDateOrder(
+        self, sequence=None, sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=0,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=second_resource_value.getUid())
+
+  def stepDoubleStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table double
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity*2 \0"
+      "COMMIT")
+    self.commit()
+
+  def stepHalfStockValue(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make stock table half
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "UPDATE stock SET quantity=quantity/2 \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepClearInventoryCache(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Explicitly Clear inventory cache.
+    """
+    self.getPortalObject().erp5_sql_transactionless_connection.manage_test(
+      "BEGIN\0"
+      "DELETE FROM inventory_cache \0"
+      "COMMIT")
+    self.commit()
+
+
+  def stepCheckCorruptedCacheHasFixedByReindex(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Make sure that corrupted caches are ignored when inventory document
+      are reindexing.
+    """
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    self._testGetInventory(expected=100,
+                           optimise=True,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+    self._testGetInventory(expected=100,
+                           optimise__=False,
+                           to_date=DateTime(self.full_inventory_start_date_1),
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=resource_value.getUid())
+
+
+  def stepStoreWrongCache(self, sequence=None, sequence_list=None, **kw):
+    """
+      Cache a corrupted stock data.
+    """
+    node_value = sequence.get('node')
+    to_date=DateTime(self.two_resource_full_inventory2_start_date)
+    self.getPortalObject().portal_simulation.getCurrentInventoryList(
+      to_date=to_date,
+      node=node_value.getRelativeUrl(),
+      group_by_variation=1,
+      group_by_sub_variation=1,
+      group_by_resource=1)
+
+  def stepCheckGetInveotoryGoesToCache(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Get inventory then store the inventory_cache record
+      thanks to the at_date parameter
+    """
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    at_date = DateTime('2013/06/11 00:00:00 GMT+9')
+    self._testGetInventory(
+      expected=15,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+    self._testGetInventory(
+      expected=20,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=second_resource_value.getUid(),
+      at_date=at_date)
+
+  def stepCheckInventoryCacheIsClearedAfterAddingInventory(
+        self, sequence=None, sequence_list=None, **kw):
+    """
+      Check that older invetory_cache is cleared.
+    """
+    resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    node_value = sequence.get('node')
+    section_value = sequence.get('section')
+    at_date = DateTime('2013/06/11 02:00:00 GMT+9')
+    self._testGetInventory(
+      expected=30,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+    self._testGetInventory(
+      expected=50,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=second_resource_value.getUid(),
+      at_date=at_date)
 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
@@ -3193,6 +3394,221 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        CreateFullInventoryAtTheDate2 \
                        Tic \
                        TestFullInventoryCollideWithEachOther \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_15_FullInventoryCanCreatesManyVirtualCompensationMovement(self, quiet=0, run=run_all_test):
+    organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
+    resource_value_list = []
+    for i in range(2000):
+      resource_value_list.append(self.portal.product_module.newContent(portal_type='Product'))
+
+    self.commit()
+    self.tic()
+
+    # Create initial inventory
+    date_1 = DateTime('2013/04/29 00:00:00 GMT+9')
+    result = self.portal.portal_simulation.getCurrentInventoryList(at_date=date_1,
+                                                                   section_uid=organisation.getUid(),
+                                                                   node_uid=organisation.getUid(),
+                                                                   group_by_resource=1)
+    self.assertEqual(len(result), 0)
+
+    full_inventory_1 = self.portal.inventory_module.newContent(portal_type='Inventory')
+    full_inventory_1.edit(destination_section_value=organisation,
+                          destination_value=organisation,
+                          start_date=date_1,
+                          full_inventory=True)
+    for resource_value in resource_value_list:
+      full_inventory_1.newContent(portal_type='Inventory Line',
+                                  resource_value=resource_value,
+                                  quantity=123)
+    full_inventory_1.deliver()
+
+    self.commit()
+    self.tic()
+
+    result = self.portal.portal_simulation.getCurrentInventoryList(at_date=date_1,
+                                                                   section_uid=organisation.getUid(),
+                                                                   node_uid=organisation.getUid(),
+                                                                   group_by_resource=1)
+    self.assertEqual(sorted([(brain.resource_uid, brain.inventory)
+                             for brain in result]),
+                     sorted([(movement.getResourceUid(), movement.getQuantity())
+                             for movement in full_inventory_1.getMovementList()]))
+
+    # Create second inventory which deletes inventories of many resources.
+    date_2 = DateTime('2013/05/03 00:00:00 GMT+9')
+    full_inventory_2 = self.portal.inventory_module.newContent(portal_type='Inventory')
+    full_inventory_2.edit(destination_section_value=organisation,
+                          destination_value=organisation,
+                          start_date=date_2,
+                          full_inventory=True)
+    full_inventory_2.newContent(portal_type='Inventory Line',
+                                resource_value=resource_value_list[0],
+                                quantity=1)
+    full_inventory_2.deliver()
+
+    self.commit()
+    self.tic()
+
+    result = self.portal.portal_simulation.getCurrentInventoryList(at_date=date_2,
+                                                                   section_uid=organisation.getUid(),
+                                                                   node_uid=organisation.getUid(),
+                                                                   group_by_resource=1)
+    self.assertEqual(sorted([(brain.resource_uid, brain.inventory)
+                             for brain in result if brain.inventory != 0]),
+                     sorted([(movement.getResourceUid(), movement.getQuantity())
+                             for movement in full_inventory_2.getMovementList()]))
+
+  @expectedFailure
+  def test_16_CorruptedInventoryCacheAndFullInventory(
+        self, quiet=0, run=run_all_test):
+    """
+    XXX-Tatuya: Do we really need to support this case?
+
+    To make assure this validity, we must ignore all the cache when reindexing.
+
+    Proof: Inventory caching caches more than one month older inventory,
+    to make THIS inventory valid, we need to invalidate one month ago
+    inventory's cache, and the one month ago inventory may wrongly cached two
+    month ago inventory and.. by mathematical induction, we need to invalidate
+    all the cache when getting inventory from new to old.
+     In contrast, reindex from the oldest inventory up to the newest one must
+    work if and only if..
+    ALL THE WRONG CACHES CAN BE REMOVED/IGNORED BY INVENTORY DOCUMENTS REINDEX.
+     For example, if the oldest wrong cache date is 31 days before than the
+    oldest inventory, re-index and stock table will be corrupted.
+     The cache is still enable because it is older than 30 days ago and newer
+    than 60 days ago, at the same time it can not be removed because the date
+    is older than the oldest inventory start_date.
+    Thus we must ignore all the cache to make assure this case validity.
+
+    The case is:
+    1) full inventory: 2013/01/01,section=A, node=B, resource=X, quantity=100
+                                                     resource=Y, quantity=100
+    2) clear the existing cache
+    3) modify stock table by hand
+    4) cache the wrong stock result at 2013/02/02
+       Note: Here we need to use between 2013/02/02 and 2013/02/28 to cache
+             2013/01/01 stock data.
+    5) fix back the stock table
+    6) full inventory: 2013/02/02,section=A, node=B, resource=X, quantity=100
+                                                     resource=Y, quantity=100
+       Note: Here we need to use between 2013/02/02 and 2013/02/28
+    [test]
+    getInventory(resource=X, to_date=2013/02/10) should return 100
+    getInventory(resource=Y, to_date=2013/02/10) should return 100
+    """
+    if not run: return
+    self.two_resource_full_inventory1_start_date = '2013/01/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 100
+    self.two_resource_full_inventory1_inventory_2 = 100
+    self.two_resource_full_inventory2_start_date = '2013/02/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 100
+    self.two_resource_full_inventory2_inventory_2 = 100
+    self.full_inventory_start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       ClearInventoryCache \
+                       DoubleStockValue \
+                       StoreWrongCache \
+                       HalfStockValue \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CheckCorruptedCacheHasFixedByReindex \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_17_FullInventoryUpdateWithValidDateOrder(
+        self, quiet=0, run=run_all_test):
+    """
+    Confirm Full inventory update with a valid start_date order
+
+    The case is:
+    1) full inventory: 2013/02/01,section=A, node=B, resource=X, quantity=15
+                                                     resource=Y, quantity=20
+    2) full inventory: 2013/02/02,section=A, node=B, resource=X, quantity=20
+                                                     resource=Y, quantity=50
+    3) full inventory: 2013/02/10,section=A, node=B, resource=X, quantity=100
+        -> X:100
+           Y:0  # creates a dummy movement with quantity=-50
+    [test]
+    getInventory(resource=X, to_date=2013/02/15) should return 100
+    getInventory(resource=Y, to_date=2013/02/15) should return 0
+    """
+    if not run: return
+
+    self.two_resource_full_inventory1_start_date = '2013/02/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 15
+    self.two_resource_full_inventory1_inventory_2 = 20
+    self.two_resource_full_inventory2_start_date = '2013/02/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 20
+    self.two_resource_full_inventory2_inventory_2 = 50
+    self.full_inventory_start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CreateFullInventoryAtTheDate1 \
+                       Tic \
+                       CheckFullInventoryUpdateWithValidDateOrder \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_18_InventoryDocumentAndInventoryCache(
+        self, quiet=0, run=run_all_test):
+    """
+    Check that inventory caches that are older than inventory stock movements
+    are cleared.
+
+    The case is:
+    1) full inventory: 2013/05/01,section=A, node=B, resource=X, quantity=15
+                                                     resource=Y, quantity=20
+    [test]
+    2) getInventory(section=A, node=B, resource=X, at_date=2013/06/11 00:00)
+         => should return 15
+       getInventory(section=A, node=B, resource=Y, at_date=2013/06/11 00:00)
+         => should return 20
+
+    3) full inventory: 2013/05/02,section=A, node=B, resource=X, quantity=30
+                                                     resource=Y, quantity=50
+
+    [test]
+    4) getInventory(section=A, node=B, resource=X, at_date=2013/06/11 02:00)
+       => should return 30
+    4) getInventory(section=A, node=B, resource=Y, at_date=2013/06/11 02:00)
+       => should return 50
+    """
+    if not run: return
+
+    self.two_resource_full_inventory1_start_date = '2013/05/01 00:00:00 GMT+9'
+    self.two_resource_full_inventory1_inventory_1 = 15
+    self.two_resource_full_inventory1_inventory_2 = 20
+    self.two_resource_full_inventory2_start_date = '2013/05/02 00:00:00 GMT+9'
+    self.two_resource_full_inventory2_inventory_1 = 30
+    self.two_resource_full_inventory2_inventory_2 = 50
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       CreateTwoResourceFullInventoryAtTheDate1 \
+                       Tic \
+                       CheckGetInveotoryGoesToCache \
+                       CreateTwoResourceFullInventoryAtTheDate2 \
+                       Tic \
+                       CheckInventoryCacheIsClearedAfterAddingInventory \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)

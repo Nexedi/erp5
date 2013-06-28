@@ -40,7 +40,7 @@
   \074tal:block metal:define-macro="master"\076\n
     \074span id="jump" class="jump" metal:define-macro="jump"\076\n
       \074select name="select_jump"\n
-              onChange="submitAction(this.form,\'Base_doJump\')"\076\n
+              onchange="submitAction(this.form,\'Base_doJump\')"\076\n
         \074option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui"\076Jump...\074/option\076\n
       \074/select\076\n
@@ -56,7 +56,7 @@
 \n
     \074span id="action" class="action" metal:define-macro="action"\076\n
       \074select name="select_action"\n
-              onChange="submitAction(this.form,\'Base_doAction\')"\076\n
+              onchange="submitAction(this.form,\'Base_doAction\')"\076\n
         \074option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui"\076Action...\074/option\076\n
       \074/select\076\n

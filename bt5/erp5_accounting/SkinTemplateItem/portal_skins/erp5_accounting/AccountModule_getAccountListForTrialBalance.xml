@@ -333,7 +333,7 @@ def getNodeTitleAndId(node_relative_url):\n
     node = traverse(node_relative_url)\n
     return node_title_and_id_cache.setdefault(node_relative_url,\n
                   ( node.getUid(),\n
-                    node.getTitle(),\n
+                    node.getTranslatedTitle(),\n
                     node.Account_getGapId(gap_root=selected_gap),\n
                     node.getProperty(\'string_index\'),\n
                     node))\n

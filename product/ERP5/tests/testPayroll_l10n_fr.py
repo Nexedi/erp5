@@ -77,6 +77,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
       paysheet.stop()
     self.tic()
 
+    base_contribution = 'base_contribution/base_amount/payroll/report/salary/gross'
     # here, check how much is contributed to the slices
     # the slices defined for this tax are :
     # - 0 to 200
@@ -84,14 +85,14 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
     # - 400 to 5000
     # the salary is of 3000
     self.assertEquals(400, # 200 from the 1st paysheet + 200 from the 2e
-        paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
-            'salary_range/france/slice_0_to_200'))
+        paysheet_list[1].PaySheetTransaction_getYearToDateSlice(
+            base_contribution, 'salary_range/france/slice_0_to_200'))
     self.assertEquals(400, # 200 from the 1st paysheet + 200 from the 2e
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
-            'salary_range/france/slice_200_to_400'))
+            base_contribution, 'salary_range/france/slice_200_to_400'))
     self.assertEquals(5200, # (3000 - 400)*2
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
-            'salary_range/france/slice_400_to_5000'))
+            base_contribution, 'salary_range/france/slice_400_to_5000'))
 
   def test_01_getYearToDateSlice(self):
     '''Check that is possible to calculate the total amount spend on a slice

@@ -1,3 +1,6 @@
+2012-10-05 arnaud.fontaine
+* Allow to specify bt5 which are not going to be upgraded (meaningful for master data for example). 
+
 2011-03-10 Kazuhiko
 * by default, all installed business templates will be upgraded, not all existing business templates in the repository.
 

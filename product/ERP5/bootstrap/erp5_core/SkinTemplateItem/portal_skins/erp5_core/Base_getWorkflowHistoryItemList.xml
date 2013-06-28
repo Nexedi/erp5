@@ -90,6 +90,7 @@ for history_name in [\'history\', \'building_history\', \'installation_history\'
   if workflow_item_list != []:\n
     break\n
 \n
+wf_state_var = portal_workflow[workflow_id].variables.getStateVar()\n
 wf_states = portal_workflow[workflow_id].states\n
 wf_transitions = portal_workflow[workflow_id].transitions\n
 \n
@@ -107,7 +108,7 @@ for workflow_item in workflow_item_list:\n
       if key.startswith(compatibility_name):\n
         # Display the workflow state in the state columns\n
         key = key[len(compatibility_name):]\n
-    if key.endswith(\'state\'): \n
+    if key == wf_state_var: \n
       # Store locally the id of state, usefull for merging action and transition\n
       state_id = wf_states.get(value, marker) and wf_states[value].id\n
       o.setProperty(\'state_id\', state_id)\n

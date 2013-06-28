@@ -197,7 +197,7 @@ will be shown\n
 <!-- do sort on the title column default sort bring Title 0 in first place-->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
@@ -209,7 +209,7 @@ will be shown\n
 <!-- do revert sort on the title column, it will bring Title 1 in first place-->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
   <td></td>\n
   <td></td>\n
 </tr>\n

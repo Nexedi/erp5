@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.CMFCore.WorkflowCore import WorkflowException\n
 from Products.Formulator.Errors import FormValidationError\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import translateString\n
@@ -73,8 +74,13 @@ try:\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
-  request.set(\'field_errors\', field_errors)\n
-  return form(request)\n
+  # Only for solve divergence dialog.\n
+  if dialog_id == \'Delivery_viewSolveDivergenceDialog\' and set([error.error_key for error in field_errors.values()])==set([\'unknown_selection\']):\n
+    message = translateString("Workflow state may have been updated by other user. Please try again.")\n
+    return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message}, **kw)\n
+  else:\n
+    request.set(\'field_errors\', field_errors)\n
+    return form(request)\n
 \n
 # XXX: this is a duplication from form validation code in Base_callDialogMethod\n
 # Correct fix is to factorise this script with Base_callDialogMethod, not to\n
@@ -118,6 +124,12 @@ except ValidationFailed, error_message:\n
                           # that would become an error.\n
     log("Status message has been truncated")\n
     message = "%s ..." % message[:(2000 - 4)]\n
+except WorkflowException, error_message:\n
+  if str(error_message) == "No workflow provides the \'${action_id}\' action.":\n
+    message = translateString("Workflow state may have been updated by other user. Please try again.")\n
+    return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message}, **kw)\n
+  else:\n
+    raise\n
 else:\n
   message = request.get(\'portal_status_message\')\n
   if message is None:\n

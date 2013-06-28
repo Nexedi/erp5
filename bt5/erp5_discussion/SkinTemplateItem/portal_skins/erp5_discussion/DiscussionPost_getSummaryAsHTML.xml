@@ -85,7 +85,7 @@
     <button tal:condition="isUserAllowedToPost"\n
             type="submit" title="Reply"\n
             name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
-            tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
+            tal:attributes="onclick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
             class="discussion-post-action-button">Reply</button>\n
   </div>\n
 \n

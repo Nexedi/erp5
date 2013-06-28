@@ -83,7 +83,7 @@ CLOSED_CLASS_WORD_LIST = """\n
   a about above across after against aged all along alongside already although\n
   amid among amongst an and another any anybody anyone anything are around as\n
   at be because been before behind below beneath beside between beyond both but\n
-  by concerning could despite did do down during each either enough every\n
+  by concerning could despite did do does down during each either enough every\n
   everybody everyone everything except few fewer following for former from\n
   goodbye half has have he her hers herself him himself his if in including\n
   inside instead into is it its itself latter less like little lots many me\n
@@ -160,7 +160,7 @@ def checkTitle(path, id, title, field=None, form=None):\n
     Generic function that test the validity of a title.\n
   """\n
   error_message = \'\'\n
-  if form is not None and form.pt != \'form_dialog\' or form is None:\n
+  if (form is not None and form.pt not in (\'form_dialog\', \'folder_workflow_action_dialog\')) or form is None:\n
     if (field is not None and not field.get_value(\'hidden\') and \\\n
      (title is None or len(title.strip()) == 0)) or (field is None and (title is None or len(title.strip()) == 0)):\n
       return "%s : %s : can\'t be empty\\n" % (path, id)\n

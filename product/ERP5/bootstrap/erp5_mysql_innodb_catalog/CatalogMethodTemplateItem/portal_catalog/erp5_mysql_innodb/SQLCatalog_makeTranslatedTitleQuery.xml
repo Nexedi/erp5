@@ -50,16 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Base_getTranslatedWorkflowStateItemList(wf_id=context.Base_getAccountingWorkflowId())\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, AndQuery\n
+portal = context.getPortalObject()\n
+\n
+# This scriptable key supports content_translation if the table is present\n
+catalog = portal.portal_catalog.getSQLCatalog()\n
+if \'content_translation\' in catalog.getProperty(\'sql_search_tables\'):\n
+  return AndQuery(SimpleQuery(**{\'content_translation.translated_text\': value, \'comparison_operator\': \'match\'}),\n
+                  Query(**{\'content_translation.property_name\': \'title\'}))\n
+\n
+# Otherwise it simply use title\n
+return SimpleQuery(title=value)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>value</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getTranslatedAccountingWorkflowStateItemList</string> </value>
+            <value> <string>SQLCatalog_makeTranslatedTitleQuery</string> </value>
         </item>
       </dictionary>
     </pickle>

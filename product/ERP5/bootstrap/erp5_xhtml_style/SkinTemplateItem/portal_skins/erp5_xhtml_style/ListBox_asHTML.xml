@@ -132,7 +132,7 @@
 \n
         <!-- Select domain node -->\n
         <select name="domain_root_url"\n
-                tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
+                tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
           <tal:block tal:repeat="c here/getDomainRootList">\n
             <option value="base_domain"\n
                     tal:define="path python: c[0]; title python: c[1]"\n
@@ -246,7 +246,7 @@
             <th tal:condition="is_report_tree_mode"\n
                 class="listbox-table-report-tree-selection-cell">\n
               <select name="report_root_url"\n
-                      tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
+                      tal:attributes="onchange string:submitAction(this.form, \'${context_url}/setReportRoot\')">\n
                 <tal:block tal:repeat="c here/getReportRootList">\n
                   <option value="base_domain"\n
                           tal:define="path python: c[0]; title python: c[1]"\n
@@ -296,14 +296,35 @@
                                                    or \'Sort\';\n
                                   listbox_field_id string:${field_id}.${sql};">                 \n
                     <!-- Button in normal view -->\n
+                    <span tal:condition="is_gadget_mode" i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    <span tal:condition="not:is_gadget_mode" class="listbox-table-header-column-title" i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
                     <button tal:condition="not:is_gadget_mode"\n
                             type="submit"\n
                             name="setSelectionQuickSortOrder:method"\n
-                            tal:attributes="title title;\n
-                                            value listbox_field_id;\n
-                                            class bt_class;"\n
+                            title="Ascending Display"\n
+                            class="sort-button sort-button-asc"\n
+                            tal:attributes="value python:test(sort_order==\'ascending\', listbox_field_id+\':none\', listbox_field_id+\':asc\')"\n
                             i18n:domain="ui" i18n:attributes="title">\n
-                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                      <img src="images/transparent-image.gif"\n
+                           alt="Ascending Display"\n
+                           title="Ascending Display"\n
+                           tal:attributes="src string:${portal_url_string}/images/transparent-image.gif;\n
+                                           class python:test(sort_order==\'ascending\', \'sort-button sort-button-arrow sort-button-asc-selected\', \'sort-button sort-button-arrow sort-button-asc-not-selected\');"\n
+                           i18n:domain="ui" i18n:attributes="title;alt" />\n
+                    </button>\n
+                    <button tal:condition="not:is_gadget_mode"\n
+                            type="submit"\n
+                            name="setSelectionQuickSortOrder:method"\n
+                            title="Descending Display"\n
+                            class="sort-button sort-button-desc"\n
+                            tal:attributes="value python:test(sort_order==\'descending\', listbox_field_id+\':none\', listbox_field_id+\':desc\')"\n
+                            i18n:domain="ui" i18n:attributes="title">\n
+                      <img src="images/transparent-image.gif"\n
+                           alt="Descending Display"\n
+                           title="Descending Display"\n
+                           tal:attributes="src string:${portal_url_string}/images/transparent-image.gif;\n
+                                           class python:test(sort_order==\'descending\', \'sort-button sort-button-arrow sort-button-desc-selected\', \'sort-button sort-button-arrow sort-button-desc-not-selected\');"\n
+                           i18n:domain="ui" i18n:attributes="title;alt" />\n
                     </button>\n
 \n
                     <!-- Button in gadget mode -->\n
@@ -318,7 +339,8 @@
                     </button>\n
   \n
                     <!-- Icon showing sort order -->\n
-                    <img src="images/transparent-image.gif"\n
+                    <img tal:condition="is_gadget_mode"\n
+                         src="images/transparent-image.gif"\n
                          tal:attributes="alt   bt_title;\n
                                          title   bt_title;\n
                                          class bt_class;\n

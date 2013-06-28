@@ -449,7 +449,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     # By removing ca1, we remove the choice for the "sql" provider.
     # Therefore template tool does not know any more what to take for "sql".
     template_tool.manage_delObjects(['ca1'])
-
+    self.commit()
     self.assertRaises(BusinessTemplateMissingDependency,
                 template_tool.resolveBusinessTemplateListDependency,
                 bt5_id_list)

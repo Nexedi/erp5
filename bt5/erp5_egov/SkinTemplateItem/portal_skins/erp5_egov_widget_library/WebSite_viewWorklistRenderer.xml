@@ -43,7 +43,7 @@
         <span class="select_favorite"\n
                 tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
                 user_actions actions/user;"\n
-                tal:attributes="onChange string:submitAction(this.form,\'Base_doFavorite\')">\n
+                tal:attributes="onchange string:submitAction(this.form,\'Base_doFavorite\')">\n
           <tal:block tal:repeat="action ordered_global_actions">\n
             <span tal:condition="action/disabled"\n
                     disabled="disabled">-- <tal:block tal:content="action/title" i18n:translate="" i18n:domain="ui" /> --</span>\n

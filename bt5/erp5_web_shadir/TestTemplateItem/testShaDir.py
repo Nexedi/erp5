@@ -163,7 +163,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(1, len(information_list))
     self.assertEquals(json.dumps(information_list[0]), self.data)
 
-  @expectedFailure
   def test_post_information_more_than_once_no_tic(self):
     """
       Check if posting information is working.
@@ -174,8 +173,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.postInformation()
     self.tic()
 
-    self.assertEqual(1, self.portal.portal_catalog.countResults(
-      reference=self.key)[0][0])
+    expectedFailure(self.assertEqual)(1,
+      self.portal.portal_catalog.countResults(reference=self.key)[0][0])
     data_set = self.portal.portal_catalog.getResultValue(
       reference=self.key)
     self.assertEqual(self.key, data_set.getReference())

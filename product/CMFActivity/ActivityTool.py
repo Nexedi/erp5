@@ -353,13 +353,14 @@ Subject: %s: %s/%s
 Node: %s
 Failures: %s
 User name: %r
+Uid: %u
 Document: %s
 Method: %s
 Arguments: %r
 Named Parameters: %r
 """ % (email_from_name, activity_tool.email_from_address, user_email, message,
        path, self.method_id, activity_tool.getCurrentNode(), fail_count,
-       self.user_name, path, self.method_id, self.args, self.kw)
+       self.user_name, self.line.uid, path, self.method_id, self.args, self.kw)
     if self.traceback:
       mail_text += '\nException:\n' + self.traceback
     if self.call_traceback:

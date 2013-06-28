@@ -173,7 +173,7 @@ for delivery in delivery_list:\n
       node_account_type_title = \'\'\n
       node_financial_section_title = \'\'\n
       if node is not None:\n
-        node_title = node.getTitle()\n
+        node_title = node.getTranslatedTitle()\n
         node_account_type_title = node.getAccountTypeTranslatedTitle()\n
         node_financial_section_title = \\\n
           node.getFinancialSectionTranslatedTitle()\n
@@ -224,7 +224,7 @@ for delivery in delivery_list:\n
       node_account_type_title = \'\'\n
       node_financial_section_title = \'\'\n
       if node is not None:\n
-        node_title = node.getTitle()\n
+        node_title = node.getTranslatedTitle()\n
         node_account_type_title = node.getAccountTypeTranslatedTitle()\n
         node_financial_section_title = \\\n
           node.getFinancialSectionTranslatedTitle()\n

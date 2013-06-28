@@ -502,6 +502,9 @@ div.listbox-header-box{\n
   padding-right: 5px;\n
 }\n
 \n
+table.listbox tr.listbox-label-line th.listbox-table-header-cell span.listbox-table-header-column-title{\n
+  float:left;\n
+}\n
 \n
 /* Listbox Footer */\n
 div.listbox-footer{\n
@@ -805,6 +808,13 @@ table.listbox th img.sort-button-asc{\n
   padding:0;\n
 }\n
 \n
+table.listbox th img.sort-button-arrow{\n
+  width: 13px;\n
+  height: 13px;\n
+  margin:0;\n
+  padding:0;\n
+}\n
+\n
 table.listbox th img.sort-button-desc{\n
   background: url(\'images/1toparrow.png\') no-repeat scroll 100% 100%;\n
 }\n
@@ -813,7 +823,21 @@ table.listbox th img.sort-button-asc{\n
   background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 100%;\n
 }\n
 \n
+table.listbox th img.sort-button-asc-not-selected{\n
+  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 100%;\n
+}\n
 \n
+table.listbox th img.sort-button-desc-not-selected{\n
+  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 100%;\n
+}\n
+\n
+table.listbox th img.sort-button-asc-selected{\n
+  background: url(\'images/1toparrow_red.png\') no-repeat scroll 100% 100%;\n
+}\n
+\n
+table.listbox th img.sort-button-desc-selected{\n
+  background: url(\'images/1bottomarrow_red.png\') no-repeat scroll 100% 100%;\n
+}\n
 /* listbox table in thumbnail style \n
    In thumbnail style we usually have only one thumbnail colum which through CSS\n
    we show as floating box table row.\n

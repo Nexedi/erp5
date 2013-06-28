@@ -111,14 +111,47 @@ class TestContentTranslation(ERP5TypeTestCase):
     result4 = portal.portal_catalog(content_translation_title='村岡')
     self.assertEquals(len(result4), 0)
 
-    # columns test
+    # Low level columns test. This behaviour is not guaranteed. I'm not sure
+    # content_translation must be a search table - jerome
     result5 = portal.portal_catalog(property_name='title')
     self.assertEquals(len(result5), 2)
     result6 = portal.portal_catalog(content_language='nob-read')
     self.assertEquals(len(result6), 2)
     result7 = portal.portal_catalog(translated_text='XXX YYY')
     self.assertEquals(len(result7), 1)
- 
+
+  def testCatalogSearchTranslatedTitleScriptableKey(self):
+    # Test 'translated_title' scriptable key.
+    portal = self.portal
+
+    portal.Localizer._add_user_defined_language('Nobody Readable', 'nob-read')
+    portal.Localizer.add_language('nob-read')
+    self.tic()
+
+    person = portal.person_module.newContent(portal_type='Person',
+                                             first_name='Yusuke',
+                                             last_name='Muraoka')
+    person.setNobReadTranslatedFirstName('友介')
+    person.setNobReadTranslatedLastName('村岡')
+    self.tic()
+
+    # We can search either by the translated title
+    self.assertEquals(person,
+      portal.portal_catalog.getResultValue(translated_title='友介'))
+    # Or the original title
+    self.assertEquals(person,
+      portal.portal_catalog.getResultValue(translated_title='Yusuke'))
+
+    # documents for which translation is not set can also be found with
+    # translated_title key
+    not_translated_person = portal.person_module.newContent(portal_type='Person',
+                                             first_name='Jérome',
+                                             last_name='Perrin')
+    self.tic()
+    self.assertEquals(not_translated_person,
+      portal.portal_catalog.getResultValue(translated_title='Jérome'))
+
+
   def testContentTranslation(self):
     """
     Make sure that translatable properties can have content translation into

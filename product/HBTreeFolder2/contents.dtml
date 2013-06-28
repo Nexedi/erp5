@@ -113,7 +113,7 @@ function toggleSelect() {
 <script type="text/javascript">
 <!-- 
 if (document.forms[0]) {
-  document.write('<input class="form-element" type="submit" name="selectButton" value="Select All" onClick="toggleSelect(); return false">')
+  document.write('<input class="form-element" type="submit" name="selectButton" value="Select All" onclick="toggleSelect(); return false">')
   }
 //-->
 </script>

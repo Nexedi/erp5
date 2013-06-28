@@ -206,7 +206,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:asc\']</td>\n
 <!--  <td>link=ID</td> -->\n
   <td></td>\n
 </tr>\n
@@ -229,7 +229,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id:desc\']</td>\n
 <!--  <td>link=ID</td> -->\n
   <td></td>\n
 </tr>\n

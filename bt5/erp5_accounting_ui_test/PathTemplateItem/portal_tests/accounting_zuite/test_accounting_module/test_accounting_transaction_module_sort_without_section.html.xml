@@ -80,7 +80,12 @@ Test sort for Accounting module main listbox, without section\n
 <!-- sort by title {{{ -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -118,7 +123,7 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -150,9 +155,20 @@ Test sort for Accounting module main listbox, without section\n
 \n
 <!-- sort by type {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset title sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.translated_portal_type\']</td>\n
+    @value=\'listbox.translated_portal_type:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -176,7 +192,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.translated_portal_type\']</td>\n
+    @value=\'listbox.translated_portal_type:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -198,9 +214,20 @@ Test sort for Accounting module main listbox, without section\n
 \n
 <!-- sort by date {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_portal_type:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset type sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.translated_portal_type:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.operation_date\']</td>\n
+    @value=\'listbox.operation_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -215,7 +242,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.operation_date\']</td>\n
+    @value=\'listbox.operation_date:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -228,6 +255,17 @@ Test sort for Accounting module main listbox, without section\n
 \n
 <!-- sort by reference {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset date sorting -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.operation_date:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>type</td>\n
   <td>listbox_reference</td>\n
   <td>%</td>\n
@@ -236,7 +274,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.reference\']</td>\n
+    @value=\'listbox.reference:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -260,7 +298,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.reference\']</td>\n
+    @value=\'listbox.reference:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -291,9 +329,21 @@ Test sort for Accounting module main listbox, without section\n
 \n
 <!-- sort by specific reference {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset reference sorting -->\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.specific_reference\']</td>\n
+    @value=\'listbox.reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.specific_reference:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -308,7 +358,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.specific_reference\']</td>\n
+    @value=\'listbox.specific_reference:desc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -321,9 +371,21 @@ Test sort for Accounting module main listbox, without section\n
 \n
 <!-- sort by simulation state {{{ -->\n
 <tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.specific_reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- reset specific_reference sorting -->\n
   <td>clickAndWait</td>\n
   <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
-    @value=\'listbox.translated_simulation_state_title\']</td>\n
+    @value=\'listbox.specific_reference:none\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and\n
+    @value=\'listbox.translated_simulation_state_title:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

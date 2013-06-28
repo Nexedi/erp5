@@ -67,11 +67,6 @@ class DownloadableMixin:
     """
     from Products.ERP5.Document.Document import VALID_TEXT_FORMAT_LIST,\
                                                         VALID_IMAGE_FORMAT_LIST
-    web_cache_kw = kw.copy()
-    if format is not _MARKER:
-      web_cache_kw['format'] = format
-    _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
-
     if format is _MARKER and not kw:
       # conversion parameters is mandatory to download the converted content.
       # By default allways return view action.
@@ -79,6 +74,12 @@ class DownloadableMixin:
       return self.view()
     if format is _MARKER:
       format = None
+
+    web_cache_kw = kw.copy()
+    if format:
+      web_cache_kw['format'] = format
+    _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
+
     if not self.checkConversionFormatPermission(format, **kw):
       raise Forbidden('You are not allowed to get this document in this ' \
                       'format')

@@ -39,7 +39,6 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
 from DocumentTemplate.DT_Util import html_quote
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File

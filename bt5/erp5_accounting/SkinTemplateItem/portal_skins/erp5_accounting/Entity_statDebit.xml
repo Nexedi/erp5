@@ -57,6 +57,8 @@ kw[\'mirror_section_uid\'] = context.getUid()\n
 kw[\'omit_asset_decrease\'] = 1\n
 kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
                                          \'account_type/liability/payable\']\n
+kw.update(kw[\'selection\'].getParams())\n
+\n
 return context.Node_statAccountingBalance(**kw)\n
 </string> </value>
         </item>

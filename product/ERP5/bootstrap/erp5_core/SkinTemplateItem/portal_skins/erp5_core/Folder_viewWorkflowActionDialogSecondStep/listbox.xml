@@ -187,11 +187,11 @@
                         </tuple>
                         <tuple>
                           <string>workflow_action</string>
-                          <string>Workflow Action</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>workflow_id</string>
-                          <string>Workflow ID</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>

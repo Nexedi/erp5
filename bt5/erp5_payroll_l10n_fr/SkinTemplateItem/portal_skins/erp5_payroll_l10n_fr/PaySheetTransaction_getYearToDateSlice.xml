@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'\n
+            <value> <string>\'\'\'\n
   This script get year to date amount for the slice corresponding to slice_path\n
   of the model.\n
 \'\'\'\n
@@ -73,12 +71,12 @@ paysheet_list = [r.getObject() for r in accounting_module.searchFolder(**search_
 paysheet_list.append(context)\n
 yearly_slice_amount = 0\n
 \n
-for paysheet in paysheet_list :\n
-  gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-        base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
+for paysheet in paysheet_list:\n
+  salary = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\n
+        base_contribution=base_contribution,\n
         contribution_share=\'contribution_share/employee\')\n
   if slice_path is None:\n
-    yearly_slice_amount += gross_salary\n
+    yearly_slice_amount += salary\n
     continue\n
   model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
       start_date=paysheet.getStartDate(),\n
@@ -89,21 +87,14 @@ for paysheet in paysheet_list :\n
       return 0.0\n
     plafond_max = slice.getQuantityRangeMax()\n
     plafond_min = slice.getQuantityRangeMin()\n
-    slice_amount = 0\n
-    if gross_salary < plafond_max:\n
-      slice_amount = gross_salary - plafond_min\n
-    else:\n
-      slice_amount = plafond_max - plafond_min\n
-    yearly_slice_amount += slice_amount\n
+    yearly_slice_amount += min(salary, plafond_max) - plafond_min\n
 \n
 return yearly_slice_amount\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>slice_path=None</string> </value>
+            <value> <string>base_contribution, slice_path=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

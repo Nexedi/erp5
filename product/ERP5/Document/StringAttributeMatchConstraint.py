@@ -39,9 +39,7 @@ class StringAttributeMatchConstraint(PropertyExistenceConstraint):
     regular expression.
   """
   property_sheets = PropertyExistenceConstraint.property_sheets + \
-                               (PropertySheet.StringAttributeMatchConstraint,) 
-
-  _message_id_tuple = ('message_attribute_match',)
+      (PropertySheet.StringAttributeMatchConstraint,) 
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -62,8 +60,57 @@ class StringAttributeMatchConstraint(PropertyExistenceConstraint):
           # Generate error
           error_list.append(self._generateError(
                        obj, 
-                       self._getMessage("message_attribute_match"),
+                       self._getMessage("message_attribute_not_match"),
             mapping=dict(attribute_name=property_id,
                          attribute_value=repr(current_value),
                          regular_expression=repr(regular_expression))))
     return error_list
+
+  _message_id_tuple = PropertyExistenceConstraint._message_id_tuple + \
+      ('message_attribute_not_match',)
+
+  @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    'message_property_does_not_match' has been renamed to
+    'message_property_not_match' to follow ERP5 naming conventions
+    """
+    filesystem_definition_dict['message_property_not_match'] = \
+        filesystem_definition_dict.pop('message_property_does_not_match',
+                                       None)
+
+    return PropertyExistenceConstraint._preConvertBaseFromFilesystemDefinition(
+      filesystem_definition_dict)
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(**property_dict):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    One constraint per regular expression and containing one or several
+    properties is created. Filesystem definition example:
+    { 'id'            : 'title_not_empty',
+      'description'   : 'Title must be defined',
+      'type'          : 'StringAttributeMatch',
+      'title'         : '^[^ ]'
+    }
+    """
+    property_list = property_dict.keys()
+    regex_list = property_dict.values()
+    regex_list_len = len(regex_list)
+    seen_property_set = set()
+    for property_index, property_id in enumerate(property_list):
+      if property_id in seen_property_set:
+        continue
+
+      constraint_property_list = [property_id]
+      constraint_regex = regex_list[property_index]
+      property_index += 1
+      for regex_index, regex in enumerate(regex_list[property_index:], property_index):
+        if constraint_regex == regex:
+          regex_property_id = property_list[regex_index]
+          constraint_property_list.append(regex_property_id)
+          seen_property_set.add(regex_property_id)
+
+      yield dict(constraint_property_list=constraint_property_list,
+                 regular_expression=constraint_regex)

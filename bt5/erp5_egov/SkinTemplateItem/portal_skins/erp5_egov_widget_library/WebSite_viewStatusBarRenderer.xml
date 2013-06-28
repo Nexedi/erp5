@@ -57,7 +57,7 @@
    <div class="onright">\n
       <span id="language">\n
         <select name="select_language"\n
-                tal:attributes="onChange string:submitAction(this.form,\'Base_doLanguage\')">\n
+                tal:attributes="onchange string:submitAction(this.form,\'Base_doLanguage\')">\n
           <option value=""\n
                   i18n:translate="" i18n:domain="ui">My language</option>\n
           <option tal:repeat="language python: here.Localizer.get_languages_map()"\n

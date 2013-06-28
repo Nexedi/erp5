@@ -1,3 +1,12 @@
+2012-10-16 yusei
+* Improve error handling on Workflow_statusModify. If divergence is solved by other user, then show a nice message.
+
+2012-10-16 yusei
+* Improve error handling on Workflow_statusModify. If requested transition is not available, then show a nice message.
+
+2012-9-12 yusei
+* Improve listbox sort feature. Now both ascending arrow and descending arrow are displayed in title column and user can sort in specific order explicitly. User also can sort multiple columns by click without using sort-on-dialog.
+
 2013-01-28 Kazuhiko
 * update RequireJS 2.1.4.
 

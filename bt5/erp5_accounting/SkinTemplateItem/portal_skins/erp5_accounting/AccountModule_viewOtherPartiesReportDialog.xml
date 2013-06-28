@@ -38,6 +38,16 @@
             <value> <string>AccountModule_viewOtherPartiesReport</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -73,6 +83,7 @@
                       <list>
                         <string>your_section_category</string>
                         <string>your_section_category_strict</string>
+                        <string>your_project</string>
                         <string>your_at_date</string>
                         <string>your_omit_balanced_accounts</string>
                         <string>your_omit_grouping_reference</string>
@@ -128,6 +139,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string>AccountModule_viewOtherPartiesReportDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

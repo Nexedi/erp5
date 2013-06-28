@@ -280,7 +280,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id=\'budget_workflow\')</string> </value>
+            <value> <string>python: context.ERP5Site_getWorkflowStateItemList(portal_type=\'Budget\', state_var=\'validation_state\')</string> </value>
         </item>
       </dictionary>
     </pickle>

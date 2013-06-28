@@ -27,10 +27,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -49,10 +46,18 @@
                         <state>
                           <dictionary>
                             <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                                 </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
@@ -70,10 +75,14 @@
                             </item>
                             <item>
                                 <key> <string>_no_cache</string> </key>
-                                <value> <int>1</int> </value>
+                                <value> <int>0</int> </value>
                             </item>
                             <item>
                                 <key> <string>_no_store</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_transform</string> </key>
                                 <value> <int>0</int> </value>
                             </item>
                             <item>
@@ -81,9 +90,39 @@
                                 <value> <string>authenticated</string> </value>
                             </item>
                             <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
                                 </value>
                             </item>
                             <item>
@@ -104,10 +143,18 @@
                         <state>
                           <dictionary>
                             <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                                 </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
@@ -132,13 +179,47 @@
                                 <value> <int>0</int> </value>
                             </item>
                             <item>
+                                <key> <string>_no_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_policy_id</string> </key>
                                 <value> <string>unauthenticated</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
                             </item>
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
                                 </value>
                             </item>
                             <item>
@@ -159,10 +240,18 @@
                         <state>
                           <dictionary>
                             <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                                 </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_max_age_secs</string> </key>
@@ -187,13 +276,47 @@
                                 <value> <int>0</int> </value>
                             </item>
                             <item>
+                                <key> <string>_no_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
                                 <key> <string>_policy_id</string> </key>
                                 <value> <string>unauthenticated web pages</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
                             </item>
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
                                 </value>
                             </item>
                             <item>
@@ -213,10 +336,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -229,10 +349,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -245,10 +362,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -261,10 +375,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -277,10 +388,7 @@
   </record>
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -293,10 +401,7 @@
   </record>
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -309,10 +414,7 @@
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -325,10 +427,7 @@
   </record>
   <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -341,10 +440,7 @@
   </record>
   <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>

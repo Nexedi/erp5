@@ -115,13 +115,6 @@ class Coordinate(Base):
       return re.search(regular_expression, string).groups()
 
     ### Mix-in methods
-    security.declareProtected( Permissions.View, 'view' )
-    def view(self):
-      """
-          Return the default view even if index_html is overridden.
-      """
-      return self()
-
     security.declareProtected( Permissions.AccessContentsInformation,
                                'asText' )
     def asText(self):

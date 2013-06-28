@@ -1,3 +1,6 @@
+2013-04-17 arnaud.fontaine
+* erp5_simulation should not be required as some system do not use simulation.
+
 2011-12-16 arnaud.fontaine
 * Display "Own Section" along "Third Party" in AccountingTransactionModule_viewAccountingTransactionList.
 

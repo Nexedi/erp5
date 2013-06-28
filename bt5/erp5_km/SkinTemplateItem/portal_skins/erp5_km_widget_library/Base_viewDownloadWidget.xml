@@ -49,7 +49,7 @@
                  list_index python: 5">\n
  <span i18n:domain="erp5_ui" \n
        i18n:translate=""\n
-       onClick="javascript:$(\'div.download-document-format-list-menu\').toggle();"> Download</span>\n
+       onclick="javascript:$(\'div.download-document-format-list-menu\').toggle();"> Download</span>\n
   <div class="download-document-format-list-menu" style="opacity: 0.999999; display: none;">\n
     <ul>\n
       <li class="separator"\n
@@ -74,7 +74,7 @@
           </li>\n
         </div>\n
         <li class="toggle-hidden-format-dialog-selection-link">\n
-          <span onClick="javascript:toggleHiddenFormatDialogSelection();"\n
+          <span onclick="javascript:toggleHiddenFormatDialogSelection();"\n
                 i18n:domain="erp5_ui" \n
                 i18n:translate=""\n
                 title="Show more download formats"> More... </span>\n

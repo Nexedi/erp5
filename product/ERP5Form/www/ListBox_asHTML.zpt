@@ -42,7 +42,7 @@
           <tr>
             <td valign="top">
               <select name="domain_root_url"
-                tal:attributes="onChange string:submitAction(this.form, '${context_url}/setDomainRoot')">
+                tal:attributes="onchange string:submitAction(this.form, '${context_url}/setDomainRoot')">
                 <tal:block tal:repeat="c here/getDomainRootList">
                   <option value="base_domain"
                     tal:define="path python: c[0]; title python: c[1]"
@@ -156,7 +156,7 @@
                   tal:define="lines here/getMaxLineNumber"
                   tal:attributes="id string:${field_id}_page_selection;
                                   name string:${field_id}_list_start;
-                                  onChange string:submitAction(this.form, '${context_url}/${field_id}_setPage')"
+                                  onchange string:submitAction(this.form, '${context_url}/${field_id}_setPage')"
                   i18n:domain="ui" i18n:attributes="title">
                   <option value="0"
                     tal:repeat="p python: range(0, here.total_pages)"
@@ -183,7 +183,7 @@
               <td tal:condition="is_report_tree_mode"
                 class="Data" style="width: 50px; text-align: left; vertical-align: middle">
                 <select name="report_root_url"
-                  tal:attributes="onChange string:submitAction(this.form, '${context_url}/setReportRoot')">
+                  tal:attributes="onchange string:submitAction(this.form, '${context_url}/setReportRoot')">
                   <tal:block tal:repeat="c here/getReportRootList">
                     <option value="base_domain"
                       tal:define="path python: c[0]; title python: c[1]"

@@ -55,19 +55,14 @@ class PasswordTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainPasswordTool', _dtmldir )
-
+  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
+  manage_overview = DTMLFile('explainPasswordTool', _dtmldir)
 
   _expiration_day = 1
 
   def __init__(self, id=None):
-    if id is None:
-      id = self.__class__.id
+    super(PasswordTool, self).__init__(id)
     self._password_request_dict = OOBTree()
-    # XXX no call to BaseTool.__init__ ?
-    # BaseTool.__init__(self, id)
 
   security.declareProtected('Manage users', 'getResetPasswordKey')
   def getResetPasswordKey(self, user_login, expiration_date=None):
@@ -258,15 +253,15 @@ class PasswordTool(BaseTool):
     return self.reset_password_form(REQUEST=REQUEST)
 
 
-  def removeExpiredRequests(self, **kw):
+  def removeExpiredRequests(self):
     """
     Browse dict and remove expired request
     """
     current_date = DateTime()
-    for key, (login, date) in self._password_request_dict.items():
+    password_request_dict = self._password_request_dict
+    for key, (_, date) in password_request_dict.items():
       if date < current_date:
-        self._password_request_dict.pop(key)
-
+        del password_request_dict[key]
 
   def changeUserPassword(self, password, password_key, password_confirm=None,
                          user_login=None, REQUEST=None, **kw):

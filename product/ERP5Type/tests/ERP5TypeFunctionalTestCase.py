@@ -168,6 +168,15 @@ class Firefox(Browser):
     os.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
     os.environ["NO_EM_RESTART"] = "1"
 
+    # This disables unwanted SCIM as it fails with Xvfb, at least on Mandriva
+    # 2010.0, because Firefox tries to start scim-bridge which SIGSEGV and
+    # thus Firefox is stucked on register_imcontext()
+    for remove_environment_variable in ('GTK_IM_MODULE',
+                                        'XIM_PROGRAM',
+                                        'XMODIFIERS',
+                                        'QT_IM_MODULE'):
+      os.environ.pop(remove_environment_variable, None)
+
   def _run(self, url):
     # Prepare to run
     self._createFile('prefs.js', self.getPrefJs())
@@ -178,6 +187,7 @@ class Firefox(Browser):
     os.environ['MOZ_NO_REMOTE'] = '0'
 
   def getPrefJs(self):
+    from App.config import getConfiguration
     return """
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
@@ -215,7 +225,15 @@ user_pref("capability.principal.codebase.p1.subjectName", "");
 
 // For debugging, do not waste space on screen
 user_pref("browser.tabs.autoHide", true);
-""" % (self.host, self.port)
+
+// This is required to download reports without requiring user interaction
+// (See ERP5UpgradeUtils for corresponding Extensions)
+user_pref("browser.download.folderList", 2);
+user_pref("browser.download.manager.showWhenStarting", false);
+user_pref("browser.download.dir", "%s");
+user_pref("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
+""" % (self.host, self.port,
+       os.path.join(getConfiguration().instancehome, 'var'))
 
 class PhantomJS(Browser):
   def _createRunJS(self):
@@ -242,8 +260,8 @@ class FunctionalTestRunner:
 
   remote_code_url_list = None
 
-  # There is no test that can take more them 2 hours
-  timeout = 2.0 * 60 * 60
+  # There is no test that can take more than 6 hours
+  timeout = 6.0 * 3600
 
   def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']

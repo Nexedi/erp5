@@ -91,6 +91,7 @@
                       <list>
                         <string>your_section_category</string>
                         <string>your_currency</string>
+                        <string>your_project</string>
                         <string>your_at_date</string>
                         <string>your_omit_balanced_accounts</string>
                         <string>your_omit_empty_accounts</string>

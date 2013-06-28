@@ -162,7 +162,7 @@
                           <string>GAP Number</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Account Name</string>
                         </tuple>
                         <tuple>
@@ -283,7 +283,7 @@
                           <string>preferred_gap_id</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Account Name</string>
                         </tuple>
                         <tuple>

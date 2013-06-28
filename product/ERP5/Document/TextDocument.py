@@ -30,7 +30,6 @@
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
 from Products.ERP5.Document.File import File
@@ -194,10 +193,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       else:
         # text_content is not set, return empty string instead of None
         return original_mime_type, ''
-
-    def __call__(self):
-      _setCacheHeaders(_ViewEmulator().__of__(self), {})
-      return Document.__call__(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getContentBaseURL')
     def getContentBaseURL(self):

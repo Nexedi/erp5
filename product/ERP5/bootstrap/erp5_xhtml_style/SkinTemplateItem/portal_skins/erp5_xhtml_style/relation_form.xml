@@ -59,7 +59,7 @@
               <label for="dialog_selector"\n
                      i18n:translate="" i18n:domain="ui">Select Template</label>\n
               <select name="select_dialog" id="dialog_selector"\n
-                      onChange="submitAction(this.form,\'Base_doRelationDialog\')">\n
+                      onchange="submitAction(this.form,\'Base_doRelationDialog\')">\n
                 <tal:block tal:repeat="proxy_listbox_id_item proxy_form_id_list">\n
                   <option tal:attributes="value python: proxy_listbox_id_item[0];\n
                                         selected python: proxy_listbox_id_item[0] == proxy_listbox_id"\n

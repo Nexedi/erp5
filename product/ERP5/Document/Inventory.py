@@ -198,6 +198,13 @@ class Inventory(Delivery):
       inventory_id = self.getId()
       list_method = inventory_calculation_dict['list_method']
       method = getattr(self, list_method)
+
+      __order_id_counter_list = [0]
+      def getOrderIdCounter():
+        value = __order_id_counter_list[0]
+        __order_id_counter_list[0] = value + 1
+        return value
+
       for movement in method():
         if movement.getResourceValue() is not None and \
             movement.getInventoriatedQuantity() not in (None, ''):
@@ -240,7 +247,10 @@ class Inventory(Delivery):
 
           # Create tmp movement
           kwd = {'uid': movement.getUid(),
-                 'start_date': stop_date}
+                 'start_date': stop_date,
+                 'order_id': getOrderIdCounter(),
+                 'mirror_order_id':getOrderIdCounter()
+                 }
           temp_delivery_line = temp_constructor(self,
                                                 inventory_id)
 
@@ -284,7 +294,10 @@ class Inventory(Delivery):
             diff_quantity = - inventory_value[tuple(second_level_key)]
 
             kwd = {'uid': inventory_uid,
-                   'start_date': stop_date}
+                   'start_date': stop_date,
+                   'order_id': getOrderIdCounter(),
+                   'mirror_order_id':getOrderIdCounter()
+                   }
 
             # create the tmp line and set category on it
             temp_delivery_line = temp_constructor(self,
@@ -320,8 +333,16 @@ class Inventory(Delivery):
                                           immediate_reindex_archive=immediate_reindex_archive)
 
     if stock_object_list:
+      # Delete existing stock records and old inventory_cache first.
       self.portal_catalog.catalogObjectList(
-           stock_object_list, method_id_list=('z_catalog_stock_list', ),
+           stock_object_list[:], method_id_list=('z0_uncatalog_stock',
+                                                 'SQLCatalog_trimInventoryCacheOnCatalog', ),
+           sql_catalog_id = sql_catalog_id,
+           disable_cache=1, check_uid=0, disable_archive=disable_archive,
+           immediate_reindex_archive=immediate_reindex_archive)
+      # Then insert new records without delete.
+      self.portal_catalog.catalogObjectList(
+           stock_object_list[:], method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
            sql_catalog_id = sql_catalog_id,
            disable_cache=1, check_uid=0, disable_archive=disable_archive,
            immediate_reindex_archive=immediate_reindex_archive)

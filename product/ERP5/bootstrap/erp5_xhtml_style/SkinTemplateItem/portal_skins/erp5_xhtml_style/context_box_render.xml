@@ -42,7 +42,7 @@
   <tal:block metal:define-macro="master">\n
     <span id="jump" class="jump" metal:define-macro="jump">\n
       <select name="select_jump"\n
-              onChange="submitAction(this.form,\'Base_doJump\')">\n
+              onchange="submitAction(this.form,\'Base_doJump\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Jump...</option>\n
         <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -77,7 +77,7 @@
 \n
     <span id="action" class="action" metal:define-macro="action">\n
       <select name="select_action"\n
-              onChange="submitAction(this.form,\'Base_doAction\')">\n
+              onchange="submitAction(this.form,\'Base_doAction\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Action...</option>\n
         <tal:block tal:repeat="content_id here/getVisibleAllowedContentTypeList | nothing">\n

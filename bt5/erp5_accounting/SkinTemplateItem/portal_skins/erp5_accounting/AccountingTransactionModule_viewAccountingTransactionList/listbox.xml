@@ -271,11 +271,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>total_debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>total_credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -397,6 +397,14 @@
                         <tuple>
                           <string>specific_reference</string>
                           <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_credit</string>
+                          <string>Credit</string>
                         </tuple>
                         <tuple>
                           <string>source_project_title</string>

@@ -634,22 +634,22 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//button[@title="ID"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="ID"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//button[@title="Title"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//button[@title="Quantity"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Quantity"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//button[@title="Date"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Date"]</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n

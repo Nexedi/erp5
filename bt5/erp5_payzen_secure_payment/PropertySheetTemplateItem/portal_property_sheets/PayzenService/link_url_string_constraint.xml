@@ -54,7 +54,7 @@
             <value> <string>link_url_string_constraint</string> </value>
         </item>
         <item>
-            <key> <string>message_attribute_match</string> </key>
+            <key> <string>message_attribute_not_match</string> </key>
             <value> <string>Payzen URL have to be set</string> </value>
         </item>
         <item>

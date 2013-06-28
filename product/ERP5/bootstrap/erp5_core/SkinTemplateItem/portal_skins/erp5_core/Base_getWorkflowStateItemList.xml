@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
+            <value> <string>\'\'\'This script is deprecated, it is much recommended to use\n
+ERP5Site_getWorkflowStateItemList by passing the portal type and state_var instead.\n
+\'\'\'\n
+\n
+from Products.CMFCore.utils import getToolByName\n
 \n
 if not (same_type(workflow_id_list, []) or same_type(workflow_id_list, ())):\n
   workflow_id_list = (workflow_id_list,)\n

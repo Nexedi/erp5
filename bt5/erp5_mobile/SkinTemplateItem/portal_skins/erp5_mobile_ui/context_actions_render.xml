@@ -155,7 +155,7 @@ XXX: Folder_filter accesses selection directly\n
               <div id="jump">\n
                 <span id="jump" metal:define-macro="jump">\n
                   <select name="select_jump"\n
-                          tal:attributes="onChange string:submitAction(this.form,\'Base_doJump\')">\n
+                          tal:attributes="onchange string:submitAction(this.form,\'Base_doJump\')">\n
                     <option selected="selected" value=""\n
                             i18n:translate="" i18n:domain="ui">Jump...</option>\n
                     <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -189,7 +189,7 @@ XXX: Folder_filter accesses selection directly\n
              <div id="actions">\n
               <span id="action" metal:define-macro="action">\n
                <select name="select_action"\n
-                        tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
+                        tal:attributes="onchange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
                   <option selected="selected" value=""\n
                           i18n:translate="" i18n:domain="ui">Action...\n
                   </option>\n

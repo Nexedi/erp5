@@ -538,7 +538,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEquals(['foo_1', 'foo_2'], content_tree.xpath(xpath_style_name_expression, namespaces=content_tree.nsmap))
     #Check that each listbox values are inside ODT table cells
     xpath_result_expression = '//table:table[@table:name="listbox2"]/table:table-row/table:table-cell/text:p/text()'
-    self.assertEquals(['foo_1', 'foo_title_5', 'foo_2', 'foo_2', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
+    self.assertEquals(['foo_1', 'foo_title_5', '0.0', 'foo_2', 'foo_2', '0.0', '1234.5'], content_tree.xpath(xpath_result_expression, namespaces=content_tree.nsmap))
     self.assertFalse(content_xml.find("foo_title_4") > 0)
     self._validate(odf_document)
 
