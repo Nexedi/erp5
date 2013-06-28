@@ -29,7 +29,6 @@
 import tempfile, os
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Image import Image
