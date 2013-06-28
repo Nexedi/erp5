@@ -75,7 +75,6 @@ from Products.DCWorkflowGraph import DCWorkflowGraph
 DCWorkflowGraph.getObjectTitle = getObjectTitle
 
 from Products.DCWorkflowGraph.config import bin_search_path, DOT_EXE
-from tempfile import NamedTemporaryFile
 from zLOG import LOG, WARNING
 import subprocess
 
@@ -102,37 +101,25 @@ def getGraph(self, wf_id="", format="png", REQUEST=None):
   except AttributeError:
     # no portal_properties or site_properties, fallback to:
     encoding = self.management_page_charset.lower()
-  pot = pot.encode(encoding)
-  result = None
-  with NamedTemporaryFile(suffix='.dot') as infile:
-    infile.write(pot)
-    infile.seek(0)
+  result = pot.encode(encoding)
 
-    if REQUEST is None:
-      REQUEST = self.REQUEST
-    response = REQUEST.RESPONSE
+  if REQUEST is None:
+    REQUEST = self.REQUEST
+  setHeader = REQUEST.RESPONSE.setHeader
 
-    if format != 'dot':
-      with NamedTemporaryFile(suffix='.%s' % format) as outfile:
-        subprocess.call((DCWorkflowGraph.bin_search(DOT_EXE),
-                         '-Nfontname="IPAexGothic"',
-                         '-Nfontsize=10',
-                         '-Efontname="IPAexGothic"',
-                         '-Efontsize=10',
-                         '-T%s' % format,
-                         '-o',
-                         outfile.name,
-                         infile.name))
+  if format != 'dot':
+    p = subprocess.Popen((DCWorkflowGraph.bin_search(DOT_EXE),
+                          '-Nfontname=IPAexGothic', '-Nfontsize=10',
+                          '-Efontname=IPAexGothic', '-Efontsize=10',
+                          '-T%s' % format),
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    result = p.communicate(pot)[0]
 
-        result = outfile.read()
-
-      response.setHeader('Content-Type', 'image/%s' % format)
-    else:
-      result = infile.read()
-      filename = wf_id or self.getId()
-      response.setHeader('Content-Type', 'text/x-graphviz')
-      response.setHeader('Content-Disposition',
-                         'attachment; filename=%s.dot' % filename)
+    setHeader('Content-Type', 'image/%s' % format)
+  else:
+    filename = wf_id or self.getId()
+    setHeader('Content-Type', 'text/x-graphviz')
+    setHeader('Content-Disposition', 'attachment; filename=%s.dot' % filename)
 
   if not result:
     LOG("ERP5Type.patches.DCWorkflowGraph", WARNING,
