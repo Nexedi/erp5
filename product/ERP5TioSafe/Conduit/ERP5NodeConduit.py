@@ -519,7 +519,10 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       elif tag == "email":
         current_value = str(document.getDefaultEmailText(""))
       else:
-        current_value = getattr(document, tag)
+        try:
+          current_value = getattr(document, tag)
+        except AttributeError:
+          current_value = None
 
       if current_value:
         current_value = current_value.encode('utf-8')
