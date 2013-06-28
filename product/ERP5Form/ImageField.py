@@ -31,6 +31,7 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from OFS.Image import Image as OFSImage
+from OFS.Image import Pdata
 from lxml.etree import Element
 from lxml import etree
 import re
@@ -156,7 +157,7 @@ class ImageFieldWidget(Widget.TextWidget):
       # is displayed in the form as a thumbnail, it will be added in the odg
       # document as thumbnail size/quality
       content_type, image_data = image_object.convert(**image_parameter_dict)
-      if isinstance(image_data, str):
+      if isinstance(image_data, (basestring, Pdata)):
         image = OFSImage('', '', image_data)
       else:
         image = image_data
