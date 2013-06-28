@@ -18,8 +18,7 @@
 min_gid\r\n
 max_gid\r\n
 path\r\n
-limit\r\n
-</string> </value>
+limit</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -70,8 +69,8 @@ WHERE\n
 <dtml-if min_gid>\n
   AND gid >= <dtml-sqlvar min_gid type="string">\n
 </dtml-if>\n
-<dtml-if strict_max_gid>\n
-  AND gid <= <dtml-sqlvar strict_max_gid type="string">\n
+<dtml-if max_gid>\n
+  AND gid <= <dtml-sqlvar max_gid type="string">\n
 </dtml-if>\n
 ORDER BY gid\n
 <dtml-if limit>\n
