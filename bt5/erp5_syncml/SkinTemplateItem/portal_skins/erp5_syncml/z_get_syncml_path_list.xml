@@ -8,7 +8,8 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>gid_list\r\n
+            <value> <string>gid_min\r\n
+gid_max\r\n
 path</string> </value>
         </item>
         <item>
@@ -28,8 +29,9 @@ BEGIN\n
 SELECT path \n
 FROM syncml\n
 WHERE\n
- gid in (<dtml-in gid_list><dtml-sqlvar sequence-item type="string">\n
-             <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
+ gid >= <dtml-sqlvar gid_min type="string">\n
+AND\n
+ gid <= <dtml-sqlvar gid_max type="string">\n
 AND\n
   path like <dtml-sqlvar path type="string">\n
 <dtml-var sql_delimiter>\n
