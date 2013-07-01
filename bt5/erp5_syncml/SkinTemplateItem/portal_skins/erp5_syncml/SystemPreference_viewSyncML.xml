@@ -89,6 +89,7 @@
                     <value>
                       <list>
                         <string>my_preferred_sync_action_per_activity_count</string>
+                        <string>my_preferred_check_delete_at_end</string>
                       </list>
                     </value>
                 </item>
