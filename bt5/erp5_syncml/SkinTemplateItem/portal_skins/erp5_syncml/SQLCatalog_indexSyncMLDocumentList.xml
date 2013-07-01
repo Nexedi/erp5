@@ -69,10 +69,7 @@ for path in path_list:\n
           # Call specific method to compute GID on source data\n
           value = subscription.getGidFromObject(obj)\n
         elif property == "data":\n
-          conduit = subscription.getConduit()\n
-          value = conduit.getXMLFromObjectWithId(obj,\n
-                           xml_mapping=subscription.getXmlBindingGeneratorMethodId(),\n
-                           context_document=subscription.getPath())\n
+          value = subscription.getDataFromDocument(obj)\n
         else:\n
           value = getattr(obj, \'get%s\' % UpperCase(property))()                           \n
       else:\n
