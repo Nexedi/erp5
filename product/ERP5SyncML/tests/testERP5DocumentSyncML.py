@@ -118,6 +118,8 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
   def afterSetUp(self):
     """Setup."""
     self.login()
+    self.portal.z_drop_syncml()
+    self.portal.z_create_syncml()
     self.addPublications()
     self.addSubscriptions()
     self.portal = self.getPortal()
