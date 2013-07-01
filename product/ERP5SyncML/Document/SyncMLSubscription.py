@@ -220,7 +220,6 @@ class SyncMLSubscription(XMLObject):
     # Build Message
     if response_message_id:
       syncml_response = self.generateBaseResponse()
-      syncml_response.addBody()
     else:
       syncml_response = None
 
@@ -637,7 +636,6 @@ class SyncMLSubscription(XMLObject):
     the "sending_modification" stage of the synchronization
     """
     syncml_response = self.generateBaseResponse()
-    syncml_response.addBody()
     syncml_response.addFinal()
 
     final_activate_kw = {
@@ -650,6 +648,37 @@ class SyncMLSubscription(XMLObject):
                             % (self.getRelativeUrl(),))
     self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
 
+
+  def getDeletedSyncMLData(self, syncml_response=None):
+    """
+    Retrieve & generate the syncml message for messages that were deleted
+    This message also contains the final tag to let know that the sending
+    of modification is over
+    """
+    if not syncml_response:
+      syncml_response = self.generateBaseResponse()
+
+    # Compare gid between signature & source to know which data were deleted
+    deleted_signature_set = self.z_get_syncml_deleted_gid_list(
+      signature_path=self.getSearchablePath(),
+      source_path=self.getSearchableSourcePath())
+
+    syncml_logger.info("\t---> delete signature are %r" % (len(deleted_signature_set)))
+    for r in deleted_signature_set:
+      syncml_response.addDeleteCommand(gid=r.gid)
+      syncml_logger.info("\t\t---> %r" % (r.gid))
+    syncml_response.addFinal()
+
+    # Now send the message
+    final_activate_kw = {
+      'after_method_id' : ("processServerSynchronization",
+                           "processClientSynchronization"),
+      'priority' :ACTIVITY_PRIORITY + 1,
+      'tag' : "%s_delete" %(self.getRelativeUrl(),)
+      }
+    syncml_logger.info("Sending final message for modificationson on %s"
+                            % (self.getRelativeUrl(),))
+    self.activate(**final_activate_kw).sendMessage(xml=str(syncml_response))
 
   def getSearchablePath(self):
     return "%s%%" %(self.getPath().replace('_', '\_'),)
@@ -668,40 +697,13 @@ class SyncMLSubscription(XMLObject):
 
     finished = True
     conduit = self.getConduit()
+    portal = self.getPortalObject()
+    traverse = portal.restrictedTraverse
 
-    # Compare gid list to know which data were deleted
-    source_gid_list = [x.gid for x in self.z_get_syncml_gid_list(
-      strict_min_gid=None,
-      min_gid=min_gid,
-      max_gid=max_gid,
-      path =self.getSearchableSourcePath(),
-      limit=None)]
+    # Check deletion now ?
+    if portal.portal_preferences.getPreferredCheckDeleteAtEnd() is False:
+      raise NotImplementedError
 
-    src = self.z_get_syncml_gid_list(
-      src__=1,
-      strict_min_gid=None,
-      min_gid=min_gid,
-      max_gid=max_gid,
-      path = self.getSearchablePath(),
-      limit=None)
-
-    syncml_logger.info("source %r" % (src,))
-    signature_list = [x.gid for x in self.z_get_syncml_gid_list(
-      strict_min_gid=None,
-      min_gid=min_gid,
-      max_gid=max_gid,
-      path = self.getSearchablePath(),
-      limit=None)]
-
-    signature_set = set(signature_list)
-    source_gid_set = set(source_gid_list) # XXX get it with mysql
-    deleted_signature_set = signature_set - source_gid_set
-    syncml_logger.info("\t---> delete signature are %r from %r - %r"
-                       % (deleted_signature_set, signature_set, source_gid_set))
-    for gid in deleted_signature_set:
-      syncml_response.addDeleteCommand(gid=gid)
-
-    traverse = self.getPortalObject().restrictedTraverse
     object_list = [traverse(x.path) for x in self.z_get_syncml_path_list(
       min_gid=min_gid,
       max_gid=max_gid,
@@ -1170,7 +1172,6 @@ class SyncMLSubscription(XMLObject):
       conflict_list.extend(signature.getConflictList())
     return conflict_list
 
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'indexSourceData')
   def indexSourceData(self, client=False):
@@ -1178,6 +1179,8 @@ class SyncMLSubscription(XMLObject):
     Index source data into mysql for ensemble comparison
     This depends on synchronization type
     """
+    # XXX Must check & index signature also (check lenght of BTree against
+    # lenght of data in sql
     if (client and self.getSyncmlAlertCode() not in \
        ("one_way_from_server", "refresh_from_server_only")) or \
        (not client and self.getSyncmlAlertCode() not in \

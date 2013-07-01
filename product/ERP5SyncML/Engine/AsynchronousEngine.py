@@ -261,8 +261,12 @@ class SyncMLAsynchronousEngine(EngineMixin):
       activity_count=pref.getPreferredRetrievalActivityCount(),
       )
     # then send the final message of this sync part
-    subscription.activate(after_tag=tag,
-                          priority=ACTIVITY_PRIORITY+1)._sendFinalMessage()
+    if pref.getPreferredCheckDeleteAtEnd():
+      subscription.activate(after_tag=tag,
+                          priority=ACTIVITY_PRIORITY+1).getDeletedSyncMLData()
+    else:
+      subscription.activate(after_tag=tag,
+                            priority=ACTIVITY_PRIORITY+1)._sendFinalMessage()
     return True
 
 

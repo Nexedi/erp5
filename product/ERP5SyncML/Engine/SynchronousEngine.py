@@ -86,9 +86,7 @@ class SyncMLSynchronousEngine(EngineMixin):
         syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
       if finished:
         # Add deleted objets
-        #subscription._getDeletedData(syncml_response=syncml_response)
-        # Notify that all modifications were sent
-        syncml_response.addFinal()
+        subscription.getDeletedSyncMLData(syncml_response=syncml_response)
         # Will then start processing sync commands from server
         subscription.processSyncRequest()
 
@@ -207,8 +205,7 @@ class SyncMLSynchronousEngine(EngineMixin):
                                                min_gid=None, max_gid=None)
         syncml_logger.info("-> Server sendind data, finished %s" % (finished,))
         if finished:
-          #subscriber._getDeletedData(syncml_response=syncml_response)
-          syncml_response.addFinal()
+          subscriber.getDeletedSyncMLData(syncml_response=syncml_response)
           subscriber.waitNotifications()
           # Do not go into finished here as we must wait for
           # notifications from client
