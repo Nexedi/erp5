@@ -193,9 +193,17 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       pmc_init_of(subclass)
 
   def setupSecurity(cls):
+    apply_security_function = getattr(cls, '_applyAllStaticSecurity', None)
+    if apply_security_function:
+      apply_security_function()
+
     # note that after this call the 'security' attribute will be gone.
     InitializeClass(cls)
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
+      apply_security_function = getattr(cls, '_applyAllStaticSecurity', None)
+      if apply_security_function:
+        apply_security_function()
+
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
