@@ -56,7 +56,7 @@ path</string> </value>
 
 BEGIN\n
 <dtml-var sql_delimiter>\n
-SELECT path \n
+SELECT path, gid, data \n
 FROM syncml\n
 WHERE\n
   path like <dtml-sqlvar path type="string">\n
