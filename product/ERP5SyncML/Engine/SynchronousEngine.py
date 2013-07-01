@@ -80,13 +80,16 @@ class SyncMLSynchronousEngine(EngineMixin):
                                                "refresh_from_server_only"):
         # We only get data from server
         finished = True
+        syncml_response.addFinal()
       else:
         finished = subscription._getSyncMLData(syncml_response=syncml_response,
                                                min_gid=None, max_gid=None)
-        syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
+        if finished:
+          # Delete message will contain final tag
+          subscription.getDeletedSyncMLData(syncml_response=syncml_response)
+
+      syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
       if finished:
-        # Add deleted objets
-        subscription.getDeletedSyncMLData(syncml_response=syncml_response)
         # Will then start processing sync commands from server
         subscription.processSyncRequest()
 
@@ -200,12 +203,16 @@ class SyncMLSynchronousEngine(EngineMixin):
                                                "refresh_from_client_only"):
           # We only get data from client
           finished = True
+          syncml_response.addFinal()
         else:
           finished = subscriber._getSyncMLData(syncml_response=syncml_response,
                                                min_gid=None, max_gid=None)
+          if finished:
+            # Delete message will contain final tag
+            subscriber.getDeletedSyncMLData(syncml_response=syncml_response)
+
         syncml_logger.info("-> Server sendind data, finished %s" % (finished,))
         if finished:
-          subscriber.getDeletedSyncMLData(syncml_response=syncml_response)
           subscriber.waitNotifications()
           # Do not go into finished here as we must wait for
           # notifications from client
