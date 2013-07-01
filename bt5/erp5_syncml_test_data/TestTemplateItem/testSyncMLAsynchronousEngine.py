@@ -48,6 +48,8 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     This is ran before anything, used to set the environment
     """
     self.sync_tool = self.portal.portal_synchronizations
+    self.portal.z_drop_syncml()
+    self.portal.z_create_syncml()
     # here, you can create the categories and objects your test will depend on
 
   def _initSyncModule(self):
