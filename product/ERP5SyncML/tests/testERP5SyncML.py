@@ -44,7 +44,6 @@ from Products.ERP5SyncML.Document import SyncMLSubscription
 from Products.ERP5SyncML.tests.testERP5SyncMLMixin import TestERP5SyncMLMixin \
      as TestMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from _mysql_exceptions import OperationalError
 
 class TestERP5SyncMLMixin(TestMixin):
 
