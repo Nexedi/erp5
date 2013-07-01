@@ -168,6 +168,22 @@ class SyncMLSubscription(XMLObject):
                         **method_kw)
     return result_count
 
+  security.declarePrivate('generateBaseResponse')
+  def generateBaseResponse(self, message_id=None):
+    """
+    Return a message containing default headers
+    """
+    if not message_id:
+      message_id=self.getNextMessageId(),
+    syncml_response = SyncMLResponse()
+    syncml_response.addHeader(
+      session_id=self.getSessionId(),
+      message_id=message_id,
+      target=self.getUrlString(),
+      source=self.getSubscriptionUrlString())
+    syncml_response.addBody()
+    return syncml_response
+
   security.declarePrivate('getSearchableSourcePath')
   def getSearchableSourcePath(self):
     """
@@ -183,25 +199,43 @@ class SyncMLSubscription(XMLObject):
     """
     # Build Message
     syncml_response = SyncMLResponse()
-    # XXX Make a generic method that already exists in engines
-    syncml_response.addHeader(
-      session_id=self.getSessionId(),
-      message_id=message_id,
-      target=self.getUrlString(),
-      source=self.getSubscriptionUrlString())
-    syncml_response.addBody()
-
+    syncml_response = self.generateBaseResponse(message_id)
     self._getSyncMLData(
       syncml_response=syncml_response,
       min_gid=min_gid,
       max_gid=max_gid,
       )
-
     # Send the message in activity to prevent recomputation of data in case of
     # transport failure
     # activate_kw["group_method_id"] = None
     # activate_kw["group_method_cost"] = .05
     self.activate(**activate_kw).sendMessage(xml=str(syncml_response))
+
+  security.declarePrivate('applySyncCommand')
+  def applySyncCommand(self, response_message_id, activate_kw, **kw):
+    """
+    This methods is intented to be called by asynchronous engine in activity to
+    apply sync commands for a subset of data
+    """
+    # Build Message
+    if response_message_id:
+      syncml_response = self.generateBaseResponse()
+      syncml_response.addBody()
+    else:
+      syncml_response = None
+
+    self._applySyncCommand(syncml_response=syncml_response, **kw)
+
+    # Send the message in activity to prevent recomputing data in case of
+    # transport failure
+    if syncml_response:
+      syncml_logger("---- %s sending %s notifications of sync"
+                    % (self.getTitle(),
+                       syncml_response.sync_confirmation_counter))
+      self.activate(activity="SQLQueue",
+                    # group_method_id=None,
+                    # group_method_cost=.05,
+                    tag=activate_kw).sendMessage(xml=str(syncml_response))
 
 
   security.declarePrivate('getAndActivate')
@@ -364,14 +398,14 @@ class SyncMLSubscription(XMLObject):
     Browse the list of sync command received, apply them and generate answer
     """
     for action in syncml_request.sync_command_list:
-      self.applySyncCommand(
+      self._applySyncCommand(
         action=action,
         request_message_id=syncml_request.header["message_id"],
         syncml_response=syncml_response,
         simulate=simulate)
 
   security.declarePrivate('applySyncCommand')
-  def applySyncCommand(self, action, request_message_id, syncml_response,
+  def _applySyncCommand(self, action, request_message_id, syncml_response,
                        simulate=False):
     """
     Apply a sync command received
@@ -602,12 +636,7 @@ class SyncMLSubscription(XMLObject):
     Send an empty message containing the final tag to notify the end of
     the "sending_modification" stage of the synchronization
     """
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=self.getSessionId(),
-      message_id=self.getNextMessageId(),
-      target=self.getUrlString(),
-      source=self.getSubscriptionUrlString())
+    syncml_response = self.generateBaseResponse()
     syncml_response.addBody()
     syncml_response.addFinal()
 

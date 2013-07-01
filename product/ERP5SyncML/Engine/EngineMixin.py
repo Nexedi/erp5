@@ -46,15 +46,6 @@ class EngineMixin(object):
 
   security = ClassSecurityInfo()
 
-  def _generateBaseResponse(self, subscription):
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=subscription.getSessionId(),
-      message_id=subscription.getNextMessageId(),
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString())
-    syncml_response.addBody()
-    return syncml_response
 
   security.declarePrivate('_readStatusList')
   def _readStatusList(self, syncml_request, domain, syncml_response=None,
@@ -83,7 +74,7 @@ class EngineMixin(object):
                                         status['authentication_type']))
           # XXX Not working To Review !
           raise NotImplementedError("Adding credentials")
-          syncml_response = self._generateBaseResponse(domain)
+          syncml_response = domain.generateBaseResponse()
           syncml_response.addCredentialMessage(domain)
           return syncml_response
         elif status['status_code'] == \

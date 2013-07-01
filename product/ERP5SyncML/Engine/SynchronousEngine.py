@@ -29,7 +29,6 @@ from logging import getLogger
 
 from Products.ERP5SyncML.Engine.EngineMixin import EngineMixin
 from Products.ERP5SyncML.SyncMLConstant import SynchronizationError
-from Products.ERP5.ERP5Site import getSite
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -55,7 +54,7 @@ class SyncMLSynchronousEngine(EngineMixin):
       # Must check what server tell about database synchronization
       # and update the mode if required
 
-    syncml_response = self._generateBaseResponse(subscription)
+    syncml_response = subscription.generateBaseResponse()
 
     # Read & apply status about databases & synchronizations
     try:
@@ -150,7 +149,7 @@ class SyncMLSynchronousEngine(EngineMixin):
 
       # Apply command & send modifications
       # XXX This can be called on subscription instead
-      syncml_response = self._generateBaseResponse(subscriber)
+      syncml_response = subscriber.generateBaseResponse()
 
       # Apply status about object send & synchronized if any
       self._readStatusList(syncml_request, subscriber, syncml_response, True)

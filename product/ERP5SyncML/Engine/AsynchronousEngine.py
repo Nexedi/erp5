@@ -75,7 +75,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
       if subscription.getSyncmlAlertCode() in ("one_way_from_server",
                                                "refresh_from_server_only"):
         # We only get data from server
-        syncml_response = self._generateBaseResponse(subscription)
+        syncml_response = subscription.generateBaseResponse()
         syncml_response.addFinal()
       else:
         # Make sure it is launched after indexation step
@@ -102,7 +102,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
                            % (len(syncml_request.sync_command_list)))
       if syncml_request.isFinal:
         if not syncml_response:
-          syncml_response = self._generateBaseResponse(subscription)
+          syncml_response = subscription.generateBaseResponse()
         # We got and process all sync command from server
         # notify it that all modifications were applied
         syncml_response.addFinal()
@@ -231,7 +231,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
           # Server has no modification to send to client, return final message
           syncml_logger.info("X-> Server sending final message")
           if not syncml_response:
-            syncml_response = self._generateBaseResponse(subscriber)
+            syncml_response = subscriber.generateBaseResponse()
           syncml_response.addFinal()
 
       if subscriber.getSynchronizationState() == "finished":
@@ -280,9 +280,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
       response_id_list = [None for x in
                           xrange(len(syncml_request.sync_command_list))]
     split = getSite().portal_preferences.getPreferredSyncActionPerActivityCount()
-    if not split:
+    if not split:  # We do not use activities
       if send_response:
-        syncml_response = self._generateBaseResponse(subscription)
+        syncml_response = subscription.generateBaseResponse()
       else:
         syncml_response = None
       subscription.applyActionList(syncml_request, syncml_response)
@@ -291,10 +291,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
           activity="SQLQueue",
           priority=ACTIVITY_PRIORITY,
           tag=subscription.getRelativeUrl()).sendMessage(xml=str(syncml_response))
-
     else:
       # XXX For now always split by one
-      activate = subscription.getPortalObject().portal_synchronizations.activate
+      activate = subscription.activate
       activate_kw = {
         "activity" :"SQLQueue",
         "priority" : ACTIVITY_PRIORITY,
@@ -305,10 +304,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
       for action in syncml_request.sync_command_list:
         syncml_logger.info("---> launch action in activity %s" %(action,))
         activate(**activate_kw).applySyncCommand(
-          subscription_path=subscription.getRelativeUrl(),
           response_message_id=response_id_list.pop(),
           activate_kw=activate_kw,
           action=action,
           request_message_id=syncml_request.header["message_id"],
           simulate=False)
-        # XXX Response is not send here
+        # Response is sent by the activity

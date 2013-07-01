@@ -402,42 +402,4 @@ class SynchronizationTool(BaseTool):
 
     return str(syncml_response)
 
-
-  # As engines are not zodb objects, the tool acts as a placeholder for methods
-  # that need to be called in activities
-  def applySyncCommand(self, subscription_path, response_message_id,
-                       activate_kw, **kw):
-    """
-    This methods is intented to be called by asynchronous engine in activity to
-    apply sync commands for a subset of data
-    """
-    subscription = self.restrictedTraverse(subscription_path)
-    assert subscription is not None, "Impossible to find subscription %s" \
-        % (subscription_path)
-    # Build Message
-    if response_message_id:
-      syncml_response = SyncMLResponse()
-      syncml_response.addHeader(
-        session_id=subscription.getSessionId(),
-        message_id=response_message_id,
-        target=subscription.getUrlString(),
-        source=subscription.getSubscriptionUrlString())
-      syncml_response.addBody()
-    else:
-      syncml_response = None
-
-    subscription.applySyncCommand(syncml_response=syncml_response, **kw)
-
-    # Send the message in activity to prevent recomputing data in case of
-    # transport failure
-    if syncml_response:
-      syncml_logger("---- %s sending %s notifications of sync"
-                    % (subscription.getTitle(),
-                       syncml_response.sync_confirmation_counter))
-      subscription.activate(activity="SQLQueue",
-                            # group_method_id=None,
-                            # group_method_cost=.05,
-                            tag=activate_kw).sendMessage(xml=str(syncml_response))
-
-
 InitializeClass(SynchronizationTool)
