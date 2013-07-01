@@ -28,6 +28,7 @@
 ##############################################################################
 
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
+from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -1405,6 +1406,7 @@ class PathTemplateItem(ObjectTemplateItem):
 
     p = context.getPortalObject()
     portal_type_role_list_len_dict = {}
+    update_dict = defaultdict(list)
     for path in self._objects:
       obj = p.unrestrictedTraverse(path)
 
@@ -1429,10 +1431,17 @@ class PathTemplateItem(ObjectTemplateItem):
             len(p.portal_types[portal_type].getRoleInformationList())
 
       if portal_type_role_list_len_dict[portal_type]:
-        p.portal_types[portal_type].updateLocalRolesOnDocument(obj)
-        LOG("BusinessTemplate", INFO,
-            "Updated Local Roles for '%s' (%s)" % (portal_type,
-                                                   obj.getRelativeUrl()))
+        update_dict[portal_type].append(obj)
+    if update_dict:
+      def updateLocalRolesOnDocument():
+        for portal_type, obj_list in update_dict.iteritems():
+          update = p.portal_types[portal_type].updateLocalRolesOnDocument
+          for obj in obj_list:
+            update(obj)
+            LOG("BusinessTemplate", INFO,
+                "Updated Local Roles for '%s' (%s)"
+                % (portal_type, obj.getRelativeUrl()))
+      transaction.get().addBeforeCommitHook(updateLocalRolesOnDocument)
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
