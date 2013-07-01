@@ -62,32 +62,34 @@ class ComponentTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, *args, **kwargs):
+  @classmethod
+  def _applyAllStaticSecurity(cls):
     """
-    Except 'Access *', 'View*' and 'WebDAV' permissions (Acquired) and 'Reset
-    dynamic classes' (Manager, required to reset Components), everything
-    requires Developer Role.
+    Apply static security on portal_components to ensure that nobody can
+    change Permissions, only 'ghost' Developer Role has Permissions to
+    add/modify/delete Components. Also, make these permissions read-only
+    thanks to 'property'.
 
-    Another solution would be to load it from XML as it was previously done,
-    but from a security point of view, it's better to forbid everything and
-    allows only some.
-
-    XXX-arnau: Really all 'Access *' and 'View*'? nothing else?
+    cls is erp5.portal_type.Component Tool and not this class as this function
+    is called on Portal Type class when loading Componet Tool Portal Type
+    class
     """
-    obj = BaseTool.__init__(self, *args, **kwargs)
-    for permission_tuple in self.ac_inherited_permissions(1):
-      name = permission_tuple[0]
-      value = permission_tuple[1]
-      if name == 'Reset dynamic classes':
-        p = Permission(name, value, self)
-        p.setRoles(('Manager',))
-      elif not (name.startswith('Access ') or
-                name.startswith('View') or
-                name.startswith('WebDAV')):
-        p = Permission(name, value, self)
-        p.setRoles(('Developer',))
+    # XXX-Cosmetic: From Zope >= 2.13, getPermissions() can be used instead of
+    # protected _registeredPermissions module attribute
+    from AccessControl.Permission import _registeredPermissions, pname
+    for permission_name in _registeredPermissions:
+      if permission_name == 'Reset dynamic classes':
+        permission_function = lambda self: ('Manager',)
+      elif permission_name in ('Change permissions', 'Define permissions'):
+        permission_function = lambda self: ()
+      elif not (permission_name.startswith('Access ') or
+                permission_name.startswith('View') or
+                permission_name.startswith('WebDAV')):
+        permission_function = lambda self: ('Developer',)
+      else:
+        continue
 
-    return obj
+      setattr(cls, pname(permission_name), property(permission_function))
 
   def _isBootstrapRequired(self):
     """
