@@ -2805,7 +2805,8 @@ class CatalogError(Exception): pass
 from Query.Query import Query as _Query
 from Query.SimpleQuery import SimpleQuery
 from Query.ComplexQuery import ComplexQuery
-from Query.AutoQuery import AutoQuery as Query
+from Query.AutoQuery import AutoQuery
+Query = AutoQuery
 
 def NegatedQuery(query):
   return ComplexQuery(query, logical_operator='not')
