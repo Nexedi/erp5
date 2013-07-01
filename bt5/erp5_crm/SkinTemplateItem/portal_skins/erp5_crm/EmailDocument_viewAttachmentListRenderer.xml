@@ -36,16 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="information_list here/getAttachmentInformationList | python:\n
-    [{\'To\': \'erp5-report@erp5.org\', \'uid\': \'part_0\', \'index\': 0}, \n
-     {\'index\': 2, \'uid\': \'part_2\', \'Content-Transfer-Encoding\': \'7bit\', \'MIME-Version\': \'1.0\'}, \n
-     {\'index\': 3, \'uid\': \'part_3\', \'Content-Disposition\': \'inline\', \'Content-Transfer-Encoding\': \'7bit\', \'MIME-Version\': \'1.0\'}]">\n
-\n
+<tal:block tal:define="information_list here/getAttachmentInformationList">\n
   <ul>\n
     <li tal:repeat="information information_list">\n
-      <tal:block tal:condition="python:1">\n
-        <a tal:content="information/file_name | information/uid" tal:attributes="href python:\'getAttachmentData?index:int=%s\' % information[\'index\']"/>\n
-      </tal:block>\n
+      <a tal:content="information/filename | information/uid" tal:attributes="href python:\'getAttachmentData?index:int=%s\' % information[\'index\']"/>\n
+      (<tal:block tal:content="information/content_type" />)\n
     </li>\n
   </ul>\n
 </tal:block>
