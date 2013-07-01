@@ -176,14 +176,41 @@ class SyncMLSubscription(XMLObject):
     """
     return "%s%%" % (self.getSourceValue().getPath().replace("_","\_"),)
 
+  def sendSyncCommand(self, min_gid, max_gid, message_id, activate_kw):
+    """
+    This methods is intented to be called by asynchronous engine in activity to
+    send sync commands for a subset of data
+    """
+    # Build Message
+    syncml_response = SyncMLResponse()
+    # XXX Make a generic method that already exists in engines
+    syncml_response.addHeader(
+      session_id=self.getSessionId(),
+      message_id=message_id,
+      target=self.getUrlString(),
+      source=self.getSubscriptionUrlString())
+    syncml_response.addBody()
+
+    self._getSyncMLData(
+      syncml_response=syncml_response,
+      min_gid=min_gid,
+      max_gid=max_gid,
+      )
+
+    # Send the message in activity to prevent recomputation of data in case of
+    # transport failure
+    # activate_kw["group_method_id"] = None
+    # activate_kw["group_method_cost"] = .05
+    self.activate(**activate_kw).sendMessage(xml=str(syncml_response))
+
+
   security.declarePrivate('getAndActivate')
-  def getAndActivate(self, callback, method_kw, activate_kw, **kw):
+  def getAndActivate(self, callback, activate_kw, **kw):
     """
     This methods is called by the asynchronous engine to split activity
     generation into activities.
 
     callback : method to call in activity
-    method_kw : callback's parameters
     activate_kw : activity parameters to pass to activate call
     kw : any parameter getAndActivate can required if it calls itself
 
@@ -223,13 +250,13 @@ class SyncMLSubscription(XMLObject):
         syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
                            (kw["min_gid"],))
         self.activate(**next_kw).getAndActivate(
-          callback, method_kw, activate_kw, **kw)
+          callback, activate_kw, **kw)
         generated_other_activity = True
 
       message_id_list = self.getNextMessageIdList(id_count=result_count)
       # XXX maybe (result_count / packet_size) + 1 instead of result_count
       message_id_list.reverse()  # We pop each id in the following loop
-      activate = self.getPortalObject().portal_synchronizations.activate
+      activate = self.activate
       callback_method = getattr(activate(**activate_kw), callback)
       if generated_other_activity:
         #  XXX Can be factorized with following code
@@ -496,8 +523,8 @@ class SyncMLSubscription(XMLObject):
       elif action['command'] == 'Delete':
         status_code="success"
         document = self.getDocumentFromGid(signature.getId())
-        syncml_logger.info("Deleting signature %s & doc %s" %(signature.getPath(),
-                                                              document.getPath()))
+        # syncml_logger.info("Deleting signature %s & doc %s" %(signature.getPath(),
+        #                                                       document.getPath()))
         path_list.remove(signature.getPath())
         if document is not None:
           # XXX Can't we get conflict ?

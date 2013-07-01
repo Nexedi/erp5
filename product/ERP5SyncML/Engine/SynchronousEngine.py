@@ -149,6 +149,7 @@ class SyncMLSynchronousEngine(EngineMixin):
         raise ValueError("Authentication failed, impossible to sync data")
 
       # Apply command & send modifications
+      # XXX This can be called on subscription instead
       syncml_response = self._generateBaseResponse(subscriber)
 
       # Apply status about object send & synchronized if any

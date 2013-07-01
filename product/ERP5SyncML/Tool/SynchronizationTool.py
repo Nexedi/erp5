@@ -440,37 +440,4 @@ class SynchronizationTool(BaseTool):
                             tag=activate_kw).sendMessage(xml=str(syncml_response))
 
 
-
-  def sendSyncCommand(self, gid_list, message_id, subscription_path,
-                      activate_kw, first_call=False, last_call=False):
-    """
-    This methods is intented to be called by asynchronous engine in activity to
-    send sync commands for a subset of data
-    """
-    subscription = self.restrictedTraverse(subscription_path)
-    assert subscription is not None, "Impossible to find subscription %s" \
-        % (subscription_path)
-    # Build Message
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=subscription.getSessionId(),
-      message_id=message_id,
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString())
-    syncml_response.addBody()
-
-    subscription._getSyncMLData(
-      syncml_response=syncml_response,
-      gid_list=gid_list,
-      first_call=first_call,
-      last_call=last_call,
-      )
-
-    # Send the message in activity to prevent recomputation of data in case of
-    # transport failure
-    # activate_kw["group_method_id"] = None
-    # activate_kw["group_method_cost"] = .05
-    subscription.activate(**activate_kw).sendMessage(xml=str(syncml_response))
-
-
 InitializeClass(SynchronizationTool)
