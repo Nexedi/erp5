@@ -30,6 +30,7 @@
 
 import unittest
 import time
+from DateTime import DateTime
 
 from Testing import ZopeTestCase
 from testDms import TestDocumentMixin
@@ -74,8 +75,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def getTitle(self):
     return "OOo Conversion Cache"
 
-  ## tests
-
   def test_image_conversion(self):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -114,8 +113,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     """
       Test Conversion Cache mechanism
     """
-    print '\nPersistent Cache Conversion'
-
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -130,13 +127,15 @@ class TestDocumentConversionCache(TestDocumentMixin):
       document.convert(format=format)
       self.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertEquals(DateTime().Date(), document.getConversionDate(format=format).Date())
+      self.assertTrue(document.getConversionMd5(format=format))
       self.assertTrue(document.getConversionSize(format=format))
     document.edit(title='Foo')
     self.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEquals(document.getConversionSize(format=format), 0)
+      self.assertRaises(KeyError, document.getConversionSize, format=format)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
@@ -147,11 +146,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertTrue(document.getConversionSize(format=format))
 
   def test_02_VolatileCacheConversionOfTempObject(self):
-    """
-      Test Conversion Cache mechanism
-    """
-    print '\nVolatile Cache Conversion of temp objects'
-
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file, temp_object=1)
@@ -166,13 +160,15 @@ class TestDocumentConversionCache(TestDocumentMixin):
       document.convert(format=format)
       self.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertEquals(DateTime().Date(), document.getConversionDate(format=format).Date())
+      self.assertTrue(document.getConversionMd5(format=format))
       self.assertTrue(document.getConversionSize(format=format))
     document.edit(title='Foo')
     self.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEqual(document.getConversionSize(format=format), 0)
+      self.assertRaises(KeyError, document.getConversionSize, format=format)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
@@ -183,11 +179,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertTrue(document.getConversionSize(format=format))
 
   def test_03_CacheConversionOfTempObjectIsNotMixed(self):
-    """
-      Test Conversion Cache mechanism
-    """
-    print '\nCache Conversion of temp objects is not mixed'
-
     filename1 = 'TEST-en-002.doc'
     filename2 = 'TEST-en-002.odt'
     file1 = makeFileUpload(filename1)
@@ -208,10 +199,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.tic()
 
   def test_04_PersistentCacheConversionWithFlare(self):
-    """
-      Test Conversion Cache mechanism
-    """
-    print '\nPersistent Cache Conversion with Flare'
     default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
     #old preferred value is still cached
@@ -239,7 +226,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format),
                                       'Cache Storage failed for %s' % (format))
-      self.assertEqual(document.getConversionSize(format=format), 0)
+      self.assertRaises(KeyError, document.getConversionSize, format=format)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
@@ -253,7 +240,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     """
       Test Conversion Cache return expected value with checksum
     """
-    print '\nCheck checksum in Conversion'
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -283,7 +269,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     """
     Check that md5 checksum is well updated when upload a file
     """
-    print '\nCheck checksum is updated'
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -302,7 +287,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
     """
     Check that key (based on path of document) support unauthorised chars
     """
-    print '\nCheck key (based on path) support unauthorised chars'
     default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
     #old preferred value is still cached
@@ -325,7 +309,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def test_08_check_conversion_cache_with_portal_document_type_list(self):
     """Check cache conversion for all Portal Document Types
     """
-    print '\nCheck cache conversion for all Portal Document Types'
     portal_type_list = list(self.portal.getPortalDocumentTypeList())
 
     if 'File' in portal_type_list:

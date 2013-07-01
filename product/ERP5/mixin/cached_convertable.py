@@ -28,6 +28,7 @@
 ##############################################################################
 
 from hashlib import md5
+from warnings import warn
 import string
 
 from Acquisition import aq_base
@@ -130,6 +131,7 @@ class CachedConvertableMixin:
       conversion_md5 = md5(size).hexdigest()
       size = len(size)
     elif isinstance(data, OFSImage):
+      warn('Passing an OFS.Image to setConversion is deprecated', stacklevel=1)
       cached_value = data
       conversion_md5 = md5(str(data.data)).hexdigest()
       size = len(data.data)
@@ -215,17 +217,19 @@ class CachedConvertableMixin:
     """
     """
     cached_dict = self._getConversionDataDict(**kw)
-    return cached_dict['mime'], cached_dict['data']
+    mime = cached_dict['mime']
+    data = cached_dict['data']
+    if isinstance(data, OFSImage):
+      data = data.data
+    if isinstance(data, Pdata):
+      data = str(data)
+    return mime, data
 
   security.declareProtected(Permissions.View, 'getConversionSize')
   def getConversionSize(self, **kw):
     """
     """
-    try:
-      return self._getConversionDataDict(**kw)['size']
-    except KeyError:
-      # If conversion doesn't exists return 0
-      return 0
+    return self._getConversionDataDict(**kw)['size']
 
   security.declareProtected(Permissions.View, 'getConversionDate')
   def getConversionDate(self, **kw):
