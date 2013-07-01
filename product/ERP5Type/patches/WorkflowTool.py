@@ -27,7 +27,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.CMFCore.utils import getToolByName
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
@@ -242,7 +242,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
             valid_criterion_dict=valid_criterion_dict)
   return worklist_set_dict.values(), metadata_dict
 
-def generateNestedQuery(priority_list, criterion_dict,
+def generateNestedQuery(getQuery, priority_list, criterion_dict,
                         possible_worklist_id_dict=None):
   """
   """
@@ -266,16 +266,17 @@ def generateNestedQuery(priority_list, criterion_dict,
         criterion_worklist_id_dict = worklist_id_dict
       if len(criterion_worklist_id_dict):
         subcriterion_query = generateNestedQuery(
+          getQuery=getQuery,
           priority_list=my_priority_list,
           criterion_dict=criterion_dict,
           possible_worklist_id_dict=criterion_worklist_id_dict)
         if subcriterion_query is not None:
-          query = Query(operator='IN',
+          query = getQuery(comparison_operator='IN',
                         **{my_criterion_id: criterion_value})
           if isinstance(criterion_value, ExclusionTuple):
             query = NegatedQuery(query)
             query = ComplexQuery(operator='OR',
-                      *(query, Query(**{my_criterion_id: None})))
+                      *(query, getQuery(**{my_criterion_id: None})))
           append(ComplexQuery(query, subcriterion_query, operator='AND'))
   else:
     possible_value_list = tuple()
@@ -296,20 +297,26 @@ def generateNestedQuery(priority_list, criterion_dict,
           possible_value_list += criterion_value
     value_query_list = []
     if len(possible_value_list):
-      query = Query(operator='IN', **{my_criterion_id: possible_value_list})
+      query = getQuery(
+        comparison_operator='IN',
+        **{my_criterion_id: possible_value_list}
+      )
       value_query_list.append(query)
     if len(impossible_value_list):
-      query = Query(operator='IN', **{my_criterion_id: impossible_value_list})
+      query = getQuery(
+        comparison_operator='IN',
+        **{my_criterion_id: impossible_value_list}
+      )
       query = NegatedQuery(query)
       query = ComplexQuery(operator='OR',
-                *(query, Query(**{my_criterion_id: None})))
+                *(query, getQuery(**{my_criterion_id: None})))
       value_query_list.append(query)
     append(ComplexQuery(operator='AND', *value_query_list))
   if len(query_list):
     return ComplexQuery(operator='OR', *query_list)
   return None
 
-def getWorklistListQuery(grouped_worklist_dict):
+def getWorklistListQuery(getQuery, grouped_worklist_dict):
   """
     Return a tuple of 3 value:
     - a select_expression with a count(*) and all columns used in
@@ -335,8 +342,11 @@ def getWorklistListQuery(grouped_worklist_dict):
       criterion_value_to_worklist_dict[worklist_id] = None
   total_criterion_id_list = sorted(total_criterion_id_dict, key=lambda y: max(
     len(x) for x in total_criterion_id_dict[y].itervalues()))
-  query = generateNestedQuery(priority_list=total_criterion_id_list,
-                              criterion_dict=total_criterion_id_dict)
+  query = generateNestedQuery(
+    getQuery=getQuery,
+    priority_list=total_criterion_id_list,
+    criterion_dict=total_criterion_id_dict,
+  )
   assert query is not None
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   return (total_criterion_id_list, query)
@@ -499,9 +509,16 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
             security_uid_dict.pop(ignored_security_uid_parameter)
           return security_uid_dict, role_column_dict, local_role_column_dict
         select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
+        # Prevent catalog from trying to join
+        getQuery = SimpleQuery
       else:
         search_result = portal_catalog.unrestrictedSearchResults
         select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
+        # Let catalog join as needed
+        getQuery = lambda comparison_operator=None, **kw: AutoQuery(
+          operator=comparison_operator,
+          **kw
+        )
       worklist_result_dict = {}
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
@@ -519,7 +536,10 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
         (total_criterion_id_list, query) = \
-          getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+          getWorklistListQuery(
+            getQuery=getQuery,
+            grouped_worklist_dict=grouped_worklist_dict,
+          )
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
         # If required mapping method is not present on the query, assume it
@@ -651,7 +671,10 @@ def WorkflowTool_refreshWorklistCache(self):
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list
         (total_criterion_id_list, query) = \
-          getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+          getWorklistListQuery(
+            getQuery=SimpleQuery,
+            grouped_worklist_dict=grouped_worklist_dict,
+          )
         for criterion_id in total_criterion_id_list:
           assert criterion_id in table_column_id_set
         for security_column_id in security_column_id_set:
