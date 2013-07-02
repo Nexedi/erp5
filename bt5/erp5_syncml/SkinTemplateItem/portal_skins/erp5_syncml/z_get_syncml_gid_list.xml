@@ -56,8 +56,6 @@ limit</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-BEGIN\n
-<dtml-var sql_delimiter>\n
 SELECT \n
   gid\n
 FROM syncml\n
@@ -76,8 +74,7 @@ ORDER BY gid\n
 <dtml-if limit>\n
   LIMIT <dtml-var limit>\n
 </dtml-if>\n
-<dtml-var sql_delimiter>\n
-COMMIT
+
 
 ]]></string> </value>
         </item>

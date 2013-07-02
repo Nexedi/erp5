@@ -54,8 +54,6 @@ path</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-BEGIN\n
-<dtml-var sql_delimiter>\n
 SELECT path, gid, data \n
 FROM syncml\n
 WHERE\n
@@ -66,8 +64,7 @@ WHERE\n
 <dtml-if max_gid>\n
   AND gid <= <dtml-sqlvar max_gid type="string">\n
 </dtml-if>\n
-<dtml-var sql_delimiter>\n
-COMMIT
+
 
 ]]></string> </value>
         </item>

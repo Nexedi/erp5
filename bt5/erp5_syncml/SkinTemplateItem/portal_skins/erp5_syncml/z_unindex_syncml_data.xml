@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>cmf_activity_sql_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -22,13 +22,10 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-BEGIN\n
-<dtml-var sql_delimiter>\n
 DELETE FROM syncml\n
 WHERE\n
   path like <dtml-sqlvar path type="string">\n
-<dtml-var sql_delimiter>\n
-COMMIT
+
 
 ]]></string> </value>
         </item>
