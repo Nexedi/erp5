@@ -8,24 +8,21 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Default state of signature</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>not_synchronized</string> </value>
+            <value> <string>no_conflict</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Not Synchronized</string> </value>
+            <value> <string>No Conflict</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
                 <string>change_to_conflict</string>
-                <string>change_to_partial</string>
-                <string>do_sync</string>
-                <string>synchronize</string>
               </tuple>
             </value>
         </item>

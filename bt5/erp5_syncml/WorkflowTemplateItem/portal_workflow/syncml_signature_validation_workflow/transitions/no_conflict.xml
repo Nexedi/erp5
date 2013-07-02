@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Reset to default state</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,11 +38,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>do_sync</string> </value>
+            <value> <string>no_conflict</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>syncing</string> </value>
+            <value> <string>no_conflict</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>No Conflict</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
