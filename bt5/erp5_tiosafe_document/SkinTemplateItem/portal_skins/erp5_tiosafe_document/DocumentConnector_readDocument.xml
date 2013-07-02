@@ -127,41 +127,42 @@ for table_name in spreadsheet_list.keys():\n
     property_map[column_index] = column_id\n
     column_index += 1\n
   # This path_element_list help us to reconstruct the absolute path\n
-  context.log("line_id = %r" %(line_id))\n
   if line_id is not None:\n
     line_list = [sheet[int(line_id)-1],]\n
     line_index = int(line_id)\n
   else:\n
     line_list = sheet[1:]\n
     line_index = 2\n
-  context.log(\'line_list = %s\' %(line_list))\n
+  line_list = line_list[:limit]\n
   for line in line_list:\n
+    if id_list and str(line_index) not in id_list:\n
+      continue\n
     # Exclude empty lines\n
-    context.log("\\tgot line", line)\n
     if line.count(\'\') + line.count(None) == len(line):\n
       continue\n
 \n
     # Prefetch line datas\n
     line_data = {"id" : str(line_index)}\n
-    path_defined = []\n
-    for cell_index, cell in enumerate(line):\n
-      # Get the property corresponding to the cell data\n
-      property_id = property_map[cell_index]\n
-      if cell is not None and cell.strip()==\'\':\n
-        # empty string is NOT a valid identifier\n
-        cell=None\n
-      if not cell:\n
-        continue\n
-      if line_data.has_key(property_id):\n
-        if isinstance(line_data[property_id], str):\n
-          cell_value_list = [line_data[property_id], cell]\n
-          line_data[property_id] = cell_value_list\n
+    if not id_only:\n
+      path_defined = []\n
+      for cell_index, cell in enumerate(line):\n
+        # Get the property corresponding to the cell data\n
+        property_id = property_map[cell_index]\n
+        if cell is not None and cell.strip()==\'\':\n
+          # empty string is NOT a valid identifier\n
+          cell=None\n
+        if not cell:\n
+          continue\n
+        if line_data.has_key(property_id):\n
+          if isinstance(line_data[property_id], str):\n
+            cell_value_list = [line_data[property_id], cell]\n
+            line_data[property_id] = cell_value_list\n
+          else:\n
+            line_data[property_id].append(cell)\n
         else:\n
-          line_data[property_id].append(cell)\n
-      else:\n
-        line_data[property_id] = cell\n
-      # Proceed to next cell\n
-      cell_index += 1\n
+          line_data[property_id] = cell\n
+        # Proceed to next cell\n
+        cell_index += 1\n
     line_index += 1\n
     spreadsheet_line_list.append(line_data)\n
 \n
@@ -172,7 +173,7 @@ return spreadsheet_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference, table, line_id=None</string> </value>
+            <value> <string>reference, table, limit, id_only, line_id=None, id_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
