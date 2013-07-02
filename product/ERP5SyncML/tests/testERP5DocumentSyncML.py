@@ -318,12 +318,12 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     for document in document_server.objectValues():
       state_list = self.getSynchronizationState(document)
       for state in state_list:
-        self.assertEqual(state[1], 'synchronized')
+        self.assertEqual(state[1], 'no_conflict')
     document_client1 = self.getDocumentClient1()
     for document in document_client1.objectValues():
       state_list = self.getSynchronizationState(document)
       for state in state_list:
-        self.assertEqual(state[1], 'synchronized')
+        self.assertEqual(state[1], 'no_conflict')
     # Check for each signature that the tempXML is None
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
       for m in sub.contentValues():
@@ -420,13 +420,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
   def getTitle(self):
     return "ERP5 Document SyncML"
 
-  def setupPublicationAndSubscriptionIdGenerator(self):
-    portal_sync = self.getSynchronizationTool()
-    sub1 = portal_sync[self.sub_id1]
-    pub = portal_sync[self.pub_id]
-
   def checkSynchronizationStateIsConflict(self, portal_type='Text'):
-    portal_sync = self.getSynchronizationTool()
     document_server = self.getDocumentServer()
     for document in document_server.objectValues():
       if document.getId()==self.id1:
@@ -643,7 +637,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     recognize objects (because by default, getGid==getId. Here, we will see
     if it also works with a somewhat strange getGid
     """
-    self.setupPublicationAndSubscriptionIdGenerator()
     nb_document = self.createDocumentServerList()
     # This will test adding object
     self.synchronize(self.sub_id1)

@@ -115,7 +115,7 @@ class EngineMixin(object):
               'conflict_resolved_with_merge'):
             # We will have to apply the update, and we should not care
             # about conflicts, so we have to force the update
-            signature.drift()
+            signature.noConflict()
             signature.setForce(True)
             syncml_logger.error("\tObject merged %s" %
                                 (status['source'] or status['target']))
@@ -125,6 +125,8 @@ class EngineMixin(object):
                                            'conflict_resolved_with_client_command_winning')):
             syncml_logger.error("\tObject synchronized %s" %
                                 (status['source'] or status['target'],))
+            if signature.getValidationState() != "no_conflict":
+              signature.noConflict()
             signature.synchronize()
           elif status['status_code'] == resolveSyncmlStatusCode('chunk_accepted'):
             syncml_logger.info("Chunk was accepted for %s" % (object_gid,))

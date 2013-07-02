@@ -437,9 +437,6 @@ class SyncMLSubscription(XMLObject):
         if document is not None:
           signature.setReference(document.getPath())
 
-      elif signature.getValidationState() == 'synchronized':
-        # Reset status of signature synchronization
-        signature.drift()
       path_list.append(signature.getPath())
       force = signature.isForce()  # XXX-must check the use of this later
     else:
@@ -556,8 +553,8 @@ class SyncMLSubscription(XMLObject):
       elif action['command'] == 'Delete':
         status_code="success"
         document = self.getDocumentFromGid(signature.getId())
-        # syncml_logger.info("Deleting signature %s & doc %s" %(signature.getPath(),
-        #                                                       document.getPath()))
+        syncml_logger.info("Deleting signature %s & doc %s" %(signature.getPath(),
+                                                              document.getPath()))
         path_list.remove(signature.getPath())
         if document is not None:
           # XXX Can't we get conflict ?
@@ -578,7 +575,7 @@ class SyncMLSubscription(XMLObject):
       # Now update signature status regarding conflict list
       if action['command'] != "Delete" and signature:
         if len(conflict_list):
-          status_code="conflict"
+          status_code = "conflict"
           signature.changeToConflict()
           # Register the data received which generated the diff
           # XXX Why ?
@@ -589,8 +586,8 @@ class SyncMLSubscription(XMLObject):
         else:
           signature.setData(str(xml_document))
           signature.synchronize()
-        syncml_logger.debug("change state of signature to %s"
-                           % (signature.getValidationState(),))
+        syncml_logger.info("change state of signature to %s with %s"
+                           % (signature.getValidationState(), signature.getData()))
 
       if signature:
         # Generate status about the object synchronized
@@ -604,9 +601,8 @@ class SyncMLSubscription(XMLObject):
           message_ref=request_message_id)
 
     else:  # We want to retrieve more data
-      syncml_logger.info("we need to retrieve more data for %s" % (signature,))
-      if signature.getValidationState() != 'partial':
-        signature.changeToPartial()
+      syncml_logger.info("we need to retrieve more data for %s"
+                         % (signature.getRelativeUrl(),))
       signature.appendPartialData(incoming_data)
       # XXX Must check if size is present into the xml
       # if not, client might ask it to server with a 411 alert
@@ -683,6 +679,38 @@ class SyncMLSubscription(XMLObject):
   def getSearchablePath(self):
     return "%s%%" %(self.getPath().replace('_', '\_'),)
 
+
+  def _generateSyncCommand(self, action, signature, data_diff ,document_data, gid,
+                           conduit, syncml_response):
+    """
+    Generate a sync command for a given data
+    """
+    more_data = False
+    if signature:
+      if len(data_diff) > MAX_LEN and not self.getIsActivityEnabled():
+        # XXX-Aurel : I do not think splitting is working when running in activity
+        syncml_logger.info("data for %s too big, splitting..." %(signature.getPath(),))
+        more_data = True
+        data_diff, rest_string = cutXML(data_diff, MAX_LEN)
+        # Store the remaining data to send it later
+        signature.setPartialData(rest_string)
+        signature.setPartialAction(action)
+      else:
+        # The data will be copied in 'data' property once we get
+        # confirmation that the document was well synchronized
+        signature.setTemporaryData(document_data)
+
+    # Generate the message
+    syncml_logger.info("adding sync command %s for %s" %(action, gid))
+    syncml_response.addSyncCommand(
+      sync_command=action,
+      gid=gid,
+      data=data_diff,
+      more_data=more_data,
+      media_type=conduit.getContentType())
+    return more_data
+
+
   def _getSyncMLData(self, syncml_response, min_gid, max_gid):
     """
     Compare data from source with data stored in signature from previous
@@ -695,7 +723,6 @@ class SyncMLSubscription(XMLObject):
     """
     syncml_logger.info("getSyncMLData, min %s - max %r" % (min_gid, max_gid,))
 
-    finished = True
     conduit = self.getConduit()
     portal = self.getPortalObject()
     traverse = portal.restrictedTraverse
@@ -722,27 +749,25 @@ class SyncMLSubscription(XMLObject):
                             % (min_gid, max_gid))
 
     path_list = []
+    more_data = False
     for result in object_list:
+      # XXX We need a way to stop the loop when we reach a given packet size
       document_path = result.path
       gid = result.gid
       document_data = result.data
-      # XXX must find a better way to prevent sending
-      # no object due to a too small limit
       signature = self.getSignatureFromGid(gid)
-      more_data = False
       if signature:
         syncml_logger.info("signature is %s = %s" %(signature.getRelativeUrl(),
                                                     signature.getValidationState()))
+
+      if not document_data:
+        raise ValueError("No data for %s / %s" %(gid, document_path))
+
       # For the case it was never synchronized, we have to send everything
       if not signature or sync_all:
         # Either it is the first time we get this object
         # either the synchronization process required
         # to send every data again as if it was never done before
-        if not document_data:
-          # XXX Which case leads here ?
-          raise ValueError("No data for %s / %s" %(gid, document_path))
-          continue
-
         if create_signature:
           if not signature:
             signature = self.newContent(portal_type='SyncML Signature',
@@ -751,32 +776,41 @@ class SyncMLSubscription(XMLObject):
                                         temporary_data=document_data)
             syncml_logger.info("Created a signature %s for gid = %s, path %s"
                                 % (signature.getPath(), gid, document_path))
-          if len(document_data) > MAX_LEN:
-            syncml_logger.info("data too big, sending  multiple message")
-            more_data = True
-            finished = False
-            document_data, rest_string = cutXML(document_data, MAX_LEN)
-            # Store the remaining data to send it later
-            signature.setPartialData(rest_string)
-            signature.setPartialAction(ADD_ACTION)
-            signature.changeToPartial()
-          else:
-            # The data will be copied in 'data' property once we get
-            # confirmation that the document was well synchronized
-            signature.setTemporaryData(document_data)
-            signature.doSync()
-            syncml_logger.info("signature %s is syncing"
-                               % (signature.getRelativeUrl(),))
+        if signature:
+          path_list.append(signature.getPath())
+        more_data = self._generateSyncCommand(
+          action=ADD_ACTION,
+          signature=signature,
+          data_diff=document_data,
+          document_data=document_data,
+          gid=gid,
+          conduit=conduit,
+          syncml_response=syncml_response)
 
-        # Generate the message
+      elif signature.hasPartialData():
+        # Case of partially sent data
+        # XXX Cutting must be managed by conduit
+        # Here it is too specific to XML data
+        xml_string = signature.getFirstPdataChunk(MAX_LEN)
+        if signature.hasPartialData():
+          more_data = True
+        # We need to convert XML to a CDATA type to prevent collision
+        # with syncml's XML
+        document_data = etree.CDATA(xml_string.decode('utf-8'))
+        path_list.append(signature.getPath())
+        syncml_logger.info("adding partial sync command for %s" %(gid,))
         syncml_response.addSyncCommand(
-          sync_command=ADD_ACTION,
+          sync_command=signature.getPartialAction(),
           gid=gid,
           data=document_data,
           more_data=more_data,
           media_type=conduit.getContentType())
 
-      elif signature.getValidationState() in ('not_synchronized', 'synchronized',
+        if not more_data:
+          syncml_logger.info("signature %s is syncing from partial"
+                             % (signature.getRelativeUrl(),))
+
+      elif signature.getValidationState() in ('no_conflict',
                                               'conflict_resolved_with_merge'):
         # We don't have synchronized this object yet but it has a signature
         if signature.getValidationState() == 'conflict_resolved_with_merge':
@@ -784,17 +818,22 @@ class SyncMLSubscription(XMLObject):
           # Server can get confirmation of sync although it has not yet
           # send its data modification to the client
           # This must be checked against specifications
+          # Right now, this message will tell the other side to apply the
+          # diff without checking conflicts
+          # We then send the modifications
           syncml_response.addConfirmationMessage(
-            source_ref=signature.getId(),
+            source_ref=gid,
             sync_code='conflict_resolved_with_merge',
             command='Replace')
+
         syncml_logger.info("\tMD5 is %s for %s" %((signature.checkMD5(document_data)),
                                                    signature.getReference()))
         if not signature.checkMD5(document_data):
           # MD5 checksum tell there is a modification of the object
+          # XXX this diff generation must managed by the conduit
+          # we just need to have conduit.generateDocumentDiff(new_data, former_data)
           if conduit.getContentType() != 'text/xml':
             # If there is no xml, we re-send the whole object
-            # XXX this must be managed by conduit ?
             data_diff = document_data
           else:
             # Compute the diff
@@ -803,59 +842,30 @@ class SyncMLSubscription(XMLObject):
                                                          'gid', gid)
             data_diff = conduit.generateDiff(new_data=new_document,
                                              former_data=previous_document)
-
           if not data_diff:
             # MD5 Checksum can detect changes like <lang/> != <lang></lang>
             # but Diff generator will return no diff for it
             # in this case, no need to send diff
-            if signature.getValidationState() != "synchronized":
-              signature.synchronize()
-            syncml_logger.debug("signature %s is synchronized"
+            syncml_logger.info("\tFake diff, signature %s is synchronized"
                                % (signature.getRelativeUrl(),))
-            path_list.append(signature.getPath())
             continue
 
-          # Split data if necessary
-          if len(data_diff) > MAX_LEN:
-            syncml_logger.info("data too big, sending multiple messages")
-            more_data = True
-            finished = False
-            data_diff, rest_string = cutXML(data_diff, MAX_LEN)
-            signature.setPartialData(rest_string)
-            signature.setPartialAction(REPLACE_ACTION)
-            if signature.getValidationState() != 'partial':
-              signature.changeToPartial()
-            syncml_logger.info("signature %s is partial"
-                               % (signature.getRelativeUrl(),))
-          else:
-            # Store the new representation of the document
-            # It will be copy to "data" property once synchronization
-            # is confirmed
-            signature.setTemporaryData(document_data)
-            signature.doSync()
-            syncml_logger.debug("signature %s is syncing"
-                               % (signature.getRelativeUrl(),))
-
-          # Generate the command
-          syncml_logger.debug("will send Replace command with %s"
-                              % (data_diff,))
-          syncml_response.addSyncCommand(
-            sync_command=REPLACE_ACTION,
+          # Reindex modified document
+          path_list.append(signature.getPath())
+          syncml_logger.info("\tGot a diff for %s : %s" %(gid, data_diff))
+          more_data = self._generateSyncCommand(
+            action=REPLACE_ACTION,
+            signature=signature,
+            data_diff=data_diff,
+            document_data=document_data,
             gid=gid,
-            data=data_diff,
-            more_data=more_data,
-            media_type=conduit.getContentType())
-
-        elif signature.getValidationState() != 'synchronized':
-          # We should not have this case when we are in CONFLICT_MERGE
-          syncml_logger.debug("signature %s is synchronized"
-                             % (signature.getRelativeUrl(),))
-          signature.synchronize()
+            conduit=conduit,
+            syncml_response=syncml_response)
 
       elif signature.getValidationState() == \
           'conflict_resolved_with_client_command_winning':
         # We have decided to apply the update
-        # XXX previous_xml will be geXML instead of getTempXML because
+        # XXX previous_xml will be getXML instead of getTempXML because
         # some modification was already made and the update
         # may not apply correctly
         xml_update = signature.getPartialData()
@@ -875,47 +885,14 @@ class SyncMLSubscription(XMLObject):
         syncml_logger.debug("signature %s is synchronized"
                            % (signature.getRelativeUrl(),))
 
-      elif signature.getValidationState() == 'partial':
-        # Case of partially sent data
-        xml_string = signature.getPartialData()
-        # XXX Cutting must be managed by conduit
-        # Here it is too specific to XML data
-        if len(xml_string) > MAX_LEN:
-          syncml_logger.info("Remaining data too big, splitting it...")
-          more_data = True
-          finished = False
-          xml_string = signature.getFirstPdataChunk(MAX_LEN)
-        xml_string = etree.CDATA(xml_string.decode('utf-8'))
-
-        syncml_response.addSyncCommand(
-          sync_command=signature.getPartialAction(),
-          gid=gid,
-          data=xml_string,
-          more_data=more_data,
-          media_type=self.getContentType())
-
-        if not more_data:
-          signature.doSync()
-          syncml_logger.debug("signature %s is syncing"
-                             % (signature.getRelativeUrl(),))
-      elif signature.getValidationState() in ('syncing'):
-        raise ValueError("Must not get signature in %s state here, signature is %s"
-                         % (signature.getValidationState(),
-                            signature.getPath(),))
-
-      if signature:
-        path_list.append(signature.getPath())
-
-      if not more_data:
-        pass
-      else:
+      if more_data:
         syncml_logger.info("Splitting document")
         break
 
     self.SQLCatalog_indexSyncMLDocumentList(path_list)
-    syncml_logger.info("_getSyncMLData end with finished %s"
-                       % (finished,))
-    return finished
+    syncml_logger.info("_getSyncMLData end with more_data %s"
+                       % (more_data,))
+    return not more_data
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConduit')
