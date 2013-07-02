@@ -840,7 +840,7 @@ div.pdf-preview-navigation img.last{\n
 }\n
 \n
 .homebanner {\n
-  background: url(community_img/homebanner.jpg) no-repeat transparent;\n
+  background: url(km_img/homebanner.jpg) no-repeat transparent;\n
   color:#fff;\n
   text-shadow: 0 1px 0 #006686;\n
 }\n
@@ -852,18 +852,18 @@ div.pdf-preview-navigation img.last{\n
 .homebanner ul li {\n
   list-style-image: none;\n
   list-style-type: none;\n
-  background: url(community_img/bannerbullet.png) no-repeat transparent;\n
+  background: url(km_img/bannerbullet.png) no-repeat transparent;\n
 }\n
 \n
 .button-why:link, .button-why:active, .button-why:visited {\n
-  background: url(community_img/bannerbuttons.png) no-repeat transparent;\n
+  background: url(km_img/bannerbuttons.png) no-repeat transparent;\n
 }\n
 .button-why:hover {\n
   background-position: 0 100%;\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited {\n
-  background: url(community_img/bannerbuttons.png) no-repeat transparent;\n
+  background: url(km_img/bannerbuttons.png) no-repeat transparent;\n
   background-position: -158px 0;\n
 }\n
 .button-try:hover {\n
