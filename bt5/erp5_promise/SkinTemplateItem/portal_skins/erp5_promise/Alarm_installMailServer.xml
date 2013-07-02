@@ -72,7 +72,8 @@ if len(auth_item) == 2:\n
   auth, promise_url = auth_item\n
   smtp_uid, smtp_pwd = auth.split(\':\')\n
 else:\n
-  smtp_uid, smtp_pwd = ""\n
+  smtp_uid = ""\n
+  smtp_pwd = ""\n
   promise_url = auth_item[0]\n
 \n
 domain_port = promise_url.split(\'/\', 1)[0]\n
