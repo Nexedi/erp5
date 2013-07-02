@@ -143,30 +143,17 @@ class ComponentTool(BaseTool):
 
     LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
 
-    type_tool = portal.portal_types
-
-    # One Component Package per allowed Portal Types on Component Tool
-    allowed_content_type_list = type_tool.getTypeInfo(
-      self.getPortalType()).getTypeAllowedContentTypeList()
-
-    import erp5.component
-
     # Make sure that it is not possible to load Components or load Portal Type
     # class when Components are reset through aq_method_lock
+    import erp5.component
+    from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
     with Base.aq_method_lock:
-      for content_type in allowed_content_type_list:
-        package_name = content_type.split(' ')[0].lower()
-
-        try:
-          package = getattr(erp5.component, package_name)
-        # XXX-arnau: not everything is defined yet...
-        except AttributeError:
-          pass
-        else:
+      for package in erp5.component.__dict__.itervalues():
+        if isinstance(package, ComponentDynamicPackage):
           package.reset()
 
     if reset_portal_type_at_transaction_boundary:
-      type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+      portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
     else:
       from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
       synchronizeDynamicModules(self, force)
