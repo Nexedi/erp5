@@ -22,6 +22,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>no_conflict</string>
                 <string>resolve_conflict_with_client_command_winning</string>
                 <string>resolve_conflict_with_merge</string>
               </tuple>
