@@ -97,7 +97,7 @@ for idx, report_section in enumerate(report_section_list):\n
               ).Base_renderReportSection(skin_name=skin_name,\n
                                          localizer_language=localizer_language,\n
                                          report_section=report_section,\n
-                                        report_section_idx=idx,\n
+                                         report_section_idx=idx,\n
                                          request_other=request_other)\n
 \n
 activity_context = context\n
@@ -114,6 +114,7 @@ activity_context.activate(activity=\'SQLQueue\', after_tag=tag, priority=priorit
            form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
            format=format,\n
+           report_section_count=len(report_section_list)\n
           )\n
 </string> </value>
         </item>

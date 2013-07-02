@@ -63,8 +63,9 @@ with portal.Localizer.translationContext(localizer_language):\n
   portal.portal_skins.changeSkin(skin_name)\n
 \n
   report_section_list = [r.getResult() for r in ap.getResultList()]\n
+  assert len(report_section_list) == report_section_count\n
   report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
-\n
+  \n
   def dummyReportMethod():\n
     return report_section_list\n
 \n
@@ -95,7 +96,7 @@ portal.ERP5Site_notifyReportComplete(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format</string> </value>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format, report_section_count</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
