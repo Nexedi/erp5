@@ -22,14 +22,15 @@ if 1:
         Patch2: do not use hasattr.
         """
         if f is None:
-            # XXX: should probably use __import__ instead, as in __call__
-            # below.
-            import erp5.component.extension
             try:
-                f = getattr(getattr(erp5.component.extension, self._module),
-                            self._function)
-            except AttributeError:
+                component_module = __import__(
+                    'erp5.component.extension.' + self._module,
+                    fromlist=['erp5.component.extension'],
+                    level=0)
+            except ImportError:
                 f = getObject(self._module, self._function, reload)
+            else:
+                f = getattr(component_module, self._function)
 
         ff = getattr(f, 'im_func', f)
 
