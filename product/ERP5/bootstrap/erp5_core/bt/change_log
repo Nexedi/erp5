@@ -1,3 +1,6 @@
+2013-07-04 arnaud.fontaine
+* ZODB Components: Do not always display bt5 Migrate Action.
+
 2013-06-26 arnaud.fontaine
 * ZODB Components: Must be able to really delete a Component and not only in 'deleted' state. Folder_delete calls Workflow 'delete_action' if the object has any Workflow History. Before, component_validation_workflow was acting like validation_workflow for deleting objects, e.g. 'delete_action' triggers 'delete' state which is fine for normal documents but not Components.
 
