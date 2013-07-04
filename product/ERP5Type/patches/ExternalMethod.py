@@ -69,12 +69,10 @@ if 1:
           from kw.
         """
         try:
-            f = getattr(__import__('erp5.component.extension.' + self._module,
-                                   fromlist=['erp5.component.extension'],
-                                   level=0),
-                        self._function)
-
-        except (ImportError, AttributeError):
+            component_module = __import__('erp5.component.extension.' + self._module,
+                                          fromlist=['erp5.component.extension'],
+                                          level=0)
+        except ImportError:
             import Globals  # for data
 
             filePath = self.filepath()
@@ -92,6 +90,9 @@ if 1:
                 self.reloadIfChanged()
 
             f = None
+        else:
+            f = getattr(component_module, self._function)
+
         _v_f = getattr(self, '_v_f', None)
         if not _v_f or (f and f is not _v_f):
             f = self.getFunction(f=f)
