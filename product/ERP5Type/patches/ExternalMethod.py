@@ -42,7 +42,6 @@ if 1:
 
     ExternalMethod.getFunction = getFunction
 
-    ExternalMethod__call__ = ExternalMethod.__call__
     def __call__(self, *args, **kw):
         """Call an ExternalMethod
 
