@@ -1,4 +1,7 @@
 2013-07-04 arnaud.fontaine
+* ZODB Components: Version was not displayed properly in Component view.
+
+2013-07-04 arnaud.fontaine
 * ZODB Components: Do not always display bt5 Migrate Action.
 
 2013-06-26 arnaud.fontaine
