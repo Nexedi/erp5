@@ -193,13 +193,23 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      try:
-        klass = getattr(__import__('erp5.component.document.' + type_class,
-                                   fromlist=['erp5.component.document'],
-                                   level=0),
-                        type_class)
-      except (ImportError, AttributeError):
-        pass
+      import erp5.component.document
+      module_fullname = 'erp5.component.document.' + type_class
+      module_loader = erp5.component.document.find_module(module_fullname)
+      if module_loader is not None:
+        try:
+          module = module_loader.load_module(module_fullname)
+        except ImportError, e:
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not load Component module '%s': %s" % (module_fullname, e))
+        else:
+          try:
+            klass = getattr(module, type_class)
+          except AttributeError:
+            LOG("ERP5Type.dynamic", WARNING,
+                "Could not get class '%s' in Component module '%s'" % \
+                (type_class,
+                 module_fullname))
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
