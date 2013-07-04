@@ -43,6 +43,18 @@ if 1:
 
     ExternalMethod.getFunction = getFunction
 
+    ExternalMethod_reloadIfChanged = ExternalMethod.reloadIfChanged
+    def reloadIfChanged(self):
+        try:
+            component_module = __import__(
+                'erp5.component.extension.' + self._module,
+                fromlist=['erp5.component.extension'],
+                level=0)
+        except ImportError:
+            return ExternalMethod_reloadIfChanged(self)
+
+    ExternalMethod.reloadIfChanged = reloadIfChanged
+
     def __call__(self, *args, **kw):
         """Call an ExternalMethod
 

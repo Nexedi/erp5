@@ -1834,6 +1834,19 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     external_method = self.getPortal().TestExternalMethod
     self.assertEqual(external_method(), 42)
 
+    # Check that the External Method returns expected result through Publisher
+    # with or without DevelopmentMode
+    path = '%s/TestExternalMethod' % self.portal.getId()
+    self.assertEqual(self.publish(path).getBody(), '42')
+
+    import Globals
+    previous_development_mode = Globals.DevelopmentMode
+    Globals.DevelopmentMode = not Globals.DevelopmentMode
+    try:
+      self.assertEqual(self.publish(path).getBody(), '42')
+    finally:
+      Globals.DevelopmentMode = previous_development_mode
+
     # Add a Python Script with the External Method defined above and check
     # that it returns 42
     from Products.PythonScripts.PythonScript import manage_addPythonScript
