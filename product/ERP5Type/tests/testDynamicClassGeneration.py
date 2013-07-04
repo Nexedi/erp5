@@ -1307,30 +1307,65 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     Check that the given module name is *not* importable (ZODB Components
     relies solely on import hooks)
     """
-    full_module_name = self._getComponentFullModuleName(module_name)
-
     try:
-      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
-                 level=0)
+      self._importModule(module_name)
     except ImportError:
       pass
     else:
       self.fail("Component '%s' should not have been generated" % \
                   full_module_name)
 
-  def assertModuleImportable(self, module_name):
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=False)
+
+  def assertModuleImportable(self,
+                             module_name,
+                             expected_default_version=None,
+                             expected_additional_version_tuple=(),
+                             reset=True):
     """
     Check that the given module name is importable (ZODB Components relies
     solely on import hooks)
     """
-    full_module_name = self._getComponentFullModuleName(module_name)
-
     try:
-      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
-                 level=0)
+      self._importModule(module_name)
     except ImportError:
       self.fail("Component '%s' should have been generated" % \
                   full_module_name)
+
+    if expected_default_version is not None:
+      top_module_name = self._getComponentModuleName()
+      top_module = __import__(top_module_name, level=0, fromlist=[top_module_name])
+
+      # The module must be available in its default version
+      self.assertHasAttribute(top_module, expected_default_version)
+      self.assertHasAttribute(getattr(top_module, expected_default_version),
+                              module_name)
+      self.assertModuleImportable('%s.%s' % (expected_default_version, module_name),
+                                  reset=False)
+
+      for expected_version in expected_additional_version_tuple:
+        # But other version with lowest attribute should not even be there
+        # until there is an explicit import
+        self.failIfHasAttribute(top_module, expected_version)
+
+        self.assertModuleImportable('%s.%s' % (expected_version, module_name),
+                                    reset=False)
+
+        self.assertHasAttribute(top_module, expected_version)
+        self.assertHasAttribute(getattr(top_module, expected_version), module_name)
+
+    if reset:
+      # There should be no side-effect by calling this function so reset
+      # everything (it hide a bug in ExternalMethod when adding a new one, the
+      # Extension Component was not loaded at all)
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=False)
+
+  def _importModule(self, module_name):
+    return __import__(self._getComponentFullModuleName(module_name),
+                      fromlist=[self._getComponentModuleName()],
+                      level=0)
 
   def testValidateInvalidate(self):
     """
@@ -1620,8 +1655,8 @@ def bar(*args, **kwargs):
     self.tic()
 
     # Versioned package and its alias must be available
-    self.assertModuleImportable('TestImportVersionedComponentOnly')
-    self.assertModuleImportable('erp5_version.TestImportVersionedComponentOnly')
+    self.assertModuleImportable('TestImportVersionedComponentOnly',
+                                expected_default_version='erp5_version')
 
     # Versioned Component of imported Component must be importable and check
     # later that the module has not been added to the top-level package
@@ -1629,6 +1664,8 @@ def bar(*args, **kwargs):
 
     top_module = __import__(top_module_name, level=0,
                             fromlist=[top_module_name])
+
+    self._importModule('erp5_version.TestImportedVersionedComponentOnly')
 
     # Function defined in versioned Component must be available and callable
     self.assertHasAttribute(
@@ -1643,6 +1680,7 @@ def bar(*args, **kwargs):
     self.failIfHasAttribute(top_module, 'TestImportedVersionedComponentOnly')
 
     # As well as functions defined on unversioned Component
+    self._importModule('TestImportVersionedComponentOnly')
     self.assertHasAttribute(top_module.TestImportVersionedComponentOnly, 'bar')
 
     self.assertEquals(
@@ -1674,8 +1712,9 @@ def bar(*args, **kwargs):
     component_foo_version.validate()
     self.tic()
 
-    self.assertModuleImportable('TestVersionPriority')
-    self.assertModuleImportable('erp5_version.TestVersionPriority')
+    self.assertModuleImportable('TestVersionPriority',
+                                expected_default_version='erp5_version')
+
     # Component for 'foo_version' must not be importable as 'foo' has not been
     # added to ERP5Site version priorities
     self.failIfModuleImportable('foo_version.TestVersionPriority')
@@ -1684,6 +1723,7 @@ def bar(*args, **kwargs):
     top_module = __import__(top_module_name, level=0,
                             fromlist=[top_module_name])
 
+    self._importModule('TestVersionPriority')
     self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
     self.assertEquals(top_module.TestVersionPriority.function_foo(),
                       "TestERP5VersionPriority")
@@ -1700,10 +1740,12 @@ def bar(*args, **kwargs):
 
       self.assertEquals(ComponentTool._reset_performed, True)
 
-      self.assertModuleImportable('TestVersionPriority')
-      self.assertModuleImportable('erp5_version.TestVersionPriority')
-      self.assertModuleImportable('foo_version.TestVersionPriority')
+      self.assertModuleImportable(
+        'TestVersionPriority',
+        expected_default_version='foo_version',
+        expected_additional_version_tuple=('erp5_version',))
 
+      self._importModule('TestVersionPriority')
       self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
       self.assertEquals(top_module.TestVersionPriority.function_foo(),
                         "TestFooVersionPriority")
@@ -1893,7 +1935,9 @@ class TestPortalType(Person):
     # There is no reason that TestPortalType Document Component has been
     # assigned to a Person
     self.failIfHasAttribute(person, 'test42')
-    self.assertFalse(self._module.TestPortalType in person.__class__.mro())
+    self.failIfHasAttribute(self._module, 'TestPortalType')
+    for klass in person.__class__.mro():
+      self.assertNotEqual(klass.__name__, 'TestPortalType')
 
     # Reset Portal Type classes to ghost to make sure that everything is reset
     self._component_tool.reset(force=True,
@@ -1910,7 +1954,7 @@ class TestPortalType(Person):
 
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component
-      self.assertModuleImportable('TestPortalType')
+      self.assertHasAttribute(self._module, 'TestPortalType')
       self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
       self.assertTrue(PersonDocument in person.__class__.mro())
 
