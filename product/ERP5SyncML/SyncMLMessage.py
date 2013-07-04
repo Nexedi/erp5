@@ -579,9 +579,14 @@ class SyncMLRequest(object):
         sync_command_kw["xml_data"] = etree.tostring(xml_data[0])
       else:
         # If not xml, return raw data
+        # XXX This must be CDATA type
+        data = sync_command.xpath('string(.//syncml:Item/syncml:Data)',
+                                  namespaces=self.data.nsmap)
+        if isinstance(data, etree.CDATA):
+          parser = etree.XMLParser(strip_cdata=False)
+          cdata = etree.XML(data, parser)
+          data = cdata.text
         # XXX this is unicode and can be a problem for activity
-        sync_command_kw["raw_data"] = sync_command.xpath(
-          'string(.//syncml:Item/syncml:Data)',
-          namespaces=self.data.nsmap)
+        sync_command_kw["raw_data"] = data
 
       append(sync_command_kw)
