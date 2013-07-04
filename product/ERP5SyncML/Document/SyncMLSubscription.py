@@ -111,9 +111,15 @@ class SyncMLSubscription(XMLObject):
     activate_kw : activity parameters to pass to activate call
     kw : any parameter getAndActivate can required if it calls itself
     """
-    search_kw = dict(kw)
-    packet_size = search_kw.pop('packet_size', 30)
-    limit = packet_size * search_kw.pop('activity_count', 100)
+    if kw.has_key("packet_size"):
+      search_kw = dict(kw)
+      packet_size = search_kw.pop('packet_size', 30)
+      limit = packet_size * search_kw.pop('activity_count', 100)
+    else:
+      # We index everything at once
+      limit=None
+      packet_size=None
+      search_kw=None
     try:
       r = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
                                                             # the result is sorted
@@ -128,7 +134,8 @@ class SyncMLSubscription(XMLObject):
     result_count = len(r)
     generated_other_activity = False
     if result_count:
-      syncml_logger.info("getAndIndex : got %d, %r result, limit = %d, packet %d" %
+      # XXX If not split, call the callback here, no need of activity
+      syncml_logger.info("getAndIndex : got %d, %r result, limit = %r, packet %r" %
                          (result_count, r, limit, packet_size))
       if result_count == limit:
         # Recursive call to prevent too many activity generation
@@ -152,7 +159,7 @@ class SyncMLSubscription(XMLObject):
                           activate_kw=activate_kw,
                           **method_kw)
       else:
-        if result_count > packet_size:
+        if result_count > packet_size and limit:
           for i in xrange(0, result_count-packet_size, packet_size):
             syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s" %
                                (i, r[i:i+packet_size], activate_kw))
@@ -446,6 +453,7 @@ class SyncMLSubscription(XMLObject):
       # XXX Some improvement can also be done to retrieve a list of document at once
 
     # Get the data
+    syncml_logger.info("applySync : got data %r" %(action["raw_data"],))
     if 'xml_data' in action:
       # Rebuild an Element
       incoming_data = etree.fromstring(action["xml_data"])
@@ -1157,7 +1165,6 @@ class SyncMLSubscription(XMLObject):
        ("one_way_from_client", "refresh_from_client_only")):
 
       portal = self.getPortalObject()
-      pref = portal.portal_preferences
       # First we must unindex everything
       portal.z_unindex_syncml_data(path=self.getSearchableSourcePath())
       if self.getIsActivityEnabled():
@@ -1166,12 +1173,17 @@ class SyncMLSubscription(XMLObject):
           'tag' : self.getRelativeUrl(),
           'priority' :ACTIVITY_PRIORITY
         }
+        pref = portal.portal_preferences
+        if pref.getPreferredSplitIndexation():
+          kw = {'packet_size' : pref.getPreferredDocumentRetrievedPerActivityCount(),
+                'activity_count' : pref.getPreferredRetrievalActivityCount()}
+        else:
+          kw = {}
         self.getAndIndex(
           callback="SQLCatalog_indexSyncMLDocumentList",
           method_kw={'subscription_path' : self.getRelativeUrl()},
           activate_kw=activate_kw,
-          packet_size=pref.getPreferredDocumentRetrievedPerActivityCount(),
-          activity_count=pref.getPreferredRetrievalActivityCount(),
+          **kw
         )
       else:
         r = [x.getPath() for x in self.getDocumentList()]
