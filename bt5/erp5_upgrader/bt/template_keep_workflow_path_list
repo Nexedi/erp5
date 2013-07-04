@@ -1,0 +1,3 @@
+portal_components/erp5.component.extension.erp5.ERP5UpgraderUtils
+portal_components/erp5.component.extension.erp5.ERP5UpgraderCompatibility
+portal_components/erp5.component.test.erp5.testLiveUpgrader
