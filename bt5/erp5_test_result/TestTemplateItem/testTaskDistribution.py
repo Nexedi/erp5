@@ -8,7 +8,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ("erp5_base",
-            "erp5_test_results")
+            "erp5_test_result")
 
   def afterSetUp(self):
     self.portal = portal = self.getPortalObject()
