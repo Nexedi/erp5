@@ -67,26 +67,15 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
               <list>
-                <string>Accounting Transaction Balance Constraint</string>
-                <string>Acquired Property</string>
-                <string>Attribute Equality Constraint</string>
-                <string>Base Category</string>
-                <string>Category Acquired Membership Arity Constraint</string>
-                <string>Category Existence Constraint</string>
-                <string>Category Membership Arity Constraint</string>
-                <string>Category Property</string>
-                <string>Category Related Membership Arity Constraint</string>
-                <string>Content Existence Constraint</string>
-                <string>Dynamic Category Property</string>
-                <string>Property Existence Constraint</string>
-                <string>Property Type Validity Constraint</string>
-                <string>Resource Measures Consistency Constraint</string>
-                <string>Standard Property</string>
-                <string>TALES Constraint</string>
-                <string>Trade Model Line Cell Consistency Constraint</string>
-                <string>Transaction Quantity Value Feasability Constraint</string>
-                <string>Transaction Quantity Value Validity Constraint</string>
+                <string>constraint</string>
+                <string>property</string>
               </list>
             </value>
         </item>
