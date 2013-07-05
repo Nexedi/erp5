@@ -133,7 +133,7 @@ class SyncMLSubscription(XMLObject):
                                     # the result is sorted
     result_count = len(r)
     if result_count:
-      r = [x.path for x in r]
+      r = [str(x.path) for x in r]
       if not limit:
         # We do not split in activity so call the callback right now
         syncml_logger.info("getAndIndex : got %d, %r result and no limit, calling callback..." %
