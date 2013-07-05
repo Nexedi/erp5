@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5ProjectUnitTestDistribution_view</string> </value>
+            <value> <string>ERP5ProjectUnitTestDistributor_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestCloud_view</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -135,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Node Cloud</string> </value>
+            <value> <string>ERP5 Project Unit Test Distributor</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
