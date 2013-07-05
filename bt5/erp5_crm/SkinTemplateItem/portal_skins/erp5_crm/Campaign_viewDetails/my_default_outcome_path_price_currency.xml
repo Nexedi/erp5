@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_outcome_quantity_unit</string> </value>
+            <value> <string>my_default_outcome_path_price_currency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity_unit</string> </value>
+                    <value> <string>my_price_currency</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
