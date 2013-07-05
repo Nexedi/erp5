@@ -26,7 +26,6 @@
 ##############################################################################
 
 from os import path
-from lxml import etree
 from logging import getLogger, Formatter
 
 from AccessControl import ClassSecurityInfo
@@ -36,25 +35,13 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY, \
     SynchronizationError
-from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse, SyncMLRequest
+from Products.ERP5SyncML.SyncMLMessage import SyncMLRequest
 from Products.ERP5SyncML.Engine.SynchronousEngine import SyncMLSynchronousEngine
 from Products.ERP5SyncML.Engine.AsynchronousEngine import SyncMLAsynchronousEngine
-from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
-from Products.ERP5SyncML.Transport.File import FileTransport
-from Products.ERP5SyncML.Transport.Mail import MailTransport
 from Products.ERP5.ERP5Site import getSite
 
 synchronous_engine = SyncMLSynchronousEngine()
 asynchronous_engine = SyncMLAsynchronousEngine()
-
-transport_scheme_dict = {
-  "http" : HTTPTransport(),
-  "https" : HTTPTransport(),
-  "file" : FileTransport(),
-  "mail" : MailTransport(),
-  }
-
-parser = etree.XMLParser(remove_blank_text=True)
 
 # Logging channel definitions
 # Main logging channel
@@ -390,7 +377,6 @@ class SynchronizationTool(BaseTool):
         return engine.processClientSynchronization(syncml_request, subscription)
 
     # Send the message
-    # XXX This must depends on activity enables property, maybe use engine
     if subscription.getIsActivityEnabled():
       subscription.activate(
         after_tag="%s_reset" %(subscription.getPath(),),
