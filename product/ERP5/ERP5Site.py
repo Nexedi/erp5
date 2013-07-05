@@ -949,9 +949,17 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                               'getPortalConstraintTypeList')
   def getPortalConstraintTypeList(self):
     """
-      Return rule types.
+      Return constraint types.
     """
     return self._getPortalGroupedTypeList('constraint')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalPropertyTypeList')
+  def getPortalPropertyTypeList(self):
+    """
+      Return property types.
+    """
+    return self._getPortalGroupedTypeList('property')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalRuleTypeList')
