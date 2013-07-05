@@ -1,0 +1,33 @@
+<property_sheet_list>
+ <portal_type id="Benchmark Result">
+  <item>Comment</item>
+  <item>SortIndex</item>
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Benchmark Result Line">
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Test Node">
+  <item>DublinCore</item>
+ </portal_type>
+ <portal_type id="Test Result">
+  <item>Comment</item>
+  <item>SortIndex</item>
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Test Result Line">
+  <item>SortIndex</item>
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Test Suite">
+  <item>Arrow</item>
+  <item>Reference</item>
+  <item>SortIndex</item>
+  <item>TestSuite</item>
+  <item>TestSuiteConstraint</item>
+ </portal_type>
+ <portal_type id="Test Suite Repository">
+  <item>TestSuiteRepository</item>
+  <item>TestSuiteRepositoryConstraint</item>
+ </portal_type>
+</property_sheet_list>

@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+value_list = context.getPortalObject().portal_selections \\\n
+               .getSelectionCheckedValueList(context.REQUEST.selection_name)\n
+if not value_list:\n
+  raise ValueError(\'No Test Result selected\')\n
+\n
+if len(value_list) != 2:\n
+  raise ValueError(\'Two Test Results should be selected\')\n
+\n
+a, b = value_list\n
+\n
+from Products.ERP5Type.Document import newTempBase\n
+\n
+# make sure that a is the oldest result\n
+if a.getIntIndex() > b.getIntIndex():\n
+  a, b = b, a\n
+\n
+# map titles to ids\n
+b_title_dict = dict((line.getObject().getTitle(), line.id) for line \\\n
+  in b.searchFolder(portal_type=\'Test Result Line\'))\n
+\n
+not_in_b = {}\n
+\n
+object_list = []\n
+\n
+compared_prop_list = (\'all_tests\', \'errors\', \'failures\', \'skips\')\n
+\n
+\n
+for a_line in a.searchFolder(portal_type=\'Test Result Line\'):\n
+  a_line = a_line.getObject()\n
+  title = a_line.getTitle()\n
+  if title in b_title_dict:\n
+    # do some diffwork\n
+    b_line = b[b_title_dict[title]]\n
+    difference_dict = dict()\n
+    for prop in compared_prop_list:\n
+      diff = b_line.getProperty(prop) - a_line.getProperty(prop)\n
+      if diff != 0:\n
+        difference_dict[prop] = diff\n
+    if difference_dict:\n
+      line = newTempBase(context, title,\n
+                         status="changed",\n
+                         before_url=a_line.absolute_url(),\n
+                         after_url=b_line.absolute_url(),\n
+                         **difference_dict)\n
+      object_list.append(line)\n
+\n
+    del b_title_dict[title]\n
+  else:\n
+    d = dict((prop, -a_line.getProperty(prop)) for prop in compared_prop_list)\n
+    object_list.append(newTempBase(context, title,\n
+                                   status="deleted",\n
+                                   before_url=a_line.absolute_url(),\n
+                                   **d))\n
+\n
+for title, not_in_a in b_title_dict.iteritems():\n
+  b_line = b[not_in_a]\n
+  d = dict((prop, b_line.getProperty(prop)) for prop in compared_prop_list)\n
+  object_list.append(newTempBase(context, title,\n
+                                 status="added",\n
+                                 after_url=b_line.absolute_url(),\n
+                                 **d))\n
+\n
+object_list.sort(key=lambda x:(x.status, x.id))\n
+return object_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestResult_getDiff</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

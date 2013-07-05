@@ -1,0 +1,8 @@
+<hidden_content_type_list>
+ <portal_type id="Test Result">
+  <item>Test Result Line</item>
+ </portal_type>
+ <portal_type id="Test Result Module">
+  <item>Test Result</item>
+ </portal_type>
+</hidden_content_type_list>

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>creation_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Simple workflow for test result.\r\n
+Can be used to trigger a script on test completion (eg. sending an email)</string> </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_result_workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>initial_state</string> </key>
+            <value> <string>draft</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_id</string> </key>
+                        <value> <string>isIndexable</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>value</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>manager_bypass</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Access contents information</string>
+                <string>View</string>
+                <string>Add portal content</string>
+                <string>Modify portal content</string>
+                <string>Delete objects</string>
+                <string>Use mailhost services</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>state_var</string> </key>
+            <value> <string>simulation_state</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Test Results</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
