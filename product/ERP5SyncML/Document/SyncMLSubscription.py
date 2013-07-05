@@ -132,47 +132,54 @@ class SyncMLSubscription(XMLObject):
         r = self.getDocumentList()  # It is assumed that
                                     # the result is sorted
     result_count = len(r)
-    generated_other_activity = False
     if result_count:
-      # XXX If not split, call the callback here, no need of activity
-      syncml_logger.info("getAndIndex : got %d, %r result, limit = %r, packet %r" %
-                         (result_count, r, limit, packet_size))
-      if result_count == limit:
-        # Recursive call to prevent too many activity generation
-        next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
-        kw["min_id"] = r[-1].getId()
-        syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
-                           (kw["min_id"],))
-
-        self.activate(**next_kw).getAndActivate(
-          callback, method_kw, activate_kw, **kw)
-        generated_other_activity = True
-
-      r = [x.getPath() for x in r]
-      activate = self.getPortalObject().portal_synchronizations.activate
-      callback_method = getattr(activate(**activate_kw), callback)
-      if generated_other_activity:
-        for i in xrange(0, result_count, packet_size):
-          syncml_logger.info("-- getAndIndex : recursive call, generating for %s"
-                             % (r[i:i+packet_size],))
-          callback_method(path_list=r[i:i+packet_size],
-                          activate_kw=activate_kw,
-                          **method_kw)
-      else:
-        if result_count > packet_size and limit:
-          for i in xrange(0, result_count-packet_size, packet_size):
-            syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s" %
-                               (i, r[i:i+packet_size], activate_kw))
-            callback_method(path_list=r[i:i+packet_size],
-                            **method_kw)
-          final_min = i +  packet_size
-        else:
-          final_min = 0
-        syncml_logger.info("---- getAndIndex : final call for %s %s : %s" \
-                           %(final_min, r[final_min:], activate_kw))
-        callback_method(path_list=r[final_min:],
+      r = [x.path for x in r]
+      if not limit:
+        # We do not split in activity so call the callback right now
+        syncml_logger.info("getAndIndex : got %d, %r result and no limit, calling callback..." %
+                           (result_count, r))
+        callback_method = getattr(self, callback)
+        callback_method(path_list=r[:],
                         activate_kw=activate_kw,
                         **method_kw)
+      else:
+        syncml_logger.info("getAndIndex : got %d, %r result, limit = %r, packet %r" %
+                           (result_count, r, limit, packet_size))
+        generated_other_activity = False
+        if result_count == limit:
+          # Recursive call to prevent too many activity generation
+          next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
+          kw["min_id"] = r[-1].getId()
+          syncml_logger.info("--> calling getAndIndex in activity, min = %s" %
+                             (kw["min_id"],))
+          self.activate(**next_kw).getAndIndex(
+            callback, method_kw, activate_kw, **kw)
+          generated_other_activity = True
+
+        activate = self.activate
+        callback_method = getattr(activate(**activate_kw), callback)
+        if generated_other_activity:
+          for i in xrange(0, result_count, packet_size):
+            syncml_logger.info("-- getAndIndex : recursive call, generating for %s"
+                               % (r[i:i+packet_size],))
+            callback_method(path_list=r[i:i+packet_size],
+                            activate_kw=activate_kw,
+                            **method_kw)
+        else:
+          if result_count > packet_size and limit:
+            for i in xrange(0, result_count-packet_size, packet_size):
+              syncml_logger.info("-- getAndIndex : i %s, call, generating for %s : %s" %
+                                 (i, r[i:i+packet_size], activate_kw))
+              callback_method(path_list=r[i:i+packet_size],
+                              **method_kw)
+            final_min = i +  packet_size
+          else:
+            final_min = 0
+          syncml_logger.info("---- getAndIndex : final call for %s %s : %s" \
+                             %(final_min, r[final_min:], activate_kw))
+          callback_method(path_list=r[final_min:],
+                          activate_kw=activate_kw,
+                          **method_kw)
     return result_count
 
   security.declarePrivate('generateBaseResponse')
@@ -296,8 +303,7 @@ class SyncMLSubscription(XMLObject):
       message_id_list = self.getNextMessageIdList(id_count=result_count)
       # XXX maybe (result_count / packet_size) + 1 instead of result_count
       message_id_list.reverse()  # We pop each id in the following loop
-      activate = self.activate
-      callback_method = getattr(activate(**activate_kw), callback)
+      callback_method = getattr(self.activate(**activate_kw), callback)
       if generated_other_activity:
         #  XXX Can be factorized with following code
         # upper_limit of xrange + some check ???
@@ -453,7 +459,6 @@ class SyncMLSubscription(XMLObject):
       # XXX Some improvement can also be done to retrieve a list of document at once
 
     # Get the data
-    syncml_logger.info("applySync : got data %r" %(action["raw_data"],))
     if 'xml_data' in action:
       # Rebuild an Element
       incoming_data = etree.fromstring(action["xml_data"])
