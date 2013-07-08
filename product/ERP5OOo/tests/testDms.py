@@ -1143,12 +1143,12 @@ class TestDocument(TestDocumentMixin):
                    version = '003',
                    language = 'bg',
                    reference = 'tlv-test-doc-1')
+    self.login()
     contributor_list = document_4.getContributorValueList()
     contributor_list.append(person1)
     document_4.setContributorValueList(contributor_list)
     document_4.publish()
     self.tic()
-    self.login()
 
     # search arbitrary word
     kw = {'searchabletext_any': 'software'}
