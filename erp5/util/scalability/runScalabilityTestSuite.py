@@ -15,6 +15,8 @@ from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import testnodeUtils
 
+from subprocess import call
+
 class ScalabilityTest(object):
   def __init__(self, data, test_result):
     self.__dict__ = {}
@@ -128,9 +130,12 @@ class ScalabilityLauncher(object):
       else:
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
-        time.sleep(5)
-        # Todo : launch performance_tester with good parameters
-        # and 
+        # Call the performance_tester_erp5
+        call(["performance_tester_erp5",
+               self.__argumentNamespace.erp5_url,
+               '1',
+               'createPerson'
+            ]) 
         self.log("Test Case %s is finish" %(current_test.title))
         current_test.stop()
         self.log("Test Case Stopped")
