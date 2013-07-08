@@ -72,6 +72,10 @@ class ScalabilityLauncher(object):
                         metavar='REVISION',
                         help='Revision of the test_suite')
                               
+    parser.add_argument('--test-suite',
+                        metavar='TEST_SUITE',
+                        help='Name of the test suite')
+                        
     parser.add_argument('--node-title',
                         metavar='NODE_TITLE',
                         help='Title of the testnode which is running this'
@@ -121,7 +125,11 @@ class ScalabilityLauncher(object):
     max_time = 36000
     start_time = time.time()
     error_message_set, exit_status = set(), 0
-                              
+
+    test_suites = 'createPerson createWebPage'
+    benchmark_path_list = ''
+    user_file_path = ''
+    
     while time.time()-start_time < max_time:
       current_test = self.getNextTest()
       if current_test == None:
@@ -134,7 +142,9 @@ class ScalabilityLauncher(object):
         call(["performance_tester_erp5",
                self.__argumentNamespace.erp5_url,
                '1',
-               'createPerson'
+               test_suites,
+               '--benchmark-path-list', benchmark_path_list,
+               '--users-file-path', user_file_path
             ]) 
         self.log("Test Case %s is finish" %(current_test.title))
         current_test.stop()
