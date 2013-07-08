@@ -97,7 +97,7 @@ class ScalabilityTestRunner():
     return instance_title
 
   def _generateInstanceXML(self, software_path, software_configuration,
-                      test_result):
+                      test_result, test_suite):
     """
     Generate a complete scalability instance XML configuration
     """
@@ -109,17 +109,18 @@ class ScalabilityTestRunner():
     config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
     config.update({'test-suite-revision':test_result.revision})
+    config.update({'test-suite':test_suite})
     config.update({'test-suite-master-url':self.testnode.config['test_suite_master_url']})
     return config
   
   def _createInstance(self, software_path, software_configuration, instance_title,
-                      test_result):
+                      test_result, test_suite):
     """
     Create scalability instance
     """
     if self.authorize_request:
       config = self._generateInstanceXML(software_path, software_configuration,
-                                    test_result)
+                                    test_result, test_suite)
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
                              "scalability", {"_" : config})
@@ -271,7 +272,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         # Launch instance
       instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       self._createInstance(self.reachable_profile, configuration_list[0],
-                            instance_title, node_test_suite.test_result)
+                            instance_title, node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Scalability instance requested")
       """      except:
         self.log("Unable to launch instance")
