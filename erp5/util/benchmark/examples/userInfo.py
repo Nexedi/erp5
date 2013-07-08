@@ -1,6 +1,6 @@
 # Specify user login/password used to run the tests. Note that there must be
 # the same number of users specified here *and* on the script command-line.
-user_tuple = (('zope', 'zope'),)
+user_tuple = (('zope', 'insecure'),)
 
 # A more complex example setting the source IP address as well, assuming the
 # users and network alias interfaces (not necessary with SlapOS though) have

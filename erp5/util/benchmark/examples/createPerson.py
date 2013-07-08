@@ -21,15 +21,15 @@ def createPerson(result, browser):
   instance).
   """
   # Open ERP5 homepage
-  browser.open(sleep=(2, 6))
+  browser.open(sleep=(0, 0))
 
   # Log in unless already logged in by a previous test suite
-  browser.mainForm.submitLogin(sleep=(2, 6))
+  browser.mainForm.submitLogin(sleep=(0, 0))
 
   # Go to Persons module (person_module)
   result('Go to person module',
          browser.mainForm.submitSelectModule(value='/person_module',
-                                             sleep=(2, 6)))
+                                             sleep=(0, 0)))
 
   # Create a new person and record the time elapsed in seconds
   result('Add Person', browser.mainForm.submitNew())
@@ -44,7 +44,7 @@ def createPerson(result, browser):
   browser.mainForm.getControl(name='field_my_career_subordination_title').value = 'Supplier'
 
   # Submit the changes, record the time elapsed in seconds
-  result('Save', browser.mainForm.submitSave(sleep=(5, 15)))
+  result('Save', browser.mainForm.submitSave(sleep=(0, 0)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
@@ -53,14 +53,14 @@ def createPerson(result, browser):
   # Add phone number
   result('Add telephone',
          browser.mainForm.submitSelectAction(value='add Telephone',
-                                             sleep=(2, 6)))
+                                             sleep=(0, 0)))
 
   # Fill telephone title and number
   browser.mainForm.getControl(name='field_my_title').value = 'Personal'
   browser.mainForm.getControl(name='field_my_telephone_number').value = '0123456789'
 
   # Submit the changes, record the time elapsed in seconds
-  result('Save', browser.mainForm.submitSave(sleep=(3, 9)))
+  result('Save', browser.mainForm.submitSave(sleep=(0, 0)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
@@ -74,7 +74,7 @@ def createPerson(result, browser):
       browser.mainForm.submitSelectWorkflow(value='validate_action',
                                             maximum_attempt_number=5,
                                             sleep_between_attempt=5,
-                                            sleep=(2, 6))
+                                            sleep=(0, 0))
 
   result('Waiting for validate_action', waiting_for_validate_action)
   result('Show validate', show_validate_time)
