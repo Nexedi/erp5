@@ -1,4 +1,7 @@
 2013-07-09 arnaud.fontaine
+* ZODB Components: inner{Weight,Width} is not applicable to window document (from jQuery API).
+
+2013-07-09 arnaud.fontaine
 * ZODB Components: Update ace_editor to 1.1.01.
 
 2012-02-28 arnaud.fontaine
