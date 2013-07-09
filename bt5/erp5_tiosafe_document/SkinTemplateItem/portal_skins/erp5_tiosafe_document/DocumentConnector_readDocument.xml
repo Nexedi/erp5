@@ -53,14 +53,18 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # First retrieve the document\n
-doc_list = context.getPortalObject().document_module.searchFolder(reference=reference,\n
-                                                                  sort_on = ((\'version\', \'DESC\'),),\n
-                                                                  limit=1)\n
-\n
-if not len(doc_list) == 1:\n
-  raise ValueError, "Impossible to find document with reference %r" %(reference)\n
-\n
-import_file = doc_list[0]\n
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable\n
+tv = getTransactionalVariable()\n
+key = "%s-%s" % (context.getPath(), reference)\n
+try:\n
+  document = tv[key]\n
+except KeyError:\n
+  document_list = portal.document_module.searchFolder(reference=reference, validation_state="shared",\n
+                                                 sort_on=[(\'version\', \'DESC\')])\n
+  if len(document_list) != 1:\n
+    raise ValueError, "Impossible to find document with reference %s" %(reference)\n
+  else:\n
+    tv[key] = document = document_list[0].getObject()\n
 \n
 # Then parse it\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
@@ -102,7 +106,7 @@ def getIDFromString(string=None):\n
 \n
   return clean_id\n
 \n
-parser.openFromString(str(import_file.getData()))\n
+parser.openFromString(str(document.getData()))\n
 \n
 # Extract tables from the speadsheet file\n
 filename = parser.getFilename()\n
