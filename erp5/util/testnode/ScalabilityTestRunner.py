@@ -317,9 +317,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Wait for instance ready to test..")
       self.log("Master testnode is waiting\
 do (kill -10 %s) to continue...", str(os.getpid()))
-      while (not self.isSoftwareReleaseReady(self.instance_title)):
+      self._prepareDummySlapOSAnswer()
+      while (not self.isInstanceReady(self.instance_title)):
         time.sleep(5)
         pass
+      self._comeBackFromDummySlapOS()
       self.log("Answer received.")
       
       # Start only the current test
