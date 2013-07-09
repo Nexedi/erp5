@@ -139,15 +139,19 @@ class ScalabilityLauncher(object):
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
         # Call the performance_tester_erp5
-        call(["performance_tester_erp5",
-               self.__argumentNamespace.erp5_url,
-               '1',
-               test_suites,
-               '--benchmark-path-list', benchmark_path_list,
-               '--users-file-path', user_file_path,
-               '--filename-prefix', "performance_tester_erp5_%s_" %(current_test.title),
-               '--report-directory', self.__argumentNamespace.log_path,
-            ]) 
+        try:
+          call(["performance_tester_erp5",
+                 self.__argumentNamespace.erp5_url,
+                 '1',
+                 test_suites,
+                 '--benchmark-path-list', benchmark_path_list,
+                 '--users-file-path', user_file_path,
+                 '--filename-prefix', "performance_tester_erp5_%s_" %(current_test.title),
+                 '--report-directory', self.__argumentNamespace.log_path,
+              ])
+        except:
+          self.log("Error during tester call.")
+          raise ValueError("Tester call failed")
         self.log("Test Case %s is finish" %(current_test.title))
         current_test.stop()
         self.log("Test Case Stopped")
