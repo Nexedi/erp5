@@ -1348,25 +1348,74 @@ class _TestZodbComponent(SecurityTestCase):
     The new Component should only be in erp5.component.XXX when validated,
     otherwise it should not be importable at all
     """
+    uf = self.portal.acl_users
+    if not uf.getUser('ERP5TypeTestCase_NonDeveloper'):
+      uf._doAddUser('ERP5TypeTestCase_NonDeveloper',
+                    '', ['Manager', 'Member', 'Assignee',
+                         'Assignor', 'Author', 'Auditor', 'Associate'], [])
+
     test_component = self._newComponent(
       'TestValidateInvalidateComponent',
       'def foobar(*args, **kwargs):\n  return "ValidateInvalidate"')
 
-    test_component.validate()
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase_NonDeveloper',
+                                             'validate_action',
+                                             test_component)
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'invalidate_action',
+                                             test_component)
+
+    from AccessControl.SecurityManagement import getSecurityManager
+    from AccessControl.SecurityManagement import setSecurityManager
+    from Products.CMFCore.WorkflowCore import WorkflowException
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser('ERP5TypeTestCase_NonDeveloper')
+      self.assertRaises(WorkflowException,
+                        self.portal.portal_workflow.doActionFor,
+                        test_component, 'delete_action')
+    finally:
+      setSecurityManager(sm)
+
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+    self.portal.portal_workflow.doActionFor(test_component, 'validate_action')
     self.tic()
 
     self.assertModuleImportable('TestValidateInvalidateComponent')
-    test_component.invalidate()
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase_NonDeveloper',
+                                             'invalidate_action',
+                                             test_component)
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'validate_action',
+                                             test_component)
+
+    self.assertRaises(WorkflowException,
+                      self.portal.portal_workflow.doActionFor,
+                      test_component, 'delete_action')
+
+    self.portal.portal_workflow.doActionFor(test_component, 'invalidate_action')
     self.tic()
     self.failIfModuleImportable('TestValidateInvalidateComponent')
 
-    test_component.validate()
+    self.portal.portal_workflow.doActionFor(test_component, 'validate_action')
     self.tic()
     self.assertModuleImportable('TestValidateInvalidateComponent')
 
-    test_component.invalidate()
+    self.portal.portal_workflow.doActionFor(test_component, 'invalidate_action')
     self.tic()
     self.failIfModuleImportable('TestValidateInvalidateComponent')
+
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser('ERP5TypeTestCase_NonDeveloper')
+      self.assertRaises(WorkflowException,
+                        self.portal.portal_workflow.doActionFor,
+                        test_component, 'delete_action')
+    finally:
+      setSecurityManager(sm)
 
     self.portal.portal_workflow.doActionFor(test_component, 'delete_action')
     self.tic()
