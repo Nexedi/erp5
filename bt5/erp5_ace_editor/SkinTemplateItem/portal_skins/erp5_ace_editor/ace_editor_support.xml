@@ -218,6 +218,8 @@
 \n
     var PythonMode = require(\'ace/mode/python\').Mode;\n
     ace_editor.getSession().setMode(new PythonMode());\n
+    ace_editor.getSession().setUseSoftTabs(true);\n
+    ace_editor.getSession().setTabSize(2);\n
 \n
     var textarea = $(\'#${id}\');\n
     ace_editor.getSession().on(\'change\', function() {\n
