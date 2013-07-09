@@ -370,6 +370,8 @@ do (kill -10 %s) to continue...", str(os.getpid()))
 
     
     # Here delete intances
+
+
     
     if error != None:
       test_result_proxy.fail()

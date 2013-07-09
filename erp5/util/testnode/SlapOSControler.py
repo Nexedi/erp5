@@ -72,6 +72,7 @@ class SlapOSControler(object):
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
+    self.intance_config = {}
 
   def createSlaposConfigurationFileAccount(self, key, certificate, config):
     # Create "slapos_account" directory in the "slapos_directory"
@@ -125,8 +126,14 @@ class SlapOSControler(object):
     """
     self.supply(self, software_url, computer_id, state="destroyed")
     
-  def request(self, reference,
-          software_url, software_type, software_configuration, computer_guid=None):
+  def getInstanceRequestedState(self, reference):
+    try:
+      return self.instance_config[reference]['requested_state']
+    except:
+      raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
+      
+  def request(self, reference, software_url, software_type=None,
+            software_configuration=None, computer_guid=None, state='started'):
     """
     configuration_file_path (slapos acount)
     reference : instance title
@@ -139,8 +146,15 @@ class SlapOSControler(object):
                                'kvm.cfg', 'cluster', { "_" : "{'toto' : 'titi'}" } )
 
     """
-    # TODO : remove return
-    self.log('SlapOSControler : _request')
+    self.log('SlapOSControler : request')
+    current_intance_config = {'software_type':software_type,
+                              'software_configuration':software_configuration,
+                              'computer_guid':computer_guid,
+                              'software_url':software_url,
+                              'requested_state':state
+                              }
+    self.instance_config[reference] = current_intance_config
+
     filter_kw = None
     if computer_guid != None:
       filter_kw = { "computer_guid": computer_guid }
@@ -157,19 +171,50 @@ class SlapOSControler(object):
           partition_reference = reference,
           partition_parameter_kw = software_configuration,
           software_type = software_type,
-          filter_kw = filter_kw)
+          filter_kw = filter_kw,
+          state = state)
       #      print "Instance requested.\nState is : %s." % partition.getState()
       # Is it possible to have the true state of the instance with getState() ?
           # Do a return partition ?
       except:
         self.log("SlapOSControler.request, \
               exception in registerOpenOrder", exc_info=sys.exc_info())
-        raise ValueError("Unable to request")
+        raise ValueError("Unable to do this request")
     else:
       raise ValueError("Configuration file not found.")
 
-  def updateInstanceXML(self, reference,
-        software_url, software_type, software_configuration, computer_guid=None):
+  def _requestSpecificState(self, reference, state):
+    self.request(reference,
+        self.instance_config[reference]['software_url'],
+        self.instance_config[reference]['software_type'],
+        self.instance_config[reference]['software_configuration'],
+        self.instance_config[reference]['computer_guid'],
+        state=state
+    )    
+  
+  def destroyInstance(self, reference):
+    self.log('SlapOSControler : delete instance')
+    try:
+      self._requestSpecificState(reference, 'destroyed')
+      del self.instance_config[reference]
+    except:
+      raise ValueError("Can't delete instance '%s' (instance may not been created?)" %reference)
+    
+  def stopInstance(self, reference):
+    self.log('SlapOSControler : stop instance')
+    try:
+      self._requestSpecificState(reference, 'stopped')
+    except:
+      raise ValueError("Can't stop instance '%s' (instance may not been created?)" %reference)
+  
+  def startInstance(self, reference):
+    self.log('SlapOSControler : start instance')
+    try:
+      self._requestSpecificState(reference, 'started')
+    except:
+      raise ValueError("Can't start instance '%s' (instance may not been created?)" %reference)
+
+  def updateInstanceXML(self, reference, software_configuration):
     """
     Update the XML configuration of an instance
     # Request same instance with different parameters.
@@ -177,8 +222,17 @@ class SlapOSControler(object):
     self.log('SlapOSControler : updateInstanceXML')
     self.log('SlapOSControler : updateInstanceXML will request same'
              'instance with new XML configuration...')
-    self.request(reference,
-          software_url, software_type, software_configuration, computer_guid)
+
+    try:   
+      self.request(reference,
+        self.instance_config[reference]['software_url'],
+        self.instance_config[reference]['software_type'],
+        software_configuration,
+        self.instance_config[reference]['computer_guid'],
+        state='started'
+      )
+    except:
+      raise ValueError("Can't update instance '%s' (may not exist?)" %reference)
 
   def _resetSoftware(self):
     self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %
