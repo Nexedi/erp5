@@ -162,12 +162,12 @@
   }\n
 \n
   function setContainerDivSize(event) {\n
-    width = $(window).innerWidth() - ace_editor_container_div.offset().left * 2 - 1;\n
+    width = $(window).width() - ace_editor_container_div.offset().left * 2 - 1;\n
     if(width < 200)\n
       width = 200;\n
     ace_editor_container_div.width(width);\n
 \n
-    height = $(window).innerHeight() - ace_editor_container_div.offset().top * 2 - 1;\n
+    height = $(window).height() - ace_editor_container_div.offset().top * 2 - 1;\n
     if(height < 400)\n
       height = 400;\n
     ace_editor_container_div.height(height);\n
@@ -196,8 +196,8 @@
 \n
     ace_editor_container_div.prependTo(body_element);\n
     ace_editor_container_div.addClass(\'maximize\');\n
-    ace_editor_container_div.width($(window).innerWidth());\n
-    ace_editor_container_div.height($(window).innerHeight());\n
+    ace_editor_container_div.width($(window).width());\n
+    ace_editor_container_div.height($(window).height());\n
 \n
     body_element.prepend(ace_editor_maximize_mode_message);\n
     ace_editor_maximize_mode_message.css(\'opacity\', 1.0);\n
