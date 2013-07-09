@@ -189,7 +189,7 @@ class IntegrationSite(Folder):
         property = string of the property we want the mapping
     """
     tv = getTransactionalVariable()
-    key = "%s" % (base_mapping.getPath(),)
+    key = "%s-%s" % (base_mapping.getPath(), property_name)
     try:
       mapping_line = tv[key]
     except KeyError:
