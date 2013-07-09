@@ -133,8 +133,8 @@ class ScalabilityLauncher(object):
     error_message_set, exit_status = set(), 0
 
     test_suites = 'createPerson createWebPage'
-    benchmark_path_list = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples'
-    user_file_path = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples'
+    benchmark_path_list = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples/'
+    user_file_path = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples/'
     tester_path = self.__argumentNamespace.runner_path
     
     while time.time()-start_time < max_time:
