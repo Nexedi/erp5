@@ -103,9 +103,6 @@ class ScalabilityTestRunner():
     """
     config_cluster = software_configuration.copy()
     config = {'cluster':config_cluster}
-    # Add here zope partition into launcher node to
-    # watch activities etc... ? or do it into buildout ?
-    #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
     config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
