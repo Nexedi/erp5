@@ -1,4 +1,7 @@
 2013-07-09 arnaud.fontaine
+* ZODB Components: Follow ERP5 Python indentation style in Ace editor.
+
+2013-07-09 arnaud.fontaine
 * ZODB Components: inner{Weight,Width} is not applicable to window document (from jQuery API).
 
 2013-07-09 arnaud.fontaine
