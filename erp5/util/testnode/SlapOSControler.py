@@ -168,35 +168,17 @@ class SlapOSControler(object):
     else:
       raise ValueError("Configuration file not found.")
 
-  def updateInstanceXML(self, software_url, computer_id, xml):
+  def updateInstanceXML(self, reference,
+        software_url, software_type, software_configuration, computer_guid=None):
     """
     Update the XML configuration of an instance
-    # If doesn't work, try to re-request same instance just with an other
-    xml onfiguration.
+    # Request same instance with different parameters.
     """
     self.log('SlapOSControler : updateInstanceXML')
-    parser = argparse.ArgumentParser()
-    parser.add_argument("configuration_file")
-    parser.add_argument("software_url")
-    parser.add_argument("node")
-    if os.path.exists(self.configuration_file_path):
-      args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
-      config = client.Config()
-      config.setConfig(args, args.configuration_file)
-      try:
-        slap = slapos.slap.slap()
-        slap.initializeConnection(config.master_url,
-                    key_file=config.key_file,
-                    cert_file=config.cert_file)
-        computer = slap.registerComputer(computer_id)
-        computer.updateConfiguration(xml)
-        self.log('SlapOSControler : updateInstanceXML %s' %(xml,))
-      except:
-        self.log("SlapOSControler.updateInstanceXML, \
-                 exception in registerOpenOrder", exc_info=sys.exc_info())
-        raise ValueError("Unable to updateInstanceXML")
-    else:
-      raise ValueError("Configuration file not found.")
+    self.log('SlapOSControler : updateInstanceXML will request same'
+             'instance with new XML configuration...')
+    self.request(reference,
+          software_url, software_type, software_configuration, computer_guid)
 
   def _resetSoftware(self):
     self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %

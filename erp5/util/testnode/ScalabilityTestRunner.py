@@ -121,7 +121,8 @@ class ScalabilityTestRunner():
                                     test_result, test_suite)
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
-                             "scalability", {"_" : config})
+                             "scalability", {"_" : config},
+                             self.launcher_nodes_computer_guid[0])
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -179,13 +180,20 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # Not empty grid means that all softwares are not installed
     return len(self.remaining_software_installation_dict) > 0
 
-  def _updateInstanceXML(self, software_path, computer_guid, xml):
+  def _updateInstanceXML(self, software_path, software_configuration, instance_title,
+                      test_result, test_suite):
     """
     Just a proxy to SlapOSControler.updateInstanceXML.
     """
-    # use _generateInstanceXML...;
-    self.slapos_controler.updateInstanceXML(software_path, computer_guid, xml)
-          
+    config = self._generateInstanceXML(software_path, software_configuration,
+                                  test_result, test_suite)
+    self.log("testnode, updateInstanceXML : %s", instance_title)
+    self.slapos_controler.updateInstanceXML(instance_title, software_path,
+                          "scalability", {"_" : config},
+                          self.launcher_nodes_computer_guid[0])
+    self.authorize_request = False
+    return {'status_code' : 0} 
+
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install testsuite softwares
