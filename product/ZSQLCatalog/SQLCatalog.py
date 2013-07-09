@@ -289,7 +289,6 @@ class LazyIndexationParameterList(tuple):
 
 ContainerAssertions[LazyIndexationParameterList] = 1
 
-related_key_definition_cache = {}
 related_key_warned_column_set = set()
 
 class Catalog(Folder,
@@ -2031,6 +2030,8 @@ class Catalog(Folder,
       Returns the definition of given related key name if found, None
       otherwise.
     """
+    related_key_definition_cache = getTransactionalVariable().setdefault(
+      'SQLCatalog.getRelatedKeyDefinition', {})
     try:
       result = related_key_definition_cache[key]
     except KeyError:
