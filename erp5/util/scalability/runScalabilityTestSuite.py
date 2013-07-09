@@ -88,6 +88,10 @@ class ScalabilityLauncher(object):
     parser.add_argument('--log-path',
                         metavar='LOG_PATH',
                         help='Log Path')
+                        
+    parser.add_argument('--runner-path',
+                        metavar='Runner_PATH',
+                        help='runner Path')
    
   @staticmethod
   def _checkParsedArguments(namespace):
@@ -129,6 +133,7 @@ class ScalabilityLauncher(object):
     test_suites = 'createPerson createWebPage'
     benchmark_path_list = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples'
     user_file_path = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples'
+    tester_path = self.__argumentNamespace.runner_path
     
     while time.time()-start_time < max_time:
       current_test = self.getNextTest()
@@ -140,7 +145,7 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is running..." %(current_test.title))
         # Call the performance_tester_erp5
         try:
-          call(["performance_tester_erp5",
+          call([tester_path,
                  self.__argumentNamespace.erp5_url,
                  '1',
                  test_suites,
