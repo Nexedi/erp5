@@ -90,6 +90,28 @@ def getRolesInContext( self, object ):
 
 from App.config import getConfiguration
 
+def getRoles( self ):
+    """ -> [ role ]
+
+    o Include only "global" roles.
+    """
+    role_tuple = self._roles.keys()
+    if role_tuple:
+        product_config = getattr(getConfiguration(), 'product_config', None)
+        if product_config:
+            config = product_config.get('erp5')
+            if config:
+                role_set = set(role_tuple)
+                user_id = self.getId()
+                if config and user_id in config.developer_list:
+                    role_set.add('Developer')
+                elif user_id in role_set:
+                    role_set.remove('Developer')
+
+                return role_set
+
+    return role_tuple
+
 def allowed(self, object, object_roles=None ):
 
     """ Check whether the user has access to object.
@@ -205,3 +227,4 @@ def allowed(self, object, object_roles=None ):
 if PropertiedUser is not None:
   PropertiedUser.getRolesInContext = getRolesInContext
   PropertiedUser.allowed = allowed
+  PropertiedUser.getRoles = getRoles
