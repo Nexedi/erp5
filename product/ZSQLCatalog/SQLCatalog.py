@@ -2035,7 +2035,6 @@ class Catalog(Folder,
     try:
       result = related_key_definition_cache[key]
     except KeyError:
-      result = None
       for entire_definition in self.getSQLCatalogRelatedKeyList([key]):
         split_entire_definition = entire_definition.split('|')
         if len(split_entire_definition) != 2:
@@ -2044,8 +2043,9 @@ class Catalog(Folder,
         if split_entire_definition[0].strip() == key:
           result = split_entire_definition[1].strip()
           break
-      if result is not None:
-        related_key_definition_cache[key] = result
+      else:
+        result = None
+      related_key_definition_cache[key] = result
     return result
 
   @transactional_cache_decorator('SQLCatalog._getgetScriptableKeyDict')
