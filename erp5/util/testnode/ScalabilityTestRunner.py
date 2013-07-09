@@ -68,6 +68,7 @@ class ScalabilityTestRunner():
     self.authorize_request = False
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
+    self.last_slapos_answer_request = []
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
@@ -163,6 +164,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   def isSoftwareReleaseReady(self, software_url, computer_guid):
     """
     Return true if the specified software on the specified node is installed.
+    This method should communicates with SlapOS Master.
+    """
+    # TODO : implement -> communication with SlapOS master
+    # this simulate a SlapOS answer
+    return self.simulateSlapOSAnswer()
+    
+  def isInstanceReady(self, instance_title):
+    """
+    Return true if the specified instance is ready.
     This method should communicates with SlapOS Master.
     """
     # TODO : implement -> communication with SlapOS master
@@ -304,9 +314,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._updateInstanceXML(self.reachable_profile, configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
       # Wait for ready status from slapos
-      self.log("Wait for instance ready to test. Sleep for 300s.")
-      time.sleep(300)
-      self.log("300s elapsed.")
+      self.log("Wait for instance ready to test..")
+      self.log("Master testnode is waiting\
+do (kill -10 %s) to continue...", str(os.getpid()))
+      while (not self.isSoftwareReleaseReady(self.instance_title)):
+        time.sleep(5)
+        pass
+      self.log("Answer received.")
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
