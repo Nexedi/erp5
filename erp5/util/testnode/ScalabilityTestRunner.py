@@ -101,7 +101,8 @@ class ScalabilityTestRunner():
     """
     Generate a complete scalability instance XML configuration
     """
-    config = software_configuration.copy()
+    config_cluster = software_configuration.copy()
+    config = {'cluster':config_cluster}
     # Add here zope partition into launcher node to
     # watch activities etc... ? or do it into buildout ?
     #config.update({'launcher-partition-list':self.launcher_nodes_computer_guid})
