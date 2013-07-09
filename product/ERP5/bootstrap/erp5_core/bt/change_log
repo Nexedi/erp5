@@ -1,4 +1,7 @@
 2013-07-09 arnaud.fontaine
+* ZODB COmponents: Cosmetic: Fix Component Validation Workflow description.
+
+2013-07-09 arnaud.fontaine
 * ZODB Components: Only Developer Role must be able to invalidate/delete/validate Components.
 
 2013-07-04 arnaud.fontaine
