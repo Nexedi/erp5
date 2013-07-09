@@ -276,9 +276,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       """      try:
       """
         # Launch instance
-      instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
+      self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       self._createInstance(self.reachable_profile, configuration_list[0],
-                            instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+                            self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Scalability instance requested")
       """      except:
         self.log("Unable to launch instance")
@@ -301,22 +301,23 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   
     count = 0
     for configuration in configuration_list:
-      # Here: update instance XML
+      self._updateInstanceXML(self.reachable_profile, configuration, self.instance_title,
+                      node_test_suite.test_result, node_test_suite.test_suite)
       # Wait for ready status from slapos
+      self.log("Wait for instance ready to test. Sleep for 300s.")
+      time.sleep(300)
+      self.log("300s elapsed.")
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
-
-      # Possible ? :
-      # No more test to run
       if test_result_line_proxy == None :
         self.log("Already tested.")
         error = ValueError("Test already tested.")
         break;
-        
-        
+
+      # TODO: use only isAlive() and change test_result workflow on ERP5 Master side for the scalability case
       self.log("Test for count : %d is in a running state." %count)
       while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
         time.sleep(15)
