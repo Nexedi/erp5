@@ -36,6 +36,8 @@ class ScalabilityLauncher(object):
     self.__argumentNamespace = self._parseArguments(argparse.ArgumentParser(
           description='Run ERP5 benchmarking scalability suites.'))
     # Create Logger
+    log_path = os.path.join(self.__argumentNamespace.log_path,
+                            "runScalabilityTestSuite.log")
     logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
     formatter = logging.Formatter(logger_format)
     logging.basicConfig(level=logging.INFO,
@@ -43,7 +45,7 @@ class ScalabilityLauncher(object):
     logger = logging.getLogger('runScalabilityTestSuite')
     logger.addHandler(logging.NullHandler())
     file_handler = logging.handlers.RotatingFileHandler(
-        filename=self.__argumentNamespace.log_path+"runScalabilityTestSuite.log",
+        filename=log_path,
         maxBytes=20000000, backupCount=4)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
