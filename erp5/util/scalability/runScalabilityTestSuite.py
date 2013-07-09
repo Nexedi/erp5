@@ -43,7 +43,7 @@ class ScalabilityLauncher(object):
     logger = logging.getLogger('runScalabilityTestSuite')
     logger.addHandler(logging.NullHandler())
     file_handler = logging.handlers.RotatingFileHandler(
-        filename=self.__argumentNamespace.log_path,
+        filename=self.__argumentNamespace.log_path+"runScalabilityTestSuite.log",
         maxBytes=20000000, backupCount=4)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -144,7 +144,9 @@ class ScalabilityLauncher(object):
                '1',
                test_suites,
                '--benchmark-path-list', benchmark_path_list,
-               '--users-file-path', user_file_path
+               '--users-file-path', user_file_path,
+               '--filename-prefix', "performance_tester_erp5_%s_" %(current_test.title),
+               '--report-directory', self.__argumentNamespace.log_path,
             ]) 
         self.log("Test Case %s is finish" %(current_test.title))
         current_test.stop()
