@@ -28,6 +28,56 @@
 #
 ##############################################################################
 
+# Products.DCWorkflowGraph.config does not check the return value of
+# getenv('PATH'). This fails if PATH is not defined which is the case when
+# running ZEO with SlapOS for example. But, Products.DCWorkflowGraph.__init__
+# imports Products.DCWorkflowGraph.config as a side-effect of importing
+# getGraph, so the only solution is to create a Module which will hide the
+# one from DCWorkflowGraph
+from types import ModuleType
+dc_workflow_config_module = ModuleType('Products.DCWorkflowGraph.config')
+
+import sys
+sys.modules['Products.DCWorkflowGraph.config'] = dc_workflow_config_module
+
+# where is 'pot'?, add your path here
+import os
+
+DOT_EXE = 'dot'
+bin_search_path = []
+
+if os.name == 'nt':
+    DOT_EXE = 'dot.exe'
+
+    # patch from Joachim Bauch bauch@struktur.de
+    # on Windows, the path to the ATT Graphviz installation 
+    # is read from the registry. 
+    try:
+        import win32api, win32con
+        # make sure that "key" is defined in our except block
+        key = None
+        try:
+            key = win32api.RegOpenKeyEx(win32con.HKEY_LOCAL_MACHINE, r'SOFTWARE\ATT\Graphviz')
+            value, type = win32api.RegQueryValueEx(key, 'InstallPath')
+            bin_search_path = [os.path.join(str(value), 'bin')]
+        except:
+            if key: win32api.RegCloseKey(key)
+            # key doesn't exist
+            pass
+    except ImportError:
+        # win32 may be not installed...
+        pass
+else:
+    # for posix systems
+    DOT_EXE = 'dot'
+    path = os.getenv("PATH")
+    if path is not None:
+      bin_search_path = path.split(":")
+
+dc_workflow_config_module.bin_search_path = bin_search_path
+dc_workflow_config_module.DOT_EXE = DOT_EXE
+
+
 def getObjectTitle(obj, REQUEST=None):
   """
   Get a state/transition title to be displayed in the graph.
