@@ -190,7 +190,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # Not empty grid means that all softwares are not installed
     return len(self.remaining_software_installation_dict) > 0
 
-  def _updateInstanceXML(self, software_path, software_configuration, instance_title,
+  def _updateInstanceXML(self, software_configuration, instance_title,
                       test_result, test_suite):
     """
     Just a proxy to SlapOSControler.updateInstanceXML.
@@ -198,10 +198,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     config = self._generateInstanceXML(software_path, software_configuration,
                                   test_result, test_suite)
     self.log("testnode, updateInstanceXML : %s", instance_title)
-    self.slapos_controler.updateInstanceXML(instance_title, software_path,
-                          "scalability", {"_" : config},
-                          self.launcher_nodes_computer_guid[0])
-    self.authorize_request = False
+    self.slapos_controler.updateInstanceXML(instance_title,
+                                            "scalability", {"_" : config})
     return {'status_code' : 0} 
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
@@ -311,7 +309,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   
     count = 0
     for configuration in configuration_list:
-      self._updateInstanceXML(self.reachable_profile, configuration, self.instance_title,
+      self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
       # Wait for ready status from slapos
       self.log("Wait for instance ready to test..")
@@ -369,8 +367,7 @@ do (kill -10 %s) to continue...", str(os.getpid()))
         break;
 
     
-    # Here delete intances
-
+    self.slapos_controler.destroyInstance(self.instance_title)
 
     
     if error != None:
