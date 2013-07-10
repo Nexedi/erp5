@@ -73,6 +73,7 @@
                       <list>
                         <string>your_format</string>
                         <string>your_portal_skin</string>
+                        <string>your_use_selection</string>
                       </list>
                     </value>
                 </item>
