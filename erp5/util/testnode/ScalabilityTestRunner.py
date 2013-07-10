@@ -97,7 +97,7 @@ class ScalabilityTestRunner():
     instance_title += time.strftime('%d/%m/%y_%H:%M:%S',time.localtime())
     return instance_title
 
-  def _generateInstanceXML(self, software_path, software_configuration,
+  def _generateInstanceXML(self, software_configuration,
                       test_result, test_suite):
     """
     Generate a complete scalability instance XML configuration
@@ -118,7 +118,7 @@ class ScalabilityTestRunner():
     Create scalability instance
     """
     if self.authorize_request:
-      config = self._generateInstanceXML(software_path, software_configuration,
+      config = self._generateInstanceXML(software_configuration,
                                     test_result, test_suite)
       self.log("testnode, request : %s", instance_title)
       self.slapos_controler.request(instance_title, software_path,
@@ -195,7 +195,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Just a proxy to SlapOSControler.updateInstanceXML.
     """
-    config = self._generateInstanceXML(software_path, software_configuration,
+    config = self._generateInstanceXML(software_configuration,
                                   test_result, test_suite)
     self.log("testnode, updateInstanceXML : %s", instance_title)
     self.slapos_controler.updateInstanceXML(instance_title,
