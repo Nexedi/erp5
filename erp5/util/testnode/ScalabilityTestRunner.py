@@ -198,8 +198,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     config = self._generateInstanceXML(software_configuration,
                                   test_result, test_suite)
     self.log("testnode, updateInstanceXML : %s", instance_title)
-    self.slapos_controler.updateInstanceXML(instance_title,
-                                            "scalability", {"_" : config})
+    self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
     return {'status_code' : 0} 
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
