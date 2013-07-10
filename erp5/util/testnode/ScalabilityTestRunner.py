@@ -294,6 +294,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       """
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     return {'status_code' : 0}
+  # Used to simulate slapOS answer
+  def _waitInstance(self, instance_title):
+    self.log("Master testnode is waiting for a (dummy) SlapOS Master answer,\
+(kill -10 %s) to continue...", str(os.getpid()))
+    self._prepareDummySlapOSAnswer()
+    while (not self.isInstanceReady(instance_title)):
+      time.sleep(5)
+      pass
+    self._comeBackFromDummySlapOS()
+    self.log("Answer received.")
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
@@ -309,18 +319,19 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   
     count = 0
     for configuration in configuration_list:
+      # Update instance XML configuration 
       self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
-      # Wait for ready status from slapos
-      self.log("Wait for instance ready to test..")
-      self.log("Master testnode is waiting\
-do (kill -10 %s) to continue...", str(os.getpid()))
-      self._prepareDummySlapOSAnswer()
-      while (not self.isInstanceReady(self.instance_title)):
-        time.sleep(5)
-        pass
-      self._comeBackFromDummySlapOS()
-      self.log("Answer received.")
+      self.log("Waiting for XML updating instance ready..")
+      _waitInstance(self.instance_title)
+      # Stop instance
+      self.slapos_controler.stopInstance(self.instance_title)
+      self.log("Waiting for instance stop..")
+      _waitInstance(self.instance_title)
+      # Start instance
+      self.slapos_controler.startInstance(self.instance_title)
+      self.log("Waiting for instance start..")
+      _waitInstance(self.instance_title)
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
