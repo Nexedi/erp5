@@ -297,6 +297,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     return {'status_code' : 0}
 
   def runTestSuite(self, node_test_suite, portal_url):
+    if not self.launchable:
+      self.log("Current test_suite is not actually launchable.")
+      return {'status_code' : 1} # Unable to continue due to not realizable configuration
+      
     configuration_list = node_test_suite.configuration_list
     test_list = [ configuration_list.index(configuration)
                   for configuration in configuration_list ]
