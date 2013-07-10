@@ -74,6 +74,9 @@ class SlapOSControler(object):
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.instance_config = {}
 
+  #TODO: implement a method to get all instance related the slapOS account
+  # and deleting all old instances (based on creation date or name etc...)
+
   def createSlaposConfigurationFileAccount(self, key, certificate, config):
     # Create "slapos_account" directory in the "slapos_directory"
     slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
