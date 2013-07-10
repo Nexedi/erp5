@@ -72,7 +72,7 @@ class SlapOSControler(object):
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.log = log
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
-    self.intance_config = {}
+    self.instance_config = {}
 
   def createSlaposConfigurationFileAccount(self, key, certificate, config):
     # Create "slapos_account" directory in the "slapos_directory"
