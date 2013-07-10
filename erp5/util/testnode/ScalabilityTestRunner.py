@@ -37,7 +37,7 @@ import shutil
 import logging
 import string
 import random
-import testnodeUtils
+import Utils
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -213,7 +213,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if self.testnode.test_suite_portal.isMasterTestnode(
             self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
-      test_configuration = testnodeUtils.deunicodeData(
+      test_configuration = Utils.deunicodeData(
           json.loads(self.testnode.test_suite_portal.generateConfiguration(
                       node_test_suite.test_suite_title)
                     )

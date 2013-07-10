@@ -13,7 +13,7 @@ import logging.handlers
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
-from erp5.util.testnode import testnodeUtils
+from erp5.util.testnode import Utils
 
 from subprocess import call
 
@@ -120,7 +120,7 @@ class ScalabilityLauncher(object):
     data = self.test_result.getNextTestCase()
     if data == None :
       return None
-    decoded_data = testnodeUtils.deunicodeData(json.loads(
+    decoded_data = Utils.deunicodeData(json.loads(
                   data
                 ))
     next_test = ScalabilityTest(decoded_data, self.test_result)
