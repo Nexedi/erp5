@@ -97,7 +97,11 @@ def getInstanceID(instance):
   # What I would like to use instead of it is:
   #   (self._p_jar.db().database_name, self._p_oid)
   # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
-  return instance.getPhysicalPath()
+  try:
+    instance_id = instance._v_physical_path
+  except AttributeError:
+    instance._v_physical_path = instance_id = instance.getPhysicalPath()
+  return instance_id
 
 def generateCatalogCacheId(method_id, self, *args, **kwd):
   return str((method_id, self.getCacheSequenceNumber(), getInstanceID(self),
@@ -658,6 +662,13 @@ class Catalog(Folder,
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
     self.filter_dict = PersistentMapping()
+
+  def manage_afterClone(self, item):
+    try:
+      del self._v_physical_path
+    except AttributeError:
+      pass
+    super(Catalog, self).manage_afterClone(item)
 
   def getCacheSequenceNumber(self):
     return self._cache_sequence_number
