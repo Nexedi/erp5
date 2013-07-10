@@ -283,7 +283,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Softwares installed")
       """      try:
       """
-        # Launch instance
+      # Launch instance
       self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       self._createInstance(self.reachable_profile, configuration_list[0],
                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
@@ -374,7 +374,7 @@ do (kill -10 %s) to continue...", str(os.getpid()))
     self.slapos_controler.destroyInstance(self.instance_title)
 
     
-    if error != None:
+    if error:
       test_result_proxy.fail()
       raise error
     else:
