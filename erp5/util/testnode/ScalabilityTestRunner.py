@@ -299,10 +299,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
-      
-    configuration_list = node_test_suite.configuration_list
-    test_list = [ configuration_list.index(configuration)
-                  for configuration in configuration_list ]
+    test_list = range(0, len(configuration_list))
     # create test_result
     test_result_proxy = self.testnode.portal.createTestResult(
       node_test_suite.revision, test_list,
