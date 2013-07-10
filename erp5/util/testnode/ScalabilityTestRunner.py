@@ -274,10 +274,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
  for the end of all software installation (for %ss) PID=%s.",
           str(int(time.time()-start_time)), str(os.getpid()))
         time.sleep(interval_time)
-      # We were wainting for too long time, that's a failure.
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
       if self.remainSoftwareToInstall() :
+        # All softwares are not installed, however maxtime is elapsed, that's a failure.
         return {'status_code' : 1}
       self.authorize_request = True
       self.log("Softwares installed")
