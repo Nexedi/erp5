@@ -136,8 +136,8 @@ class SyncMLSubscription(XMLObject):
       r = [str(x.path) for x in r]
       if not limit:
         # We do not split in activity so call the callback right now
-        syncml_logger.info("getAndIndex : got %d, %r result and no limit, calling callback..." %
-                           (result_count, r))
+        syncml_logger.info("getAndIndex : got %d result and no limit, calling callback..." %
+                           (result_count,))
         callback_method = getattr(self, callback)
         callback_method(path_list=r[:],
                         activate_kw=activate_kw,
@@ -295,7 +295,7 @@ class SyncMLSubscription(XMLObject):
         next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
         kw["strict_min_gid"] = r[-1]
         syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
-                           (kw["min_gid"],))
+                           (kw.get("min_gid", None),))
         self.activate(**next_kw).getAndActivate(
           callback, activate_kw, **kw)
         generated_other_activity = True
