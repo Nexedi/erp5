@@ -62,8 +62,9 @@ section_set = set((None,))\n
 payment_set = set((None,))\n
 payment_request_set = set((None,))\n
 resource_set = set((context.getResource(),))\n
+movement_type_list = context.getPortalAccountingMovementTypeList()\n
 \n
-for line in context.getMovementList():\n
+for line in context.getMovementList(portal_type=movement_type_list):\n
   resource_set.add(line.getResource())\n
   if source:\n
     section_set.add(line.getDestinationSection())\n
