@@ -152,7 +152,8 @@ class EngineMixin(object):
 
       else:
         raise ValueError("Unknown status command : %r" % (status['command'],))
-    domain.SQLCatalog_indexSyncMLDocumentList(path_list)
+    if len(path_list):
+      domain.SQLCatalog_indexSyncMLDocumentList(path_list)
     return sync_status_counter
 
   #
