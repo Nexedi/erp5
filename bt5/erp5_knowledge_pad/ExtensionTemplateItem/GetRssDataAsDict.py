@@ -29,8 +29,11 @@ def getRssDataAsDict(self, url, username=None, password=None):
     # we have an URL error
     return {'status':-2}
   elif d.bozo:
-    print d.bozo, d.bozo_exception
-    return {'status': -5}
+    # some bozo exceptions can be ignored
+    if not isinstance(d.bozo_exception, (
+        feedparser.CharacterEncodingOverride,
+      )):
+      return {'status': -5}
   if d.status == 401:
     return {'status':-3}
   elif d.status == 404:
