@@ -54,6 +54,7 @@ class EngineMixin(object):
     Read status (answer to command) and act according to them
     """
     sync_status_counter = 0
+    path_list = []
     for status in syncml_request.status_list:
       if status["command"] == "SyncHdr":  # Check for authentication
         if domain.getSynchronizationState() != "initializing":
@@ -132,6 +133,8 @@ class EngineMixin(object):
             syncml_logger.info("Chunk was accepted for %s" % (object_gid,))
           else:
             raise ValueError("Unknown status code : %r" % (status['status_code'],))
+          # Index signature now to fill the data column
+          path_list.append(signature.getPath())
       elif status['command'] == 'Delete':
         sync_status_counter += 1
         object_gid = status['source'] or status['target']
@@ -149,6 +152,7 @@ class EngineMixin(object):
 
       else:
         raise ValueError("Unknown status command : %r" % (status['command'],))
+    domain.SQLCatalog_indexSyncMLDocumentList(path_list)
     return sync_status_counter
 
   #

@@ -761,7 +761,6 @@ class SyncMLSubscription(XMLObject):
       raise ValueError("No object retrieved althoud min/max gid (%s/%s) is provided"
                             % (min_gid, max_gid))
 
-    path_list = []
     more_data = False
     for result in object_list:
       # XXX We need a way to stop the loop when we reach a given packet size
@@ -789,8 +788,6 @@ class SyncMLSubscription(XMLObject):
                                         temporary_data=document_data)
             syncml_logger.info("Created a signature %s for gid = %s, path %s"
                                 % (signature.getPath(), gid, document_path))
-        if signature:
-          path_list.append(signature.getPath())
         more_data = self._generateSyncCommand(
           action=ADD_ACTION,
           signature=signature,
@@ -810,7 +807,6 @@ class SyncMLSubscription(XMLObject):
         # We need to convert XML to a CDATA type to prevent collision
         # with syncml's XML
         document_data = etree.CDATA(xml_string.decode('utf-8'))
-        path_list.append(signature.getPath())
         syncml_logger.info("adding partial sync command for %s" %(gid,))
         syncml_response.addSyncCommand(
           sync_command=signature.getPartialAction(),
@@ -864,7 +860,6 @@ class SyncMLSubscription(XMLObject):
             continue
 
           # Reindex modified document
-          path_list.append(signature.getPath())
           syncml_logger.info("\tGot a diff for %s : %s" %(gid, data_diff))
           more_data = self._generateSyncCommand(
             action=REPLACE_ACTION,
@@ -902,7 +897,6 @@ class SyncMLSubscription(XMLObject):
         syncml_logger.info("Splitting document")
         break
 
-    self.SQLCatalog_indexSyncMLDocumentList(path_list)
     syncml_logger.info("_getSyncMLData end with more_data %s"
                        % (more_data,))
     return not more_data
