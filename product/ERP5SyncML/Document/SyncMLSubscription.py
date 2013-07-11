@@ -314,8 +314,13 @@ class SyncMLSubscription(XMLObject):
             first_call = False
           else:
             min_gid = r[i]
+            try:
+              max_gid = r[i+packet_size]
+            except IndexError:
+              # Last packet
+              max_gid = r[-1]
           callback_method(min_gid=min_gid,
-                          max_gid=r[i+packet_size],
+                          max_gid=max_gid,
                           message_id=message_id_list.pop(),
                           activate_kw=activate_kw)
       else:
