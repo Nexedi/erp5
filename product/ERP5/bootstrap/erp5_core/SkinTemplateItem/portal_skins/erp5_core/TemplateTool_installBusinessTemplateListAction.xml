@@ -51,8 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>listbox = kw.get(\'listbox\', ())\n
-update_catalog = kw.get(\'update_catalog\')\n
-update_translation = kw.get(\'update_translation\')\n
+update_catalog = update_translation = 0\n
 \n
 bt_id_list = getattr(context.REQUEST, \'bt_list\', ())\n
 bt_dict = {}\n
@@ -75,6 +74,9 @@ for bt_id in bt_id_list:\n
     object_list={}\n
   else:\n
     object_list = bt_dict[bt_id]\n
+  if bt_id == bt_id_list[-1]:\n
+    update_catalog = kw.get(\'update_catalog\')\n
+    update_translation = kw.get(\'update_translation\')\n
   bt = context.portal_templates[bt_id]\n
   bt.install(force=0, object_to_update=object_list, update_catalog=update_catalog,\n
              update_translation=update_translation)\n
