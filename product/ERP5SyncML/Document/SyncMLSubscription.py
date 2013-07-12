@@ -642,7 +642,8 @@ class SyncMLSubscription(XMLObject):
             last_anchor=self.getLastAnchor(),
             next_anchor=self.getNextAnchor())
     # Index signature with their new value
-    self.SQLCatalog_indexSyncMLDocumentList(path_list)
+    if len(path_list):
+      self.SQLCatalog_indexSyncMLDocumentList(path_list)
 
   def _sendFinalMessage(self):
     """
