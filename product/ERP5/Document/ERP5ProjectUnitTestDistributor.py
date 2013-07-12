@@ -99,11 +99,11 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_list_to_remove = []
     for test_node in test_node_list:
       test_suite_list = test_node.getAggregateList()
-      for test_suite_title in test_suite_list:
+      for test_suite in test_suite_list:
         try:
-          test_suite_list_to_add.remove(test_suite_title)
+          test_suite_list_to_add.remove(test_suite)
         except ValueError:
-          test_suite_list_to_remove.append(test_suite_title)
+          test_suite_list_to_remove.append(test_suite)
     return test_suite_list_to_remove
 
   security.declareProtected(Permissions.ManagePortal, "optimizeConfiguration")
@@ -207,10 +207,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       if len(test_node_list) == 1:
         test_node = test_node_list[0].getObject()
         if test_node.getValidationState() != 'validated':
-           try:
-            test_node.validate()
-           except e:
-             LOG('Test Node Validate',ERROR,'%s' %e)
+          test_node.validate()
       if test_node is None:
         test_node = test_node_module.newContent(portal_type="Test Node", title=title,
                                       specialise=self.getRelativeUrl(),

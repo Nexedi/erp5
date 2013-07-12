@@ -68,12 +68,16 @@ class TestTaskDistribution(ERP5TypeTestCase):
     return test_node_list
 
   def _createTestSuite(self,quantity=1,priority=1, reference_correction=0,
-                       specialise_value=None):
+                       specialise_value=None, title=None):
+    if title is None:
+      title = ""
     if specialise_value is None:
       specialise_value = self.distributor
     test_suite_list = []
     for i in range(quantity):
-      test_suite_title = "test suite %i" % (i + 1 + reference_correction,)
+      test_suite_title = "test suite %i" % (i + 1 + reference_correction)
+      if title:
+        test_suite_title += " %s" % title
       test_suite =  self.test_suite_module.newContent(
                     title = test_suite_title,
                     test_suite_title = test_suite_title,
@@ -302,12 +306,13 @@ class TestTaskDistribution(ERP5TypeTestCase):
     one test suite distributed per test node
     """
     test_node_one, test_node_two = self._createTestNode(quantity=2)
-    test_suite_list = self._createTestSuite(quantity=2)
+    test_suite_one = self._createTestSuite(reference_correction=+0,
+                              title='one')[0]
+    test_suite_one_url = test_suite_one.getRelativeUrl()
+    test_suite_two_url = self._createTestSuite(reference_correction=+1,
+                              title='two')[0].getRelativeUrl()
     self.tic()
     self._callOptimizeAlarm()
-    test_suite_one, test_suite_two = test_suite_list
-    test_suite_one_url, test_suite_two_url = [x.getRelativeUrl() for x in 
-                                            test_suite_list]
     check = self._checkTestSuiteAggregateList
     check([test_node_one, [test_suite_one_url]],
           [test_node_two, [test_suite_two_url]])
@@ -322,7 +327,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     check([test_node_zero, []],
           [test_node_one, []],
           [test_node_two, [test_suite_two_url]])
-    # test suite one is validating again, it is installed on first
+    # test suite one is validated again, it is installed on first
     # available test node
     test_suite_one.validate()
     check([test_node_zero, [test_suite_one_url]],
@@ -336,8 +341,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_two, []])
     # we add another test suite, since all test node already have one
     # test suite, the new test suite is given to first available one
-    test_suite_three_url = self._createTestSuite(reference_correction=+2)[0]\
-                             .getRelativeUrl()
+    test_suite_three_url = self._createTestSuite(reference_correction=+2,
+                                title='three')[0].getRelativeUrl()
     check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
           [test_node_one, [test_suite_two_url]],
           [test_node_two, []])
@@ -347,6 +352,52 @@ class TestTaskDistribution(ERP5TypeTestCase):
     check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
           [test_node_one, [test_suite_two_url]],
           [test_node_two, []])
+    # Now let's create a test suite needing between 1 to 2 test nodes
+    # We check that nodes with less suites are completed first
+    test_suite_four_url = self._createTestSuite(reference_correction=+5,
+                             priority=4, title='four')[0].getRelativeUrl()
+    check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
+          [test_node_one, [test_suite_two_url, test_suite_four_url]],
+          [test_node_two, [test_suite_four_url]])
+    # Now let's create a 2 test suite needing between 2 to 3 test nodes
+    # to make all test nodes almost satured
+    test_suite_five_url = self._createTestSuite(reference_correction=+6,
+                             priority=7, title='five')[0].getRelativeUrl()
+    test_suite_six_url = self._createTestSuite(reference_correction=+7,
+                             priority=7, title='six')[0].getRelativeUrl()
+    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_one, [test_suite_two_url, test_suite_four_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_two, [test_suite_four_url,
+                            test_suite_five_url, test_suite_six_url]])
+    # Then, check what happens if all nodes are more than saturated
+    # with a test suite needing between 3 to 5 test nodes
+    test_suite_seven_url = self._createTestSuite(reference_correction=+4,
+                             priority=9, title='seven')[0].getRelativeUrl()
+    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_one, [test_suite_two_url, test_suite_four_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_two, [test_suite_four_url, test_suite_seven_url,
+                            test_suite_five_url, test_suite_six_url]])
+    # No place any more, adding more test suite has no consequence
+    test_suite_height_url = self._createTestSuite(reference_correction=+8,
+                             priority=9, title='height')[0].getRelativeUrl()
+    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_one, [test_suite_two_url, test_suite_four_url,
+                            test_suite_five_url, test_suite_six_url]],
+          [test_node_two, [test_suite_four_url, test_suite_seven_url,
+                            test_suite_five_url, test_suite_six_url]])
+    # free some place by removing a test suite
+    self.portal.unrestrictedTraverse(test_suite_five_url).invalidate()
+    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
+                            test_suite_six_url, test_suite_seven_url]],
+          [test_node_one, [test_suite_two_url, test_suite_four_url,
+                            test_suite_six_url, test_suite_seven_url]],
+          [test_node_two, [test_suite_four_url, test_suite_six_url,
+                            test_suite_seven_url, test_suite_height_url]])
 
   def test_12_checkCloudPerformanceOptimizationIsStable(self):
     """
@@ -389,7 +440,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     check([test_node_zero, [test_suite_one_url, test_suite_two_url]],
           [test_node_one, [test_suite_one_url, test_suite_two_url]],
           [test_node_two, [test_suite_one_url, test_suite_two_url]])
-    # we add another test suite, all test nodes should run it
+    # we add another test suite, all test nodes should run it, except
+    # test_node_two which is dead
     test_suite_three_url = self._createTestSuite(reference_correction=+2,
                              specialise_value=self.performance_distributor)[0]\
                              .getRelativeUrl()
@@ -406,6 +458,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
                             test_suite_three_url]],
           [test_node_two, [test_suite_one_url, test_suite_two_url,
                             test_suite_three_url]])
+    # now we are going to
 
   def test_13_startTestSuiteWithOneTestNodeAndPerformanceDistributor(self):
     config_list = json.loads(self.performance_distributor.startTestSuite(
