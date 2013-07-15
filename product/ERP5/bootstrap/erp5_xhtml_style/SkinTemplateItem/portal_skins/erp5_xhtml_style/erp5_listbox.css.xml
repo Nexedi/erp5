@@ -844,8 +844,8 @@ table.listbox th img.sort-button-desc-selected{\n
 */\n
 table.listbox-thumbnail tbody tr{\n
   display:block;\n
-  width: 128px; /* nano image width. XXX: dynamically generate. */\n
-  height:128px; /* nano image height. XXX: dynamically generate. */\n
+  min-width: 128px; /* nano image width. XXX: dynamically generate. */\n
+  min-height:128px; /* nano image height. XXX: dynamically generate. */\n
   float:left;\n
   margin: 10px;\n
 }\n
