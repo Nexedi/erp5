@@ -91,6 +91,10 @@ class ScalabilityLauncher(object):
                         metavar='LOG_PATH',
                         help='Log Path')
                         
+    parser.add_argument('--erp5-location',
+                        metavar='ERP5_LOCATION',
+                        help='Path to erp5 depository')
+                        
     parser.add_argument('--runner-path',
                         metavar='Runner_PATH',
                         help='runner Path')
@@ -132,9 +136,9 @@ class ScalabilityLauncher(object):
     start_time = time.time()
     error_message_set, exit_status = set(), 0
 
-    test_suites = 'createPerson createWebPage'
-    benchmark_path_list = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples/'
-    user_file_path = '/opt/slapgrid/0d079fd393801181806cf894bf39aca6/parts/erp5/erp5/util/benchmark/examples/'
+    test_suites = 'createPerson'
+    benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, 'erp5/util/benchmark/examples/')
+    user_file_path = os.path.join(self.__argumentNamespace.erp5_location, 'erp5/util/benchmark/examples/')
     tester_path = self.__argumentNamespace.runner_path
     
     while time.time()-start_time < max_time:
