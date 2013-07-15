@@ -10,12 +10,15 @@ import errno
 import json
 import logging
 import logging.handlers
+import glob
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 
 from subprocess import call
+
+LOG_FILE_PREFIX = "performance_tester_erp5"
 
 class ScalabilityTest(object):
   def __init__(self, data, test_result):
@@ -116,6 +119,32 @@ class ScalabilityLauncher(object):
     """
     pass
 
+  def _returnFileContentList(path, scheme):
+    """
+    """
+    complete_scheme = os.path.join(path, scheme)
+    file_path_list = glob.glob(scheme)
+    content_list = []
+    for file_path in file_path_list:
+      opened_file = open(file_path, 'r')
+      content_list.append(opened_file.readlines())
+      opened_file.close()
+    return content_list
+
+  def returnLogList():
+    return self._returnFileContentList(self.__argumentNamespace.log_path,
+                                       "%s*.log" %LOG_FILE_PREFIX)
+    
+  def returnCsvList():
+    return self._returnFileContentList(self.__argumentNamespace.log_path,
+                                       "%s*.csv" %LOG_FILE_PREFIX)
+
+  def cleanUplogAndCsv():
+    files_to_delete = glob.glob(os.path.join(path, "%s*.log" %LOG_FILE_PREFIX))
+                      + glob.glob(os.path.join(path, "%s*.csv" %LOG_FILE_PREFIX))
+    for file_path in files_to_delete:
+      os.remove(file_path)
+
   def getNextTest(self):
     """
     Return a ScalabilityTest with current running test case informations,
@@ -157,16 +186,39 @@ class ScalabilityLauncher(object):
                  test_suites,
                  '--benchmark-path-list', benchmark_path_list,
                  '--users-file-path', user_file_path,
-                 '--filename-prefix', "performance_tester_erp5_%s_" %(current_test.title),
+                 '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
               ])
         except:
           self.log("Error during tester call.")
           raise ValueError("Tester call failed")
         self.log("Test Case %s is finish" %(current_test.title))
-        current_test.stop()
+        
+        log_contents = self.returnLogList()
+        csv_contents = self.returnCsvList()
+        self.cleanUplogAndCsv()
+
+        #current_test.stop()
+        
+        proxy = taskdistribution.ServerProxy(
+                    self.__argumentNamespace.test_suite_master_url,
+                    allow_none=True
+                ).portal_task_distribution
+        test_result_line_test = taskdistribution.TestResultLineProxy(
+                                  proxy, retry_time, self.log,
+                                  current_test.relative_path,
+                                  current_test.title
+                                )
+        stdout = "LOG:\n""\n====\n====\n====\n====\n"
+        for log_content in log_contents:
+          stdout = stdout + log_content + "\n====\n====\n"
+        stdout = stdout + "CSV:\n""\n====\n====\n====\n====\n"
+        for log_content in log_contents:
+          stdout = stdout + log_content + "\n====\n====\n"
+          
+        test_result_line_test.stop(stdout=stdout)
         self.log("Test Case Stopped")
-      
+
     return error_message_set, exit_status
 
 def main():
