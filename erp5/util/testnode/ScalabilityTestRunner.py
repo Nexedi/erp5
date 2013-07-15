@@ -309,6 +309,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
+    configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
     # create test_result
     test_result_proxy = self.testnode.portal.createTestResult(
@@ -323,15 +324,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Waiting for XML updating instance ready..")
-      _waitInstance(self.instance_title)
+      self._waitInstance(self.instance_title)
       # Stop instance
       self.slapos_controler.stopInstance(self.instance_title)
       self.log("Waiting for instance stop..")
-      _waitInstance(self.instance_title)
+      self._waitInstance(self.instance_title)
       # Start instance
       self.slapos_controler.startInstance(self.instance_title)
       self.log("Waiting for instance start..")
-      _waitInstance(self.instance_title)
+      self._waitInstance(self.instance_title)
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
