@@ -14,9 +14,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -27,9 +25,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,9 +36,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -54,9 +48,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -116,6 +108,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_multi_entry_transitions</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_server_buffer</string> </key>
             <value>
               <dictionary/>
@@ -124,7 +122,7 @@
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -132,6 +130,8 @@
             <value>
               <tuple>
                 <string>resource/workflow_module/erp5_standard_workflow</string>
+                <string>current_state/workflow_module/erp5_standard_workflow/63</string>
+                <string>specialise/portal_templates/42</string>
               </tuple>
             </value>
         </item>
@@ -183,10 +183,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>modification_date</string> </key>
@@ -245,8 +241,28 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>business_process_id</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>categories_spreadsheet_configuration_save_relative_url</string> </key>
+                    <value> <string>business_configuration_module/default_standard_configuration/3</string> </value>
+                </item>
+                <item>
                     <key> <string>company_email</string> </key>
-                    <value> <string>LUCAS@nexedi.com</string> </value>
+                    <value> <string>me@example.com</string> </value>
+                </item>
+                <item>
+                    <key> <string>company_employees_number</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>currency_id</string> </key>
+                    <value> <string>EUR</string> </value>
+                </item>
+                <item>
+                    <key> <string>default_currency</string> </key>
+                    <value> <string>EUR</string> </value>
                 </item>
                 <item>
                     <key> <string>group_id</string> </key>
@@ -254,7 +270,15 @@
                 </item>
                 <item>
                     <key> <string>organisation_configurator_item</string> </key>
-                    <value> <string>business_configuration_module/default_standard_configuration/3/1</string> </value>
+                    <value> <string>business_configuration_module/default_standard_configuration/5/3</string> </value>
+                </item>
+                <item>
+                    <key> <string>organisation_id</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type_roles_spreadsheet_configuration_save_relative_url</string> </key>
+                    <value> <string>business_configuration_module/default_standard_configuration/4</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -271,6 +295,26 @@
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>workflow_module/erp5_standard_workflow/12</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
