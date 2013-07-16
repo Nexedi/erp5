@@ -201,6 +201,17 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
     return {'status_code' : 0} 
 
+  # Used to simulate slapOS answer
+  def _waitInstance(self, instance_title):
+    self.log("Master testnode is waiting for a (dummy) SlapOS Master answer,\
+(kill -10 %s) to continue...", str(os.getpid()))
+    self._prepareDummySlapOSAnswer()
+    while (not self.isInstanceReady(instance_title)):
+      time.sleep(5)
+      pass
+    self._comeBackFromDummySlapOS()
+    self.log("Answer received.")
+
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install testsuite softwares
@@ -286,6 +297,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       self._createInstance(self.reachable_profile, configuration_list[0],
                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+      self.log("Waiting for instance creation..")
+      self._waitInstance(self.instance_title)
       self.log("Scalability instance requested")
       """      except:
         self.log("Unable to launch instance")
@@ -294,16 +307,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       """
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     return {'status_code' : 0}
-  # Used to simulate slapOS answer
-  def _waitInstance(self, instance_title):
-    self.log("Master testnode is waiting for a (dummy) SlapOS Master answer,\
-(kill -10 %s) to continue...", str(os.getpid()))
-    self._prepareDummySlapOSAnswer()
-    while (not self.isInstanceReady(instance_title)):
-      time.sleep(5)
-      pass
-    self._comeBackFromDummySlapOS()
-    self.log("Answer received.")
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
