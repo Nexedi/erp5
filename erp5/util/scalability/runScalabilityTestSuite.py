@@ -199,7 +199,7 @@ class ScalabilityLauncher(object):
         self.cleanUplogAndCsv()
 
         #current_test.stop()
-        
+        retry_time = 2.0
         proxy = taskdistribution.ServerProxy(
                     self.__argumentNamespace.test_suite_master_url,
                     allow_none=True
