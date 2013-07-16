@@ -320,14 +320,14 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   
     count = 0
     for configuration in configuration_list:
+      # Stop instance
+      self.slapos_controler.stopInstance(self.instance_title)
+      self.log("Waiting for instance stop..")
+      self._waitInstance(self.instance_title)
       # Update instance XML configuration 
       self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Waiting for XML updating instance ready..")
-      self._waitInstance(self.instance_title)
-      # Stop instance
-      self.slapos_controler.stopInstance(self.instance_title)
-      self.log("Waiting for instance stop..")
       self._waitInstance(self.instance_title)
       # Start instance
       self.slapos_controler.startInstance(self.instance_title)
