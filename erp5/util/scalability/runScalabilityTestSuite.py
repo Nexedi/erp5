@@ -160,7 +160,14 @@ class ScalabilityLauncher(object):
     return next_test
 
   def run(self):
-    self.log("Scalability Launcher started")
+    self.log("Scalability Launcher started, with:")
+    self.log("Test suite master url: %s" %self.__argumentNamespace.test_suite_master_url)
+    self.log("Test suite: %s" %self.__argumentNamespace.test_suite)
+    self.log("Test result path: %s" %self.__argumentNamespace.test_result_path)
+    self.log("Revision: %s" %self.__argumentNamespace.revision)
+    self.log("Node title: %s" %self.__argumentNamespace.node_title)
+    self.log("ERP5 url: %s" %self.__argumentNamespace.erp5_url)
+  
     max_time = 36000
     start_time = time.time()
     error_message_set, exit_status = set(), 0
