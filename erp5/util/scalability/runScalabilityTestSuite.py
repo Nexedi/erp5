@@ -119,7 +119,7 @@ class ScalabilityLauncher(object):
     """
     pass
 
-  def _returnFileContentList(path, scheme):
+  def _returnFileContentList(self, path, scheme):
     """
     """
     complete_scheme = os.path.join(path, scheme)
@@ -131,15 +131,15 @@ class ScalabilityLauncher(object):
       opened_file.close()
     return content_list
 
-  def returnLogList():
+  def returnLogList(self):
     return self._returnFileContentList(self.__argumentNamespace.log_path,
                                        "%s*.log" %LOG_FILE_PREFIX)
     
-  def returnCsvList():
+  def returnCsvList(self):
     return self._returnFileContentList(self.__argumentNamespace.log_path,
                                        "%s*.csv" %LOG_FILE_PREFIX)
 
-  def cleanUplogAndCsv():
+  def cleanUplogAndCsv(self):
     files_to_delete = glob.glob(os.path.join(path, "%s*.log" %LOG_FILE_PREFIX))\
                       + glob.glob(os.path.join(path, "%s*.csv" %LOG_FILE_PREFIX))
     for file_path in files_to_delete:
