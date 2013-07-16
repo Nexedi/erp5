@@ -166,7 +166,6 @@ extends = %(software_config_path)s
           profile_content_list.append("""
 [%(buildout_section_id)s]
 revision = %(revision)s
-branch = 
 """ %  {'buildout_section_id': buildout_section_id,
    'revision' : revision_dict[buildout_section_id]})
         else:
