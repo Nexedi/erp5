@@ -140,8 +140,10 @@ class ScalabilityLauncher(object):
                                        "%s*.csv" %LOG_FILE_PREFIX)
 
   def cleanUplogAndCsv(self):
-    files_to_delete = glob.glob(os.path.join(path, "%s*.log" %LOG_FILE_PREFIX))\
-                      + glob.glob(os.path.join(path, "%s*.csv" %LOG_FILE_PREFIX))
+    files_to_delete = glob.glob(os.path.join(self.__argumentNamespace.log_path,
+                                "%s*.log" %LOG_FILE_PREFIX))\
+                      + glob.glob(os.path.join(self.__argumentNamespace.log_path,
+                                "%s*.csv" %LOG_FILE_PREFIX))
     for file_path in files_to_delete:
       os.remove(file_path)
 
