@@ -127,7 +127,7 @@ class ScalabilityLauncher(object):
     content_list = []
     for file_path in file_path_list:
       opened_file = open(file_path, 'r')
-      content_list.append(opened_file.readlines())
+      content_list.append(''.join(opened_file.readlines()))
       opened_file.close()
     return content_list
 
