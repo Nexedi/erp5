@@ -1,0 +1,4 @@
+business_configuration_module/default_standard_configuration
+business_configuration_module/default_standard_configuration/*
+business_configuration_module/default_standard_configuration/*/*
+business_configuration_module/default_standard_configuration/**
