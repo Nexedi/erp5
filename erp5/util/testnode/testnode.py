@@ -113,7 +113,7 @@ class TestNode(object):
       invocation_list = line[2:].split()
     return invocation_list
 
-  def constructProfile(self, node_test_suite, use_relative_path=False):
+  def constructProfile(self, node_test_suite, test_type, use_relative_path=False):
     config = self.config
     profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
@@ -153,7 +153,24 @@ extends = %(software_config_path)s
                                     node_test_suite.reference)
           repository_path = os.path.relpath(repository_path, from_path)
 
-        profile_content_list.append("""
+        if test_type=="ScalabilityTest":
+#          updater = Updater(repository_path, git_binary=self.config['git_binary'],
+#          branch = vcs_repository.get('branch','master'), log=self.log, process_manager=self.process_manager)
+#          updater.checkout()
+#          revision = updater.getRevision()[1]
+          all_revision = node_test_suite.revision
+          # from 'sec1=xx-azer,sec2=yy-qwer,..' to [[sec1,azer],[sec2,qwer],..]
+          revision_list = [ [x.split('=')[0],x.split('=')[1].split('-')[1]] for x in all_revision.split(',') ]
+          # from [[sec1,azer],[sec2,qwer],..] to {sec1:azer,sec2:qwer,..}
+          revision_dict = {branch:revision for branch,revision in revision_list}
+          profile_content_list.append("""
+[%(buildout_section_id)s]
+revision = %(revision)s
+branch = 
+""" %  {'buildout_section_id': buildout_section_id,
+   'revision' : revision_dict[buildout_section_id]})
+        else:
+          profile_content_list.append("""
 [%(buildout_section_id)s]
 repository = %(repository_path)s
 branch = %(branch)s
@@ -345,11 +362,11 @@ from the distributor.")
                log_directory=self.config['log_directory'])
             node_test_suite.edit(**test_suite)
             run_software = True
-            # Write our own software.cfg to use the local repository
-            self.constructProfile(node_test_suite, runner.getRelativePathUsage())
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             self.getAndUpdateFullRevisionList(node_test_suite)
+            # Write our own software.cfg to use the local repository
+            self.constructProfile(node_test_suite, my_test_type, runner.getRelativePathUsage())
             # Make sure we have local repository
             test_result = portal.createTestResult(node_test_suite.revision, [],
                      config['test_node_title'], False,

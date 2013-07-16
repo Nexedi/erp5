@@ -209,15 +209,19 @@ class ERP5TestNode(TestCase):
   def test_04_constructProfile(self, my_test_type='UnitTest'):
     """
     Check if the software profile is correctly generated
-    """
+    """  
     test_node = self.getTestNode()
+    test_node.test_suite_portal = TaskDistributor
+    test_node.test_suite_portal.getTestNode = TaskDistributor.getTestType
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    test_node.constructProfile(node_test_suite)
+    node_test_suite.revision = 'rep1=1234-azerty,rep2=3456-qwerty'
+    test_node.constructProfile(node_test_suite,my_test_type)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
     profile = open(node_test_suite.custom_profile_path, 'r')
-    expected_profile = """
+    if my_test_type=='UnitTest':
+      expected_profile = """
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
@@ -229,6 +233,21 @@ branch = master
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
 """ % {'temp_dir': self._temp_dir}
+    else:
+      revision1 = "azerty"
+      revision2 = "qwerty"
+      expected_profile = """
+[buildout]
+extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
+
+[rep1]
+revision = %(revision1)s
+branch = 
+
+[rep2]
+revision = %(revision2)s
+branch = 
+""" % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
@@ -726,7 +745,7 @@ branch = foo
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       SlapOSControler.supply =original_supply
       SlapOSControler.request = original_request
-      SlapOSControler._updateInstanceXML = original_updateInstanceXML
+      SlapOSControler.updateInstanceXML = original_updateInstanceXML
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -921,7 +940,7 @@ branch = foo
     original_runTestSuite = RunnerClass.runTestSuite
     original_supply = SlapOSControler.supply
     original_request = SlapOSControler.request
-    original_updateInstanceXML = SlapOSControler._updateInstanceXML
+    original_updateInstanceXML = SlapOSControler.updateInstanceXML
 
     #
     time.sleep = doNothing
@@ -937,7 +956,7 @@ branch = foo
     RunnerClass.runTestSuite = doNothing
     SlapOSControler.supply = doNothing
     SlapOSControler.request = doNothing
-    SlapOSControler._updateInstanceXML = doNothing
+    SlapOSControler.updateInstanceXML = doNothing
     # Run
     test_node = self.getTestNode()  
     test_node.run()
@@ -954,5 +973,5 @@ branch = foo
     RunnerClass.runTestSuite = original_runTestSuite
     SlapOSControler.supply = original_supply
     SlapOSControler.request = original_request
-    SlapOSControler._updateInstanceXML = original_updateInstanceXML
+    SlapOSControler.updateInstanceXML = original_updateInstanceXML
     time.sleep =original_sleep
