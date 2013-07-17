@@ -173,15 +173,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # this simulate a SlapOS answer
     return self.simulateSlapOSAnswer()
     
-  def isInstanceReady(self, instance_title):
+  def isInstanceReady(self, instance_title, state):
     """
     Return true if the specified instance is ready.
     This method should communicates with SlapOS Master.
     """
-    # TODO : implement -> communication with SlapOS master
-    # this simulate a SlapOS answer
-    #return self.simulateSlapOSAnswer()
-    return self.slapos_communicator.isInstanceCorrectly(instance_title, 'started')
+    return self.slapos_communicator.isInstanceCorrectly(instance_title, state)
       
   def remainSoftwareToInstall(self):
     """
@@ -207,15 +204,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     return {'status_code' : 0} 
 
   # Used to simulate slapOS answer
-  def _waitInstance(self, instance_title):
-    self.log("Master testnode is waiting for a (dummy) SlapOS Master answer,\
-(kill -10 %s) to continue...", str(os.getpid()))
-    self._prepareDummySlapOSAnswer()
-    while (not self.isInstanceReady(instance_title)):
-      time.sleep(5)
+  def _waitInstance(self, instance_title, state):
+    self.log("Wait for instance state: %s" %state)
+    while (not self.isInstanceReady(instance_title, state)):
+      time.sleep(15)
       pass
-    self._comeBackFromDummySlapOS()
-    self.log("Answer received.")
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -303,8 +296,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._createInstance(self.reachable_profile, configuration_list[0],
                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Waiting for instance creation..")
-      #self._waitInstance(self.instance_title)
-      self.slapos_communicator.isInstanceCorrectly(self.self.instance_title, 'started')
+      self._waitInstance(self.instance_title, 'started')
       self.log("Scalability instance requested")
       """      except:
         self.log("Unable to launch instance")
@@ -332,22 +324,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       # Stop instance
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self.slapos_controler.stopInstance(self.instance_title)
-      self.log("Waiting for instance stop..")
-      #self._waitInstance(self.instance_title)
-      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'stopped')
+      self._waitInstance(self.instance_title, 'stopped')
       # Update instance XML configuration 
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
-      self.log("Waiting for XML updating instance ready..")
-      #self._waitInstance(self.instance_title)
-      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'started')
+      self._waitInstance(self.instance_title, 'started')
       # Start instance
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self.slapos_controler.startInstance(self.instance_title)
-      self.log("Waiting for instance start..")
-      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'started')
-      #self._waitInstance(self.instance_title)
+      self._waitInstance(self.instance_title, 'started')
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
