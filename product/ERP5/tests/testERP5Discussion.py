@@ -33,6 +33,7 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5OOo.tests.testDms import makeFileUpload
 
 
 class TestERP5Discussion(ERP5TypeTestCase):
@@ -134,6 +135,22 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.tic()
     # indexed already
     self.assertSameSet([discussion_thread], web_section1.WebSection_getDiscussionThreadList())
+    discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()
+    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(0, len(attachment_list))
+
+    # check attachment creation
+    file = makeFileUpload('TEST-en-002.doc')
+    web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file)
+    discussion_thread = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getReference()=='test1-new-with-attachment'][0]
+    self.tic()
+    
+    discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
+    attachment_list = discussion_post.DiscussionPost_getAttachmentList()
+    self.assertEqual(discussion_thread.getValidationState(), 'published')
+    self.assertEqual(1, len(attachment_list))
 
   def test_MultipleForum(self):
     """
