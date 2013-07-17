@@ -135,6 +135,13 @@ class SlapOSControler(object):
     except:
       raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
       
+  def getInstanceState(self, reference):
+    try:
+      return self.instance_config[reference]['partition'].getState()
+    except:
+      raise ValueError("Impossible to get the instance state, instance "
+                       "'%s' may not exist" %self.instance_config[reference])
+      
   def request(self, reference, software_url, software_type=None,
             software_configuration=None, computer_guid=None, state='started'):
     """
@@ -154,7 +161,8 @@ class SlapOSControler(object):
                               'software_configuration':software_configuration,
                               'computer_guid':computer_guid,
                               'software_url':software_url,
-                              'requested_state':state
+                              'requested_state':state,
+                              'partition':None
                               }
     self.instance_config[reference] = current_intance_config
 
@@ -176,6 +184,7 @@ class SlapOSControler(object):
           software_type = software_type,
           filter_kw = filter_kw,
           state = state)
+        self.instance_config[reference]['partition'] = partition
       #      print "Instance requested.\nState is : %s." % partition.getState()
       # Is it possible to have the true state of the instance with getState() ?
           # Do a return partition ?
