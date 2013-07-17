@@ -222,8 +222,8 @@ class ScalabilityLauncher(object):
         for log_content in log_contents:
           stdout = stdout + log_content + "\n====\n====\n"
         stdout = stdout + "CSV:\n""\n====\n====\n====\n====\n"
-        for log_content in log_contents:
-          stdout = stdout + log_content + "\n====\n====\n"
+        for csv_content in csv_contents:
+          stdout = stdout + csv_content + "\n====\n====\n"
           
         test_result_line_test.stop(stdout=stdout)
         self.log("Test Case Stopped")
