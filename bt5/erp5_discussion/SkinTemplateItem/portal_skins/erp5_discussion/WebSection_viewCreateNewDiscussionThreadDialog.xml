@@ -96,6 +96,7 @@
                         <string>your_title</string>
                         <string>your_send_notification_text</string>
                         <string>your_text_content</string>
+                        <string>your_file</string>
                         <string>your_captcha</string>
                       </list>
                     </value>

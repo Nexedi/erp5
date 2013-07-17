@@ -50,6 +50,7 @@
                  discussion_post_creation_date python: here.Base_FormatDate(discussion_post_object.getCreationDate());\n
                  discussion_post_validation_state_title discussion_post_object/getTranslatedValidationStateTitle;\n
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
+                 attachment_list discussion_post_object/DiscussionPost_getAttachmentList;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
   <div class="discussion-post-header">\n
@@ -76,6 +77,18 @@
 \n
   <div class="discussion-post-body-container"\n
        tal:content="structure discussion_post_stripped_html"></div>\n
+\n
+  <div class="attachment"\n
+       tal:condition="python: len(attachment_list)">\n
+    <p>Attachments:</p>\n
+    <ul>\n
+      <li tal:repeat="attachment attachment_list">\n
+        <a tal:attributes="href attachment/url"\n
+           tal:content="attachment/title"></a>\n
+      </li>\n
+    </ul>\n
+  </div>\n
+  \n
 \n
   <div tal:condition="python: author_signature is not None"\n
        class="discussion-post-author-signature-container"\n
