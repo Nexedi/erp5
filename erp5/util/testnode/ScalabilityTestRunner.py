@@ -42,6 +42,7 @@ from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
+from erp5.util.testnode import SlapOSMasterCommunicator
 # for dummy slapos answer
 import signal
 
@@ -60,7 +61,8 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
-                              
+    self.slapos_communicator = SlapOSMasterCommunicator(key, certificate,
+                                 'https://rest.slapos.org/Base_getHateoasMaster')
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking
@@ -178,7 +180,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     # TODO : implement -> communication with SlapOS master
     # this simulate a SlapOS answer
-    return self.simulateSlapOSAnswer()
+    #return self.simulateSlapOSAnswer()
+    return self.slapos_communicator.isInstanceCorrectly(instance_title, 'started')
       
   def remainSoftwareToInstall(self):
     """
@@ -300,7 +303,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._createInstance(self.reachable_profile, configuration_list[0],
                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Waiting for instance creation..")
-      self._waitInstance(self.instance_title)
+      #self._waitInstance(self.instance_title)
+      self.slapos_communicator.isInstanceCorrectly(self.self.instance_title, 'started')
       self.log("Scalability instance requested")
       """      except:
         self.log("Unable to launch instance")
@@ -329,18 +333,21 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self.slapos_controler.stopInstance(self.instance_title)
       self.log("Waiting for instance stop..")
-      self._waitInstance(self.instance_title)
+      #self._waitInstance(self.instance_title)
+      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'stopped')
       # Update instance XML configuration 
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
       self.log("Waiting for XML updating instance ready..")
-      self._waitInstance(self.instance_title)
+      #self._waitInstance(self.instance_title)
+      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'started')
       # Start instance
       self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
       self.slapos_controler.startInstance(self.instance_title)
       self.log("Waiting for instance start..")
-      self._waitInstance(self.instance_title)
+      self.slapos_communicator.isInstanceCorrectly(self.instance_title, 'started')
+      #self._waitInstance(self.instance_title)
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
