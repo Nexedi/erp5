@@ -50,7 +50,7 @@ class SlapOSMasterCommunicator(object):
 
   def _curl(self, link):
     """
-    link must look like : {'href':link,'type':content_type}
+    'link' must look like : {'href':url,'type':content_type}
     """
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(link['href'])
     self.connection.request(
