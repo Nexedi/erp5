@@ -363,7 +363,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break;
 
       # TODO: use only isAlive() and change test_result workflow on ERP5 Master side for the scalability case
-      sel)f.log("Test for count : %d is in a running state." %count)
+      self.log("Test for count : %d is in a running state." %count)
       while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
         time.sleep(15)
         pass
