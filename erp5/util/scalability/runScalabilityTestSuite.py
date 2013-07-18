@@ -24,14 +24,7 @@ class ScalabilityTest(object):
   def __init__(self, data, test_result):
     self.__dict__ = {}
     self.__dict__.update(data)
-    self.test_result = test_result
-
-  def stop(self):
-    self.test_result.stopTestCase(self.relative_path)
-    
-  def cancel(self):
-    self.test_result.cancelTestCase(self.relative_path)
-    
+    self.test_result = test_result    
     
 class ScalabilityLauncher(object):
   def __init__(self):
@@ -205,9 +198,8 @@ class ScalabilityLauncher(object):
         
         log_contents = self.returnLogList()
         csv_contents = self.returnCsvList()
-        self.cleanUplogAndCsv()
+        #self.cleanUplogAndCsv()
 
-        #current_test.stop()
         retry_time = 2.0
         proxy = taskdistribution.ServerProxy(
                     self.__argumentNamespace.test_suite_master_url,
