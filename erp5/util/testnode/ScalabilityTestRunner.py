@@ -31,6 +31,7 @@ import sys
 import time
 import glob
 import SlapOSControler
+import SlapOSMasterCommunicator
 import json
 import time
 import shutil
@@ -42,7 +43,6 @@ from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
-from erp5.util.testnode import SlapOSMasterCommunicator
 # for dummy slapos answer
 import signal
 
