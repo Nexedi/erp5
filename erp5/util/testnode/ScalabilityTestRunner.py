@@ -47,6 +47,7 @@ from erp5.util import taskdistribution
 import signal
 
 MAX_INSTANCE_TIME = 60*60 # 1 hour
+MAX_CREATION_INSTANCE_TIME = 60*5 # 5 minutes
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -176,14 +177,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # TODO : implement -> communication with SlapOS master
     # this simulate a SlapOS answer
     return self.simulateSlapOSAnswer()
-    
-  def isInstanceReady(self, instance_title, state):
-    """
-    Return true if the specified instance is ready.
-    This method should communicates with SlapOS Master.
-    """
-    return self.slapos_communicator.isHostingSubscriptionCorrectly(instance_title, state)
-      
+  
   def remainSoftwareToInstall(self):
     """
     Return True if it remains softwares to install, otherwise return False
@@ -207,16 +201,31 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
     return {'status_code' : 0} 
 
-  # Used to simulate slapOS answer
-  def _waitInstance(self, instance_title, state):
+  def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
+    """
+    Wait for 'max_time' an instance specific state
+    """
     self.log("Wait for instance state: %s" %state)
-    #TODO: add a time limit
-    max_time = MAX_INSTANCE_TIME
-    start_time = 0
-    
-    while (not self.isInstanceReady(instance_title, state) 
+    start_time = time.time()
+    while (not self.slapos_communicator.isHostingSubscriptionCorrectly(instance_title, state)
          and (max_time > (time.time()-start_time))):
       time.sleep(15)
+    if (time.time()-start_time) > max_time:
+      raise ErrorValue("Instance '%s' not '%s' after %s seconds" %(title, state))
+    self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
+
+  def _waitInstanceCreation(self, title, max_time=MAX_CREATION_INSTANCE_TIME):
+    """
+    Wait for 'max_time' the instance creation
+    """
+    self.log("Wait for instance creation")
+    start_time = time.time()
+    while ( not self.slapos_communicator.isRegisteredHostingSubscription(title) \
+         and (max_time > (time.time()-start_time)) ):
+      time.sleep(5)
+    if (time.time()-start_time) > max_time:
+      raise ErrorValue("Instance '%s' not found after %s seconds" %(title, max_time))
+    self.log("Instance found on slapOSMaster")
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -303,9 +312,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       self._createInstance(self.reachable_profile, configuration_list[0],
                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
-      self.log("Waiting for instance creation..")
-      self._waitInstance(self.instance_title, 'started')
       self.log("Scalability instance requested")
+      self.log("Waiting for instance creation..")
+      self._waitInstanceCreation(self.instance_title)
       """      except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
@@ -330,17 +339,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     count = 0
     for configuration in configuration_list:
       # Stop instance
-      self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
-      self.slapos_controler.stopInstance(self.instance_title)
-      self._waitInstance(self.instance_title, 'stopped')
-      # Update instance XML configuration 
-      self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
-      self._updateInstanceXML(configuration, self.instance_title,
+      if count > 0:
+        self.slapos_controler.stopInstance(self.instance_title)
+        self._waitInstance(self.instance_title, 'stopped')
+        # Update instance XML configuration 
+        self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
-      self._waitInstance(self.instance_title, 'started')
-      # Start instance
-      self.log("Instance state: %s", self.slapos_controler.getInstanceState(self.instance_title))
-      self.slapos_controler.startInstance(self.instance_title)
+        self._waitInstance(self.instance_title, 'started')
+        # Start instance
+        self.slapos_controler.startInstance(self.instance_title)
       self._waitInstance(self.instance_title, 'started')
       
       # Start only the current test
@@ -387,9 +394,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         error = ValueError("Test case is in an undeterminated state")
         break;
 
-    
     self.slapos_controler.destroyInstance(self.instance_title)
-
     
     if error:
       test_result_proxy.fail()

@@ -1,6 +1,7 @@
 import json
 import httplib
 import urlparse
+import time
 
 # TODO: News-> look list to get last news... (and not the first of the list)
 
@@ -25,15 +26,16 @@ class SlapOSMasterCommunicator(object):
     for instance_link in instance_link_list:
       news = communicator.getNewsFromInstanceLink(instance_link)
       print news['news']
-    
   """
   def __init__(self, certificate_path, key_path, log,
                      url):
     # Create connection
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
     self.log = log
-    self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
-    self.connection = httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path)
+    self.certificate_path = certificate_path
+    self.key_path = key_path
+    self.url = url
+    self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
     # Get master
     master_link = {'href':api_path,'type':"application/vnd.slapos.org.hal+json; class=slapos.org.master"}
     master = self._curl(master_link)
@@ -50,6 +52,11 @@ class SlapOSMasterCommunicator(object):
     self.log("SlapOSMasterCommunicator will read all hosting subscriptions entries, "
              "it may take several time...")
     self._update_hosting_subscription_informations()
+    
+  def _getConnection(self,certificate_path, key_path, url):
+    api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
+    self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
+    return httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path)
 
   def _curl(self, link):
     """
@@ -57,13 +64,18 @@ class SlapOSMasterCommunicator(object):
     """
     self.log("_curl with: url:%s content_type:%s" %(link['href'], link['type']))
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(link['href'])
-    self.connection.request(
-      method='GET',
-      url=api_path,
-      headers={'Accept': link['type']},
-      body=""
-    )
-    response = self.connection.getresponse()
+    # Try to use existing conection
+    try:
+      self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
+      response = self.connection.getresponse()
+    except:
+      try:
+        # Try to update and use the connection
+        self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
+        self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
+        response = self.connection.getresponse()
+      except:
+        raise ValueError("Impossible to use connection")
     return json.loads(response.read())
         
   def _update_hosting_subscription_informations(self):
@@ -77,8 +89,8 @@ class SlapOSMasterCommunicator(object):
     # For each hosting_subcription present in the collection
     for hosting_subscription_link in collection['_links']['item']:
       if hosting_subscription_link not in self.visited_hosting_subcriptions_link_list:
-        title = self._curl(hosting_subscription_link)['title']
-        self.hosting_subcriptions_dict.update({title:hosting_subscription_link})
+        hosting_subscription = self._curl(hosting_subscription_link)
+        self.hosting_subcriptions_dict.update({hosting_subscription['title']:hosting_subscription_link})
         self.visited_hosting_subcriptions_link_list.append(hosting_subscription_link)
     
   def _getRelatedInstanceLink(self, hosting_subscription_title):
@@ -160,8 +172,16 @@ class SlapOSMasterCommunicator(object):
     """
     instance_link_list = self._getRelatedInstanceLink(hosting_subscription_title)
     for instance_link in instance_link_list:
-      if not communicator.isInstanceCorrectly(instance_link, status):
+      if not self.isInstanceCorrectly(instance_link, status):
         return False
     return len(instance_link_list) > 0
     
-  
+  def isRegisteredHostingSubscription(self, hosting_subscription_title):
+    """
+    Return True if the specified hosting_subscription is present on SlapOSMaster
+    """
+    self._update_hosting_subscription_informations()
+    if self.hosting_subcriptions_dict.get(hosting_subscription_title):
+      return True
+    return False
+    

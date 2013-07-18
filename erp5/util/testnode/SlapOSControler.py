@@ -136,13 +136,6 @@ class SlapOSControler(object):
     except:
       raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
       
-  def getInstanceState(self, reference):
-    try:
-      return self.instance_config[reference]['partition'].getState()
-    except:
-      raise ValueError("Impossible to get the instance state, instance "
-                       "'%s' may not exist" %self.instance_config[reference])
-      
   def request(self, reference, software_url, software_type=None,
             software_configuration=None, computer_guid=None, state='started'):
     """

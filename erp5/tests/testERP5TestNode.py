@@ -502,6 +502,8 @@ revision = %(revision2)s
       return (grade == 'master')
     def patch_isHostingSubscriptionCorrectly(self, *args, **kw):
       return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True      
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -568,6 +570,7 @@ revision = %(revision2)s
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_updateInstanceXML = RunnerClass._updateInstanceXML
       original_isHostingSubscriptionCorrectly = SlapOSMasterCommunicator.isHostingSubscriptionCorrectly
+      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
       original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
@@ -575,6 +578,7 @@ revision = %(revision2)s
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       RunnerClass._updateInstanceXML = doNothing
       SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = patch_isHostingSubscriptionCorrectly
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
@@ -605,6 +609,7 @@ revision = %(revision2)s
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       RunnerClass._updateInstanceXML = original_updateInstanceXML
       SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = original_isHostingSubscriptionCorrectly
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
@@ -668,6 +673,8 @@ revision = %(revision2)s
       return grade == 'master'
     def patch_isHostingSubscriptionCorrectly(self, *args, **kw):
       return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True     
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -722,6 +729,7 @@ revision = %(revision2)s
       original_request = SlapOSControler.request
       original_updateInstanceXML = RunnerClass._updateInstanceXML
       original_isHostingSubscriptionCorrectly = SlapOSMasterCommunicator.isHostingSubscriptionCorrectly
+      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
       original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
@@ -731,6 +739,7 @@ revision = %(revision2)s
       SlapOSControler.request = doNothing
       RunnerClass._updateInstanceXML = doNothing
       SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = patch_isHostingSubscriptionCorrectly
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
@@ -761,6 +770,7 @@ revision = %(revision2)s
       SlapOSControler.request = original_request
       SlapOSControler.updateInstanceXML = original_updateInstanceXML
       SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = original_isHostingSubscriptionCorrectly
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
@@ -938,6 +948,8 @@ revision = %(revision2)s
       return "ScalabilityTest"
     def patch_isHostingSubscriptionCorrectly(self, *args, **kw):
       return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True     
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -960,6 +972,7 @@ revision = %(revision2)s
     original_request = SlapOSControler.request
     original_updateInstanceXML = SlapOSControler.updateInstanceXML
     original_isHostingSubscriptionCorrectly = SlapOSMasterCommunicator.isHostingSubscriptionCorrectly
+    original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
     original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
 
     #
@@ -978,6 +991,7 @@ revision = %(revision2)s
     SlapOSControler.request = doNothing
     SlapOSControler.updateInstanceXML = doNothing
     SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = patch_isHostingSubscriptionCorrectly
+    SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
     SlapOSMasterCommunicator.__init__ = doNothing
     # Run
     test_node = self.getTestNode()  
@@ -997,5 +1011,6 @@ revision = %(revision2)s
     SlapOSControler.request = original_request
     SlapOSControler.updateInstanceXML = original_updateInstanceXML
     SlapOSMasterCommunicator.isHostingSubscriptionCorrectly = original_isHostingSubscriptionCorrectly
+    SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
     SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     time.sleep =original_sleep
