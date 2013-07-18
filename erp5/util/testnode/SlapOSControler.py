@@ -150,7 +150,7 @@ class SlapOSControler(object):
                                'kvm.cfg', 'cluster', { "_" : "{'toto' : 'titi'}" } )
 
     """
-    self.log('SlapOSControler : request')
+    self.log('SlapOSControler : request-->SlapOSMaster')
     current_intance_config = {'software_type':software_type,
                               'software_configuration':software_configuration,
                               'computer_guid':computer_guid,

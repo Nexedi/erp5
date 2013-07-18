@@ -46,8 +46,10 @@ from erp5.util import taskdistribution
 # for dummy slapos answer
 import signal
 
-MAX_INSTANCE_TIME = 60*60 # 1 hour
-MAX_CREATION_INSTANCE_TIME = 60*5 # 5 minutes
+# max time to instance changing state: 1 hour
+MAX_INSTANCE_TIME = 60*60
+# max time to register instance to slapOSMaster: 5 minutes
+MAX_CREATION_INSTANCE_TIME = 60*5
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -355,12 +357,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
       if test_result_line_proxy == None :
-        self.log("Already tested.")
-        error = ValueError("Test already tested.")
+        #self.log("Already tested.")
+        #error = ValueError("Test already tested.")
+        self.log("Warning::Test already tested.")
         break;
 
       # TODO: use only isAlive() and change test_result workflow on ERP5 Master side for the scalability case
-      self.log("Test for count : %d is in a running state." %count)
+      sel)f.log("Test for count : %d is in a running state." %count)
       while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
         time.sleep(15)
         pass
@@ -394,7 +397,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         error = ValueError("Test case is in an undeterminated state")
         break;
 
+    # Destroy instance
     self.slapos_controler.destroyInstance(self.instance_title)
+    self._waitInstance(self.instance_title, 'destroyed')
     
     if error:
       test_result_proxy.fail()

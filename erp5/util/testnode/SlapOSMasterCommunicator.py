@@ -55,14 +55,14 @@ class SlapOSMasterCommunicator(object):
     
   def _getConnection(self,certificate_path, key_path, url):
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
-    self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
+    #self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
     return httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path)
 
   def _curl(self, link):
     """
     'link' must look like : {'href':url,'type':content_type}
     """
-    self.log("_curl with: url:%s content_type:%s" %(link['href'], link['type']))
+    #.log("_curl with: url:%s content_type:%s" %(link['href'], link['type']))
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(link['href'])
     # Try to use existing conection
     try:
@@ -184,4 +184,12 @@ class SlapOSMasterCommunicator(object):
     if self.hosting_subcriptions_dict.get(hosting_subscription_title):
       return True
     return False
+
+  def getAliveHostingSubscription(self, prefix_title):
+    """
+    Return list of dict information of alive hosting subscrtion
+    """
+    return []
+
+
     
