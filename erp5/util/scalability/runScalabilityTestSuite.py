@@ -190,6 +190,7 @@ class ScalabilityLauncher(object):
                  '--users-file-path', user_file_path,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
+                 '--repeat', '100',
               ])
         except:
           self.log("Error during tester call.")
