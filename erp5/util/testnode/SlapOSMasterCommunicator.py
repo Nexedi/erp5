@@ -134,7 +134,7 @@ class SlapOSMasterCommunicator(object):
     Return True if instance status and instance news text ~looks corresponding.
     ( use the matching of 'correctly' and 'Instance' and status )
     """
-    text = getNewsFromInstanceLink(instance_link)['news'][0]['text']
+    text = self.getNewsFromInstanceLink(instance_link)['news'][0]['text']
     return ('Instance' in text) and ('correctly' in text) and (status in text)
 
   def isHostingSubscriptionCorrect(self, hosting_subscription_title):
