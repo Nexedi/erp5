@@ -2340,6 +2340,17 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'order_by_expression (%r) and sort_on (%r) were given. Ignoring order_by_expression.' % (order_by_expression, sort_on))
       if not isinstance(sort_on, (tuple, list)):
         sort_on = [[sort_on]]
+
+      # Workaround fix for translated_simulation_state_title by Yusei
+      new_sort_on = []
+      for sort_on_item in sort_on:
+        if (isinstance(sort_on_item, (tuple, list)) and len(sort_on_item) == 2 and
+            sort_on_item[0] == 'translated_simulation_state_title'):
+          sort_on_item = ('translated_simulation_state_title__', sort_on_item[1])
+        new_sort_on.append(sort_on_item)
+      original_sort_on = sort_on
+      sort_on = new_sort_on
+
       for item in sort_on:
         if isinstance(item, (tuple, list)):
           item = list(item)
