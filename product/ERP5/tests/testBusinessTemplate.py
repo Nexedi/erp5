@@ -7010,6 +7010,85 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        Tic \
                        CheckOrganisationModified \
                        '
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCreateTextFile(self, sequence=None, **kw):
+    skin_tool = self.getSkinsTool()
+    skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
+
+    file_id = 'fake_js_file'
+    file_content = """  
+   var 
+ 
+        debug =  [42  
+ ];
+ 
+    """
+
+    from Products.ERP5Type.tests.utils import createZODBFile
+    createZODBFile(skin_folder, file_id, 'text/javascript', file_content)
+
+    sequence.edit(fake_file_id=file_id,
+                  fake_file_content=file_content)
+
+  def stepCheckTextFileContent(self, sequence=None, **kw):
+    skin_folder = self.getSkinsTool()._getOb(sequence.get('skin_folder_id'))
+    file_content = getattr(skin_folder, sequence.get('fake_file_id')).data
+    expected_file_content = sequence.get('fake_file_content')
+
+    self.assertEquals(file_content, expected_file_content)
+    self.assertEquals(len(file_content), len(expected_file_content))
+
+  def test_text_file_import_export(self):
+    """
+    When importing back ace.js containing a last line with whitespaces only,
+    the last line was not imported, and thus the file could never been
+    downloaded completely as its really size was less than the one on the File
+    ZODB object
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+       CreateSkinFolder
+       CreateTextFile
+       CheckTextFileContent
+
+       CreateNewBusinessTemplate
+       UseExportBusinessTemplate
+       AddSkinFolderToBusinessTemplate
+       CheckModifiedBuildingState
+       CheckNotInstalledInstallationState
+       BuildBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       CheckObjectPropertiesInBusinessTemplate
+       SaveBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       RemoveSkinFolder
+       RemoveBusinessTemplate
+       RemoveAllTrashBins
+
+       ImportBusinessTemplate
+       UseImportBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       InstallWithoutForceBusinessTemplate
+       Tic
+       CheckInstalledInstallationState
+       CheckBuiltBuildingState
+       CheckNoTrashBin
+       CheckSkinsLayers
+       CheckSkinFolderExists
+       CheckTextFileContent
+
+       UninstallBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       CheckSkinFolderRemoved
+       """
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
