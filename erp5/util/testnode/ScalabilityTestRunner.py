@@ -46,6 +46,7 @@ from erp5.util import taskdistribution
 # for dummy slapos answer
 import signal
 
+MAX_INSTANCE_TIME = 60*60 # 1 hour
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -181,7 +182,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     Return true if the specified instance is ready.
     This method should communicates with SlapOS Master.
     """
-    return self.slapos_communicator.isInstanceCorrectly(instance_title, state)
+    return self.slapos_communicator.isHostingSubscriptionCorrectly(instance_title, state)
       
   def remainSoftwareToInstall(self):
     """
@@ -209,9 +210,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   # Used to simulate slapOS answer
   def _waitInstance(self, instance_title, state):
     self.log("Wait for instance state: %s" %state)
-    while (not self.isInstanceReady(instance_title, state)):
+    #TODO: add a time limit
+    max_time = MAX_INSTANCE_TIME
+    start_time = 0
+    
+    while (not self.isInstanceReady(instance_title, state) 
+         and (max_time > (time.time()-start_time))):
       time.sleep(15)
-      pass
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """

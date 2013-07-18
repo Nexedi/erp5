@@ -116,7 +116,8 @@ class SlapOSMasterCommunicator(object):
       if excepted_news_text != news['news'][0]['text']:
         return False
     return len(related_instance_link_list) > 0
-  
+
+  # check if requested state = status
   def isInstanceCorrect(self, instance_link):
     """
     Return True if instance status and instance news text ~looks corresponding.
@@ -128,7 +129,20 @@ class SlapOSMasterCommunicator(object):
     text = news['news'][0]['text']
     requested_status = instance['status']
     return ('Instance' in text) and ('correctly' in text) and (requested_status in text)
+  
+  # check if requested state = status
+  def isHostingSubscriptionCorrect(self, hosting_subscription_title):
+    """
+    Return True if all instance news related to hosting_subscription_title
+    correspond to the requested status.
+    """
+    instance_link_list = self._getRelatedInstanceLink(hosting_subscription_title)
+    for instance_link in instance_link_list:
+      if not communicator.isInstanceCorrect(instance_link):
+        return False
+    return len(instance_link_list) > 0
     
+  # check if provided 'status' = status
   def isInstanceCorrectly(self, instance_link, status):
     """
     Return True if instance status and instance news text ~looks corresponding.
@@ -137,14 +151,16 @@ class SlapOSMasterCommunicator(object):
     text = self.getNewsFromInstanceLink(instance_link)['news'][0]['text']
     return ('Instance' in text) and ('correctly' in text) and (status in text)
 
-  def isHostingSubscriptionCorrect(self, hosting_subscription_title):
+  # check if provided 'status' = status
+  def isHostingSubscriptionCorrectly(self, hosting_subscription_title, status):
     """
-    Return True if all instance news related to hosting_subscription_title
-    correspond to the requested status.
+    Return True if all instance status and instance news text ~looks corresponding.
+    ( use the matching of 'correctly' and 'Instance' and status ).
     """
-    instance_link_list = self._getRelatedInstanceLink('TestScalability_21423104630420')
+    instance_link_list = self._getRelatedInstanceLink(hosting_subscription_title)
     for instance_link in instance_link_list:
-      if not communicator.isInstanceCorrect(instance_link):
+      if not communicator.isInstanceCorrectly(instance_link, status):
         return False
     return len(instance_link_list) > 0
+    
   
