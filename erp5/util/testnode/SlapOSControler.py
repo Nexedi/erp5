@@ -94,6 +94,7 @@ class SlapOSControler(object):
     createFile(slapos_account_certificate_path, "w", certificate)
     createFile(configuration_file_path, "w", configuration_file_value)
     self.configuration_file_path = configuration_file_path
+    return slapos_account_key_path, slapos_account_certificate_path, configuration_file_path
 
   def supply(self, software_url, computer_id, state="available"):
     """

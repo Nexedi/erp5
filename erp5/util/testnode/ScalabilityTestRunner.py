@@ -59,11 +59,11 @@ class ScalabilityTestRunner():
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
-    self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
-                                    self.testnode.config)
+    key_path, cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
+                                        key,certificate, self.testnode.config)
     self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
-                                  key,
-                                  certificate,
+                                  cert_path,
+                                  key_path,
                                   self.log,
                                   url='https://rest.slapos.org/Base_getHateoasMaster')
     self.remaining_software_installation_dict = {}
