@@ -208,6 +208,19 @@ def removeZODBPythonScript(container, script_id):
   """
   container.manage_delObjects([script_id])
 
+def createZODBFile(container, file_id, file_content_type, file_content):
+  if file_id in container.objectIds():
+    removeZODBFileScript(container, file_id)
+
+  container.manage_addProduct['OFSP'].manage_addFile(id=file_id)
+  zodb_file = container._getOb(file_id)
+  zodb_file.manage_edit(title='',
+                        content_type=file_content_type,
+                        filedata=file_content)
+
+  container.portal_url.getPortalObject().changeSkin(None)
+  return zodb_file
+
 # class tool
 def installRealClassTool(portal):
   """Replaces portal_classes by a real class tool object.
