@@ -65,7 +65,7 @@ class ScalabilityTestRunner():
                                   cert_path,
                                   key_path,
                                   self.log,
-                                  url='https://rest.slapos.org/Base_getHateoasMaster')
+                                  self.testnode.config['hateoas_slapos_master_url'])
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking

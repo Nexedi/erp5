@@ -28,7 +28,7 @@ class SlapOSMasterCommunicator(object):
     
   """
   def __init__(self, certificate_path, key_path, log,
-                     url='https://rest.slapos.org/Base_getHateoasMaster'):
+                     url):
     # Create connection
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
     self.log = log

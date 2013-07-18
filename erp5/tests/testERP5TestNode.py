@@ -77,6 +77,7 @@ class ERP5TestNode(TestCase):
     config["log_directory"] = self.log_directory
     config["log_file"] = self.log_file
     config["test_suite_master_url"] = None
+    config["hateoas_slapos_master_url"] = None
     config["test_node_title"] = "Foo-Test-Node"
     config["system_temp_folder"] = self.system_temp_folder
     config["computer_id"] = "COMP-TEST"
