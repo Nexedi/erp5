@@ -27,8 +27,8 @@ class SlapOSMasterCommunicator(object):
       print news['news']
     
   """
-  def __init__(self, certificate_path='/home/benjamin/nexedi_scalability_service_account/certificate',
-                     key_path='/home/benjamin/nexedi_scalability_service_account/key',
+  def __init__(self, certificate_path,
+                     key_path,
                      url='https://rest.slapos.org/Base_getHateoasMaster'):
     # Create connection
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
