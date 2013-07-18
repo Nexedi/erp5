@@ -4,6 +4,7 @@ from erp5.util.testnode.testnode import TestNode
 from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 
+from erp5.util.testnode.SlapOSMasterCommunicator import SlapOSMasterCommunicator
 from erp5.util.testnode.SlapOSControler import SlapOSControler
 from erp5.util.testnode.UnitTestRunner import UnitTestRunner
 from erp5.util.testnode.ScalabilityTestRunner import ScalabilityTestRunner
@@ -498,6 +499,8 @@ revision = %(revision2)s
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
+    def patch_isInstanceCorrectly(self, *args, **kw):
+      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -563,11 +566,15 @@ revision = %(revision2)s
       original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_updateInstanceXML = RunnerClass._updateInstanceXML
+      original_isInstanceCorrectly = SlapOSMasterCommunicator.isInstanceCorrectly
+      original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       RunnerClass._updateInstanceXML = doNothing
+      SlapOSMasterCommunicator.isInstanceCorrectly = patch_isInstanceCorrectly
+      SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -596,6 +603,8 @@ revision = %(revision2)s
       TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       RunnerClass._updateInstanceXML = original_updateInstanceXML
+      SlapOSMasterCommunicator.isInstanceCorrectly = original_isInstanceCorrectly
+      SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -656,6 +665,8 @@ revision = %(revision2)s
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
       return grade == 'master'
+    def patch_isInstanceCorrectly(self, *args, **kw):
+      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -709,6 +720,8 @@ revision = %(revision2)s
       original_supply = SlapOSControler.supply
       original_request = SlapOSControler.request
       original_updateInstanceXML = RunnerClass._updateInstanceXML
+      original_isInstanceCorrectly = SlapOSMasterCommunicator.isInstanceCorrectly
+      original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.generateConfiguration = patch_generateConfiguration
@@ -716,6 +729,8 @@ revision = %(revision2)s
       SlapOSControler.supply = doNothing
       SlapOSControler.request = doNothing
       RunnerClass._updateInstanceXML = doNothing
+      SlapOSMasterCommunicator.isInstanceCorrectly = patch_isInstanceCorrectly
+      SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
@@ -744,6 +759,8 @@ revision = %(revision2)s
       SlapOSControler.supply =original_supply
       SlapOSControler.request = original_request
       SlapOSControler.updateInstanceXML = original_updateInstanceXML
+      SlapOSMasterCommunicator.isInstanceCorrectly = original_isInstanceCorrectly
+      SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
     TaskDistributionTool.subscribeNode = original_subscribeNode
@@ -918,6 +935,8 @@ revision = %(revision2)s
       return "Certificate"
     def patch_getTestType(self, *args, **kw):
       return "ScalabilityTest"
+    def patch_isInstanceCorrectly(self, *args, **kw):
+      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -939,6 +958,8 @@ revision = %(revision2)s
     original_supply = SlapOSControler.supply
     original_request = SlapOSControler.request
     original_updateInstanceXML = SlapOSControler.updateInstanceXML
+    original_isInstanceCorrectly = SlapOSMasterCommunicator.isInstanceCorrectly
+    original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
 
     #
     time.sleep = doNothing
@@ -955,6 +976,8 @@ revision = %(revision2)s
     SlapOSControler.supply = doNothing
     SlapOSControler.request = doNothing
     SlapOSControler.updateInstanceXML = doNothing
+    SlapOSMasterCommunicator.isInstanceCorrectly = patch_isInstanceCorrectly
+    SlapOSMasterCommunicator.__init__ = doNothing
     # Run
     test_node = self.getTestNode()  
     test_node.run()
@@ -972,4 +995,6 @@ revision = %(revision2)s
     SlapOSControler.supply = original_supply
     SlapOSControler.request = original_request
     SlapOSControler.updateInstanceXML = original_updateInstanceXML
+    SlapOSMasterCommunicator.isInstanceCorrectly = original_isInstanceCorrectly
+    SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     time.sleep =original_sleep
