@@ -61,8 +61,11 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     self.slapos_controler.createSlaposConfigurationFileAccount(key,certificate,
                                     self.testnode.config)
-    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(key, certificate,
-                                 'https://rest.slapos.org/Base_getHateoasMaster')
+    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
+                                  key,
+                                  certificate,
+                                  self.log,
+                                  url='https://rest.slapos.org/Base_getHateoasMaster')
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking

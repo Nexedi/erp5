@@ -27,11 +27,12 @@ class SlapOSMasterCommunicator(object):
       print news['news']
     
   """
-  def __init__(self, certificate_path,
-                     key_path,
+  def __init__(self, certificate_path, key_path, log,
                      url='https://rest.slapos.org/Base_getHateoasMaster'):
     # Create connection
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
+    self.log = log
+    self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
     self.connection = httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path)
     # Get master
     master_link = {'href':api_path,'type':"application/vnd.slapos.org.hal+json; class=slapos.org.master"}
@@ -46,6 +47,8 @@ class SlapOSMasterCommunicator(object):
     # has been visited)
     self.hosting_subcriptions_dict = {}
     self.visited_hosting_subcriptions_link_list = []
+    self.log("SlapOSMasterCommunicator will read all hosting subscriptions entries, "
+             "it may take several time...")
     self._update_hosting_subscription_informations()
 
   def _curl(self, link):
