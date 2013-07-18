@@ -6,6 +6,8 @@ import urlparse
 
 class SlapOSMasterCommunicator(object):
   """
+  Communication with slapos Master using Hateoas.
+  
   collection: collection of data (hosting_subscription, instance, software_release...)
   hosting_subscription: result of a request
   instance(s): instance(s) related to an hosting_subscription
