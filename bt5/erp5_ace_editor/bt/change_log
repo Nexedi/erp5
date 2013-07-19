@@ -1,3 +1,6 @@
+2013-07-19 arnaud.fontaine
+* Add save button to Ace Editor to save source code while staying on the same page.
+
 2013-07-09 arnaud.fontaine
 * ZODB Components: Follow ERP5 Python indentation style in Ace editor.
 

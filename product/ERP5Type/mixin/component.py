@@ -282,14 +282,22 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getErrorMessageList')
-  def getErrorMessageList(self):
+  def getErrorMessageList(self, as_json=False):
     """
     Return the checkConsistency errors which may have occurred when
     the Component has been modified after being validated once
     """
     current_workflow = self.workflow_history['component_validation_workflow'][-1]
-    return [error.translate()
-            for error in current_workflow.get('error_message', [])]
+    error_list = [error.translate()
+                  for error in current_workflow.get('error_message', [])]
+
+    # Dirty hack until RenderJS is used to save the source code
+    # (erp5_ace_editor/ace_editor_support)
+    if as_json:
+      import json
+      return json.dumps(error_list)
+
+    return error_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'load')
   def load(self, namespace_dict, validated_only=False, text_content=None):
