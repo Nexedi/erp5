@@ -125,4 +125,14 @@ class ERP5_simulation(_ERP5):
     return super(ERP5_simulation, self).runUnitTest(
       erp5_report_new_simulation_failures='1', *args, **kw)
 
+class ERP5_scalability(_ERP5):
 
+  def getTestList(self):
+    return ['testCreatePerson']
+
+  def getTestPath(self):
+    return 'erp5/util/benchmark/examples/'
+
+  # Test duration in seconds
+  def getTestDuration(self):
+    return 60
