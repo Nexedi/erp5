@@ -257,6 +257,9 @@ class ScalabilityLauncher(object):
           user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
           tester_path = self.__argumentNamespace.runner_path
           user_number = suite.getUserNumber(current_test)
+
+          self.log("user_number: %s" str(user_number))
+          self.log("test_duration: %ss" str(test_duration))
     
           tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
@@ -297,7 +300,7 @@ class ScalabilityLauncher(object):
                                 )
                                 
         self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
-        test_result_line_test.stop(stdout='soon',
+        test_result_line_test.stop(stdout=str(created_document_number)+" doc in "+str(test_duration)+" secs = "+str(created_document_per_hour_number)+" docs per hour",
                         test_count=created_document_number,
                         failure_count=failed_document_number,
                         error_count=error_count,
