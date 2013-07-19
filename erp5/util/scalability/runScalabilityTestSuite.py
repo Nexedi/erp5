@@ -6,6 +6,8 @@ import os
 import time
 import sys
 import multiprocessing
+import subprocess
+import signal
 import errno
 import json
 import logging
@@ -19,6 +21,10 @@ from erp5.util.testnode import Utils
 from subprocess import call
 
 LOG_FILE_PREFIX = "performance_tester_erp5"
+# Duration of a test case
+TEST_CASE_DURATION = 60
+# Maximum limit of documents to create during a test case
+MAX_DOCUMENTS = 100000
 
 class ScalabilityTest(object):
   def __init__(self, data, test_result):
@@ -116,7 +122,7 @@ class ScalabilityLauncher(object):
     """
     """
     complete_scheme = os.path.join(path, scheme)
-    file_path_list = glob.glob(scheme)
+    file_path_list = glob.glob(complete_scheme)
     content_list = []
     for file_path in file_path_list:
       opened_file = open(file_path, 'r')
@@ -131,6 +137,14 @@ class ScalabilityLauncher(object):
   def returnCsvList(self):
     return self._returnFileContentList(self.__argumentNamespace.log_path,
                                        "%s*.csv" %LOG_FILE_PREFIX)
+  def getCreatedDocumentNumber(self):
+    number = 0
+    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
+                                  "%s*.csv" %LOG_FILE_PREFIX)
+    file_path_list = glob.glob(complete_scheme)
+    for file_path in file_path_list:
+      number = number + sum(1 for line in open(file_path))
+    return number
 
   def cleanUplogAndCsv(self):
     files_to_delete = glob.glob(os.path.join(self.__argumentNamespace.log_path,
@@ -153,6 +167,30 @@ class ScalabilityLauncher(object):
                 ))
     next_test = ScalabilityTest(decoded_data, self.test_result)
     return next_test
+
+  def getCreatedDocumentNumber(self):
+    # First file line is corresponding to header
+    number = -1
+    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
+                                  "%s*.csv" %LOG_FILE_PREFIX)
+    file_path_list = glob.glob(complete_scheme)
+    for file_path in file_path_list:
+      number = number + sum(1 for line in open(file_path))
+    return number
+    
+  def getFailedDocumentNumber(self):
+    number = 0
+    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
+                                  "%s*.csv" %LOG_FILE_PREFIX)
+    file_path_list = glob.glob(complete_scheme)
+    for file_path in file_path_list:
+      opened_file = open(file_path, 'r')
+      lines = opened_file.readlines()
+      for line in lines:
+        if '-1' in line:
+          number = number + 1
+      opened_file.close()
+    return number
 
   def run(self):
     self.log("Scalability Launcher started, with:")
@@ -178,11 +216,12 @@ class ScalabilityLauncher(object):
         self.log("No Test Case Ready")
         time.sleep(5)
       else:
+        error_count = 1
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
-        # Call the performance_tester_erp5
         try:
-          call([tester_path,
+
+          tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
                  '1',
                  test_suites,
@@ -190,16 +229,26 @@ class ScalabilityLauncher(object):
                  '--users-file-path', user_file_path,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
-                 '--repeat', '100',
+                 '--repeat', "%s" %str(MAX_DOCUMENTS),
               ])
+          
+          test_case_duration = TEST_CASE_DURATION
+          time.sleep(test_case_duration)
+          #tester_process.kill()
+          tester_process.send_signal(signal.SIGINT)
+          error_count = 0
+          
         except:
           self.log("Error during tester call.")
           raise ValueError("Tester call failed")
         self.log("Test Case %s is finish" %(current_test.title))
-        
-        log_contents = self.returnLogList()
-        csv_contents = self.returnCsvList()
-        #self.cleanUplogAndCsv()
+
+        failed_document_number = self.getFailedDocumentNumber()
+        created_document_number = self.getCreatedDocumentNumber() - failed_document_number
+        created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_case_duration) )        
+        #log_contents = self.returnLogList()
+        #csv_contents = self.returnCsvList()
+        self.cleanUplogAndCsv()
 
         retry_time = 2.0
         proxy = taskdistribution.ServerProxy(
@@ -211,14 +260,13 @@ class ScalabilityLauncher(object):
                                   current_test.relative_path,
                                   current_test.title
                                 )
-        stdout = "LOG:\n""\n====\n====\n====\n====\n"
-        for log_content in log_contents:
-          stdout = stdout + log_content + "\n====\n====\n"
-        stdout = stdout + "CSV:\n""\n====\n====\n====\n====\n"
-        for csv_content in csv_contents:
-          stdout = stdout + csv_content + "\n====\n====\n"
-          
-        test_result_line_test.stop(stdout=stdout)
+                                
+        output = "%s doc in %s secs = %s docs per hour" %(created_document_number, test_case_duration, created_document_per_hour_number)
+        test_result_line_test.stop(stdout=output,
+                        test_count=created_document_number,
+                        failure_count=failed_document_number,
+                        error_count=error_count,
+                        duration=test_case_duration)
         self.log("Test Case Stopped")
 
     return error_message_set, exit_status
