@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import argparse
 import os
 import time
@@ -18,6 +17,12 @@ from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 
+
+# XXX: This import is required, just to populate sys.modules['test_suite'].
+# Even if it's not used in this file. Yuck.
+import ERP5TypeTestSuite
+
+
 from subprocess import call
 
 LOG_FILE_PREFIX = "performance_tester_erp5"
@@ -31,7 +36,29 @@ class ScalabilityTest(object):
     self.__dict__ = {}
     self.__dict__.update(data)
     self.test_result = test_result    
-    
+
+def makeSuite(test_suite=None, **kwargs):
+  # BBB tests (plural form) is only checked for backward compatibility
+  for k in sys.modules.keys():
+    if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
+      del sys.modules[k]
+  singular_succeed = True
+  while True:
+    module_name, class_name = ('%s.%s' % (singular_succeed and 'test' or 'tests',
+                                          test_suite)).rsplit('.', 1)
+    try:
+      suite_class = getattr(__import__(module_name, None, None, [class_name]),
+                            class_name)
+    except (AttributeError, ImportError):
+      if not singular_succeed:
+        raise
+      singular_succeed = False
+    else:
+      break
+  suite = suite_class(**kwargs)
+  return suite
+
+
 class ScalabilityLauncher(object):
   def __init__(self):
     # Parse arguments
@@ -200,14 +227,19 @@ class ScalabilityLauncher(object):
     self.log("Revision: %s" %self.__argumentNamespace.revision)
     self.log("Node title: %s" %self.__argumentNamespace.node_title)
     self.log("ERP5 url: %s" %self.__argumentNamespace.erp5_url)
-  
+       
     max_time = 36000
     start_time = time.time()
     error_message_set, exit_status = set(), 0
 
-    test_suites = 'createPerson'
-    benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, 'erp5/util/benchmark/examples/')
-    user_file_path = os.path.join(self.__argumentNamespace.erp5_location, 'erp5/util/benchmark/examples/')
+    # Get suite informations
+    suite = makeSuite(self.__argumentNamespace.test_suite)
+    test_suites = suite.getTestList()
+    test_path = suite.getTestPath()
+    test_duration = suite.getTestDuration()
+    
+    benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
+    user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
     tester_path = self.__argumentNamespace.runner_path
     
     while time.time()-start_time < max_time:
@@ -232,9 +264,7 @@ class ScalabilityLauncher(object):
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
               ])
           
-          test_case_duration = TEST_CASE_DURATION
-          time.sleep(test_case_duration)
-          #tester_process.kill()
+          time.sleep(test_duration)
           tester_process.send_signal(signal.SIGINT)
           error_count = 0
           
