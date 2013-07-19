@@ -213,7 +213,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
          and (max_time > (time.time()-start_time))):
       time.sleep(15)
     if (time.time()-start_time) > max_time:
-      raise ErrorValue("Instance '%s' not '%s' after %s seconds" %(title, state))
+      raise ValueError("Instance '%s' not '%s' after %s seconds" %(title, state))
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
   def _waitInstanceCreation(self, title, max_time=MAX_CREATION_INSTANCE_TIME):
@@ -226,7 +226,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
          and (max_time > (time.time()-start_time)) ):
       time.sleep(5)
     if (time.time()-start_time) > max_time:
-      raise ErrorValue("Instance '%s' not found after %s seconds" %(title, max_time))
+      raise ValueError("Instance '%s' not found after %s seconds" %(title, max_time))
     self.log("Instance found on slapOSMaster")
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
