@@ -237,11 +237,7 @@ class ScalabilityLauncher(object):
     suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
     test_suites = suite.getTestList()
     test_path = suite.getTestPath()
-    test_duration = suite.getTestDuration()
     
-    benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
-    user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
-    tester_path = self.__argumentNamespace.runner_path
     
     while time.time()-start_time < max_time:
       current_test = self.getNextTest()
@@ -254,9 +250,17 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is running..." %(current_test.title))
         try:
 
+          current_test = int(current_test.title)
+          test_duration = suite.getTestDuration(current_test)
+          benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
+          #TODO: generate a basic user file with all scalability users.
+          user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
+          tester_path = self.__argumentNamespace.runner_path
+          user_number = suite.getUserNumber(current_test)
+    
           tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
-                 '1',
+                 str(user_number),
                  ' '.join(test_suites),
                  '--benchmark-path-list', benchmark_path_list,
                  '--users-file-path', user_file_path,
