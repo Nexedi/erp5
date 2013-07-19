@@ -1,3 +1,6 @@
+2013-07-19 arnaud.fontaine
+* Fix legacy jQuery.ajax() success function being called when HTTP connection refused.
+
 2010-11-01 kazuhiko
 * Rename from erp5_jquery.
 
