@@ -173,10 +173,8 @@ class ScalabilityLauncher(object):
       number = number + sum(1 for line in open(file_path))
     return number
 
-  def cleanUplogAndCsv(self):
+  def cleanUpCsv(self):
     files_to_delete = glob.glob(os.path.join(self.__argumentNamespace.log_path,
-                                "%s*.log" %LOG_FILE_PREFIX))\
-                      + glob.glob(os.path.join(self.__argumentNamespace.log_path,
                                 "%s*.csv" %LOG_FILE_PREFIX))
     for file_path in files_to_delete:
       os.remove(file_path)
@@ -278,7 +276,7 @@ class ScalabilityLauncher(object):
         created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_case_duration) )        
         #log_contents = self.returnLogList()
         #csv_contents = self.returnCsvList()
-        self.cleanUplogAndCsv()
+        self.cleanUpCsv()
 
         retry_time = 2.0
         proxy = taskdistribution.ServerProxy(
