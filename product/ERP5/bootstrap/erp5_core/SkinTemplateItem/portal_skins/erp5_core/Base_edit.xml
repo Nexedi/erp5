@@ -287,6 +287,9 @@ try:\n
 except ActivityPendingError,e:\n
   message = Base_translateString("%s" % e)\n
 \n
+if message_only:\n
+  return message\n
+\n
 ignore_layout = int(ignore_layout)\n
 editable_mode = int(editable_mode)\n
 spp = context.getPhysicalPath()\n
@@ -332,7 +335,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', key_prefix=None, listbox_edit=None</string> </value>
+            <value> <string>form_id, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', key_prefix=None, listbox_edit=None, message_only=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

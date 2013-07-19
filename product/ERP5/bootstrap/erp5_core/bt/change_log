@@ -1,3 +1,6 @@
+2013-07-19 arnaud.fontaine
+* Add save button to Ace Editor to save source code while staying on the same page.
+
 2013-07-09 arnaud.fontaine
 * ZODB COmponents: Cosmetic: Fix Component Validation Workflow description.
 
