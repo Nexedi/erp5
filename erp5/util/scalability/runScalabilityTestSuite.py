@@ -20,7 +20,7 @@ from erp5.util.testnode import Utils
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
 # Even if it's not used in this file. Yuck.
-import ERP5TypeTestSuite
+import product.ERP5Type.tests.ERP5TypeTestSuite
 
 
 from subprocess import call
@@ -37,7 +37,10 @@ class ScalabilityTest(object):
     self.__dict__.update(data)
     self.test_result = test_result    
 
-def makeSuite(test_suite=None, **kwargs):
+def doNothing(**kwargs):
+  pass
+
+def makeSuite(test_suite=None, log=doNothing, **kwargs):
   # BBB tests (plural form) is only checked for backward compatibility
   for k in sys.modules.keys():
     if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
@@ -55,7 +58,7 @@ def makeSuite(test_suite=None, **kwargs):
       singular_succeed = False
     else:
       break
-  suite = suite_class(**kwargs)
+  suite = suite_class(max_instance_count=1, **kwargs)
   return suite
 
 
@@ -231,7 +234,7 @@ class ScalabilityLauncher(object):
     error_message_set, exit_status = set(), 0
 
     # Get suite informations
-    suite = makeSuite(self.__argumentNamespace.test_suite)
+    suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
     test_suites = suite.getTestList()
     test_path = suite.getTestPath()
     test_duration = suite.getTestDuration()
@@ -254,7 +257,7 @@ class ScalabilityLauncher(object):
           tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
                  '1',
-                 test_suites,
+                 ' '.join(test_suites),
                  '--benchmark-path-list', benchmark_path_list,
                  '--users-file-path', user_file_path,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
@@ -273,7 +276,7 @@ class ScalabilityLauncher(object):
 
         failed_document_number = self.getFailedDocumentNumber()
         created_document_number = self.getCreatedDocumentNumber() - failed_document_number
-        created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_case_duration) )        
+        created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )        
         #log_contents = self.returnLogList()
         #csv_contents = self.returnCsvList()
         self.cleanUpCsv()
@@ -289,12 +292,12 @@ class ScalabilityLauncher(object):
                                   current_test.title
                                 )
                                 
-        output = "%s doc in %s secs = %s docs per hour" %(created_document_number, test_case_duration, created_document_per_hour_number)
-        test_result_line_test.stop(stdout=output,
+        self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
+        test_result_line_test.stop(stdout='soon',
                         test_count=created_document_number,
                         failure_count=failed_document_number,
                         error_count=error_count,
-                        duration=test_case_duration)
+                        duration=test_duration)
         self.log("Test Case Stopped")
 
     return error_message_set, exit_status
