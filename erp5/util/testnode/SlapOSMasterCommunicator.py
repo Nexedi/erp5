@@ -76,7 +76,19 @@ class SlapOSMasterCommunicator(object):
         response = self.connection.getresponse()
       except:
         raise ValueError("Impossible to use connection")
-    return json.loads(response.read())
+    try:
+      return json.loads(response.read())
+    except:
+      # Repet action after 2 secs
+      time.sleep(2)
+      try:
+        # Try to update and use the connection
+        self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
+        self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
+        response = self.connection.getresponse()
+      except:
+        raise ValueError("Impossible to use connection")
+      return json.loads(response.read())
         
   def _update_hosting_subscription_informations(self):
     """
