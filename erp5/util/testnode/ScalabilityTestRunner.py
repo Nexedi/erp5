@@ -397,9 +397,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         error = ValueError("Test case is in an undeterminated state")
         break;
 
-    # Destroy instance
+    # Stop and Destroy instance
+    self.slapos_controler.stopInstance(self.instance_title)
+    self._waitInstance(self.instance_title, 'stopped')
     self.slapos_controler.destroyInstance(self.instance_title)
-    self._waitInstance(self.instance_title, 'destroyed')
     
     if error:
       test_result_proxy.fail()
