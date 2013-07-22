@@ -250,13 +250,13 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is running..." %(current_test.title))
         try:
 
-          current_test = int(current_test.title)
-          test_duration = suite.getTestDuration(current_test)
+          current_test_duration = int(current_test.title)
+          test_duration = suite.getTestDuration(current_test_number)
           benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
           #TODO: generate a basic user file with all scalability users.
           user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
           tester_path = self.__argumentNamespace.runner_path
-          user_number = suite.getUserNumber(current_test)
+          user_number = suite.getUserNumber(current_test_number)
 
           self.log("user_number: %s" str(user_number))
           self.log("test_duration: %ss" str(test_duration))
