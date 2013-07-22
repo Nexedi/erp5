@@ -60,6 +60,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_folder_handler</string> </key>
+            <value> <string>CMFBTreeFolderHandler</string> </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -78,7 +82,9 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>subordination</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -92,12 +98,14 @@
         <item>
             <key> <string>acquisition_object_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>default_address</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: [\'Address\', \'Organisation\', \'Person\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -106,7 +114,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>configurator_region</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -123,8 +133,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>WARNING: do not modify Ids for this base category. Id is used in many places in accounting. This base category should be read-only.\n
-You can still safely change Title or (better) translate it using Localizer</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -134,7 +143,7 @@ You can still safely change Title or (better) translate it using Localizer</stri
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>account_type</string> </value>
+            <value> <string>configurator_region</string> </value>
         </item>
         <item>
             <key> <string>id_generator</string> </key>
@@ -144,7 +153,9 @@ You can still safely change Title or (better) translate it using Localizer</stri
         </item>
         <item>
             <key> <string>id_group</string> </key>
-            <value> <string>None</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
@@ -174,7 +185,9 @@ You can still safely change Title or (better) translate it using Localizer</stri
         </item>
         <item>
             <key> <string>read_permission</string> </key>
-            <value> <string>None</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>rid</string> </key>
@@ -202,11 +215,13 @@ You can still safely change Title or (better) translate it using Localizer</stri
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Account Type</string> </value>
+            <value> <string>Region</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>
-            <value> <string>None</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
