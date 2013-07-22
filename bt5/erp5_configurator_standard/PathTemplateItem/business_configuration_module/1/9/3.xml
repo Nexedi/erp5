@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Preference Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_category_child_item_list_method_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_listbox_list_mode_line_count</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_text_format</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_html_style_access_tab</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_text_editor</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_textarea_width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_currency</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_string_field_width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_date_order</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_listbox_view_mode_line_count</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_textarea_height</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_quantity_field_width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_report_style</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_money_quantity_field_width</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_report_format</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The default parameters for the site are set on this preference</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>3</string> </value>
+        </item>
+        <item>
+            <key> <string>object_id</string> </key>
+            <value> <string>default_configurator_preference</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Preference Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_currency</string> </key>
+            <value> <string>currency_module/EUR</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_category_child_item_list_method_id</string> </key>
+            <value> <string>getCategoryChildTranslatedLogicalPathItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_date_order</string> </key>
+            <value> <string>dmy</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_html_style_access_tab</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_listbox_list_mode_line_count</string> </key>
+            <value> <int>20</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_listbox_view_mode_line_count</string> </key>
+            <value> <int>20</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_money_quantity_field_width</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_quantity_field_width</string> </key>
+            <value> <int>8</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_report_format</string> </key>
+            <value> <string>pdf</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_report_style</string> </key>
+            <value> <string>ODT</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_string_field_width</string> </key>
+            <value> <int>30</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_text_editor</string> </key>
+            <value> <string>fck_editor</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_text_format</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_textarea_height</string> </key>
+            <value> <int>5</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_textarea_width</string> </key>
+            <value> <int>80</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Configurator Site Preference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

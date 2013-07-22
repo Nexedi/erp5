@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Accounting Period Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>14</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Accounting Period Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>2013</string> </value>
+        </item>
+        <item>
+            <key> <string>start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1356998400.0</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>stop_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1388448000.0</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

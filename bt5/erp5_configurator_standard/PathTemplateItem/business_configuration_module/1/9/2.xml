@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Service Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>configuration_list</string> </key>
+            <value>
+              <tuple>
+                <tuple>
+                  <string>product</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Product</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/sale_opportunity</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>service</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Service</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/sale_opportunity</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>marketing_campaign</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Marketing Campaign</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/campaign</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>marketing_survey</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Market Survey</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/campaign</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>marketing_purchases</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Purchases Campaign</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/campaign</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>marketing_sales</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Sales Campaign</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/campaign</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>marketing_other</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Other Marketing Service</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/campaign</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>support_administrative</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Administrative Support</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/support_request</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>support_financial</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Financial Support</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/support_request</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>support_it</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>IT Support</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/support_request</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>support_other</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Other Support Service</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/support_request</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_conference</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Conference</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_partnership</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Partnership Meeting</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_purchases</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Purchases Meeting</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_project</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Project Meeting</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_sales</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Sales Meeting</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>organisation_other</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Other Meeting</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/meeting</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_complaint</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Complaint</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_announcement</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Announcement</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_inquiry</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Inquiry</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_advertisement</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Advertisement</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_spam</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Spam</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_information</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Information</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+                <tuple>
+                  <string>event_other</string>
+                  <dictionary>
+                    <item>
+                        <key> <string>title</string> </key>
+                        <value> <string>Other event</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>use</string> </key>
+                        <value> <string>crm/event</string> </value>
+                    </item>
+                  </dictionary>
+                </tuple>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Service Configurator Item</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

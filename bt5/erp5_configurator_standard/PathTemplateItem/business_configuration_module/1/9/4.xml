@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="System Preference Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_synchronous_metadata_discovery</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_tax_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_packing_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_support_request_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_event_sender_email</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_component_individual_variation_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_campaign_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_product_individual_variation_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_document_file_name_regular_expression</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_price_ratio_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_document_classification</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_sale_opportunity_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_supplier_role_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_meeting_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_event_assessment_form_id_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_sale_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_client_role_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_event_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_purchase_use_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_redirect_to_document</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_document_reference_regular_expression</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_service_individual_variation_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The default system parameters for the site are set on this preference</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>object_id</string> </key>
+            <value> <string>default_configurator_system_preference</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>System Preference Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_campaign_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/campaign</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_client_role_list</string> </key>
+            <value>
+              <tuple>
+                <string>role/client</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_component_individual_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_classification</string> </key>
+            <value> <string>collaborative/team</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_file_name_regular_expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_document_reference_regular_expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_assessment_form_id_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_sender_email</string> </key>
+            <value> <string>me@example.com</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/event</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_meeting_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/meeting</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_packing_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/container</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_price_ratio_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/tax</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_product_individual_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_purchase_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/purchase</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_redirect_to_document</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_sale_opportunity_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/sale_opportunity</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_sale_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/sale</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_service_individual_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_supplier_role_list</string> </key>
+            <value>
+              <tuple>
+                <string>role/supplier</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_support_request_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/support_request</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_synchronous_metadata_discovery</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_tax_use_list</string> </key>
+            <value>
+              <tuple>
+                <string>use/trade/tax</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Configurator System Site Preference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

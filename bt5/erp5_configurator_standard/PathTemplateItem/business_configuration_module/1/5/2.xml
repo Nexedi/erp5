@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Category Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>category_root</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>category_root</string> </key>
+            <value> <string>group</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>object_id</string> </key>
+            <value> <string>my_group</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Nexedi</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Account Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>account_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>account_id</string> </key>
+            <value> <string>sales</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>financial_section/income/revenue</string>
+                <string>gap/ias/ifrs/7/70</string>
+                <string>account_type/income</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>12</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Account Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Sales</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Preference Configurator Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_from_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_section_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_simulation_state_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_at_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_section_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_gap</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>13</string> </value>
+        </item>
+        <item>
+            <key> <string>object_id</string> </key>
+            <value> <string>default_configurator_preference</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Preference Configurator Item</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_at_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_from_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_gap</string> </key>
+            <value> <string>gap/ias/ifrs</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_section_category</string> </key>
+            <value> <string>group/my_group</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_simulation_state_list</string> </key>
+            <value> <string>delivered stopped</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_section_category</string> </key>
+            <value> <string>group/my_group</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
