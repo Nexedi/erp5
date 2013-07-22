@@ -5,7 +5,7 @@ import random
 import time
 import string
 import genericToolToFillForm
-from genericToolToFillForm import *
+from utils import *
 
 if False :
   TMIN_SLEEP = 0
@@ -19,7 +19,7 @@ PREFIX_TITLE = ""
 MAX_PRODUCT = 5
 
 
-def add_order_line(browser, my_title, result) :
+def addOrderLine(browser, my_title, result) :
   """
   Add an order line to the sale order
   
@@ -82,7 +82,7 @@ def createSaleOrder(result, browser):
   browser.mainForm.getControl(name='field_my_title').value = my_title
   
   # Set some random informations
-  my_str = gen_string(random.randint(1,100))
+  my_str = generateString(random.randint(1,100))
   browser.mainForm.getControl(name='field_my_comment').value = my_str
   browser.mainForm.getControl(name='field_my_description').value = my_str
    
@@ -124,7 +124,7 @@ def createSaleOrder(result, browser):
   # Add Sale order lines
   max_ite = random.randint(1,MAX_PRODUCT)
   for i in range (0, max_ite) :
-    add_order_line(browser, my_title, result)
+    addOrderLine(browser, my_title, result)
  
   browser.open(my_order_sale_url)
 

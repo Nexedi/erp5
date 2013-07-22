@@ -5,7 +5,7 @@ import random
 import time
 import string
 import genericToolToFillForm
-from genericToolToFillForm import *
+from utils import *
 
 PREFIX_TITLE = ""
 

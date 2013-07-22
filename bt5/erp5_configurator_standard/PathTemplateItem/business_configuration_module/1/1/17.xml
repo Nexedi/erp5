@@ -13,6 +13,10 @@
             </value>
         </item>
         <item>
+            <key> <string>bt5_id</string> </key>
+            <value> <string>erp5_dhtml_style</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>17</string> </value>
         </item>
