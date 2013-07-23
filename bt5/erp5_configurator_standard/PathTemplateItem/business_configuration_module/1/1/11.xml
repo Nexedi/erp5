@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_configurator_standard_trade_template</string> </value>
+            <value> <string>erp5_configurator_standard_solver</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_configurator_standard_trade_template</string> </value>
+            <value> <string>erp5_configurator_standard_solver</string> </value>
         </item>
         <item>
             <key> <string>update_catalog</string> </key>

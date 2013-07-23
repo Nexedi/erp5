@@ -8,7 +8,13 @@
       <dictionary>
         <item>
             <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_accounting</string> </value>
+            <value> <string>erp5_simulation</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -19,16 +25,22 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard BT5 Configurator Item</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_accounting</string> </value>
+            <value> <string>erp5_simulation</string> </value>
         </item>
         <item>
             <key> <string>update_catalog</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>

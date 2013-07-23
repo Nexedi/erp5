@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_crm</string> </value>
+            <value> <string>erp5_accounting</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -24,11 +24,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_crm</string> </value>
+            <value> <string>erp5_accounting</string> </value>
         </item>
         <item>
             <key> <string>update_catalog</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
