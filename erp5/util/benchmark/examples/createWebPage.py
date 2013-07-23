@@ -4,31 +4,18 @@ import datetime
 import random
 import time
 import string
-import genericToolToFillForm
 from utils import *
 
 PREFIX_TITLE = ""
 
-if False :
-  TMIN_SLEEP_SHORT = 0 # 2
-  TMAX_SLEEP_SHORT = 0 # 6
-  TMIN_SLEEP = 0 # 5
-  TMAX_SLEEP = 0 # 15
-  TMIN_SLEEP_LONG = 0 # 10
-  TMAX_SLEEP_LONG = 0 # 30
-  NUMMAX_FOLLOW_UP = 0
-  NUMMAX_CONTRIBUTORS = 0
-else :
-  TMIN_SLEEP_SHORT = 2
-  TMAX_SLEEP_SHORT = 6
-  TMIN_SLEEP = 5
-  TMAX_SLEEP = 15
-  TMIN_SLEEP_LONG = 10
-  TMAX_SLEEP_LONG = 30
-  NUMMAX_FOLLOW_UP = 1
-  NUMMAX_CONTRIBUTORS = 2
-
-  
+TMIN_SLEEP_SHORT = 2
+TMAX_SLEEP_SHORT = 6
+TMIN_SLEEP = 5
+TMAX_SLEEP = 15
+TMIN_SLEEP_LONG = 10
+TMAX_SLEEP_LONG = 30
+NUMMAX_FOLLOW_UP = 1
+NUMMAX_CONTRIBUTORS = 2
 
 def createWebPage(result, browser):
   """
@@ -65,22 +52,22 @@ def createWebPage(result, browser):
   browser.mainForm.getControl(name='subfield_field_my_effective_date_day').value = str(date.day)
   browser.mainForm.getControl(name='subfield_field_my_effective_date_month').value = str(date.month)
   browser.mainForm.getControl(name='subfield_field_my_effective_date_year').value = str(date.year)
-  select_random_option(browser, "subfield_field_my_publication_section_list_default:list")
+  selectRandomOption(browser, "subfield_field_my_publication_section_list_default:list")
   browser.mainForm.getControl(name='field_my_description').value = 'Benchmark test'
-  select_random_option(browser, "field_my_classification")
-  select_random_option(browser, "subfield_field_my_group_list_default:list")
-  select_random_option(browser, "subfield_field_my_site_list_default:list")
-  select_random_option(browser, "subfield_field_my_function_list_default:list")
-  browser.mainForm.getControl(name='field_my_subject_list').value = gen_string(30)
+  selectRandomOption(browser, "field_my_classification")
+  selectRandomOption(browser, "subfield_field_my_group_list_default:list")
+  selectRandomOption(browser, "subfield_field_my_site_list_default:list")
+  selectRandomOption(browser, "subfield_field_my_function_list_default:list")
+  browser.mainForm.getControl(name='field_my_subject_list').value = generateString(30)
  
   
   ## Fill the Follow-up input
-  fill_related_objects(browser, result,
+  fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", NUMMAX_FOLLOW_UP,
                "FollowUp", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)                                        
 
   ## Fill the Contributors input
-  fill_related_objects(browser, result,
+  fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog1:method", NUMMAX_CONTRIBUTORS,
                "Contributors", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
   
@@ -89,30 +76,30 @@ def createWebPage(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
-  WebPage_url = browser.url
+  web_page_url = browser.url
   
   
   ## Edit the relations with other existing documents
   # Go to the Related Documents view
-  browser.open(WebPage_url+"/Document_viewRelated")
+  browser.open(web_page_url+"/Document_viewRelated")
     
   # Fill the Referenced Documents input
-  fill_related_objects(browser, result,
+  fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", 3,
                "ReferencedDocument", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
   # Fill the Similar Documents input
-  fill_related_objects(browser, result,
+  fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog1:method", 3,
                " SimilarDocuments", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
   # Fill the Related Documents  input
-  #fill_related_objects(browser, result,
+  #fillRelatedObjects(browser, result,
    #   "portal_selections/viewSearchRelatedDocumentDialog2:method", 3,
     #           "RelatedDocuments", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
 
 
   ## Edit content
-  WebPage_url = '/'.join(WebPage_url.split('/')[:-1])
-  browser.open(WebPage_url+"/WebPage_viewEditor")
+  web_page_url = '/'.join(web_page_url.split('/')[:-1])
+  browser.open(web_page_url+"/WebPage_viewEditor")
   browser.mainForm.getControl(name='field_my_text_content').value = '<html><body><h1>Test</h1><p>Content of test</p></body></html>'
   # Submit the changes, record the time elapsed in seconds
   result('Save', browser.mainForm.submitSave(sleep=(TMIN_SLEEP_LONG, TMAX_SLEEP_LONG)))
