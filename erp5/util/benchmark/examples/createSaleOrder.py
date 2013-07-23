@@ -4,17 +4,12 @@ import datetime
 import random
 import time
 import string
-import genericToolToFillForm
 from utils import *
 
-if False :
-  TMIN_SLEEP = 0
-  TMAX_SLEEP = 0
-else :
-  TMIN_SLEEP = 2
-  TMAX_SLEEP = 6
+TMIN_SLEEP = 2
+TMAX_SLEEP = 6
 
-SALE_TRADE_CONDITION_NAME = "Sale Trade Condition"
+SALE_TRADE_CONDITION_NAME = "Scalability Sale Trade Condition"
 PREFIX_TITLE = ""
 MAX_PRODUCT = 5
 
@@ -38,7 +33,7 @@ def addOrderLine(browser, my_title, result) :
       sleep=(TMIN_SLEEP, TMAX_SLEEP)))
   
   ## Choose the product randomly
-  fill_related_objects(browser, result,
+  fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", 1,
                "AddOrderLine", TMIN_SLEEP, TMAX_SLEEP)
 
@@ -78,7 +73,7 @@ def createSaleOrder(result, browser):
   my_order_sale_url = browser.url.split("?")[0]
 
   # Fill the title
-  my_title = PREFIX_TITLE + gen_string(6)
+  my_title = PREFIX_TITLE + generateString(6)
   browser.mainForm.getControl(name='field_my_title').value = my_title
   
   # Set some random informations
@@ -87,7 +82,7 @@ def createSaleOrder(result, browser):
   browser.mainForm.getControl(name='field_my_description').value = my_str
    
   # Select some options randomly
-  select_random_option(browser, "field_my_order")
+  selectRandomOption(browser, "field_my_order")
   
   # Set dates
   date = datetime.datetime.now()
