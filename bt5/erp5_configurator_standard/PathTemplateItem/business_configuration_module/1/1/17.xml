@@ -7,14 +7,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>bt5_id</string> </key>
+            <value> <string>erp5_simulation</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_simulation</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
