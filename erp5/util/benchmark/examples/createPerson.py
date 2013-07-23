@@ -89,5 +89,3 @@ def createPerson(result, browser):
   result('Show validate', show_validate_time)
   result('Validated', browser.mainForm.submitDialogConfirm())
   assert browser.getTransitionMessage() == 'Status changed.'
-  
-  print "OK"
