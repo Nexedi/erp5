@@ -65,11 +65,7 @@ class ScalabilityTestRunner():
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
     key_path, cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
                                         key,certificate, self.testnode.config)
-    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
-                                  cert_path,
-                                  key_path,
-                                  self.log,
-                                  self.testnode.config['hateoas_slapos_master_url'])
+    self.slapos_communicator = None
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking
@@ -237,6 +233,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     max_time = 3600*10*1.0 # 10 hours
     interval_time = 60
     start_time = time.time()
+    # Create a communicator with slapos
+    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
+                                  cert_path,
+                                  key_path,
+                                  self.log,
+                                  self.testnode.config['hateoas_slapos_master_url'])
     # Only master testnode must order software installation
     if self.testnode.test_suite_portal.isMasterTestnode(
             self.testnode.config['test_node_title']):
