@@ -8,14 +8,14 @@ from utils import *
 
 PREFIX_TITLE = ""
 
-TMIN_SLEEP_SHORT = 2
-TMAX_SLEEP_SHORT = 6
-TMIN_SLEEP = 5
-TMAX_SLEEP = 15
-TMIN_SLEEP_LONG = 10
-TMAX_SLEEP_LONG = 30
-NUMMAX_FOLLOW_UP = 1
-NUMMAX_CONTRIBUTORS = 2
+TMIN_SLEEP_SHORT = 0
+TMAX_SLEEP_SHORT = 0
+TMIN_SLEEP = 0
+TMAX_SLEEP = 0
+TMIN_SLEEP_LONG = 0
+TMAX_SLEEP_LONG = 0
+NUMMAX_FOLLOW_UP = 0
+NUMMAX_CONTRIBUTORS = 0
 
 def createWebPage(result, browser):
   """
@@ -65,11 +65,6 @@ def createWebPage(result, browser):
   fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", NUMMAX_FOLLOW_UP,
                "FollowUp", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)                                        
-
-  ## Fill the Contributors input
-  fillRelatedObjects(browser, result,
-      "portal_selections/viewSearchRelatedDocumentDialog1:method", NUMMAX_CONTRIBUTORS,
-               "Contributors", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
   
   # Submit the changes, record the time elapsed in seconds
   result('Save', browser.mainForm.submitSave(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
@@ -87,15 +82,6 @@ def createWebPage(result, browser):
   fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", 3,
                "ReferencedDocument", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
-  # Fill the Similar Documents input
-  fillRelatedObjects(browser, result,
-      "portal_selections/viewSearchRelatedDocumentDialog1:method", 3,
-               " SimilarDocuments", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
-  # Fill the Related Documents  input
-  #fillRelatedObjects(browser, result,
-   #   "portal_selections/viewSearchRelatedDocumentDialog2:method", 3,
-    #           "RelatedDocuments", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
-
 
   ## Edit content
   web_page_url = '/'.join(web_page_url.split('/')[:-1])
