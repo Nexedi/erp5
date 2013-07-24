@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Assignment" module="erp5.portal_type"/>
+      <global name="Accounting Period" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,10 +10,29 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -29,40 +48,12 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>destination/organisation_module/1</string>
-                <string>group/my_group</string>
-                <string>site/main</string>
-                <string>role/administration</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -71,7 +62,11 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Assignment</string> </value>
+            <value> <string>Accounting Period</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>2013</string> </value>
         </item>
         <item>
             <key> <string>start_date</string> </key>
@@ -85,7 +80,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>946684800.0</float>
+                    <float>1356998400.0</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -102,42 +97,16 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>32503680000.0</float>
+                    <float>1388448000.0</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
               </object>
             </value>
         </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
         <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>title</string> </key>
+            <value> <string>2013</string> </value>
         </item>
       </dictionary>
     </pickle>

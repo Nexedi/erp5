@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Organisation" module="erp5.portal_type"/>
+      <global name="Person" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -74,23 +74,39 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>price_currency/currency_module/EUR</string>
-                <string>group/my_group</string>
-                <string>site/main</string>
+                <string>gender/male</string>
+                <string>nationality/europe/western_europe/french</string>
+                <string>social_title/mister</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>first_name</string> </key>
+            <value> <string>John</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>6</string> </value>
+        </item>
+        <item>
+            <key> <string>last_name</string> </key>
+            <value> <string>Bo</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Organisation</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Nexedi</string> </value>
+            <value> <string>Person</string> </value>
         </item>
       </dictionary>
     </pickle>

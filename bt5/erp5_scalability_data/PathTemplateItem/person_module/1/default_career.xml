@@ -44,7 +44,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>function/company</string>
+              </tuple>
             </value>
         </item>
         <item>

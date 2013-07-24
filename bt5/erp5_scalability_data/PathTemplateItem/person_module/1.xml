@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Organisation" module="erp5.portal_type"/>
+      <global name="Person" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,26 +71,30 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>price_currency/currency_module/EUR</string>
-                <string>group/my_group</string>
-                <string>site/main</string>
-              </tuple>
-            </value>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user</string> </value>
+        </item>
+        <item>
+            <key> <string>first_name</string> </key>
+            <value> <string>John</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>1</string> </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Organisation</string> </value>
+            <key> <string>last_name</string> </key>
+            <value> <string>Doe</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Nexedi</string> </value>
+            <key> <string>password</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Person</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -115,6 +119,26 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>{SSHA}ub1axxxIeHd5cBMZZ2YVKs/h5PPIvb0Pwvc3</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Organisation" module="erp5.portal_type"/>
+      <global name="Product" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,13 +71,37 @@
             </value>
         </item>
         <item>
+            <key> <string>base_volume</string> </key>
+            <value> <float>0.001</float> </value>
+        </item>
+        <item>
+            <key> <string>base_weight</string> </key>
+            <value> <float>0.001</float> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>price_currency/currency_module/EUR</string>
-                <string>group/my_group</string>
-                <string>site/main</string>
+                <string>product_line/component</string>
+                <string>base_contribution/base_amount/taxable</string>
+                <string>quantity_unit/unit/piece</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>RL01</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -85,12 +109,26 @@
             <value> <string>1</string> </value>
         </item>
         <item>
+            <key> <string>individual_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Organisation</string> </value>
+            <value> <string>Product</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Nexedi</string> </value>
+            <value> <string>Red Led</string> </value>
+        </item>
+        <item>
+            <key> <string>variation_base_category_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

@@ -75,14 +75,18 @@
             <value>
               <tuple>
                 <string>price_currency/currency_module/EUR</string>
-                <string>group/my_group</string>
-                <string>site/main</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -90,7 +94,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Nexedi</string> </value>
+            <value> <string>Idexen</string> </value>
         </item>
       </dictionary>
     </pickle>

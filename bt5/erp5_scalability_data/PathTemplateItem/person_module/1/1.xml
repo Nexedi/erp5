@@ -37,32 +37,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/organisation_module/1</string>
+                <string>function/company</string>
                 <string>group/my_group</string>
-                <string>site/main</string>
-                <string>role/administration</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -85,7 +65,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>946684800.0</float>
+                    <float>1374667820.81</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -102,41 +82,11 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>32503680000.0</float>
+                    <float>1690027820.81</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
               </object>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
