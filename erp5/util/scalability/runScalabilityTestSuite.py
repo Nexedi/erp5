@@ -258,8 +258,8 @@ class ScalabilityLauncher(object):
           tester_path = self.__argumentNamespace.runner_path
           user_number = suite.getUserNumber(current_test_number)
 
-          self.log("user_number: %s" str(user_number))
-          self.log("test_duration: %ss" str(test_duration))
+          self.log("user_number: %s" %str(user_number))
+          self.log("test_duration: %ss" %str(test_duration))
     
           tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
