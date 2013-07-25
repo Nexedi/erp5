@@ -301,8 +301,22 @@ class ScalabilityLauncher(object):
                                   current_test.title
                                 )
                                 
+
+        results = "created docs=%d\n"\
+                  "failed docs=%d\n"\
+                  "duration=%d\n"\
+                  "number of tests=%d\n"\
+                  %(
+                    created_document_number,
+                    failed_document_number,
+                    test_duration,
+                    benchmark_path_list
+                  )
+
+        self.log("results:")
+        self.log("%s" %results)
         self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
-        test_result_line_test.stop(stdout=str(created_document_number)+" doc in "+str(test_duration)+" secs = "+str(created_document_per_hour_number)+" docs per hour",
+        test_result_line_test.stop(stdout=results,
                         test_count=created_document_number,
                         failure_count=failed_document_number,
                         error_count=error_count,
