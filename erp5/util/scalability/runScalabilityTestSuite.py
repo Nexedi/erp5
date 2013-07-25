@@ -250,7 +250,7 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is running..." %(current_test.title))
         try:
 
-          current_test_duration = int(current_test.title)
+          current_test_number = int(current_test.title)
           test_duration = suite.getTestDuration(current_test_number)
           benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
           #TODO: generate a basic user file with all scalability users.
@@ -260,6 +260,8 @@ class ScalabilityLauncher(object):
 
           self.log("user_number: %s" %str(user_number))
           self.log("test_duration: %ss" %str(test_duration))
+
+          #Here: wait for 0-pending activities ?
     
           tester_process = subprocess.Popen([tester_path,
                  self.__argumentNamespace.erp5_url,
