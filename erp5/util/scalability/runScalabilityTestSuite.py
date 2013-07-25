@@ -310,7 +310,7 @@ class ScalabilityLauncher(object):
                     created_document_number,
                     failed_document_number,
                     test_duration,
-                    benchmark_path_list
+                    len(benchmark_path_list)
                   )
 
         self.log("results:")
