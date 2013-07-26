@@ -263,19 +263,19 @@ class ScalabilityLauncher(object):
 
           #Here: wait for 0-pending activities ?
     
-          tester_process = subprocess.Popen([tester_path,
-                 self.__argumentNamespace.erp5_url,
-                 str(user_number),
-                 ' '.join(test_suites),
-                 '--benchmark-path-list', benchmark_path_list,
-                 '--users-file-path', user_file_path,
-                 '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
-                 '--report-directory', self.__argumentNamespace.log_path,
-                 '--repeat', "%s" %str(MAX_DOCUMENTS),
-              ])
-          
-          time.sleep(test_duration)
-          tester_process.send_signal(signal.SIGINT)
+#          tester_process = subprocess.Popen([tester_path,
+#                 self.__argumentNamespace.erp5_url,
+#                 str(user_number),
+#                 ' '.join(test_suites),
+#                 '--benchmark-path-list', benchmark_path_list,
+#                 '--users-file-path', user_file_path,
+#                 '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
+#                 '--report-directory', self.__argumentNamespace.log_path,
+#                 '--repeat', "%s" %str(MAX_DOCUMENTS),
+#              ])
+#          
+#          time.sleep(test_duration)
+#          tester_process.send_signal(signal.SIGINT)
           error_count = 0
           
         except:
@@ -316,11 +316,11 @@ class ScalabilityLauncher(object):
         self.log("results:")
         self.log("%s" %results)
         self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
-        test_result_line_test.stop(stdout=results,
-                        test_count=created_document_number,
-                        failure_count=failed_document_number,
-                        error_count=error_count,
-                        duration=test_duration)
+#        test_result_line_test.stop(stdout=results,
+#                        test_count=created_document_number,
+#                        failure_count=failed_document_number,
+#                        error_count=error_count,
+#                        duration=test_duration)
         self.log("Test Case Stopped")
 
     return error_message_set, exit_status
