@@ -9,7 +9,7 @@ organisation_module/4
 product_module/1
 product_module/2
 product_module/3
-
+portal_preferences/default_site_preference
 organisation_module/*
 organisation_module/*/**
 person_module/*
