@@ -110,7 +110,7 @@
         </item>
         <item>
             <key> <string>preferred_accounting_transaction_source_section</string> </key>
-            <value> <string>organisation_module/2</string> </value>
+            <value> <string>organisation_module/4</string> </value>
         </item>
         <item>
             <key> <string>preferred_campaign_use</string> </key>
@@ -206,7 +206,7 @@
         </item>
         <item>
             <key> <string>preferred_section</string> </key>
-            <value> <string>organisation_module/2</string> </value>
+            <value> <string>organisation_module/4</string> </value>
         </item>
         <item>
             <key> <string>preferred_section_category</string> </key>
@@ -232,7 +232,7 @@
             <key> <string>preferred_text_editor</string> </key>
             <value>
               <tuple>
-                <string>text_area</string>
+                <string>fck_editor</string>
               </tuple>
             </value>
         </item>
