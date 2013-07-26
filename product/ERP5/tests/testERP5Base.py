@@ -44,21 +44,6 @@ class TestERP5Base(ERP5TypeTestCase):
   Those are tests for erp5_base business template.
   """
 
-  # pseudo constants
-  RUN_ALL_TEST = 1
-  QUIET = 1
-
-
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
-
-  def getTitle(self):
-    """
-      Return the title of the current test set.
-    """
-    return "ERP5 Base"
-
 
   def getBusinessTemplateList(self):
     """
@@ -741,17 +726,14 @@ class TestERP5Base(ERP5TypeTestCase):
          organisation.getDefaultAddressCity())
 
 
-
-
   ##################################
   ##  Tests
   ##################################
 
-  def test_01_Organisation(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_Organisation(self):
     """
       Test basic behaviour of Organisation.
     """
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreateOrganisation'
                 , 'stepSetOrganisationCategories'
@@ -760,14 +742,13 @@ class TestERP5Base(ERP5TypeTestCase):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
 
-  def test_02_Person(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_Person(self):
     """
       Test basic behaviour of Person.
     """
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreatePerson'
                 , 'stepCreateOrganisation'
@@ -776,13 +757,12 @@ class TestERP5Base(ERP5TypeTestCase):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_03_Subordination(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_Subordination(self):
     """
       Tests that career steps subordination properties behave correctly
     """
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreatePerson'
                 , 'stepCreateOrganisation'
@@ -792,13 +772,12 @@ class TestERP5Base(ERP5TypeTestCase):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_04_SubordinationAndAddress(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_SubordinationAndAddress(self):
     """
       Tests that career steps subordination properties behave correctly
     """
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreatePerson'
                 , 'stepCreateOrganisation'
@@ -808,7 +787,7 @@ class TestERP5Base(ERP5TypeTestCase):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_SubordinationAcquisition(self):
     """
@@ -832,7 +811,7 @@ class TestERP5Base(ERP5TypeTestCase):
 
 
   # Dates
-  def test_05_DatesOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_DatesOnPerson(self):
     """Tests dates on Person objects.
     """
     pers = self.getPersonModule().newContent(portal_type='Person')
@@ -847,7 +826,7 @@ class TestERP5Base(ERP5TypeTestCase):
                         getattr(pers.getCreationDate(), slot)(),
                         'Wrong creation date %s' % pers.getCreationDate())
   
-  def test_06_DatesOnOrganisation(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_DatesOnOrganisation(self):
     """Tests dates on Organisation objects.
     """
     org = self.getOrganisationModule().newContent(portal_type='Organisation')
@@ -861,7 +840,7 @@ class TestERP5Base(ERP5TypeTestCase):
                         getattr(org.getCreationDate(), slot)(),
                         'Wrong creation date %s' % org.getCreationDate())
 
-  def test_07_BirthplaceOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_BirthplaceOnPerson(self):
     """Tests birthplace on Person objects.
     """
     pers = self.getPersonModule().newContent(portal_type='Person')
