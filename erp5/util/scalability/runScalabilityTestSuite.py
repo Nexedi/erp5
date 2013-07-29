@@ -278,10 +278,10 @@ class ScalabilityLauncher(object):
     
     
     while time.time()-start_time < max_time:
+      time.sleep(5)
       current_test = self.getNextTest()
       if current_test == None:
         self.log("No Test Case Ready")
-        time.sleep(5)
       else:
         error_count = 1
 
