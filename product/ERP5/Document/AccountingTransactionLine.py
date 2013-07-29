@@ -102,9 +102,8 @@ class AccountingTransactionLine(DeliveryLine):
     """
       The price is set to 1.0 because we do not want to implement
       automatic currency conversion in accounting. Users must define the
-      conversion manually in accounting.  This is required by accounting
-      law. One can not account USD (in a EUR based company) without
-      defining the equivalent in EUR.
+      conversion manually in accounting. One can not account USD (in a EUR
+      based company) without defining the equivalent in EUR.
     """
     return 1.0
 
@@ -114,9 +113,8 @@ class AccountingTransactionLine(DeliveryLine):
     """
       The price is set to 1.0 because we do not want to implement
       automatic currency conversion in accounting. Users must define the
-      conversion manually in accounting.  This is required by accounting
-      law. One can not account USD (in a EUR based company) without
-      defining the equivalent in EUR.
+      conversion manually in accounting. One can not account USD (in a EUR
+      based company) without defining the equivalent in EUR.
     """
     return 1.0
 
