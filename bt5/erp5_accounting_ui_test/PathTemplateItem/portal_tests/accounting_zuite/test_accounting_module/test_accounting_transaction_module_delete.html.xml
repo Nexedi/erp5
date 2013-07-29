@@ -72,11 +72,6 @@ Test Accounting module listbox supports deleting\n
 \n
 <!-- 4 records in the list {{{ -->\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>4 records</td>\n

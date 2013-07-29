@@ -57,11 +57,6 @@ Test Accounting module listbox multi pages\n
 \n
 <!-- 4*12 records in the list {{{ -->\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>48 records</td>\n
@@ -184,6 +179,11 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[ @value=\'listbox.operation_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

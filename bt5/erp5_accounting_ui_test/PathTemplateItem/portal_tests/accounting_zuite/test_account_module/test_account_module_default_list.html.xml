@@ -56,11 +56,6 @@ Test default display of Account Module\n
 \n
 <!-- 10 accounts -> 10 records in the list {{{ -->\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@title=\'Show All\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>10 records</td>\n
@@ -535,8 +530,7 @@ for line_idx, line in enumerate(list(csv.reader(f))[1:]):\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

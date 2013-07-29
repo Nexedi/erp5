@@ -54,10 +54,6 @@ Test sort for Accounting module main listbox\n
   <td>Accounting</td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
 <!-- }}} -->\n
 \n
 <!-- check content of known lines {{{ -->\n
