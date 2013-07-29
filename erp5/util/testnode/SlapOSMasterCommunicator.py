@@ -17,9 +17,6 @@ class SlapOSMasterCommunicator(object):
     # Try to reuse same communicator, because initilization step may takes a lot of time
     # due to listing of all instances (alive or not) related to the specified slapOS account.
     communicator = SlapOSMasterCommunicator()
-
-    # Know if 'TestScalability_21423104630420' requested status is corresponding as excepted (True/Flase)
-    print communicator.isHostingSubscriptionCorrect('TestScalability_21423104630420')
     
     # Print news related to 'TestScalability_21423104630420' all instances
     instance_link_list =  communicator._getRelatedInstanceLink('TestScalability_21423104630420')
@@ -142,32 +139,6 @@ class SlapOSMasterCommunicator(object):
         return False
     return len(related_instance_link_list) > 0
 
-  # check if requested state = status
-  def isInstanceCorrect(self, instance_link):
-    """
-    Return True if instance status and instance news text ~looks corresponding.
-    ( use the matching of 'correctly' and 'Instance' and status )
-    """
-    instance = self._curl(instance_link)
-    news_link = instance['_links']['http://slapos.org/reg/news']
-    news = self._curl(news_link)
-    text = news['news'][0]['text']
-    requested_status = instance['status']
-    return ('Instance' in text) and ('correctly' in text) and (requested_status in text)
-  
-  # check if requested state = status
-  def isHostingSubscriptionCorrect(self, hosting_subscription_title):
-    """
-    Return True if all instance news related to hosting_subscription_title
-    correspond to the requested status.
-    """
-    instance_link_list = self._getRelatedInstanceLink(hosting_subscription_title)
-    for instance_link in instance_link_list:
-      if not communicator.isInstanceCorrect(instance_link):
-        return False
-    return len(instance_link_list) > 0
-    
-  # check if provided 'status' = status
   def isInstanceCorrectly(self, instance_link, status):
     """
     Return True if instance status and instance news text ~looks corresponding.
