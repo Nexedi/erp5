@@ -12,10 +12,48 @@ import json
 import logging
 import logging.handlers
 import glob
+import urlparse
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
+
+
+def getConnection(erp5_url):
+  parsed = urlparse.urlparse(erp5_url)
+  host = "%s:%s" % (parsed.hostname, str(parsed.port))
+  if parsed.scheme == 'https':
+    return httplib.HTTPSConnection(host)
+  elif parsed.scheme == 'http':
+    return httplib.HTTPConnection(host)
+  else:
+    raise ValueError("Protocol not implemented")
+
+def waitFor0PendingActivities(erp5_url):
+  start_time = time.time()
+  while MAX_INSTALLATION_TIME > time.time()-start_time:
+    zope_connection = getConnection(erp5_url)
+    zope_connection.request(
+      'GET', '/erp5/portal_activities/getMessageList',
+      headers=header_dict
+    )
+    result = zope_connection.getresponse()
+    message_list_text = result.read()
+    message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
+    if len(message_list)==0:
+      print "There is no pending activities."
+      break
+    print "There is %d pending activities" %len(message_list)
+    time.sleep(5)
+
+    #Hack to do not take into account persistent Alarm_installMailServer acitivities
+    if len(message_list)==0 and testIfExist("/erp5/portal_activities", "Alarm_installMailServer"):
+      print "1 pending activity for 'Alarm_installMailServer'."
+      print "ok."
+      break
+
+
+
 
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
@@ -246,6 +284,11 @@ class ScalabilityLauncher(object):
         time.sleep(5)
       else:
         error_count = 1
+
+        # Waiting for 0-pending activities
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url)
+
+        
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
         try:
