@@ -68,23 +68,6 @@ class AccountingTransactionLine(DeliveryLine):
     """
     return Amount.getInventoriatedQuantity(self)
 
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedStartDate')
-  def getInventoriatedStartDate(self):
-    """
-      Get the start date.
-    """
-    return self.getStartDate()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedStopDate')
-  def getInventoriatedStopDate(self):
-    """
-      Get the stop date.
-    """
-    return self.getStopDate()
- 
   # Pricing in standard currency
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None):
@@ -94,7 +77,7 @@ class AccountingTransactionLine(DeliveryLine):
       converted value for source in getSourceInventoriatedTotalAssetPrice
       and getDestinationInventoriatedTotalAssetPrice for destination.
     """
-    return 1.0 
+    return 1.0
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceAssetPrice')

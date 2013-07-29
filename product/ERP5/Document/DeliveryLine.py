@@ -259,18 +259,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
       """
       return Movement.getInventoriatedQuantity(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStartDate')
-    def getInventoriatedStartDate(self):
-      """
-      """
-      return Movement.getStartDate(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStopDate')
-    def getInventoriatedStopDate(self):
-      """
-      """
-      return Movement.getStopDate(self)
-
 #     security.declarePrivate('_checkConsistency')
 #     def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
 #       """
