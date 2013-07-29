@@ -142,7 +142,11 @@ class TestResultLineProxy(RPCRetry):
         """
         Return : boolean 
         """
-        return bool(self._retryRPC('isTestCaseRunning', [self._test_result_line_path]))
+        try:
+          return bool(self._retryRPC('isTestCaseRunning', [self._test_result_line_path]))
+        except:
+          raise ValueError('isTestCaseRunning Failed.')
+          
         
     def isFailed(self):
         """
