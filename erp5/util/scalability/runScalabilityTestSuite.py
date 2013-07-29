@@ -29,6 +29,7 @@ def getConnection(erp5_url):
   else:
     raise ValueError("Protocol not implemented")
 
+MAX_INSTALLATION_TIME = 1200
 def waitFor0PendingActivities(erp5_url):
   start_time = time.time()
   while MAX_INSTALLATION_TIME > time.time()-start_time:
