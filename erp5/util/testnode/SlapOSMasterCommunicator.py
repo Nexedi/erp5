@@ -139,7 +139,7 @@ class SlapOSMasterCommunicator(object):
         return False
     return len(related_instance_link_list) > 0
 
-  def isInstanceCorrectly(self, instance_link, status):
+  def isInstanceReady(self, instance_link, status):
     """
     Return True if instance status and instance news text ~looks corresponding.
     ( use the matching of 'correctly' and 'Instance' and status )
@@ -148,14 +148,14 @@ class SlapOSMasterCommunicator(object):
     return ('Instance' in text) and ('correctly' in text) and (status in text)
 
   # check if provided 'status' = status
-  def isHostingSubscriptionCorrectly(self, hosting_subscription_title, status):
+  def isHostingSubscriptionReady(self, hosting_subscription_title, status):
     """
     Return True if all instance status and instance news text ~looks corresponding.
     ( use the matching of 'correctly' and 'Instance' and status ).
     """
     instance_link_list = self._getRelatedInstanceLink(hosting_subscription_title)
     for instance_link in instance_link_list:
-      if not self.isInstanceCorrectly(instance_link, status):
+      if not self.isInstanceReady(instance_link, status):
         return False
     return len(instance_link_list) > 0
     

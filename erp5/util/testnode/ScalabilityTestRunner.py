@@ -205,7 +205,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     self.log("Wait for instance state: %s" %state)
     start_time = time.time()
-    while (not self.slapos_communicator.isHostingSubscriptionCorrectly(instance_title, state)
+    while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
          and (max_time > (time.time()-start_time))):
       time.sleep(15)
     if (time.time()-start_time) > max_time:
