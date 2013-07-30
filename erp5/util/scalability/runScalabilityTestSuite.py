@@ -274,9 +274,7 @@ class ScalabilityLauncher(object):
 
     # Get suite informations
     suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
-    test_suites = suite.getTestList()
-    test_path = suite.getTestPath()
-    
+    test_suites = suite.getTestList()    
     
     while time.time()-start_time < max_time:
       time.sleep(5)
@@ -296,9 +294,9 @@ class ScalabilityLauncher(object):
 
           current_test_number = int(current_test.title)
           test_duration = suite.getTestDuration(current_test_number)
-          benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, test_path)
+          benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
           #TODO: generate a basic user file with all scalability users.
-          user_file_path = os.path.join(self.__argumentNamespace.erp5_location, test_path)
+          user_file_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
           tester_path = self.__argumentNamespace.runner_path
           user_number = suite.getUserNumber(current_test_number)
 

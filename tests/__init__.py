@@ -132,6 +132,9 @@ class ERP5_scalability(_ERP5):
 
   def getTestPath(self):
     return 'erp5/util/benchmark/examples/'
+    
+  def getUsersFilePath(self):
+    return 'erp5/util/benchmark/examples/scalabilityUsers'
 
   def getUserNumber(self, test_number):
     user_number = 1
