@@ -62,9 +62,8 @@ def waitFor0PendingActivities(erp5_url, log):
     time.sleep(5)
 
     #Hack to do not take into account persistent Alarm_installMailServer acitivities
-    if len(message_list)==0 and testIfExist("/erp5/portal_activities", "Alarm_installMailServer"):
-      print "1 pending activity for 'Alarm_installMailServer'."
-      print "ok."
+    if len(message_list)==1 :
+      print "1 pending activity but ok."
       break
 
 
