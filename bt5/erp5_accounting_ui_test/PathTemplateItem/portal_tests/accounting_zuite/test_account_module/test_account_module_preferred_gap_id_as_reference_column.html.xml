@@ -118,18 +118,9 @@ Test `preferred_gap_id` column of Account Module\n
 </tr>\n
 \n
 \n
-\n
-<!-- make sure we are sorted by preferred_gap_id ASC -->\n
 <tr>\n
-  <td>storeLocation</td>\n
-  <td>current_account_url</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <!-- reset any sort on preferred_gap_id. previously here was sorting by title, \n
-       but now we can sort by multiple columns, so sort by title does not reset sorting. -->\n
-  <td>openAndWait</td>\n
-  <td>${current_account_url}&reset=int:1</td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
