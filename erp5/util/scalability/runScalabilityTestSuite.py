@@ -14,6 +14,7 @@ import logging.handlers
 import glob
 import urlparse
 import httplib
+import base64
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
@@ -39,6 +40,12 @@ def getConnection(erp5_url, log):
 MAX_INSTALLATION_TIME = 1200
 def waitFor0PendingActivities(erp5_url, log):
   start_time = time.time()
+  parsed = urlparse.urlparse(erp5_url)
+  user = parsed.username;
+  password = parsed.password;
+  header_dict = {'Authorization': 'Basic %s' % \
+  base64.encodestring('%s:%s' % (user, password)).strip()}
+  
   while MAX_INSTALLATION_TIME > time.time()-start_time:
     zope_connection = getConnection(erp5_url, log)
     zope_connection.request(
