@@ -19,21 +19,27 @@ from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 
 
-def getConnection(erp5_url):
-  parsed = urlparse.urlparse(erp5_url)
-  host = "%s:%s" % (parsed.hostname, str(parsed.port))
-  if parsed.scheme == 'https':
-    return httplib.HTTPSConnection(host)
-  elif parsed.scheme == 'http':
-    return httplib.HTTPConnection(host)
-  else:
-    raise ValueError("Protocol not implemented")
+def getConnection(erp5_url, log):
+  while True:
+    try:
+      parsed = urlparse.urlparse(erp5_url)
+      host = "%s:%s" % (parsed.hostname, str(parsed.port))
+      if parsed.scheme == 'https':
+        return httplib.HTTPSConnection(host)
+      elif parsed.scheme == 'http':
+        return httplib.HTTPConnection(host)
+      else:
+        raise ValueError("Protocol not implemented")
+    except:
+      log("Can't get connecttion to %s, we will retry." %erp5_url)
+      time.sleep(10)
+      pass
 
 MAX_INSTALLATION_TIME = 1200
-def waitFor0PendingActivities(erp5_url):
+def waitFor0PendingActivities(erp5_url, log):
   start_time = time.time()
   while MAX_INSTALLATION_TIME > time.time()-start_time:
-    zope_connection = getConnection(erp5_url)
+    zope_connection = getConnection(erp5_url, log)
     zope_connection.request(
       'GET', '/erp5/portal_activities/getMessageList',
       headers=header_dict
@@ -285,7 +291,7 @@ class ScalabilityLauncher(object):
         error_count = 1
 
         # Waiting for 0-pending activities
-        waitFor0PendingActivities(self.__argumentNamespace.erp5_url)
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
 
         
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
