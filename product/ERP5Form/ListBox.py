@@ -2019,7 +2019,7 @@ class ListBoxRenderer:
     # Set the total number of objects.
     self.total_size = sum([s.object_list_len for s in report_section_list])
     limit = param_dict.get('limit')
-    if isintance(limit, basestring):
+    if isinstance(limit, basestring):
       limit = int(limit)
     self.is_sample = self.total_size == limit
 
