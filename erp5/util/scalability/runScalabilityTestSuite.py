@@ -13,6 +13,7 @@ import logging
 import logging.handlers
 import glob
 import urlparse
+import httplib
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
