@@ -51,9 +51,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
+\n
+# Update roles\n
+portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
+portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
+portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
+portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
+portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
+\n
+# Clone users\n
 module = context.person_module\n
 my_user = module.scalability_user\n
-\n
 for i in xrange(0,50):\n
   new_user = my_user.Base_createCloneDocument(batch_mode=1)\n
   name = \'scalability_user_%d\' %i\n
@@ -73,7 +81,7 @@ return 1\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>clone_scalability_user</string> </value>
+            <value> <string>init_scalability</string> </value>
         </item>
       </dictionary>
     </pickle>

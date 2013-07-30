@@ -8,7 +8,7 @@ person_module/john_rock
 person_module/john_rock/*
 person_module/scalability_user
 person_module/scalability_user/*
-portal_skins/custom/clone_scalability_user
+portal_skins/custom/init_scalability
 product_module/blue_led
 product_module/blue_led/*
 product_module/green_led
