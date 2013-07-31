@@ -20,10 +20,15 @@ from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 
+MAX_GETTING_CONNECTION_TIME = 60*5
 
 def getConnection(erp5_url, log):
-  while True:
+  
+  start_time = time.time()
+  count = 0
+  while MAX_GETTING_CONNECTION_TIME > time.time()-start_time:
     try:
+      count = count + 1
       parsed = urlparse.urlparse(erp5_url)
       host = "%s:%s" % (parsed.hostname, str(parsed.port))
       if parsed.scheme == 'https':
@@ -33,9 +38,9 @@ def getConnection(erp5_url, log):
       else:
         raise ValueError("Protocol not implemented")
     except:
-      log("Can't get connecttion to %s, we will retry." %erp5_url)
+      log("Can't get connection to %s, we will retry." %erp5_url)
       time.sleep(10)
-      pass
+  raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
 MAX_INSTALLATION_TIME = 1200
 def waitFor0PendingActivities(erp5_url, log):
