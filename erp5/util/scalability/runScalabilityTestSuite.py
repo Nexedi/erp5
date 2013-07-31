@@ -309,7 +309,9 @@ class ScalabilityLauncher(object):
           test_duration = suite.getTestDuration(current_test_number)
           benchmark_path_list = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
           #TODO: generate a basic user file with all scalability users.
-          user_file_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
+          user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
+          user_file_path = os.path.split(user_file_full_path)[0]
+          user_file = os.path.split(user_file_full_path)[1]
           tester_path = self.__argumentNamespace.runner_path
           user_number = suite.getUserNumber(current_test_number)
 
@@ -322,6 +324,7 @@ class ScalabilityLauncher(object):
                  ' '.join(test_suites),
                  '--benchmark-path-list', benchmark_path_list,
                  '--users-file-path', user_file_path,
+                 '--users-file', user_file,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
