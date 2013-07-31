@@ -85,6 +85,7 @@ import posixpath
 import transaction
 
 import threading
+from ZODB.broken import Broken
 
 CACHE_DATABASE_PATH = None
 try:
@@ -917,6 +918,70 @@ class ObjectTemplateItem(BaseTemplateItem):
     keys.sort()
     return keys
 
+  def unindexBrokenObject(self, new_obj, item_path):
+    """
+      Unindex broken objects.
+
+      Corresponding catalog record is not unindexed even after a broken object
+      is removed, since the broken object does not implement 'CopySupport'.
+      This situation triggers a FATAL problem on SQLCatalog.catalogObjectList
+      when upgrading a broken path by ObjectTemplateItem with BusinessTemplate.
+      We often get this problem when we are upgrading a quite old ERP5 site
+      to new one, as several old classes may be already removed/replaced 
+      in the file system, thus several objects tend to be broken.
+
+      Keyword arguments:
+      new_obj -- the object in the BusinessTemplate
+      item_path -- the path specified by the ObjectTemplateItem
+    """
+    def flushActivity(obj, invoke=0, **kw):
+      try:
+        activity_tool = self.getPortalObject().portal_activities
+      except AttributeError:
+        return # Do nothing if no portal_activities
+      # flush all activities related to this object
+      activity_tool.flush(obj, invoke=invoke, **kw)
+
+    class fakeobject:
+       def __init__(self, path):
+         self._physical_path = tuple(path.split('/')) 
+       def getPhysicalPath(self):
+         return self._physical_path
+ 
+    def recursiveUnindex(catalog, item_path, root_document_path):
+      # search the object + sub-objects
+      result = catalog(relative_url=(item_path, item_path + '/%'))
+      for x in result:
+        uid = x.uid
+        path = x.path
+        unindex(root_document_path, path, uid)
+
+    def unindex(root_document_path, path, uid):
+      LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+          'Unindex Broken object at %r.' % (path,))
+      # Set the path as deleted without lock
+      catalog.beforeUnindexObject(None,path=path,uid=uid)
+      # Then start activity in order to remove lines in catalog,
+      # sql wich generate locks
+      catalog.activate(activity='SQLQueue',
+                       tag='%s' % uid,
+                       group_method_id='portal_catalog/uncatalogObjectList',
+                       serialization_tag=root_document_path
+                       ).unindexObject(uid=uid)
+
+    # check isIndexable with new one, because the old one is broken
+    if new_obj.isIndexable():
+      portal = self.getPortalObject()
+      try:
+        catalog = portal.portal_catalog
+      except AttributeError:
+        pass
+      else:
+        # given item_path is a relative_url in reality
+        root_path = "/".join(item_path.split('/')[:2])
+        root_document_path = '/%s/%s' % (portal.getId(), root_path)
+        recursiveUnindex(catalog, item_path, root_document_path)
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -1015,6 +1080,10 @@ class ObjectTemplateItem(BaseTemplateItem):
               portal_type_dict['workflow_chain'] = \
                 getChainByType(context)[1].get('chain_' + object_id, '')
             container.manage_delObjects([object_id])
+            # unindex here when it is a broken object
+            if isinstance(old_obj, Broken):
+              new_obj = self._objects[path]
+              self.unindexBrokenObject(new_obj, path)
 
           # install object
           obj = self._objects[path]
