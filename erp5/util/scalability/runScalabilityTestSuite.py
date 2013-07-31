@@ -53,7 +53,8 @@ def waitFor0PendingActivities(erp5_url, log):
   base64.encodestring('%s:%s' % (user, password)).strip()}
 
   count = 0
-  while MAX_INSTALLATION_TIME > time.time()-start_time:
+  ok = False
+  while MAX_INSTALLATION_TIME > time.time()-start_time and not ok:
     zope_connection = getConnection(erp5_url, log)
     try:
       count = count + 1
@@ -66,19 +67,20 @@ def waitFor0PendingActivities(erp5_url, log):
       message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
       if len(message_list)==0:
         log("There is no pending activities.")
-        break
-      log("There is %d pending activities" %len(message_list))
-      time.sleep(5)
-
+        ok = True
       #Hack to do not take into account persistent Alarm_installMailServer acitivities
       if len(message_list)==1 :
         log("1 pending activity but ok.")
-        break
+        ok = True
+        
+      log("There is %d pending activities" %len(message_list))
+      time.sleep(5)
     except:
       time.sleep(5)
       log("Getting activities failed, retry.")
 
-  raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
+  if not ok:
+    raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
 
 
