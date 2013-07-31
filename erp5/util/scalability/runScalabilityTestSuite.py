@@ -20,6 +20,8 @@ from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 
+MAX_INSTALLATION_TIME = 60*50
+MAX_TESTING_TIME = 60
 MAX_GETTING_CONNECTION_TIME = 60*5
 
 def getConnection(erp5_url, log):
@@ -42,7 +44,6 @@ def getConnection(erp5_url, log):
       time.sleep(10)
   raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
-MAX_INSTALLATION_TIME = 1200
 def waitFor0PendingActivities(erp5_url, log):
   start_time = time.time()
   parsed = urlparse.urlparse(erp5_url)
@@ -50,28 +51,34 @@ def waitFor0PendingActivities(erp5_url, log):
   password = parsed.password;
   header_dict = {'Authorization': 'Basic %s' % \
   base64.encodestring('%s:%s' % (user, password)).strip()}
-  
+
+  count = 0
   while MAX_INSTALLATION_TIME > time.time()-start_time:
     zope_connection = getConnection(erp5_url, log)
-    zope_connection.request(
-      'GET', '/erp5/portal_activities/getMessageList',
-      headers=header_dict
-    )
-    result = zope_connection.getresponse()
-    message_list_text = result.read()
-    message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
-    if len(message_list)==0:
-      print "There is no pending activities."
-      break
-    print "There is %d pending activities" %len(message_list)
-    time.sleep(5)
+    try:
+      count = count + 1
+      zope_connection.request(
+        'GET', '/erp5/portal_activities/getMessageList',
+        headers=header_dict
+      )
+      result = zope_connection.getresponse()
+      message_list_text = result.read()
+      message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
+      if len(message_list)==0:
+        log("There is no pending activities.")
+        break
+      log("There is %d pending activities" %len(message_list))
+      time.sleep(5)
 
-    #Hack to do not take into account persistent Alarm_installMailServer acitivities
-    if len(message_list)==1 :
-      print "1 pending activity but ok."
-      break
+      #Hack to do not take into account persistent Alarm_installMailServer acitivities
+      if len(message_list)==1 :
+        log("1 pending activity but ok.")
+        break
+    except:
+      time.sleep(5)
+      log("Getting activities failed, retry.")
 
-
+  raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
 
 
