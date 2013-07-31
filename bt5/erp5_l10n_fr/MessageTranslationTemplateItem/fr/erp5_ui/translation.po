@@ -11205,6 +11205,9 @@ msgstr "Passe l'écriture au brouillard validé."
 msgid "This action will post the transaction to the General Ledger. It can be journalized again thanks to the restart action"
 msgstr "Passe l'écriture au brouillard validé."
 
+msgid "This dialog has already been submitted. Do you want to submit again ?"
+msgstr "Le dialogue a déjà été soumis. Voulez vous le soumettre à nouveau ?"
+
 msgid "This document is not converted yet."
 msgstr "Ce document n'est pas encore converti"
 
