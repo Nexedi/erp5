@@ -407,8 +407,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if error:
       test_result_proxy.fail()
       raise error
-    else:
-      test_result_proxy.stop()
+    #else:
+      #test_result_proxy.stop()
 
     return {'status_code' : 0}
     
