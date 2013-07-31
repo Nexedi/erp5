@@ -144,4 +144,4 @@ class ERP5_scalability(_ERP5):
 
   # Test duration in seconds
   def getTestDuration(self, test_number):
-    return 60*5
+    return 60
