@@ -51,14 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>import json\n
-from Products.ERP5Type.Log import log\n
+#from Products.ERP5Type.Log import log\n
 # use JSON.parse as json.loads and JSON.stringify as json.dumps\n
 \n
 context.REQUEST.response.setHeader("Access-Control-Allow-Origin", "*")\n
 \n
 jio = context.JIO_class()\n
 \n
-log(context.REQUEST.form["option"])\n
 try: option = jio.jsonUtf8Loads(context.REQUEST.form["option"])\n
 except KeyError:\n
   option = {}\n

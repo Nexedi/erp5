@@ -69,7 +69,7 @@ jio.setMode(mode)\n
 try:\n
   response_json = jio.removeAttachment(doc)\n
 except (ValueError, TypeError) as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot remove attachment", str(e)))\n
+  return jio.sendError(jio.createConflictDict("Cannot remove attachment", str(e)))\n
 except LookupError as e:\n
   return jio.sendError(jio.createNotFoundDict("Cannot remove attachment", str(e)))\n
 \n

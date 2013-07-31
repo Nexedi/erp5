@@ -52,8 +52,47 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-import json, hashlib\n
-#from Products.ERP5Type.Log import log\n
+import json\n
+from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
+from Products.ERP5Type.Log import log\n
+\n
+def dictGetKeyFromValue(obj, value, *args):\n
+  for k, v in obj.items():\n
+    if v == value:\n
+      return k\n
+  if len(args) == 0:\n
+    raise ValueError(\'value not found\')\n
+  return args[0]\n
+\n
+def UTF8DeepJsonEncoder(obj):\n
+  # string -> unicode -> str\n
+  if isinstance(obj, unicode):\n
+    return obj.encode("UTF-8")\n
+  # array -> list\n
+  if isinstance(obj, list):\n
+    for i in xrange(len(obj)):\n
+      obj[i] = UTF8DeepJsonEncoder(obj[i])\n
+    return obj\n
+  # object -> dict\n
+  if isinstance(obj, dict):\n
+    for k, v in obj.items():\n
+      v = UTF8DeepJsonEncoder(v)\n
+      del obj[k]\n
+      obj[UTF8DeepJsonEncoder(k)] = v\n
+    return obj\n
+  # number (int) -> int, long\n
+  # true -> True\n
+  # false -> False\n
+  # null -> None\n
+  return obj\n
+\n
+def json_loads(string):\n
+  return UTF8DeepJsonEncoder(json.loads(string))\n
+\n
+def jsonDeepCopy(json_dict):\n
+  "Clones the JSON object in deep and returns the clone"\n
+  return json_loads(json.dumps(json_dict))\n
 \n
 class FakeDocument():\n
   def getObject(self): return self\n
@@ -84,32 +123,39 @@ class JioGeneric():\n
   def __init__(self):\n
     self.simple_conversion_dict = {\n
       "content_type": "format",\n
-      "effective_date": "posted_date",\n
       "portal_type": "type",\n
       "contributor_list": "contributor",\n
       "subject_list": "subject",\n
-      "categories_list": "category"\n
+      "categories_list": "category",\n
+      "creation_date": "created",\n
+      "modification_date": "modified"\n
     }\n
     # order deny, allow\n
     # deny from all\n
-    self.allowed_property_id_dict = ["title", "short_title", "description",\n
+    self.allowed_property_id_list = ["title", "short_title", "description",\n
                                      "language", "reference", "version",\n
-                                     "format", "posted_date", "type",\n
-                                     "expiration_date",\n
+                                     "format", "type",\n
+                                     "effective_date", "expiration_date",\n
                                      "contributor", "subject", "category"]\n
+    self.type_attachment_key = {\n
+      "Web Page": "text_content",\n
+      "Image": "data"\n
+    }\n
     self.allowed_portal_type_list = ["Web Page", "Image"]\n
-    self.local_attachment_key = "local_attachment_dict"\n
+    # self.local_attachment_key = "local_attachment_dict"\n
 \n
   def getDocumentAttachment(self, metadata_json):\n
     tool.checkMetadata(metadata_json)\n
     try: document = tool.getDocumentFromUrl(metadata_json.get("_id"))\n
     except AttributeError: raise ValueError("Bad document id")\n
-    except ValueError: raise LookupError("Missing document")\n
-    except KeyError: raise LookupError("Missing document")\n
+    except (ValueError, KeyError): raise LookupError("Missing document")\n
     document_dict = tool.getDocumentProperties(document)\n
+    attachment_key = self.type_attachment_key.get(document.getPortalType())\n
     if metadata_json.get("_attachment") == "body" and \\\n
-      "text_content" in document_dict:\n
-      return document_dict["text_content"]\n
+      attachment_key in document_dict:\n
+      data = document_dict[attachment_key]\n
+      if data is not None:\n
+        return data\n
     # elif document_dict.get(self.local_attachment_key) is not None and \\\n
     #      metadata_json.get("_attachment") in \\\n
     #      document_dict.get(self.local_attachment_key):\n
@@ -126,11 +172,13 @@ class JioGeneric():\n
     document_dict = tool.getDocumentProperties(document)\n
     real_document_dict = {}\n
     # get attachments metas\n
-    if document_dict.get("text_content") is not None:\n
+    attachment_key = self.type_attachment_key.get(document.getPortalType())\n
+    if attachment_key is not None and \\\n
+      document_dict.get(attachment_key) is not None:\n
       real_document_dict["_attachments"] = tool.dictFusion(\n
         real_document_dict.get("_attachments"), {\n
           "body": {\n
-            "length": len(document_dict["text_content"]),\n
+            "length": len(document_dict[attachment_key]),\n
             "content_type": document_dict.get("content_type")\n
           }\n
         }\n
@@ -153,11 +201,10 @@ class JioGeneric():\n
         continue\n
       if k in self.simple_conversion_dict:\n
         k = self.simple_conversion_dict.get(k)\n
-      if k in self.allowed_property_id_dict:\n
-        try: v.time\n
-        except AttributeError: pass\n
-        else: v = str(v)\n
-        if k == "text_content":\n
+      if k in self.allowed_property_id_list:\n
+        if isinstance(v, DateTime):\n
+          v = v.ISO8601()\n
+        if k == attachment_key:\n
           real_document_dict["_attachments"] = {\n
             "body": {\n
               "length": len(v)\n
@@ -173,6 +220,9 @@ class JioGeneric():\n
             real_document_dict["relation"] = relation_list\n
         real_document_dict[k] = v\n
     real_document_dict["_id"] = metadata_json["_id"]\n
+    real_document_dict["date"] = document.getCreationDate().ISO8601()\n
+    real_document_dict["created"] = document.getCreationDate().ISO8601()\n
+    real_document_dict["modified"] = document.getModificationDate().ISO8601()\n
     real_document_dict["type"] = document.getPortalType()\n
     #tool.stringifyDictDateValue(real_document_dict)\n
     return real_document_dict\n
@@ -188,7 +238,7 @@ class JioGeneric():\n
         if jio_key == meta_key:\n
           doc_key = erp5_key\n
           break\n
-      if meta_key in self.allowed_property_id_dict:\n
+      if meta_key in self.allowed_property_id_list:\n
         if meta_value is None and document.hasProperty(doc_key) or \\\n
            meta_value is not None:\n
           edit_kw[doc_key] = meta_value\n
@@ -202,8 +252,10 @@ class JioGeneric():\n
   def putDocumentAttachment(self, metadata_json):\n
     tool.checkMetadata(metadata_json)\n
     document = tool.getDocumentFromUrl(metadata_json["_id"]).getObject()\n
+    attachment_key = self.type_attachment_key.get(document.getPortalType())\n
     if metadata_json.get("_attachment") == "body":\n
-      document.edit(text_content=metadata_json.get("_data"))\n
+      edit_kw = {attachment_key: metadata_json.get("_data")}\n
+      document.edit(**edit_kw)\n
     else:\n
       raise ValueError("Unauthorized attachment id")\n
       # edit_kw = {self.local_attachment_key:\n
@@ -232,9 +284,11 @@ class JioGeneric():\n
         **self.updateDocumentMetadataEditKw(metadata_json, document=document))\n
     else:\n
       if "_id" in metadata_json:\n
-        tool.newDocumentFromUrl(\n
-          metadata_json["_id"],\n
-          self.updateDocumentMetadataEditKw(metadata_json))\n
+        try:\n
+          tool.newDocumentFromUrl(\n
+            metadata_json["_id"],\n
+            self.updateDocumentMetadataEditKw(metadata_json))\n
+        except KeyError: raise KeyError("Bad document id")\n
       elif "type" in metadata_json:\n
         try:\n
           document = tool.newDocumentFromType(\n
@@ -263,35 +317,175 @@ class JioGeneric():\n
     except AttributeError: raise ValueError("Bad document id")\n
     except ValueError: raise LookupError("Missing document")\n
     except KeyError: raise LookupError("Missing document")\n
-    edit_kw = {}\n
+    attachment_key = self.type_attachment_key.get(document.getPortalType())\n
     if metadata_json.get("_attachment") == "body":\n
       if document.getTextContent() == None:\n
         raise LookupError("Missing attachment")\n
-      document.edit(text_content = None)\n
+      edit_kw = {attachment_key: None}\n
+      document.edit(**edit_kw)\n
     else:\n
       raise ValueError("Unauthorized attachment id")\n
     return {"ok": True, "id": metadata_json["_id"],\n
             "attachment": metadata_json.get("_attachment")}\n
 \n
+  def parseQuery(self, query_dict):\n
+    def rec(query_dict):\n
+      if query_dict.get("type") == "simple":\n
+        # if query_dict.get("key") not in self.allowed_property_id_list:\n
+        #   return None\n
+        for erp5_key, jio_key in self.simple_conversion_dict.items():\n
+          if query_dict["key"] == jio_key:\n
+            query_dict["key"] = erp5_key\n
+            break\n
+        return SimpleQuery(comparison_operator=query_dict[\'operator\'],\n
+                           **{query_dict[\'key\']: query_dict[\'value\']})\n
+      if query_dict.get("type") == "complex":\n
+        tool.listMapReplace(rec, query_dict[\'query_list\'])\n
+        try:\n
+          while True: query_dict[\'query_list\'].remove(None)\n
+        except ValueError: pass\n
+        return ComplexQuery(operator=query_dict[\'operator\'],\n
+                            *query_dict[\'query_list\'])\n
+      return None\n
+    return rec(query_dict)\n
+\n
   def getAllDocuments(self, option_json):\n
     response = {"rows":[]}\n
-    for portal_type in self.allowed_portal_type_list:\n
-      for document in context.portal_catalog(portal_type=portal_type):\n
-        url = tool.getUrlFromDocument(document)\n
-        row = {"id": url, "key": url, "values": {}}\n
-        if option_json.get(\'include_docs\') is True:\n
-          row["doc"] = self.getDocumentMetadata({"_id": url})\n
-        response["rows"].append(row)\n
+    kw = {}\n
+    if isinstance(option_json.get(\'query\'), dict):\n
+      kw[\'query\'] = self.parseQuery(option_json["query"])\n
+      kw[\'query\'] = ComplexQuery(\n
+        kw[\'query\'],\n
+        ComplexQuery(\n
+          operator=\'or\',\n
+          *[SimpleQuery(comparison_operator="=", portal_type=x) \\\n
+            for x in self.allowed_portal_type_list]\n
+        ),\n
+        comparison_operator=\'and\'\n
+      )\n
+    else:\n
+      kw[\'query\'] = ComplexQuery(\n
+        operator=\'or\',\n
+        *[SimpleQuery(comparison_operator="=", portal_type=x) \\\n
+          for x in self.allowed_portal_type_list]\n
+      )\n
+\n
+    if isinstance(option_json.get(\'limit\'), list):\n
+      kw[\'limit\'] = tuple(option_json[\'limit\'])\n
+\n
+    c = self.simple_conversion_dict\n
+    if isinstance(option_json.get(\'sort_on\'), list):\n
+      for i in range(len(option_json[\'sort_on\'])):\n
+        s = option_json[\'sort_on\'][i]\n
+        option_json[\'sort_on\'][i] = dictGetKeyFromValue(c, s[0], s[0])\n
+      kw[\'sort_on\'] = option_json[\'sort_on\']\n
+\n
+    if not isinstance(option_json.get(\'select_list\'), list):\n
+      option_json[\'select_list\'] = []\n
+    if option_json[\'select_list\'] != []:\n
+      id_list = context.portal_catalog.getSQLCatalog().getColumnIds()\n
+      i = len(option_json[\'select_list\']) - 1\n
+      while i >= 0:\n
+        s = option_json[\'select_list\'][i]\n
+        option_json[\'select_list\'][i] = dictGetKeyFromValue(c, s, s)\n
+        if option_json[\'select_list\'][i] not in id_list:\n
+          option_json[\'select_list\'].pop(i)\n
+        i -= 1\n
+    kw[\'select_list\'] = option_json[\'select_list\']\n
+\n
+    for document in context.portal_catalog(**kw):\n
+      url = tool.getUrlFromDocument(document)\n
+      row = {"id": url, "key": url, "value": {}}\n
+      for erp5_meta in option_json[\'select_list\']:\n
+        jio_meta = c.get(erp5_meta, erp5_meta)\n
+        row[\'value\'][jio_meta] = getattr(document, erp5_meta, None)\n
+        if isinstance(row[\'value\'][jio_meta], DateTime):\n
+          row[\'value\'][jio_meta] = row[\'value\'][jio_meta].ISO8601()\n
+      if option_json.get(\'include_docs\') is True:\n
+        row["doc"] = self.getDocumentMetadata({"_id": url})\n
+      response["rows"].append(row)\n
     response["total_rows"] = len(response["rows"])\n
     return response\n
 \n
+  # def getAllDocuments(self, option_json):\n
+  #   response = {"rows":[]}\n
+  #   editkw = {}\n
+  #   if "query" in option_json:\n
+  #     editkw[\'query\'] = self.parseQuery(option_json["query"])\n
+  #     editkw[\'query\'] = ComplexQuery(\n
+  #       editkw[\'query\'],\n
+  #       ComplexQuery(\n
+  #         operator=\'or\',\n
+  #         *[SimpleQuery(comparison_operator="=", portal_type=x) \\\n
+  #           for x in self.allowed_portal_type_list]\n
+  #       ),\n
+  #       comparison_operator=\'and\'\n
+  #     )\n
+  #     # if isinstance(option_json.get(\'limit\'), list):\n
+  #     #   editkw[\'limit\'] = tuple(option_json[\'limit\'])\n
+\n
+  #     # if isinstance(option_json.get(\'select_list\'), list):\n
+  #     #   for sub_list in option_json[\'select_list\']:\n
+  #     #     sub_list = tuple(sub_list)\n
+  #     #   editkw[\'select_list\'] = option_json[\'select_list\']\n
+\n
+  #     for document in context.portal_catalog(query=query):\n
+  #       url = tool.getUrlFromDocument(document)\n
+  #       row = {"id": url, "key": url, "values": {}}\n
+  #       if option_json.get(\'include_docs\') is True:\n
+  #         row["doc"] = self.getDocumentMetadata({"_id": url})\n
+  #       response["rows"].append(row)\n
+  #   else:\n
+  #     for portal_type in self.allowed_portal_type_list:\n
+  #       for document in context.portal_catalog(portal_type=portal_type):\n
+  #         url = tool.getUrlFromDocument(document)\n
+  #         row = {"id": url, "key": url, "values": {}}\n
+  #         if option_json.get(\'include_docs\') is True:\n
+  #           row["doc"] = self.getDocumentMetadata({"_id": url})\n
+  #         response["rows"].append(row)\n
+  #   response["total_rows"] = len(response["rows"])\n
+  #   return response\n
+\n
+  # def getAllDocuments(self, option_json):\n
+  #   response = {"rows":[]}\n
+  #   for portal_type in self.allowed_portal_type_list:\n
+  #     for document in context.portal_catalog(portal_type=portal_type):\n
+  #       url = tool.getUrlFromDocument(document)\n
+  #       row = {"id": url, "key": url, "values": {}}\n
+  #       if option_json.get(\'include_docs\') is True:\n
+  #         row["doc"] = self.getDocumentMetadata({"_id": url})\n
+  #       response["rows"].append(row)\n
+  #   response["total_rows"] = len(response["rows"])\n
+  #   return response\n
+\n
 class JioTool():\n
   # TODO doc strings\n
+\n
+  def listMapReplace(self, function, li):\n
+    """listMapReplace(function, list)\n
+\n
+        li = [1, 2, 3]\n
+        listFilter(lambda x: x + 1, li)\n
+        print(li) -> [2, 3, 4]\n
+\n
+    """\n
+    for i in range(len(li)):\n
+        li[i] = function(li[i])\n
+\n
   def createBadRequestDict(self, message, reason):\n
     return {\n
       "status": 405,\n
       "statusText": "Bad Request",\n
       "error": "bad_request",\n
+      "message": message,\n
+      "reason": reason\n
+    }\n
+\n
+  def createForbiddenDict(self, message, reason):\n
+    return {\n
+      "status": 403,\n
+      "statusText": "Forbidden",\n
+      "error": "forbidden",\n
       "message": message,\n
       "reason": reason\n
     }\n
@@ -313,10 +507,6 @@ class JioTool():\n
       "message": message,\n
       "reason": reason\n
     }\n
-\n
-  def jsonDeepCopy(self, json_dict):\n
-    "Clones the JSON object in deep and returns the clone"\n
-    return json.loads(json.dumps(json_dict))\n
 \n
   def checkMetadata(self, metadata_json):\n
     "Check if the id of the metadata is good"\n
@@ -358,27 +548,13 @@ class JioTool():\n
       document_dict[property_id] = document.getProperty(property_id)\n
     return document_dict\n
 \n
-  def recursiveEncodeToUtf8(self, obj):\n
-    if isinstance(obj, (str, unicode)):\n
-      return obj.encode("utf-8")\n
-    elif isinstance(obj, list):\n
-      return [self.recursiveEncodeToUtf8(x) for x in obj]\n
-    elif isinstance(obj, tuple):\n
-      return tuple((self.recursiveEncodeToUtf8(x) for x in obj))\n
-    elif isinstance(obj, dict):\n
-      return dict(((k.encode("utf-8"), self.recursiveEncodeToUtf8(v)) \\\n
-                   for k, v in obj.iteritems()))\n
-    else:\n
-      return obj\n
-\n
   def jsonUtf8Loads(self, json_str):\n
-    return self.recursiveEncodeToUtf8(json.loads(json_str))\n
+    return json_loads(json_str)\n
 \n
   def stringifyDictDateValue(self, obj_dict):\n
     for k, v in obj_dict.items():\n
-      try: v.time\n
-      except AttributeError: pass\n
-      else: obj_dict[k] = str(v)\n
+      if isinstance(v, DateTime):\n
+        obj_dict[k] = v.ISO8601()\n
 \n
   def formatMetadataToPut(self, metadata_json):\n
     for k, v in metadata_json.iteritems():\n
@@ -410,11 +586,13 @@ class JioTool():\n
   def getDocumentAttachment(self, metadata_json):\n
     return self.jio.getDocumentAttachment(metadata_json)\n
 \n
-  def putDocumentMetadata(self, metadata_json, overwrite=True):\n
-    return self.jio.putDocumentMetadata(\n
-      self.formatMetadataToPut(\n
-        self.recursiveEncodeToUtf8(\n
-          self.jsonDeepCopy(metadata_json))), overwrite=overwrite)\n
+  def putDocumentMetadata(self, metadata_json, overwrite=True, need_id=False):\n
+    metadata = self.formatMetadataToPut(\n
+      jsonDeepCopy(metadata_json))\n
+    if need_id:\n
+      if not isinstance(metadata.get("_id"), str) or metadata.get("_id") == "":\n
+        raise ValueError("Document id needed")\n
+    return self.jio.putDocumentMetadata(metadata, overwrite=overwrite)\n
 \n
   def putDocumentAttachment(self, attachment_json):\n
     return self.jio.putDocumentAttachment(attachment_json)\n

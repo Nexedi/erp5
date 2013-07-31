@@ -60,7 +60,8 @@ jio = context.JIO_class()\n
 \n
 try: doc = jio.jsonUtf8Loads(context.REQUEST.form["doc"])\n
 except KeyError:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot get document", "No document information received"))\n
+  return jio.sendError(jio.createBadRequestDict(\n
+    "Cannot get document", "No document information received"))\n
 \n
 try: mode = str(context.REQUEST.form["mode"])\n
 except KeyError: mode = "generic"\n
@@ -68,10 +69,12 @@ jio.setMode(mode)\n
 \n
 try:\n
   response_json = jio.putDocumentMetadata(doc, overwrite=False)\n
-except (ValueError, TypeError) as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot post document", str(e)))\n
-except LookupError as e:\n
+except (ValueError, TypeError, LookupError) as e:\n
   return jio.sendError(jio.createConflictDict("Cannot post document", str(e)))\n
+# except KeyError as e:\n
+#   return jio.sendError(jio.createForbiddenDict("Cannot post document", str(e)))\n
+# except LookupError as e:\n
+#   return jio.sendError(jio.createConflictDict("Cannot post document", str(e)))\n
 \n
 return jio.sendSuccess(response_json)\n
 </string> </value>

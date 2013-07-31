@@ -68,10 +68,10 @@ jio.setMode(mode)\n
 \n
 try:\n
   response_json = jio.putDocumentAttachment(doc)\n
-except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot put attachment", str(e)))\n
-except TypeError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot put attachment", str(e)))\n
+except (ValueError, TypeError, KeyError) as e:\n
+  return jio.sendError(jio.createConflictDict("Cannot put attachment", str(e)))\n
+# except TypeError as e:\n
+#   return jio.sendError(jio.createBadRequestDict("Cannot put attachment", str(e)))\n
 \n
 return jio.sendSuccess(response_json)\n
 </string> </value>
