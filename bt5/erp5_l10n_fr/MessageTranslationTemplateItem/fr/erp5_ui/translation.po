@@ -1929,12 +1929,6 @@ msgstr "Caisse"
 msgid "Cash Status"
 msgstr "État de valeur"
 
-msgid "Cash to Currency Purchase"
-msgstr "Achat de devises contre espèces"
-
-msgid "Cash to Currency Sale"
-msgstr "Vente de devises contre espèces"
-
 msgid "Cash Transfer"
 msgstr "Transfert Inter-caisse"
 
@@ -1943,6 +1937,12 @@ msgstr "ligne de transfert inter-caisse"
 
 msgid "Cash Transfers"
 msgstr "Transfert Inter-caisse"
+
+msgid "Cash to Currency Purchase"
+msgstr "Achat de devises contre espèces"
+
+msgid "Cash to Currency Sale"
+msgstr "Vente de devises contre espèces"
 
 msgid "Categories"
 msgstr "Catégories"
@@ -2502,14 +2502,14 @@ msgstr "Contenants"
 msgid "Content"
 msgstr "Contenu"
 
+msgid "Content Format"
+msgstr "Format du contenu"
+
 msgid "Content Layout"
 msgstr "Mise en page du contenu"
 
 msgid "Content Translation Workflow"
 msgstr "Workflow de traduction"
-
-msgid "Content Format"
-msgstr "Format du contenu"
 
 msgid "Content of a document in ERP5"
 msgstr "Montre le contenu d'une page."
@@ -2778,29 +2778,29 @@ msgstr "Créer un utilisateur"
 msgid "Create User [transition in user_account_workflow]"
 msgstr "Créer un compte utilisateur"
 
-msgid "Create your New Account"
-msgstr "Créez votre compte"
-
 msgid "Create a New Event for Reply"
 msgstr "Créer un nouvel évènement pour la réponse"
 
 msgid "Create a Task"
 msgstr "Créer une tâche"
 
-msgid "Created after"
-msgstr "Crée après"
-
-msgid "Created before"
-msgstr "Crée avant"
+msgid "Create your New Account"
+msgstr "Créez votre compte"
 
 msgid "Created Clone ${portal_type}."
 msgstr "${portal_type} cloné."
+
+msgid "Created after"
+msgstr "Crée après"
 
 msgid "Created and associated ${count} new events to the selected ticket."
 msgstr "${count} nouveaux évènements ont été créés et associés au ticket"
 
 msgid "Created and associated a new ${portal_type} to the ticket."
 msgstr "${portal_type} créé et associé au ticket"
+
+msgid "Created before"
+msgstr "Crée avant"
 
 msgid "Created by"
 msgstr "Créé par"
@@ -3775,11 +3775,11 @@ msgstr "Page affichée par défaut"
 msgid "Display Method ID"
 msgstr "Méthode d'affichage"
 
-msgid "Distributed Ram Cache"
-msgstr "Cache de ram distribué"
-
 msgid "Distributed RAM Cache Plugin"
 msgstr "Greffon de cache de ram distribué"
+
+msgid "Distributed Ram Cache"
+msgstr "Cache de ram distribué"
 
 msgid "Diverged"
 msgstr "Divergent"
@@ -4579,9 +4579,6 @@ msgstr "Particularité"
 msgid "February"
 msgstr "Février"
 
-msgid "Fields"
-msgstr "Liste des champs"
-
 msgid "Field Path"
 msgstr "Chemin du champs"
 
@@ -4590,6 +4587,9 @@ msgstr "Champ utilisé pour donner une description d'une étape de commande de v
 
 msgid "Field used to give a brief description of the PaySheet Transaction"
 msgstr "Champ utilisé pour donner une description de l'écriture de paye."
+
+msgid "Fields"
+msgstr "Liste des champs"
 
 msgid "Fields updated."
 msgstr "Champs mis à jour"
@@ -4723,14 +4723,14 @@ msgstr "Dossier"
 msgid "Folder Contents"
 msgstr "Liste"
 
+msgid "Follow up must be set to acknowledge an Event."
+msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
+
 msgid "Follow-up"
 msgstr "Suivi"
 
 msgid "Follow-up Ticket"
 msgstr "Ticket de suivi"
-
-msgid "Follow up must be set to acknowledge an Event."
-msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
 
 msgid "For each account, there will be a breakdown by each analytic checked here."
 msgstr "Le rapport inclura un détail pour chaque axe analytique sélectionné ici"
@@ -4765,9 +4765,6 @@ msgstr "Français"
 msgid "Frequency"
 msgstr "Fréquence"
 
-msgid "Frequency in Weeks"
-msgstr "Fréquence (semaines)"
-
 msgid "Frequency in Days"
 msgstr "Fréquence (jours)"
 
@@ -4779,6 +4776,9 @@ msgstr "Fréquence (minutes)"
 
 msgid "Frequency in Months"
 msgstr "Fréquence (mois)"
+
+msgid "Frequency in Weeks"
+msgstr "Fréquence (semaines)"
 
 msgid "Friday"
 msgstr "Vendredi"
@@ -5050,14 +5050,14 @@ msgstr "Historique"
 msgid "Home"
 msgstr "Accueil"
 
+msgid "Host Name"
+msgstr "Nom d'hôte"
+
 msgid "Hostname"
 msgstr "Nom d'hôte"
 
 msgid "Hostname of the oood server."
 msgstr "Nom de l'hébergeur du serveur oood."
-
-msgid "Host Name"
-msgstr "Nom d'hôte"
 
 msgid "Hours"
 msgstr "Heures"
@@ -5824,6 +5824,9 @@ msgstr "Lister les documents de la corbeille"
 msgid "List of Documents"
 msgstr "Liste des documents"
 
+msgid "Listbox"
+msgstr "Liste"
+
 msgid "Local Permissions"
 msgstr "Permissions locales"
 
@@ -6076,17 +6079,17 @@ msgstr "Critère min"
 msgid "Min. Delay (Day)"
 msgstr "Délai min. (jours)"
 
-msgid "Minimum Delay (Day)"
-msgstr "Délai minimum (jours)"
-
-msgid "Minimum Flow"
-msgstr "Débit minimum"
-
 msgid "Min. flow"
 msgstr "Minimum de commande"
 
 msgid "Minimal quantity to use on a movement."
 msgstr "La quantité minimale à utiliser sur un mouvement."
+
+msgid "Minimum Delay (Day)"
+msgstr "Délai minimum (jours)"
+
+msgid "Minimum Flow"
+msgstr "Débit minimum"
 
 msgid "Mirror"
 msgstr "Miroir"
@@ -6881,9 +6884,6 @@ msgstr "Provision de tri tiers"
 msgid "Outsourcing Sort Line Out"
 msgstr "Résultat de tri tiers"
 
-msgid "Overtime Duration Unit"
-msgstr "Unité de durée des heures supplémentaires"
-
 msgid "Overdraft Facility"
 msgstr "Autorisation de découvert"
 
@@ -6896,6 +6896,9 @@ msgstr "Heures supplémentaires"
 
 msgid "Overtime Duration"
 msgstr "Durée des heures supplémentaires"
+
+msgid "Overtime Duration Unit"
+msgstr "Unité de durée des heures supplémentaires"
 
 msgid "Owner"
 msgstr "Propriétaire"
@@ -7433,11 +7436,11 @@ msgstr "Attributs"
 msgid "Preference"
 msgstr "Préférence"
 
-msgid "Preference Tool"
-msgstr "Outil des préférences"
-
 msgid "Preference Priority"
 msgstr "Priorité"
+
+msgid "Preference Tool"
+msgstr "Outil des préférences"
 
 msgid "Preferences"
 msgstr "Préférences"
@@ -7616,10 +7619,10 @@ msgstr "Produits à valider"
 msgid "Profile"
 msgstr "Profil"
 
-msgid "Profit and Loss Account"
+msgid "Profit and Loss"
 msgstr "Compte de résultat"
 
-msgid "Profit and Loss"
+msgid "Profit and Loss Account"
 msgstr "Compte de résultat"
 
 msgid "Progression"
@@ -8084,14 +8087,14 @@ msgstr "Citer le message d'origine"
 msgid "Quoting"
 msgstr "Cotation"
 
+msgid "RAM Cache Plugin"
+msgstr "Greffon de Cache RAM"
+
 msgid "RSS Feed"
 msgstr "Flux RSS"
 
 msgid "Ram Cache"
 msgstr "Cache RAM"
-
-msgid "RAM Cache Plugin"
-msgstr "Greffon de Cache RAM"
 
 msgid "Ratio"
 msgstr "Taux (%)"
@@ -8234,6 +8237,9 @@ msgstr "Date"
 msgid "Reference Documents"
 msgstr "Référencer les documents"
 
+msgid "Reference Lookup Regular Expression"
+msgstr "Expression régulière de recherche des documents référencés"
+
 msgid "Reference Prefix"
 msgstr "Préfixe pour les références"
 
@@ -8245,9 +8251,6 @@ msgstr "Références générées pour toutes les lignes."
 
 msgid "Reference generated for all requirements."
 msgstr "Une référence a été générée pour chaque besoin."
-
-msgid "Reference Lookup Regular Expression"
-msgstr "Expression régulière de recherche des documents référencés"
 
 msgid "Reference of the Payment chosen by the accountant or the person in charge of accounting in ERP5. The payment reference can be a check number for example. Payment Reference only appears in Payment transactions"
 msgstr "Référence du paiement, choisie par le ou la comptable, cela peut-être un numéro de chèque par exemple."
@@ -9662,6 +9665,9 @@ msgstr "Crédit"
 msgid "Source Debit"
 msgstr "Débit"
 
+msgid "Source File Path"
+msgstr "Chemin du fichier source"
+
 msgid "Source Group"
 msgstr "Groupement"
 
@@ -9694,9 +9700,6 @@ msgstr "La conversion n'a pas lieu d'être définie pour la source."
 
 msgid "Source decision"
 msgstr "Représentant"
-
-msgid "Source File Path"
-msgstr "Chemin du fichier source"
 
 msgid "Source payment"
 msgstr "Facturer par"
@@ -10435,17 +10438,17 @@ msgstr "Testé?"
 msgid "Text"
 msgstr "Texte"
 
-msgid "Text Editor"
-msgstr "Éditeur de texte"
-
-msgid "Text Format"
-msgstr "Format de texte"
-
 msgid "Text Area Field Height"
 msgstr "Longueur des champs de type TextArea"
 
 msgid "Text Area Field Width"
 msgstr "Largeur des champs de type TextArea"
+
+msgid "Text Editor"
+msgstr "Éditeur de texte"
+
+msgid "Text Format"
+msgstr "Format de texte"
 
 msgid "The Account in the third party's accounting"
 msgstr "Le compte dans la comptabilité du tiers"
@@ -11658,9 +11661,6 @@ msgstr "Mettre à jour les méta données"
 msgid "Update Lines"
 msgstr "Mettre à jour des lignes"
 
-msgid "Update my Credentials"
-msgstr "Mettre à jour mon compte utilisateur"
-
 msgid "Update Quantity from Container"
 msgstr "Mettre à jour la quantité depuis le container"
 
@@ -11687,6 +11687,9 @@ msgstr "Mettre à jour les états"
 
 msgid "Update Workflows by English Glossary"
 msgstr "Mettre à jour les workflows à partir du glossaire anglais"
+
+msgid "Update my Credentials"
+msgstr "Mettre à jour mon compte utilisateur"
 
 msgid "Update quantity"
 msgstr "Mettre à jour la quantité"
@@ -12410,9 +12413,6 @@ msgstr "Instructions qui expliquent comment utiliser une ressource."
 
 msgid "language of the web page"
 msgstr "langue de la page web."
-
-msgid "Listbox"
-msgstr "Liste"
 
 msgid "logged_in"
 msgstr "Vous êtes connecté."
