@@ -383,7 +383,11 @@ from the distributor.")
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               #time.sleep(20)
-              runner.runTestSuite(node_test_suite, portal_url)
+              if status_dict['status_code'] == 0:
+                runner.runTestSuite(node_test_suite, portal_url)
+              else:
+                #TODO: do a fail on test result
+                pass
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
