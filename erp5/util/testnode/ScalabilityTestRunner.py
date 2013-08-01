@@ -310,8 +310,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         return {'status_code' : 1}
       self.authorize_request = True
       self.log("Softwares installed")
-      """      try:
-      """
       # Launch instance
       self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
       try:
