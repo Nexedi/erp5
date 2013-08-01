@@ -1,4 +1,6 @@
+portal_preferences/scalability_preference
 portal_preferences/default_site_preference
+portal_preferences/default_configurator_preference
 organisation_module/idexen
 organisation_module/idexen/**
 person_module/scalability_user
