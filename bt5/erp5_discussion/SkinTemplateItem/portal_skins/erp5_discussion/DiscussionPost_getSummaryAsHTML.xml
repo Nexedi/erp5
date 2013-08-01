@@ -51,6 +51,7 @@
                  discussion_post_creation_date python: here.Base_FormatDate(discussion_post_object.getCreationDate());\n
                  discussion_post_validation_state_title discussion_post_object/getTranslatedValidationStateTitle;\n
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
+                 attachment_list discussion_post_object/DiscussionPost_getAttachmentList;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
   <div class="discussion-post-header">\n
