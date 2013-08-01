@@ -314,18 +314,17 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       """
       # Launch instance
       self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
-      self._createInstance(self.reachable_profile, configuration_list[0],
-                            self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
-      self.log("Scalability instance requested")
-      self.log("Waiting for instance creation..")
-      self._waitInstanceCreation(self.instance_title)
-      """      except:
+      try:
+        self._createInstance(self.reachable_profile, configuration_list[0],
+                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+        self.log("Scalability instance requested.")
+      except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
-        return {'status_code' : 1} # Unbale to launch instance
-      """
-      return {'status_code' : 1} # Unable to continue due to not realizable configuration
-    return {'status_code' : 0}
+      self.log("Waiting for instance creation..")
+      self._waitInstanceCreation(self.instance_title)
+      return {'status_code' : 0}
+    return {'status_code' : 1}
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
