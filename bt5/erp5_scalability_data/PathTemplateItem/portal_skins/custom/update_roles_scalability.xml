@@ -55,8 +55,11 @@
 # Update roles of Product, Organisation and Sale Trade Condition\n
 portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
 portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
+portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
+\n
+return 1\n
 </string> </value>
         </item>
         <item>
