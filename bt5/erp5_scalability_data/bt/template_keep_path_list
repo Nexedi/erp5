@@ -1,4 +1,5 @@
 portal_skins/custom/init_scalability
+portal_skins/custom/update_roles_scalability
 organisation_module/idexen
 organisation_module/idexen/**
 person_module/scalability_user

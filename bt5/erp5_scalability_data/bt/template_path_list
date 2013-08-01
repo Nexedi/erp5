@@ -9,6 +9,7 @@ person_module/john_rock/*
 person_module/scalability_user
 person_module/scalability_user/*
 portal_skins/custom/init_scalability
+portal_skins/custom/update_roles_scalability
 product_module/blue_led
 product_module/blue_led/*
 product_module/green_led
