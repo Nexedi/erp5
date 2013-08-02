@@ -336,7 +336,7 @@ class ScalabilityLauncher(object):
                  self.__argumentNamespace.erp5_url,
                  str(user_number),
                  ' '.join(test_suites),
-                 '--benchmark-path-list', benchmark_path_list,
+                 '--benchmark-path-list', '"'+benchmark_path_list+'"',
                  '--users-file-path', user_file_path,
                  '--users-file', user_file,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
