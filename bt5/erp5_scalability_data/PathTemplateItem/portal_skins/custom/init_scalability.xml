@@ -63,7 +63,7 @@ portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\
 # Clone users\n
 module = context.person_module\n
 my_user = module.scalability_user\n
-for i in xrange(0,50):\n
+for i in xrange(0,350):\n
   new_user = my_user.Base_createCloneDocument(batch_mode=1)\n
   name = \'scalability_user_%d\' %i\n
   new_user.setId(name)\n
