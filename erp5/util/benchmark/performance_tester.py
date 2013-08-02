@@ -167,7 +167,11 @@ class PerformanceTester(object):
                                                          object_name='user_tuple',
                                                          searchable_path_list=users_file_path_list)
     
+    namespace.benchmark_suite_list = namespace.benchmark_suite_list[0].split(" ")
+    
     object_benchmark_suite_list = []
+    print "namespace.benchmark_suite_list:"
+    print namespace.benchmark_suite_list
     for benchmark_suite in namespace.benchmark_suite_list:
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
                                                                        callable_object=True,
