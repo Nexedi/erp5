@@ -1468,7 +1468,7 @@ class ActivityTool (Folder, UniqueObject):
       object_list = []
       for sql_message in message_list:
         message = self.newContent(temp_object=1)
-        message.edit (**sql_message.__dict__)
+        message.__dict__.update(**sql_message.__dict__)
         object_list.append(message)
       return object_list
 
