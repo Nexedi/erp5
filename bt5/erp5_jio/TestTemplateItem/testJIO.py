@@ -70,8 +70,11 @@ class TestJIO(ERP5TypeTestCase):
     Tuple of Business Templates we need to install
     """
     return (
-      'erp5_base',
       'erp5_core_proxy_field_legacy',
+      # 'erp5_full_text_catalog',
+      'erp5_base',
+      'erp5_web',
+      'erp5_ingestion',
       'erp5_dms',
       'erp5_jio',
     )
