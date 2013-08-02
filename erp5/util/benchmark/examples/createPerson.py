@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-TMIN_SLEEP_SHORT = 0 # 2
-TMAX_SLEEP_SHORT = 0 # 6
-TMIN_SLEEP = 0 # 5
-TMAX_SLEEP = 0 # 15
-TMIN_SLEEP_LONG = 0 # 10
-TMAX_SLEEP_LONG = 0 # 30
+TMIN_SLEEP_SHORT = 2
+TMAX_SLEEP_SHORT = 6
+TMIN_SLEEP = 5
+TMAX_SLEEP = 15
+TMIN_SLEEP_LONG = 10
+TMAX_SLEEP_LONG = 30
 
 def createPerson(result, browser):
   """
