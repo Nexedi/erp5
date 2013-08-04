@@ -7,14 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>your_follow_up</string> </value>
+            <value> <string>my_dialog_mode_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,11 +65,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_dialog_mode_follow_up</string> </value>
+                    <value> <string>my_dialog_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
