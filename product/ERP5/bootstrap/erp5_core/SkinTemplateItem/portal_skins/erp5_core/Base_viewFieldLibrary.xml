@@ -141,6 +141,9 @@
                         <string>listbox_modification_date</string>
                         <string>listbox_owner_title</string>
                         <string>my_captcha</string>
+                        <string>my_dialog_mode_description</string>
+                        <string>my_dialog_mode_title</string>
+                        <string>my_dialog_mode_text_content</string>
                       </list>
                     </value>
                 </item>
