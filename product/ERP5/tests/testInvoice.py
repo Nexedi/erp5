@@ -45,6 +45,14 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
+
+class FakeFormBoxEditor(dict):
+  # acts as a FormBoxEditor
+  __allow_access_to_unprotected_subobjects__ = 1
+  def as_dict(self):
+    return self
+
+
 class TestInvoiceMixin(TestPackingListMixin):
   """Test methods for invoices
   """
@@ -895,16 +903,39 @@ class TestInvoiceMixin(TestPackingListMixin):
     split and defer at the invoice level
     """
     invoice = sequence.get('invoice')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'SplitAndDefer'} for line in invoice.getMovementList()]}
-    self.portal.portal_workflow.doActionFor(
-      invoice,
-      'split_and_defer_action',
+    # solve divergence action is in the menu
+    self.assertTrue('solve_divergence_action' in [action['id'] for action in
+      self.portal.portal_actions.listFilteredActionsFor(invoice)['workflow']])
+
+    decision_list = invoice.Delivery_getSolverDecisionList()
+
+    # Check that the tester provides "Quantity Split Solver" and this solver
+    # uses FIFO Delivery Solver
+    solver_decision, = decision_list
+    tester = solver_decision.getCausalityValue()
+    self.assertEquals('Net Converted Quantity Divergence Tester',
+                      tester.getPortalType())
+    self.assertTrue('portal_solvers/Quantity Split Solver'
+      in tester.getSolverList())
+    self.assertTrue('portal_solvers/FIFO Delivery Solver' in
+      self.portal.portal_solvers['Quantity Split Solver'].getDeliverySolverList())
+
+    # Content of the formbox
+    solver_configuration = FakeFormBoxEditor(
       start_date=self.datetime + 15,
       stop_date=self.datetime + 25,
-      **kw)
-    pass
+      delivery_solver='FIFO Delivery Solver')
+
+    invoice.Delivery_submitSolveDivergenceDialog(listbox=[{
+       'comment': '',
+       'solver': 'portal_solvers/Quantity Split Solver',
+       'listbox_key': solver_decision.getPath(),
+       'solver_configuration': solver_configuration, }])
+
+    # TODO: solving divergence could trigger the building alarm
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
+    self.tic()
 
   def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
                                             sequence_list=None):
