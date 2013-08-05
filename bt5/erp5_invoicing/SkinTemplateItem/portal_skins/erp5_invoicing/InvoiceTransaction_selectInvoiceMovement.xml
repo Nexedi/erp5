@@ -74,7 +74,6 @@ kw[\'portal_type\']                   = \'Simulation Movement\'\n
 kw[\'delivery_uid\'] = None\n
 kw[\'left_join_list\'] = [\'delivery_uid\']\n
 kw[\'select_dict\'] = dict(delivery_uid=None)\n
-kw[\'group_by\'] = (\'uid\',)\n
 \n
 search_kw = kw.copy()\n
 search_kw[\'grand_parent_simulation_state\'] = [\'started\']\n
