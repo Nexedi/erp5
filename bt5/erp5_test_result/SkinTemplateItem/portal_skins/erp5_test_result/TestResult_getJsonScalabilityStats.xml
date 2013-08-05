@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.PythonScripts.standard import Object\n
+import json\n
+\n
+# Get result lines\n
+test_result_lines = context.objectValues(portal_type="Test Result Line", sort_on=\'int_index\')\n
+\n
+# Create a dict containing stats for each test\n
+tests = []\n
+count = 0\n
+for tl in test_result_lines:\n
+  # Get and parse stdout to a dict\n
+  stdout = tl.getProperty(\'stdout\')\n
+  if stdout:\n
+    count = count + 1\n
+    stdout_lines = filter(None, stdout.split(\'\\n\'))\n
+    current_stats = dict( [(l.split("=")[0].replace(" ", "_"), int(l.split("=")[1])) for l in stdout_lines ])\n
+    tests.append(current_stats)\n
+\n
+test_suite = context.getPortalObject().test_suite_module.searchFolder(title=context.getTitle())[0]\n
+\n
+xs = map(int, test_suite.getGraphCoordinate())\n
+\n
+\n
+test_informations = dict()\n
+test_informations.update({"test":tests, "xs":xs})\n
+return json.dumps(test_informations)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestResult_getJsonScalabilityStats</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

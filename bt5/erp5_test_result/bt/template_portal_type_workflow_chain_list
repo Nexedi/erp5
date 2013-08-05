@@ -2,6 +2,8 @@ Benchmark Result Line | edit_workflow
 Benchmark Result Line | test_result_workflow
 Benchmark Result | edit_workflow
 Benchmark Result | test_result_workflow
+Scalability Test Suite | edit_workflow
+Scalability Test Suite | test_suite_workflow
 Test Node | edit_workflow
 Test Node | test_node_workflow
 Test Result Line | edit_workflow

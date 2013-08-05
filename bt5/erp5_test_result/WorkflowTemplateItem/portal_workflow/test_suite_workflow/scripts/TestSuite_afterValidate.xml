@@ -52,6 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+import string\n
+from random import choice\n
+\n
 test_suite = state_change[\'object\']\n
 portal = test_suite.getPortalObject()\n
 \n
@@ -66,6 +69,17 @@ def int2letter(i):\n
 \n
 new_id = portal.portal_ids.generateNewId(id_generator="uid", id_group="test_suite_reference")\n
 test_suite.setReference(int2letter(new_id))\n
+\n
+def generateRandomString(size):\n
+  tab = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"  \n
+  my_string = \'\'\n
+  for i in range(size):\n
+    my_string = my_string + choice(tab)\n
+  return my_string\n
+\n
+if test_suite.getPortalType() == "Scalability Test Suite":\n
+  random_path = test_suite.getReference() + "_" + generateRandomString(64)\n
+  test_suite.setRandomizedPath(random_path)\n
 
 
 ]]></string> </value>

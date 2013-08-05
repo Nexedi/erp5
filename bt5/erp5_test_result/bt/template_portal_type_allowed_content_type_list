@@ -1,4 +1,5 @@
 Benchmark Result | Benchmark Result Line
+Scalability Test Suite | Test Suite Repository
 Task Distribution Tool | Cloud Performance Unit Test Distributor
 Task Distribution Tool | ERP5 Project Unit Test Distributor
 Test Node Module | Test Node
@@ -6,5 +7,6 @@ Test Result Module | Benchmark Result
 Test Result Module | Test Result
 Test Result | Test Result Line
 Test Result | Test Result Node
+Test Suite Module | Scalability Test Suite
 Test Suite Module | Test Suite
 Test Suite | Test Suite Repository

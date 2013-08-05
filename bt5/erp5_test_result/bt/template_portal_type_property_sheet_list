@@ -2,6 +2,9 @@ Benchmark Result Line | Task
 Benchmark Result | Comment
 Benchmark Result | SortIndex
 Benchmark Result | Task
+Scalability Test Suite | Arrow
+Scalability Test Suite | ScalabilityTestSuite
+Scalability Test Suite | TestSuite
 Test Node | DublinCore
 Test Result Line | SortIndex
 Test Result Line | Task

@@ -2,3 +2,4 @@ TestSuite
 TestSuiteRepository
 TestSuiteRepositoryConstraint
 TestSuiteConstraint
+ScalabilityTestSuite
