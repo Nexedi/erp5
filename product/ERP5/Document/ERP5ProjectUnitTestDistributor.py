@@ -112,6 +112,8 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     We are going to add test suites to test nodes.
     First are completed test nodes with fewer test suites
     """
+    self.serialize() # prevent parallel optimization to avoid conflict
+                     # on nodes and possibly weird results
     portal = self.getPortalObject()
     test_node_module = self._getTestNodeModule()
     test_node_list = [
