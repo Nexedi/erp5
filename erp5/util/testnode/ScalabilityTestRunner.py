@@ -209,7 +209,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
          and (max_time > (time.time()-start_time))):
       time.sleep(15)
     if (time.time()-start_time) > max_time:
-      raise ValueError("Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
+      raise ValueError("Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time)))
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
   def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
