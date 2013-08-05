@@ -8,7 +8,10 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string encoding="base64">Z2lkDQpwYXRoDQpkYXRhDQo=</string> </value>
+            <value> <string>getId\r\n
+getPath\r\n
+getData\r\n
+</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -25,11 +28,11 @@
 REPLACE INTO\n
   syncml (`path`, `gid`, `data`)\n
 VALUES\n
-<dtml-in prefix="loop" expr="_.range(_.len(path))">\n
+<dtml-in prefix="loop" expr="_.range(_.len(getPath))">\n
 (\n
-  <dtml-sqlvar expr="path[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="gid[loop_item]" type="string">,\n
-  <dtml-sqlvar expr="data[loop_item]" type="string">\n
+  <dtml-sqlvar expr="getPath[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="getId[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="getData[loop_item]" type="string">\n
 )<dtml-unless sequence-end>,</dtml-unless>\n
 </dtml-in>\n
 
