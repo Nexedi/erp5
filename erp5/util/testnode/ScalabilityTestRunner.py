@@ -46,10 +46,10 @@ from erp5.util import taskdistribution
 # for dummy slapos answer
 import signal
 
-# max time to instance changing state: 1 hour
-MAX_INSTANCE_TIME = 60*60
+# max time to instance changing state: 2 hour
+MAX_INSTANCE_TIME = 60*60*2
 # max time to register instance to slapOSMaster: 5 minutes
-MAX_CREATION_INSTANCE_TIME = 60*5
+MAX_CREATION_INSTANCE_TIME = 60*10
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
