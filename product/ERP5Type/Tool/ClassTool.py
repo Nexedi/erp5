@@ -785,36 +785,30 @@ def myExtensionMethod(self, param=None):
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class Test(ERP5TypeTestCase):
-  """
-  A Sample Test Class
+  """A Sample Test Class
   """
 
   def getTitle(self):
     return "SampleTest"
 
   def getBusinessTemplateList(self):
-    """
-    Tuple of Business Templates we need to install
+    """Tuple of Business Templates we need to install
     """
     return ('erp5_base',)
 
   def afterSetUp(self):
-    """
-    This is ran before anything, used to set the environment
+    """This is ran before anything, used to set the environment
     """
     # here, you can create the categories and objects your test will depend on
     pass
 
-  def test_01_sampleTest(self):
-    """
-    A Sample Test
+  def test_sampleTest(self):
+    """A Sample Test
 
     For the method to be called during the test,
     its name must start with 'test'.
-    The '_01_' part of the name is not mandatory,
-    it just allows you to define in which order the tests are to be launched.
     Tests methods (self.assert... and self.failIf...)
-    are defined in /usr/lib/python/unittest.py.
+    are defined in http://docs.python.org/2/library/unittest.html
     """
     self.assertEqual(0, 1)
 ''' % COPYRIGHT
