@@ -84,11 +84,10 @@ if not single_event:\n
     if direction == \'incoming\':\n
       event.setSourceValue(person.getObject())\n
       event.setDestinationValue(user_person)\n
-      event.receive()\n
     else:\n
       event.setDestinationValue(person.getObject())\n
       event.setSourceValue(user_person)\n
-      event.plan()\n
+    event.plan()\n
     event_list.append(event)\n
 else:\n
   if direction == \'incoming\' and len(person_list) > 1:\n

@@ -185,7 +185,7 @@ class TestCRM(BaseTestCRM):
                            description='New Desc',
                            direction='incoming')
 
-  def test_PersonModule_CreateRelatedEventSelectionParams(self):
+  def checkCreateRelatedEventSelectionParamsOnPersonModule(self, direction):
     # create related event from selected persons.
     person_module = self.portal.person_module
     pers1 = person_module.newContent(portal_type='Person', title='Pers1')
@@ -200,7 +200,7 @@ class TestCRM(BaseTestCRM):
     person_module.PersonModule_newEvent(portal_type='Mail Message',
                                         title='The Event Title',
                                         description='The Event Descr.',
-                                        direction='outgoing',
+                                        direction=direction,
                                         selection_name='person_module_selection',
                                         follow_up='',
                                         text_content='Event Content',
@@ -208,16 +208,25 @@ class TestCRM(BaseTestCRM):
 
     self.tic()
 
-    related_event = pers1.getDestinationRelatedValue(
-                          portal_type='Mail Message')
+    if direction == "outgoing":
+      getter_id = "getDestinationRelatedValue"
+    elif direction == "incoming":
+      getter_id = "getSourceRelatedValue"
+    related_event = getattr(pers1, getter_id)(portal_type='Mail Message')
     self.assertNotEquals(None, related_event)
     self.assertEquals('The Event Title', related_event.getTitle())
     self.assertEquals('The Event Descr.', related_event.getDescription())
     self.assertEquals('Event Content', related_event.getTextContent())
 
     for person in (pers2, pers3):
-      self.assertEquals(None, person.getDestinationRelatedValue(
+      self.assertEquals(None, getattr(person, getter_id)(
                                        portal_type='Mail Message'))
+
+  def test_PersonModule_CreateOutgoingRelatedEventSelectionParams(self):
+    self.checkCreateRelatedEventSelectionParamsOnPersonModule('outgoing')
+
+  def test_PersonModule_CreateIncomingRelatedEventSelectionParams(self):
+    self.checkCreateRelatedEventSelectionParamsOnPersonModule('incoming')
 
   def test_PersonModule_CreateRelatedEventCheckedUid(self):
     # create related event from selected persons.
