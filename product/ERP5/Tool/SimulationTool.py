@@ -42,8 +42,6 @@ from Products.ERP5.Capacity.GLPK import solve
 from numpy import zeros, resize
 from DateTime import DateTime
 
-from Products.ERP5 import DeliverySolver
-from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery

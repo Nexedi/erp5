@@ -33,7 +33,6 @@ import re
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.TypesTool import TypeProvider
-from Products.ERP5 import DeliverySolver
 from Products.ERP5Type.Message import translateString
 from Products.CMFCore.utils import getToolByName
 
