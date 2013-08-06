@@ -81,6 +81,12 @@ portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
+\n
+# Set id gen\n
+portal.portal_simulation.setIdGenerator("_generatePerDayId")\n
+portal.web_page_module.setIdGenerator("_generatePerDayId")\n
+portal.sale_order_module.setIdGenerator("_generatePerDayId")\n
+portal.person_module.setIdGenerator("_generatePerDayId")\n
 </string> </value>
         </item>
         <item>
