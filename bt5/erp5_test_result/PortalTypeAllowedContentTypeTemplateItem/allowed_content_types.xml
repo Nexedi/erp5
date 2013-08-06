@@ -8,6 +8,7 @@
  <portal_type id="Task Distribution Tool">
   <item>Cloud Performance Unit Test Distributor</item>
   <item>ERP5 Project Unit Test Distributor</item>
+  <item>ERP5 Scalability Distributor</item>
  </portal_type>
  <portal_type id="Test Node Module">
   <item>Test Node</item>
