@@ -331,8 +331,8 @@ class ScalabilityLauncher(object):
 
           self.log("user_number: %s" %str(user_number))
           self.log("test_duration: %ss" %str(test_duration))
-    
-          tester_process = subprocess.Popen([tester_path,
+
+          command = [tester_path,
                  self.__argumentNamespace.erp5_url,
                  str(user_number),
                  ' '.join(test_suites),
@@ -342,7 +342,9 @@ class ScalabilityLauncher(object):
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
-              ])
+              ]
+          self.log("command: %s" %str(command))
+          tester_process = subprocess.Popen(command)
           
           time.sleep(test_duration)
           tester_process.send_signal(signal.SIGINT)
