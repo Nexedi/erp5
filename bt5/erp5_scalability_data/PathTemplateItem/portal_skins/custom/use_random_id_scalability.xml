@@ -52,35 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
+# Set id generator\n
+portal.portal_simulation.setIdGenerator("_generatePerDayId")\n
+portal.web_page_module.setIdGenerator("_generatePerDayId")\n
+portal.sale_order_module.setIdGenerator("_generatePerDayId")\n
+portal.person_module.setIdGenerator("_generatePerDayId")\n
 \n
-# Update roles\n
-portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
-portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
-\n
-# Clone users\n
-module = context.person_module\n
-my_user = module.scalability_user\n
-for i in xrange(0,350):\n
-  new_user = my_user.Base_createCloneDocument(batch_mode=1)\n
-  name = \'scalability_user_%d\' %i\n
-  new_user.setId(name)\n
-  new_user.setTitle(name)\n
-  new_user.setReference(name)\n
-  # new_user.setSubordinationValue(some_organisation_document)\n
-  new_user.validate()\n
-  assignment = new_user.objectValues(portal_type=\'Assignment\')[0]\n
-  assignment.open()\n
 return 1\n
-\n
-# Update roles\n
-portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
-portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
-portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
 </string> </value>
         </item>
         <item>
@@ -89,7 +67,7 @@ portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>init_scalability</string> </value>
+            <value> <string>use_random_id_scalability</string> </value>
         </item>
       </dictionary>
     </pickle>

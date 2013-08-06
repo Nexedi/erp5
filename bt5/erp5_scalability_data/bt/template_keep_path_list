@@ -2,6 +2,7 @@ portal_preferences/scalability_preference
 portal_skins/custom/init_scalability
 portal_skins/custom/update_roles_scalability
 portal_skins/custom/apply_load_balancing_scalability
+portal_skins/custom/use_random_id_scalability
 organisation_module/idexen
 organisation_module/idexen/**
 person_module/scalability_user
