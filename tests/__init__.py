@@ -128,7 +128,7 @@ class ERP5_simulation(_ERP5):
 class ERP5_scalability(_ERP5):
 
   def getTestList(self):
-    return ['createPerson', 'createWebPage']
+    return ['createPerson', 'createSaleOrder', 'createWebPage']
 
   def getTestPath(self):
     return 'erp5/util/benchmark/examples/'
