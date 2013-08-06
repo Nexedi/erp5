@@ -3432,6 +3432,31 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation.activate().getTitle()
     self.tic()
 
+  def test_flushActivitiesOnDelete(self):
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+      self.tic()
+
+    organisation = organisation_module[self.company_id]
+    organisation_module.manage_delObjects(ids=[organisation.getId()])
+    organisation.activate().getTitle()
+    self.tic()
+
+  def test_flushActivitiesOnDeleteWithAcquierableObject(self):
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+      self.tic()
+
+    # Create an object with the same ID that can be acquired
+    self.portal._setObject(self.company_id, Organisation(self.company_id))
+
+    organisation = organisation_module[self.company_id]
+    organisation_module.manage_delObjects(ids=[organisation.getId()])
+    organisation.reindexObject()
+    self.tic()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
