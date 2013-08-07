@@ -122,6 +122,10 @@
                           <string>specialise_title</string>
                           <string>Distributor</string>
                         </tuple>
+                        <tuple>
+                          <string>master</string>
+                          <string>Is Master</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

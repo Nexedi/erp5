@@ -20,6 +20,7 @@ Test Result Node | view
 Test Result | jump_previous_test_result
 Test Result | jump_viewvc_revision
 Test Result | view
+Test Result | view_graph
 Test Result | view_node_list
 Test Suite Module | view
 Test Suite Repository | view
