@@ -33,7 +33,8 @@ import inspect
 import transaction
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
-from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
+from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
+from . import aq_method_lock
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
@@ -318,7 +319,7 @@ def synchronizeDynamicModules(context, force=False):
     last_sync = cookie
 
   import erp5
-  with Base.aq_method_lock:
+  with aq_method_lock:
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.

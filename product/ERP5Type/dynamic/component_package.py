@@ -31,8 +31,10 @@
 from __future__ import absolute_import
 
 import sys
+import imp
 
 from Products.ERP5.ERP5Site import getSite
+from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER
 
@@ -41,8 +43,6 @@ class ComponentVersionPackage(ModuleType):
   Component Version package (erp5.component.XXX.VERSION)
   """
   __path__ = []
-
-from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 class ComponentDynamicPackage(ModuleType):
   """
@@ -65,7 +65,6 @@ class ComponentDynamicPackage(ModuleType):
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
-  __lock = ImportLock()
 
   def __init__(self, namespace, portal_type):
     super(ComponentDynamicPackage, self).__init__(namespace)
@@ -108,24 +107,23 @@ class ComponentDynamicPackage(ModuleType):
       # objectValues should not be used for a large number of objects, but
       # this is only done upon reset, moreover using the Catalog is too risky
       # as it lags behind and depends upon objects being reindexed
-      with self.__lock:
-        for component in component_tool.objectValues(portal_type=self._portal_type):
-          # Only consider modified or validated states as state transition will
-          # be handled by component_validation_workflow which will take care of
-          # updating the registry
-          try:
-            validation_state_tuple = component.getValidationState()
-          except AttributeError:
-            # XXX: Accessors may have not been generated yet
-            pass
-          else:
-            if validation_state_tuple in ('modified', 'validated'):
-              version = component.getVersion(validated_only=True)
-              # The versions should have always been set on ERP5Site property
-              # beforehand
-              if version in version_priority_set:
-                reference = component.getReference(validated_only=True)
-                self.__registry_dict.setdefault(reference, {})[version] = component.getId()
+      for component in component_tool.objectValues(portal_type=self._portal_type):
+        # Only consider modified or validated states as state transition will
+        # be handled by component_validation_workflow which will take care of
+        # updating the registry
+        try:
+          validation_state_tuple = component.getValidationState()
+        except AttributeError:
+          # XXX: Accessors may have not been generated yet
+          pass
+        else:
+          if validation_state_tuple in ('modified', 'validated'):
+            version = component.getVersion(validated_only=True)
+            # The versions should have always been set on ERP5Site property
+            # beforehand
+            if version in version_priority_set:
+              reference = component.getReference(validated_only=True)
+              self.__registry_dict.setdefault(reference, {})[version] = component.getId()
 
     return self.__registry_dict
 
@@ -159,32 +157,53 @@ class ComponentDynamicPackage(ModuleType):
     if path or not fullname.startswith(self._namespace_prefix):
       return None
 
-    site = getSite()
+    import_lock_held = True
+    try:
+      imp.release_lock()
+    except RuntimeError:
+      import_lock_held = False
 
-    # __import__ will first try a relative import, for example
-    # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
-    # Component where an import is done
-    name = fullname[len(self._namespace_prefix):]
-    if '.' in name:
-      try:
-        version, name = name.split('.')
-        version = version[:-self.__version_suffix_len]
-      except ValueError:
+    # The import lock has been released, but as _registry_dict may be
+    # initialized or cleared, no other Components should access this critical
+    # region
+    #
+    # TODO-arnau: Too coarse-grain?
+    aq_method_lock.acquire()
+    try:
+      site = getSite()
+
+      # __import__ will first try a relative import, for example
+      # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
+      # Component where an import is done
+      name = fullname[len(self._namespace_prefix):]
+      if '.' in name:
+        try:
+          version, name = name.split('.')
+          version = version[:-self.__version_suffix_len]
+        except ValueError:
+          return None
+
+        try:
+          self._registry_dict[name][version]
+        except KeyError:
+          return None
+
+      # Skip unavailable components, otherwise Products for example could be
+      # wrongly considered as importable and thus the actual filesystem class
+      # ignored
+      elif (name not in self._registry_dict and
+            name[:-self.__version_suffix_len] not in site.getVersionPriorityNameList()):
         return None
 
-      try:
-        self._registry_dict[name][version]
-      except KeyError:
-        return None
+      return self
 
-    # Skip unavailable components, otherwise Products for example could be
-    # wrongly considered as importable and thus the actual filesystem class
-    # ignored
-    elif (name not in self._registry_dict and
-          name[:-self.__version_suffix_len] not in site.getVersionPriorityNameList()):
-      return None
+    finally:
+      aq_method_lock.release()
 
-    return self
+      # Internal release of import lock at the end of import machinery will
+      # fail if the hook is not acquired
+      if import_lock_held:
+        imp.acquire_lock()
 
   def _getVersionPackage(self, version):
     """
@@ -220,106 +239,147 @@ class ComponentDynamicPackage(ModuleType):
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
     """
-    site = getSite()
-    name = fullname[len(self._namespace_prefix):]
-
-    # if only Version package (erp5.component.XXX.VERSION_version) is
-    # requested to be loaded, then create it if necessary
-    if name.endswith('_version'):
-      version = name[:-self.__version_suffix_len]
-      return (version in site.getVersionPriorityNameList() and
-              self._getVersionPackage(version) or None)
-
-    module_fullname_alias = None
-    version_package_name = name[:-self.__version_suffix_len]
-
-    # If a specific version of the Component has been requested
-    if '.' in name:
-      try:
-        version, name = name.split('.')
-        version = version[:-self.__version_suffix_len]
-      except ValueError, error:
-        raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
-                            (fullname, self._namespace, error))
-
-      try:
-        component_id = self._registry_dict[name][version]
-      except KeyError:
-        raise ImportError("%s: version %s of Component %s could not be found" % \
-                            (fullname, version, name))
-
-    # Otherwise, find the Component with the highest version priority
-    else:
-      try:
-        component_version_dict = self._registry_dict[name]
-      except KeyError:
-        raise ImportError("%s: Component %s could not be found" % (fullname,
-                                                                   name))
-
-      # Version priority name list is ordered in descending order
-      for version in site.getVersionPriorityNameList():
-        component_id = component_version_dict.get(version)
-        if component_id is not None:
-          break
-      else:
-        raise ImportError("%s: no version of Component %s in Site priority" % \
-                            (fullname, name))
-
-      # Check whether this module has already been loaded before for a
-      # specific version, if so, just add it to the upper level
-      try:
-        module = getattr(getattr(self, version + '_version'), name)
-      except AttributeError:
-        pass
-      else:
-        setattr(self, name, module)
-        return module
-
-      module_fullname_alias = self._namespace + '.' + name
-
-    component = getattr(site.portal_components, component_id)
-
-    module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
-    module = ModuleType(module_fullname, component.getDescription())
-
-    # The module *must* be in sys.modules before executing the code in case
-    # the module code imports (directly or indirectly) itself (see PEP 302)
-    sys.modules[module_fullname] = module
-    if module_fullname_alias:
-      sys.modules[module_fullname_alias] = module
-
-    # This must be set for imports at least (see PEP 302)
-    module.__file__ = '<' + component.getId() + '>'
+    # In Python < 3.3, the import lock is a global lock for all modules:
+    # http://bugs.python.org/issue9260
+    #
+    # So, release the import lock acquired by import statement on all hooks to
+    # load objects from ZODB. When an object is requested from ZEO, it sends a
+    # RPC request and lets the asyncore thread gets the reply. This reply may
+    # be a tuple (PICKLE, TID), sent directly to the first thread, or an
+    # Exception, which tries to import a ZODB module and thus creates a
+    # deadlock because of the global import lock
+    #
+    # Also, handle the case where find_module() may be called without import
+    # statement as it does change anything in sys.modules
+    import_lock_held = True
+    try:
+      imp.release_lock()
+    except RuntimeError:
+      import_lock_held = False
 
     try:
-      component.load(module.__dict__, validated_only=True)
-    except Exception, error:
-      del sys.modules[module_fullname]
+      site = getSite()
+      name = fullname[len(self._namespace_prefix):]
+
+      # if only Version package (erp5.component.XXX.VERSION_version) is
+      # requested to be loaded, then create it if necessary
+      if name.endswith('_version'):
+        version = name[:-self.__version_suffix_len]
+        return (version in site.getVersionPriorityNameList() and
+                self._getVersionPackage(version) or None)
+
+      module_fullname_alias = None
+      version_package_name = name[:-self.__version_suffix_len]
+
+      # If a specific version of the Component has been requested
+      if '.' in name:
+        try:
+          version, name = name.split('.')
+          version = version[:-self.__version_suffix_len]
+        except ValueError, error:
+          raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
+                              (fullname, self._namespace, error))
+
+        try:
+          component_id = self._registry_dict[name][version]
+        except KeyError:
+          raise ImportError("%s: version %s of Component %s could not be found" % \
+                              (fullname, version, name))
+
+      # Otherwise, find the Component with the highest version priority
+      else:
+        try:
+          component_version_dict = self._registry_dict[name]
+        except KeyError:
+          raise ImportError("%s: Component %s could not be found" % (fullname,
+                                                                     name))
+
+        # Version priority name list is ordered in descending order
+        for version in site.getVersionPriorityNameList():
+          component_id = component_version_dict.get(version)
+          if component_id is not None:
+            break
+        else:
+          raise ImportError("%s: no version of Component %s in Site priority" % \
+                              (fullname, name))
+
+        # Check whether this module has already been loaded before for a
+        # specific version, if so, just add it to the upper level
+        try:
+          module = getattr(getattr(self, version + '_version'), name)
+        except AttributeError:
+          pass
+        else:
+          setattr(self, name, module)
+          return module
+
+        module_fullname_alias = self._namespace + '.' + name
+
+      component = getattr(site.portal_components, component_id)
+
+      module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
+      module = ModuleType(module_fullname, component.getDescription())
+
+      source_code_str = component.getTextContent(validated_only=True)
+      version_package = self._getVersionPackage(version)
+
+    finally:
+      # Internal release of import lock at the end of import machinery will
+      # fail if the hook is not acquired
+      if import_lock_held:
+        imp.acquire_lock()
+
+    # All the required objects have been loaded, acquire import lock to modify
+    # sys.modules and execute PEP302 requisites
+    if not import_lock_held:
+      imp.acquire_lock()
+    try:
+      # The module *must* be in sys.modules before executing the code in case
+      # the module code imports (directly or indirectly) itself (see PEP 302)
+      sys.modules[module_fullname] = module
       if module_fullname_alias:
-        del sys.modules[module_fullname_alias]
+        sys.modules[module_fullname_alias] = module
 
-      raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
-                                                               name,
-                                                               error))
+      # This must be set for imports at least (see PEP 302)
+      module.__file__ = '<' + component.getId() + '>'
 
-    module.__path__ = []
-    module.__loader__ = self
-    module.__name__ = module_fullname
+      try:
+        # XXX: Any loading from ZODB while exec'ing the source code will result
+        # in a deadlock
+        exec source_code_str in module.__dict__
+      except Exception, error:
+        del sys.modules[module_fullname]
+        if module_fullname_alias:
+          del sys.modules[module_fullname_alias]
 
-    # Add the newly created module to the Version package and add it as an
-    # alias to the top-level package as well
-    setattr(self._getVersionPackage(version), name, module)
-    if module_fullname_alias:
-      setattr(self, name, module)
+        raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
+                                                                 name,
+                                                                 error))
 
-    return module
+      module.__path__ = []
+      module.__loader__ = self
+      module.__name__ = module_fullname
+
+      # Add the newly created module to the Version package and add it as an
+      # alias to the top-level package as well
+      setattr(version_package, name, module)
+      if module_fullname_alias:
+        setattr(self, name, module)
+
+      return module
+    finally:
+      # load_module() can be called outside of import machinery, for example
+      # to check first if the module can be handled by Component and then try
+      # to load it without going through the same code again
+      if not import_lock_held:
+        imp.release_lock()
 
   def load_module(self, fullname):
     """
     Make sure that loading module is thread-safe using aq_method_lock to make
     sure that modules do not disappear because of an ongoing reset
     """
-    with self.__lock:
+    with aq_method_lock:
       return self.__load_module(fullname)
 
   def reset(self, sub_package=None):

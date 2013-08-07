@@ -310,6 +310,9 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     Initially, namespace_dict default parameter value was an empty dict to
     allow checking the source code before validate, but this is completely
     wrong as the object reference is kept accross each call
+
+    TODO-arnau: Not used anymore in component_package, so this could be
+                removed as soon as pyflakes is used instead
     """
     if text_content is None:
       text_content = self.getTextContent(validated_only=validated_only)
