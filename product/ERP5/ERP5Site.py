@@ -44,6 +44,7 @@ from zLOG import LOG, INFO, WARNING, ERROR
 from string import join
 import os
 import warnings
+import transaction
 from App.config import getConfiguration
 MARKER = []
 
@@ -1600,6 +1601,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security.declareProtected(Permissions.ManagePortal,
                             'migrateToPortalTypeClass')
   def migrateToPortalTypeClass(self):
+    # PickleUpdater() will load objects from ZODB, but any objects created
+    # before must have been committed (otherwise POSKeyError is raised)
+    transaction.savepoint(optimistic=True)
+
     from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
     from Products.ERP5Type.Tool.BaseTool import BaseTool
     PickleUpdater(self)
