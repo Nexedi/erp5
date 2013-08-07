@@ -6,6 +6,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
+from . import aq_method_lock
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
@@ -319,7 +320,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     portal_type = klass.__name__
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
-    ERP5Base.aq_method_lock.acquire()
+    aq_method_lock.acquire()
     try:
       try:
         class_definition = generatePortalTypeClass(site, portal_type)
@@ -363,7 +364,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       import traceback; traceback.print_exc()
       raise
     finally:
-      ERP5Base.aq_method_lock.release()
+      aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,

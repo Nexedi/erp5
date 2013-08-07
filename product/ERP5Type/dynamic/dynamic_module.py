@@ -28,8 +28,8 @@
 ##############################################################################
 
 from types import ModuleType
+from . import aq_method_lock
 import sys
-from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
@@ -41,13 +41,13 @@ class DynamicModule(ModuleType):
   def __init__(self, name, factory, doc=None):
     super(DynamicModule, self).__init__(name, doc=doc)
     self._factory = factory
-    self._lock = ImportLock()
 
   def __getattr__(self, name):
     if name[:2] == '__':
       raise AttributeError('%r module has no attribute %r'
                            % (self.__name__, name))
-    with self._lock:
+
+    with aq_method_lock:
       try:
         return super(DynamicModule, self).__getattribute__(name)
       except AttributeError:

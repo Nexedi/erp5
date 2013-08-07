@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from AccessControl.Permission import Permission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
@@ -147,7 +147,7 @@ class ComponentTool(BaseTool):
     # class when Components are reset through aq_method_lock
     import erp5.component
     from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
-    with Base.aq_method_lock:
+    with aq_method_lock:
       for package in erp5.component.__dict__.itervalues():
         if isinstance(package, ComponentDynamicPackage):
           package.reset()
