@@ -3,3 +3,4 @@ TestSuiteRepository
 TestSuiteRepositoryConstraint
 TestSuiteConstraint
 ScalabilityTestSuite
+TestNode
