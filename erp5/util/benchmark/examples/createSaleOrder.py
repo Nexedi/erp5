@@ -97,6 +97,7 @@ def createSaleOrder(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
+  sale_order_url = browser.url
 
 
   ## Set Sale Trade conditions
@@ -118,7 +119,8 @@ def createSaleOrder(result, browser):
     
   # Add Sale order lines
   max_ite = random.randint(1,MAX_PRODUCT)
-  for i in range (0, max_ite) :
+  for i in range (0, max_ite):
+    browser.open(sale_order_url+"/view")
     addOrderLine(browser, my_title, result)
  
   browser.open(my_order_sale_url)
