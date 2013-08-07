@@ -1611,7 +1611,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     for tool in self.objectValues():
       if isinstance(tool, BaseTool):
         tool_id = tool.id
-        if tool_id != 'portal_property_sheets':
+        if tool_id not in ('portal_property_sheets', 'portal_components'):
           if tool_id in ('portal_categories', ):
             tool = tool.activate()
           tool.migrateToPortalTypeClass(tool_id not in (
