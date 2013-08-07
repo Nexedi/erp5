@@ -335,7 +335,7 @@ class ScalabilityLauncher(object):
           command = [tester_path,
                  self.__argumentNamespace.erp5_url,
                  str(user_number),
-                 '"'+' '.join(test_suites)+'"',
+                 ' '.join(test_suites),
                  '--benchmark-path-list', benchmarks_path,
                  '--users-file-path', user_file_path,
                  '--users-file', user_file,
