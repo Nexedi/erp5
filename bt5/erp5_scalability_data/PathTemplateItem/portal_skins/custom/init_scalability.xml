@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
-\n
 # Update roles\n
 portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
 portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
@@ -73,7 +72,6 @@ for i in xrange(0,350):\n
   new_user.validate()\n
   assignment = new_user.objectValues(portal_type=\'Assignment\')[0]\n
   assignment.open()\n
-return 1\n
 \n
 # Update roles\n
 portal_type = portal.searchFolder(title=\'portal_types\')[0]\n
@@ -81,6 +79,15 @@ portal_type.searchFolder(title=\'Person\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Product\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Organisation\')[0].updateRoleMapping()\n
 portal_type.searchFolder(title=\'Sale Trade Condition\')[0].updateRoleMapping()\n
+\n
+# Validate rules in portal_rules\n
+portal_rules = portal.portal_rules\n
+for rule in portal_rules.searchFolder(validation_state = "draft"):\n
+  rule.validate()\n
+\n
+\n
+# Return 1, at the end of the script.\n
+return 1\n
 </string> </value>
         </item>
         <item>
