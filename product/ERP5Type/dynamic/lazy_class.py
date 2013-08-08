@@ -320,8 +320,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     portal_type = klass.__name__
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
-    aq_method_lock.acquire()
-    try:
+    with aq_method_lock:
       try:
         class_definition = generatePortalTypeClass(site, portal_type)
       except AttributeError:
@@ -359,12 +358,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         klass.generatePortalTypeAccessors(site, portal_type_category_list)
         # need to set %s__roles__ for generated methods
         cls.setupSecurity()
-
-    except Exception:
-      import traceback; traceback.print_exc()
-      raise
-    finally:
-      aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,
