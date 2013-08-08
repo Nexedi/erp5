@@ -950,7 +950,8 @@ class ObjectTemplateItem(BaseTemplateItem):
  
     def recursiveUnindex(catalog, item_path, root_document_path):
       # search the object + sub-objects
-      result = catalog(relative_url=(item_path, item_path + '/%'))
+      result = catalog(relative_url=(item_path,
+                                     item_path.replace('_', r'\_') + '/%'))
       for x in result:
         uid = x.uid
         path = x.path
