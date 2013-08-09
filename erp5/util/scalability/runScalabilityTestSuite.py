@@ -88,6 +88,11 @@ def getCreatedDocumentNumberFromERP5(erp5_url, log):
   """
   log("count docs number from ERP5 instance")
   count_retry = 0
+  parsed = urlparse.urlparse(erp5_url)
+  user = parsed.username;
+  password = parsed.password;
+  header_dict = {'Authorization': 'Basic %s' % \
+  base64.encodestring('%s:%s' % (user, password)).strip()}
   zope_connection = getConnection(erp5_url, log)
   while count_retry < 100 :
     try:
