@@ -54,7 +54,6 @@ def createWebPage(result, browser):
   browser.mainForm.getControl(name='subfield_field_my_effective_date_year').value = str(date.year)
   selectRandomOption(browser, "subfield_field_my_publication_section_list_default:list")
   browser.mainForm.getControl(name='field_my_description').value = 'Benchmark test'
-  selectRandomOption(browser, "field_my_classification")
   selectRandomOption(browser, "subfield_field_my_group_list_default:list")
   selectRandomOption(browser, "subfield_field_my_site_list_default:list")
   selectRandomOption(browser, "subfield_field_my_function_list_default:list")
