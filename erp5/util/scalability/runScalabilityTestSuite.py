@@ -354,7 +354,8 @@ class ScalabilityLauncher(object):
           self.log("Error during tester call.")
           raise ValueError("Tester call failed")
         self.log("Test Case %s is finish" %(current_test.title))
-
+        self.log("Going to count the number of created documents")
+        time.sleep(120)
         failed_document_number = self.getFailedDocumentNumber()
         created_document_number = self.getCreatedDocumentNumber() - failed_document_number
         created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )        
