@@ -90,7 +90,7 @@ class ScalabilityTestRunner():
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
       return {'status_code' : 1}     
 
-  def _generateInstancetitle(self, test_suite_title):
+  def _generateInstanceTitle(self, test_suite_title):
     """
     Generate an instance title using various parameter
     TODO : add some verification (to don't use unexisting variables)
@@ -311,7 +311,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.authorize_request = True
       self.log("Softwares installed")
       # Launch instance
-      self.instance_title = self._generateInstancetitle(node_test_suite.test_suite_title)
+      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
         self._createInstance(self.reachable_profile, configuration_list[0],
                               self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
