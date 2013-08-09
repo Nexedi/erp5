@@ -120,6 +120,10 @@ class PerformanceTester(object):
                         help='Repeat the benchmark suite N times for the whole '
                              'range of users (default: infinite)')
 
+    parser.add_argument('--duration',
+                        default=0,
+                        help='Test duration in second (default: infinite)')
+
     parser.add_argument('--user-index',
                         type=int,
                         default=0,

@@ -31,6 +31,7 @@ import traceback
 import signal
 import sys
 import socket
+import time
 
 from ..testbrowser.browser import Browser
 from .result import NothingFlushedException
@@ -46,6 +47,7 @@ class BenchmarkProcess(multiprocessing.Process):
     self._nb_users = nb_users
     self._user_index = user_index
     self._current_repeat_range = current_repeat_range
+    self._duration = self._argument_namespace.duration
 
     try:
       self._username, self._password, self._source_ip = \
@@ -57,6 +59,7 @@ class BenchmarkProcess(multiprocessing.Process):
     # Initialized when running the test
     self._browser = None
     self._current_repeat = 1
+    self._start_time = time.time()
 
     # TODO: Per target error counter instead of global one?
     self._error_counter = 0
@@ -161,7 +164,8 @@ class BenchmarkProcess(multiprocessing.Process):
       with result_instance as result:
         self._browser = self.getBrowser(result_instance.log_file)
 
-        while self._current_repeat != (self._argument_namespace.repeat + 1):
+        while self._current_repeat != (self._argument_namespace.repeat + 1)\
+          and (not self._duration or self._duration > (time.time() - self._start_time)):
           self._logger.info("Iteration: %d" % self._current_repeat)
           self.runBenchmarkSuiteList(result)
 
