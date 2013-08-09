@@ -37,6 +37,7 @@ from ..testbrowser.browser import Browser
 from .result import NothingFlushedException
 
 REPEAT_NUMBER_BEFORE_FLUSHING = 1
+FORCE_FLUSH_AFTER_EACH_SUITE = True
 
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, result_klass, argument_namespace,
@@ -124,9 +125,10 @@ class BenchmarkProcess(multiprocessing.Process):
 
       try:
         self._logger.info(str(result.getCurrentSuiteUseCaseStat()))
+        if FORCE_FLUSH_AFTER_EACH_SUITE:
+          result.flush()
       except:
         pass
-
     result.iterationFinished()
 
   def run(self):
