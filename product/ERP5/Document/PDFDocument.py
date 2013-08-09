@@ -174,11 +174,7 @@ class PDFDocument(Image):
 
   security.declarePrivate('_convertToHTML')
   def _convertToHTML(self):
-    """
-    Convert the PDF text content to HTML with pdftohtml
-
-    NOTE: XXX check that command exists and was executed
-    successfully
+    """Convert the PDF text content to HTML with pdftohtml
     """
     if not self.hasData():
       return ''
@@ -208,8 +204,7 @@ class PDFDocument(Image):
 
   security.declarePrivate('_convertToDJVU')
   def _convertToDJVU(self):
-    """
-    Convert the PDF text content to DJVU with pdf2djvu
+    """Convert the PDF text content to DJVU with pdf2djvu
     """
     if not self.hasData():
       return ''
