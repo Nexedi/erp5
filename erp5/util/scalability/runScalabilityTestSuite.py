@@ -82,6 +82,25 @@ def waitFor0PendingActivities(erp5_url, log):
   if not ok:
     raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
+def getCreatedDocumentNumberFromERP5(erp5_url, log):
+  """
+  Get the number of created documents
+  """
+  count_retry = 0
+  zope_connection = getConnection(erp5_url, log)
+  while count_retry < 100 :
+    try:
+      count = count + 1
+      zope_connection.request(
+        'GET', '/erp5/count_docs_scalability',
+        headers=header_dict
+      )
+      result = zope_connection.getresponse()
+      return int(result.read())
+    except:
+      count_retry += 1
+      time.sleep(15)
+  raise ValueError("Impossible to get number of docs from ERP5")
 
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
@@ -313,7 +332,7 @@ class ScalabilityLauncher(object):
 
         # Waiting for 0-pending activities
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-
+        previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
@@ -356,9 +375,15 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is finish" %(current_test.title))
         self.log("Going to count the number of created documents")
         time.sleep(120)
-        failed_document_number = self.getFailedDocumentNumber()
-        created_document_number = self.getCreatedDocumentNumber() - failed_document_number
-        created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )        
+#        failed_document_number = self.getFailedDocumentNumber()
+#        created_document_number = self.getCreatedDocumentNumber() - failed_document_number
+        
+        current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+        created_document_number = current_document_number - previous_document_number
+        failed_document_number = 0
+
+        created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )
+
         #log_contents = self.returnLogList()
         #csv_contents = self.returnCsvList()
         self.cleanUpCsv()
