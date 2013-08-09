@@ -960,6 +960,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     def unindex(root_document_path, path, uid):
       LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
           'Unindex Broken object at %r.' % (path,))
+      # Make sure there is not activity for this object
+      flushActivity(fakeobject(path))
       # Set the path as deleted without lock
       catalog.beforeUnindexObject(None,path=path,uid=uid)
       # Then start activity in order to remove lines in catalog,
