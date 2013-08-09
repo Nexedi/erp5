@@ -335,7 +335,7 @@ class ScalabilityLauncher(object):
         # Waiting for 0-pending activities
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
         previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-        self.log("previous_document_number: %d" previous_document_number)
+        self.log("previous_document_number: %d" %previous_document_number)
         # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
         try:
@@ -382,9 +382,9 @@ class ScalabilityLauncher(object):
         
         current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         created_document_number = current_document_number - previous_document_number
-        self.log("previous_document_number: %d" previous_document_number)
-        self.log("current_document_number: %d" current_document_number)
-        self.log("created_document_number: %d" created_document_number)
+        self.log("previous_document_number: %d" %previous_document_number)
+        self.log("current_document_number: %d" %current_document_number)
+        self.log("created_document_number: %d" %created_document_number)
 
         failed_document_number = 0
 
