@@ -1337,6 +1337,65 @@ class TestDocument(TestDocumentMixin):
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
+  def test_PDF_watermark(self):
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('REF-en-001.pdf'))
+    # This watermark.pdf document is a pdf with a transparent background. Such
+    # document can be created using GIMP
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=False)
+
+    # this looks like a pdf
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+
+    # and ERP5 can make a PDF Document out of it
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('1', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
+
+  def test_PDF_watermark_repeat(self):
+    # watermark a pdf, repeating the watermark
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=True)
+
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('42', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
+
+  def test_PDF_watermark_start_page(self):
+    # watermark a pdf, starting on the second page
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=False,
+      watermark_start_page=1) # This is 0 based.
+
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('42', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
+
   def test_Document_getStandardFilename(self):
     upload_file = makeFileUpload('metadata.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')

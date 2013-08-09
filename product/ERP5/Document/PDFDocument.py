@@ -28,15 +28,17 @@
 
 import tempfile, os
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError,\
                                             VALID_TEXT_FORMAT_LIST
 from subprocess import Popen, PIPE
 from zLOG import LOG
 import errno
+from StringIO import StringIO
 
 class PDFDocument(Image):
   """
@@ -65,6 +67,44 @@ class PDFDocument(Image):
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
                     )
+
+  zope.interface.implements(interfaces.IWatermarkable)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWatermarkedData')
+  def getWatermarkedData(self, watermark_data, repeat_watermark=True,
+                         watermark_start_page=0, **kw):
+    """See interface
+
+    * watermark_data is the PDF data (as a string) to use as a watermark.
+    * If repeat_watermark is true, then the watermark will be applied on all
+      pages, otherwise it is applied only once.
+    * Watermark is applied at all pages starting watermark_start_page (this
+      index is 0 based)
+    """
+    from pyPdf import PdfFileWriter, PdfFileReader, pdf
+    self_reader = PdfFileReader(StringIO(self.getData()))
+    watermark_reader = PdfFileReader(StringIO(watermark_data))
+    watermark_page_count = watermark_reader.getNumPages()
+
+    output = PdfFileWriter()
+
+    for page_number in range(self_reader.getNumPages()):
+      self_page = self_reader.getPage(page_number)
+      watermark_page = None
+      if page_number >= watermark_start_page:
+        if repeat_watermark:
+          watermark_page = watermark_reader.getPage(
+            (page_number - watermark_start_page) % watermark_page_count)
+        elif page_number < (watermark_page_count + watermark_start_page):
+          watermark_page = watermark_reader.getPage(page_number - watermark_start_page)
+        if watermark_page is not None:
+          self_page.mergePage(watermark_page)
+      output.addPage(self_page)
+
+    outputStream = StringIO()
+    output.write(outputStream)
+    return outputStream.getvalue()
 
   # Conversion API
   def _convert(self, format, **kw):
