@@ -177,6 +177,8 @@ class BenchmarkProcess(multiprocessing.Process):
 
           self._current_repeat += 1
 
+        result.flush()
+
     except StopIteration, e:
       self._logger.error(e)
 
