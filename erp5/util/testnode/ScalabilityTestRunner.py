@@ -339,8 +339,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
   
     count = 0
     for configuration in configuration_list:
-      # Stop instance
       if count > 0:
+        # Stop instance
         self.slapos_controler.stopInstance(self.instance_title)
         self._waitInstance(self.instance_title, 'stopped')
         # Update instance XML configuration 
