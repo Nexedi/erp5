@@ -128,7 +128,7 @@ class ScalabilityTestRunner():
       self.log("testnode, request : %s", instance_title)
       config = json.dumps(config)
       self.slapos_controler.request(instance_title, software_path,
-                             "scalability", {"_" : config},
+                             "test", {"_" : config},
                              self.launcher_nodes_computer_guid[0])
       self.authorize_request = False
       return {'status_code' : 0}                                          
