@@ -4,4 +4,4 @@ TestSuiteRepositoryConstraint
 TestSuiteConstraint
 ScalabilityTestSuite
 TestNode
-ERP5ScalabilityDistributor
+ScalabilityDistributor

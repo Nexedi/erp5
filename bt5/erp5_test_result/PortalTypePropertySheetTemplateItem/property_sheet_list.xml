@@ -8,7 +8,7 @@
   <item>Task</item>
  </portal_type>
  <portal_type id="ERP5 Scalability Distributor">
-  <item>ERP5ScalabilityDistributor</item>
+  <item>ScalabilityDistributor</item>
  </portal_type>
  <portal_type id="Scalability Test Suite">
   <item>Arrow</item>
