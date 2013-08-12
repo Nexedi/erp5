@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import tempfile, os
+import tempfile, os, pickle
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
@@ -36,7 +36,7 @@ from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError,\
                                             VALID_TEXT_FORMAT_LIST
 from subprocess import Popen, PIPE
-from zLOG import LOG
+from zLOG import LOG, INFO, PROBLEM
 import errno
 from StringIO import StringIO
 
@@ -312,14 +312,25 @@ class PDFDocument(Image):
             info_key = info_key.lstrip("/")
             if isinstance(info_value, unicode):
               info_value = info_value.encode("utf-8")
-            result.setdefault(info_key, info_value)
+
+            # Ignore values that cannot be pickled ( such as AAPL:Keywords )
+            try:
+              pickle.dumps(info_value)
+            except pickle.PicklingError, err:
+              LOG("PDFDocument.getContentInformation", INFO,
+                "Ignoring non picklable document info on %s: %s (%r)" % (
+                self.getRelativeUrl(), info_key, info_value))
+            else:
+              result.setdefault(info_key, info_value)
         except PdfReadError:
-          LOG("PDFDocument.getContentInformation", 0,
+          LOG("PDFDocument.getContentInformation", PROBLEM,
             "pyPdf is Unable to read PDF, probably corrupted PDF here : %s" % \
             (self.getRelativeUrl(),))
     finally:
       tmp.close()
 
+    # Store cache as an instance of document. FIXME: we usually try to avoid this
+    # pattern and cache the result of methods using content md5 as a cache key.
     self._content_information = result
     return result.copy()
 

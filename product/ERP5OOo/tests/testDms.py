@@ -1329,6 +1329,21 @@ class TestDocument(TestDocumentMixin):
     # empty PDF have no content information
     self.assertEquals(dict(), content_information)
 
+  def test_apple_PDF_metadata(self):
+    # PDF created with Apple software have a special 'AAPL:Keywords' info tag
+    # and when pypdf extracts pdf information, it is returned as an
+    # IndirectObject instance which is not picklable
+    document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      file=makeFileUpload('apple_metadata.pdf'))
+    # content_information is picklable
+    content_information = document.getContentInformation()
+    from pickle import dumps
+    dumps(content_information)
+    # so document can be saved in ZODB
+    self.commit()
+    self.tic()
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
