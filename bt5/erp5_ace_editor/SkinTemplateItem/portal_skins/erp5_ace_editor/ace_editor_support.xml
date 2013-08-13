@@ -200,7 +200,7 @@
       else if(element.webkitRequestFullScreen) {\n
         element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);\n
       }\n
-      ace_editor.resize();\n
+      ace_editor.resize(true);\n
     }\n
   }\n
 \n
@@ -216,7 +216,7 @@
     ace_editor_container_div.height(height);\n
 \n
     if(event != null)\n
-      ace_editor.resize();\n
+      ace_editor.resize(true);\n
   }\n
 \n
   ace_editor_container_div_parent_before_maximized = null;\n
@@ -249,7 +249,7 @@
                                              function() { $(this).remove(); });\n
 \n
     $(document).keyup(unmaximize);\n
-    ace_editor.resize();\n
+    ace_editor.resize(true);\n
   }\n
 \n
   // Save source code only through an AJAX request\n
@@ -365,7 +365,7 @@
         readOnly: true\n
     }]);\n
 \n
-    ace_editor.resize();\n
+    ace_editor.resize(true);\n
 \n
     var PythonMode = require(\'ace/mode/python\').Mode;\n
     ace_editor.getSession().setMode(new PythonMode());\n
