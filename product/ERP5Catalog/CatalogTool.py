@@ -49,6 +49,8 @@ from Products.ERP5Type.Utils import sqlquote
 
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
+from _mysql_exceptions import ProgrammingError
+from MySQLdb.constants.ER import NO_SUCH_TABLE
 
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
@@ -971,5 +973,27 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def searchAndActivate(self, *args, **kw):
       """Restricted version of _searchAndActivate"""
       return self._searchAndActivate(restricted=True, *args, **kw)
+
+    security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
+    def upgradeSchema(self, sql_catalog_id=None, src__=0):
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      connection_id = catalog.z_create_catalog.connection_id
+      src = []
+      for clear_method in catalog.sql_clear_catalog:
+        clear_method = catalog[clear_method]
+        try:
+          r = clear_method._upgradeSchema(connection_id, src__=1)
+        except ProgrammingError, e:
+          if e[0] != NO_SUCH_TABLE:
+            raise
+          r = clear_method(src__=1)
+        if r:
+          src.append(r)
+      if src and not src__:
+        query = self.getPortalObject()[connection_id]().query
+        for r in src:
+          query(r)
+      return src
+
 
 InitializeClass(CatalogTool)
