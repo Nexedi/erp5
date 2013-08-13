@@ -1,4 +1,7 @@
 2013-08-13 arnaud.fontaine
+* ZODB Components: Add Ace Editor settings menu (Alt+p) to set up keybinding styles for example.
+
+2013-08-13 arnaud.fontaine
 * ZODB Components: Add JS file required to find text within Ace Editor.
 
 2013-07-19 arnaud.fontaine
