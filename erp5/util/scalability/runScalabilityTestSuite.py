@@ -356,11 +356,15 @@ class ScalabilityLauncher(object):
 
           self.log("user_number: %s" %str(user_number))
           self.log("test_duration: %ss" %str(test_duration))
-
-          command = [tester_path,
+          
+          # Generate commands
+          command_list = []
+          i = 0
+          for suite in test_suites:
+            command_list[i] = [tester_path,
                  self.__argumentNamespace.erp5_url,
                  str(user_number),
-                 ' '.join(test_suites),
+                 suite,
                  '--benchmark-path-list', benchmarks_path,
                  '--users-file-path', user_file_path,
                  '--users-file', user_file,
@@ -368,13 +372,24 @@ class ScalabilityLauncher(object):
                  '--report-directory', self.__argumentNamespace.log_path,
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
               ]
-          self.log("command: %s" %str(command))
-          tester_process = subprocess.Popen(command)
-          
+            i += 1
+            
+          # Launch
+          tester_process_list = []
+          for i in range(i,len(command_list)):
+            self.log("command: %s" %str(command_list[i]))
+            tester_process_list[i] = subprocess.Popen(command_list[i])
+
+          # Sleep
           time.sleep(test_duration)
-          tester_process.send_signal(signal.SIGINT)
+
+          # Stop
+          for i in range(i,len(tester_process_list)):
+            tester_process_list[i].send_signal(signal.SIGINT)
+
+          # Ok
           error_count = 0
-          
+        
         except:
           self.log("Error during tester call.")
           raise ValueError("Tester call failed")
