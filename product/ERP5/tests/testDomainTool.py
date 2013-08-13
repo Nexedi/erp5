@@ -649,6 +649,38 @@ class TestDomainTool(TestPredicateMixIn):
       tested_base_category_list=['WAAA', 'BOOO'],
       src__=1))
 
+  def test_searchPredicateInvalidCategories(self):
+    predicate = self.portal.sale_supply_module.newContent(
+      portal_type='Sale Supply')
+    predicate.validate()
+    self.assertNotEquals(predicate.asPredicate(), None)
+
+    context = self.portal.person_module.newContent(
+      portal_type='Person',
+      region=('broken/category'))
+
+    # An invalid category should raise explicitly, for all parameters of
+    # searchPredicateList ( the code paths are different )
+    self.assertRaises(TypeError, self.portal.portal_domains.searchPredicateList,
+      context=context, portal_type=predicate.portal_type)
+    self.assertRaises(TypeError, self.portal.portal_domains.searchPredicateList,
+      context=context, portal_type=predicate.portal_type, acquired=False)
+    self.assertRaises(TypeError, self.portal.portal_domains.searchPredicateList,
+      context=context, portal_type=predicate.portal_type,
+      tested_base_category_list=['region'])
+    self.assertRaises(TypeError, self.portal.portal_domains.searchPredicateList,
+      context=context, portal_type=predicate.portal_type,
+      tested_base_category_list=['region'], acquired=False)
+
+    # This is also the case if there are multiple categories (another code
+    # path)
+    context = self.portal.person_module.newContent(
+      portal_type='Person',
+      region=('broken/category', 'region'))
+    self.assertRaises(TypeError, self.portal.portal_domains.searchPredicateList,
+      context=context, portal_type=predicate.portal_type)
+
+
   def test_setRelationToBaseDomain(self):
     # category accessors can be useed to set relations to base domains.
     base_domain = self.portal.portal_domains.newContent(

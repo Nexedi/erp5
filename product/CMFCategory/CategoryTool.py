@@ -1587,9 +1587,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if len(category_uid_list) == 0:
               # New base category, append it to the ordered list.
               ordered_base_category_uid_list.append(base_category_uid)
-            category_uid_list.append(self.getCategoryUid(category))
-          else: 
-            LOG('CategoryTool', 0, 'Received invalid category %r' % (category, ))
+            category_uid = self.getCategoryUid(category)
+            category_uid_list.append(category_uid)
+
+          if category_uid is None and category != 'NULL':
+            raise TypeError(
+              "Invalid category passed to buildAdvancedSQLSelector: %r"
+                % category )
+
         # Generate "left join" and "where" expressions.
         left_join_list = [catalog_table_name]
         where_expression_list = []
