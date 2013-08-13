@@ -174,6 +174,8 @@
   <script type="text/javascript"\n
           tal:attributes="src string:${portal_url}/ace/mode-python.js"></script>\n
   <script type="text/javascript"\n
+          tal:attributes="src string:${portal_url}/ace/ext-settings_menu.js"></script>\n
+  <script type="text/javascript"\n
           tal:define=\'fullscreen_button string:<input type="button" value="Fullscreen" onclick="switchToFullScreen()" class="ace_editor_action_button" />;\n
                       save_button string:<button class="ace_editor_save_button" onclick="saveDocument(event)"><img src="images/save2.png" width="30" height="30" border="0" /></button>;\'\n
 \n
@@ -354,6 +356,15 @@
     window.onresize = setContainerDivSize;\n
 \n
     ace_editor = ace.edit(\'${div_id}\');\n
+\n
+    ace.require(\'ace/ext/settings_menu\').init(ace_editor);\n
+    ace_editor.commands.addCommands([{\n
+        name: \'showSettingsMenu\',\n
+        bindKey: {win: \'Alt-p\', mac: \'Alt-p\'},\n
+        exec: function(editor) { editor.showSettingsMenu(); },\n
+        readOnly: true\n
+    }]);\n
+\n
     ace_editor.resize();\n
 \n
     var PythonMode = require(\'ace/mode/python\').Mode;\n
