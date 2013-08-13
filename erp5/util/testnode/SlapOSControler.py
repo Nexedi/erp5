@@ -77,7 +77,7 @@ class SlapOSControler(object):
   #TODO: implement a method to get all instance related the slapOS account
   # and deleting all old instances (based on creation date or name etc...)
 
-  def createSlaposConfigurationFileAccount(self, key, certificate, config):
+  def createSlaposConfigurationFileAccount(self, key, certificate, slapos_url, config):
     # Create "slapos_account" directory in the "slapos_directory"
     slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
     createFolder(slapos_account_directory)
@@ -87,7 +87,7 @@ class SlapOSControler(object):
     configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
     configuration_file_value = "[slapos]\nmaster_url = %s\n\
 [slapconsole]\ncert_file = %s\nkey_file = %s" %(
-                                  config['server_url'],
+                                  slapos_url,
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
     createFile(slapos_account_key_path, "w", key)

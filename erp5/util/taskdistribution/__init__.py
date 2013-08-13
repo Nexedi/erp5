@@ -570,6 +570,13 @@ class TaskDistributor(RPCRetry):
       """
       return self._retryRPC('getSlaposAccountCertificate')
 
+    def getSlaposUrl(self):
+      """
+        Returns the url of slapos master related to the distributor
+      """
+      return self._retryRPC('getSlaposUrl')
+
+
 class DummyTaskDistributionTool(object):
     """
     Fake remote server.

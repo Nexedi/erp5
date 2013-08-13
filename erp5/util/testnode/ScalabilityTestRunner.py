@@ -63,8 +63,17 @@ class ScalabilityTestRunner():
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
+    # Get Slapos Master Url
+    slapos_url = ''
+    try:
+      slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
+      if not slapos_url:
+        slapos_url = self.testnode.config['server_url']
+    except:
+      slapos_url = self.testnode.config['server_url']
+      
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
-                                        key, certificate, self.testnode.config)
+                                        key, certificate, slapos_url, self.testnode.config)
     self.slapos_communicator = None
     self.remaining_software_installation_dict = {}
     
