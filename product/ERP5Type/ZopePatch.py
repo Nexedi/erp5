@@ -75,6 +75,7 @@ from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
 from Products.ERP5Type.patches import DCWorkflowGraph
+from Products.ERP5Type.patches import AceEditorZMI
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager

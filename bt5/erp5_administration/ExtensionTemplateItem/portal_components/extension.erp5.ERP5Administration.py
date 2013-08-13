@@ -137,6 +137,7 @@ def checkConversionToolAvailability(self):
   active_process.activateResult(result)
 
 def runPyflakes(script_code, script_path):
+  # TODO: reuse _runPyflakes ...
   from pyflakes.api import check
   from pyflakes import reporter
   from StringIO import StringIO
@@ -144,3 +145,64 @@ def runPyflakes(script_code, script_path):
   check(script_code, script_path, reporter.Reporter(stream, stream))
   return stream.getvalue()
 
+def runPyflakesOnPythonScript(self, data):
+  import json
+
+  # XXX data is encoded as json, because jQuery serialize lists as []
+  if isinstance(data, basestring):
+    data = json.loads(data)
+
+  # data contains the code, the bound names and the script params. From this
+  # we reconstruct a function that can be parsed with pyflakes.
+  code = data
+  def indent(text):
+    return ''.join(("  " + line) for line in text.splitlines(True))
+
+  bound_names = data['bound_names']
+  signature_parts = data['bound_names']
+  if data['params']:
+    signature_parts += [data['params']]
+  signature = ", ".join(signature_parts)
+
+  function_name = "function_name"
+  body = "def %s(%s):\n%s" % (function_name,
+                              signature,
+                              indent(data['code']) or "  pass")
+
+  error_list = _runPyflakes(body, lineno_offset=-1)
+
+  self.REQUEST.RESPONSE.setHeader('content-type', 'application/json')
+  return json.dumps(dict(annotations=error_list))
+
+
+def _runPyflakes(code, lineno_offset=0):
+  import pyflakes.api
+  error_list = []
+
+  class Reporter(object):
+    def unexpectedError(self, filename, msg):
+        error_list.append(
+         { 'row': 0,
+           'column': 0,
+           'text': msg,
+           'type': 'error' }
+        )
+
+    def syntaxError(self, filename, msg, lineno, offset, text):
+        error_list.append(
+         { 'row': lineno - 1 + lineno_offset,
+           'column': offset,
+           'text': msg + (text and ": " + text or ''),
+           'type': 'error' }
+        )
+
+    def flake(self, message):
+      error_list.append(
+         { 'row': message.lineno - 1 + lineno_offset,
+           'column': getattr(message, 'col', 0),
+           'text': message.message % message.message_args,
+           'type': 'warning' }
+      )
+
+  pyflakes.api.check(code, '', Reporter())
+  return error_list
