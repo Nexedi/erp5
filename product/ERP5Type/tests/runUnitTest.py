@@ -175,16 +175,16 @@ def initializeInstanceHome(tests_framework_home,
   assert (os.path.isabs(tests_framework_home)
       and os.path.isabs(real_instance_home)
       and os.path.isabs(instance_home))
-  if not os.path.exists(instance_home):
-    os.mkdir(instance_home)
-    if not WIN:
-      # Try to use relative symlinks
-      if tests_framework_home.startswith(os.path.join(real_instance_home,
-                                                      'Products', '')):
-        tests_framework_home = tests_framework_home[len(real_instance_home)+1:]
-      if real_instance_home == os.path.dirname(instance_home):
-        real_instance_home = 'real_instance'
-        os.symlink('..', os.path.join(instance_home, real_instance_home))
+  os.path.exists(instance_home) or os.mkdir(instance_home)
+  if not WIN:
+    # Try to use relative symlinks
+    if tests_framework_home.startswith(os.path.join(real_instance_home,
+                                                    'Products', '')):
+      tests_framework_home = tests_framework_home[len(real_instance_home)+1:]
+    if real_instance_home == os.path.dirname(instance_home):
+      real_instance_home = 'real_instance'
+      d = os.path.join(instance_home, real_instance_home)
+      os.path.exists(d) or os.symlink('..', d)
   old_pwd = os.getcwd()
   try:
     os.chdir(instance_home)
