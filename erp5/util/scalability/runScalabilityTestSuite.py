@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import shutil
 import time
 import sys
 import multiprocessing
@@ -25,7 +26,9 @@ MAX_TESTING_TIME = 60
 MAX_GETTING_CONNECTION_TIME = 60*5
 
 def getConnection(erp5_url, log):
-  
+  """
+  Return a connection with the erp5 instance.
+  """  
   start_time = time.time()
   count = 0
   while MAX_GETTING_CONNECTION_TIME > time.time()-start_time:
@@ -45,6 +48,9 @@ def getConnection(erp5_url, log):
   raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
 def waitFor0PendingActivities(erp5_url, log):
+  """
+  Waiting while there are no pending activities on the erp5 instance.
+  """
   start_time = time.time()
   parsed = urlparse.urlparse(erp5_url)
   user = parsed.username;
@@ -82,9 +88,10 @@ def waitFor0PendingActivities(erp5_url, log):
   if not ok:
     raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
+
 def getCreatedDocumentNumberFromERP5(erp5_url, log):
   """
-  Get the number of created documents
+  Get the number of created documents from erp5 instance.
   """
   log("count docs number from ERP5 instance")
   count_retry = 0
@@ -233,45 +240,19 @@ class ScalabilityLauncher(object):
     ScalabilityLauncher._checkParsedArguments(namespace)
     return namespace
 
-  def checkERP5Instance(self):
-    """
-    Check if erp5_instance is accessible
-    """
-    pass
-
-  def _returnFileContentList(self, path, scheme):
-    """
-    """
-    complete_scheme = os.path.join(path, scheme)
-    file_path_list = glob.glob(complete_scheme)
-    content_list = []
-    for file_path in file_path_list:
-      opened_file = open(file_path, 'r')
-      content_list.append(''.join(opened_file.readlines()))
-      opened_file.close()
-    return content_list
-
-  def returnLogList(self):
-    return self._returnFileContentList(self.__argumentNamespace.log_path,
-                                       "%s*.log" %LOG_FILE_PREFIX)
-    
-  def returnCsvList(self):
-    return self._returnFileContentList(self.__argumentNamespace.log_path,
-                                       "%s*.csv" %LOG_FILE_PREFIX)
-  def getCreatedDocumentNumber(self):
-    number = 0
-    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
-                                  "%s*.csv" %LOG_FILE_PREFIX)
-    file_path_list = glob.glob(complete_scheme)
-    for file_path in file_path_list:
-      number = number + sum(1 for line in open(file_path))
-    return number
-
-  def cleanUpCsv(self):
-    files_to_delete = glob.glob(os.path.join(self.__argumentNamespace.log_path,
+  def moveLogs(self, folder_name):
+    # Get file paths
+    file_to_move_list = glob.glob(os.path.join(self.__argumentNamespace.log_path,
                                 "%s*.csv" %LOG_FILE_PREFIX))
-    for file_path in files_to_delete:
-      os.remove(file_path)
+    file_to_move_list += glob.glob(os.path.join(self.__argumentNamespace.log_path,
+                                "%s*.log" %LOG_FILE_PREFIX))
+    # Create folder
+    new_directory_path = os.path.join(self.__argumentNamespace.log_path,
+                                folder_name)
+    if not os.path.exists(new_directory_path): os.makedirs(new_directory_path)
+    # Move files
+    for file_to_move in file_to_move_list:
+      shutil.move(file_to_move, new_directory_path)
 
   def getNextTest(self):
     """
@@ -286,17 +267,7 @@ class ScalabilityLauncher(object):
                 ))
     next_test = ScalabilityTest(decoded_data, self.test_result)
     return next_test
-
-  def getCreatedDocumentNumber(self):
-    # First file line is corresponding to header
-    number = -1
-    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
-                                  "%s*.csv" %LOG_FILE_PREFIX)
-    file_path_list = glob.glob(complete_scheme)
-    for file_path in file_path_list:
-      number = number + sum(1 for line in open(file_path))
-    return number
-
+    
   def run(self):
     self.log("Scalability Launcher started, with:")
     self.log("Test suite master url: %s" %self.__argumentNamespace.test_suite_master_url)
@@ -305,35 +276,34 @@ class ScalabilityLauncher(object):
     self.log("Revision: %s" %self.__argumentNamespace.revision)
     self.log("Node title: %s" %self.__argumentNamespace.node_title)
     self.log("ERP5 url: %s" %self.__argumentNamespace.erp5_url)
-       
-    max_time = 36000
-    start_time = time.time()
+    
     error_message_set, exit_status = set(), 0
 
     # Get suite informations
     suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
-    test_suites = suite.getTestList()    
-    
-    while time.time()-start_time < max_time:
-      time.sleep(5)
+    test_suite_list = suite.getTestList()    
+
+    # Main loop
+    while True:
+      
       current_test = self.getNextTest()
       if current_test == None:
         self.log("No Test Case Ready")
       else:
         error_count = 1
 
-        # Waiting for 0-pending activities
+        # Do not run a test while there are pending activities
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
+        # Get the number of documents present before running the test.
         previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         self.log("previous_document_number: %d" %previous_document_number)
-        # Here call a runScalabilityTest ( placed on product/ERP5Type/tests ) ?
         self.log("Test Case %s is running..." %(current_test.title))
+        
         try:
-
+          # Prepare command parameters
           current_test_number = int(current_test.title)
           test_duration = suite.getTestDuration(current_test_number)
           benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
-          #TODO: generate a basic user file with all scalability users.
           user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
           user_file_path = os.path.split(user_file_full_path)[0]
           user_file = os.path.split(user_file_full_path)[1]
@@ -343,35 +313,33 @@ class ScalabilityLauncher(object):
           self.log("user_number: %s" %str(user_number))
           self.log("test_duration: %ss" %str(test_duration))
           
-          # Generate commands
+          # Generate commands to run
           command_list = []
-          i = 0
-          for suite in test_suites:
-            command_list[i] = [tester_path,
+          for test_suite in test_suite_list:
+            command_list.append([tester_path,
                  self.__argumentNamespace.erp5_url,
-                 str(user_number),
-                 suite,
+                 str(user_number/len(test_suite_list)),
+                 test_suite,
                  '--benchmark-path-list', benchmarks_path,
                  '--users-file-path', user_file_path,
                  '--users-file', user_file,
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
-              ]
-            i += 1
-            
+              ])
+              
           # Launch
           tester_process_list = []
-          for i in range(i,len(command_list)):
-            self.log("command: %s" %str(command_list[i]))
-            tester_process_list[i] = subprocess.Popen(command_list[i])
+          for command in command_list:
+            self.log("command: %s" %str(command))
+            tester_process_list.append(subprocess.Popen(command))
 
           # Sleep
           time.sleep(test_duration)
 
           # Stop
-          for i in range(i,len(tester_process_list)):
-            tester_process_list[i].send_signal(signal.SIGINT)
+          for tester_process in tester_process_list:
+            tester_process.send_signal(signal.SIGINT)
 
           # Ok
           error_count = 0
@@ -381,20 +349,21 @@ class ScalabilityLauncher(object):
           raise ValueError("Tester call failed")
         self.log("Test Case %s is finish" %(current_test.title))
         self.log("Going to count the number of created documents")
-        time.sleep(120)
-        
+
+        # Wait for 0 pending activities before counting
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)        
+        # Count created documents
         current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         created_document_number = current_document_number - previous_document_number
         self.log("previous_document_number: %d" %previous_document_number)
         self.log("current_document_number: %d" %current_document_number)
         self.log("created_document_number: %d" %created_document_number)
-
         created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )
 
-        #log_contents = self.returnLogList()
-        #csv_contents = self.returnCsvList()
-        self.cleanUpCsv()
+        # Move csv/logs
+        self.moveLogs(current_test.title)
 
+        # Make a connection with ERP5 master
         retry_time = 2.0
         proxy = taskdistribution.ServerProxy(
                     self.__argumentNamespace.test_suite_master_url,
@@ -405,26 +374,27 @@ class ScalabilityLauncher(object):
                                   current_test.relative_path,
                                   current_test.title
                                 )
-                                
-
+        # Generate output                        
         results = "created docs=%d\n"\
                   "duration=%d\n"\
                   "number of tests=%d\n"\
                   %(
                     created_document_number,
                     test_duration,
-                    len(test_suites)
+                    len(test_suite_list)
                   )
-
-        self.log("results:")
-        self.log("%s" %results)
+        self.log("results: %s" %results)
         self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
+        
+        # Stop test case
         test_result_line_test.stop(stdout=results,
-                        test_count=created_document_number,
+                        test_count=len(test_suite_list),
                         error_count=error_count,
                         duration=test_duration)
         self.log("Test Case Stopped")
 
+      # Sleep between two loops
+      time.sleep(5)
     return error_message_set, exit_status
 
 def main():
