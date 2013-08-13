@@ -1,4 +1,7 @@
 2013-08-13 arnaud.fontaine
+* ZODB Components: Force resize of Ace Editor on maximize/fullscreen. Otherwise, without passing the new height/width to resize() and without force, text is not visible when switching to maximize/fullscreen mode.
+
+2013-08-13 arnaud.fontaine
 * ZODB Components: Add Ace Editor settings menu (Alt+p) to set up keybinding styles for example.
 
 2013-08-13 arnaud.fontaine
