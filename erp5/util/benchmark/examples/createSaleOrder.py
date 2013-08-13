@@ -111,11 +111,6 @@ def createSaleOrder(result, browser):
   result('SubmitSaleTradeConditionRelation', 
       browser.mainForm.submit(name='Base_callDialogMethod:method',
                                         sleep=(TMIN_SLEEP, TMAX_SLEEP)))
-  # Apply sale trade conditions  
-  result('ApplySaleTradeCondition', 
-      browser.mainForm.submitSelectAction(label="Apply Sale Trade Condition",
-                                        sleep=(TMIN_SLEEP, TMAX_SLEEP)))
-  assert browser.getTransitionMessage() == 'Order updated.'
     
   # Add Sale order lines
   max_ite = random.randint(1,MAX_PRODUCT)
