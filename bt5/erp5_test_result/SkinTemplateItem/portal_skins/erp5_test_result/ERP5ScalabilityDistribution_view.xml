@@ -97,6 +97,7 @@
                         <string>my_description</string>
                         <string>my_slapos_account_key</string>
                         <string>my_slapos_account_certificate</string>
+                        <string>my_slapos_url</string>
                       </list>
                     </value>
                 </item>
