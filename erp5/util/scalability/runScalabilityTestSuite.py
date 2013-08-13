@@ -296,20 +296,6 @@ class ScalabilityLauncher(object):
     for file_path in file_path_list:
       number = number + sum(1 for line in open(file_path))
     return number
-    
-  def getFailedDocumentNumber(self):
-    number = 0
-    complete_scheme = os.path.join(self.__argumentNamespace.log_path,
-                                  "%s*.csv" %LOG_FILE_PREFIX)
-    file_path_list = glob.glob(complete_scheme)
-    for file_path in file_path_list:
-      opened_file = open(file_path, 'r')
-      lines = opened_file.readlines()
-      for line in lines:
-        if '-1' in line:
-          number = number + 1
-      opened_file.close()
-    return number
 
   def run(self):
     self.log("Scalability Launcher started, with:")
@@ -396,16 +382,12 @@ class ScalabilityLauncher(object):
         self.log("Test Case %s is finish" %(current_test.title))
         self.log("Going to count the number of created documents")
         time.sleep(120)
-#        failed_document_number = self.getFailedDocumentNumber()
-#        created_document_number = self.getCreatedDocumentNumber() - failed_document_number
         
         current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         created_document_number = current_document_number - previous_document_number
         self.log("previous_document_number: %d" %previous_document_number)
         self.log("current_document_number: %d" %current_document_number)
         self.log("created_document_number: %d" %created_document_number)
-
-        failed_document_number = 0
 
         created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )
 
@@ -426,12 +408,10 @@ class ScalabilityLauncher(object):
                                 
 
         results = "created docs=%d\n"\
-                  "failed docs=%d\n"\
                   "duration=%d\n"\
                   "number of tests=%d\n"\
                   %(
                     created_document_number,
-                    failed_document_number,
                     test_duration,
                     len(test_suites)
                   )
@@ -441,7 +421,6 @@ class ScalabilityLauncher(object):
         self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
         test_result_line_test.stop(stdout=results,
                         test_count=created_document_number,
-                        failure_count=failed_document_number,
                         error_count=error_count,
                         duration=test_duration)
         self.log("Test Case Stopped")
