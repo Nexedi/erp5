@@ -26,6 +26,7 @@
 from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR, INFO
 import sys
+from collections import defaultdict
 
 import transaction
 
@@ -35,8 +36,8 @@ class ActivityBuffer(TM):
 
   def __init__(self):
     self.queued_activity = []
-    self.message_list_dict = {}
-    self.uid_set_dict = {}
+    self.message_list_dict = defaultdict(list)
+    self.uid_set_dict = defaultdict(set)
 
   def _clear(self):
     del self.queued_activity[:]
@@ -45,10 +46,10 @@ class ActivityBuffer(TM):
     self.activity_tool = None
 
   def getMessageList(self, activity):
-    return self.message_list_dict.setdefault(activity, [])
+    return self.message_list_dict[activity]
 
   def getUidSet(self, activity):
-    return self.uid_set_dict.setdefault(activity, set())
+    return self.uid_set_dict[activity]
 
   def _register(self, activity_tool):
     if not self._registered:
@@ -65,9 +66,9 @@ class ActivityBuffer(TM):
     try:
       activity_tool = self.activity_tool
       # Try to push all messages
-      activity_dict = {}
+      activity_dict = defaultdict(list)
       for activity, message in self.queued_activity[queued:]:
-        activity_dict.setdefault(activity, []).append(message)
+        activity_dict[activity].append(message)
       for activity, message_list in activity_dict.iteritems():
         activity.prepareQueueMessageList(activity_tool, message_list)
       self._prepare_args = len(self.queued_activity),
