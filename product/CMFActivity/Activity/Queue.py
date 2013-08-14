@@ -235,9 +235,6 @@ class Queue(object):
     raise NotImplementedError
 
   # Registration Management
-  def registerActivityBuffer(self, activity_buffer):
-    pass
-
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     # BBB: deprecated
     message_list = activity_buffer.getMessageList(self)

@@ -60,20 +60,6 @@ class ActivityBuffer(TM):
       transaction.get().addBeforeCommitHook(self._prepare, self._prepare_args)
       self._prepare_args = None
 
-  # Keeps a list of messages to add and remove
-  # at end of transaction
-  def _begin(self):
-    # LOG('ActivityBuffer', 0, '_begin %r' % (self,))
-    from ActivityTool import activity_dict
-    try:
-      # Reset registration for each transaction.
-      for activity in activity_dict.itervalues():
-        activity.registerActivityBuffer(self)
-    except:
-      LOG('ActivityBuffer', ERROR, "exception during _begin",
-          error=sys.exc_info())
-      raise
-
   _abort = _finish = _clear
 
   def _prepare(self, queued):
