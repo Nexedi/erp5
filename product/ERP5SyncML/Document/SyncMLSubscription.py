@@ -272,7 +272,7 @@ class SyncMLSubscription(XMLObject):
     search_kw = dict(kw)
     packet_size = search_kw.pop('packet_size', 30)
     limit = packet_size * search_kw.pop('activity_count', 100)
-    syncml_logger.info("--> calling getAndActivate packet size = %s, limit = %s" %
+    syncml_logger.debug("--> calling getAndActivate packet size = %s, limit = %s" %
                            (packet_size, limit))
     # We must know if we have a lower limit or not to propagate
     if not kw.has_key("strict_min_gid"):
@@ -319,8 +319,8 @@ class SyncMLSubscription(XMLObject):
           except IndexError:
             # Last packet
             max_gid = r[-1]
-          syncml_logger.info("-- getAndActivate : recursive call i = %s,  min = %s, max = %s\nr = %s" \
-                             % (i, min_gid, max_gid, r))
+          syncml_logger.info("-- getAndActivate : recursive call i = %s,  min = %s, max = %s" \
+                             % (i, min_gid, max_gid,))
           callback_method(min_gid=min_gid,
                           max_gid=max_gid,
                           message_id=message_id_list.pop(),
@@ -329,7 +329,6 @@ class SyncMLSubscription(XMLObject):
         i = 0
         if result_count > packet_size:
           for i in xrange(0, result_count-packet_size, packet_size):
-            syncml_logger.info("-- getAndActivate call")
             if first_call:
               min_gid = None
               first_call = False
@@ -346,13 +345,12 @@ class SyncMLSubscription(XMLObject):
           final_min = 0
         # Final activity must be tell there is no upper limit
         # XXX maybe re-put here the final tag of message to avoid empty message
-        syncml_logger.info("---- getAndActivate : final call")
         if first_call:
           min_gid = None
         else:
           min_gid = r[final_min]
-        syncml_logger.info("-- getAndActivate : final call min = %s, max = %s" \
-                             % (min_gid, "None"))
+        syncml_logger.info("-- getAndActivate : final call min = %s, max = None" \
+                             % (min_gid,))
         callback_method(min_gid=min_gid,
                         max_gid=None, # No limit when last call
                         message_id=message_id_list.pop(),
