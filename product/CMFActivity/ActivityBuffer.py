@@ -53,7 +53,6 @@ class ActivityBuffer(TM):
   def _register(self, activity_tool):
     if not self._registered:
       self.activity_tool = activity_tool
-      self._activity_tool_path = activity_tool.getPhysicalPath()
       TM._register(self)
       self._prepare_args = 0,
     if self._prepare_args:
