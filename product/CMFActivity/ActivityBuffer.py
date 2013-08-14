@@ -24,7 +24,7 @@
 ##############################################################################
 
 from Shared.DC.ZRDB.TM import TM
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, ERROR
 import sys
 from collections import defaultdict
 
