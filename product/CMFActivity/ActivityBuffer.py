@@ -31,9 +31,6 @@ from collections import defaultdict
 import transaction
 
 class ActivityBuffer(TM):
-
-  _p_oid=_p_changed=_registered=None
-
   def __init__(self):
     self.queued_activity = []
     self.message_list_dict = defaultdict(list)
