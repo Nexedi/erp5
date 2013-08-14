@@ -105,8 +105,7 @@ class SQLDict(SQLBase):
     if message_id in uid_set:
       return
     uid_set.add(message_id)
-    message_list = activity_buffer.getMessageList(self)
-    message_list.append(m)
+    activity_buffer.getMessageList(self).append(m)
     m.is_registered = True
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
