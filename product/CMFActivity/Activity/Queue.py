@@ -241,10 +241,7 @@ class Queue(object):
     return m in message_list
 
   def registerMessage(self, activity_buffer, activity_tool, m):
-    message_list = activity_buffer.getMessageList(self)
-    if m in message_list:
-      return
-    message_list.append(m)
+    activity_buffer.getMessageList(self).append(m)
     m.is_registered = True
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
