@@ -103,7 +103,7 @@
                         <string>my_aggregate_title</string>
                         <string>my_specialise_title</string>
                         <string>my_master</string>
-                        <string>my_computer_guid</string>
+                        <string>my_reference</string>
                       </list>
                     </value>
                 </item>

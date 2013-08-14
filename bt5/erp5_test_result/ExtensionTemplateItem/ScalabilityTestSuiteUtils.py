@@ -32,13 +32,14 @@ def getGeneratedConfigurationList(self, *args, **kw):
   document_list = []
   template = jinja2.Template(self.getClusterConfiguration())
   max = len(self.getGraphCoordinate())
+  max_comp = 100
   #max = self.getNumberConfiguration()
-  compListView = [ "COMP-%i" %(x) for x in range(0,max+1) ]
+  comp_list_view = [ "COMP-%i" %(x) for x in range(0,max_comp) ]
 
   for count in xrange(1, max+1):
-    templateVars = { "count" : count, "comp" : compListView }
-    outputText = template.render( templateVars )
-    description = json.dumps(json.loads(outputText), sort_keys=True, indent=4, separators=(',', ': '))
+    template_vars = { "count" : count, "comp" : comp_list_view }
+    output_text = template.render(template_vars)
+    description = json.dumps(json.loads(output_text), sort_keys=True, indent=4, separators=(',', ': '))
 
     # Create a temp object
     document_list.append(self.newContent(
@@ -113,8 +114,8 @@ def generateConfigurationList(self, test_suite_title):
   launcher_nodes.append( remaining_nodes.pop() )
   
   # Make list with only the computer_guid property of each node (to be used directly by template)
-  remaining_nodes_computer_guid = [unvalid_node] + [ node.getComputerGuid() for node in remaining_nodes ] + [unvalid_node]
-  launcher_nodes_computer_guid = [ node.getComputerGuid() for node in launcher_nodes ]
+  remaining_nodes_computer_guid = [unvalid_node] + [ node.getReference() for node in remaining_nodes ] + [unvalid_node]
+  launcher_nodes_computer_guid = [ node.getReference() for node in launcher_nodes ]
 
   configuration_list_json = []
   return_dict = {}
@@ -147,7 +148,7 @@ def generateConfigurationList(self, test_suite_title):
   # Get the list of all nodes wich will are involved in the test
   involved_nodes_computer_guid = []
   for node in available_nodes:
-    computer_guid = node.getComputerGuid()
+    computer_guid = node.getReference()
     if _isInMyDictOrListRec(return_dict, computer_guid):
       involved_nodes_computer_guid.append(computer_guid)
     
