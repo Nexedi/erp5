@@ -272,7 +272,8 @@ class SyncMLSubscription(XMLObject):
     search_kw = dict(kw)
     packet_size = search_kw.pop('packet_size', 30)
     limit = packet_size * search_kw.pop('activity_count', 100)
-
+    syncml_logger.info("--> calling getAndActivate packet size = %s, limit = %s" %
+                           (packet_size, limit))
     # We must know if we have a lower limit or not to propagate
     if not kw.has_key("strict_min_gid"):
       first_call = True
@@ -295,7 +296,7 @@ class SyncMLSubscription(XMLObject):
         next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
         kw["strict_min_gid"] = r[-1]
         syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
-                           (kw.get("min_gid", None),))
+                           (kw.get("strict_min_gid", None),))
         self.activate(**next_kw).getAndActivate(
           callback, activate_kw, **kw)
         generated_other_activity = True
@@ -308,17 +309,18 @@ class SyncMLSubscription(XMLObject):
         #  XXX Can be factorized with following code
         # upper_limit of xrange + some check ???
         for i in xrange(0, result_count, packet_size):
-          syncml_logger.info("-- getAndActivate : recursive call")
           if first_call:
             min_gid = None
             first_call = False
           else:
             min_gid = r[i]
           try:
-            max_gid = r[i+packet_size]
+            max_gid = r[i+packet_size-1]
           except IndexError:
             # Last packet
             max_gid = r[-1]
+          syncml_logger.info("-- getAndActivate : recursive call i = %s,  min = %s, max = %s\nr = %s" \
+                             % (i, min_gid, max_gid, r))
           callback_method(min_gid=min_gid,
                           max_gid=max_gid,
                           message_id=message_id_list.pop(),
@@ -333,11 +335,13 @@ class SyncMLSubscription(XMLObject):
               first_call = False
             else:
               min_gid = r[i]
+            syncml_logger.info("-- getAndActivate : call min = %s, max = %s" \
+                               % (min_gid, r[i+packet_size-1]))
             callback_method(min_gid=min_gid,
-                            max_gid=r[i+packet_size],
+                            max_gid=r[i+packet_size-1],
                             message_id=message_id_list.pop(),
                             activate_kw=activate_kw)
-          final_min = i +  packet_size
+          final_min = i +  packet_size - 1
         else:
           final_min = 0
         # Final activity must be tell there is no upper limit
@@ -347,6 +351,8 @@ class SyncMLSubscription(XMLObject):
           min_gid = None
         else:
           min_gid = r[final_min]
+        syncml_logger.info("-- getAndActivate : final call min = %s, max = %s" \
+                             % (min_gid, "None"))
         callback_method(min_gid=min_gid,
                         max_gid=None, # No limit when last call
                         message_id=message_id_list.pop(),

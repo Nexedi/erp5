@@ -62,7 +62,7 @@ WHERE\n
   AND gid >= <dtml-sqlvar min_gid type="string">\n
 </dtml-if>\n
 <dtml-if max_gid>\n
-  AND gid < <dtml-sqlvar max_gid type="string">\n
+  AND gid <= <dtml-sqlvar max_gid type="string">\n
 </dtml-if>\n
 
 
