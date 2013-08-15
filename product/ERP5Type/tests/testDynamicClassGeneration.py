@@ -1802,6 +1802,12 @@ def bar(*args, **kwargs):
 
     self.tic()
 
+    # Anonymous should not even be able to view/access Component Tool
+    self.failIfUserCanViewDocument(None, self._component_tool)
+    self.failIfUserCanAccessDocument(None, self._component_tool)
+    self.failIfUserCanViewDocument(None, component)
+    self.failIfUserCanAccessDocument(None, component)
+
     user_id = 'ERP5TypeTestCase'
 
     self.assertUserCanChangeLocalRoles(user_id, self._component_tool)
