@@ -82,12 +82,12 @@ class ComponentTool(BaseTool):
         permission_function = lambda self: ('Manager',)
       elif permission_name in ('Change permissions', 'Define permissions'):
         permission_function = lambda self: ()
-      elif not (permission_name.startswith('Access ') or
-                permission_name.startswith('View') or
-                permission_name.startswith('WebDAV')):
-        permission_function = lambda self: ('Developer',)
+      elif (permission_name.startswith('Access ') or
+            permission_name.startswith('View') or
+            permission_name == 'WebDAV access'):
+        permission_function = lambda self: ('Developer', 'Manager')
       else:
-        continue
+        permission_function = lambda self: ('Developer',)
 
       setattr(cls, pname(permission_name), property(permission_function))
 
