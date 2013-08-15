@@ -86,6 +86,7 @@
     position: absolute;\n
     bottom: 0;\n
     right: 20px;\n
+    width: 40%;\n
     z-index: 424242;\n
     padding: 20px;\n
     background-color: #DAE6F6;\n
@@ -273,7 +274,6 @@
                                  {duration: 3000, queue: false});\n
 \n
       var maximize_fullscreen_message = data;\n
-      var error_arr = [];\n
 \n
       var validation_state_span = $(\'div.input > .ace_editor_validation_state\');\n
       if(validation_state_span.length) {\n
@@ -290,30 +290,27 @@
                 success: getTranslatedValidationStateTitleHandler});\n
       }\n
 \n
-      var error_element = $(\'div.input > .error\');\n
-      if(error_element.length) {\n
-        // Animate field to emphasize the change\n
-        function getErrorMessageListHandler(data) {\n
-          error_arr = $.parseJSON(data);\n
-          error_element.css(\'opacity\', 0.0);\n
-          error_element.html(error_arr.join(\'<br />\'));\n
-          error_element.animate({opacity: 1.0},\n
-                                {duration: 3000, queue: false});\n
-        }\n
+      updateErrorWarningMessageDivWithJump();\n
 \n
-        $.ajax({type: \'GET\',\n
-                async: false,\n
-                url: \'getErrorMessageList\',\n
-                data: \'as_json:int=1\',\n
-                success: getErrorMessageListHandler});\n
+      // Animate fields to emphasize the change\n
+      if(error_element.length) {\n
+        error_element.css(\'opacity\', 0.0);\n
+        error_element.animate({opacity: 1.0}, {duration: 3000, queue: false});\n
+      }\n
+\n
+      if(warning_element.length) {\n
+        warning_element.css(\'opacity\', 0.0);\n
+        warning_element.animate({opacity: 1.0}, {duration: 3000, queue: false});\n
       }\n
 \n
       if($(\'.maximize\').length ||\n
          (document.fullScreenElement && document.fullScreenElement !== null &&\n
           (document.mozFullScreen || document.webkitIsFullScreen))) {\n
         var msg_elem_classes = \'ace_editor_maximize_fullscreen_message\';\n
-        if(error_arr.length) {\n
-          maximize_fullscreen_message = error_arr.join(\'<br />\');\n
+        if(error_arr.length || warning_arr.length) {\n
+          maximize_fullscreen_message = (error_arr.join(\'<br />\') + \'<br />\' +\n
+                                         warning_arr.join(\'<br />\'));\n
+\n
           msg_elem_classes += \' ace_editor_maximize_fullscreen_error_message\';\n
         }\n
 \n
@@ -348,6 +345,45 @@
             error: errorHandler});\n
 \n
     return false;\n
+  }\n
+\n
+  function fillMessageElementAndArray(list, elem, arr) {\n
+    $.each(list, function(i, dict) {\n
+           line = dict[\'line\'];\n
+           column = dict[\'column\'];\n
+           if(line != null && column != null)\n
+             arr.push(\'<a href=&quot;#&quot; onclick=&quot;c=ace_editor.getCursorPosition();c.row=\' + (line - 1) + \';c.column=\' + column + \';ace_editor.gotoLine(line);ace_editor.moveCursorToPosition(c);ace_editor.focus();event.stopPropagation();event.preventDefault();&quot;>\' + dict[\'message\'] + \'</a>\');\n
+           else\n
+             arr.push(dict[\'message\']);\n
+    });\n
+\n
+    elem.html(arr.join(\'<br />\'));\n
+  }\n
+\n
+  function getErrorWarningMessageDictHandler(data) {\n
+    error_warning_dict = $.parseJSON(data);\n
+\n
+    if(error_element.length) {\n
+      error_arr.length = 0;\n
+      fillMessageElementAndArray(error_warning_dict[\'error_list\'],\n
+                                 error_element, error_arr);\n
+    }\n
+\n
+    if(warning_element.length) {\n
+      warning_arr.length = 0;\n
+      fillMessageElementAndArray(error_warning_dict[\'warning_list\'],\n
+                                 warning_element, warning_arr);\n
+    }\n
+  }\n
+\n
+  function updateErrorWarningMessageDivWithJump() {\n
+    if(!error_element.length && !warning_element.length)\n
+      return;\n
+\n
+    $.ajax({type: \'GET\',\n
+            async: false,\n
+            url: \'Component_getErrorWarningMessageDictAsJson\',\n
+            success: getErrorWarningMessageDictHandler});\n
   }\n
 \n
   window.onload = function() {\n
@@ -387,6 +423,13 @@
      */\n
     if($$(\'div.actions > button.save[name=Base_edit:method]\').length)\n
       $$(\'${save_button}\').appendTo($(\'#${div_id}\'));\n
+\n
+    error_element = $$(\'div.input > .error\');\n
+    error_arr = [];\n
+    warning_element = $$(\'div.input > .warning\');\n
+    warning_arr = [];\n
+\n
+    updateErrorWarningMessageDivWithJump();\n
 \n
     if(typeof document.cancelFullScreen != \'undefined\' ||\n
        (typeof document.mozFullScreenEnabled != \'undefined\' && document.mozFullScreenEnabled) ||\n

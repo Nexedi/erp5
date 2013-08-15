@@ -1437,7 +1437,7 @@ class _TestZodbComponent(SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component = self._newComponent(valid_reference,
-                                     'def foobar(*args, **kwargs):\n  return 42')
+                                     'def foobar():\n  return 42')
 
       component.validate()
       self.tic()
@@ -1448,7 +1448,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getReference(), valid_reference)
     self.assertEquals(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
@@ -1456,7 +1458,6 @@ class _TestZodbComponent(SecurityTestCase):
     # Check that checkConsistency returns the proper error message for the
     # following reserved keywords
     invalid_reference_dict = {
-      None: ComponentMixin._message_reference_not_set,
       # '_version' could clash with Version package name
       'ReferenceReservedKeywords_version': ComponentMixin._message_invalid_reference,
       # Besides of clashing with protected attributes/methods, it does not
@@ -1479,10 +1480,11 @@ class _TestZodbComponent(SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEquals(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertEquals(error_message, error_list[0])
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        [error_message])
+      self.assertEquals(component.getTextContentErrorMessageList(), [])
+      self.assertEquals(component.getTextContentWarningMessageList(), [])
       self.assertEquals(component.getReference(), invalid_reference)
       self.assertEquals(component.getReference(validated_only=True), valid_reference)
       self._component_tool.reset(force=True,
@@ -1502,7 +1504,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getReference(), valid_reference)
     self.assertEquals(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
@@ -1521,7 +1525,7 @@ class _TestZodbComponent(SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component = self._newComponent(reference,
-                                     'def foobar(*args, **kwargs):\n  return 42',
+                                     'def foobar():\n  return 42',
                                      valid_version)
 
       component.validate()
@@ -1533,7 +1537,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getVersion(), valid_version)
     self.assertEquals(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
@@ -1557,10 +1563,11 @@ class _TestZodbComponent(SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEquals(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertEquals(error_message, error_list[0])
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        [error_message])
+      self.assertEquals(component.getTextContentErrorMessageList(), [])
+      self.assertEquals(component.getTextContentWarningMessageList(), [])
       self.assertEquals(component.getVersion(), invalid_version)
       self.assertEquals(component.getVersion(validated_only=True), valid_version)
       self._component_tool.reset(force=True,
@@ -1580,7 +1587,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getVersion(), valid_version)
     self.assertEquals(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
@@ -1594,10 +1603,35 @@ class _TestZodbComponent(SecurityTestCase):
     validated but not when an error was encountered (implemented in
     dynamic_class_generation_interaction_workflow)
     """
-    valid_code = 'def foobar(*args, **kwargs):\n  return 42'
+    # Error/Warning properties must be set everytime the source code is
+    # modified, even in Draft state
+    component = self._newComponent('TestComponentWithSyntaxError', 'print "ok"')
+    self.tic()
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
+
+    component.setTextContent('import sys')
+    self.tic()
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(),
+                      ["W:  1, 0: Unused import sys (unused-import)"])
+
+    component.setTextContent('import unexistent_module')
+    self.tic()
+    self.assertEquals(
+      [m.getMessage().translate() for m in component.checkConsistency()],
+      ["Error in Source Code: F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+    self.assertEquals(component.getTextContentErrorMessageList(),
+                      ["F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+    self.assertEquals(component.getTextContentWarningMessageList(),
+                      ["W:  1, 0: Unused import unexistent_module (unused-import)"])
+
+    valid_code = 'def foobar():\n  return 42'
     ComponentTool.reset = assertResetCalled
     try:
-      component = self._newComponent('TestComponentWithSyntaxError', valid_code)
+      component.setTextContent(valid_code)
       component.validate()
       self.tic()
 
@@ -1607,7 +1641,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
@@ -1615,13 +1651,27 @@ class _TestZodbComponent(SecurityTestCase):
     # Check that checkConsistency returns the proper error message for the
     # following Python errors
     invalid_code_dict = (
-      (None, ComponentMixin._message_text_content_not_set),
-      ('def foobar(*args, **kwargs)\n  return 42', 'Syntax error in source code:'),
+      (None,
+       # There could be no source code until validated, so checkConsistency()
+       # is used instead
+       [ComponentMixin._message_text_content_not_set],
+       [],
+       []),
+      ('def foobar(*args, **kwargs)\n  return 42',
+       ["Error in Source Code: E:  1, 0: invalid syntax (syntax-error)"],
+       ["E:  1, 0: invalid syntax (syntax-error)"],
+       []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
-      ('foobar', 'Source code:'))
+      ('foobar',
+       ["Error in Source Code: E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
+       ["E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
+       ["W:  1, 0: Statement seems to have no effect (pointless-statement)"]))
 
-    for invalid_code, error_message in invalid_code_dict:
+    for (invalid_code,
+         check_consistency_list,
+         error_list,
+         warning_list) in invalid_code_dict:
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:
@@ -1632,10 +1682,12 @@ class _TestZodbComponent(SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEqual(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertTrue(error_list[0].startswith(error_message))
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        check_consistency_list)
+      self.assertEquals(component.getTextContentErrorMessageList(), error_list)
+      self.assertEquals(component.getTextContentWarningMessageList(), warning_list)
+
       self.assertEquals(component.getTextContent(), invalid_code)
       self.assertEquals(component.getTextContent(validated_only=True), valid_code)
       self._component_tool.reset(force=True,
@@ -1655,7 +1707,9 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')

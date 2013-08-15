@@ -50,16 +50,40 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].modify()\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+import re\n
+message_re = re.compile(\'[CRWEF]:\\s*(?P<line>\\d+),\\s*(?P<column>\\d+):\\s*.*\')\n
+error_warning_dict = {\'error_list\': [], \'warning_list\': []}\n
+\n
+def getParsedMessageList(message_list):\n
+  result_list = []\n
+  for message in message_list:\n
+    line = None\n
+    column = None\n
+    message_obj = message_re.match(message)\n
+    if message_obj:\n
+      line = int(message_obj.group(\'line\'))\n
+      column = int(message_obj.group(\'column\'))\n
+\n
+    result_list.append({\'line\': line, \'column\': column, \'message\': message})\n
+\n
+  return result_list\n
+\n
+import json\n
+return json.dumps({\'error_list\': getParsedMessageList(context.getTextContentErrorMessageList()),\n
+                   \'warning_list\': getParsedMessageList(context.getTextContentWarningMessageList())})\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Component_setModifiedState</string> </value>
+            <value> <string>Component_getErrorWarningMessageDictAsJson</string> </value>
         </item>
       </dictionary>
     </pickle>

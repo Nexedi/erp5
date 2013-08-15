@@ -1,3 +1,6 @@
+2013-08-15 arnaud.fontaine
+* ZODB Components: pylint is now used and reports warnings. Also, allow to jump to error line/column by clicking on the error/warning message.
+
 2013-08-13 arnaud.fontaine
 * ZODB Components: Force resize of Ace Editor on maximize/fullscreen. Otherwise, without passing the new height/width to resize() and without force, text is not visible when switching to maximize/fullscreen mode.
 
