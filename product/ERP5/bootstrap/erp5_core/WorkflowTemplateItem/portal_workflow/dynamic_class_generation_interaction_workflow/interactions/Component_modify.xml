@@ -34,7 +34,7 @@
             <key> <string>before_commit_script_name</string> </key>
             <value>
               <list>
-                <string>Component_validateAfterModified</string>
+                <string>Component_checkSourceCodeAndValidateAfterModified</string>
               </list>
             </value>
         </item>
@@ -45,7 +45,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -77,10 +77,16 @@
             </value>
         </item>
         <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>script_name</string> </key>
             <value>
               <list>
-                <string>Component_setModifiedState</string>
+                <string>Component_setModifiedStateIfValidated</string>
               </list>
             </value>
         </item>
@@ -95,34 +101,6 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: here.getValidationState() in (\'validated\', \'modified\')</string> </value>
         </item>
       </dictionary>
     </pickle>

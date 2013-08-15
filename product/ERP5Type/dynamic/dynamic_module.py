@@ -31,6 +31,13 @@ from types import ModuleType
 from . import aq_method_lock
 import sys
 
+class PackageType(ModuleType):
+  """
+  If a module has a __path__attribute, it will be treated as a package
+  (PEP 302), this is required for Introspection (for example pylint)
+  """
+  __path__ = []
+
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
   # it's useful to have such a generic utility
@@ -95,7 +102,7 @@ def initializeDynamicModules():
     erp5.component.test:
       holds Live Test modules previously found in bt5 in $INSTANCE_HOME/test
   """
-  erp5 = ModuleType("erp5")
+  erp5 = PackageType("erp5")
   sys.modules["erp5"] = erp5
 
   # Document classes without physical import path
@@ -106,6 +113,7 @@ def initializeDynamicModules():
   from accessor_holder import AccessorHolderType, AccessorHolderModuleType
 
   erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
+  erp5.accessor_holder.__path__ = []
   sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
 
   erp5.accessor_holder.property_sheet = \
@@ -127,7 +135,7 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
-  erp5.component = ModuleType("erp5.component")
+  erp5.component = PackageType("erp5.component")
   sys.modules["erp5.component"] = erp5.component
 
   from component_package import ComponentDynamicPackage

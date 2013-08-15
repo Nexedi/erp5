@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].checkConsistencyAndValidate()\n
+            <value> <string>obj = state_change[\'object\']\n
+if obj.getValidationState() == \'validated\':\n
+  obj.modify()\n
 </string> </value>
         </item>
         <item>
@@ -59,7 +61,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Component_validateAfterModified</string> </value>
+            <value> <string>Component_setModifiedStateIfValidated</string> </value>
         </item>
       </dictionary>
     </pickle>

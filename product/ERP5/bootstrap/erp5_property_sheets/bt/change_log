@@ -1,3 +1,6 @@
+2013-08-15 arnaud.fontaine
+* ZODB Components: Add error and warning property for Components.
+
 2012-09-04 arnaud.fontaine
 * message_attribute_not_match was incorrectly renamed to message_attribute_match when migrating StringAttributeMatch constraint from filesystem to ZODB.
 
