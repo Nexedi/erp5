@@ -30,6 +30,7 @@
 from types import ModuleType
 from . import aq_method_lock
 import sys
+import imp
 
 class PackageType(ModuleType):
   """
@@ -103,24 +104,18 @@ def initializeDynamicModules():
       holds Live Test modules previously found in bt5 in $INSTANCE_HOME/test
   """
   erp5 = PackageType("erp5")
-  sys.modules["erp5"] = erp5
 
   # Document classes without physical import path
   erp5.document = ModuleType("erp5.document")
-  sys.modules["erp5.document"] = erp5.document
 
   # Portal types as classes
   from accessor_holder import AccessorHolderType, AccessorHolderModuleType
 
   erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
   erp5.accessor_holder.__path__ = []
-  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
 
   erp5.accessor_holder.property_sheet = \
       AccessorHolderModuleType("erp5.accessor_holder.property_sheet")
-
-  sys.modules["erp5.accessor_holder.property_sheet"] = \
-      erp5.accessor_holder.property_sheet
 
   erp5.accessor_holder.portal_type = registerDynamicModule(
     'erp5.accessor_holder.portal_type',
@@ -136,15 +131,27 @@ def initializeDynamicModules():
 
   # ZODB Components
   erp5.component = PackageType("erp5.component")
-  sys.modules["erp5.component"] = erp5.component
 
   from component_package import ComponentDynamicPackage
 
-  erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
-                                                     'Extension Component')
+  # Prevent other threads to create erp5.* packages and modules or seeing them
+  # incompletely
+  imp.acquire_lock()
+  try:
+    sys.modules["erp5"] = erp5
+    sys.modules["erp5.document"] = erp5.document
+    sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
+    sys.modules["erp5.accessor_holder.property_sheet"] = \
+        erp5.accessor_holder.property_sheet
+    sys.modules["erp5.component"] = erp5.component
 
-  erp5.component.document = ComponentDynamicPackage('erp5.component.document',
-                                                    'Document Component')
+    erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
+                                                       'Extension Component')
 
-  erp5.component.test = ComponentDynamicPackage('erp5.component.test',
-                                                'Test Component')
+    erp5.component.document = ComponentDynamicPackage('erp5.component.document',
+                                                      'Document Component')
+
+    erp5.component.test = ComponentDynamicPackage('erp5.component.test',
+                                                  'Test Component')
+  finally:
+    imp.release_lock()
