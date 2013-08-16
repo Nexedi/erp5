@@ -171,8 +171,8 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
   else:
     comment = ''
 
-  subject = '%s r%s %s: %s Tests, %s Errors, %s Failures, %s Skips' % (
-    self.getTitle(), self.getIntIndex(), comment, self.getProperty('all_tests'),
+  subject = '%s %s: %s Tests, %s Errors, %s Failures, %s Skips' % (
+    self.getTitle(), comment, self.getProperty('all_tests'),
     self.getProperty('errors'), self.getProperty('failures'),
     self.getProperty('skips'))
 
