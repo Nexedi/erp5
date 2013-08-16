@@ -83,6 +83,10 @@ class PDFDocument(Image):
       index is 0 based)
     """
     from pyPdf import PdfFileWriter, PdfFileReader, pdf
+    if not watermark_data:
+      raise ValueError("watermark_data cannot not be empty")
+    if not self.hasData():
+      raise ValueError("Cannot watermark an empty document")
     self_reader = PdfFileReader(StringIO(self.getData()))
     watermark_reader = PdfFileReader(StringIO(watermark_data))
     watermark_page_count = watermark_reader.getNumPages()
