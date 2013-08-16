@@ -143,8 +143,8 @@ class Alarm(XMLObject, PeriodicityMixin):
         except AttributeError:
           # XXX guess presence of *args and **kw
           name_list = func_code.co_varnames[func_code.co_argcount:]
-          has_args = int(name_list and name_list[0] == 'args')
-          has_kw = int(len(name_list) > has_args and
+          has_args = bool(name_list and name_list[0] == 'args')
+          has_kw = bool(len(name_list) > has_args and
                        name_list[has_args] == 'kw')
         name_list = func_code.co_varnames[:func_code.co_argcount]
         if 'params' in name_list or has_kw:
