@@ -3401,6 +3401,9 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
   def testBackwardCompatibility(self):
     self.getRule(reference='default_delivery_rule').validate()
 
+    currency = self.portal.currency_module.newContent(
+                      portal_type='Currency',)
+
     resource = self.portal.product_module.newContent(
                       portal_type='Product',
                       quantity_unit_list=('mass/gram',
@@ -3411,7 +3414,7 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
                       portal_type='Purchase Packing List',
                       specialise=self.business_process,
                       start_date='2010-01-26',
-                      price_currency='currency_module/EUR',
+                      price_currency_value=currency,
                       destination_value=node,
                       destination_section_value=node)
     delivery.newContent(portal_type='Purchase Packing List Line',
