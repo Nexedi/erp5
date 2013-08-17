@@ -237,4 +237,12 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
     output = StringIO()
   output.write("**Running Live Test:\n")
   ZopeTestCase._print = output.write
-  result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+
+  # Test may login/logout with different users, so ensure that at the end the
+  # original SecurityManager is restored
+  from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
+  sm = getSecurityManager()
+  try:
+    result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+  finally:
+    setSecurityManager(sm)
