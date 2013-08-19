@@ -1378,7 +1378,9 @@ class TemplateTool (BaseTool):
       imported_bt5 = self.download(url = download_url, id = id)
       bt_title = imported_bt5.getTitle()
 
-      if not reinstall:
+      if reinstall:
+        install_kw = None
+      else:
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
         if (previous_bt5 is not None) and only_newer:
           try:
@@ -1429,11 +1431,8 @@ class TemplateTool (BaseTool):
       if update_catalog is _MARKER and install_kw != {}:
         update_catalog = imported_bt5.isCatalogUpdatable()
 
-      if reinstall:
-        imported_bt5.install(force=True,update_catalog=update_catalog)
-      else:
-        imported_bt5.install(object_to_update=install_kw,
-                             update_catalog=update_catalog)
+      imported_bt5.install(object_to_update=install_kw,
+                           update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
@@ -1525,7 +1524,7 @@ class TemplateTool (BaseTool):
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
         if not(dry_run):
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
-          self.updateBusinessTemplateFromUrl(bt5_url)
+          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall)
       if delete_orphaned:
         if keep_bt5_id_set is None:
           keep_bt5_id_set = set()
