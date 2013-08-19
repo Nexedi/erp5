@@ -5158,7 +5158,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return modified_object_list
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
-                 update_catalog=_MARKER, **kw):
+                 update_catalog=False, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update

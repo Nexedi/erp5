@@ -1341,7 +1341,7 @@ class TemplateTool (BaseTool):
                                          keep_original_list=None,
                                          before_triggered_bt5_id_list=None,
                                          after_triggered_bt5_id_list=None,
-                                         update_catalog=_MARKER,
+                                         update_catalog=False,
                                          reinstall=False,
                                          active_process=None,
                                          force_keep_list=None,
@@ -1427,9 +1427,6 @@ class TemplateTool (BaseTool):
       for before_triggered_bt5_id in before_triggered_bt5_id_list:
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
-
-      if update_catalog is _MARKER and install_kw != {}:
-        update_catalog = imported_bt5.isCatalogUpdatable()
 
       imported_bt5.install(object_to_update=install_kw,
                            update_catalog=update_catalog)
