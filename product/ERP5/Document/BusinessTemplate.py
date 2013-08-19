@@ -4266,11 +4266,9 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       setattr(catalog, self.key_list_attr, catalog_key_list)
 
   def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
-    catalog_key_list = list(catalog_key_list) # copy
-    for key in new_key_list:
-      if key not in catalog_key_list:
-        catalog_key_list.append(key)
-    return catalog_key_list
+    catalog_key_set = set(catalog_key_list) # copy
+    catalog_key_set.update(new_key_list)
+    return sorted(catalog_key_set)
 
   def uninstall(self, context, **kw):
     catalog = _getCatalogValue(self)
