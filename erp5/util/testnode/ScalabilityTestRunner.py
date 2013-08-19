@@ -71,7 +71,9 @@ class ScalabilityTestRunner():
         slapos_url = self.testnode.config['server_url']
     except:
       slapos_url = self.testnode.config['server_url']
-      
+
+    self.log("SlapOS Master url is: %s" %slapos_url)
+    
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
                                         key, certificate, slapos_url, self.testnode.config)
     self.slapos_communicator = None
@@ -323,7 +325,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
         self._createInstance(self.reachable_profile, configuration_list[0],
-                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite_title)
         self.log("Scalability instance requested.")
       except:
         self.log("Unable to launch instance")
@@ -354,7 +356,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self._waitInstance(self.instance_title, 'stopped')
         # Update instance XML configuration 
         self._updateInstanceXML(configuration, self.instance_title,
-                      node_test_suite.test_result, node_test_suite.test_suite)
+                      node_test_suite.test_result, node_test_suite.test_suite_title)
         self._waitInstance(self.instance_title, 'started')
         # Start instance
         self.slapos_controler.startInstance(self.instance_title)
