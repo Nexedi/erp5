@@ -323,7 +323,7 @@
         msg_elem.appendTo($(\'#${div_id}\'));\n
 \n
         function animateMessageComplete() {\n
-          if(!error_arr.length)\n
+          if(!error_arr.length && !warning_arr.length)\n
             $(this).remove();\n
           else\n
             $(this).bind(\'click\', function() { $(this).remove() });\n
