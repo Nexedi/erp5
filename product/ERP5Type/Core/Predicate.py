@@ -99,6 +99,11 @@ class Predicate(XMLObject):
         are strictly a member of tested categories
     """
     self = self.asPredicate()
+    if self is None:
+      # asPredicate returned None, so this predicate never applies.
+      # But if we reach this it is because catalog is not up to date.
+      return False
+
     result = 1
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = PersistentMapping()
