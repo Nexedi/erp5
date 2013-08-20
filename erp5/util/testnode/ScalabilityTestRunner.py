@@ -63,19 +63,31 @@ class ScalabilityTestRunner():
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
-    # Get Slapos Master Url
-    slapos_url = ''
-    try:
-      slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
-      if not slapos_url:
-        slapos_url = self.testnode.config['server_url']
-    except:
-      slapos_url = self.testnode.config['server_url']
 
-    self.log("SlapOS Master url is: %s" %slapos_url)
+    # Get Slapos Master Url
+    self.slapos_url = ''
+    try:
+      self.slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
+      if not self.slapos_url:
+        self.slapos_url = self.testnode.config['server_url']
+    except:
+      self.slapos_url = self.testnode.config['server_url']
+    
+    # Get Slapos Master url used for api rest (using hateoas)
+    self.slapos_api_rest_url = ""
+    try:
+      self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
+      if not self.slapos_api_rest_url:
+        self.slapos_api_rest_url = self.testnode.config['hateoas_slapos_master_url']
+    except:
+      self.slapos_api_rest_url = self.testnode.config['hateoas_slapos_master_url']
+
+
+
+    self.log("SlapOS Master url is: %s" %self.slapos_url)
     
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
-                                        key, certificate, slapos_url, self.testnode.config)
+                                        key, certificate, self.slapos_url, self.testnode.config)
     self.slapos_communicator = None
     self.remaining_software_installation_dict = {}
     
@@ -250,7 +262,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
                                   self.cert_path,
                                   self.key_path,
                                   self.log,
-                                  self.testnode.config['hateoas_slapos_master_url'])
+                                  self.slapos_api_rest_url)
     # Only master testnode must order software installation
     if self.testnode.test_suite_portal.isMasterTestnode(
             self.testnode.config['test_node_title']):

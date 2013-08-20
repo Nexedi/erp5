@@ -575,6 +575,13 @@ class TaskDistributor(RPCRetry):
         Returns the url of slapos master related to the distributor
       """
       return self._retryRPC('getSlaposUrl')
+      
+    def getSlaposHateoasUrl(self):
+      """
+        Returns the url of API REST using hateoas of
+        slapos master related to the distributor
+      """
+      return self._retryRPC('getSlaposHateoasUrl')
 
 
 class DummyTaskDistributionTool(object):
