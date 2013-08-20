@@ -1,3 +1,6 @@
+2013-08-20 arnaud.fontaine
+* ZODB Components: ID and Reference may be quite long so make fields wider in Component_view.
+
 2013-08-15 arnaud.fontaine
 * ZODB Components: Add pylint support and use a property for error message rather than workflow variable (error messages are now reported everytime the source code is changed).
 
