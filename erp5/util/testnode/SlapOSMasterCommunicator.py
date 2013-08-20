@@ -144,6 +144,9 @@ class SlapOSMasterCommunicator(object):
     Return True if instance status and instance news text ~looks corresponding.
     ( use the matching of 'correctly' and 'Instance' and status )
     """
+    # XXX: SlapOS Master doesn't store any "news" about slave instances. Assume true.
+    if self._curl(instance_link)['slave']:
+      return True
     text = self.getNewsFromInstanceLink(instance_link)['news'][0]['text']
     return ('Instance' in text) and ('correctly' in text) and (status in text)
 
