@@ -360,6 +360,9 @@ from the distributor.")
                working_directory=self.config['working_directory'],
                log_directory=self.config['log_directory'])
             node_test_suite.edit(**test_suite)
+            # XXX: temporary hack to prevent empty test_suite
+            if not node_test_suite.get('test_suite'):
+              node_test_suite.edit(test_suite='')
             run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
