@@ -7410,20 +7410,38 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence['current_bt'].setProperty(self.template_property,
                                        sequence['document_id'])
 
-    sequence['current_bt'].setTemplateKeepWorkflowPathList(
+    sequence['current_bt'].setTemplateKeepLastWorkflowHistoryOnlyPathList(
       'portal_components/' + sequence['document_id'])
+
+  def stepCheckZodbDocumentWorkflowHistoryUnchanged(self, sequence=None, **kw):
+    component = getattr(self.getPortalObject().portal_components,
+                        sequence['document_id'], None)
+
+    self.assertNotEqual(component, None)
+    self.assertEquals(sorted(list(component.workflow_history)),
+                      ['component_validation_workflow', 'edit_workflow'])
+    self.failIf(len(component.workflow_history['component_validation_workflow']) <= 1)
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.getPortalObject().portal_components.deleteContent(
       sequence['document_id'])
 
   def stepCheckZodbDocumentExistsAndValidated(self, sequence=None, **kw):
-    self.assertHasAttribute(self.getPortalObject().portal_components,
-                            sequence['document_id'])
+    component = getattr(self.getPortalObject().portal_components,
+                        sequence['document_id'], None)
 
-    self.assertEquals(getattr(self.getPortalObject().portal_components,
-                              sequence['document_id']).getValidationState(),
-                      'validated')
+    self.assertNotEqual(component, None)
+    self.assertEquals(component.getValidationState(), 'validated')
+
+    # Only the last Workflow History should have been exported
+    self.assertEquals(list(component.workflow_history),
+                      ['component_validation_workflow'])
+
+    validation_state_only_list = []
+    for validation_dict in list(component.workflow_history['component_validation_workflow']):
+      validation_state_only_list.append(validation_dict.get('validation_state'))
+
+    self.assertEquals(validation_state_only_list, ['validated'])
 
   def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
     component_tool = self.getPortalObject().portal_components
@@ -7479,6 +7497,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckForkedMigrationExport \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7544,6 +7563,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckForkedMigrationExport \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7592,7 +7612,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     component_id = '%s.erp5.%s' % (self.component_module,
                                    sequence.get('document_title'))
 
-    self.assertEquals(bt.getTemplateKeepWorkflowPathList(),
+    self.assertEquals(bt.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
                       ['portal_components/' + component_id])
 
     self.assertEquals(bt.getProperty(self.template_property),
@@ -7657,6 +7677,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        RemoveBusinessTemplate \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        Tic \
                        ImportBusinessTemplate \
@@ -7709,6 +7730,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
       CheckNotInstalledInstallationState
       SaveBusinessTemplate
       RemoveBusinessTemplate
+      CheckZodbDocumentWorkflowHistoryUnchanged
       RemoveZodbDocument
       CheckDocumentExists
       CheckZodbDocumentRemoved
