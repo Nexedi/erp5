@@ -218,6 +218,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     start_time = time.time()
     while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
          and (max_time > (time.time()-start_time))):
+      self.log("Instance(s) not in %s state yet." % state)
       time.sleep(15)
     if (time.time()-start_time) > max_time:
       raise ValueError("Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time)))
