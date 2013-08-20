@@ -50,9 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getProperty(\'validation_state\') in (\'invalidated\', \'deleted\'):\n
-  # return a predicate that will never apply\n
-  return context.generatePredicate(criterion_property_list=(\'uid\',))\n
+            <value> <string>if getattr(context, \'getValidationState\', lambda: "")() in (\'invalidated\', \'deleted\'):\n
+  return None\n
 \n
 base_category_tuple = (\'resource\', \'price_currency\')\n
 \n

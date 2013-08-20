@@ -300,6 +300,35 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     # using the supply line inside trade condition
     self.assertEquals(2, line.getPrice())
 
+  def test_supply_line_in_invalidated_trade_condition_does_not_apply(self):
+    # supply lines from supply modules
+    other_supply = self.portal.getDefaultModule(self.supply_type
+                             ).newContent(portal_type=self.supply_type,
+                                          resource_value=self.resource,
+                                          source_section_value=self.vendor,
+                                          destination_section_value=self.client)
+    other_supply_line = other_supply.newContent(
+                                    portal_type=self.supply_line_type,
+                                    base_price=1)
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.resource,
+                                    base_price=2)
+    self.order.setSpecialiseValue(self.trade_condition)
+    self.order.setSourceSectionValue(self.vendor)
+    self.order.setDestinationSectionValue(self.client)
+    self.tic()
+
+    self.trade_condition.validate()
+    self.trade_condition.invalidate()
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.resource,
+                                 quantity=1)
+    # not using the supply line inside trade condition
+    self.assertEquals(1, line.getPrice())
+
   # TODO: move to testSupplyLine ! (which does not exist yet)
   def test_supply_line_section(self):
     # if a supply lines defines a section, it has priority over supply lines
