@@ -75,12 +75,7 @@ class ScalabilityTestRunner():
     
     # Get Slapos Master url used for api rest (using hateoas)
     self.slapos_api_rest_url = ""
-    try:
-      self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
-      if not self.slapos_api_rest_url:
-        self.slapos_api_rest_url = self.testnode.config['hateoas_slapos_master_url']
-    except:
-      self.slapos_api_rest_url = self.testnode.config['hateoas_slapos_master_url']
+    self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
 
 
 
