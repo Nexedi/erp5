@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -91,7 +97,7 @@ x_max = xs[stats.test.length-1];\n
 var n = stats.test.length;\n
 // compute and assign value to display\n
 for (var i=0; i<n; i++) {\n
-  stats.test[i]["value"] = stats.test[i].created_docs / stats.test[i].duration;\n
+  stats.test[i]["value"] = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
 }\n
 // Lagrange interpolation\n
 var L=[];\n
@@ -148,7 +154,7 @@ var y = d3.scale.linear()\n
 function getMaxCoef(){\n
   var max_coef = 0;\n
   for(var i=0; i<stats.test.length; i++){\n
-    var coef = 1.0*(stats.test[i].created_docs / stats.test[i].duration) / xs[i];\n
+    var coef = 1.0*(3600 * stats.test[i].created_docs / stats.test[i].duration) / xs[i];\n
     if (coef > max_coef){\n
       max_coef = coef;\n
     }\n
@@ -170,7 +176,7 @@ var commasFormatter = d3.format(".2s")\n
 var yAxis = d3.svg.axis()\n
     .scale(y)\n
     .orient("left")\n
-    .tickFormat(function(d) { return commasFormatter(d) + "k"; });\n
+    .tickFormat(function(d) { return commasFormatter(d); });\n
 \n
 var svg = d3.select("body").append("svg")\n
     .attr("width", width + margin.left + margin.right)\n
