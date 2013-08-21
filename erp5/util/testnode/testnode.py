@@ -361,7 +361,7 @@ from the distributor.")
                log_directory=self.config['log_directory'])
             node_test_suite.edit(**test_suite)
             # XXX: temporary hack to prevent empty test_suite
-            if not node_test_suite.get('test_suite'):
+            if not hasattr(node_test_suite, 'test_suite'):
               node_test_suite.edit(test_suite='')
             run_software = True
             # kill processes from previous loop if any
