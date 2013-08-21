@@ -46,7 +46,7 @@ import string, re
 from time import time
 from random import random
 from urlparse import urlsplit, urlunsplit
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
 import warnings
@@ -284,9 +284,14 @@ class SelectionTool( BaseTool, SimpleItem ):
       if anonymous_uid is not None:
         self.REQUEST.response.setCookie('anonymous_uid', anonymous_uid,
                                         path='/')
-      assert selection_object is None or selection_name == selection_object.name
 
-      if self.getSelectionFor(selection_name) != selection_object:
+      if not (selection_object is None or
+              selection_name == selection_object.name):
+        LOG('SelectionTool', WARNING,
+            "Selection not set: new Selection name ('%s') differs from existing one ('%s')" % \
+            (selection_name,
+             selection_object.name))
+      elif self.getSelectionFor(selection_name) != selection_object:
         self._setSelectionToContainer(selection_name, selection_object)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
