@@ -41,9 +41,8 @@ class TestSupplyMixin:
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade')
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
-    portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.domain_tool = self.getDomainTool()
     self.catalog_tool = self.getCatalogTool()
@@ -63,7 +62,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   """
     Test Supplies usage
   """
-  run_all_test = 1
 
   supply_portal_type = 'Sale Supply'
   supply_line_portal_type = 'Sale Supply Line'
@@ -71,9 +69,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   generic_supply_line_portal_type = 'Supply Line'
   generic_supply_cell_portal_type = 'Supply Cell'
   predicate_portal_type = 'Predicate'
-
-  def getTitle(self):
-    return "Sale Supply"
 
   @reindex
   def _makeMovement(self, **kw):
@@ -109,12 +104,11 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply_cell.edit(**kw)
     return supply_cell
 
-  def test_01_MovementAndSupplyModification(self, quiet=0, run=run_all_test):
+  def test_MovementAndSupplyModification(self):
     """
       Check that moving timeframe of supply
       and then setting movement into that timeframe works.
     """
-    if not run: return
     
     # movement is in middle of timeframe...
     movement = self._makeMovement(start_date='2009/01/15')
@@ -164,13 +158,11 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertSameSet(res_line, [supply_line])
     self.assertSameSet(res_cell, [supply_cell])
 
-  def test_02_checkLineIsReindexedOnSupplyChange(self, quiet=0, run=run_all_test):
+  def test_checkLineIsReindexedOnSupplyChange(self):
     """
       Check that Supply Line is properly reindexed (in predicate table)
-      when date is change on Supply.
+      when date is changed on Supply.
     """
-    if not run: return
-    
     original_date = DateTime().earliestTime() # lower precision of date
     new_date = DateTime(original_date + 10)
 
@@ -194,20 +186,17 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.tic()
     
     # ...and check supply line
-    kw['predicate.uid'] = supply_line.getUid()
     result = self.catalog_tool(**kw)
     self.assertEquals(1, len(result) )
     result = result[0]
     self.assertEquals(result.start_date_range_min, new_date.toZone('UTC'))
 
 
-  def test_03_SupplyLineApplied(self, quiet=0, run=run_all_test):
+  def test_SupplyLineApplied(self):
     """
       Test supply line being found.
       XXX: This tests fails for second run due to bug #1248.
     """
-    if not run: return
-
     portal = self.portal
     original_date = DateTime().earliestTime()
 
@@ -283,7 +272,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self._testSubContentReindexing(generic_supply_line, [generic_supply_cell,
       generic_supply_predicate])
 
-  def testSupplyCellPropertyAndAccessor(self, quiet=0, run=run_all_test):
+  def testSupplyCellPropertyAndAccessor(self):
     """
       Check that getter/setter and get/setProperty methods works the same
       on supply cell. This test is added due to a bug introduced by revision
@@ -335,27 +324,18 @@ class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
   """
-  run_all_test = 1
-
   supply_portal_type = 'Purchase Supply'
   supply_line_portal_type = 'Purchase Supply Line'
   supply_cell_portal_type = 'Purchase Supply Cell'
-
-  def getTitle(self):
-    return "Purchase Supply"
 
 class TestInternalSupply(TestSaleSupply):
   """
     Test Internal Supplies usage
   """
-  run_all_test = 1
-
   supply_portal_type = 'Internal Supply'
   supply_line_portal_type = 'Internal Supply Line'
   supply_cell_portal_type = 'Internal Supply Cell'
 
-  def getTitle(self):
-    return "Internal Supply"
 
 def test_suite():
   suite = unittest.TestSuite()
