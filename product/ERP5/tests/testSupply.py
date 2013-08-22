@@ -319,6 +319,51 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='orange')), 0)
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='banana')), 1)
 
+  def test_getBaseUnitPrice(self):
+    currency = self.portal.currency_module.newContent(
+      portal_type='Currency',
+      base_unit_quantity=0.01)
+    product = self.portal.product_module.newContent(portal_type="Product",
+                                                    title=self.id())
+    supply = self._makeSupply()
+    supply_line = self._makeSupplyLine(supply, resource_value=product)
+    another_supply_line = self._makeSupplyLine(supply, resource_value=product)
+
+    # A new supply line has no no base unit price
+    self.assertEqual(None, supply_line.getBaseUnitPrice())
+
+    movement = self.portal.sale_order_module.newContent(
+        portal_type='Sale Order',
+      ).newContent(
+        portal_type='Sale Order Line',
+        resource_value=product)
+
+    # A new movement has no no base unit price
+    self.assertEqual(None, movement.getBaseUnitPrice())
+
+    # When a price currency is set, the price precision uses the precision from
+    # price currency
+    movement.setPriceCurrencyValue(currency)
+    self.tic()
+
+    self.assertEqual(None, movement.getBaseUnitPrice())
+    self.assertEqual(2, movement.getPricePrecision())
+
+    # If base unit price is set on an applicable supply line, then the base
+    # unit price of this movement will use the one from the supply line
+    supply_line.setBaseUnitPrice(0.001)
+    self.assertEqual(3, supply_line.getPricePrecision())
+    self.tic()
+
+    self.assertEqual(0.001, movement.getBaseUnitPrice())
+    self.assertEqual(3, movement.getPricePrecision())
+
+    # Base unit pice have been copied on the movement
+    self.assertTrue(movement.hasBaseUnitPrice())
+
+    # Supply lines does not lookup base unit price from other supply lines
+    self.assertEqual(None, another_supply_line.getBaseUnitPrice())
+
 
 class TestPurchaseSupply(TestSaleSupply):
   """
