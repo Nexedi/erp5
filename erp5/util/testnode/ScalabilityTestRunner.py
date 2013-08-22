@@ -74,12 +74,10 @@ class ScalabilityTestRunner():
       self.slapos_url = self.testnode.config['server_url']
     
     # Get Slapos Master url used for api rest (using hateoas)
-    self.slapos_api_rest_url = ""
     self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
 
-
-
     self.log("SlapOS Master url is: %s" %self.slapos_url)
+    self.log("SlapOS Master hateoas url is: %s" %self.slapos_api_rest_url)
     
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
                                         key, certificate, self.slapos_url, self.testnode.config)
@@ -415,10 +413,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         error = ValueError("Test case is in an undeterminated state")
         break;
 
-    # Stop and Destroy instance
+    # Stop instance
     self.slapos_controler.stopInstance(self.instance_title)
     self._waitInstance(self.instance_title, 'stopped')
-    self.slapos_controler.destroyInstance(self.instance_title)
+    #self.slapos_controler.destroyInstance(self.instance_title)
     
     if error:
       test_result_proxy.fail()
