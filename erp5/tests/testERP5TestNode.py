@@ -496,6 +496,8 @@ revision = %(revision2)s
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
       return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
@@ -569,6 +571,7 @@ revision = %(revision2)s
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_getSlaposUrl = TaskDistributor.getSlaposUrl
+      original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
       original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_updateInstanceXML = RunnerClass._updateInstanceXML
@@ -578,6 +581,7 @@ revision = %(revision2)s
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
       TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       RunnerClass._updateInstanceXML = doNothing
@@ -610,6 +614,7 @@ revision = %(revision2)s
       TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = original_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
       TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       RunnerClass._updateInstanceXML = original_updateInstanceXML
@@ -672,6 +677,9 @@ revision = %(revision2)s
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
+      return "Certificate"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
       return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
 : [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
@@ -731,6 +739,7 @@ revision = %(revision2)s
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
       original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
       original_getSlaposUrl = TaskDistributor.getSlaposUrl
+      original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
       original_generateConfiguration = TaskDistributor.generateConfiguration
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_supply = SlapOSControler.supply
@@ -742,6 +751,7 @@ revision = %(revision2)s
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
       TaskDistributor.generateConfiguration = patch_generateConfiguration
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       SlapOSControler.supply = doNothing
@@ -774,6 +784,7 @@ revision = %(revision2)s
       TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
       TaskDistributor.getSlaposUrl = original_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
       TaskDistributor.generateConfiguration = original_generateConfiguration
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       SlapOSControler.supply =original_supply
@@ -956,6 +967,9 @@ revision = %(revision2)s
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
+      return "Certificate"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
     def patch_getTestType(self, *args, **kw):
       return "ScalabilityTest"
     def patch_isHostingSubscriptionReady(self, *args, **kw):
@@ -973,6 +987,7 @@ revision = %(revision2)s
     original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
     original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
     original_getSlaposUrl = TaskDistributor.getSlaposUrl
+    original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
     original_generateConfiguration = TaskDistributor.generateConfiguration
     original_isMasterTestnode = TaskDistributor.isMasterTestnode
     original_startTestSuite = TaskDistributor.startTestSuite
@@ -993,6 +1008,7 @@ revision = %(revision2)s
     TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
     TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
     TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+    TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
     TaskDistributor.generateConfiguration = patch_generateConfiguration
     TaskDistributor.isMasterTestnode = patch_isMasterTestnode
     TaskDistributor.startTestSuite = patch_startTestSuite
@@ -1014,6 +1030,7 @@ revision = %(revision2)s
     TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
     TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
     TaskDistributor.getSlaposUrl = original_getSlaposUrl
+    TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.isMasterTestnode = original_isMasterTestnode
     TaskDistributor.startTestSuite = original_startTestSuite
