@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155564.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-tex.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * tex.js\n
+ *\n
+ * Copyright (C) 2009-11 by RStudio, Inc.\n
+ *\n
+ * The Initial Developer of the Original Code is\n
+ * Ajax.org B.V.\n
+ * Portions created by the Initial Developer are Copyright (C) 2010\n
+ * the Initial Developer. All Rights Reserved.\n
+ *\n
+ * This program is licensed to you under the terms of version 3 of the\n
+ * GNU Affero General Public License. This program is distributed WITHOUT\n
+ * ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,\n
+ * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the\n
+ * AGPL (http://www.gnu.org/licenses/agpl-3.0.txt) for more details.\n
+ *\n
+ */\n
+define(\'ace/mode/tex\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/text_highlight_rules\', \'ace/mode/tex_highlight_rules\', \'ace/mode/matching_brace_outdent\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("./text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+var TexHighlightRules = require("./tex_highlight_rules").TexHighlightRules;\n
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
+\n
+var Mode = function(suppressHighlighting) {\n
+\tif (suppressHighlighting)\n
+    \tthis.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());\n
+\telse\n
+    \tthis.$tokenizer = new Tokenizer(new TexHighlightRules().getRules());\n
+    this.$outdent = new MatchingBraceOutdent();\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {\n
+   this.getNextLineIndent = function(state, line, tab) {\n
+      return this.$getIndent(line);\n
+   };\n
+\n
+   this.allowAutoInsert = function() {\n
+      return false;\n
+   };\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+define(\'ace/mode/tex_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var lang = require("../lib/lang");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var TexHighlightRules = function(textClass) {\n
+\n
+    if (!textClass)\n
+        textClass = "text";\n
+\n
+    this.$rules = {\n
+        "start" : [\n
+\t        {\n
+\t            token : "comment",\n
+\t            regex : "%.*$"\n
+\t        }, {\n
+\t            token : textClass, // non-command\n
+\t            regex : "\\\\\\\\[$&%#\\\\{\\\\}]"\n
+\t        }, {\n
+\t            token : "keyword", // command\n
+\t            regex : "\\\\\\\\(?:documentclass|usepackage|newcounter|setcounter|addtocounter|value|arabic|stepcounter|newenvironment|renewenvironment|ref|vref|eqref|pageref|label|cite[a-zA-Z]*|tag|begin|end|bibitem)\\\\b",\n
+               next : "nospell"\n
+\t        }, {\n
+\t            token : "keyword", // command\n
+\t            regex : "\\\\\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])"\n
+\t        }, {\n
+               token : "paren.keyword.operator",\n
+\t            regex : "[[({]"\n
+\t        }, {\n
+               token : "paren.keyword.operator",\n
+\t            regex : "[\\\\])}]"\n
+\t        }, {\n
+\t            token : textClass,\n
+\t            regex : "\\\\s+"\n
+\t        }\n
+        ],\n
+        "nospell" : [\n
+           {\n
+               token : "comment",\n
+               regex : "%.*$",\n
+               next : "start"\n
+           }, {\n
+               token : "nospell." + textClass, // non-command\n
+               regex : "\\\\\\\\[$&%#\\\\{\\\\}]"\n
+           }, {\n
+               token : "keyword", // command\n
+               regex : "\\\\\\\\(?:documentclass|usepackage|newcounter|setcounter|addtocounter|value|arabic|stepcounter|newenvironment|renewenvironment|ref|vref|eqref|pageref|label|cite[a-zA-Z]*|tag|begin|end|bibitem)\\\\b"\n
+           }, {\n
+               token : "keyword", // command\n
+               regex : "\\\\\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])",\n
+               next : "start"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "[[({]"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "[\\\\])]"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "}",\n
+               next : "start"\n
+           }, {\n
+               token : "nospell." + textClass,\n
+               regex : "\\\\s+"\n
+           }, {\n
+               token : "nospell." + textClass,\n
+               regex : "\\\\w+"\n
+           }\n
+        ]\n
+    };\n
+};\n
+\n
+oop.inherits(TexHighlightRules, TextHighlightRules);\n
+\n
+exports.TexHighlightRules = TexHighlightRules;\n
+});\n
+\n
+define(\'ace/mode/matching_brace_outdent\', [\'require\', \'exports\', \'module\' , \'ace/range\'], function(require, exports, module) {\n
+\n
+\n
+var Range = require("../range").Range;\n
+\n
+var MatchingBraceOutdent = function() {};\n
+\n
+(function() {\n
+\n
+    this.checkOutdent = function(line, input) {\n
+        if (! /^\\s+$/.test(line))\n
+            return false;\n
+\n
+        return /^\\s*\\}/.test(input);\n
+    };\n
+\n
+    this.autoOutdent = function(doc, row) {\n
+        var line = doc.getLine(row);\n
+        var match = line.match(/^(\\s*\\})/);\n
+\n
+        if (!match) return 0;\n
+\n
+        var column = match[1].length;\n
+        var openBracePos = doc.findMatchingBracket({row: row, column: column});\n
+\n
+        if (!openBracePos || openBracePos.row == row) return 0;\n
+\n
+        var indent = this.$getIndent(doc.getLine(openBracePos.row));\n
+        doc.replace(new Range(row, 0, row, column-1), indent);\n
+    };\n
+\n
+    this.$getIndent = function(line) {\n
+        return line.match(/^\\s*/)[0];\n
+    };\n
+\n
+}).call(MatchingBraceOutdent.prototype);\n
+\n
+exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5466</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

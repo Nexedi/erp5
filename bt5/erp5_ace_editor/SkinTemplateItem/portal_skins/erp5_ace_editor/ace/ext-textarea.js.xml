@@ -1,0 +1,536 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155553.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-textarea.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ *\n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/ext/textarea\', [\'require\', \'exports\', \'module\' , \'ace/lib/event\', \'ace/lib/useragent\', \'ace/lib/net\', \'ace/ace\', \'ace/theme/textmate\', \'ace/mode/text\'], function(require, exports, module) {\n
+\n
+\n
+var event = require("../lib/event");\n
+var UA = require("../lib/useragent");\n
+var net = require("../lib/net");\n
+var ace = require("../ace");\n
+\n
+require("../theme/textmate");\n
+\n
+module.exports = exports = ace;\n
+var getCSSProperty = function(element, container, property) {\n
+    var ret = element.style[property];\n
+\n
+    if (!ret) {\n
+        if (window.getComputedStyle) {\n
+            ret = window.getComputedStyle(element, \'\').getPropertyValue(property);\n
+        } else {\n
+            ret = element.currentStyle[property];\n
+        }\n
+    }\n
+\n
+    if (!ret || ret == \'auto\' || ret == \'intrinsic\') {\n
+        ret = container.style[property];\n
+    }\n
+    return ret;\n
+};\n
+\n
+function applyStyles(elm, styles) {\n
+    for (var style in styles) {\n
+        elm.style[style] = styles[style];\n
+    }\n
+}\n
+\n
+function setupContainer(element, getValue) {\n
+    if (element.type != \'textarea\') {\n
+        throw "Textarea required!";\n
+    }\n
+\n
+    var parentNode = element.parentNode;\n
+    var container = document.createElement(\'div\');\n
+    var resizeEvent = function() {\n
+        var style = \'position:relative;\';\n
+        [\n
+            \'margin-top\', \'margin-left\', \'margin-right\', \'margin-bottom\'\n
+        ].forEach(function(item) {\n
+            style += item + \':\' +\n
+                        getCSSProperty(element, container, item) + \';\';\n
+        });\n
+        var width = getCSSProperty(element, container, \'width\') || (element.clientWidth + "px");\n
+        var height = getCSSProperty(element, container, \'height\')  || (element.clientHeight + "px");\n
+        style += \'height:\' + height + \';width:\' + width + \';\';\n
+        style += \'display:inline-block;\';\n
+        container.setAttribute(\'style\', style);\n
+    };\n
+    event.addListener(window, \'resize\', resizeEvent);\n
+    resizeEvent();\n
+    parentNode.insertBefore(container, element.nextSibling);\n
+    while (parentNode !== document) {\n
+        if (parentNode.tagName.toUpperCase() === \'FORM\') {\n
+            var oldSumit = parentNode.onsubmit;\n
+            parentNode.onsubmit = function(evt) {\n
+                element.value = getValue();\n
+                if (oldSumit) {\n
+                    oldSumit.call(this, evt);\n
+                }\n
+            };\n
+            break;\n
+        }\n
+        parentNode = parentNode.parentNode;\n
+    }\n
+    return container;\n
+}\n
+\n
+exports.transformTextarea = function(element, loader) {\n
+    var session;\n
+    var container = setupContainer(element, function() {\n
+        return session.getValue();\n
+    });\n
+    element.style.display = \'none\';\n
+    container.style.background = \'white\';\n
+    var editorDiv = document.createElement("div");\n
+    applyStyles(editorDiv, {\n
+        top: "0px",\n
+        left: "0px",\n
+        right: "0px",\n
+        bottom: "0px",\n
+        border: "1px solid gray",\n
+        position: "absolute"\n
+    });\n
+    container.appendChild(editorDiv);\n
+\n
+    var settingOpener = document.createElement("div");\n
+    applyStyles(settingOpener, {\n
+        position: "absolute",\n
+        right: "0px",\n
+        bottom: "0px",\n
+        background: "red",\n
+        cursor: "nw-resize",\n
+        borderStyle: "solid",\n
+        borderWidth: "9px 8px 10px 9px",\n
+        width: "2px",\n
+        borderColor: "lightblue gray gray lightblue",\n
+        zIndex: 101\n
+    });\n
+\n
+    var settingDiv = document.createElement("div");\n
+    var settingDivStyles = {\n
+        top: "0px",\n
+        left: "20%",\n
+        right: "0px",\n
+        bottom: "0px",\n
+        position: "absolute",\n
+        padding: "5px",\n
+        zIndex: 100,\n
+        color: "white",\n
+        display: "none",\n
+        overflow: "auto",\n
+        fontSize: "14px",\n
+        boxShadow: "-5px 2px 3px gray"\n
+    };\n
+    if (!UA.isOldIE) {\n
+        settingDivStyles.backgroundColor = "rgba(0, 0, 0, 0.6)";\n
+    } else {\n
+        settingDivStyles.backgroundColor = "#333";\n
+    }\n
+\n
+    applyStyles(settingDiv, settingDivStyles);\n
+    container.appendChild(settingDiv);\n
+    var options = {};\n
+\n
+    var editor = ace.edit(editorDiv);\n
+    session = editor.getSession();\n
+\n
+    session.setValue(element.value || element.innerHTML);\n
+    editor.focus();\n
+    container.appendChild(settingOpener);\n
+    setupApi(editor, editorDiv, settingDiv, ace, options, loader);\n
+    setupSettingPanel(settingDiv, settingOpener, editor, options);\n
+\n
+    var state = "";\n
+    event.addListener(settingOpener, "mousemove", function(e) {\n
+        var rect = this.getBoundingClientRect();\n
+        var x = e.clientX - rect.left, y = e.clientY - rect.top;\n
+        if (x + y < (rect.width + rect.height)/2) {\n
+            this.style.cursor = "pointer";\n
+            state = "toggle";\n
+        } else {\n
+            state = "resize";\n
+            this.style.cursor = "nw-resize";\n
+        }\n
+    });\n
+\n
+    event.addListener(settingOpener, "mousedown", function(e) {\n
+        if (state == "toggle") {\n
+            editor.setDisplaySettings();\n
+            return;\n
+        }\n
+        container.style.zIndex = 100000;\n
+        var rect = container.getBoundingClientRect();\n
+        var startX = rect.width  + rect.left - e.clientX;\n
+        var startY = rect.height  + rect.top - e.clientY;\n
+        event.capture(settingOpener, function(e) {\n
+            container.style.width = e.clientX - rect.left + startX + "px";\n
+            container.style.height = e.clientY - rect.top + startY + "px";\n
+            editor.resize();\n
+        }, function() {});\n
+    });\n
+\n
+    return editor;\n
+};\n
+\n
+function load(url, module, callback) {\n
+    net.loadScript(url, function() {\n
+        require([module], callback);\n
+    });\n
+}\n
+\n
+function setupApi(editor, editorDiv, settingDiv, ace, options, loader) {\n
+    var session = editor.getSession();\n
+    var renderer = editor.renderer;\n
+    loader = loader || load;\n
+\n
+    function toBool(value) {\n
+        return value === "true" || value == true;\n
+    }\n
+\n
+    editor.setDisplaySettings = function(display) {\n
+        if (display == null)\n
+            display = settingDiv.style.display == "none";\n
+        if (display) {\n
+            settingDiv.style.display = "block";\n
+            settingDiv.hideButton.focus();\n
+            editor.on("focus", function onFocus() {\n
+                editor.removeListener("focus", onFocus);\n
+                settingDiv.style.display = "none"\n
+            });\n
+        } else {\n
+            editor.focus();\n
+        };\n
+    };\n
+\n
+    editor.setOption = function(key, value) {\n
+        if (options[key] == value) return;\n
+\n
+        switch (key) {\n
+            case "gutter":\n
+                renderer.setShowGutter(toBool(value));\n
+            break;\n
+\n
+            case "mode":\n
+                if (value != "text") {\n
+                    loader("mode-" + value + ".js", "ace/mode/" + value, function() {\n
+                        var aceMode = require("../mode/" + value).Mode;\n
+                        session.setMode(new aceMode());\n
+                    });\n
+                } else {\n
+                    session.setMode(new (require("../mode/text").Mode));\n
+                }\n
+            break;\n
+\n
+            case "theme":\n
+                if (value != "textmate") {\n
+                    loader("theme-" + value + ".js", "ace/theme/" + value, function() {\n
+                        editor.setTheme("ace/theme/" + value);\n
+                    });\n
+                } else {\n
+                    editor.setTheme("ace/theme/textmate");\n
+                }\n
+            break;\n
+\n
+            case "fontSize":\n
+                editorDiv.style.fontSize = value;\n
+            break;\n
+\n
+            case "keybindings":\n
+                switch (value) {\n
+                    case "vim":\n
+                        editor.setKeyboardHandler("ace/keyboard/vim");\n
+                        break;\n
+                    case "emacs":\n
+                        editor.setKeyboardHandler("ace/keyboard/emacs");\n
+                        break;\n
+                    default:\n
+                        editor.setKeyboardHandler(null);\n
+                }\n
+            break;\n
+\n
+            case "softWrap":\n
+                switch (value) {\n
+                    case "off":\n
+                        session.setUseWrapMode(false);\n
+                        renderer.setPrintMarginColumn(80);\n
+                    break;\n
+                    case "40":\n
+                        session.setUseWrapMode(true);\n
+                        session.setWrapLimitRange(40, 40);\n
+                        renderer.setPrintMarginColumn(40);\n
+                    break;\n
+                    case "80":\n
+                        session.setUseWrapMode(true);\n
+                        session.setWrapLimitRange(80, 80);\n
+                        renderer.setPrintMarginColumn(80);\n
+                    break;\n
+                    case "free":\n
+                        session.setUseWrapMode(true);\n
+                        session.setWrapLimitRange(null, null);\n
+                        renderer.setPrintMarginColumn(80);\n
+                    break;\n
+                }\n
+            break;\n
+\n
+            case "useSoftTabs":\n
+                session.setUseSoftTabs(toBool(value));\n
+            break;\n
+\n
+            case "showPrintMargin":\n
+                renderer.setShowPrintMargin(toBool(value));\n
+            break;\n
+\n
+            case "showInvisibles":\n
+                editor.setShowInvisibles(toBool(value));\n
+            break;\n
+        }\n
+\n
+        options[key] = value;\n
+    };\n
+\n
+    editor.getOption = function(key) {\n
+        return options[key];\n
+    };\n
+\n
+    editor.getOptions = function() {\n
+        return options;\n
+    };\n
+\n
+    for (var option in exports.options) {\n
+        editor.setOption(option, exports.options[option]);\n
+    }\n
+\n
+    return editor;\n
+}\n
+\n
+function setupSettingPanel(settingDiv, settingOpener, editor, options) {\n
+    var BOOL = null;\n
+\n
+    var desc = {\n
+        mode:            "Mode:",\n
+        gutter:          "Display Gutter:",\n
+        theme:           "Theme:",\n
+        fontSize:        "Font Size:",\n
+        softWrap:        "Soft Wrap:",\n
+        keybindings:     "Keyboard",\n
+        showPrintMargin: "Show Print Margin:",\n
+        useSoftTabs:     "Use Soft Tabs:",\n
+        showInvisibles:  "Show Invisibles"\n
+    };\n
+\n
+    var optionValues = {\n
+        mode: {\n
+            text:       "Plain",\n
+            javascript: "JavaScript",\n
+            xml:        "XML",\n
+            html:       "HTML",\n
+            css:        "CSS",\n
+            scss:       "SCSS",\n
+            python:     "Python",\n
+            php:        "PHP",\n
+            java:       "Java",\n
+            ruby:       "Ruby",\n
+            c_cpp:      "C/C++",\n
+            coffee:     "CoffeeScript",\n
+            json:       "json",\n
+            perl:       "Perl",\n
+            clojure:    "Clojure",\n
+            ocaml:      "OCaml",\n
+            csharp:     "C#",\n
+            haxe:       "haXe",\n
+            svg:        "SVG",\n
+            textile:    "Textile",\n
+            groovy:     "Groovy",\n
+            liquid:     "Liquid",\n
+            Scala:      "Scala"\n
+        },\n
+        theme: {\n
+            clouds:           "Clouds",\n
+            clouds_midnight:  "Clouds Midnight",\n
+            cobalt:           "Cobalt",\n
+            crimson_editor:   "Crimson Editor",\n
+            dawn:             "Dawn",\n
+            eclipse:          "Eclipse",\n
+            idle_fingers:     "Idle Fingers",\n
+            kr_theme:         "Kr Theme",\n
+            merbivore:        "Merbivore",\n
+            merbivore_soft:   "Merbivore Soft",\n
+            mono_industrial:  "Mono Industrial",\n
+            monokai:          "Monokai",\n
+            pastel_on_dark:   "Pastel On Dark",\n
+            solarized_dark:   "Solarized Dark",\n
+            solarized_light:  "Solarized Light",\n
+            textmate:         "Textmate",\n
+            twilight:         "Twilight",\n
+            vibrant_ink:      "Vibrant Ink"\n
+        },\n
+        gutter: BOOL,\n
+        fontSize: {\n
+            "10px": "10px",\n
+            "11px": "11px",\n
+            "12px": "12px",\n
+            "14px": "14px",\n
+            "16px": "16px"\n
+        },\n
+        softWrap: {\n
+            off:    "Off",\n
+            40:     "40",\n
+            80:     "80",\n
+            free:   "Free"\n
+        },\n
+        keybindings: {\n
+            ace: "ace",\n
+            vim: "vim",\n
+            emacs: "emacs"\n
+        },\n
+        showPrintMargin:    BOOL,\n
+        useSoftTabs:        BOOL,\n
+        showInvisibles:     BOOL\n
+    };\n
+\n
+    var table = [];\n
+    table.push("<table><tr><th>Setting</th><th>Value</th></tr>");\n
+\n
+    function renderOption(builder, option, obj, cValue) {\n
+        if (!obj) {\n
+            builder.push(\n
+                "<input type=\'checkbox\' title=\'", option, "\' ",\n
+                    cValue == "true" ? "checked=\'true\'" : "",\n
+               "\'></input>"\n
+            );\n
+            return\n
+        }\n
+        builder.push("<select title=\'" + option + "\'>");\n
+        for (var value in obj) {\n
+            builder.push("<option value=\'" + value + "\' ");\n
+\n
+            if (cValue == value) {\n
+                builder.push(" selected ");\n
+            }\n
+\n
+            builder.push(">",\n
+                obj[value],\n
+                "</option>");\n
+        }\n
+        builder.push("</select>");\n
+    }\n
+\n
+    for (var option in options) {\n
+        table.push("<tr><td>", desc[option], "</td>");\n
+        table.push("<td>");\n
+        renderOption(table, option, optionValues[option], options[option]);\n
+        table.push("</td></tr>");\n
+    }\n
+    table.push("</table>");\n
+    settingDiv.innerHTML = table.join("");\n
+\n
+    var onChange = function(e) {\n
+        var select = e.currentTarget;\n
+        editor.setOption(select.title, select.value);\n
+    };\n
+    var onClick = function(e) {\n
+        var cb = e.currentTarget;\n
+        editor.setOption(cb.title, cb.checked);\n
+    };\n
+    var selects = settingDiv.getElementsByTagName("select");\n
+    for (var i = 0; i < selects.length; i++)\n
+        selects[i].onchange = onChange;\n
+    var cbs = settingDiv.getElementsByTagName("input");\n
+    for (var i = 0; i < cbs.length; i++)\n
+        cbs[i].onclick = onClick;\n
+\n
+\n
+    var button = document.createElement("input");\n
+    button.type = "button";\n
+    button.value = "Hide";\n
+    event.addListener(button, "click", function() {\n
+        editor.setDisplaySettings(false);\n
+    });\n
+    settingDiv.appendChild(button);\n
+    settingDiv.hideButton = button;\n
+}\n
+exports.options = {\n
+    mode:               "text",\n
+    theme:              "textmate",\n
+    gutter:             "false",\n
+    fontSize:           "12px",\n
+    softWrap:           "off",\n
+    keybindings:        "ace",\n
+    showPrintMargin:    "false",\n
+    useSoftTabs:        "true",\n
+    showInvisibles:     "false"\n
+};\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16096</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

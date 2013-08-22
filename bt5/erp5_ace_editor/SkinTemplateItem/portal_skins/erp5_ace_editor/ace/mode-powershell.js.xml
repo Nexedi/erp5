@@ -1,0 +1,662 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155562.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-powershell.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+define(\'ace/mode/powershell\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/powershell_highlight_rules\', \'ace/mode/matching_brace_outdent\', \'ace/mode/behaviour/cstyle\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("./text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var PowershellHighlightRules = require("./powershell_highlight_rules").PowershellHighlightRules;\n
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
+var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
+var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
+\n
+var Mode = function() {\n
+    this.$tokenizer = new Tokenizer(new PowershellHighlightRules().getRules());\n
+    this.$outdent = new MatchingBraceOutdent();\n
+    this.$behaviour = new CstyleBehaviour();\n
+    this.foldingRules = new CStyleFoldMode({start: "^\\\\s*(<#)", end: "^[#\\\\s]>\\\\s*$"});\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {\n
+\n
+    this.lineCommentStart = "#";\n
+    this.blockComment = {start: "<#", end: "#>"};\n
+    \n
+    this.getNextLineIndent = function(state, line, tab) {\n
+        var indent = this.$getIndent(line);\n
+\n
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokens = tokenizedLine.tokens;\n
+\n
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
+            return indent;\n
+        }\n
+      \n
+        if (state == "start") {\n
+            var match = line.match(/^.*[\\{\\(\\[]\\s*$/);\n
+            if (match) {\n
+                indent += tab;\n
+            }\n
+        }\n
+\n
+        return indent;\n
+    };\n
+\n
+    this.checkOutdent = function(state, line, input) {\n
+        return this.$outdent.checkOutdent(line, input);\n
+    };\n
+\n
+    this.autoOutdent = function(state, doc, row) {\n
+        this.$outdent.autoOutdent(doc, row);\n
+    };\n
+\n
+\n
+    this.createWorker = function(session) {\n
+        return null;\n
+    };\n
+\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+define(\'ace/mode/powershell_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var PowershellHighlightRules = function() {\n
+\n
+    var keywords = (\n
+      "function|if|else|elseif|switch|while|default|for|do|until|break|continue|" +\n
+       "foreach|return|filter|in|trap|throw|param|begin|process|end"\n
+    );\n
+\n
+    var builtinFunctions = (\n
+      "Get-Alias|Import-Alias|New-Alias|Set-Alias|Get-AuthenticodeSignature|Set-AuthenticodeSignature|" +\n
+       "Set-Location|Get-ChildItem|Clear-Item|Get-Command|Measure-Command|Trace-Command|" +\n
+       "Add-Computer|Checkpoint-Computer|Remove-Computer|Restart-Computer|Restore-Computer|Stop-Computer|" +\n
+       "Reset-ComputerMachinePassword|Test-ComputerSecureChannel|Add-Content|Get-Content|Set-Content|Clear-Content|" +\n
+       "Get-Command|Invoke-Command|Enable-ComputerRestore|Disable-ComputerRestore|Get-ComputerRestorePoint|Test-Connection|" +\n
+       "ConvertFrom-CSV|ConvertTo-CSV|ConvertTo-Html|ConvertTo-Xml|ConvertFrom-SecureString|ConvertTo-SecureString|" +\n
+       "Copy-Item|Export-Counter|Get-Counter|Import-Counter|Get-Credential|Get-Culture|" +\n
+       "Get-ChildItem|Get-Date|Set-Date|Remove-Item|Compare-Object|Get-Event|" +\n
+       "Get-WinEvent|New-Event|Remove-Event|Unregister-Event|Wait-Event|Clear-EventLog|" +\n
+       "Get-Eventlog|Limit-EventLog|New-Eventlog|Remove-EventLog|Show-EventLog|Write-EventLog|" +\n
+       "Get-EventSubscriber|Register-EngineEvent|Register-ObjectEvent|Register-WmiEvent|Get-ExecutionPolicy|Set-ExecutionPolicy|" +\n
+       "Export-Alias|Export-Clixml|Export-Console|Export-Csv|ForEach-Object|Format-Custom|" +\n
+       "Format-List|Format-Table|Format-Wide|Export-FormatData|Get-FormatData|Get-Item|" +\n
+       "Get-ChildItem|Get-Help|Add-History|Clear-History|Get-History|Invoke-History|" +\n
+       "Get-Host|Read-Host|Write-Host|Get-HotFix|Import-Clixml|Import-Csv|" +\n
+       "Invoke-Command|Invoke-Expression|Get-Item|Invoke-Item|New-Item|Remove-Item|" +\n
+       "Set-Item|Clear-ItemProperty|Copy-ItemProperty|Get-ItemProperty|Move-ItemProperty|New-ItemProperty|" +\n
+       "Remove-ItemProperty|Rename-ItemProperty|Set-ItemProperty|Get-Job|Receive-Job|Remove-Job|" +\n
+       "Start-Job|Stop-Job|Wait-Job|Stop-Process|Update-List|Get-Location|" +\n
+       "Pop-Location|Push-Location|Set-Location|Send-MailMessage|Add-Member|Get-Member|" +\n
+       "Move-Item|Compare-Object|Group-Object|Measure-Object|New-Object|Select-Object|" +\n
+       "Sort-Object|Where-Object|Out-Default|Out-File|Out-GridView|Out-Host|" +\n
+       "Out-Null|Out-Printer|Out-String|Convert-Path|Join-Path|Resolve-Path|" +\n
+       "Split-Path|Test-Path|Get-Pfxcertificate|Pop-Location|Push-Location|Get-Process|" +\n
+       "Start-Process|Stop-Process|Wait-Process|Enable-PSBreakpoint|Disable-PSBreakpoint|Get-PSBreakpoint|" +\n
+       "Set-PSBreakpoint|Remove-PSBreakpoint|Get-PSDrive|New-PSDrive|Remove-PSDrive|Get-PSProvider|" +\n
+       "Set-PSdebug|Enter-PSSession|Exit-PSSession|Export-PSSession|Get-PSSession|Import-PSSession|" +\n
+       "New-PSSession|Remove-PSSession|Disable-PSSessionConfiguration|Enable-PSSessionConfiguration|Get-PSSessionConfiguration|Register-PSSessionConfiguration|" +\n
+       "Set-PSSessionConfiguration|Unregister-PSSessionConfiguration|New-PSSessionOption|Add-PsSnapIn|Get-PsSnapin|Remove-PSSnapin|" +\n
+       "Get-Random|Read-Host|Remove-Item|Rename-Item|Rename-ItemProperty|Select-Object|" +\n
+       "Select-XML|Send-MailMessage|Get-Service|New-Service|Restart-Service|Resume-Service|" +\n
+       "Set-Service|Start-Service|Stop-Service|Suspend-Service|Sort-Object|Start-Sleep|" +\n
+       "ConvertFrom-StringData|Select-String|Tee-Object|New-Timespan|Trace-Command|Get-Tracesource|" +\n
+       "Set-Tracesource|Start-Transaction|Complete-Transaction|Get-Transaction|Use-Transaction|Undo-Transaction|" +\n
+       "Start-Transcript|Stop-Transcript|Add-Type|Update-TypeData|Get-Uiculture|Get-Unique|" +\n
+       "Update-Formatdata|Update-Typedata|Clear-Variable|Get-Variable|New-Variable|Remove-Variable|" +\n
+       "Set-Variable|New-WebServiceProxy|Where-Object|Write-Debug|Write-Error|Write-Host|" +\n
+       "Write-Output|Write-Progress|Write-Verbose|Write-Warning|Set-WmiInstance|Invoke-WmiMethod|" +\n
+       "Get-WmiObject|Remove-WmiObject|Connect-WSMan|Disconnect-WSMan|Test-WSMan|Invoke-WSManAction|" +\n
+       "Disable-WSManCredSSP|Enable-WSManCredSSP|Get-WSManCredSSP|New-WSManInstance|Get-WSManInstance|Set-WSManInstance|" +\n
+       "Remove-WSManInstance|Set-WSManQuickConfig|New-WSManSessionOption"\n
+       );\n
+\n
+    var keywordMapper = this.createKeywordMapper({\n
+        "support.function": builtinFunctions,\n
+        "keyword": keywords\n
+    }, "identifier");\n
+\n
+    var binaryOperatorsRe = "eq|ne|ge|gt|lt|le|like|notlike|match|notmatch|replace|contains|notcontains|" +\n
+                            "ieq|ine|ige|igt|ile|ilt|ilike|inotlike|imatch|inotmatch|ireplace|icontains|inotcontains|" +\n
+                            "is|isnot|as|" +\n
+                            "and|or|band|bor|not";\n
+\n
+    this.$rules = {\n
+        "start" : [\n
+            {\n
+                token : "comment",\n
+                regex : "#.*$"\n
+            }, {\n
+                token : "comment.start",\n
+                regex : "<#",\n
+                next : "comment"\n
+            }, {\n
+                token : "string", // single line\n
+                regex : \'["](?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?["]\'\n
+            }, {\n
+                token : "string", // single line\n
+                regex : "[\'](?:(?:\\\\\\\\.)|(?:[^\'\\\\\\\\]))*?[\']"\n
+            }, {\n
+                token : "constant.numeric", // hex\n
+                regex : "0[xX][0-9a-fA-F]+\\\\b"\n
+            }, {\n
+                token : "constant.numeric", // float\n
+                regex : "[+-]?\\\\d+(?:(?:\\\\.\\\\d*)?(?:[eE][+-]?\\\\d+)?)?\\\\b"\n
+            }, {\n
+                token : "constant.language.boolean",\n
+                regex : "[$](?:[Tt]rue|[Ff]alse)\\\\b"\n
+            }, {\n
+                token : "constant.language",\n
+                regex : "[$][Nn]ull\\\\b"\n
+            }, {\n
+                token : "variable.instance",\n
+                regex : "[$][a-zA-Z][a-zA-Z0-9_]*\\\\b"\n
+            }, {\n
+                token : keywordMapper,\n
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$\\\\-]*\\\\b"\n
+            }, {\n
+                token : "keyword.operator",\n
+                regex : "\\\\-(?:" + binaryOperatorsRe + ")"\n
+            }, {\n
+                token : "keyword.operator",\n
+                regex : "&|\\\\*|\\\\+|\\\\-|\\\\=|\\\\+=|\\\\-="\n
+            }, {\n
+                token : "lparen",\n
+                regex : "[[({]"\n
+            }, {\n
+                token : "rparen",\n
+                regex : "[\\\\])}]"\n
+            }, {\n
+                token : "text",\n
+                regex : "\\\\s+"\n
+            }\n
+        ],\n
+        "comment" : [\n
+            {\n
+                token : "comment.end",\n
+                regex : "#>",\n
+                next : "start"\n
+            }, {\n
+                token : "doc.comment.tag",\n
+                regex : "^\\\\.\\\\w+"\n
+            }, {\n
+                token : "comment",\n
+                regex : "\\\\w+"\n
+            }, {\n
+                token : "comment",\n
+                regex : "."\n
+            }\n
+        ]\n
+    };\n
+};\n
+\n
+oop.inherits(PowershellHighlightRules, TextHighlightRules);\n
+\n
+exports.PowershellHighlightRules = PowershellHighlightRules;\n
+});\n
+\n
+define(\'ace/mode/matching_brace_outdent\', [\'require\', \'exports\', \'module\' , \'ace/range\'], function(require, exports, module) {\n
+\n
+\n
+var Range = require("../range").Range;\n
+\n
+var MatchingBraceOutdent = function() {};\n
+\n
+(function() {\n
+\n
+    this.checkOutdent = function(line, input) {\n
+        if (! /^\\s+$/.test(line))\n
+            return false;\n
+\n
+        return /^\\s*\\}/.test(input);\n
+    };\n
+\n
+    this.autoOutdent = function(doc, row) {\n
+        var line = doc.getLine(row);\n
+        var match = line.match(/^(\\s*\\})/);\n
+\n
+        if (!match) return 0;\n
+\n
+        var column = match[1].length;\n
+        var openBracePos = doc.findMatchingBracket({row: row, column: column});\n
+\n
+        if (!openBracePos || openBracePos.row == row) return 0;\n
+\n
+        var indent = this.$getIndent(doc.getLine(openBracePos.row));\n
+        doc.replace(new Range(row, 0, row, column-1), indent);\n
+    };\n
+\n
+    this.$getIndent = function(line) {\n
+        return line.match(/^\\s*/)[0];\n
+    };\n
+\n
+}).call(MatchingBraceOutdent.prototype);\n
+\n
+exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
+});\n
+\n
+define(\'ace/mode/behaviour/cstyle\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/behaviour\', \'ace/token_iterator\', \'ace/lib/lang\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../../lib/oop");\n
+var Behaviour = require("../behaviour").Behaviour;\n
+var TokenIterator = require("../../token_iterator").TokenIterator;\n
+var lang = require("../../lib/lang");\n
+\n
+var SAFE_INSERT_IN_TOKENS =\n
+    ["text", "paren.rparen", "punctuation.operator"];\n
+var SAFE_INSERT_BEFORE_TOKENS =\n
+    ["text", "paren.rparen", "punctuation.operator", "comment"];\n
+\n
+\n
+var autoInsertedBrackets = 0;\n
+var autoInsertedRow = -1;\n
+var autoInsertedLineEnd = "";\n
+var maybeInsertedBrackets = 0;\n
+var maybeInsertedRow = -1;\n
+var maybeInsertedLineStart = "";\n
+var maybeInsertedLineEnd = "";\n
+\n
+var CstyleBehaviour = function () {\n
+    \n
+    CstyleBehaviour.isSaneInsertion = function(editor, session) {\n
+        var cursor = editor.getCursorPosition();\n
+        var iterator = new TokenIterator(session, cursor.row, cursor.column);\n
+        if (!this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS)) {\n
+            var iterator2 = new TokenIterator(session, cursor.row, cursor.column + 1);\n
+            if (!this.$matchTokenType(iterator2.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS))\n
+                return false;\n
+        }\n
+        iterator.stepForward();\n
+        return iterator.getCurrentTokenRow() !== cursor.row ||\n
+            this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_BEFORE_TOKENS);\n
+    };\n
+    \n
+    CstyleBehaviour.$matchTokenType = function(token, types) {\n
+        return types.indexOf(token.type || token) > -1;\n
+    };\n
+    \n
+    CstyleBehaviour.recordAutoInsert = function(editor, session, bracket) {\n
+        var cursor = editor.getCursorPosition();\n
+        var line = session.doc.getLine(cursor.row);\n
+        if (!this.isAutoInsertedClosing(cursor, line, autoInsertedLineEnd[0]))\n
+            autoInsertedBrackets = 0;\n
+        autoInsertedRow = cursor.row;\n
+        autoInsertedLineEnd = bracket + line.substr(cursor.column);\n
+        autoInsertedBrackets++;\n
+    };\n
+    \n
+    CstyleBehaviour.recordMaybeInsert = function(editor, session, bracket) {\n
+        var cursor = editor.getCursorPosition();\n
+        var line = session.doc.getLine(cursor.row);\n
+        if (!this.isMaybeInsertedClosing(cursor, line))\n
+            maybeInsertedBrackets = 0;\n
+        maybeInsertedRow = cursor.row;\n
+        maybeInsertedLineStart = line.substr(0, cursor.column) + bracket;\n
+        maybeInsertedLineEnd = line.substr(cursor.column);\n
+        maybeInsertedBrackets++;\n
+    };\n
+    \n
+    CstyleBehaviour.isAutoInsertedClosing = function(cursor, line, bracket) {\n
+        return autoInsertedBrackets > 0 &&\n
+            cursor.row === autoInsertedRow &&\n
+            bracket === autoInsertedLineEnd[0] &&\n
+            line.substr(cursor.column) === autoInsertedLineEnd;\n
+    };\n
+    \n
+    CstyleBehaviour.isMaybeInsertedClosing = function(cursor, line) {\n
+        return maybeInsertedBrackets > 0 &&\n
+            cursor.row === maybeInsertedRow &&\n
+            line.substr(cursor.column) === maybeInsertedLineEnd &&\n
+            line.substr(0, cursor.column) == maybeInsertedLineStart;\n
+    };\n
+    \n
+    CstyleBehaviour.popAutoInsertedClosing = function() {\n
+        autoInsertedLineEnd = autoInsertedLineEnd.substr(1);\n
+        autoInsertedBrackets--;\n
+    };\n
+    \n
+    CstyleBehaviour.clearMaybeInsertedClosing = function() {\n
+        maybeInsertedBrackets = 0;\n
+        maybeInsertedRow = -1;\n
+    };\n
+\n
+    this.add("braces", "insertion", function (state, action, editor, session, text) {\n
+        var cursor = editor.getCursorPosition();\n
+        var line = session.doc.getLine(cursor.row);\n
+        if (text == \'{\') {\n
+            var selection = editor.getSelectionRange();\n
+            var selected = session.doc.getTextRange(selection);\n
+            if (selected !== "" && selected !== "{" && editor.getWrapBehavioursEnabled()) {\n
+                return {\n
+                    text: \'{\' + selected + \'}\',\n
+                    selection: false\n
+                };\n
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {\n
+                if (/[\\]\\}\\)]/.test(line[cursor.column])) {\n
+                    CstyleBehaviour.recordAutoInsert(editor, session, "}");\n
+                    return {\n
+                        text: \'{}\',\n
+                        selection: [1, 1]\n
+                    };\n
+                } else {\n
+                    CstyleBehaviour.recordMaybeInsert(editor, session, "{");\n
+                    return {\n
+                        text: \'{\',\n
+                        selection: [1, 1]\n
+                    };\n
+                }\n
+            }\n
+        } else if (text == \'}\') {\n
+            var rightChar = line.substring(cursor.column, cursor.column + 1);\n
+            if (rightChar == \'}\') {\n
+                var matching = session.$findOpeningBracket(\'}\', {column: cursor.column + 1, row: cursor.row});\n
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {\n
+                    CstyleBehaviour.popAutoInsertedClosing();\n
+                    return {\n
+                        text: \'\',\n
+                        selection: [1, 1]\n
+                    };\n
+                }\n
+            }\n
+        } else if (text == "\\n" || text == "\\r\\n") {\n
+            var closing = "";\n
+            if (CstyleBehaviour.isMaybeInsertedClosing(cursor, line)) {\n
+                closing = lang.stringRepeat("}", maybeInsertedBrackets);\n
+                CstyleBehaviour.clearMaybeInsertedClosing();\n
+            }\n
+            var rightChar = line.substring(cursor.column, cursor.column + 1);\n
+            if (rightChar == \'}\' || closing !== "") {\n
+                var openBracePos = session.findMatchingBracket({row: cursor.row, column: cursor.column}, \'}\');\n
+                if (!openBracePos)\n
+                     return null;\n
+\n
+                var indent = this.getNextLineIndent(state, line.substring(0, cursor.column), session.getTabString());\n
+                var next_indent = this.$getIndent(line);\n
+\n
+                return {\n
+                    text: \'\\n\' + indent + \'\\n\' + next_indent + closing,\n
+                    selection: [1, indent.length, 1, indent.length]\n
+                };\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("braces", "deletion", function (state, action, editor, session, range) {\n
+        var selected = session.doc.getTextRange(range);\n
+        if (!range.isMultiLine() && selected == \'{\') {\n
+            var line = session.doc.getLine(range.start.row);\n
+            var rightChar = line.substring(range.end.column, range.end.column + 1);\n
+            if (rightChar == \'}\') {\n
+                range.end.column++;\n
+                return range;\n
+            } else {\n
+                maybeInsertedBrackets--;\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("parens", "insertion", function (state, action, editor, session, text) {\n
+        if (text == \'(\') {\n
+            var selection = editor.getSelectionRange();\n
+            var selected = session.doc.getTextRange(selection);\n
+            if (selected !== "" && editor.getWrapBehavioursEnabled()) {\n
+                return {\n
+                    text: \'(\' + selected + \')\',\n
+                    selection: false\n
+                };\n
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {\n
+                CstyleBehaviour.recordAutoInsert(editor, session, ")");\n
+                return {\n
+                    text: \'()\',\n
+                    selection: [1, 1]\n
+                };\n
+            }\n
+        } else if (text == \')\') {\n
+            var cursor = editor.getCursorPosition();\n
+            var line = session.doc.getLine(cursor.row);\n
+            var rightChar = line.substring(cursor.column, cursor.column + 1);\n
+            if (rightChar == \')\') {\n
+                var matching = session.$findOpeningBracket(\')\', {column: cursor.column + 1, row: cursor.row});\n
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {\n
+                    CstyleBehaviour.popAutoInsertedClosing();\n
+                    return {\n
+                        text: \'\',\n
+                        selection: [1, 1]\n
+                    };\n
+                }\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("parens", "deletion", function (state, action, editor, session, range) {\n
+        var selected = session.doc.getTextRange(range);\n
+        if (!range.isMultiLine() && selected == \'(\') {\n
+            var line = session.doc.getLine(range.start.row);\n
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);\n
+            if (rightChar == \')\') {\n
+                range.end.column++;\n
+                return range;\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("brackets", "insertion", function (state, action, editor, session, text) {\n
+        if (text == \'[\') {\n
+            var selection = editor.getSelectionRange();\n
+            var selected = session.doc.getTextRange(selection);\n
+            if (selected !== "" && editor.getWrapBehavioursEnabled()) {\n
+                return {\n
+                    text: \'[\' + selected + \']\',\n
+                    selection: false\n
+                };\n
+            } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {\n
+                CstyleBehaviour.recordAutoInsert(editor, session, "]");\n
+                return {\n
+                    text: \'[]\',\n
+                    selection: [1, 1]\n
+                };\n
+            }\n
+        } else if (text == \']\') {\n
+            var cursor = editor.getCursorPosition();\n
+            var line = session.doc.getLine(cursor.row);\n
+            var rightChar = line.substring(cursor.column, cursor.column + 1);\n
+            if (rightChar == \']\') {\n
+                var matching = session.$findOpeningBracket(\']\', {column: cursor.column + 1, row: cursor.row});\n
+                if (matching !== null && CstyleBehaviour.isAutoInsertedClosing(cursor, line, text)) {\n
+                    CstyleBehaviour.popAutoInsertedClosing();\n
+                    return {\n
+                        text: \'\',\n
+                        selection: [1, 1]\n
+                    };\n
+                }\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("brackets", "deletion", function (state, action, editor, session, range) {\n
+        var selected = session.doc.getTextRange(range);\n
+        if (!range.isMultiLine() && selected == \'[\') {\n
+            var line = session.doc.getLine(range.start.row);\n
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);\n
+            if (rightChar == \']\') {\n
+                range.end.column++;\n
+                return range;\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {\n
+        if (text == \'"\' || text == "\'") {\n
+            var quote = text;\n
+            var selection = editor.getSelectionRange();\n
+            var selected = session.doc.getTextRange(selection);\n
+            if (selected !== "" && selected !== "\'" && selected != \'"\' && editor.getWrapBehavioursEnabled()) {\n
+                return {\n
+                    text: quote + selected + quote,\n
+                    selection: false\n
+                };\n
+            } else {\n
+                var cursor = editor.getCursorPosition();\n
+                var line = session.doc.getLine(cursor.row);\n
+                var leftChar = line.substring(cursor.column-1, cursor.column);\n
+                if (leftChar == \'\\\\\') {\n
+                    return null;\n
+                }\n
+                var tokens = session.getTokens(selection.start.row);\n
+                var col = 0, token;\n
+                var quotepos = -1; // Track whether we\'re inside an open quote.\n
+\n
+                for (var x = 0; x < tokens.length; x++) {\n
+                    token = tokens[x];\n
+                    if (token.type == "string") {\n
+                      quotepos = -1;\n
+                    } else if (quotepos < 0) {\n
+                      quotepos = token.value.indexOf(quote);\n
+                    }\n
+                    if ((token.value.length + col) > selection.start.column) {\n
+                        break;\n
+                    }\n
+                    col += tokens[x].value.length;\n
+                }\n
+                if (!token || (quotepos < 0 && token.type !== "comment" && (token.type !== "string" || ((selection.start.column !== token.value.length+col-1) && token.value.lastIndexOf(quote) === token.value.length-1)))) {\n
+                    if (!CstyleBehaviour.isSaneInsertion(editor, session))\n
+                        return;\n
+                    return {\n
+                        text: quote + quote,\n
+                        selection: [1,1]\n
+                    };\n
+                } else if (token && token.type === "string") {\n
+                    var rightChar = line.substring(cursor.column, cursor.column + 1);\n
+                    if (rightChar == quote) {\n
+                        return {\n
+                            text: \'\',\n
+                            selection: [1, 1]\n
+                        };\n
+                    }\n
+                }\n
+            }\n
+        }\n
+    });\n
+\n
+    this.add("string_dquotes", "deletion", function (state, action, editor, session, range) {\n
+        var selected = session.doc.getTextRange(range);\n
+        if (!range.isMultiLine() && (selected == \'"\' || selected == "\'")) {\n
+            var line = session.doc.getLine(range.start.row);\n
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);\n
+            if (rightChar == selected) {\n
+                range.end.column++;\n
+                return range;\n
+            }\n
+        }\n
+    });\n
+\n
+};\n
+\n
+oop.inherits(CstyleBehaviour, Behaviour);\n
+\n
+exports.CstyleBehaviour = CstyleBehaviour;\n
+});\n
+\n
+define(\'ace/mode/folding/cstyle\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../../lib/oop");\n
+var Range = require("../../range").Range;\n
+var BaseFoldMode = require("./fold_mode").FoldMode;\n
+\n
+var FoldMode = exports.FoldMode = function(commentRegex) {\n
+    if (commentRegex) {\n
+        this.foldingStartMarker = new RegExp(\n
+            this.foldingStartMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.start)\n
+        );\n
+        this.foldingStopMarker = new RegExp(\n
+            this.foldingStopMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.end)\n
+        );\n
+    }\n
+};\n
+oop.inherits(FoldMode, BaseFoldMode);\n
+\n
+(function() {\n
+\n
+    this.foldingStartMarker = /(\\{|\\[)[^\\}\\]]*$|^\\s*(\\/\\*)/;\n
+    this.foldingStopMarker = /^[^\\[\\{]*(\\}|\\])|^[\\s\\*]*(\\*\\/)/;\n
+\n
+    this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var line = session.getLine(row);\n
+        var match = line.match(this.foldingStartMarker);\n
+        if (match) {\n
+            var i = match.index;\n
+\n
+            if (match[1])\n
+                return this.openingBracketBlock(session, match[1], row, i);\n
+\n
+            return session.getCommentFoldRange(row, i + match[0].length, 1);\n
+        }\n
+\n
+        if (foldStyle !== "markbeginend")\n
+            return;\n
+\n
+        var match = line.match(this.foldingStopMarker);\n
+        if (match) {\n
+            var i = match.index + match[0].length;\n
+\n
+            if (match[1])\n
+                return this.closingBracketBlock(session, match[1], row, i);\n
+\n
+            return session.getCommentFoldRange(row, i, -1);\n
+        }\n
+    };\n
+\n
+}).call(FoldMode.prototype);\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>25803</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

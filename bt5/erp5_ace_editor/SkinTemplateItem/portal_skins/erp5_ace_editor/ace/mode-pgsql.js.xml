@@ -1,0 +1,973 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155561.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-pgsql.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ * \n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ * \n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/pgsql\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/pgsql_highlight_rules\', \'ace/range\'], function(require, exports, module) {\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("../mode/text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var PgsqlHighlightRules = require("./pgsql_highlight_rules").PgsqlHighlightRules;\n
+var Range = require("../range").Range;\n
+\n
+var Mode = function() {\n
+    this.$tokenizer = new Tokenizer(new PgsqlHighlightRules().getRules());\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {       \n
+    this.lineCommentStart = "--";\n
+    this.blockComment = {start: "/*", end: "*/"};\n
+\n
+    this.getNextLineIndent = function(state, line, tab) { \n
+        if (state == "start" || state == "keyword.statementEnd") {\n
+            return "";\n
+        } else {\n
+            return this.$getIndent(line); // Keep whatever indent the previous line has\n
+        }\n
+    }\n
+\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+\n
+define(\'ace/mode/pgsql_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/doc_comment_highlight_rules\', \'ace/mode/text_highlight_rules\', \'ace/mode/perl_highlight_rules\', \'ace/mode/python_highlight_rules\'], function(require, exports, module) {\n
+\n
+var oop = require("../lib/oop");\n
+var lang = require("../lib/lang");\n
+var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+var PerlHighlightRules = require("./perl_highlight_rules").PerlHighlightRules;\n
+var PythonHighlightRules = require("./python_highlight_rules").PythonHighlightRules;\n
+\n
+var PgsqlHighlightRules = function() {\n
+    var keywords = (\n
+        "abort|absolute|abstime|access|aclitem|action|add|admin|after|aggregate|all|also|alter|always|" +\n
+        "analyse|analyze|and|any|anyarray|anyelement|anyenum|anynonarray|array|as|asc|assertion|" +\n
+        "assignment|asymmetric|at|attribute|authorization|backward|before|begin|between|bigint|" +\n
+        "binary|bit|bool|boolean|both|box|bpchar|by|bytea|cache|called|cascade|cascaded|case|cast|" +\n
+        "catalog|chain|char|character|characteristics|check|checkpoint|cid|cidr|circle|class|close|" +\n
+        "cluster|coalesce|collate|collation|column|comment|comments|commit|committed|concurrently|" +\n
+        "configuration|connection|constraint|constraints|content|continue|conversion|copy|cost|" +\n
+        "create|cross|cstring|csv|current|current_catalog|current_date|current_role|" +\n
+        "current_schema|current_time|current_timestamp|current_user|cursor|cycle|data|database|" +\n
+        "date|day|deallocate|dec|decimal|declare|default|defaults|deferrable|deferred|definer|delete|" +\n
+        "delimiter|delimiters|desc|dictionary|disable|discard|distinct|do|document|domain|double|" +\n
+        "drop|each|else|enable|encoding|encrypted|end|enum|escape|except|exclude|excluding|exclusive|" +\n
+        "execute|exists|explain|extension|external|extract|false|family|fdw_handler|fetch|first|" +\n
+        "float|float4|float8|following|for|force|foreign|forward|freeze|from|full|function|functions|" +\n
+        "global|grant|granted|greatest|group|gtsvector|handler|having|header|hold|hour|identity|if|" +\n
+        "ilike|immediate|immutable|implicit|in|including|increment|index|indexes|inet|inherit|" +\n
+        "inherits|initially|inline|inner|inout|input|insensitive|insert|instead|int|int2|int2vector|" +\n
+        "int4|int8|integer|internal|intersect|interval|into|invoker|is|isnull|isolation|join|key|label|" +\n
+        "language|language_handler|large|last|lc_collate|lc_ctype|leading|least|left|level|like|" +\n
+        "limit|line|listen|load|local|localtime|localtimestamp|location|lock|lseg|macaddr|mapping|" +\n
+        "match|maxvalue|minute|minvalue|mode|money|month|move|name|names|national|natural|nchar|next|no|" +\n
+        "none|not|nothing|notify|notnull|nowait|null|nullif|nulls|numeric|object|of|off|offset|oid|oids|" +\n
+        "oidvector|on|only|opaque|operator|option|options|or|order|out|outer|over|overlaps|overlay|" +\n
+        "owned|owner|parser|partial|partition|passing|password|path|pg_attribute|pg_auth_members|" +\n
+        "pg_authid|pg_class|pg_database|pg_node_tree|pg_proc|pg_type|placing|plans|point|polygon|" +\n
+        "position|preceding|precision|prepare|prepared|preserve|primary|prior|privileges|" +\n
+        "procedural|procedure|quote|range|read|real|reassign|recheck|record|recursive|ref|refcursor|" +\n
+        "references|regclass|regconfig|regdictionary|regoper|regoperator|regproc|regprocedure|" +\n
+        "regtype|reindex|relative|release|reltime|rename|repeatable|replace|replica|reset|restart|" +\n
+        "restrict|returning|returns|revoke|right|role|rollback|row|rows|rule|savepoint|schema|scroll|" +\n
+        "search|second|security|select|sequence|sequences|serializable|server|session|session_user|" +\n
+        "set|setof|share|show|similar|simple|smallint|smgr|some|stable|standalone|start|statement|" +\n
+        "statistics|stdin|stdout|storage|strict|strip|substring|symmetric|sysid|system|table|tables|" +\n
+        "tablespace|temp|template|temporary|text|then|tid|time|timestamp|timestamptz|timetz|" +\n
+        "tinterval|to|trailing|transaction|treat|trigger|trim|true|truncate|trusted|tsquery|tsvector|" +\n
+        "txid_snapshot|type|unbounded|uncommitted|unencrypted|union|unique|unknown|unlisten|" +\n
+        "unlogged|until|update|user|using|uuid|vacuum|valid|validate|validator|value|values|varbit|" +\n
+        "varchar|variadic|varying|verbose|version|view|void|volatile|when|where|whitespace|window|" +\n
+        "with|without|work|wrapper|write|xid|xml|xmlattributes|xmlconcat|xmlelement|xmlexists|" +\n
+        "xmlforest|xmlparse|xmlpi|xmlroot|xmlserialize|year|yes|zone"\n
+    );\n
+\n
+\n
+    var builtinFunctions = (\n
+        "RI_FKey_cascade_del|RI_FKey_cascade_upd|RI_FKey_check_ins|RI_FKey_check_upd|" +\n
+        "RI_FKey_noaction_del|RI_FKey_noaction_upd|RI_FKey_restrict_del|RI_FKey_restrict_upd|" +\n
+        "RI_FKey_setdefault_del|RI_FKey_setdefault_upd|RI_FKey_setnull_del|" +\n
+        "RI_FKey_setnull_upd|abbrev|abs|abstime|abstimeeq|abstimege|abstimegt|abstimein|abstimele|" +\n
+        "abstimelt|abstimene|abstimeout|abstimerecv|abstimesend|aclcontains|aclexplode|aclinsert|" +\n
+        "aclitemeq|aclitemin|aclitemout|aclremove|acos|age|any_in|any_out|anyarray_in|anyarray_out|" +\n
+        "anyarray_recv|anyarray_send|anyelement_in|anyelement_out|anyenum_in|anyenum_out|" +\n
+        "anynonarray_in|anynonarray_out|anytextcat|area|areajoinsel|areasel|array_agg|" +\n
+        "array_agg_finalfn|array_agg_transfn|array_append|array_cat|array_dims|array_eq|" +\n
+        "array_fill|array_ge|array_gt|array_in|array_larger|array_le|array_length|array_lower|" +\n
+        "array_lt|array_ndims|array_ne|array_out|array_prepend|array_recv|array_send|" +\n
+        "array_smaller|array_to_string|array_upper|arraycontained|arraycontains|arrayoverlap|" +\n
+        "ascii|ascii_to_mic|ascii_to_utf8|asin|atan|atan2|avg|big5_to_euc_tw|big5_to_mic|" +\n
+        "big5_to_utf8|bit_and|bit_in|bit_length|bit_or|bit_out|bit_recv|bit_send|bitand|bitcat|" +\n
+        "bitcmp|biteq|bitge|bitgt|bitle|bitlt|bitne|bitnot|bitor|bitshiftleft|bitshiftright|" +\n
+        "bittypmodin|bittypmodout|bitxor|bool|bool_and|bool_or|booland_statefunc|booleq|boolge|" +\n
+        "boolgt|boolin|boolle|boollt|boolne|boolor_statefunc|boolout|boolrecv|boolsend|box|" +\n
+        "box_above|box_above_eq|box_add|box_below|box_below_eq|box_center|box_contain|" +\n
+        "box_contain_pt|box_contained|box_distance|box_div|box_eq|box_ge|box_gt|box_in|" +\n
+        "box_intersect|box_le|box_left|box_lt|box_mul|box_out|box_overabove|box_overbelow|" +\n
+        "box_overlap|box_overleft|box_overright|box_recv|box_right|box_same|box_send|box_sub|" +\n
+        "bpchar_larger|bpchar_pattern_ge|bpchar_pattern_gt|bpchar_pattern_le|" +\n
+        "bpchar_pattern_lt|bpchar_smaller|bpcharcmp|bpchareq|bpcharge|bpchargt|bpchariclike|" +\n
+        "bpcharicnlike|bpcharicregexeq|bpcharicregexne|bpcharin|bpcharle|bpcharlike|bpcharlt|" +\n
+        "bpcharne|bpcharnlike|bpcharout|bpcharrecv|bpcharregexeq|bpcharregexne|bpcharsend|" +\n
+        "bpchartypmodin|bpchartypmodout|broadcast|btabstimecmp|btarraycmp|btbeginscan|btboolcmp|" +\n
+        "btbpchar_pattern_cmp|btbuild|btbuildempty|btbulkdelete|btcharcmp|btcostestimate|" +\n
+        "btendscan|btfloat48cmp|btfloat4cmp|btfloat84cmp|btfloat8cmp|btgetbitmap|btgettuple|" +\n
+        "btinsert|btint24cmp|btint28cmp|btint2cmp|btint42cmp|btint48cmp|btint4cmp|btint82cmp|" +\n
+        "btint84cmp|btint8cmp|btmarkpos|btnamecmp|btoidcmp|btoidvectorcmp|btoptions|btrecordcmp|" +\n
+        "btreltimecmp|btrescan|btrestrpos|btrim|bttext_pattern_cmp|bttextcmp|bttidcmp|" +\n
+        "bttintervalcmp|btvacuumcleanup|byteacat|byteacmp|byteaeq|byteage|byteagt|byteain|byteale|" +\n
+        "bytealike|bytealt|byteane|byteanlike|byteaout|bytearecv|byteasend|cash_cmp|cash_div_cash|" +\n
+        "cash_div_flt4|cash_div_flt8|cash_div_int2|cash_div_int4|cash_eq|cash_ge|cash_gt|cash_in|" +\n
+        "cash_le|cash_lt|cash_mi|cash_mul_flt4|cash_mul_flt8|cash_mul_int2|cash_mul_int4|cash_ne|" +\n
+        "cash_out|cash_pl|cash_recv|cash_send|cash_words|cashlarger|cashsmaller|cbrt|ceil|ceiling|" +\n
+        "center|char|char_length|character_length|chareq|charge|chargt|charin|charle|charlt|charne|" +\n
+        "charout|charrecv|charsend|chr|cideq|cidin|cidout|cidr|cidr_in|cidr_out|cidr_recv|cidr_send|" +\n
+        "cidrecv|cidsend|circle|circle_above|circle_add_pt|circle_below|circle_center|" +\n
+        "circle_contain|circle_contain_pt|circle_contained|circle_distance|circle_div_pt|" +\n
+        "circle_eq|circle_ge|circle_gt|circle_in|circle_le|circle_left|circle_lt|circle_mul_pt|" +\n
+        "circle_ne|circle_out|circle_overabove|circle_overbelow|circle_overlap|circle_overleft|" +\n
+        "circle_overright|circle_recv|circle_right|circle_same|circle_send|circle_sub_pt|" +\n
+        "clock_timestamp|close_lb|close_ls|close_lseg|close_pb|close_pl|close_ps|close_sb|" +\n
+        "close_sl|col_description|concat|concat_ws|contjoinsel|contsel|convert|convert_from|" +\n
+        "convert_to|corr|cos|cot|count|covar_pop|covar_samp|cstring_in|cstring_out|cstring_recv|" +\n
+        "cstring_send|cume_dist|current_database|current_query|current_schema|current_schemas|" +\n
+        "current_setting|current_user|currtid|currtid2|currval|cursor_to_xml|" +\n
+        "cursor_to_xmlschema|database_to_xml|database_to_xml_and_xmlschema|" +\n
+        "database_to_xmlschema|date|date_cmp|date_cmp_timestamp|date_cmp_timestamptz|date_eq|" +\n
+        "date_eq_timestamp|date_eq_timestamptz|date_ge|date_ge_timestamp|date_ge_timestamptz|" +\n
+        "date_gt|date_gt_timestamp|date_gt_timestamptz|date_in|date_larger|date_le|" +\n
+        "date_le_timestamp|date_le_timestamptz|date_lt|date_lt_timestamp|date_lt_timestamptz|" +\n
+        "date_mi|date_mi_interval|date_mii|date_ne|date_ne_timestamp|date_ne_timestamptz|" +\n
+        "date_out|date_part|date_pl_interval|date_pli|date_recv|date_send|date_smaller|" +\n
+        "date_trunc|datetime_pl|datetimetz_pl|dcbrt|decode|degrees|dense_rank|dexp|diagonal|" +\n
+        "diameter|dispell_init|dispell_lexize|dist_cpoly|dist_lb|dist_pb|dist_pc|dist_pl|" +\n
+        "dist_ppath|dist_ps|dist_sb|dist_sl|div|dlog1|dlog10|domain_in|domain_recv|dpow|dround|" +\n
+        "dsimple_init|dsimple_lexize|dsnowball_init|dsnowball_lexize|dsqrt|dsynonym_init|" +\n
+        "dsynonym_lexize|dtrunc|encode|enum_cmp|enum_eq|enum_first|enum_ge|enum_gt|enum_in|" +\n
+        "enum_larger|enum_last|enum_le|enum_lt|enum_ne|enum_out|enum_range|enum_recv|enum_send|" +\n
+        "enum_smaller|eqjoinsel|eqsel|euc_cn_to_mic|euc_cn_to_utf8|" +\n
+        "euc_jis_2004_to_shift_jis_2004|euc_jis_2004_to_utf8|euc_jp_to_mic|euc_jp_to_sjis|" +\n
+        "euc_jp_to_utf8|euc_kr_to_mic|euc_kr_to_utf8|euc_tw_to_big5|euc_tw_to_mic|" +\n
+        "euc_tw_to_utf8|every|exp|factorial|family|fdw_handler_in|fdw_handler_out|first_value|" +\n
+        "float4|float48div|float48eq|float48ge|float48gt|float48le|float48lt|float48mi|float48mul|" +\n
+        "float48ne|float48pl|float4_accum|float4abs|float4div|float4eq|float4ge|float4gt|float4in|" +\n
+        "float4larger|float4le|float4lt|float4mi|float4mul|float4ne|float4out|float4pl|float4recv|" +\n
+        "float4send|float4smaller|float4um|float4up|float8|float84div|float84eq|float84ge|" +\n
+        "float84gt|float84le|float84lt|float84mi|float84mul|float84ne|float84pl|float8_accum|" +\n
+        "float8_avg|float8_corr|float8_covar_pop|float8_covar_samp|float8_regr_accum|" +\n
+        "float8_regr_avgx|float8_regr_avgy|float8_regr_intercept|float8_regr_r2|" +\n
+        "float8_regr_slope|float8_regr_sxx|float8_regr_sxy|float8_regr_syy|float8_stddev_pop|" +\n
+        "float8_stddev_samp|float8_var_pop|float8_var_samp|float8abs|float8div|float8eq|" +\n
+        "float8ge|float8gt|float8in|float8larger|float8le|float8lt|float8mi|float8mul|float8ne|" +\n
+        "float8out|float8pl|float8recv|float8send|float8smaller|float8um|float8up|floor|" +\n
+        "flt4_mul_cash|flt8_mul_cash|fmgr_c_validator|fmgr_internal_validator|" +\n
+        "fmgr_sql_validator|format|format_type|gb18030_to_utf8|gbk_to_utf8|generate_series|" +\n
+        "generate_subscripts|get_bit|get_byte|get_current_ts_config|getdatabaseencoding|" +\n
+        "getpgusername|gin_cmp_prefix|gin_cmp_tslexeme|gin_extract_tsquery|" +\n
+        "gin_extract_tsvector|gin_tsquery_consistent|ginarrayconsistent|ginarrayextract|" +\n
+        "ginbeginscan|ginbuild|ginbuildempty|ginbulkdelete|gincostestimate|ginendscan|" +\n
+        "gingetbitmap|gininsert|ginmarkpos|ginoptions|ginqueryarrayextract|ginrescan|" +\n
+        "ginrestrpos|ginvacuumcleanup|gist_box_compress|gist_box_consistent|" +\n
+        "gist_box_decompress|gist_box_penalty|gist_box_picksplit|gist_box_same|gist_box_union|" +\n
+        "gist_circle_compress|gist_circle_consistent|gist_point_compress|" +\n
+        "gist_point_consistent|gist_point_distance|gist_poly_compress|gist_poly_consistent|" +\n
+        "gistbeginscan|gistbuild|gistbuildempty|gistbulkdelete|gistcostestimate|gistendscan|" +\n
+        "gistgetbitmap|gistgettuple|gistinsert|gistmarkpos|gistoptions|gistrescan|gistrestrpos|" +\n
+        "gistvacuumcleanup|gtsquery_compress|gtsquery_consistent|gtsquery_decompress|" +\n
+        "gtsquery_penalty|gtsquery_picksplit|gtsquery_same|gtsquery_union|gtsvector_compress|" +\n
+        "gtsvector_consistent|gtsvector_decompress|gtsvector_penalty|gtsvector_picksplit|" +\n
+        "gtsvector_same|gtsvector_union|gtsvectorin|gtsvectorout|has_any_column_privilege|" +\n
+        "has_column_privilege|has_database_privilege|has_foreign_data_wrapper_privilege|" +\n
+        "has_function_privilege|has_language_privilege|has_schema_privilege|" +\n
+        "has_sequence_privilege|has_server_privilege|has_table_privilege|" +\n
+        "has_tablespace_privilege|hash_aclitem|hash_array|hash_numeric|hashbeginscan|" +\n
+        "hashbpchar|hashbuild|hashbuildempty|hashbulkdelete|hashchar|hashcostestimate|" +\n
+        "hashendscan|hashenum|hashfloat4|hashfloat8|hashgetbitmap|hashgettuple|hashinet|" +\n
+        "hashinsert|hashint2|hashint2vector|hashint4|hashint8|hashmacaddr|hashmarkpos|hashname|" +\n
+        "hashoid|hashoidvector|hashoptions|hashrescan|hashrestrpos|hashtext|hashvacuumcleanup|" +\n
+        "hashvarlena|height|host|hostmask|iclikejoinsel|iclikesel|icnlikejoinsel|icnlikesel|" +\n
+        "icregexeqjoinsel|icregexeqsel|icregexnejoinsel|icregexnesel|inet_client_addr|" +\n
+        "inet_client_port|inet_in|inet_out|inet_recv|inet_send|inet_server_addr|" +\n
+        "inet_server_port|inetand|inetmi|inetmi_int8|inetnot|inetor|inetpl|initcap|int2|int24div|" +\n
+        "int24eq|int24ge|int24gt|int24le|int24lt|int24mi|int24mul|int24ne|int24pl|int28div|int28eq|" +\n
+        "int28ge|int28gt|int28le|int28lt|int28mi|int28mul|int28ne|int28pl|int2_accum|" +\n
+        "int2_avg_accum|int2_mul_cash|int2_sum|int2abs|int2and|int2div|int2eq|int2ge|int2gt|int2in|" +\n
+        "int2larger|int2le|int2lt|int2mi|int2mod|int2mul|int2ne|int2not|int2or|int2out|int2pl|" +\n
+        "int2recv|int2send|int2shl|int2shr|int2smaller|int2um|int2up|int2vectoreq|int2vectorin|" +\n
+        "int2vectorout|int2vectorrecv|int2vectorsend|int2xor|int4|int42div|int42eq|int42ge|" +\n
+        "int42gt|int42le|int42lt|int42mi|int42mul|int42ne|int42pl|int48div|int48eq|int48ge|int48gt|" +\n
+        "int48le|int48lt|int48mi|int48mul|int48ne|int48pl|int4_accum|int4_avg_accum|int4_mul_cash|" +\n
+        "int4_sum|int4abs|int4and|int4div|int4eq|int4ge|int4gt|int4in|int4inc|int4larger|int4le|" +\n
+        "int4lt|int4mi|int4mod|int4mul|int4ne|int4not|int4or|int4out|int4pl|int4recv|int4send|" +\n
+        "int4shl|int4shr|int4smaller|int4um|int4up|int4xor|int8|int82div|int82eq|int82ge|int82gt|" +\n
+        "int82le|int82lt|int82mi|int82mul|int82ne|int82pl|int84div|int84eq|int84ge|int84gt|int84le|" +\n
+        "int84lt|int84mi|int84mul|int84ne|int84pl|int8_accum|int8_avg|int8_avg_accum|int8_sum|" +\n
+        "int8abs|int8and|int8div|int8eq|int8ge|int8gt|int8in|int8inc|int8inc_any|" +\n
+        "int8inc_float8_float8|int8larger|int8le|int8lt|int8mi|int8mod|int8mul|int8ne|int8not|" +\n
+        "int8or|int8out|int8pl|int8pl_inet|int8recv|int8send|int8shl|int8shr|int8smaller|int8um|" +\n
+        "int8up|int8xor|integer_pl_date|inter_lb|inter_sb|inter_sl|internal_in|internal_out|" +\n
+        "interval_accum|interval_avg|interval_cmp|interval_div|interval_eq|interval_ge|" +\n
+        "interval_gt|interval_hash|interval_in|interval_larger|interval_le|interval_lt|" +\n
+        "interval_mi|interval_mul|interval_ne|interval_out|interval_pl|interval_pl_date|" +\n
+        "interval_pl_time|interval_pl_timestamp|interval_pl_timestamptz|interval_pl_timetz|" +\n
+        "interval_recv|interval_send|interval_smaller|interval_um|intervaltypmodin|" +\n
+        "intervaltypmodout|intinterval|isclosed|isfinite|ishorizontal|iso8859_1_to_utf8|" +\n
+        "iso8859_to_utf8|iso_to_koi8r|iso_to_mic|iso_to_win1251|iso_to_win866|isopen|isparallel|" +\n
+        "isperp|isvertical|johab_to_utf8|justify_days|justify_hours|justify_interval|" +\n
+        "koi8r_to_iso|koi8r_to_mic|koi8r_to_utf8|koi8r_to_win1251|koi8r_to_win866|" +\n
+        "koi8u_to_utf8|lag|language_handler_in|language_handler_out|last_value|lastval|" +\n
+        "latin1_to_mic|latin2_to_mic|latin2_to_win1250|latin3_to_mic|latin4_to_mic|lead|left|" +\n
+        "length|like|like_escape|likejoinsel|likesel|line|line_distance|line_eq|line_horizontal|" +\n
+        "line_in|line_interpt|line_intersect|line_out|line_parallel|line_perp|line_recv|" +\n
+        "line_send|line_vertical|ln|lo_close|lo_creat|lo_create|lo_export|lo_import|lo_lseek|" +\n
+        "lo_open|lo_tell|lo_truncate|lo_unlink|log|loread|lower|lowrite|lpad|lseg|lseg_center|" +\n
+        "lseg_distance|lseg_eq|lseg_ge|lseg_gt|lseg_horizontal|lseg_in|lseg_interpt|" +\n
+        "lseg_intersect|lseg_le|lseg_length|lseg_lt|lseg_ne|lseg_out|lseg_parallel|lseg_perp|" +\n
+        "lseg_recv|lseg_send|lseg_vertical|ltrim|macaddr_cmp|macaddr_eq|macaddr_ge|macaddr_gt|" +\n
+        "macaddr_in|macaddr_le|macaddr_lt|macaddr_ne|macaddr_out|macaddr_recv|macaddr_send|" +\n
+        "makeaclitem|masklen|max|md5|mic_to_ascii|mic_to_big5|mic_to_euc_cn|mic_to_euc_jp|" +\n
+        "mic_to_euc_kr|mic_to_euc_tw|mic_to_iso|mic_to_koi8r|mic_to_latin1|mic_to_latin2|" +\n
+        "mic_to_latin3|mic_to_latin4|mic_to_sjis|mic_to_win1250|mic_to_win1251|mic_to_win866|" +\n
+        "min|mktinterval|mod|money|mul_d_interval|name|nameeq|namege|namegt|nameiclike|nameicnlike|" +\n
+        "nameicregexeq|nameicregexne|namein|namele|namelike|namelt|namene|namenlike|nameout|" +\n
+        "namerecv|nameregexeq|nameregexne|namesend|neqjoinsel|neqsel|netmask|network|network_cmp|" +\n
+        "network_eq|network_ge|network_gt|network_le|network_lt|network_ne|network_sub|" +\n
+        "network_subeq|network_sup|network_supeq|nextval|nlikejoinsel|nlikesel|notlike|now|" +\n
+        "npoints|nth_value|ntile|numeric_abs|numeric_accum|numeric_add|numeric_avg|" +\n
+        "numeric_avg_accum|numeric_cmp|numeric_div|numeric_div_trunc|numeric_eq|numeric_exp|" +\n
+        "numeric_fac|numeric_ge|numeric_gt|numeric_in|numeric_inc|numeric_larger|numeric_le|" +\n
+        "numeric_ln|numeric_log|numeric_lt|numeric_mod|numeric_mul|numeric_ne|numeric_out|" +\n
+        "numeric_power|numeric_recv|numeric_send|numeric_smaller|numeric_sqrt|" +\n
+        "numeric_stddev_pop|numeric_stddev_samp|numeric_sub|numeric_uminus|numeric_uplus|" +\n
+        "numeric_var_pop|numeric_var_samp|numerictypmodin|numerictypmodout|numnode|" +\n
+        "obj_description|octet_length|oid|oideq|oidge|oidgt|oidin|oidlarger|oidle|oidlt|oidne|oidout|" +\n
+        "oidrecv|oidsend|oidsmaller|oidvectoreq|oidvectorge|oidvectorgt|oidvectorin|oidvectorle|" +\n
+        "oidvectorlt|oidvectorne|oidvectorout|oidvectorrecv|oidvectorsend|oidvectortypes|on_pb|" +\n
+        "on_pl|on_ppath|on_ps|on_sb|on_sl|opaque_in|opaque_out|overlaps|overlay|path|path_add|" +\n
+        "path_add_pt|path_center|path_contain_pt|path_distance|path_div_pt|path_in|path_inter|" +\n
+        "path_length|path_mul_pt|path_n_eq|path_n_ge|path_n_gt|path_n_le|path_n_lt|path_npoints|" +\n
+        "path_out|path_recv|path_send|path_sub_pt|pclose|percent_rank|pg_advisory_lock|" +\n
+        "pg_advisory_lock_shared|pg_advisory_unlock|pg_advisory_unlock_all|" +\n
+        "pg_advisory_unlock_shared|pg_advisory_xact_lock|pg_advisory_xact_lock_shared|" +\n
+        "pg_available_extension_versions|pg_available_extensions|pg_backend_pid|" +\n
+        "pg_cancel_backend|pg_char_to_encoding|pg_client_encoding|pg_collation_is_visible|" +\n
+        "pg_column_size|pg_conf_load_time|pg_conversion_is_visible|pg_create_restore_point|" +\n
+        "pg_current_xlog_insert_location|pg_current_xlog_location|pg_cursor|pg_database_size|" +\n
+        "pg_describe_object|pg_encoding_max_length|pg_encoding_to_char|" +\n
+        "pg_extension_config_dump|pg_extension_update_paths|pg_function_is_visible|" +\n
+        "pg_get_constraintdef|pg_get_expr|pg_get_function_arguments|" +\n
+        "pg_get_function_identity_arguments|pg_get_function_result|pg_get_functiondef|" +\n
+        "pg_get_indexdef|pg_get_keywords|pg_get_ruledef|pg_get_serial_sequence|" +\n
+        "pg_get_triggerdef|pg_get_userbyid|pg_get_viewdef|pg_has_role|pg_indexes_size|" +\n
+        "pg_is_in_recovery|pg_is_other_temp_schema|pg_is_xlog_replay_paused|" +\n
+        "pg_last_xact_replay_timestamp|pg_last_xlog_receive_location|" +\n
+        "pg_last_xlog_replay_location|pg_listening_channels|pg_lock_status|pg_ls_dir|" +\n
+        "pg_my_temp_schema|pg_node_tree_in|pg_node_tree_out|pg_node_tree_recv|" +\n
+        "pg_node_tree_send|pg_notify|pg_opclass_is_visible|pg_operator_is_visible|" +\n
+        "pg_options_to_table|pg_postmaster_start_time|pg_prepared_statement|pg_prepared_xact|" +\n
+        "pg_read_binary_file|pg_read_file|pg_relation_filenode|pg_relation_filepath|" +\n
+        "pg_relation_size|pg_reload_conf|pg_rotate_logfile|pg_sequence_parameters|" +\n
+        "pg_show_all_settings|pg_size_pretty|pg_sleep|pg_start_backup|pg_stat_clear_snapshot|" +\n
+        "pg_stat_file|pg_stat_get_activity|pg_stat_get_analyze_count|" +\n
+        "pg_stat_get_autoanalyze_count|pg_stat_get_autovacuum_count|" +\n
+        "pg_stat_get_backend_activity|pg_stat_get_backend_activity_start|" +\n
+        "pg_stat_get_backend_client_addr|pg_stat_get_backend_client_port|" +\n
+        "pg_stat_get_backend_dbid|pg_stat_get_backend_idset|pg_stat_get_backend_pid|" +\n
+        "pg_stat_get_backend_start|pg_stat_get_backend_userid|pg_stat_get_backend_waiting|" +\n
+        "pg_stat_get_backend_xact_start|pg_stat_get_bgwriter_buf_written_checkpoints|" +\n
+        "pg_stat_get_bgwriter_buf_written_clean|pg_stat_get_bgwriter_maxwritten_clean|" +\n
+        "pg_stat_get_bgwriter_requested_checkpoints|pg_stat_get_bgwriter_stat_reset_time|" +\n
+        "pg_stat_get_bgwriter_timed_checkpoints|pg_stat_get_blocks_fetched|" +\n
+        "pg_stat_get_blocks_hit|pg_stat_get_buf_alloc|pg_stat_get_buf_fsync_backend|" +\n
+        "pg_stat_get_buf_written_backend|pg_stat_get_db_blocks_fetched|" +\n
+        "pg_stat_get_db_blocks_hit|pg_stat_get_db_conflict_all|" +\n
+        "pg_stat_get_db_conflict_bufferpin|pg_stat_get_db_conflict_lock|" +\n
+        "pg_stat_get_db_conflict_snapshot|pg_stat_get_db_conflict_startup_deadlock|" +\n
+        "pg_stat_get_db_conflict_tablespace|pg_stat_get_db_numbackends|" +\n
+        "pg_stat_get_db_stat_reset_time|pg_stat_get_db_tuples_deleted|" +\n
+        "pg_stat_get_db_tuples_fetched|pg_stat_get_db_tuples_inserted|" +\n
+        "pg_stat_get_db_tuples_returned|pg_stat_get_db_tuples_updated|" +\n
+        "pg_stat_get_db_xact_commit|pg_stat_get_db_xact_rollback|pg_stat_get_dead_tuples|" +\n
+        "pg_stat_get_function_calls|pg_stat_get_function_self_time|" +\n
+        "pg_stat_get_function_time|pg_stat_get_last_analyze_time|" +\n
+        "pg_stat_get_last_autoanalyze_time|pg_stat_get_last_autovacuum_time|" +\n
+        "pg_stat_get_last_vacuum_time|pg_stat_get_live_tuples|pg_stat_get_numscans|" +\n
+        "pg_stat_get_tuples_deleted|pg_stat_get_tuples_fetched|" +\n
+        "pg_stat_get_tuples_hot_updated|pg_stat_get_tuples_inserted|" +\n
+        "pg_stat_get_tuples_returned|pg_stat_get_tuples_updated|pg_stat_get_vacuum_count|" +\n
+        "pg_stat_get_wal_senders|pg_stat_get_xact_blocks_fetched|" +\n
+        "pg_stat_get_xact_blocks_hit|pg_stat_get_xact_function_calls|" +\n
+        "pg_stat_get_xact_function_self_time|pg_stat_get_xact_function_time|" +\n
+        "pg_stat_get_xact_numscans|pg_stat_get_xact_tuples_deleted|" +\n
+        "pg_stat_get_xact_tuples_fetched|pg_stat_get_xact_tuples_hot_updated|" +\n
+        "pg_stat_get_xact_tuples_inserted|pg_stat_get_xact_tuples_returned|" +\n
+        "pg_stat_get_xact_tuples_updated|pg_stat_reset|pg_stat_reset_shared|" +\n
+        "pg_stat_reset_single_function_counters|pg_stat_reset_single_table_counters|" +\n
+        "pg_stop_backup|pg_switch_xlog|pg_table_is_visible|pg_table_size|" +\n
+        "pg_tablespace_databases|pg_tablespace_size|pg_terminate_backend|pg_timezone_abbrevs|" +\n
+        "pg_timezone_names|pg_total_relation_size|pg_try_advisory_lock|" +\n
+        "pg_try_advisory_lock_shared|pg_try_advisory_xact_lock|" +\n
+        "pg_try_advisory_xact_lock_shared|pg_ts_config_is_visible|pg_ts_dict_is_visible|" +\n
+        "pg_ts_parser_is_visible|pg_ts_template_is_visible|pg_type_is_visible|pg_typeof|" +\n
+        "pg_xlog_replay_pause|pg_xlog_replay_resume|pg_xlogfile_name|pg_xlogfile_name_offset|" +\n
+        "pi|plainto_tsquery|plpgsql_call_handler|plpgsql_inline_handler|plpgsql_validator|" +\n
+        "point|point_above|point_add|point_below|point_distance|point_div|point_eq|point_horiz|" +\n
+        "point_in|point_left|point_mul|point_ne|point_out|point_recv|point_right|point_send|" +\n
+        "point_sub|point_vert|poly_above|poly_below|poly_center|poly_contain|poly_contain_pt|" +\n
+        "poly_contained|poly_distance|poly_in|poly_left|poly_npoints|poly_out|poly_overabove|" +\n
+        "poly_overbelow|poly_overlap|poly_overleft|poly_overright|poly_recv|poly_right|" +\n
+        "poly_same|poly_send|polygon|popen|position|positionjoinsel|positionsel|" +\n
+        "postgresql_fdw_validator|pow|power|prsd_end|prsd_headline|prsd_lextype|prsd_nexttoken|" +\n
+        "prsd_start|pt_contained_circle|pt_contained_poly|query_to_xml|" +\n
+        "query_to_xml_and_xmlschema|query_to_xmlschema|querytree|quote_ident|quote_literal|" +\n
+        "quote_nullable|radians|radius|random|rank|record_eq|record_ge|record_gt|record_in|" +\n
+        "record_le|record_lt|record_ne|record_out|record_recv|record_send|regclass|regclassin|" +\n
+        "regclassout|regclassrecv|regclasssend|regconfigin|regconfigout|regconfigrecv|" +\n
+        "regconfigsend|regdictionaryin|regdictionaryout|regdictionaryrecv|regdictionarysend|" +\n
+        "regexeqjoinsel|regexeqsel|regexnejoinsel|regexnesel|regexp_matches|regexp_replace|" +\n
+        "regexp_split_to_array|regexp_split_to_table|regoperatorin|regoperatorout|" +\n
+        "regoperatorrecv|regoperatorsend|regoperin|regoperout|regoperrecv|regopersend|" +\n
+        "regprocedurein|regprocedureout|regprocedurerecv|regproceduresend|regprocin|regprocout|" +\n
+        "regprocrecv|regprocsend|regr_avgx|regr_avgy|regr_count|regr_intercept|regr_r2|" +\n
+        "regr_slope|regr_sxx|regr_sxy|regr_syy|regtypein|regtypeout|regtyperecv|regtypesend|" +\n
+        "reltime|reltimeeq|reltimege|reltimegt|reltimein|reltimele|reltimelt|reltimene|reltimeout|" +\n
+        "reltimerecv|reltimesend|repeat|replace|reverse|right|round|row_number|rpad|rtrim|" +\n
+        "scalargtjoinsel|scalargtsel|scalarltjoinsel|scalarltsel|schema_to_xml|" +\n
+        "schema_to_xml_and_xmlschema|schema_to_xmlschema|session_user|set_bit|set_byte|" +\n
+        "set_config|set_masklen|setseed|setval|setweight|shell_in|shell_out|" +\n
+        "shift_jis_2004_to_euc_jis_2004|shift_jis_2004_to_utf8|shobj_description|sign|" +\n
+        "similar_escape|sin|sjis_to_euc_jp|sjis_to_mic|sjis_to_utf8|slope|smgreq|smgrin|smgrne|" +\n
+        "smgrout|split_part|sqrt|statement_timestamp|stddev|stddev_pop|stddev_samp|string_agg|" +\n
+        "string_agg_finalfn|string_agg_transfn|string_to_array|strip|strpos|substr|substring|sum|" +\n
+        "suppress_redundant_updates_trigger|table_to_xml|table_to_xml_and_xmlschema|" +\n
+        "table_to_xmlschema|tan|text|text_ge|text_gt|text_larger|text_le|text_lt|text_pattern_ge|" +\n
+        "text_pattern_gt|text_pattern_le|text_pattern_lt|text_smaller|textanycat|textcat|texteq|" +\n
+        "texticlike|texticnlike|texticregexeq|texticregexne|textin|textlen|textlike|textne|" +\n
+        "textnlike|textout|textrecv|textregexeq|textregexne|textsend|thesaurus_init|" +\n
+        "thesaurus_lexize|tideq|tidge|tidgt|tidin|tidlarger|tidle|tidlt|tidne|tidout|tidrecv|tidsend|" +\n
+        "tidsmaller|time_cmp|time_eq|time_ge|time_gt|time_hash|time_in|time_larger|time_le|time_lt|" +\n
+        "time_mi_interval|time_mi_time|time_ne|time_out|time_pl_interval|time_recv|time_send|" +\n
+        "time_smaller|timedate_pl|timemi|timenow|timeofday|timepl|timestamp_cmp|" +\n
+        "timestamp_cmp_date|timestamp_cmp_timestamptz|timestamp_eq|timestamp_eq_date|" +\n
+        "timestamp_eq_timestamptz|timestamp_ge|timestamp_ge_date|timestamp_ge_timestamptz|" +\n
+        "timestamp_gt|timestamp_gt_date|timestamp_gt_timestamptz|timestamp_hash|timestamp_in|" +\n
+        "timestamp_larger|timestamp_le|timestamp_le_date|timestamp_le_timestamptz|" +\n
+        "timestamp_lt|timestamp_lt_date|timestamp_lt_timestamptz|timestamp_mi|" +\n
+        "timestamp_mi_interval|timestamp_ne|timestamp_ne_date|timestamp_ne_timestamptz|" +\n
+        "timestamp_out|timestamp_pl_interval|timestamp_recv|timestamp_send|timestamp_smaller|" +\n
+        "timestamptypmodin|timestamptypmodout|timestamptz_cmp|timestamptz_cmp_date|" +\n
+        "timestamptz_cmp_timestamp|timestamptz_eq|timestamptz_eq_date|" +\n
+        "timestamptz_eq_timestamp|timestamptz_ge|timestamptz_ge_date|" +\n
+        "timestamptz_ge_timestamp|timestamptz_gt|timestamptz_gt_date|" +\n
+        "timestamptz_gt_timestamp|timestamptz_in|timestamptz_larger|timestamptz_le|" +\n
+        "timestamptz_le_date|timestamptz_le_timestamp|timestamptz_lt|timestamptz_lt_date|" +\n
+        "timestamptz_lt_timestamp|timestamptz_mi|timestamptz_mi_interval|timestamptz_ne|" +\n
+        "timestamptz_ne_date|timestamptz_ne_timestamp|timestamptz_out|" +\n
+        "timestamptz_pl_interval|timestamptz_recv|timestamptz_send|timestamptz_smaller|" +\n
+        "timestamptztypmodin|timestamptztypmodout|timetypmodin|timetypmodout|timetz_cmp|" +\n
+        "timetz_eq|timetz_ge|timetz_gt|timetz_hash|timetz_in|timetz_larger|timetz_le|timetz_lt|" +\n
+        "timetz_mi_interval|timetz_ne|timetz_out|timetz_pl_interval|timetz_recv|timetz_send|" +\n
+        "timetz_smaller|timetzdate_pl|timetztypmodin|timetztypmodout|timezone|tinterval|" +\n
+        "tintervalct|tintervalend|tintervaleq|tintervalge|tintervalgt|tintervalin|tintervalle|" +\n
+        "tintervalleneq|tintervallenge|tintervallengt|tintervallenle|tintervallenlt|" +\n
+        "tintervallenne|tintervallt|tintervalne|tintervalout|tintervalov|tintervalrecv|" +\n
+        "tintervalrel|tintervalsame|tintervalsend|tintervalstart|to_ascii|to_char|to_date|to_hex|" +\n
+        "to_number|to_timestamp|to_tsquery|to_tsvector|transaction_timestamp|translate|" +\n
+        "trigger_in|trigger_out|trunc|ts_debug|ts_headline|ts_lexize|ts_match_qv|ts_match_tq|" +\n
+        "ts_match_tt|ts_match_vq|ts_parse|ts_rank|ts_rank_cd|ts_rewrite|ts_stat|ts_token_type|" +\n
+        "ts_typanalyze|tsmatchjoinsel|tsmatchsel|tsq_mcontained|tsq_mcontains|tsquery_and|" +\n
+        "tsquery_cmp|tsquery_eq|tsquery_ge|tsquery_gt|tsquery_le|tsquery_lt|tsquery_ne|" +\n
+        "tsquery_not|tsquery_or|tsqueryin|tsqueryout|tsqueryrecv|tsquerysend|tsvector_cmp|" +\n
+        "tsvector_concat|tsvector_eq|tsvector_ge|tsvector_gt|tsvector_le|tsvector_lt|" +\n
+        "tsvector_ne|tsvector_update_trigger|tsvector_update_trigger_column|tsvectorin|" +\n
+        "tsvectorout|tsvectorrecv|tsvectorsend|txid_current|txid_current_snapshot|" +\n
+        "txid_snapshot_in|txid_snapshot_out|txid_snapshot_recv|txid_snapshot_send|" +\n
+        "txid_snapshot_xip|txid_snapshot_xmax|txid_snapshot_xmin|txid_visible_in_snapshot|" +\n
+        "uhc_to_utf8|unique_key_recheck|unknownin|unknownout|unknownrecv|unknownsend|unnest|" +\n
+        "upper|utf8_to_ascii|utf8_to_big5|utf8_to_euc_cn|utf8_to_euc_jis_2004|utf8_to_euc_jp|" +\n
+        "utf8_to_euc_kr|utf8_to_euc_tw|utf8_to_gb18030|utf8_to_gbk|utf8_to_iso8859|" +\n
+        "utf8_to_iso8859_1|utf8_to_johab|utf8_to_koi8r|utf8_to_koi8u|utf8_to_shift_jis_2004|" +\n
+        "utf8_to_sjis|utf8_to_uhc|utf8_to_win|uuid_cmp|uuid_eq|uuid_ge|uuid_gt|uuid_hash|uuid_in|" +\n
+        "uuid_le|uuid_lt|uuid_ne|uuid_out|uuid_recv|uuid_send|var_pop|var_samp|varbit_in|" +\n
+        "varbit_out|varbit_recv|varbit_send|varbitcmp|varbiteq|varbitge|varbitgt|varbitle|" +\n
+        "varbitlt|varbitne|varbittypmodin|varbittypmodout|varcharin|varcharout|varcharrecv|" +\n
+        "varcharsend|varchartypmodin|varchartypmodout|variance|version|void_in|void_out|" +\n
+        "void_recv|void_send|width|width_bucket|win1250_to_latin2|win1250_to_mic|win1251_to_iso|" +\n
+        "win1251_to_koi8r|win1251_to_mic|win1251_to_win866|win866_to_iso|win866_to_koi8r|" +\n
+        "win866_to_mic|win866_to_win1251|win_to_utf8|xideq|xideqint4|xidin|xidout|xidrecv|xidsend|" +\n
+        "xml|xml_in|xml_is_well_formed|xml_is_well_formed_content|xml_is_well_formed_document|" +\n
+        "xml_out|xml_recv|xml_send|xmlagg|xmlcomment|xmlconcat2|xmlexists|xmlvalidate|xpath|" +\n
+        "xpath_exists"\n
+    );\n
+\n
+    var keywordMapper = this.createKeywordMapper({\n
+        "support.function": builtinFunctions,\n
+        "keyword": keywords\n
+    }, "identifier", true);\n
+\n
+\n
+    var sqlRules = [{\n
+            token : "string", // single line string -- assume dollar strings if multi-line for now\n
+            regex : "[\'](?:(?:\\\\\\\\.)|(?:[^\'\\\\\\\\]))*?[\']"\n
+        }, {\n
+            token : "variable.language", // pg identifier\n
+            regex : \'".*?"\'\n
+        }, {\n
+            token : "constant.numeric", // float\n
+            regex : "[+-]?\\\\d+(?:(?:\\\\.\\\\d*)?(?:[eE][+-]?\\\\d+)?)?\\\\b"\n
+        }, {\n
+            token : keywordMapper,\n
+            regex : "[a-zA-Z_][a-zA-Z0-9_$]*\\\\b" // TODO - Unicode in identifiers\n
+        }, {\n
+            token : "keyword.operator",\n
+            regex : "!|!!|!~|!~\\\\*|!~~|!~~\\\\*|#|##|#<|#<=|#<>|#=|#>|#>=|%|\\\\&|\\\\&\\\\&|\\\\&<|\\\\&<\\\\||\\\\&>|\\\\*|\\\\+|" +\n
+                    "\\\\-|/|<|<#>|<\\\\->|<<|<<=|<<\\\\||<=|<>|<\\\\?>|<@|<\\\\^|=|>|>=|>>|>>=|>\\\\^|\\\\?#|\\\\?\\\\-|\\\\?\\\\-\\\\||" +\n
+                    "\\\\?\\\\||\\\\?\\\\|\\\\||@|@\\\\-@|@>|@@|@@@|\\\\^|\\\\||\\\\|\\\\&>|\\\\|/|\\\\|>>|\\\\|\\\\||\\\\|\\\\|/|~|~\\\\*|~<=~|~<~|" +\n
+                    "~=|~>=~|~>~|~~|~~\\\\*"\n
+        }, {\n
+            token : "paren.lparen",\n
+            regex : "[\\\\(]"\n
+        }, {\n
+            token : "paren.rparen",\n
+            regex : "[\\\\)]"\n
+        }, {\n
+            token : "text",\n
+            regex : "\\\\s+"\n
+        }\n
+    ];\n
+\n
+\n
+    this.$rules = {\n
+        "start" : [{\n
+                token : "comment",\n
+                regex : "--.*$"\n
+            },\n
+            DocCommentHighlightRules.getStartRule("doc-start"),\n
+            {\n
+                token : "comment", // multi-line comment\n
+                regex : "\\\\/\\\\*",\n
+                next : "comment"\n
+            },{\n
+                token : "keyword.statementBegin",\n
+                regex : "^[a-zA-Z]+", // Could enumerate starting keywords but this allows things to work when new statements are added.\n
+                next : "statement"\n
+            },{\n
+                token : "support.buildin", // psql directive\n
+                regex : "^\\\\\\\\[\\\\S]+.*$"\n
+            }\n
+        ],\n
+\n
+        "statement" : [{\n
+                token : "comment",\n
+                regex : "--.*$"\n
+            }, {\n
+                token : "comment", // multi-line comment\n
+                regex : "\\\\/\\\\*",\n
+                next : "commentStatement"\n
+            }, {\n
+                token : "statementEnd",\n
+                regex : ";",\n
+                next : "start"\n
+            }, {\n
+                token : "string", // perl, python, tcl are in the pg default dist (no tcl highlighter)\n
+                regex : "\\\\$perl\\\\$",\n
+                next : "perl-start"\n
+            }, {\n
+                token : "string",\n
+                regex : "\\\\$python\\\\$",\n
+                next : "python-start"\n
+            },{\n
+                token : "string",\n
+                regex : "\\\\$[\\\\w_0-9]*\\\\$$", // dollar quote at the end of a line\n
+                next : "dollarSql"\n
+            }, {\n
+                token : "string",\n
+                regex : "\\\\$[\\\\w_0-9]*\\\\$",\n
+                next : "dollarStatementString"\n
+            }\n
+        ].concat(sqlRules),\n
+\n
+        "dollarSql" : [{\n
+                token : "comment",\n
+                regex : "--.*$"\n
+            }, {\n
+                token : "comment", // multi-line comment\n
+                regex : "\\\\/\\\\*",\n
+                next : "commentDollarSql"\n
+            }, {\n
+                token : "string", // end quoting with dollar at the start of a line\n
+                regex : "^\\\\$[\\\\w_0-9]*\\\\$",\n
+                next : "statement"\n
+            }, {\n
+                token : "string",\n
+                regex : "\\\\$[\\\\w_0-9]*\\\\$",\n
+                next : "dollarSqlString"\n
+            }\n
+        ].concat(sqlRules),\n
+\n
+        "comment" : [{\n
+                token : "comment", // closing comment\n
+                regex : ".*?\\\\*\\\\/",\n
+                next : "start"\n
+            }, {\n
+                token : "comment", // comment spanning whole line\n
+                regex : ".+"\n
+            }\n
+        ],\n
+\n
+        "commentStatement" : [{\n
+                token : "comment", // closing comment\n
+                regex : ".*?\\\\*\\\\/",\n
+                next : "statement"\n
+            }, {\n
+                token : "comment", // comment spanning whole line\n
+                regex : ".+"\n
+            }\n
+        ],\n
+\n
+        "commentDollarSql" : [{\n
+                token : "comment", // closing comment\n
+                regex : ".*?\\\\*\\\\/",\n
+                next : "dollarSql"\n
+            }, {\n
+                token : "comment", // comment spanning whole line\n
+                regex : ".+"\n
+            }\n
+        ],\n
+\n
+        "dollarStatementString" : [{\n
+                token : "string", // closing dollarstring\n
+                regex : ".*?\\\\$[\\\\w_0-9]*\\\\$",\n
+                next : "statement"\n
+            }, {\n
+                token : "string", // dollarstring spanning whole line\n
+                regex : ".+"\n
+            }\n
+        ],\n
+\n
+        "dollarSqlString" : [{\n
+                token : "string", // closing dollarstring\n
+                regex : ".*?\\\\$[\\\\w_0-9]*\\\\$",\n
+                next : "dollarSql"\n
+            }, {\n
+                token : "string", // dollarstring spanning whole line\n
+                regex : ".+"\n
+            }\n
+        ]\n
+    };\n
+\n
+    this.embedRules(DocCommentHighlightRules, "doc-", [ DocCommentHighlightRules.getEndRule("start") ]);\n
+    this.embedRules(PerlHighlightRules, "perl-", [{token : "string", regex : "\\\\$perl\\\\$", next : "statement"}]);\n
+    this.embedRules(PythonHighlightRules, "python-", [{token : "string", regex : "\\\\$python\\\\$", next : "statement"}]);\n
+};\n
+\n
+oop.inherits(PgsqlHighlightRules, TextHighlightRules);\n
+\n
+exports.PgsqlHighlightRules = PgsqlHighlightRules;\n
+});\n
+\n
+define(\'ace/mode/doc_comment_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var DocCommentHighlightRules = function() {\n
+\n
+    this.$rules = {\n
+        "start" : [ {\n
+            token : "comment.doc.tag",\n
+            regex : "@[\\\\w\\\\d_]+" // TODO: fix email addresses\n
+        }, {\n
+            token : "comment.doc.tag",\n
+            regex : "\\\\bTODO\\\\b"\n
+        }, {\n
+            defaultToken : "comment.doc"\n
+        }]\n
+    };\n
+};\n
+\n
+oop.inherits(DocCommentHighlightRules, TextHighlightRules);\n
+\n
+DocCommentHighlightRules.getStartRule = function(start) {\n
+    return {\n
+        token : "comment.doc", // doc comment\n
+        regex : "\\\\/\\\\*(?=\\\\*)",\n
+        next  : start\n
+    };\n
+};\n
+\n
+DocCommentHighlightRules.getEndRule = function (start) {\n
+    return {\n
+        token : "comment.doc", // closing comment\n
+        regex : "\\\\*\\\\/",\n
+        next  : start\n
+    };\n
+};\n
+\n
+\n
+exports.DocCommentHighlightRules = DocCommentHighlightRules;\n
+\n
+});\n
+\n
+define(\'ace/mode/perl_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var PerlHighlightRules = function() {\n
+\n
+    var keywords = (\n
+        "base|constant|continue|else|elsif|for|foreach|format|goto|if|last|local|my|next|" +\n
+         "no|package|parent|redo|require|scalar|sub|unless|until|while|use|vars"\n
+    );\n
+\n
+    var buildinConstants = ("ARGV|ENV|INC|SIG");\n
+\n
+    var builtinFunctions = (\n
+        "getprotobynumber|getprotobyname|getservbyname|gethostbyaddr|" +\n
+         "gethostbyname|getservbyport|getnetbyaddr|getnetbyname|getsockname|" +\n
+         "getpeername|setpriority|getprotoent|setprotoent|getpriority|" +\n
+         "endprotoent|getservent|setservent|endservent|sethostent|socketpair|" +\n
+         "getsockopt|gethostent|endhostent|setsockopt|setnetent|quotemeta|" +\n
+         "localtime|prototype|getnetent|endnetent|rewinddir|wantarray|getpwuid|" +\n
+         "closedir|getlogin|readlink|endgrent|getgrgid|getgrnam|shmwrite|" +\n
+         "shutdown|readline|endpwent|setgrent|readpipe|formline|truncate|" +\n
+         "dbmclose|syswrite|setpwent|getpwnam|getgrent|getpwent|ucfirst|sysread|" +\n
+         "setpgrp|shmread|sysseek|sysopen|telldir|defined|opendir|connect|" +\n
+         "lcfirst|getppid|binmode|syscall|sprintf|getpgrp|readdir|seekdir|" +\n
+         "waitpid|reverse|unshift|symlink|dbmopen|semget|msgrcv|rename|listen|" +\n
+         "chroot|msgsnd|shmctl|accept|unpack|exists|fileno|shmget|system|" +\n
+         "unlink|printf|gmtime|msgctl|semctl|values|rindex|substr|splice|" +\n
+         "length|msgget|select|socket|return|caller|delete|alarm|ioctl|index|" +\n
+         "undef|lstat|times|srand|chown|fcntl|close|write|umask|rmdir|study|" +\n
+         "sleep|chomp|untie|print|utime|mkdir|atan2|split|crypt|flock|chmod|" +\n
+         "BEGIN|bless|chdir|semop|shift|reset|link|stat|chop|grep|fork|dump|" +\n
+         "join|open|tell|pipe|exit|glob|warn|each|bind|sort|pack|eval|push|" +\n
+         "keys|getc|kill|seek|sqrt|send|wait|rand|tied|read|time|exec|recv|" +\n
+         "eof|chr|int|ord|exp|pos|pop|sin|log|abs|oct|hex|tie|cos|vec|END|ref|" +\n
+         "map|die|uc|lc|do"\n
+    );\n
+\n
+    var keywordMapper = this.createKeywordMapper({\n
+        "keyword": keywords,\n
+        "constant.language": buildinConstants,\n
+        "support.function": builtinFunctions\n
+    }, "identifier");\n
+\n
+    this.$rules = {\n
+        "start" : [\n
+            {\n
+                token : "comment",\n
+                regex : "#.*$"\n
+            }, {\n
+                token : "comment.doc",\n
+                regex : "^=(?:begin|item)\\\\b",\n
+                next : "block_comment"\n
+            }, {\n
+                token : "string.regexp",\n
+                regex : "[/](?:(?:\\\\[(?:\\\\\\\\]|[^\\\\]])+\\\\])|(?:\\\\\\\\/|[^\\\\]/]))*[/]\\\\w*\\\\s*(?=[).,;]|$)"\n
+            }, {\n
+                token : "string", // single line\n
+                regex : \'["](?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?["]\'\n
+            }, {\n
+                token : "string", // multi line string start\n
+                regex : \'["].*\\\\\\\\$\',\n
+                next : "qqstring"\n
+            }, {\n
+                token : "string", // single line\n
+                regex : "[\'](?:(?:\\\\\\\\.)|(?:[^\'\\\\\\\\]))*?[\']"\n
+            }, {\n
+                token : "string", // multi line string start\n
+                regex : "[\'].*\\\\\\\\$",\n
+                next : "qstring"\n
+            }, {\n
+                token : "constant.numeric", // hex\n
+                regex : "0x[0-9a-fA-F]+\\\\b"\n
+            }, {\n
+                token : "constant.numeric", // float\n
+                regex : "[+-]?\\\\d+(?:(?:\\\\.\\\\d*)?(?:[eE][+-]?\\\\d+)?)?\\\\b"\n
+            }, {\n
+                token : keywordMapper,\n
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"\n
+            }, {\n
+                token : "keyword.operator",\n
+                regex : "\\\\.\\\\.\\\\.|\\\\|\\\\|=|>>=|<<=|<=>|&&=|=>|!~|\\\\^=|&=|\\\\|=|\\\\.=|x=|%=|\\\\/=|\\\\*=|\\\\-=|\\\\+=|=~|\\\\*\\\\*|\\\\-\\\\-|\\\\.\\\\.|\\\\|\\\\||&&|\\\\+\\\\+|\\\\->|!=|==|>=|<=|>>|<<|,|=|\\\\?\\\\:|\\\\^|\\\\||x|%|\\\\/|\\\\*|<|&|\\\\\\\\|~|!|>|\\\\.|\\\\-|\\\\+|\\\\-C|\\\\-b|\\\\-S|\\\\-u|\\\\-t|\\\\-p|\\\\-l|\\\\-d|\\\\-f|\\\\-g|\\\\-s|\\\\-z|\\\\-k|\\\\-e|\\\\-O|\\\\-T|\\\\-B|\\\\-M|\\\\-A|\\\\-X|\\\\-W|\\\\-c|\\\\-R|\\\\-o|\\\\-x|\\\\-w|\\\\-r|\\\\b(?:and|cmp|eq|ge|gt|le|lt|ne|not|or|xor)"\n
+            }, {\n
+                token : "lparen",\n
+                regex : "[[({]"\n
+            }, {\n
+                token : "rparen",\n
+                regex : "[\\\\])}]"\n
+            }, {\n
+                token : "text",\n
+                regex : "\\\\s+"\n
+            }\n
+        ],\n
+        "qqstring" : [\n
+            {\n
+                token : "string",\n
+                regex : \'(?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?"\',\n
+                next : "start"\n
+            }, {\n
+                token : "string",\n
+                regex : \'.+\'\n
+            }\n
+        ],\n
+        "qstring" : [\n
+            {\n
+                token : "string",\n
+                regex : "(?:(?:\\\\\\\\.)|(?:[^\'\\\\\\\\]))*?\'",\n
+                next : "start"\n
+            }, {\n
+                token : "string",\n
+                regex : \'.+\'\n
+            }\n
+        ],\n
+        "block_comment": [\n
+            {\n
+                token: "comment.doc", \n
+                regex: "^=cut\\\\b",\n
+                next: "start"\n
+            },\n
+            {\n
+                defaultToken: "comment.doc"\n
+            }\n
+        ]\n
+    };\n
+};\n
+\n
+oop.inherits(PerlHighlightRules, TextHighlightRules);\n
+\n
+exports.PerlHighlightRules = PerlHighlightRules;\n
+});\n
+\n
+define(\'ace/mode/python_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var PythonHighlightRules = function() {\n
+\n
+    var keywords = (\n
+        "and|as|assert|break|class|continue|def|del|elif|else|except|exec|" +\n
+        "finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|" +\n
+        "raise|return|try|while|with|yield"\n
+    );\n
+\n
+    var builtinConstants = (\n
+        "True|False|None|NotImplemented|Ellipsis|__debug__"\n
+    );\n
+\n
+    var builtinFunctions = (\n
+        "abs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|" +\n
+        "eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|" +\n
+        "binfile|iter|property|tuple|bool|filter|len|range|type|bytearray|" +\n
+        "float|list|raw_input|unichr|callable|format|locals|reduce|unicode|" +\n
+        "chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|" +\n
+        "cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|" +\n
+        "__import__|complex|hash|min|set|apply|delattr|help|next|setattr|" +\n
+        "buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern"\n
+    );\n
+    var keywordMapper = this.createKeywordMapper({\n
+        "invalid.deprecated": "debugger",\n
+        "support.function": builtinFunctions,\n
+        "constant.language": builtinConstants,\n
+        "keyword": keywords\n
+    }, "identifier");\n
+\n
+    var strPre = "(?:r|u|ur|R|U|UR|Ur|uR)?";\n
+\n
+    var decimalInteger = "(?:(?:[1-9]\\\\d*)|(?:0))";\n
+    var octInteger = "(?:0[oO]?[0-7]+)";\n
+    var hexInteger = "(?:0[xX][\\\\dA-Fa-f]+)";\n
+    var binInteger = "(?:0[bB][01]+)";\n
+    var integer = "(?:" + decimalInteger + "|" + octInteger + "|" + hexInteger + "|" + binInteger + ")";\n
+\n
+    var exponent = "(?:[eE][+-]?\\\\d+)";\n
+    var fraction = "(?:\\\\.\\\\d+)";\n
+    var intPart = "(?:\\\\d+)";\n
+    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\\\.))";\n
+    var exponentFloat = "(?:(?:" + pointFloat + "|" +  intPart + ")" + exponent + ")";\n
+    var floatNumber = "(?:" + exponentFloat + "|" + pointFloat + ")";\n
+\n
+    var stringEscape =  "\\\\\\\\(x[0-9A-Fa-f]{2}|[0-7]{3}|[\\\\\\\\abfnrtv\'\\"]|U[0-9A-Fa-f]{8}|u[0-9A-Fa-f]{4})";\n
+\n
+    this.$rules = {\n
+        "start" : [ {\n
+            token : "comment",\n
+            regex : "#.*$"\n
+        }, {\n
+            token : "string",           // multi line """ string start\n
+            regex : strPre + \'"{3}\',\n
+            next : "qqstring3"\n
+        }, {\n
+            token : "string",           // " string\n
+            regex : strPre + \'"(?=.)\',\n
+            next : "qqstring"\n
+        }, {\n
+            token : "string",           // multi line \'\'\' string start\n
+            regex : strPre + "\'{3}",\n
+            next : "qstring3"\n
+        }, {\n
+            token : "string",           // \' string\n
+            regex : strPre + "\'(?=.)",\n
+            next : "qstring"\n
+        }, {\n
+            token : "constant.numeric", // imaginary\n
+            regex : "(?:" + floatNumber + "|\\\\d+)[jJ]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // float\n
+            regex : floatNumber\n
+        }, {\n
+            token : "constant.numeric", // long integer\n
+            regex : integer + "[lL]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // integer\n
+            regex : integer + "\\\\b"\n
+        }, {\n
+            token : keywordMapper,\n
+            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"\n
+        }, {\n
+            token : "keyword.operator",\n
+            regex : "\\\\+|\\\\-|\\\\*|\\\\*\\\\*|\\\\/|\\\\/\\\\/|%|<<|>>|&|\\\\||\\\\^|~|<|>|<=|=>|==|!=|<>|="\n
+        }, {\n
+            token : "paren.lparen",\n
+            regex : "[\\\\[\\\\(\\\\{]"\n
+        }, {\n
+            token : "paren.rparen",\n
+            regex : "[\\\\]\\\\)\\\\}]"\n
+        }, {\n
+            token : "text",\n
+            regex : "\\\\s+"\n
+        } ],\n
+        "qqstring3" : [ {\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string", // multi line """ string end\n
+            regex : \'"{3}\',\n
+            next : "start"\n
+        }, {\n
+            defaultToken : "string"\n
+        } ],\n
+        "qstring3" : [ {\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",  // multi line \'\'\' string end\n
+            regex : "\'{3}",\n
+            next : "start"\n
+        }, {\n
+            defaultToken : "string"\n
+        } ],\n
+        "qqstring" : [{\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",\n
+            regex : "\\\\\\\\$",\n
+            next  : "qqstring"\n
+        }, {\n
+            token : "string",\n
+            regex : \'"|$\',\n
+            next  : "start"\n
+        }, {\n
+            defaultToken: "string"\n
+        }],\n
+        "qstring" : [{\n
+            token : "constant.language.escape",\n
+            regex : stringEscape\n
+        }, {\n
+            token : "string",\n
+            regex : "\\\\\\\\$",\n
+            next  : "qstring"\n
+        }, {\n
+            token : "string",\n
+            regex : "\'|$",\n
+            next  : "start"\n
+        }, {\n
+            defaultToken: "string"\n
+        }]\n
+    };\n
+};\n
+\n
+oop.inherits(PythonHighlightRules, TextHighlightRules);\n
+\n
+exports.PythonHighlightRules = PythonHighlightRules;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>53780</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

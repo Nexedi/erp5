@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155553.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-statusbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+define(\'ace/ext/statusbar\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\', \'ace/lib/lang\'], function(require, exports, module) {\n
+var dom = require("ace/lib/dom");\n
+var lang = require("ace/lib/lang");\n
+\n
+var StatusBar = function(editor, parentNode) {\n
+    this.element = dom.createElement("div");\n
+    this.element.className = "ace_status-indicator";\n
+    this.element.style.cssText = "display: inline-block;";\n
+    parentNode.appendChild(this.element);\n
+\n
+    var statusUpdate = lang.delayedCall(function(){\n
+        this.updateStatus(editor)\n
+    }.bind(this));\n
+    editor.on("changeStatus", function() {\n
+        statusUpdate.schedule(100);\n
+    });\n
+    editor.on("changeSelection", function() {\n
+        statusUpdate.schedule(100);\n
+    });\n
+};\n
+\n
+(function(){\n
+    this.updateStatus = function(editor) {\n
+        var status = [];\n
+        function add(str, separator) {\n
+            str && status.push(str, separator || "|");\n
+        }\n
+\n
+        if (editor.$vimModeHandler)\n
+            add(editor.$vimModeHandler.getStatusText());\n
+        else if (editor.commands.recording)\n
+            add("REC");\n
+\n
+        var c = editor.selection.lead;\n
+        add(c.row + ":" + c.column, " ");\n
+        if (!editor.selection.isEmpty()) {\n
+            var r = editor.getSelectionRange();\n
+            add("(" + (r.end.row - r.start.row) + ":"  +(r.end.column - r.start.column) + ")");\n
+        }\n
+        status.pop();\n
+        this.element.textContent = status.join("");\n
+    };\n
+}).call(StatusBar.prototype);\n
+\n
+exports.StatusBar = StatusBar;\n
+\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1508</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ext-statusbar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

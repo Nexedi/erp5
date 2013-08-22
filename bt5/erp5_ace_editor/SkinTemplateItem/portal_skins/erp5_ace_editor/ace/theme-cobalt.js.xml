@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155566.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>theme-cobalt.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ * \n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/theme/cobalt\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\'], function(require, exports, module) {\n
+\n
+exports.isDark = true;\n
+exports.cssClass = "ace-cobalt";\n
+exports.cssText = ".ace-cobalt .ace_gutter {\\\n
+background: #011e3a;\\\n
+color: #fff\\\n
+}\\\n
+.ace-cobalt .ace_print-margin {\\\n
+width: 1px;\\\n
+background: #011e3a\\\n
+}\\\n
+.ace-cobalt {\\\n
+background-color: #002240;\\\n
+color: #FFFFFF\\\n
+}\\\n
+.ace-cobalt .ace_cursor {\\\n
+border-left: 2px solid #FFFFFF\\\n
+}\\\n
+.ace-cobalt .ace_overwrite-cursors .ace_cursor {\\\n
+border-left: 0px;\\\n
+border-bottom: 1px solid #FFFFFF\\\n
+}\\\n
+.ace-cobalt .ace_marker-layer .ace_selection {\\\n
+background: rgba(179, 101, 57, 0.75)\\\n
+}\\\n
+.ace-cobalt.ace_multiselect .ace_selection.ace_start {\\\n
+box-shadow: 0 0 3px 0px #002240;\\\n
+border-radius: 2px\\\n
+}\\\n
+.ace-cobalt .ace_marker-layer .ace_step {\\\n
+background: rgb(127, 111, 19)\\\n
+}\\\n
+.ace-cobalt .ace_marker-layer .ace_bracket {\\\n
+margin: -1px 0 0 -1px;\\\n
+border: 1px solid rgba(255, 255, 255, 0.15)\\\n
+}\\\n
+.ace-cobalt .ace_marker-layer .ace_active-line {\\\n
+background: rgba(0, 0, 0, 0.35)\\\n
+}\\\n
+.ace-cobalt .ace_gutter-active-line {\\\n
+background-color: rgba(0, 0, 0, 0.35)\\\n
+}\\\n
+.ace-cobalt .ace_marker-layer .ace_selected-word {\\\n
+border: 1px solid rgba(179, 101, 57, 0.75)\\\n
+}\\\n
+.ace-cobalt .ace_invisible {\\\n
+color: rgba(255, 255, 255, 0.15)\\\n
+}\\\n
+.ace-cobalt .ace_keyword,\\\n
+.ace-cobalt .ace_meta {\\\n
+color: #FF9D00\\\n
+}\\\n
+.ace-cobalt .ace_constant,\\\n
+.ace-cobalt .ace_constant.ace_character,\\\n
+.ace-cobalt .ace_constant.ace_character.ace_escape,\\\n
+.ace-cobalt .ace_constant.ace_other {\\\n
+color: #FF628C\\\n
+}\\\n
+.ace-cobalt .ace_invalid {\\\n
+color: #F8F8F8;\\\n
+background-color: #800F00\\\n
+}\\\n
+.ace-cobalt .ace_support {\\\n
+color: #80FFBB\\\n
+}\\\n
+.ace-cobalt .ace_support.ace_constant {\\\n
+color: #EB939A\\\n
+}\\\n
+.ace-cobalt .ace_fold {\\\n
+background-color: #FF9D00;\\\n
+border-color: #FFFFFF\\\n
+}\\\n
+.ace-cobalt .ace_support.ace_function {\\\n
+color: #FFB054\\\n
+}\\\n
+.ace-cobalt .ace_storage {\\\n
+color: #FFEE80\\\n
+}\\\n
+.ace-cobalt .ace_entity {\\\n
+color: #FFDD00\\\n
+}\\\n
+.ace-cobalt .ace_string {\\\n
+color: #3AD900\\\n
+}\\\n
+.ace-cobalt .ace_string.ace_regexp {\\\n
+color: #80FFC2\\\n
+}\\\n
+.ace-cobalt .ace_comment {\\\n
+font-style: italic;\\\n
+color: #0088FF\\\n
+}\\\n
+.ace-cobalt .ace_variable {\\\n
+color: #CCCCCC\\\n
+}\\\n
+.ace-cobalt .ace_variable.ace_language {\\\n
+color: #FF80E1\\\n
+}\\\n
+.ace-cobalt .ace_meta.ace_tag {\\\n
+color: #9EFFFF\\\n
+}\\\n
+.ace-cobalt .ace_markup.ace_underline {\\\n
+text-decoration: underline\\\n
+}\\\n
+.ace-cobalt .ace_markup.ace_heading {\\\n
+color: #C8E4FD;\\\n
+background-color: #001221\\\n
+}\\\n
+.ace-cobalt .ace_markup.ace_list {\\\n
+background-color: #130D26\\\n
+}\\\n
+.ace-cobalt .ace_indent-guide {\\\n
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHCLSvkPAAP3AgSDTRd4AAAAAElFTkSuQmCC) right repeat-y;\\\n
+}";\n
+\n
+var dom = require("../lib/dom");\n
+dom.importCssString(exports.cssText, exports.cssClass);\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4472</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155552.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-keybinding_menu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2013 Matthew Christopher Kastor-Inare III, Atropa Inc. Intl\n
+ * All rights reserved.\n
+ *\n
+ * Contributed to Ajax.org under the BSD license.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ *\n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/ext/keybinding_menu\', [\'require\', \'exports\', \'module\' , \'ace/editor\', \'ace/ext/menu_tools/overlay_page\', \'ace/ext/menu_tools/get_editor_keyboard_shortcuts\'], function(require, exports, module) {\n
+    \n
+    var Editor = require("ace/editor").Editor;\n
+    function showKeyboardShortcuts (editor) {\n
+        if(!document.getElementById(\'kbshortcutmenu\')) {\n
+            var overlayPage = require(\'./menu_tools/overlay_page\').overlayPage;\n
+            var getEditorKeybordShortcuts = require(\'./menu_tools/get_editor_keyboard_shortcuts\').getEditorKeybordShortcuts;\n
+            var kb = getEditorKeybordShortcuts(editor);\n
+            var el = document.createElement(\'div\');\n
+            var commands = kb.reduce(function(previous, current) {\n
+                return previous + \'<div class="ace_optionsMenuEntry"><span class="ace_optionsMenuCommand">\' \n
+                    + current.command + \'</span> : \'\n
+                    + \'<span class="ace_optionsMenuKey">\' + current.key + \'</span></div>\';\n
+            }, \'\');\n
+\n
+            el.id = \'kbshortcutmenu\';\n
+            el.innerHTML = \'<h1>Keyboard Shortcuts</h1>\' + commands + \'</div>\';\n
+            overlayPage(editor, el, \'0\', \'0\', \'0\', null);\n
+        }\n
+    };\n
+    module.exports.init = function(editor) {\n
+        Editor.prototype.showKeyboardShortcuts = function() {\n
+            showKeyboardShortcuts(this);\n
+        };\n
+        editor.commands.addCommands([{\n
+            name: "showKeyboardShortcuts",\n
+            bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},\n
+            exec: function(editor, line) {\n
+                editor.showKeyboardShortcuts();\n
+            }\n
+        }]);\n
+    };\n
+\n
+});\n
+\n
+define(\'ace/ext/menu_tools/overlay_page\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\'], function(require, exports, module) {\n
+\n
+var dom = require("../../lib/dom");\n
+var cssText = "#ace_settingsmenu, #kbshortcutmenu {\\\n
+background-color: #F7F7F7;\\\n
+color: black;\\\n
+box-shadow: -5px 4px 5px rgba(126, 126, 126, 0.55);\\\n
+padding: 1em 0.5em 2em 1em;\\\n
+overflow: auto;\\\n
+position: absolute;\\\n
+margin: 0;\\\n
+bottom: 0;\\\n
+right: 0;\\\n
+top: 0;\\\n
+z-index: 9991;\\\n
+cursor: default;\\\n
+}\\\n
+.ace_dark #ace_settingsmenu, .ace_dark #kbshortcutmenu {\\\n
+box-shadow: -20px 10px 25px rgba(126, 126, 126, 0.25);\\\n
+background-color: rgba(255, 255, 255, 0.6);\\\n
+color: black;\\\n
+}\\\n
+.ace_optionsMenuEntry:hover {\\\n
+background-color: rgba(100, 100, 100, 0.1);\\\n
+-webkit-transition: all 0.5s;\\\n
+transition: all 0.3s\\\n
+}\\\n
+.ace_closeButton {\\\n
+background: rgba(245, 146, 146, 0.5);\\\n
+border: 1px solid #F48A8A;\\\n
+border-radius: 50%;\\\n
+padding: 7px;\\\n
+position: absolute;\\\n
+right: -8px;\\\n
+top: -8px;\\\n
+z-index: 1000;\\\n
+}\\\n
+.ace_closeButton{\\\n
+background: rgba(245, 146, 146, 0.9);\\\n
+}\\\n
+.ace_optionsMenuKey {\\\n
+color: darkslateblue;\\\n
+font-weight: bold;\\\n
+}\\\n
+.ace_optionsMenuCommand {\\\n
+color: darkcyan;\\\n
+font-weight: normal;\\\n
+}";\n
+dom.importCssString(cssText);\n
+module.exports.overlayPage = function overlayPage(editor, contentElement, top, right, bottom, left) {\n
+    top = top ? \'top: \' + top + \';\' : \'\';\n
+    bottom = bottom ? \'bottom: \' + bottom + \';\' : \'\';\n
+    right = right ? \'right: \' + right + \';\' : \'\';\n
+    left = left ? \'left: \' + left + \';\' : \'\';\n
+\n
+    var closer = document.createElement(\'div\');\n
+    var contentContainer = document.createElement(\'div\');\n
+\n
+    function documentEscListener(e) {\n
+        if (e.keyCode === 27) {\n
+            closer.click();\n
+        }\n
+    }\n
+\n
+    closer.style.cssText = \'margin: 0; padding: 0; \' +\n
+        \'position: fixed; top:0; bottom:0; left:0; right:0;\' +\n
+        \'z-index: 9990; \' +\n
+        \'background-color: rgba(0, 0, 0, 0.3);\';\n
+    closer.addEventListener(\'click\', function() {\n
+        document.removeEventListener(\'keydown\', documentEscListener);\n
+        closer.parentNode.removeChild(closer);\n
+        editor.focus();\n
+        closer = null;\n
+    });\n
+    document.addEventListener(\'keydown\', documentEscListener);\n
+\n
+    contentContainer.style.cssText = top + right + bottom + left;\n
+    contentContainer.addEventListener(\'click\', function(e) {\n
+        e.stopPropagation();\n
+    });\n
+\n
+    var wrapper = dom.createElement("div");\n
+    wrapper.style.position = "relative";\n
+    \n
+    var closeButton = dom.createElement("div");\n
+    closeButton.className = "ace_closeButton";\n
+    closeButton.addEventListener(\'click\', function() {\n
+        closer.click();\n
+    });\n
+    \n
+    wrapper.appendChild(closeButton);\n
+    contentContainer.appendChild(wrapper);\n
+    \n
+    contentContainer.appendChild(contentElement);\n
+    closer.appendChild(contentContainer);\n
+    document.body.appendChild(closer);\n
+    editor.blur();\n
+};\n
+\n
+});\n
+\n
+define(\'ace/ext/menu_tools/get_editor_keyboard_shortcuts\', [\'require\', \'exports\', \'module\' , \'ace/lib/keys\'], function(require, exports, module) {\n
+\n
+var keys = require("../../lib/keys");\n
+module.exports.getEditorKeybordShortcuts = function(editor) {\n
+    var KEY_MODS = keys.KEY_MODS;\n
+    var keybindings = [];\n
+    var commandMap = {};\n
+    editor.keyBinding.$handlers.forEach(function(handler) {\n
+        var ckb = handler.commmandKeyBinding;\n
+        for (var i in ckb) {\n
+            var modifier = parseInt(i);\n
+            if (modifier == -1) {\n
+                modifier = "";\n
+            } else if(isNaN(modifier)) {\n
+                modifier = i;\n
+            } else {\n
+                modifier = "" +\n
+                    (modifier & KEY_MODS.command ? "Cmd-"   : "") +\n
+                    (modifier & KEY_MODS.ctrl    ? "Ctrl-"  : "") +\n
+                    (modifier & KEY_MODS.alt     ? "Alt-"   : "") +\n
+                    (modifier & KEY_MODS.shift   ? "Shift-" : "");\n
+            }\n
+            for (var key in ckb[i]) {\n
+                var command = ckb[i][key]\n
+                if (typeof command != "string")\n
+                    command  = command.name\n
+                if (commandMap[command]) {\n
+                    commandMap[command].key += "|" + modifier + key;\n
+                } else {\n
+                    commandMap[command] = {key: modifier+key, command: command};\n
+                    keybindings.push(commandMap[command]);\n
+                }\n
+            }\n
+        }\n
+    });\n
+    return keybindings;\n
+};\n
+\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7803</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
