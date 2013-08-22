@@ -10,12 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>columns</string>
+                <string>list_method</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>list_method</string>
                 <string>sort_columns</string>
-                <string>columns</string>
+                <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -81,8 +82,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>class_name</string>
-                          <string>Class Name</string>
+                          <string>constraint_relative_url</string>
+                          <string>Constraint</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -91,10 +92,6 @@
                         <tuple>
                           <string>getMessage</string>
                           <string>Message</string>
-                        </tuple>
-                        <tuple>
-                          <string>getObject</string>
-                          <string>Object</string>
                         </tuple>
                         <tuple>
                           <string>getTranslatedMessage</string>
@@ -162,6 +159,17 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Consistency</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>constraint_relative_url</string>
+                          <string>ObjectMessage_getConstraintUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
