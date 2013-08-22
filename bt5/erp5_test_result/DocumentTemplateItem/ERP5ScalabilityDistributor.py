@@ -57,13 +57,8 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     # Get lists of test node wich belong to the current distributor
     all_test_node_list = test_node_module.searchFolder(
         portal_type="Test Node", specialise_uid=self.getUid())
-    test_node_list = [ x.getObject() for x in all_test_node_list if x.validationState() == 'validated' ]
-    invalid_test_node_list = [ x.getObject() for x in all_test_node_list if x.validationState() != 'validated' ]
-    
-    log("test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in test_node_list])
-    log("invalid_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in invalid_test_node_list])
+    test_node_list = [ x.getObject() for x in all_test_node_list if x.getValidationState() == 'validated' ]
+    invalid_test_node_list = [ x.getObject() for x in all_test_node_list if x.getValidationState() != 'validated' ]
 
     # Set master property to False for all invalid testnode
     for node in invalid_test_node_list:
@@ -73,17 +68,9 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     slave_test_node_list = [ x.getObject() for x in test_node_list if x.getMaster()!=True ]
     master_test_node_list = [ x.getObject() for x in test_node_list if x.getMaster()==True ]
 
-
-    log("---2--")
-    log("test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in test_node_list])
-    log("invalid_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in invalid_test_node_list])
-    log("slave_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in slave_test_node_list])
-    log("master_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in master_test_node_list])
-
+    # Set to 'False' slaves
+    for node in slave_test_node_list:
+      node.setMaster(False)
 
     # if there is validated testnodes
     if len(test_node_list) > 0:
@@ -102,24 +89,12 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     slave_test_node_list = [ x.getObject() for x in test_node_list if x.getMaster()!=True ]
     master_test_node_list = [ x.getObject() for x in test_node_list if x.getMaster()==True ]
 
-    log("---3--")
-    log("test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in test_node_list])
-    log("invalid_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in invalid_test_node_list])
-    log("slave_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in slave_test_node_list])
-    log("master_test_node_list:")
-    log([(x.getTitle(), x.getMaster()) for x in master_test_node_list])
-
     # Get test suites and aggregate them to all valid testnode
     test_suite_list = [ x.getTitle() for x in test_suite_module.searchFolder(
                         portal_type="Scalability Test Suite",
                         validation_state="validated", specialise_uid=self.getUid())]
     for test_node in test_node_list:
       test_node.setAggregateList(test_suite_list)
-
-
 
   security.declarePublic("getInvolvedNodeList")
   def getInvolvedNodeList(self):
@@ -131,36 +106,6 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     involved_nodes = []   
     involved_nodes = involved_nodes + [ x.getObject() for x in test_node_module.searchFolder(validation_state='validated') if ( x.getSpecialiseTitle() == distributor_title ) ]
     return involved_nodes
-
-  security.declarePublic("subscribeNode")
-  def subscribeNode(self,title,computer_guid,batch_mode=0):
-    """
-    subscribeNode doc
-    """
-    test_node_module = self._getTestNodeModule()
-    portal = self.getPortalObject()
-
-    tag = "%s_%s" % (self.getRelativeUrl(), title)
-    if portal.portal_activities.countMessageWithTag(tag) == 0:
-      test_node_list = test_node_module.searchFolder(portal_type="Test Node",title=title)
-      assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
-      test_node = None
-      if len(test_node_list) == 1:
-        test_node = test_node_list[0].getObject()
-        if test_node.getValidationState() != 'validated':
-           try:
-            test_node.validate()
-           except e:
-             LOG('Test Node Validate',ERROR,'%s' %e)
-      if test_node is None:
-        test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,
-                                      specialise=self.getRelativeUrl(),
-                                      activate_kw={'tag': tag})
-        self.activate(after_tag=tag).optimizeConfiguration()
-      test_node.setPingDate()
-      return test_node
-    return None
-
 
   security.declarePublic("getTestNode")
   def getTestNode(self,title,batch_mode=0):
@@ -201,14 +146,12 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     else:
       return False
     
-
   security.declarePublic("getTestType")
   def getTestType(self, batch_mode=0):
     """
     getTestType : return a string defining the type of tests
     """
     return 'ScalabilityTest'
-
 
   security.declarePublic("startTestSuite")
   def startTestSuite(self,title, batch_mode=0):
