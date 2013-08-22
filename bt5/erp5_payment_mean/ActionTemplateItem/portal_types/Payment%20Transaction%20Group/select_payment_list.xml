@@ -79,11 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-string:${object_url}/PaymentTransactionGroup_viewSelectPaymentTransactionLineListDialog?reset:int=1&field_your_limit:int=1&limit:int=1
-
-]]></string> </value>
+            <value> <string>string:${object_url}/PaymentTransactionGroup_viewSelectPaymentTransactionLineListDialog?reset:int=1</string> </value>
         </item>
       </dictionary>
     </pickle>
