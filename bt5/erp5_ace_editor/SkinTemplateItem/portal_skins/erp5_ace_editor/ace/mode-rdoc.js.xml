@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155562.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-rdoc.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * rdoc.js\n
+ *\n
+ * Copyright (C) 2009-11 by RStudio, Inc.\n
+ *\n
+ * This program is licensed to you under the terms of version 3 of the\n
+ * GNU Affero General Public License. This program is distributed WITHOUT\n
+ * ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,\n
+ * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the\n
+ * AGPL (http://www.gnu.org/licenses/agpl-3.0.txt) for more details.\n
+ *\n
+ */\n
+define(\'ace/mode/rdoc\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/text_highlight_rules\', \'ace/mode/rdoc_highlight_rules\', \'ace/mode/matching_brace_outdent\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("./text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+var RDocHighlightRules = require("./rdoc_highlight_rules").RDocHighlightRules;\n
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
+\n
+var Mode = function(suppressHighlighting) {\n
+\tthis.$tokenizer = new Tokenizer(new RDocHighlightRules().getRules());\n
+    this.$outdent = new MatchingBraceOutdent();\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {\n
+    this.getNextLineIndent = function(state, line, tab) {\n
+        return this.$getIndent(line);\n
+    };\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+define(\'ace/mode/rdoc_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/text_highlight_rules\', \'ace/mode/latex_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var lang = require("../lib/lang");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+var LaTeXHighlightRules = require("./latex_highlight_rules");\n
+\n
+var RDocHighlightRules = function() {\n
+\n
+    this.$rules = {\n
+        "start" : [\n
+\t        {\n
+\t            token : "comment",\n
+\t            regex : "%.*$"\n
+\t        }, {\n
+\t            token : "text", // non-command\n
+\t            regex : "\\\\\\\\[$&%#\\\\{\\\\}]"\n
+\t        }, {\n
+\t            token : "keyword", // command\n
+\t            regex : "\\\\\\\\(?:name|alias|method|S3method|S4method|item|code|preformatted|kbd|pkg|var|env|option|command|author|email|url|source|cite|acronym|href|code|preformatted|link|eqn|deqn|keyword|usage|examples|dontrun|dontshow|figure|if|ifelse|Sexpr|RdOpts|inputencoding|usepackage)\\\\b",\n
+               next : "nospell"\n
+\t        }, {\n
+\t            token : "keyword", // command\n
+\t            regex : "\\\\\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])"\n
+\t        }, {\n
+               token : "paren.keyword.operator",\n
+\t            regex : "[[({]"\n
+\t        }, {\n
+               token : "paren.keyword.operator",\n
+\t            regex : "[\\\\])}]"\n
+\t        }, {\n
+\t            token : "text",\n
+\t            regex : "\\\\s+"\n
+\t        }\n
+        ],\n
+        "nospell" : [\n
+           {\n
+               token : "comment",\n
+               regex : "%.*$",\n
+               next : "start"\n
+           }, {\n
+               token : "nospell.text", // non-command\n
+               regex : "\\\\\\\\[$&%#\\\\{\\\\}]"\n
+           }, {\n
+               token : "keyword", // command\n
+               regex : "\\\\\\\\(?:name|alias|method|S3method|S4method|item|code|preformatted|kbd|pkg|var|env|option|command|author|email|url|source|cite|acronym|href|code|preformatted|link|eqn|deqn|keyword|usage|examples|dontrun|dontshow|figure|if|ifelse|Sexpr|RdOpts|inputencoding|usepackage)\\\\b"\n
+           }, {\n
+               token : "keyword", // command\n
+               regex : "\\\\\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])",\n
+               next : "start"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "[[({]"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "[\\\\])]"\n
+           }, {\n
+               token : "paren.keyword.operator",\n
+               regex : "}",\n
+               next : "start"\n
+           }, {\n
+               token : "nospell.text",\n
+               regex : "\\\\s+"\n
+           }, {\n
+               token : "nospell.text",\n
+               regex : "\\\\w+"\n
+           }\n
+        ]\n
+    };\n
+};\n
+\n
+oop.inherits(RDocHighlightRules, TextHighlightRules);\n
+\n
+exports.RDocHighlightRules = RDocHighlightRules;\n
+});\n
+define(\'ace/mode/latex_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var LatexHighlightRules = function() {   \n
+    this.$rules = {\n
+        "start" : [{\n
+            token : "keyword",\n
+            regex : "\\\\\\\\(?:[^a-zA-Z]|[a-zA-Z]+)"\n
+        }, {\n
+            token : "lparen",\n
+            regex : "[[({]"\n
+        }, {\n
+            token : "rparen",\n
+            regex : "[\\\\])}]"\n
+        }, {\n
+            token : "string",\n
+            regex : "\\\\$(?:(?:\\\\\\\\.)|(?:[^\\\\$\\\\\\\\]))*?\\\\$"\n
+        }, {\n
+            token : "comment",\n
+            regex : "%.*$"\n
+        }]\n
+    };\n
+};\n
+\n
+oop.inherits(LatexHighlightRules, TextHighlightRules);\n
+\n
+exports.LatexHighlightRules = LatexHighlightRules;\n
+\n
+});\n
+\n
+define(\'ace/mode/matching_brace_outdent\', [\'require\', \'exports\', \'module\' , \'ace/range\'], function(require, exports, module) {\n
+\n
+\n
+var Range = require("../range").Range;\n
+\n
+var MatchingBraceOutdent = function() {};\n
+\n
+(function() {\n
+\n
+    this.checkOutdent = function(line, input) {\n
+        if (! /^\\s+$/.test(line))\n
+            return false;\n
+\n
+        return /^\\s*\\}/.test(input);\n
+    };\n
+\n
+    this.autoOutdent = function(doc, row) {\n
+        var line = doc.getLine(row);\n
+        var match = line.match(/^(\\s*\\})/);\n
+\n
+        if (!match) return 0;\n
+\n
+        var column = match[1].length;\n
+        var openBracePos = doc.findMatchingBracket({row: row, column: column});\n
+\n
+        if (!openBracePos || openBracePos.row == row) return 0;\n
+\n
+        var indent = this.$getIndent(doc.getLine(openBracePos.row));\n
+        doc.replace(new Range(row, 0, row, column-1), indent);\n
+    };\n
+\n
+    this.$getIndent = function(line) {\n
+        return line.match(/^\\s*/)[0];\n
+    };\n
+\n
+}).call(MatchingBraceOutdent.prototype);\n
+\n
+exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6173</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
