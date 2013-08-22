@@ -332,6 +332,18 @@ var svg = d3.select("body").append("svg")\n
     .attr("stroke", smoothed_curve_color)\n
   }\n
 \n
+  // Add number of docs per hour on the top of bars\n
+  for(var j=1; j<data2[0].length; j++){\n
+    if(data[0][j] > 0){\n
+      svg.append("text")\n
+      .attr("x", x1(j)+x0(0))\n
+      .attr("y", y(data[0][j]))\n
+      .attr("dy", "1.0em")\n
+      .attr("stroke-width", 2)\n
+      .attr("class", "title")\n
+      .text(data[0][j]);\n
+    }\n
+  }\n
 \n
 \n
       \n
