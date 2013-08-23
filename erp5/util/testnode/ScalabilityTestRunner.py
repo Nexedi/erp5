@@ -430,6 +430,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     return {'status_code' : 0}
 
   def _cleanUpOldInstance(self):
+    self.log("_cleanUpOldInstance")
     # Get link list of instances to delete
     instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
     instance_to_delete_list = []
@@ -453,6 +454,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
             computer_guid=instance_information_dict['computer_guid'],
             state='destroyed'
         )
+        self.log("Instance '%s' deleted." %instance_information_dict['title'])
 
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
