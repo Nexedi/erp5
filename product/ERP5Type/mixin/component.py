@@ -361,9 +361,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     be loaded straightaway provided validate() does not raise any error of
     course
     """
-    object_id = '%s.%s.%s' % (cls._getDynamicModuleNamespace(), version,
-                              reference)
-
+    object_id = '%s.%s.%s' % (cls._getIdPrefix(), version, reference)
     obj = context._getOb(object_id, None)
     if obj is not None:
       if not erase_existing:

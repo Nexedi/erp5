@@ -56,3 +56,7 @@ class ExtensionComponent(ComponentMixin):
   @staticmethod
   def _getDynamicModuleNamespace():
     return 'erp5.component.extension'
+
+  @staticmethod
+  def _getIdPrefix():
+    return 'extension'

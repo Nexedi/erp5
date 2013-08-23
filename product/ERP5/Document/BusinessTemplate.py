@@ -4022,6 +4022,8 @@ class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+
 class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   """
   Documents are now stored in ZODB rather than on the filesystem. However,
@@ -4047,7 +4049,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.document.' + id
+    return DocumentComponent._getIdPrefix() + '.' + id
 
   @staticmethod
   def _getFilesystemPath(class_id):
@@ -4169,6 +4171,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       self.portal_components.reset(force=True,
                                    reset_portal_type_at_transaction_boundary=True)
 
+from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
+
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
   Extensions are now stored in ZODB rather than on the filesystem. However,
@@ -4184,10 +4188,12 @@ class ExtensionTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.extension.' + id
+    return ExtensionComponent._getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateExtensionIdList()
+
+from Products.ERP5Type.Core.TestComponent import TestComponent
 
 class TestTemplateItem(DocumentTemplateItem):
   """
@@ -4203,7 +4209,7 @@ class TestTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.test.' + id
+    return TestComponent._getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateTestIdList()

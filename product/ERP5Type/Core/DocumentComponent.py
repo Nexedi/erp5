@@ -57,3 +57,7 @@ class DocumentComponent(ComponentMixin):
   @staticmethod
   def _getDynamicModuleNamespace():
     return 'erp5.component.document'
+
+  @staticmethod
+  def _getIdPrefix():
+    return 'document'
