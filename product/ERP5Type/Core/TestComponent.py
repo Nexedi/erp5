@@ -57,3 +57,7 @@ class TestComponent(ComponentMixin):
   @staticmethod
   def _getDynamicModuleNamespace():
     return 'erp5.component.test'
+
+  @staticmethod
+  def _getIdPrefix():
+    return 'test'

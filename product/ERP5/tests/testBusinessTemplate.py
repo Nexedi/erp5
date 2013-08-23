@@ -7204,11 +7204,11 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  component_module = DocumentComponent._getDynamicModuleNamespace()
+  component_id_prefix = DocumentComponent._getIdPrefix()
   component_portal_type = DocumentComponent.portal_type
 
   def stepCreateZodbDocument(self, sequence=None, **kw):
-    document_id = self.component_module + '.erp5.' + self.document_title
+    document_id = self.component_id_prefix + '.erp5.' + self.document_title
     component = self.portal.portal_components.newContent(
       id=document_id,
       version='erp5',
@@ -7277,7 +7277,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
 
     self.assertTrue(os.path.exists(component_bt_tool_path))
 
-    component_id = self.component_module + '.erp5.' + sequence['document_title']
+    component_id = self.component_id_prefix + '.erp5.' + sequence['document_title']
     base_path = os.path.join(component_bt_tool_path, component_id)
 
     python_source_code_path = base_path + '.py'
@@ -7424,7 +7424,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     Check bt5 migration of Document from the Filesystem to ZODB
     """
     bt = sequence.get('current_bt')
-    component_id = '%s.erp5.%s' % (self.component_module,
+    component_id = '%s.erp5.%s' % (self.component_id_prefix,
                                    sequence.get('document_title'))
 
     self.assertEquals(bt.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
@@ -7600,7 +7600,7 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_extension_id_list'
 
   # Specific to ZODB Extension Component
-  component_module = ExtensionComponent._getDynamicModuleNamespace()
+  component_id_prefix = ExtensionComponent._getIdPrefix()
   component_portal_type = ExtensionComponent.portal_type
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
@@ -7619,7 +7619,7 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_test_id_list'
 
   # Specific to ZODB Extension Component
-  component_module = TestComponent._getDynamicModuleNamespace()
+  component_id_prefix = TestComponent._getIdPrefix()
   component_portal_type = TestComponent.portal_type
 
   def stepAddTestToBusinessTemplate(self, sequence=None, **kw):

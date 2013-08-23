@@ -74,6 +74,11 @@ class IComponent(Interface):
     Return the module name where Component module are loaded into
     """
 
+  def _getIdPrefix():
+    """
+    Return the ID prefix for Component objects
+    """
+
   def importFromFilesystem(cls, context, reference, version,
                            erase_existing=False):
     """
