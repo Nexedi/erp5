@@ -65,8 +65,9 @@ body {\n
 .bullet .title { font-size: 14px; font-weight: bold; }\n
 </style>\n
 \n
- <script src="http://d3js.org/d3.v3.min.js"></script>\n
+ <script src="http://d3js.org/d3.v3.js"></script>\n
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>\n
+\n
  \n
  </head>\n
   <body>\n
@@ -88,7 +89,15 @@ body {\n
   stats = JSON.parse(json);\n
   xs = stats.xs;\n
 \n
-//TODO: smooth the intterpolation in a new curve\n
+if (xs.length != stats.test.length){\n
+  alert("The number of configuration to test ("+xs.length+", defined on test suite document) is \\\n
+lower than the number of tested configurations for this test result document ("+stats.test.length+").");\n
+  alert("x-scale will not be respected.");\n
+  for(var i=xs.length; i<stats.test.length; i++){\n
+    xs[i]=xs[xs.length-1]+1;\n
+  }\n
+}\n
+\n
 \n
 x_max = xs[stats.test.length-1];\n
 // just for fun..\n
@@ -96,7 +105,7 @@ x_max = xs[stats.test.length-1];\n
 // polynomial interpolation using Lagrande method\n
 var n = stats.test.length;\n
 // compute and assign value to display\n
-for (var i=0; i<n; i++) {\n
+for(var i=0; i<n; i++) {\n
   stats.test[i]["value"] = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
 }\n
 // Lagrange interpolation\n
@@ -145,8 +154,8 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},\n
 \n
 var x0 = d3.scale.ordinal()\n
     .rangeRoundBands([0, width], .1);\n
-\n
 var x1 = d3.scale.ordinal();\n
+\n
 \n
 var y = d3.scale.linear()\n
     .range([height, 0]);\n
@@ -248,7 +257,6 @@ var svg = d3.select("body").append("svg")\n
       .attr("stroke-width", 1)\n
       .attr("stroke", "red");\n
   }\n
-\n
   \n
   //smoothed curve data computation\n
   var v_1 = [];\n
