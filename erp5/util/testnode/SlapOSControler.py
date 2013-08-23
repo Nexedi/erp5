@@ -151,6 +151,7 @@ class SlapOSControler(object):
 
     """
     self.log('SlapOSControler : request-->SlapOSMaster')
+    import pdb; pdb.set_trace()
     current_intance_config = {'software_type':software_type,
                               'software_configuration':software_configuration,
                               'computer_guid':computer_guid,
@@ -179,9 +180,6 @@ class SlapOSControler(object):
           filter_kw = filter_kw,
           state = state)
         self.instance_config[reference]['partition'] = partition
-      #      print "Instance requested.\nState is : %s." % partition.getState()
-      # Is it possible to have the true state of the instance with getState() ?
-          # Do a return partition ?
       except:
         self.log("SlapOSControler.request, \
               exception in registerOpenOrder", exc_info=sys.exc_info())
