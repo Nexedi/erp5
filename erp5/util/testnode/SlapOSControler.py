@@ -151,7 +151,6 @@ class SlapOSControler(object):
 
     """
     self.log('SlapOSControler : request-->SlapOSMaster')
-    import pdb; pdb.set_trace()
     current_intance_config = {'software_type':software_type,
                               'software_configuration':software_configuration,
                               'computer_guid':computer_guid,
@@ -180,6 +179,8 @@ class SlapOSControler(object):
           filter_kw = filter_kw,
           state = state)
         self.instance_config[reference]['partition'] = partition
+        if state == 'destroyed':
+          del self.instance_config[reference]
       except:
         self.log("SlapOSControler.request, \
               exception in registerOpenOrder", exc_info=sys.exc_info())
@@ -200,7 +201,6 @@ class SlapOSControler(object):
     self.log('SlapOSControler : delete instance')
     try:
       self._requestSpecificState(reference, 'destroyed')
-      del self.instance_config[reference]
     except:
       raise ValueError("Can't delete instance '%s' (instance may not been created?)" %reference)
     
@@ -227,7 +227,7 @@ class SlapOSControler(object):
     self.log('SlapOSControler : updateInstanceXML will request same'
              'instance with new XML configuration...')
 
-    try:   
+    try:
       self.request(reference,
         self.instance_config[reference]['software_url'],
         self.instance_config[reference]['software_type'],

@@ -101,7 +101,7 @@ class SlapOSMasterCommunicator(object):
         hosting_subscription = self._curl(hosting_subscription_link)
         self.hosting_subcriptions_dict.update({hosting_subscription['title']:hosting_subscription_link})
         self.visited_hosting_subcriptions_link_list.append(hosting_subscription_link)
-    
+  
   def _getRelatedInstanceLink(self, hosting_subscription_title):
     """
     Return a list of all related instance_url from an hosting_subscription_title
@@ -171,11 +171,34 @@ class SlapOSMasterCommunicator(object):
       return True
     return False
 
-  def getAliveHostingSubscription(self, prefix_title):
+  def getHostingSubscriptionDict(self):
     """
-    Return list of dict information of alive hosting subscrtion
+    Return the dict of hosting subcription.
     """
-    return []
+    return self.hosting_subcriptions_dict
 
-
-    
+  def getHostingSubscriptionInformationDict(self, title):
+    """
+    Return a dict with informations about Hosting subscription
+    """
+    related_instance_link_list = self._getRelatedInstanceLink(title)
+    related_instance_link = None
+    # Get root instance
+    for link in related_instance_link_list:
+      instance = self._curl(link)
+      if tile == instance['title']:
+        related_instance_link = link
+        break
+    # Return information dict
+    if related_instance_link:
+      related_instance = self._curl(related_instance_link)
+      return {
+        'title': related_instance['title'],
+        'status': related_instance['status'],
+        'software_url': related_instance['_links']['http://slapos.org/reg/release'],
+        'software_type': related_instance['software_type'],
+        'computer_guid': related_instance['sla']['computer_guid']
+      }
+    else:
+      return None
+  

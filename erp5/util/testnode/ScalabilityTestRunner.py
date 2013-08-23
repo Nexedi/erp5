@@ -114,8 +114,8 @@ class ScalabilityTestRunner():
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-"
-    instance_title += time.strftime('%d/%m/%y_%H:%M:%S',time.localtime())
+    instance_title += "-"+str(datetime.now().isoformat())+"-"
+    instance_title += "timestamp="+str(time.time())
     return instance_title
 
   def _generateInstanceXML(self, software_configuration,
@@ -417,6 +417,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self.slapos_controler.stopInstance(self.instance_title)
     self._waitInstance(self.instance_title, 'stopped')
     #self.slapos_controler.destroyInstance(self.instance_title)
+
+    # Delete old instances
+    self._cleanUpOldInstance()
     
     if error:
       test_result_proxy.fail()
@@ -425,7 +428,32 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       #test_result_proxy.stop()
 
     return {'status_code' : 0}
+
+  def _cleanUpOldInstance(self):
+    # Get link list of instances to delete
+    instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
+    instance_to_delete_list = []
+    outdated_date = datetime.fromtimestamp(time.time()) - timedelta(days=2)
+    for title,link in instance_dict.items():
+      if "Scalability-" in title and "timestamp=" in title:
+        foo, timestamp = title.split("timestamp=")
+        creation_date = datetime.fromtimestamp(timestamp)
+        if creation_date < outdated_date:
+          instance_to_delete_list.append((title,link))
     
+    for title,link in instance_to_delete_list:
+      # Get instance information
+      instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformation(link)
+      # Delete instance
+      if instance_information_dict:
+        self.slapos_controler.request(
+            instance_information_dict['title'],
+            instance_information_dict['software_url'],
+            software_type=instance_information_dict['software_type'],
+            computer_guid=instance_information_dict['computer_guid'],
+            state='destroyed'
+        )
+
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
     self.launcher_nodes_computer_guid = []
