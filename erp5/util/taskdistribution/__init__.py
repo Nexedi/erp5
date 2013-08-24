@@ -111,7 +111,7 @@ class RPCRetry(object):
             try:
                 return self._RPC(func_id, args)
             except SAFE_RPC_EXCEPTION_LIST:
-                self._logger('Got exception, retrying: %s%r '
+                self._logger.warning('Got exception, retrying: %s%r '
                     'in %is', func_id, tuple(args), retry_time, exc_info=1)
                 time.sleep(retry_time)
                 retry_time *= 1.5
