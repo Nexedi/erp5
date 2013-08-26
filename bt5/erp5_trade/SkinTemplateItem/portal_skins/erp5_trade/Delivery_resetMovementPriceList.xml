@@ -59,7 +59,7 @@ portal_type_list = portal.getPortalInvoiceMovementTypeList() \\\n
   + portal.getPortalOrderMovementTypeList() \\\n
   + portal.getPortalDeliveryMovementTypeList()\n
 for movement in context.getMovementList(portal_type=portal_type_list):\n
-  movement.edit(price=None)\n
+  movement.edit(price=None, base_unit_price=None)\n
 \n
 if not batch_mode:\n
   message = context.Base_translateString(\'Prices reset.\')\n
