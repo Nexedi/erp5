@@ -60,7 +60,11 @@ class Path(MappedValue, Amount):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.Task    # The date determines a validity period for the path
-                    , PropertySheet.Arrow   # The arrow defines
+                    , PropertySheet.Arrow   # The arrow defines the sources and destinations
                     , PropertySheet.Path    # The path defines the efficiency & resource
                     , PropertySheet.FlowCapacity    # The capacity defines the max. qty
                     )
+
+  def _getBaseUnitPrice(self, context=None, **kw):
+    # No base unit price lookup
+    return None
