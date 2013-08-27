@@ -177,6 +177,9 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
   _message_version_not_set = "Version must be set"
   _message_invalid_version = "Version cannot start with '_'"
+  _message_duplicated_version_reference = "${id} is validated has the same "\
+       "Reference and Version"
+
   _message_text_content_not_set = "No source code"
   _message_text_content_error = "Error in Source Code: ${error_message}"
 
@@ -195,9 +198,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     error_list = super(ComponentMixin, self).checkConsistency(*args, **kw)
     object_relative_url = self.getRelativeUrl()
-
     reference = self.getReference()
+    reference_has_error = False
     if not reference:
+      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -207,6 +211,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     elif (reference.endswith('_version') or
           reference[0] == '_' or
           reference in ('find_module', 'load_module', 'reset')):
+      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -224,6 +229,26 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                            object_relative_url,
                                            message=self._message_invalid_version,
                                            mapping={}))
+    else:
+      package = __import__(self._getDynamicModuleNamespace(), globals(),
+                           fromlist=[self._getDynamicModuleNamespace()], level=0)
+      component_id = None
+      component_uid = None
+      from Products.ERP5Type.dynamic import aq_method_lock
+      with aq_method_lock:
+        component_id_uid_tuple = package._registry_dict.get(
+          self.getReference(), {}).get(self.getVersion(), None)
+        if component_id_uid_tuple:
+          component_id, component_uid = component_id_uid_tuple
+
+      if (component_id is not None and component_uid is not None and
+          not reference_has_error and
+          component_uid != self.getUid() and component_id != self.getId()):
+        error_list.append(
+          ConsistencyMessage(self,
+                             object_relative_url,
+                             message=self._message_duplicated_version_reference,
+                             mapping=dict(id=component_id)))
 
     text_content = self.getTextContent()
     if not text_content:

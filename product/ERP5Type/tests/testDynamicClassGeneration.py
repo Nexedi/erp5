@@ -1261,12 +1261,23 @@ class _TestZodbComponent(SecurityTestCase):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-  @abc.abstractmethod
-  def _newComponent(self, reference, text_content, version='erp5'):
+  def _newComponent(self, reference, text_content, version='erp5', id_=None):
     """
-    Abstract method to create a new Component
+    Create new Component
     """
-    pass
+    full_id = '%s.%s.%s' % (self._getComponentModuleName(),
+                            version + '_version',
+                            reference)
+
+    if id_ is not None:
+      full_id += '.%s' % id_
+
+    return self._component_tool.newContent(
+      id=full_id,
+      version=version,
+      reference=reference,
+      text_content=text_content,
+      portal_type=self._component_portal_type)
 
   @abc.abstractmethod
   def _getComponentModuleName(self):
@@ -1895,6 +1906,45 @@ def bar(*args, **kwargs):
     self.assertUserCanModifyDocument(user_id, component)
     self.assertUserCanDeleteDocument(user_id, component)
 
+  def testValidateComponentWithSameReferenceVersionAlreadyValidated(self):
+    reference = 'ValidateComponentWithSameReferenceVersionAlreadyValidated'
+
+    component = self._newComponent(reference, 'def foo():\n  print "ok"')
+    component.validate()
+    self.tic()
+
+    component_dup = self._newComponent(reference, 'def foo():\n  print "ok"',
+                                       id_='duplicated')
+
+    self.tic()
+
+    from Products.DCWorkflow.DCWorkflow import ValidationFailed
+    self.assertRaises(ValidationFailed,
+                      self.portal.portal_workflow.doActionFor,
+                      component_dup, 'validate_action')
+
+    self.assertEquals(component_dup.getValidationState(), 'draft')
+
+    component_dup.setReference(reference + '_copy')
+    component_dup.validate()
+    self.tic()
+
+    component_dup.setReference(reference)
+    self.tic()
+    self.assertEquals(component_dup.getValidationState(), 'modified')
+    self.assertEquals(component_dup.getReference(), reference)
+    self.assertEquals(component_dup.getReference(validated_only=True),
+                      reference + '_copy')
+
+    component_dup.invalidate()
+    self.tic()
+    component_dup.setReference(reference)
+    self.assertRaises(ValidationFailed,
+                      self.portal.portal_workflow.doActionFor,
+                      component_dup, 'validate_action')
+
+    self.assertEquals(component_dup.getValidationState(), 'invalidated')
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(_TestZodbComponent):
@@ -1902,15 +1952,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
   Tests specific to ZODB Extension Component (previously defined in bt5 and
   installed on the filesystem in $INSTANCE_HOME/Extensions)
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version',
-                       reference),
-      version=version,
-      reference=reference,
-      text_content=text_content,
-      portal_type='Extension Component')
+  _component_portal_type = 'Extension Component'
 
   def _getComponentModuleName(self):
     return ExtensionComponent._getDynamicModuleNamespace()
@@ -1987,14 +2029,7 @@ class TestZodbDocumentComponent(_TestZodbComponent):
   previously defined in bt5 and installed on the filesystem in
   $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version', reference),
-      reference=reference,
-      version=version,
-      text_content=text_content,
-      portal_type='Document Component')
+  _component_portal_type = 'Document Component'
 
   def _getComponentModuleName(self):
     return DocumentComponent._getDynamicModuleNamespace()
@@ -2125,14 +2160,7 @@ class TestZodbTestComponent(_TestZodbComponent):
   Tests specific to ZODB Test Component (known as Live Tests, and previously
   defined in bt5 and installed in $INSTANCE_HOME/test)
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version', reference),
-      reference=reference,
-      version=version,
-      text_content=text_content,
-      portal_type='Test Component')
+  _component_portal_type = 'Test Component'
 
   def _getComponentModuleName(self):
     return TestComponent._getDynamicModuleNamespace()
