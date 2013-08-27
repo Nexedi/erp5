@@ -280,19 +280,19 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
-      self.ofuscated_link_path = os.path.join(
+      self.obfuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
                       self.randomized_path)
-      if ( not os.path.lexists(self.ofuscated_link_path) and
-           not os.path.exists(self.ofuscated_link_path) ) :
+      if ( not os.path.lexists(self.obfuscated_link_path) and
+           not os.path.exists(self.obfuscated_link_path) ) :
         try :
-          os.symlink(path_to_suite, self.ofuscated_link_path)
+          os.symlink(path_to_suite, self.obfuscated_link_path)
           self.log("testnode, Symbolic link (%s->%s) created."
-                   %(self.ofuscated_link_path, path_to_suite))
+                   %(self.obfuscated_link_path, path_to_suite))
         except :
           self.log("testnode, Unable to create symbolic link to the testsuite.")
           raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
-      self.log("Sym link : %s %s" %(path_to_suite, self.ofuscated_link_path))
+      self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
       node_test_suite.edit(configuration_list=configuration_list)
