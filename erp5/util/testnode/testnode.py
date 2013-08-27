@@ -163,11 +163,11 @@ extends = %(software_config_path)s
           revision_list = [ [x.split('=')[0],x.split('=')[1].split('-')[1]] for x in all_revision.split(',') ]
           # from [[sec1,azer],[sec2,qwer],..] to {sec1:azer,sec2:qwer,..}
           revision_dict = {branch:revision for branch,revision in revision_list}
+          # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
-revision = %(revision)s
-""" %  {'buildout_section_id': buildout_section_id,
-   'revision' : revision_dict[buildout_section_id]})
+repository = <obfuscated_url>/%(buildout_section_id)s
+""" %  {'buildout_section_id': buildout_section_id})
         else:
           profile_content_list.append("""
 [%(buildout_section_id)s]
@@ -261,6 +261,7 @@ branch = %(branch)s
                         revision=revision, log=log,
                         process_manager=self.process_manager)
       updater.checkout()
+      updater.git_update_server_info()
       node_test_suite.revision = test_result.revision
 
   def _cleanupLog(self):

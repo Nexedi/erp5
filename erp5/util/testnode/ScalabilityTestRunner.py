@@ -160,8 +160,6 @@ ces or already launched.")
     if self.testnode.test_suite_portal.isMasterTestnode(
                            self.testnode.config['test_node_title']):
       pass
-#      software_path_list = []
-#      software_path_list.append(self.testnode.config.get("software_list"))
     return {'status_code' : 0} 
 
   # Dummy slapos answering
@@ -276,7 +274,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self.log("ERP5 Master indicates : %s" %(self.error_message,))
         # error : wich code to return ?
         return {'status_code' : 1}
-      # create an obfuscated link to the testsuite directory
+
+      involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
+      configuration_list = test_configuration['configuration_list']
+      node_test_suite.edit(configuration_list=configuration_list)
+      self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
+      
+      # Create an obfuscated link to the testsuite directory
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
@@ -293,22 +297,32 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
           self.log("testnode, Unable to create symbolic link to the testsuite.")
           raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
       self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
-      involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
-      configuration_list = test_configuration['configuration_list']
-      node_test_suite.edit(configuration_list=configuration_list)
-      self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-      software_path_list = []
+      
       # Construct the ipv6 obfuscated url of the software profile reachable from outside
-      self.reachable_profile = os.path.join(
+      self.reachable_address = os.path.join(
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-        self.randomized_path, "software.cfg")
+        self.randomized_path)
+      self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
+
+      # Write the reachable address in the software.cfg file,
+      # by replacing <obfuscated_url> occurences by the current reachable address.
+      software_file = open(node_test_suite.custom_profile_path, "r")
+      file_content = software_file.readlines()
+      new_file_content = []
+      for line in file_content:
+        new_file_content.append(line.replace('<obfuscated_url>', self.reachable_address))
+      software_file.close()
+      os.remove(node_test_suite.custom_profile_path)
+      software_file = open(node_test_suite.custom_profile_path, "w")
+      for line in new_file_content:
+        software_file.write(line)
+      software_file.close()
       self.log("Software reachable profile path is : %s "
                               %(self.reachable_profile,))
-      software_path_list.append(self.reachable_profile)
-      # Ask for softwares installation
-      for software_path in software_path_list:
-        for computer_guid in self.involved_nodes_computer_guid:
-          self._prepareSlapOS(software_path, computer_guid) 
+
+      # Ask for SR installation
+      for computer_guid in self.involved_nodes_computer_guid:
+        self._prepareSlapOS(self.reachable_profile, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
       # TODO : remove the line below wich simulate an answer from slapos master

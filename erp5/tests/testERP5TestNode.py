@@ -243,10 +243,10 @@ branch = foo
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
-revision = %(revision1)s
+repository = <obfuscated_url>/rep1
 
 [rep2]
-revision = %(revision2)s
+repository = <obfuscated_url>/rep2
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()

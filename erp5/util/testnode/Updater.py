@@ -96,6 +96,9 @@ class Updater(object):
   def _git(self, *args, **kw):
     return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()
 
+  def git_update_server_info(self):
+    return self._git('update-server-info')
+
   def _git_find_rev(self, ref):
     try:
       return self._git_cache[ref]
