@@ -442,7 +442,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       if "Scalability-" in title and "timestamp=" in title:
         # Get timestamp of the instance creation date
         foo, timestamp = title.split("timestamp=")
-        creation_date = datetime.fromtimestamp(timestamp)
+        creation_date = datetime.date.fromtimestamp(float(timestamp))
         # Test if instance is older than the limit
         if creation_date < outdated_date:
           instance_to_delete_list.append((title,link))
