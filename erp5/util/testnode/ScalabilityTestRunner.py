@@ -431,14 +431,19 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
   def _cleanUpOldInstance(self):
     self.log("_cleanUpOldInstance")
-    # Get link list of instances to delete
+    # Get title and link list of all instances
     instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
     instance_to_delete_list = []
     outdated_date = datetime.fromtimestamp(time.time()) - timedelta(days=2)
+    # Select instances to delete
     for title,link in instance_dict.items():
+      # Instances created by testnode contains "Scalability-" and
+      # "timestamp=" in the title.
       if "Scalability-" in title and "timestamp=" in title:
+        # Get timestamp of the instance creation date
         foo, timestamp = title.split("timestamp=")
         creation_date = datetime.fromtimestamp(timestamp)
+        # Test if instance is older than the limit
         if creation_date < outdated_date:
           instance_to_delete_list.append((title,link))
     
@@ -447,14 +452,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformation(link)
       # Delete instance
       if instance_information_dict:
-        self.slapos_controler.request(
-            instance_information_dict['title'],
-            instance_information_dict['software_url'],
-            software_type=instance_information_dict['software_type'],
-            computer_guid=instance_information_dict['computer_guid'],
-            state='destroyed'
-        )
-        self.log("Instance '%s' deleted." %instance_information_dict['title'])
+        if instance_information_dict['status'] != 'destroyed':
+          self.slapos_controler.request(
+              instance_information_dict['title'],
+              instance_information_dict['software_url'],
+              software_type=instance_information_dict['software_type'],
+              computer_guid=instance_information_dict['computer_guid'],
+              state='destroyed'
+          )
+          self.log("Instance '%s' deleted." %instance_information_dict['title'])
 
   def _cleanUpNodesInformation(self):
     self.involved_nodes_computer_guid = []
