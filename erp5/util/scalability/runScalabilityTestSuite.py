@@ -25,6 +25,12 @@ MAX_INSTALLATION_TIME = 60*50
 MAX_TESTING_TIME = 60
 MAX_GETTING_CONNECTION_TIME = 60*5
 
+class DummyLogger(object):
+  def __init__(self, func):
+    for name in ('trace', 'debug', 'info', 'warn', 'warning', 'error',
+      'critical', 'fatal'):
+       setattr(self, name, func)
+
 def getConnection(erp5_url, log):
   """
   Return a connection with the erp5 instance.
@@ -184,7 +190,7 @@ class ScalabilityLauncher(object):
     # Proxy to with erp5 master test_result
     self.test_result = taskdistribution.TestResultProxyProxy(
                         self.__argumentNamespace.test_suite_master_url,
-                        1.0, self.log,
+                        1.0, DummyLogger(self.log),
                         self.__argumentNamespace.test_result_path,
                         self.__argumentNamespace.node_title,
                         self.__argumentNamespace.revision
