@@ -68,8 +68,7 @@ if recipient_list:\n
   context.TestResult_sendEmailNotification(mail_to=recipient_list,\n
                                            mail_from=\'nobody@svn.erp5.org\',\n
                                            include_link=include_link,\n
-                                           include_diff=True,\n
-                                           **send_notification_kw)\n
+                                           include_diff=True)\n
   print \'Successfully sent to: \', recipient_list\n
 print \'OK\'\n
 return printed\n
