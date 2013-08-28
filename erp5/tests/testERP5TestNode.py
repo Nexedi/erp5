@@ -243,10 +243,14 @@ branch = foo
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
-repository = <obfuscated_url>/rep1
+repository = <obfuscated_url>/rep1/rep1.git
+branch = master
+ignore-ssl-certificate = true
 
 [rep2]
-repository = <obfuscated_url>/rep2
+repository = <obfuscated_url>/rep2/rep2.git
+branch = foo
+ignore-ssl-certificate = true
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()

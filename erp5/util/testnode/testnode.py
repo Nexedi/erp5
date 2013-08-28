@@ -168,6 +168,7 @@ extends = %(software_config_path)s
 [%(buildout_section_id)s]
 repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
 branch = %(branch)s
+ignore-ssl-certificate = true
 """ %     {'buildout_section_id': buildout_section_id,
           'branch' : vcs_repository.get('branch','master')})
         else:
