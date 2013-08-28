@@ -90,14 +90,17 @@ body {\n
   xs = stats.xs;\n
 \n
 if (xs.length != stats.test.length){\n
-  alert("The number of configuration to test ("+xs.length+", defined on test suite document) is \\\n
-lower than the number of tested configurations for this test result document ("+stats.test.length+").");\n
-  alert("x-scale will not be respected.");\n
+  bracket_left = \'<\';\n
+  bracket_right = \'>\';\n
+  bracket_right_end = \'/>\';\n
+  text = bracket_left+"h1 style=\'color:red\'"+bracket_right+"The number of configuration to test ("+xs.length+", defined on test suite document) is \\\n
+not equal to the number of tested configurations for this test result document ("+stats.test.length+").<br> \\\n
+x-scale may not be respected."+bracket_left+"h1"+bracket_right_end;\n
+  document.write(text)\n
   for(var i=xs.length; i<stats.test.length; i++){\n
     xs[i]=xs[xs.length-1]+1;\n
   }\n
 }\n
-\n
 \n
 x_max = xs[stats.test.length-1];\n
 // just for fun..\n
