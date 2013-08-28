@@ -61,8 +61,6 @@ if project is not None:\n
   if source_administration is not None:\n
     recipient_list = [source_administration.getDefaultEmailText()]\n
 \n
-if batch_mode == 1:\n
-  return "going to send to : %s" % (recipient_list,)\n
 # send emails\n
 if recipient_list:\n
   context.TestResult_sendEmailNotification(mail_to=recipient_list,\n
@@ -76,7 +74,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=0</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
