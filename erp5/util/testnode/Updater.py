@@ -99,6 +99,27 @@ class Updater(object):
   def git_update_server_info(self):
     return self._git('update-server-info')
 
+  def git_create_repository_link(self):
+    """ Create a link in depository to the ".git" directory.
+        ex:
+        for "../erp5/.git"
+        "../erp5/erp5.git"->"../erp5/.git" will be created.
+    """
+    git_repository_path = os.path.join(self.getRepositoryPath(), '.git')
+    name = os.path.basename(os.path.normpath(self.getRepositoryPath()))
+    git_repository_link_path = os.path.join(self.getRepositoryPath(), '%s.git' %name)
+    self.log("checking link %s -> %s.."
+                %(git_repository_link_path,git_repository_path))
+    if ( not os.path.lexists(git_repository_link_path) and \
+         not os.path.exists(git_repository_link_path) ):
+      try:
+        os.symlink(git_repository_path, git_repository_link_path)
+        self.log("link: %s -> %s created"
+                %(git_repository_link_path,git_repository_path))
+      except:
+        self.log("Cannot create link from %s -> %s"
+                %(git_repository_link_path,git_repository_path))
+  
   def _git_find_rev(self, ref):
     try:
       return self._git_cache[ref]

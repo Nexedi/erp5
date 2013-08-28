@@ -244,11 +244,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Install testsuite softwares
     """
+    self.log('prepareSlapOSForTestSuite')
     # Define how many time this method can take
     max_time = 3600*10*1.0 # 10 hours
     interval_time = 60
     start_time = time.time()
     # Create a communicator with slapos
+    self.log("creating SlapOs Master communicator...")
     self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
                                   self.cert_path,
                                   self.key_path,

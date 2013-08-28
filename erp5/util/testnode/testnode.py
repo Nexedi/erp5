@@ -166,16 +166,18 @@ extends = %(software_config_path)s
           # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
-repository = <obfuscated_url>/%(buildout_section_id)s
-""" %  {'buildout_section_id': buildout_section_id})
+repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
+branch = %(branch)s
+""" %     {'buildout_section_id': buildout_section_id,
+          'branch' : vcs_repository.get('branch','master')})
         else:
           profile_content_list.append("""
 [%(buildout_section_id)s]
 repository = %(repository_path)s
 branch = %(branch)s
-""" %  {'buildout_section_id': buildout_section_id,
-   'repository_path' : repository_path,
-   'branch' : vcs_repository.get('branch','master')})
+""" %     {'buildout_section_id': buildout_section_id,
+          'repository_path' : repository_path,
+          'branch' : vcs_repository.get('branch','master')})
     if not profile_path_count:
       raise ValueError(PROFILE_PATH_KEY + ' not defined')
     # Write file
@@ -262,6 +264,7 @@ branch = %(branch)s
                         process_manager=self.process_manager)
       updater.checkout()
       updater.git_update_server_info()
+      updater.git_create_repository_link()
       node_test_suite.revision = test_result.revision
 
   def _cleanupLog(self):
