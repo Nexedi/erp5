@@ -653,13 +653,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   def test_19_SearchFolderWithNonAsciiCharacter(self):
     person_module = self.getPersonModule()
 
-    # Now we will try the same thing as previous test and look at searchFolder
-    title='S\xc3\xa9bastien'
+    title = 'Sébastien'
     person = person_module.newContent(id='5',portal_type='Person',title=title)
     person.immediateReindexObject()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals(['5'],folder_object_list)
-    folder_object_list = [x.getObject().getId() for x in 
+    folder_object_list = [x.getObject().getId() for x in
                               person_module.searchFolder(title=title)]
     self.assertEquals(['5'],folder_object_list)
 
