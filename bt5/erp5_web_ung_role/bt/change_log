@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-03-01 gabriel
 * Add roles to allow erp5 user manage events in Event Module
 * Initial commit to testUNGSecurity

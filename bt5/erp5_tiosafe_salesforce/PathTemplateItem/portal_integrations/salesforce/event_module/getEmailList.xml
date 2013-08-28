@@ -1646,7 +1646,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Subje
   </record>
   <record id="24" aka="AAAAAAAAABg=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3766,7 +3766,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Subje
   </record>
   <record id="91" aka="AAAAAAAAAFs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3829,7 +3829,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Subje
   </record>
   <record id="92" aka="AAAAAAAAAFw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3888,7 +3888,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Subje
   </record>
   <record id="93" aka="AAAAAAAAAF0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3947,7 +3947,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Subje
   </record>
   <record id="94" aka="AAAAAAAAAF4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -4148,7 +4148,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="95" aka="AAAAAAAAAF8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6324,7 +6324,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="138" aka="AAAAAAAAAIo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6383,7 +6383,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="139" aka="AAAAAAAAAIs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6446,7 +6446,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="140" aka="AAAAAAAAAIw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6509,7 +6509,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="141" aka="AAAAAAAAAI0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6568,7 +6568,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="142" aka="AAAAAAAAAI4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6627,7 +6627,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="143" aka="AAAAAAAAAI8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6686,7 +6686,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="144" aka="AAAAAAAAAJA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7010,7 +7010,7 @@ USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>New 
   </record>
   <record id="145" aka="AAAAAAAAAJE=">
     <pickle>
-      <global name="WebServiceRequestGroup" module="erp5.document.WebServiceRequestGroup"/>
+      <global name="WebServiceRequestGroup" module="erp5.component.document.WebServiceRequestGroup"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7070,7 +7070,7 @@ USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>New 
   </record>
   <record id="146" aka="AAAAAAAAAJI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7237,7 +7237,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="147" aka="AAAAAAAAAJM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7296,7 +7296,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="148" aka="AAAAAAAAAJQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8507,7 +8507,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="171" aka="AAAAAAAAAKs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8566,7 +8566,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="172" aka="AAAAAAAAAKw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8629,7 +8629,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="173" aka="AAAAAAAAAK0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8692,7 +8692,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="174" aka="AAAAAAAAAK4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8751,7 +8751,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="175" aka="AAAAAAAAAK8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8810,7 +8810,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="176" aka="AAAAAAAAALA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8880,7 +8880,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="177" aka="AAAAAAAAALE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9199,7 +9199,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="178" aka="AAAAAAAAALI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9345,7 +9345,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="179" aka="AAAAAAAAALM=">
     <pickle>
-      <global name="WebServiceRequestGroup" module="erp5.document.WebServiceRequestGroup"/>
+      <global name="WebServiceRequestGroup" module="erp5.component.document.WebServiceRequestGroup"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9405,7 +9405,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="180" aka="AAAAAAAAALQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9551,7 +9551,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="181" aka="AAAAAAAAALU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9610,7 +9610,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="182" aka="AAAAAAAAALY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9937,7 +9937,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="189" aka="AAAAAAAAAL0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10000,7 +10000,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="190" aka="AAAAAAAAAL4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10059,7 +10059,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="191" aka="AAAAAAAAAL8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10118,7 +10118,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="192" aka="AAAAAAAAAMA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10364,7 +10364,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="193" aka="AAAAAAAAAME=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10448,7 +10448,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="195" aka="AAAAAAAAAMM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10511,7 +10511,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="196" aka="AAAAAAAAAMQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10570,7 +10570,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="197" aka="AAAAAAAAAMU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10629,7 +10629,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="198" aka="AAAAAAAAAMY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11155,7 +11155,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="199" aka="AAAAAAAAAMc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11214,7 +11214,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="200" aka="AAAAAAAAAMg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11277,7 +11277,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="201" aka="AAAAAAAAAMk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11336,7 +11336,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="202" aka="AAAAAAAAAMo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11395,7 +11395,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="203" aka="AAAAAAAAAMs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11454,7 +11454,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="204" aka="AAAAAAAAAMw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11513,7 +11513,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="205" aka="AAAAAAAAAM0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11572,7 +11572,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="206" aka="AAAAAAAAAM4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11631,7 +11631,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="207" aka="AAAAAAAAAM8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11690,7 +11690,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="208" aka="AAAAAAAAANA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11749,7 +11749,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="209" aka="AAAAAAAAANE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11808,7 +11808,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="210" aka="AAAAAAAAANI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11867,7 +11867,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="211" aka="AAAAAAAAANM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11926,7 +11926,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="212" aka="AAAAAAAAANQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11985,7 +11985,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="213" aka="AAAAAAAAANU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12044,7 +12044,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="214" aka="AAAAAAAAANY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12103,7 +12103,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="215" aka="AAAAAAAAANc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12162,7 +12162,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="216" aka="AAAAAAAAANg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12221,7 +12221,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="217" aka="AAAAAAAAANk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12280,7 +12280,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="218" aka="AAAAAAAAANo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12339,7 +12339,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, N
   </record>
   <record id="219" aka="AAAAAAAAANs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12525,7 +12525,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, S
   </record>
   <record id="220" aka="AAAAAAAAANw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12701,7 +12701,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="221" aka="AAAAAAAAAN0=">
     <pickle>
-      <global name="WebServiceRequestGroup" module="erp5.document.WebServiceRequestGroup"/>
+      <global name="WebServiceRequestGroup" module="erp5.component.document.WebServiceRequestGroup"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12761,7 +12761,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="222" aka="AAAAAAAAAN4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12820,7 +12820,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="223" aka="AAAAAAAAAN8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12879,7 +12879,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="224" aka="AAAAAAAAAOA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12938,7 +12938,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="225" aka="AAAAAAAAAOE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12997,7 +12997,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="226" aka="AAAAAAAAAOI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13056,7 +13056,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="227" aka="AAAAAAAAAOM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13115,7 +13115,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="228" aka="AAAAAAAAAOQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13174,7 +13174,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="229" aka="AAAAAAAAAOU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13233,7 +13233,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="230" aka="AAAAAAAAAOY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -14292,7 +14292,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="249" aka="AAAAAAAAAPk=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15060,7 +15060,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="280" aka="AAAAAAAAARg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15112,7 +15112,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="281" aka="AAAAAAAAARk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15160,7 +15160,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="282" aka="AAAAAAAAARo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15208,7 +15208,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="283" aka="AAAAAAAAARs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15346,7 +15346,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="284" aka="AAAAAAAAARw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15419,7 +15419,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="286" aka="AAAAAAAAAR4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15471,7 +15471,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="287" aka="AAAAAAAAAR8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15519,7 +15519,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="288" aka="AAAAAAAAASA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15567,7 +15567,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="289" aka="AAAAAAAAASE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15705,7 +15705,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="290" aka="AAAAAAAAASI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15808,7 +15808,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="292" aka="AAAAAAAAASQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15860,7 +15860,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="293" aka="AAAAAAAAASU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15908,7 +15908,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="294" aka="AAAAAAAAASY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15956,7 +15956,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="295" aka="AAAAAAAAASc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16004,7 +16004,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="296" aka="AAAAAAAAASg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16052,7 +16052,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="297" aka="AAAAAAAAASk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16100,7 +16100,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="298" aka="AAAAAAAAASo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16148,7 +16148,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="299" aka="AAAAAAAAASs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16196,7 +16196,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="300" aka="AAAAAAAAASw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16244,7 +16244,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="301" aka="AAAAAAAAAS0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16292,7 +16292,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="302" aka="AAAAAAAAAS4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16340,7 +16340,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="303" aka="AAAAAAAAAS8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16388,7 +16388,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="304" aka="AAAAAAAAATA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16436,7 +16436,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="305" aka="AAAAAAAAATE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16500,7 +16500,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="306" aka="AAAAAAAAATI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16548,7 +16548,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="307" aka="AAAAAAAAATM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16596,7 +16596,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="308" aka="AAAAAAAAATQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16644,7 +16644,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="309" aka="AAAAAAAAATU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16692,7 +16692,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="310" aka="AAAAAAAAATY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16740,7 +16740,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="311" aka="AAAAAAAAATc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16861,7 +16861,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="313" aka="AAAAAAAAATk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16913,7 +16913,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="314" aka="AAAAAAAAATo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16961,7 +16961,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="315" aka="AAAAAAAAATs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17009,7 +17009,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="316" aka="AAAAAAAAATw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17057,7 +17057,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="317" aka="AAAAAAAAAT0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17105,7 +17105,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="318" aka="AAAAAAAAAT4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17153,7 +17153,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="319" aka="AAAAAAAAAT8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17201,7 +17201,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="320" aka="AAAAAAAAAUA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17249,7 +17249,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="321" aka="AAAAAAAAAUE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17297,7 +17297,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="322" aka="AAAAAAAAAUI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17345,7 +17345,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="323" aka="AAAAAAAAAUM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17393,7 +17393,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="324" aka="AAAAAAAAAUQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17441,7 +17441,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="325" aka="AAAAAAAAAUU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17489,7 +17489,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="326" aka="AAAAAAAAAUY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17537,7 +17537,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="327" aka="AAAAAAAAAUc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17585,7 +17585,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="328" aka="AAAAAAAAAUg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17633,7 +17633,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="329" aka="AAAAAAAAAUk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17681,7 +17681,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="330" aka="AAAAAAAAAUo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17729,7 +17729,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="331" aka="AAAAAAAAAUs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17777,7 +17777,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="332" aka="AAAAAAAAAUw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17841,7 +17841,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="333" aka="AAAAAAAAAU0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17889,7 +17889,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="334" aka="AAAAAAAAAU4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17937,7 +17937,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="335" aka="AAAAAAAAAU8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17985,7 +17985,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="336" aka="AAAAAAAAAVA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18033,7 +18033,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="337" aka="AAAAAAAAAVE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18081,7 +18081,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="338" aka="AAAAAAAAAVI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18129,7 +18129,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="339" aka="AAAAAAAAAVM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18177,7 +18177,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="340" aka="AAAAAAAAAVQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18225,7 +18225,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="341" aka="AAAAAAAAAVU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18306,7 +18306,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="343" aka="AAAAAAAAAVc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18354,7 +18354,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="344" aka="AAAAAAAAAVg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18406,7 +18406,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="345" aka="AAAAAAAAAVk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18454,7 +18454,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="346" aka="AAAAAAAAAVo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18502,7 +18502,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="347" aka="AAAAAAAAAVs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18550,7 +18550,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="348" aka="AAAAAAAAAVw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18598,7 +18598,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="349" aka="AAAAAAAAAV0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18662,7 +18662,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="350" aka="AAAAAAAAAV4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -18710,7 +18710,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="351" aka="AAAAAAAAAV8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19101,7 +19101,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="361" aka="AAAAAAAAAWk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19149,7 +19149,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="362" aka="AAAAAAAAAWo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19201,7 +19201,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="363" aka="AAAAAAAAAWs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19249,7 +19249,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="364" aka="AAAAAAAAAWw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19297,7 +19297,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="365" aka="AAAAAAAAAW0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19345,7 +19345,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="366" aka="AAAAAAAAAW4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19393,7 +19393,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="367" aka="AAAAAAAAAW8=">
     <pickle>
-      <global name="WebServiceRequestGroup" module="erp5.document.WebServiceRequestGroup"/>
+      <global name="WebServiceRequestGroup" module="erp5.component.document.WebServiceRequestGroup"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19442,7 +19442,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="368" aka="AAAAAAAAAXA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19584,7 +19584,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="369" aka="AAAAAAAAAXE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19632,7 +19632,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="370" aka="AAAAAAAAAXI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19705,7 +19705,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="372" aka="AAAAAAAAAXQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19757,7 +19757,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="373" aka="AAAAAAAAAXU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19805,7 +19805,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="374" aka="AAAAAAAAAXY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19853,7 +19853,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="375" aka="AAAAAAAAAXc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19923,7 +19923,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="376" aka="AAAAAAAAAXg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19996,7 +19996,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="378" aka="AAAAAAAAAXo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -20048,7 +20048,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="379" aka="AAAAAAAAAXs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -20096,7 +20096,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="380" aka="AAAAAAAAAXw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -20144,7 +20144,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="381" aka="AAAAAAAAAX0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -20284,7 +20284,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="382" aka="AAAAAAAAAX4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21187,7 +21187,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="398" aka="AAAAAAAAAY4=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21858,7 +21858,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="426" aka="AAAAAAAAAao=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21910,7 +21910,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="427" aka="AAAAAAAAAas=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -21958,7 +21958,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="428" aka="AAAAAAAAAaw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22006,7 +22006,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="429" aka="AAAAAAAAAa0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22070,7 +22070,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="430" aka="AAAAAAAAAa4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22143,7 +22143,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="432" aka="AAAAAAAAAbA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22195,7 +22195,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="433" aka="AAAAAAAAAbE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22243,7 +22243,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="434" aka="AAAAAAAAAbI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22291,7 +22291,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="435" aka="AAAAAAAAAbM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22355,7 +22355,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="436" aka="AAAAAAAAAbQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22458,7 +22458,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="438" aka="AAAAAAAAAbY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22510,7 +22510,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="439" aka="AAAAAAAAAbc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22558,7 +22558,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="440" aka="AAAAAAAAAbg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22606,7 +22606,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="441" aka="AAAAAAAAAbk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22654,7 +22654,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="442" aka="AAAAAAAAAbo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22702,7 +22702,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="443" aka="AAAAAAAAAbs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22750,7 +22750,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="444" aka="AAAAAAAAAbw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22798,7 +22798,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="445" aka="AAAAAAAAAb0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22846,7 +22846,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="446" aka="AAAAAAAAAb4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22894,7 +22894,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="447" aka="AAAAAAAAAb8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22942,7 +22942,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="448" aka="AAAAAAAAAcA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -22990,7 +22990,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="449" aka="AAAAAAAAAcE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23038,7 +23038,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="450" aka="AAAAAAAAAcI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23086,7 +23086,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="451" aka="AAAAAAAAAcM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23150,7 +23150,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="452" aka="AAAAAAAAAcQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23198,7 +23198,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="453" aka="AAAAAAAAAcU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23246,7 +23246,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="454" aka="AAAAAAAAAcY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23294,7 +23294,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="455" aka="AAAAAAAAAcc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23342,7 +23342,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="456" aka="AAAAAAAAAcg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23390,7 +23390,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="457" aka="AAAAAAAAAck=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23511,7 +23511,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="459" aka="AAAAAAAAAcs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23563,7 +23563,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="460" aka="AAAAAAAAAcw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23611,7 +23611,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="461" aka="AAAAAAAAAc0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23659,7 +23659,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="462" aka="AAAAAAAAAc4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23707,7 +23707,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="463" aka="AAAAAAAAAc8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23755,7 +23755,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="464" aka="AAAAAAAAAdA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23803,7 +23803,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="465" aka="AAAAAAAAAdE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23851,7 +23851,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="466" aka="AAAAAAAAAdI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23899,7 +23899,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="467" aka="AAAAAAAAAdM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23947,7 +23947,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="468" aka="AAAAAAAAAdQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23995,7 +23995,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="469" aka="AAAAAAAAAdU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24043,7 +24043,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="470" aka="AAAAAAAAAdY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24091,7 +24091,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="471" aka="AAAAAAAAAdc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24139,7 +24139,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="472" aka="AAAAAAAAAdg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24187,7 +24187,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="473" aka="AAAAAAAAAdk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24235,7 +24235,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="474" aka="AAAAAAAAAdo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24283,7 +24283,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="475" aka="AAAAAAAAAds=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24331,7 +24331,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="476" aka="AAAAAAAAAdw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24379,7 +24379,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="477" aka="AAAAAAAAAd0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24427,7 +24427,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="478" aka="AAAAAAAAAd4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24491,7 +24491,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="479" aka="AAAAAAAAAd8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24539,7 +24539,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="480" aka="AAAAAAAAAeA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24587,7 +24587,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="481" aka="AAAAAAAAAeE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24635,7 +24635,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="482" aka="AAAAAAAAAeI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24683,7 +24683,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="483" aka="AAAAAAAAAeM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24731,7 +24731,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="484" aka="AAAAAAAAAeQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24779,7 +24779,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="485" aka="AAAAAAAAAeU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24827,7 +24827,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="486" aka="AAAAAAAAAeY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24875,7 +24875,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="487" aka="AAAAAAAAAec=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24956,7 +24956,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="489" aka="AAAAAAAAAek=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25004,7 +25004,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="490" aka="AAAAAAAAAeo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25056,7 +25056,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="491" aka="AAAAAAAAAes=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25104,7 +25104,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="492" aka="AAAAAAAAAew=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25152,7 +25152,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="493" aka="AAAAAAAAAe0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25200,7 +25200,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="494" aka="AAAAAAAAAe4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25248,7 +25248,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="495" aka="AAAAAAAAAe8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25312,7 +25312,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="496" aka="AAAAAAAAAfA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25360,7 +25360,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="497" aka="AAAAAAAAAfE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25458,7 +25458,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="500" aka="AAAAAAAAAfQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25506,7 +25506,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="501" aka="AAAAAAAAAfU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25558,7 +25558,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="502" aka="AAAAAAAAAfY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25606,7 +25606,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="503" aka="AAAAAAAAAfc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25654,7 +25654,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="504" aka="AAAAAAAAAfg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25702,7 +25702,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="505" aka="AAAAAAAAAfk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25750,7 +25750,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="506" aka="AAAAAAAAAfo=">
     <pickle>
-      <global name="WebServiceRequestGroup" module="erp5.document.WebServiceRequestGroup"/>
+      <global name="WebServiceRequestGroup" module="erp5.component.document.WebServiceRequestGroup"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25798,7 +25798,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="507" aka="AAAAAAAAAfs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25846,7 +25846,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="508" aka="AAAAAAAAAfw=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25919,7 +25919,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="510" aka="AAAAAAAAAf4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25971,7 +25971,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="511" aka="AAAAAAAAAf8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26019,7 +26019,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="512" aka="AAAAAAAAAgA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26067,7 +26067,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="513" aka="AAAAAAAAAgE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26137,7 +26137,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="514" aka="AAAAAAAAAgI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26210,7 +26210,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="516" aka="AAAAAAAAAgQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26262,7 +26262,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="517" aka="AAAAAAAAAgU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26310,7 +26310,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="518" aka="AAAAAAAAAgY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26358,7 +26358,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="519" aka="AAAAAAAAAgc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -26422,7 +26422,7 @@ args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, T
   </record>
   <record id="520" aka="AAAAAAAAAgg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-03-22 lucas
 - We must hide the change password action, once the password management is done locally.
 

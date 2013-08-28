@@ -1,0 +1,4 @@
+portal_components/document.erp5.WebSite
+portal_components/extension.erp5.ShaDir
+portal_components/test.erp5.testShaDir
+portal_components/test.erp5.ShaDirMixin

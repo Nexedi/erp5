@@ -1,0 +1,9 @@
+portal_components/document.erp5.WebServiceRequestGroup
+portal_components/document.erp5.WebServiceConnector
+portal_components/document.erp5.WebServiceRequest
+portal_components/extension.erp5.TioSafeBaseConduit
+portal_components/extension.erp5.TioSafeBrain
+portal_components/extension.erp5.TioSafeDoNothingConduit
+portal_components/extension.erp5.TioSafeResourceConduit
+portal_components/extension.erp5.TioSafeTool
+portal_components/extension.erp5.TioSafeNodeConduit

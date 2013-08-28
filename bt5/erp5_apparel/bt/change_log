@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2010-01-01 fabien
 * move fabric_brand category from erp5_pdm to erp5_apparel. This category is going to be replaced by a trade_mark_module.
 

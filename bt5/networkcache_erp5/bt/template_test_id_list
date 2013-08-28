@@ -1,5 +1,5 @@
-testShaCacheSecurity
-testShaDirSecurity
-testShaDirExternal
-testShaCacheExternal
-ShaSecurityMixin
+test.erp5.testShaDirExternal
+test.erp5.testShaCacheExternal
+test.erp5.ShaSecurityMixin
+test.erp5.testShaCacheSecurity
+test.erp5.testShaDirSecurity

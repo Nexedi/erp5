@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-08-16 rafael
 * Remove useless code and do not re-setup conversion server.
 

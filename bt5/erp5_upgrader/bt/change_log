@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2012-10-05 arnaud.fontaine
 * Allow to specify bt5 which are not going to be upgraded (meaningful for master data for example). 
 

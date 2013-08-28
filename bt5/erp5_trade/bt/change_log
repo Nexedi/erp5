@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2013-05-28 arnaud.fontaine
 * Fix incorrect change of my_view_mode_quantity ProxyField which must point to Base_viewFieldLibrary/my_view_mode_quantity so that figure CSS class is applied (9fcbe9c).
 

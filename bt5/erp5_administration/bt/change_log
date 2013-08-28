@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2010-04-06 yusuke
 * Updated Base_viewSecurity to see what a user has any local roles on an object in context.
 
