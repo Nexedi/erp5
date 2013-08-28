@@ -1,3 +1,6 @@
+2013-08-30 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-02-07 gabriel
 * Added erp5_crm as dependency
 * Update Fields

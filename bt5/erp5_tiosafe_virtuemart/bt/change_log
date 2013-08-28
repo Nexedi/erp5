@@ -1,2 +1,5 @@
+2013-09-02 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-05-07 mohamadou
 - initial version

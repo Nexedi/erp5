@@ -1,3 +1,6 @@
+2013-08-30 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 * 2010-08-24 aurel
 New data structure for Integration Site
 

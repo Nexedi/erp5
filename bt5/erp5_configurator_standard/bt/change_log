@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-04-12 lucas
 * Added default image on default_standard_configuration and a better description.
 

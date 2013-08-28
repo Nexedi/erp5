@@ -1,0 +1,3 @@
+portal_components/extension.erp5.ShaCache
+portal_components/test.erp5.ShaCacheMixin
+portal_components/test.erp5.testShaCache

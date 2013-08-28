@@ -1,3 +1,3 @@
-erp5.component.extension.erp5.Glossary
-erp5.component.extension.erp5.ProxyFieldUtils
-erp5.component.extension.erp5.PythonScriptParserUtility
+extension.erp5.Glossary
+extension.erp5.ProxyFieldUtils
+extension.erp5.PythonScriptParserUtility

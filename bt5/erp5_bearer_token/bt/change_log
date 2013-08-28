@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2012/05/16 Łukasz Nowak
 * use volatile memcached to store tokens, as there is not need to touch ZODB
 * use global token key in order to decouple fully from ERP5 loggable objects

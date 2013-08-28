@@ -1,2 +1,2 @@
-erp5.component.extension.erp5.BaseMigration
-erp5.component.extension.erp5.BarcodeUtils
+extension.erp5.BaseMigration
+extension.erp5.BarcodeUtils

@@ -1,5 +1,5 @@
-2013-07-04 arnaud.fontaine
-* ZODB Components: Migrate Extensions.
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
 
 2012-10-04 arnaud.fontaine
 * getPreferredSubversionWorkingCopyList() cannot be set properly.

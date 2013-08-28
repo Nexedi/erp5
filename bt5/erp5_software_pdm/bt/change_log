@@ -1,3 +1,6 @@
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2010-12-10 romain
 * Move software release stuff from erp5_forge_release.
 
