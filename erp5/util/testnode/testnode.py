@@ -189,7 +189,7 @@ branch = %(branch)s
     custom_profile.close()
     sys.path.append(repository_path)
 
-  def getAndUpdateFullRevisionList(self, node_test_suite):
+  def getAndUpdateFullRevisionList(self, node_test_suite, my_test_type):
     full_revision_list = []
     config = self.config
     log = self.log
@@ -200,7 +200,12 @@ branch = %(branch)s
       if not os.path.exists(repository_path):
         parameter_list = [config['git_binary'], 'clone',
                           vcs_repository['url']]
-        if branch is not None:
+        # XXX: In scalability we use revision to update code,
+        # so accordingly to recipe.slapos.gitclone we need to have
+        # a master branch.
+        if my_test_type == 'ScalabilityTest':
+          parameter_list.extend(['-b', 'master'])
+        elif branch is not None:
           parameter_list.extend(['-b', branch])
         parameter_list.append(repository_path)
         log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
@@ -371,7 +376,7 @@ from the distributor.")
             run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            self.getAndUpdateFullRevisionList(node_test_suite)
+            self.getAndUpdateFullRevisionList(node_test_suite, my_test_type)
             # Write our own software.cfg to use the local repository
             self.constructProfile(node_test_suite, my_test_type, runner.getRelativePathUsage())
             # Make sure we have local repository

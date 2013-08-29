@@ -97,7 +97,7 @@ class Updater(object):
     return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()
 
   def git_update_server_info(self):
-    return self._git('update-server-info')
+    return self._git('update-server-info', '--force')
 
   def git_create_repository_link(self):
     """ Create a link in depository to the ".git" directory.
