@@ -114,7 +114,7 @@ class ScalabilityTestRunner():
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-"+str(datetime.now().isoformat())+"-"
+    instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
     instance_title += "timestamp="+str(time.time())
     return instance_title
 
@@ -450,7 +450,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # Get title and link list of all instances
     instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
     instance_to_delete_list = []
-    outdated_date = datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
+    outdated_date = datetime.datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
     # Select instances to delete
     for title,link in instance_dict.items():
       # Instances created by testnode contains "Scalability-" and
@@ -458,7 +458,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       if "Scalability-" in title and "timestamp=" in title:
         # Get timestamp of the instance creation date
         foo, timestamp = title.split("timestamp=")
-        creation_date = datetime.fromtimestamp(float(timestamp))
+        creation_date = datetime.datetime.fromtimestamp(float(timestamp))
         # Test if instance is older than the limit
         if creation_date < outdated_date:
           instance_to_delete_list.append((title,link))
