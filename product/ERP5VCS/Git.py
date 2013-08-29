@@ -351,7 +351,8 @@ class Git(WorkingCopy):
           # first check why we could not push
           status = [x for x in e.stdout.splitlines() if x[:1] == '!']
           if (len(status) !=  1 or
-              status[0].split()[2:] != ['[rejected]', '(non-fast-forward)']):
+              not re.match(r'.*\[rejected\]\s*\((fetch first|non-fast-forward)\)',
+                           status[0])):
             raise
           self.remote_git('fetch', '--prune', remote)
           if not self.getBehindCount():
