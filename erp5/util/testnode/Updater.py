@@ -97,7 +97,7 @@ class Updater(object):
     return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()
 
   def git_update_server_info(self):
-    return self._git('update-server-info', '--force')
+    return self._git('update-server-info', '-f')
 
   def git_create_repository_link(self):
     """ Create a link in depository to the ".git" directory.
@@ -204,3 +204,4 @@ class Updater(object):
     else:
       raise NotImplementedError
     self._path_list += path_list
+    self.git_update_server_info()
