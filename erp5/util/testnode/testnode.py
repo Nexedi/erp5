@@ -167,10 +167,10 @@ extends = %(software_config_path)s
           profile_content_list.append("""
 [%(buildout_section_id)s]
 repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
-branch = %(branch)s
+revision = %(revision)s
 ignore-ssl-certificate = true
 """ %     {'buildout_section_id': buildout_section_id,
-          'branch' : vcs_repository.get('branch','master')})
+          'revision': revision_dict[buildout_section_id]})
         else:
           profile_content_list.append("""
 [%(buildout_section_id)s]
