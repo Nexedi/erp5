@@ -465,7 +465,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     
     for title,link in instance_to_delete_list:
       # Get instance information
-      instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformation(link)
+      instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformationDict(title)
       # Delete instance
       if instance_information_dict:
         if instance_information_dict['status'] != 'destroyed':

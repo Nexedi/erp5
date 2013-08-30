@@ -186,7 +186,7 @@ class SlapOSMasterCommunicator(object):
     # Get root instance
     for link in related_instance_link_list:
       instance = self._curl(link)
-      if tile == instance['title']:
+      if title == instance['title']:
         related_instance_link = link
         break
     # Return information dict
