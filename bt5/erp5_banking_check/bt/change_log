@@ -1,4 +1,7 @@
 2013-08-30 arnaud.fontaine
+* Saving erp5_banking_check failed because bt5 definition was not updated after removing global actions (83a994b7).
+
+2013-08-30 arnaud.fontaine
 * ZODB Components: Migrate Documents, Extensions and Tests.
 
 2007-11-06 aurel
