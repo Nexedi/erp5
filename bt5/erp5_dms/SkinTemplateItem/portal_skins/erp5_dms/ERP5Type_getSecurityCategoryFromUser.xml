@@ -94,14 +94,6 @@ return category_list\n
             <value> <string>base_category_list, user_name, object, portal_type</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Type_getSecurityCategoryFromUser</string> </value>
         </item>

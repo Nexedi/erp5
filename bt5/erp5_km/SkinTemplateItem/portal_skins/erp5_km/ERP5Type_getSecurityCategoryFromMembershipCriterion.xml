@@ -66,8 +66,6 @@ The parameters are\n
   user_name          -- the user identifier (not used)\n
   object             -- object which we want to assign roles to\n
   portal_type        -- portal type of object\n
-\n
-NOTE: for now, this script requires proxy manager\n
 """\n
 \n
 category_list = []\n
@@ -89,14 +87,6 @@ return category_list\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list, user_name, object, portal_type</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

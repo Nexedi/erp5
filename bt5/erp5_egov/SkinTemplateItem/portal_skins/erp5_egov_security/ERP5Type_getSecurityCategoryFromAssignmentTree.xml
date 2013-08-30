@@ -63,8 +63,6 @@ Differences to the stock implementation:\n
   (unless we say it is strict)\n
 """\n
 \n
-\n
-# XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
 from Products.ERP5Type.Log import log\n
 \n
 category_list = []\n
@@ -125,15 +123,6 @@ return category_list\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>base_category_list, user_name, object, portal_type, strict=False, root=False</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
