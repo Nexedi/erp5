@@ -27,6 +27,7 @@
 import errno
 import os
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -46,7 +47,8 @@ class Updater(object):
   stdin = file(os.devnull)
 
   def __init__(self, repository_path, log, revision=None, git_binary=None,
-      branch=None, realtime_output=True, process_manager=None):
+      branch=None, realtime_output=True, process_manager=None, url=None,
+      working_directory=None):
     self.log = log
     self.revision = revision
     self._path_list = []
@@ -55,6 +57,8 @@ class Updater(object):
     self.git_binary = git_binary
     self.realtime_output = realtime_output
     self.process_manager = process_manager
+    self.url = url
+    self.working_directory = working_directory
 
   def getRepositoryPath(self):
     return self.repository_path
@@ -88,9 +92,12 @@ class Updater(object):
               raise
 
   def spawn(self, *args, **kw):
+    cwd = kw.pop("cwd", None)
+    if cwd is None:
+      cwd = self.getRepositoryPath()
     return self.process_manager.spawn(*args, 
                                       log_prefix='git',
-                                      cwd=self.getRepositoryPath(),
+                                      cwd=cwd,
                                       **kw)
 
   def _git(self, *args, **kw):
@@ -120,7 +127,33 @@ class Updater(object):
       return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
     raise NotImplementedError
 
+  def deleteRepository(self):
+    self.log("Wrong repository or wrong url, deleting repos %s" % \
+             self.repository_path)
+    shutil.rmtree(self.repository_path)
+
+  def checkRepository(self):
+    # make sure that the repository is like we expect
+    if self.url:
+      if os.path.exists(self.repository_path):
+        correct_url = False
+        try:
+          remote_url = self._git("config", "--get", "remote.origin.url")
+          if remote_url == self.url:
+            correct_url = True
+        except (SubprocessError,) as e:
+          self.log("SubprocessError", exc_info=sys.exc_info())
+        if not(correct_url):
+          self.deleteRepository()
+      if not os.path.exists(self.repository_path):
+        parameter_list = ['clone', self.url]
+        if self.branch is not None:
+          parameter_list.extend(['-b', self.branch])
+        parameter_list.append(self.repository_path)
+        self._git(*parameter_list, cwd=self.working_directory)
+
   def checkout(self, *path_list):
+    self.checkRepository()
     if not path_list:
       path_list = '.',
     revision = self.revision

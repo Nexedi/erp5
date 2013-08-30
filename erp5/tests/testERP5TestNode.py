@@ -3,6 +3,7 @@ from unittest import TestCase
 from erp5.util.testnode.testnode import TestNode
 from erp5.util.testnode.testnode import SlapOSInstance
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
+from erp5.util.testnode.Updater import Updater
 
 from erp5.util.testnode.SlapOSControler import SlapOSControler
 from erp5.util.testnode.SlapOSControler import createFolder
@@ -267,6 +268,44 @@ branch = foo
     rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
     output = call("git branch".split()).strip()
     self.assertTrue("* bar" in output.split('\n'))
+
+  def test_05c_changeRepositoryUrl(self):
+    """
+    It could happen that the url is changed for a repository (new place, or
+    change of username and password). testnode must be able to erase and clone
+    again the repository
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEquals(2, len(rev_list))
+    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    # patch deleteRepository to make sure it will be called once for the wrong
+    # repos, and not for the repos which has not changed
+    deleted_repository_path_list = []
+    original_deleteRepository = Updater.deleteRepository
+    try:
+      def deleteRepository(self):
+        deleted_repository_path_list.append(self.repository_path)
+        original_deleteRepository(self)
+      Updater.deleteRepository = deleteRepository
+      # change the url of the first repository
+      vcs_repository_info = node_test_suite.vcs_repository_list[0]
+      vcs_repository_info["url"] = self.remote_repository2
+      rep0_clone_path = [x['repository_path'] for x in \
+                         node_test_suite.vcs_repository_list \
+                         if x['repository_path'].endswith("rep0")][0]
+      call = self.getCaller(cwd=rep0_clone_path)
+      self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
+                        self.remote_repository0)
+      rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+      self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
+                        self.remote_repository2)
+      self.assertEquals([rep0_clone_path], deleted_repository_path_list)
+    finally:
+      Updater.deleteRepository = original_deleteRepository
 
   def test_06_checkRevision(self):
     """
