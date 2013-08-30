@@ -115,6 +115,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     supply = self._makeSupply(start_date_range_min='2009/01/01',
                               start_date_range_max='2009/01/31')
+    supply.validate()
 
     supply_line = self._makeSupplyLine(supply)
     supply_cell = self._makeSupplyCell(supply_line)
@@ -169,6 +170,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertNotEquals(original_date, new_date)
 
     supply = self._makeSupply(start_date_range_min=original_date)
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
 
     kw = {}
@@ -201,6 +203,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     original_date = DateTime().earliestTime()
 
     supply = self._makeSupply(start_date_range_min=original_date)
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
     self.tic()
 
@@ -223,6 +226,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       supply_line
     """
     supply = self._makeSupply(start_date_range_min=DateTime())
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
     supply_line.setSourceReference('my_source_reference')
     self.assertEquals(supply_line.getSourceReference(), 'my_source_reference')
@@ -326,6 +330,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     product = self.portal.product_module.newContent(portal_type="Product",
                                                     title=self.id())
     supply = self._makeSupply()
+    supply.validate()
     supply_line = self._makeSupplyLine(supply, resource_value=product)
     another_supply_line = self._makeSupplyLine(supply, resource_value=product)
 

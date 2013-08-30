@@ -63,6 +63,7 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
     self.trade_condition = self.trade_condition_module.newContent(
                             portal_type=self.trade_condition_type,
                             title='Trade Condition')
+    self.trade_condition.validate()
     self.order_module = self.portal.getDefaultModule(
                                       self.order_type)
     self.order = self.order_module.newContent(
@@ -282,6 +283,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           resource_value=self.resource,
                                           source_section_value=self.vendor,
                                           destination_section_value=self.client)
+    other_supply.validate()
     other_supply_line = other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
@@ -307,6 +309,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           resource_value=self.resource,
                                           source_section_value=self.vendor,
                                           destination_section_value=self.client)
+    other_supply.validate()
     other_supply_line = other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
@@ -317,9 +320,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
     self.order.setSourceSectionValue(self.vendor)
     self.order.setDestinationSectionValue(self.client)
-    self.tic()
 
-    self.trade_condition.validate()
     self.trade_condition.invalidate()
     self.tic()
 
@@ -339,6 +340,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     supply = self.portal.getDefaultModule(self.supply_type
                              ).newContent(portal_type=self.supply_type,
                                           resource_value=self.resource,)
+    supply.validate()
     supply_line = supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=1)
@@ -348,6 +350,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                           resource_value=self.resource,
                                           destination_section_value=self.client,
                                           source_section_value=self.vendor)
+    other_supply.validate()
     other_supply_line = other_supply.newContent(
                                     portal_type=self.supply_line_type,
                                     base_price=2)

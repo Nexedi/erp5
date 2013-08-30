@@ -456,6 +456,7 @@ class TestDomainTool(TestPredicateMixIn):
                                        source_section_value=supplier,
                                        destination_section_value=shop,
                                        price_currency_value=jpy)
+    supply1.validate()
     supply1.newContent(portal_type='Sale Supply Line',
                        resource_value=product1)
     supply1.newContent(portal_type='Sale Supply Line',
@@ -465,12 +466,14 @@ class TestDomainTool(TestPredicateMixIn):
                                        source_section_value=supplier,
                                        destination_section_value=company,
                                        price_currency_value=jpy)
+    supply2.validate()
     supply2.newContent(portal_type='Sale Supply Line',
                        resource_value=product2)
     supply3 = supply_module.newContent(portal_type='Sale Supply',
                                        title='Supply3',
                                        source_section_value=supplier,
                                        price_currency_value=euro)
+    supply3.validate()
     supply3.newContent(portal_type='Sale Supply Line',
                        resource_value=product1)
 

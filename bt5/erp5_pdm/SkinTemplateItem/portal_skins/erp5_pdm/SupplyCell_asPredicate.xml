@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if getattr(context, \'getValidationState\', lambda: "")() in (\'invalidated\', \'deleted\'):\n
+            <value> <string>if context.getParentValue().getParentValue().getPortalType() not in context.getPortalResourceTypeList() \\\n
+     and getattr(context, \'getValidationState\', lambda: "")() in (\'invalidated\', \'deleted\', \'draft\'):\n
+  # If this supply cell is contained in a supply or trade condition that is not validated, it does not apply.\n
   return None\n
 \n
 base_category_tuple = (\'resource\', \'price_currency\')\n
