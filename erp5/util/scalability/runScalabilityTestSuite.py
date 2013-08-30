@@ -332,6 +332,7 @@ class ScalabilityLauncher(object):
                  '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
                  '--report-directory', self.__argumentNamespace.log_path,
                  '--repeat', "%s" %str(MAX_DOCUMENTS),
+                 '--max-errors', str(1000000),
               ])
               
           # Launch
