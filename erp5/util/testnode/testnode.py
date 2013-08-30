@@ -200,13 +200,7 @@ branch = %(branch)s
       if not os.path.exists(repository_path):
         parameter_list = [config['git_binary'], 'clone',
                           vcs_repository['url']]
-        # XXX: In scalability we use revision to update code,
-        # so accordingly to recipe.slapos.gitclone we need to have
-        # a master branch.
-        if my_test_type == 'ScalabilityTest':
-          parameter_list.extend(['-b', 'master'])
-        elif branch is not None:
-          parameter_list.extend(['-b', branch])
+        parameter_list.extend(['-b', branch])
         parameter_list.append(repository_path)
         log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
       # Make sure we have local repository
