@@ -153,7 +153,7 @@ class IMAPSServer(MailServer):
       message_folder -- the name of the folder to ingest messages from
     """
     self._selectMessageFolder(message_folder)
-    query = "( ALL )"
+    query = "ALL"
     response, message_id_list = self.server.uid('search', None, query) # XXX - reponse not taken into account
     result = message_id_list[0].split()
     result.reverse() # Download the latest first
@@ -171,13 +171,13 @@ class IMAPSServer(MailServer):
     result = []
     response, folder_list = self.server.list() # XXX - reponse not taken into account
     for folder in folder_list:
-      if folder is not None:	    
-        folder_definition_list = folder.split(' "." ')
-        # XXX - Here we consider that
+      if folder is not None:
         # strings are of the form '(\\HasChildren) "." "INBOX.Business.OpenBrick.Prospects"'
-        # but is this really the generic case - review IMAP protocol
-        folder_type, folder_name = folder_definition_list
-        folder_name = folder_name[1:-1]
+        #                           folder_flags    delimeter folder
+        folder_flags, folder_name = folder.split(') "', 1)
+        folder_flags = folder_flags.strip('(')
+        folder_delimiter, folder_name = folder.split('" ', 1)
+        folder_name = folder_name.strip('"')
         result.append(folder_name)
     return result
 
@@ -434,7 +434,7 @@ class EmailReader(ExternalSource):
     """
     if message_folder is None:
       return str(uid)
-    return "%s-%s" % (message_folder, uid) # Can this be configurable, based on what ? date?
+    return "%s-%s" % (message_folder.replace('/','.'), uid) # Can this be configurable, based on what ? date?
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMessageFolderList')
   def getMessageFolderList(self):
