@@ -259,19 +259,21 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
 
 def _getTableSchema(query, name,
         create_lstrip = re.compile(r"[^(]+\(\s*").sub,
-        create_rstrip = re.compile(r"\s*\)[^)]+$").sub,
+        create_rmatch = re.compile(r"(.*\S)\s*\)[^)]+\s"
+          "(DEFAULT(\s+(CHARSET|COLLATE)=\S+)+).*$", re.DOTALL).match,
         create_split  = re.compile(r",\n\s*").split,
         column_match  = re.compile(r"`(\w+)`\s+(.+)").match,
         ):
     (_, schema), = query("SHOW CREATE TABLE " + name)[1]
     column_list = []
     key_set = set()
-    for spec in create_split(create_rstrip("", create_lstrip("", schema, 1))):
+    m = create_rmatch(create_lstrip("", schema, 1))
+    for spec in create_split(m.group(1)):
         if "KEY" in spec:
             key_set.add(spec)
         else:
             column_list.append(column_match(spec).groups())
-    return column_list, key_set
+    return column_list, key_set, m.group(2)
 
 _create_search = re.compile(r'\bCREATE\s+TABLE\s+(`?)(\w+)\1\s+', re.I).search
 _key_search = re.compile(r'\bKEY\s+(`[^`]+`)\s+(.+)').search
@@ -284,17 +286,19 @@ def DA_upgradeSchema(self, connection_id=None, src__=0):
         return
     name = m.group(2)
 
-    old_list, old_set = _getTableSchema(query, name)
+    old_list, old_set, old_default = _getTableSchema(query, name)
 
     name_new = '_%s_new' % name
     query('CREATE TEMPORARY TABLE %s %s' % (name_new, src[m.end():]))
     try:
-        new_list, new_set = _getTableSchema(query, name_new)
+        new_list, new_set, new_default = _getTableSchema(query, name_new)
     finally:
         query("DROP TEMPORARY TABLE " + name_new)
 
     src = []
     q = src.append
+    if old_default != new_default:
+      q(new_default)
 
     old_dict = {}
     new = set(column[0] for column in new_list)
