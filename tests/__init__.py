@@ -28,8 +28,10 @@ class _ERP5(ERP5TypeTestSuite):
 
   def _getAllTestList(self):
     test_list = []
-    for test_path in glob.glob('%s/product/*/tests/test*.py' % sys.path[0]) + \
-                 glob.glob('%s/bt5/*/TestTemplateItem/test*.py' % sys.path[0]):
+    for test_path in (
+        glob.glob('%s/product/*/tests/test*.py' % sys.path[0]) +
+        glob.glob('%s/bt5/*/TestTemplateItem/test*.py' % sys.path[0]) +
+        glob.glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % sys.path[0])):
       test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
@@ -64,23 +66,26 @@ class ERP5(_ERP5):
     test_list = []
     for test_case in self._getAllTestList():
       # skip some tests
-      if test_case.startswith('testLive') or test_case.startswith('testVifib') \
-         or test_case.find('Performance') > 0 \
-         or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
-                          # tests reading selenium tables from erp5.com
-                          'testFunctionalStandaloneUserTutorial',
-                          'testFunctionalRunMyDocSample',
-                          'testFunctionalConfigurator',
-                          'testFunctionalConfiguratorConsulting',
-                          # not maintained
-                          'testERP5eGov',
-                          'testAccounting_l10n_fr_m9'):
+      if ('testLive' in test_case or
+          'testVifib' in test_case or
+          test_case.find('Performance') > 0 or
+          # XXX (Ivan), until LDAP server is available this test will alway fail
+          test_case.endswith('testERP5LdapCatalog') or
+          # tests reading selenium tables from erp5.com
+          test_case.endswith('testFunctionalStandaloneUserTutorial') or
+          test_case.endswith('testFunctionalRunMyDocSample') or
+          test_case.endswith('testFunctionalConfigurator') or
+          test_case.endswith('testFunctionalConfiguratorConsulting') or
+          # not maintained
+          test_case.endswith('testERP5eGov') or
+          test_case.endswith('testAccounting_l10n_fr_m9')):
         continue
       test_list.append(test_case)
     return test_list
 
   def run(self, test):
-    if test in ('testConflictResolution', 'testInvalidationBug'):
+    if (test.endswith('testConflictResolution') or
+        test.endswith('testInvalidationBug')):
       status_dict = self.runUnitTest('--save', test)
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', test)

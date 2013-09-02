@@ -297,6 +297,33 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     if name.endswith('.py'):
       name = name[:-3]
     name = name.replace(':', '.')
+
+    # TODO-arnau: Dirty hack to allow './runUnitTest test.erp5.testFoo'. This
+    # must be implemented properly by specifiying the bt5 *and* test name
+    if name.startswith('test.'):
+      for path in sys.path:
+        if not path.endswith('/portal_components'):
+          continue
+
+        component_module_name = name.split('.')[2]
+        component_filename = '.'.join(name.split('.', 3)[:3]) + '.py'
+        component_path = os.path.join(path, component_filename)
+        if not os.path.isfile(component_path):
+          continue
+
+        with open(component_path) as component_file:
+          import imp
+          module = imp.new_module(component_module_name)
+          setattr(module,
+                  component_module_name,
+                  imp.load_module(component_module_name,
+                                  component_file,
+                                  component_filename,
+                                  ('.py', 'rb', imp.PY_SOURCE)))
+
+          name = '.'.join(name.split('.', 3)[2:])
+          break
+
     return super(ERP5TypeTestLoader, self).loadTestsFromName(name, module)
 
   def loadTestsFromModule(self, module):
@@ -429,9 +456,16 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   project_bt5_test_list = []
   for bt5_path in bt5_path_list:
     bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem')))
+    bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem',
+                                           'portal_components')))
+
     # also suport instance_home/bt5/project_bt5/*
     project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
-                                                         'TestTemplateItem')))
+                                                   'TestTemplateItem')))
+    project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
+                                                   'TestTemplateItem',
+                                                   'portal_components')))
+
   sys.path.extend(bt5_test_list)
   sys.path.extend(project_bt5_test_list)
 
