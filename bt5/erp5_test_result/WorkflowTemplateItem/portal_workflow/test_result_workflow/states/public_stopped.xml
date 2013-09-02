@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>stopped</string> </value>
+            <value> <string>public_stopped</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,7 +31,6 @@
                 <string>cancel</string>
                 <string>cancel_action</string>
                 <string>fail</string>
-                <string>publish_stopped</string>
               </tuple>
             </value>
         </item>
@@ -58,6 +57,7 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
@@ -105,6 +105,7 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>

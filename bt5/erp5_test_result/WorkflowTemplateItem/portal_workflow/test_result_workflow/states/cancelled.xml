@@ -29,6 +29,7 @@
             <value>
               <tuple>
                 <string>delete_action</string>
+                <string>fail</string>
               </tuple>
             </value>
         </item>
