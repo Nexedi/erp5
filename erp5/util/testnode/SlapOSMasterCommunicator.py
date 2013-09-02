@@ -3,6 +3,8 @@ import httplib
 import urlparse
 import time
 
+TIMEOUT = 30
+
 # TODO: News-> look list to get last news... (and not the first of the list)
 
 class SlapOSMasterCommunicator(object):
@@ -53,39 +55,39 @@ class SlapOSMasterCommunicator(object):
   def _getConnection(self,certificate_path, key_path, url):
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
     #self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
-    return httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path)
+    return httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path, timeout=TIMEOUT)
 
   def _curl(self, link):
     """
     'link' must look like : {'href':url,'type':content_type}
     """
-    #.log("_curl with: url:%s content_type:%s" %(link['href'], link['type']))
+    # Set timeout
+    import socket
+    socket.setdefaulttimeout(1.0*TIMEOUT)
+    
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(link['href'])
+    max_retry = 10
     # Try to use existing conection
     try:
       self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
       response = self.connection.getresponse()
-    except:
-      try:
-        # Try to update and use the connection
-        self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
-        self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
-        response = self.connection.getresponse()
-      except:
-        raise ValueError("Impossible to use connection")
-    try:
       return json.loads(response.read())
+    # Create and use new connection
     except:
-      # Repet action after 2 secs
-      time.sleep(2)
-      try:
-        # Try to update and use the connection
-        self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
-        self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
-        response = self.connection.getresponse()
-      except:
-        raise ValueError("Impossible to use connection")
-      return json.loads(response.read())
+      retry = 0
+      # (re)Try several time to use new connection
+      while retry < max_retry:
+        try:
+          self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
+          self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
+          response = self.connection.getresponse()
+          return json.loads(response.read())
+        except:
+          self.log("SlapOSMasterCommunicator: Connection failed..")
+          retry += 1
+          time.sleep(10)
+    self.log("SlapOSMasterCommunicator: All connection attempts failed after %d try.." %max_retry)
+    raise ValueError("SlapOSMasterCommunicator: Impossible to use connection")
         
   def _update_hosting_subscription_informations(self):
     """
