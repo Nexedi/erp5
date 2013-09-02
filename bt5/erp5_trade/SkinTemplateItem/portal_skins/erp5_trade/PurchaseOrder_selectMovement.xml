@@ -68,14 +68,6 @@ return context.portal_catalog(**kw)\n
             <value> <string>src__=0, **kw</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>PurchaseOrder_selectMovement</string> </value>
         </item>
