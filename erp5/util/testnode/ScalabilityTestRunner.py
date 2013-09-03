@@ -382,6 +382,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self._waitInstance(self.instance_title, 'started')
         # Start instance
         self.slapos_controler.startInstance(self.instance_title)
+        
+      # XXX: Dirty hack used to force haproxy to restart in time
+      # with all zope informations.
+      self._waitInstance(self.instance_title, 'started')
+      self.slapos_controler.stopInstance(self.instance_title)
+      self._waitInstance(self.instance_title, 'stopped')
+      self.slapos_controler.startInstance(self.instance_title)
+      ##########################################################
+        
       self._waitInstance(self.instance_title, 'started')
       
       # Start only the current test
