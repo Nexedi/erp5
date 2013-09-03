@@ -1319,9 +1319,7 @@ class TemplateTool (BaseTool):
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
 
-      missing_dependency_list.extend([x for x in resolved_template_list if 
-                                      x[1] in template_list])
-      for repository, bt_id in missing_dependency_list:
+      for repository, bt_id in resolved_template_list:
         bt_url = '%s/%s' % (repository, bt_id)
         param_dict = dict(download_url=bt_url, only_newer=only_newer)
         if update_catalog is not _MARKER:

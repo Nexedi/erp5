@@ -31,6 +31,7 @@ import os
 import shutil
 import unittest
 import random
+import transaction
 from App.config import getConfiguration
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 
@@ -563,8 +564,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertEquals(bt.getTitle(), bt5_name)
 
   def test_installBusinessTemplatesFromRepository_install_dependency(self):
-    """ Test if update catalog is trigger when needed.
+    """Test if dependencies are automatically installed properly
     """
+    # erp5_configurator_{ung,standard} depends on erp5_configurator which in
+    # turn depends on erp5_workflow
     bt5_name_list = ['erp5_configurator_ung', 'erp5_configurator_standard']
     template_tool = self.portal.portal_templates
     for repos in template_tool.getRepositoryList():
@@ -596,16 +599,33 @@ class TestTemplateTool(ERP5TypeTestCase):
                    (repository, bt5_name))
       self.assertNotEquals(dependency_list, [])
 
-    self.tic()
     template_tool.installBusinessTemplateListFromRepository(
                             bt5_name_list, install_dependency=True)
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
-      bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
+
+    bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
+    self.assertNotEquals(bt, None)
+    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
+    self.assertNotEquals(bt, None)
+    transaction.abort()
+
+    # Same as above but also check that dependencies are properly resolved if
+    # one of the dependency is explicitly added to the list of bt5 to be
+    # installed
+    template_tool.installBusinessTemplateListFromRepository(
+      bt5_name_list + ['erp5_workflow'],
+      install_dependency=True)
+    for bt5_name in bt5_name_list:
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
-      bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
-      self.assertNotEquals(bt, None)
+
+    bt = template_tool.getInstalledBusinessTemplate("erp5_configurator")
+    self.assertNotEquals(bt, None)
+    bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
+    self.assertNotEquals(bt, None)
+    transaction.abort()
 
   def test_sortBusinessTemplateList(self):
     """Check sorting of a list of business template by their dependencies
