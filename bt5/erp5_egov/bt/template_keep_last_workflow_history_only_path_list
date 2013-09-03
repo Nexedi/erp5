@@ -1,7 +1,0 @@
-portal_components/document.erp5.EGovTypeInformation
-portal_components/document.erp5.Person
-portal_components/extension.erp5.SetUpEGovInstance
-portal_components/extension.erp5.Captcha
-portal_components/extension.erp5.ERP5EGov_Extensions
-portal_components/extension.erp5.EGovSecurity
-portal_components/test.erp5.TestEGovMixin

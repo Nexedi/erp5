@@ -7225,9 +7225,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence['current_bt'].setProperty(self.template_property,
                                        sequence['document_id'])
 
-    sequence['current_bt'].setTemplateKeepLastWorkflowHistoryOnlyPathList(
-      'portal_components/' + sequence['document_id'])
-
   def stepCheckZodbDocumentWorkflowHistoryUnchanged(self, sequence=None, **kw):
     component = getattr(self.getPortalObject().portal_components,
                         sequence['document_id'], None)
@@ -7426,9 +7423,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     bt = sequence.get('current_bt')
     component_id = '%s.erp5.%s' % (self.component_id_prefix,
                                    sequence.get('document_title'))
-
-    self.assertEquals(bt.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
-                      ['portal_components/' + component_id])
 
     self.assertEquals(bt.getProperty(self.template_property),
                       [component_id])

@@ -3995,6 +3995,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
                         "Document",
                         class_id + ".py")
 
+  def isKeepWorkflowObjectLastHistoryOnly(self, path):
+    """
+    Component Validation Workflow last History of ZODB Components must always be
+    kept, without explicitly adding them to the field which requires an extra
+    action for developers
+    """
+    return path.startswith(self._tool_id + '/')
+
   def _removeAllButLastWorkflowHistory(self, obj):
     """
     Only export the last state of component_validation_workflow, because only
@@ -6127,11 +6135,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         if migrated_id_list:
           template_id_list_method(migrated_id_list)
-          path_list = self.getTemplateKeepLastWorkflowHistoryOnlyPathList()
-          path_list.extend([ ('portal_components/' + id_)
-                             for id_ in migrated_id_list ])
-
-          self.setTemplateKeepLastWorkflowHistoryOnlyPathList(path_list)
 
       component_dict = component_portal_type_dict.get('Document Component')
       if component_dict:
