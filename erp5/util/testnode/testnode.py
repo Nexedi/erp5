@@ -396,8 +396,10 @@ from the distributor.")
                 if status_dict['status_code'] == 0:
                   runner.runTestSuite(node_test_suite, portal_url)
                 else:
-                  #TODO: do a fail on test result
-                  pass
+                  test_result.reportFailure(
+                      command="runner.prepareSlapOSForTestSuite()",
+                      stdout="Software installation too long or error(s) are present."
+                  )
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
