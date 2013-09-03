@@ -35,12 +35,19 @@ def diffXML(xml_plugin="", xml_erp5="", html=True):
     xml_plugin="<object>Not found</object>"
   if xml_erp5 == "":
     xml_erp5="<object>Not found</object>"
-  xml = etree.fromstring(xml_erp5)
-  xml_erp5 = etree.tostring(xml, pretty_print=True, encoding="utf-8")
+  try:
+    xml = etree.fromstring(xml_erp5)
+    xml_erp5 = etree.tostring(xml, pretty_print=True, encoding="utf-8")
+  except etree.XMLSyntaxError:
+    pass
+
   if isinstance(xml_plugin, unicode):
     xml_plugin = xml_plugin.encode('utf-8')
-  xml = etree.fromstring(xml_plugin)
-  xml_plugin = etree.tostring(xml, pretty_print=True, encoding="utf-8")
+  try:
+    xml = etree.fromstring(xml_plugin)
+    xml_plugin = etree.tostring(xml, pretty_print=True, encoding="utf-8")
+  except etree.XMLSyntaxError:
+    pass
 
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))
   if len(diff_list) != 0:
