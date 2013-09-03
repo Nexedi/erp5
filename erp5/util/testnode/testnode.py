@@ -189,7 +189,7 @@ branch = %(branch)s
     custom_profile.close()
     sys.path.append(repository_path)
 
-  def getAndUpdateFullRevisionList(self, node_test_suite, my_test_type):
+  def getAndUpdateFullRevisionList(self, node_test_suite):
     full_revision_list = []
     config = self.config
     log = self.log
@@ -370,7 +370,7 @@ from the distributor.")
             run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            self.getAndUpdateFullRevisionList(node_test_suite, my_test_type)
+            self.getAndUpdateFullRevisionList(node_test_suite)
             # Write our own software.cfg to use the local repository
             self.constructProfile(node_test_suite, my_test_type, runner.getRelativePathUsage())
             # Make sure we have local repository
