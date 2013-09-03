@@ -181,6 +181,8 @@ class SlapOSControler(object):
         self.instance_config[reference]['partition'] = partition
         if state == 'destroyed':
           del self.instance_config[reference]
+        if state == 'started':
+          self.log('Instance started with configuration: %s' %str(software_configuration))
       except:
         self.log("SlapOSControler.request, \
               exception in registerOpenOrder", exc_info=sys.exc_info())
