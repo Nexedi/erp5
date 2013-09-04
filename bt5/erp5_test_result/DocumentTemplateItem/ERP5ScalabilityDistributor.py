@@ -72,6 +72,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     for node in slave_test_node_list:
       node.setMaster(False)
 
+
     # if there is validated testnodes
     if len(test_node_list) > 0:
       # Only one testnode must be the master
@@ -130,8 +131,6 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
       return test_node
     return None
 
-
-
   security.declarePublic("isMasterTestnode")
   def isMasterTestnode(self,title, batch_mode=0):
     """
@@ -146,12 +145,14 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     else:
       return False
     
+
   security.declarePublic("getTestType")
   def getTestType(self, batch_mode=0):
     """
     getTestType : return a string defining the type of tests
     """
     return 'ScalabilityTest'
+
 
   security.declarePublic("startTestSuite")
   def startTestSuite(self,title, batch_mode=0):
@@ -227,112 +228,9 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
       return generated_configuration
     return json.dumps(generated_configuration)
 
-  
-  security.declarePublic("getTestCaseSimulationState")
-  def getTestCaseSimulationState(self, test_result_line_path, batch_mode=0):
+  def getRunningTestCase(self, test_result_path, batch_mode=0):
     """
-    getTestCaseSimulationState : return getTestCaseSimulationState of test result line
-    """
-    portal = self.getPortalObject()
-    test_result_line = portal.restrictedTraverse(test_result_line_path)
-    return test_result_line.getSimulationState()
-
-  security.declarePublic("isTestCaseRunning")
-  def isTestCaseRunning(self, test_result_line_path, batch_mode=0):
-    """
-    isTestCaseRunning : return True if test case is running
-    """
-    return self.getTestCaseSimulationState(test_result_line_path) == 'started'
-
-  security.declarePublic("isTestCaseFailed")
-  def isTestCaseFailed(self, test_result_line_path, batch_mode=0):
-    """
-    isTestCaseFailed : return True if test case is Failed
-    """
-    return self.getTestCaseSimulationState(test_result_line_path) == 'failed'
-
-  security.declarePublic("isTestCaseCompleted")
-  def isTestCaseCompleted(self, test_result_line_path, batch_mode=0):
-    """
-    isTestCaseCompleted : return True if test case is completed
-    """
-    return self.getTestCaseSimulationState(test_result_line_path) == 'stopped'
-
-  security.declarePublic("isTestCaseCancelled")
-  def isTestCaseCancelled(self, test_result_line_path, batch_mode=0):
-    """
-    isTestCaseCancelled : return True if test case is cancelled
-    """
-    return self.getTestCaseSimulationState(test_result_line_path) == 'cancelled'
-
-  security.declarePublic("setTestCaseSimulationState")
-  def setTestCaseSimulationState(self, test_result_line_path, state, batch_mode=0):
-    """
-    setTestCasesimulationState : set the Simulation state of a test case/test result line
-    """
-    portal = self.getPortalObject()
-    test_result_line = portal.restrictedTraverse(test_result_line_path)
-    return test_result_line.setSimulationState(state)
-
-  security.declarePublic("startTestCase")
-  def startTestCase(self, test_result_line_path, batch_mode=0):
-    """
-    startTestCase : change the simulation state of the test Case(result line) to started
-    """
-    portal = self.getPortalObject()
-    test_result_line = portal.restrictedTraverse(test_result_line_path)
-    test_result_line.start()
-
-  security.declarePublic("stopTestCase")
-  def stopTestCase(self, test_result_line_path, batch_mode=0):
-    """
-    stopTestCase : change the simulation state of the test Case(result line) to stopped
-    """
-    portal = self.getPortalObject()
-    test_result_line = portal.restrictedTraverse(test_result_line_path)
-    test_result_line.stop()
-
-  security.declarePublic("cancelTestCase")
-  def cancelTestCase(self, test_result_line_path, batch_mode=0):
-    """
-    cancelTestCase : change the simulation state of the test Case(result line) to cancelled
-    """
-    portal = self.getPortalObject()
-    test_result_line = portal.restrictedTraverse(test_result_line_path)
-    test_result_line.cancel()
-
-
-  security.declarePublic("getTestResult")
-  def getTestResult(self, test_result_path, batch_mode=0):
-    """
-    xxx : 
-    """
-    portal = self.getPortalObject()
-    test_result = portal.restrictedTraverse(test_result_path)
-    return test_result
-
-
-  security.declarePublic("stopTest")
-  def stopTest(self, test_result_path, batch_mode=0):
-    """
-    xxx : 
-    """
-    portal = self.getPortalObject()
-    test_result = portal.restrictedTraverse(test_result_path)
-    return test_result.stop()
-
-  security.declarePublic("failTest")
-  def failTest(self, test_result_path, batch_mode=0):
-    """
-    xxx : 
-    """
-    portal = self.getPortalObject()
-    test_result = portal.restrictedTraverse(test_result_path)
-    return test_result.fail()
-
-  def getNextTestCase(self, test_result_path, batch_mode=0):
-    """
-    getNextTestCase : return informations about the running test case,
+    getRunningTestCase : return informations about the running test case,
               if no running test_case, return None
     """
     test_result = self.getTestResult(test_result_path)
@@ -355,4 +253,4 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
 
     if batch_mode:
       return next_test
-    return json.dumps(next_test)   
+    return json.dumps(next_test)
