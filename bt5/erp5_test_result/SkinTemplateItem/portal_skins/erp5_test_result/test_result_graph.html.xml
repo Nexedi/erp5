@@ -360,6 +360,29 @@ var svg = d3.select("body").append("svg")\n
       \n
 </script>\n
 \n
+\n
+\n
+<!-- speedup / efficiency -->\n
+<table border="1">\n
+<tr><th>n</th><th>Speedup</th><th>Efficiency</th></tr>\n
+\n
+<script type="text/javascript">\n
+bracket_left = \'<\';\n
+bracket_right = \'>\';\n
+bracket_right_end = \'/>\';\n
+\n
+F1 = (3600 * stats.test[0].created_docs / stats.test[0].duration);\n
+for(var i=0; i<stats.test.length; i++){\n
+  document.write(bracket_left+"tr>");\n
+  docs = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
+  speedup = docs/F1;\n
+  document.write(bracket_left+"td>"+xs[i]+bracket_left+"/td>");\n
+  document.write(bracket_left+"td>"+speedup.toFixed(2)+bracket_left+"/td>");\n
+  document.write(bracket_left+"td>"+(speedup/xs[i]).toFixed(2)+bracket_left+"/td>");\n
+}\n
+</script>\n
+</table>\n
+\n
   </body>\n
 </html>
 
