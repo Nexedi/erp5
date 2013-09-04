@@ -260,19 +260,16 @@ class ScalabilityLauncher(object):
     for file_to_move in file_to_move_list:
       shutil.move(file_to_move, new_directory_path)
 
-  def getNextTest(self):
+  def getRunningTest(self):
     """
     Return a ScalabilityTest with current running test case informations,
     or None if no test_case ready
     """
-    data = self.test_result.getNextTestCase()
-    if data == None :
+    data = self.test_result.getRunningTestCase()
+    if not data:
       return None
-    decoded_data = Utils.deunicodeData(json.loads(
-                  data
-                ))
-    next_test = ScalabilityTest(decoded_data, self.test_result)
-    return next_test
+    decoded_data = Utils.deunicodeData(json.loads(data))
+    return ScalabilityTest(decoded_data, self.test_result)
     
   def run(self):
     self.log("Scalability Launcher started, with:")
@@ -292,7 +289,7 @@ class ScalabilityLauncher(object):
     # Main loop
     while True:
       
-      current_test = self.getNextTest()
+      current_test = self.getRunningTest()
       if current_test == None:
         self.log("No Test Case Ready")
       else:

@@ -410,12 +410,12 @@ class TestResultProxyProxy(TestResultProxy):
       TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,
                 node_title, revision)
 
-    def getNextTestCase(self):
+    def getRunningTestCase(self):
         """
         A proxy to getNextTestCase
         Return the relative path of the test with the running state
         """
-        return self._retryRPC('getNextTestCase', [self._test_result_path])
+        return self._retryRPC('getRunningTestCase', [self._test_result_path])
       
     def cancelTestCase(self, test_result_line_path):
         """
