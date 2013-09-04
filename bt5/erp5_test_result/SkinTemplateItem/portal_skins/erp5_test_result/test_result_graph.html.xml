@@ -378,7 +378,7 @@ for(var i=0; i<stats.test.length; i++){\n
   speedup = docs/F1;\n
   document.write(bracket_left+"td>"+xs[i]+bracket_left+"/td>");\n
   document.write(bracket_left+"td>"+speedup.toFixed(2)+bracket_left+"/td>");\n
-  document.write(bracket_left+"td>"+(speedup/xs[i]).toFixed(2)+bracket_left+"/td>");\n
+  document.write(bracket_left+"td>"+parseInt(100*speedup/xs[i])+"%"+bracket_left+"/td>");\n
 }\n
 </script>\n
 </table>\n
