@@ -1143,6 +1143,21 @@ Hé Hé Hé!""", page.asText().strip())
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
 
+  def test_15a_CheckCachingPolicyManager(self):
+    """
+    Check if caching_policy_manager is well applied even if custom
+    render method is used in Web Site or Web Section.
+    """
+    web_site = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = web_site.newContent(portal_type=web_section_portal_type)
+    self.assertTrue(self.publish(web_site.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
+    web_site.setCustomRenderMethodId('WebSection_viewAsWeb')
+    self.assertTrue(self.publish(web_site.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
+    self.assertTrue(self.publish(web_section.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
+    web_section.setCustomRenderMethodId('WebSection_viewAsWeb')
+    self.assertTrue(self.publish(web_section.absolute_url_path()).getHeader('X-Cache-Headers-Set-By'))
+
   def test_16_404ErrorPageIsReturned(self):
     """
       Test that when we try to access a non existing url trought a web site, a
