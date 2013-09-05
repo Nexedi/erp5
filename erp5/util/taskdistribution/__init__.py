@@ -411,27 +411,11 @@ class TestResultProxyProxy(TestResultProxy):
                 node_title, revision)
 
     def getRunningTestCase(self):
-        """
-        A proxy to getNextTestCase
-        Return the relative path of the test with the running state
-        """
-        return self._retryRPC('getRunningTestCase', [self._test_result_path])
-      
-    def cancelTestCase(self, test_result_line_path):
-        """
-        
-        """
-        return self._retryRPC('cancelTestCase', [test_result_line_path])
-      
-    def stopTestCase(self, test_result_line_path):
-        """
-        
-        """
-        return self._retryRPC('stopTestCase', [test_result_line_path])
-      
-      
-
-
+      """
+      A proxy to getNextTestCase
+      Return the relative path of the test with the running state
+      """
+      return self._retryRPC('getRunningTestCase', [self._test_result_path])
 
 class ServerProxy(xmlrpclib.ServerProxy):
 
@@ -510,7 +494,6 @@ class TaskDistributionTool(RPCRetry):
 class TaskDistributor(RPCRetry):
 
     def __init__(self,portal_url,retry_time=64,logger=None):
-
         if logger is None:
            logger = null_logger
         if portal_url is None:
