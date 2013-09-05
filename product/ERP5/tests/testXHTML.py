@@ -255,11 +255,11 @@ class TestXHTML(ERP5TypeTestCase):
             form_path not in FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
             error_list.append(form_path)
     self.assertEquals(error_list, [])
-    
+
   def test_duplicatingSelectionNameInListbox(self):
-    """ 
+    """
     Check for duplicating selection name in listboxes.
-    Usually we should not have duplicates except in some rare cases 
+    Usually we should not have duplicates except in some rare cases
     described in SkinsTool_getDuplicateSelectionNameDict
     """
     portal_skins = self.portal.portal_skins
@@ -267,7 +267,7 @@ class TestXHTML(ERP5TypeTestCase):
     self.assertFalse(duplicating_selection_name_dict,
                      "Repeated listbox selection names:\n" +
                      portal_skins.SkinsTool_checkDuplicateSelectionName())
-    
+
   def test_javascript_lint(self):
     skins_tool = self.portal.portal_skins
     path_list = []
@@ -299,7 +299,7 @@ class TestXHTML(ERP5TypeTestCase):
       jsl(check_path)
 
   def test_PythonScriptSyntax(self):
-    """ 
+    """
     Check that Python Scripts syntax is correct.
     """
     for tool in (self.portal.portal_skins, self.portal.portal_workflow):
@@ -310,7 +310,7 @@ class TestXHTML(ERP5TypeTestCase):
           self.assertEquals('%s : %s' %(script_path, script.errors), ())
 
   def test_SkinItemId(self):
-    """ 
+    """
     Check that skin item id is acquiring is correct.
     """
     skins_tool = self.portal.portal_skins
@@ -499,7 +499,7 @@ def validate_xhtml(validator, source, view_name, bt_name):
   '''
     validate_xhtml return True if there is no error on the page, False else.
     Now it's possible to show warnings, so, if the option is set to True on the
-    validator object, and there is some warning on the page, the function 
+    validator object, and there is some warning on the page, the function
     return False, even if there is no error.
   '''
   # display some information when test faild to facilitate debugging
@@ -542,9 +542,9 @@ def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
 
     object = createSubContent(module, portal_type_list)
     view = getattr(object, view_name)
-    self.assert_(*validate_xhtml( validator=validator, 
-                                  source=view(), 
-                                  view_name=view_name, 
+    self.assert_(*validate_xhtml( validator=validator,
+                                  source=view(),
+                                  view_name=view_name,
                                   bt_name=bt_name))
   return testMethod
 
@@ -552,7 +552,7 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
     business_template_info, business_template_info_list, portal_type_list,
     portal_type_path_dict, base_path, tested_portal_type_list):
   '''
-  This function go on all portal_type recursivly if the portal_type could 
+  This function go on all portal_type recursivly if the portal_type could
   contain other portal_types and make a test for all view that have action
   '''
   # iteration over all allowed portal_types inside the module/portal_type
@@ -561,7 +561,7 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
     if portal_type not in tested_portal_type_list:
       # this portal type haven't been tested yet
 
-      backuped_module_id = module_id 
+      backuped_module_id = module_id
       backuped_business_template_info = business_template_info
 
       if not business_template_info.actions.has_key(portal_type):
@@ -584,12 +584,12 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
             len(action_information['text'].split('/'))==2):
           view_name = action_information['text'].split('/')[-1].split('?')[0]
           method = makeTestMethod(validator,
-                                  module_id, 
+                                  module_id,
                                   portal_path,
-                                  view_name, 
+                                  view_name,
                                   business_template_info.title)
-          method_name = ('test_%s_%s_%s' % 
-                         (business_template_info.title, 
+          method_name = ('test_%s_%s_%s' %
+                         (business_template_info.title,
                           str(portal_type).replace(' ','_'), # can be unicode
                           view_name))
           method.__name__ = method_name
@@ -617,13 +617,13 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
         if next_base_path != '' and 'Module' not in pt:
           new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
         else:
-          new_portal_type_path_dict[pt] = pt 
+          new_portal_type_path_dict[pt] = pt
       testPortalTypeViewRecursivly(test_class=test_class,
                        validator=validator,
-                       module_id=module_id, 
-                       business_template_info=backuped_business_template_info, 
+                       module_id=module_id,
+                       business_template_info=backuped_business_template_info,
                        business_template_info_list=business_template_info_list,
-                       portal_type_list=new_portal_type_list, 
+                       portal_type_list=new_portal_type_list,
                        portal_type_path_dict=new_portal_type_path_dict,
                        base_path=next_base_path,
                        tested_portal_type_list=tested_portal_type_list)
@@ -648,10 +648,10 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
       portal_type_path_dict = dict(zip(portal_type_list, portal_type_list))
       testPortalTypeViewRecursivly(test_class=test_class,
                        validator=validator,
-                       module_id=module_id, 
-                       business_template_info=business_template_info, 
+                       module_id=module_id,
+                       business_template_info=business_template_info,
                        business_template_info_list=business_template_info_list,
-                       portal_type_list=portal_type_list, 
+                       portal_type_list=portal_type_list,
                        portal_type_path_dict=portal_type_path_dict,
                        base_path = '',
                        tested_portal_type_list=tested_portal_type_list)
