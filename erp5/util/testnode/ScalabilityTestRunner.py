@@ -50,6 +50,8 @@ import signal
 MAX_INSTANCE_TIME = 60*60*2
 # max time to register instance to slapOSMaster: 5 minutes
 MAX_CREATION_INSTANCE_TIME = 60*10
+# max time for a test: 1 hour
+MAX_TEST_CASE_TIME = 60*60
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -371,7 +373,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       node_test_suite.project_title)
   
     count = 0
+    error = None
+
+    # Each cluster configuration are tested
     for configuration in configuration_list:
+
+      # First configuration doesn't need XML configuration update.
       if count > 0:
         # Stop instance
         self.slapos_controler.stopInstance(self.instance_title)
@@ -397,69 +404,59 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
+
+      # 
       if test_result_line_proxy == None :
-        #self.log("Already tested.")
-        #error = ValueError("Test already tested.")
-        self.log("Warning::Test already tested.")
-        break;
+        error_message = "Test case already tested."
+        error = ValueError(error_message)
+        break
 
-      # TODO: use only isAlive() and change test_result workflow on ERP5 Master side for the scalability case
       self.log("Test for count : %d is in a running state." %count)
-      while test_result_line_proxy.isRunning() and test_result_proxy.isAlive():
+
+      # Wait for test case ending
+      test_case_start_time = time.time()
+      while test_result_line_proxy.isTestCaseAlive() and \
+            test_result_proxy.isAlive() and \
+            time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
         time.sleep(15)
-        pass
 
-      # Check test case state
-      if test_result_line_proxy.isCompleted():
-        self.log("Test case completed.")
-        error = None
-      elif not test_result_proxy.isAlive():
-        self.log("Test cancelled.")
-        # Here do somethig with instances
-        error = ValueError("Test cancelled")
-        break;
-      elif test_result_line_proxy.isFailed():
-        self.log("Test failed.")
-        # Here do somethig with instances
-        error = ValueError("Test failed")
-        break;
-      elif test_result_line_proxy.isCancelled():
-        self.log("Test cancelled.")
-        # Here do somethig with instances
-        error = ValueError("Test has been cancelled")
-        break;
-      elif test_result_line_proxy.isRunning():
-        self.log("Test always running after max time elapsed.")
-        # Here do somethig with instances
-        error = ValueError("Max time for this test case is elapsed.")
-        break;
-      else:
-        self.log("Test in a undeterminated state.")
-        error = ValueError("Test case is in an undeterminated state")
-        break;
+      # Max time limit reach for current test case: failure.
+      if test_result_line_proxy.isTestCaseAlive():
+        error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
+                            %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
+        error = ValueError(error_message)
+        test_result_proxy.reportFailure(stdout=error_message)
+        break
 
-    # Stop instance
+      # Test cancelled or in an undeterminate state.
+      if not test_result_proxy.isAlive():
+        error_message = "Test cancelled or undeterminate state."
+        error = ValueError(error_message)
+        break
+
+    # Stop current instance
     self.slapos_controler.stopInstance(self.instance_title)
     self._waitInstance(self.instance_title, 'stopped')
-    #self.slapos_controler.destroyInstance(self.instance_title)
 
     # Delete old instances
     self._cleanUpOldInstance()
-    
+
+    # If error appears then that's a test failure.    
     if error:
       test_result_proxy.fail()
       raise error
     #else:
       #test_result_proxy.stop()
-
     return {'status_code' : 0}
 
   def _cleanUpOldInstance(self):
     self.log("_cleanUpOldInstance")
+
     # Get title and link list of all instances
     instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
     instance_to_delete_list = []
     outdated_date = datetime.datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
+
     # Select instances to delete
     for title,link in instance_dict.items():
       # Instances created by testnode contains "Scalability-" and

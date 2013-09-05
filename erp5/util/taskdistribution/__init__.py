@@ -138,33 +138,14 @@ class TestResultLineProxy(RPCRetry):
     def name(self):
         return self._name
 
-    def isRunning(self):
+    def isTestCaseAlive(self):
         """
-        Return : boolean 
+        Tell if test result line is still alive on site.
         """
         try:
-          return bool(self._retryRPC('isTestCaseRunning', [self._test_result_line_path]))
+          return bool(self._retryRPC('isTestCaseAlive', [self._test_result_line_path]))
         except:
-          raise ValueError('isTestCaseRunning Failed.')
-          
-        
-    def isFailed(self):
-        """
-        Return : boolean 
-        """
-        return bool(self._retryRPC('isTestCaseFailed', [self._test_result_line_path]))
-
-    def isCompleted(self):
-        """
-        Return : boolean 
-        """
-        return bool(self._retryRPC('isTestCaseCompleted', [self._test_result_line_path]))
-        
-    def isCancelled(self):
-        """
-        Return : boolean 
-        """
-        return bool(self._retryRPC('isTestCaseCancelled', [self._test_result_line_path]))
+          raise ValueError('isTestCaseAlive Failed.')
 
     def stop(self, test_count=None, error_count=None, failure_count=None,
             skip_count=None, duration=None, date=None, command=None,
