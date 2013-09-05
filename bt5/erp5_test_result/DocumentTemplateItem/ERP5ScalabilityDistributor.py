@@ -254,3 +254,10 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     if batch_mode:
       return next_test
     return json.dumps(next_test)
+
+
+  security.declarePublic("isTestCaseAlive")
+  def isTestCaseAlive(self, test_result_line_path):
+    portal = self.getPortalObject()
+    test_result_line = portal.restrictedTraverse(test_result_line_path)
+    return test_result_line.getSimulationState() == "started"
