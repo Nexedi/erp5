@@ -153,7 +153,6 @@ class TestXHTML(ERP5TypeTestCase):
 
   def enableDefaultSitePreference(self):
     portal_preferences = getToolByName(self.portal, 'portal_preferences')
-    portal_workflow = getToolByName(self.portal, 'portal_workflow')
     default_site_preference = portal_preferences.default_site_preference
     if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
       default_site_preference.enable()
