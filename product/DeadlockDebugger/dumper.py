@@ -62,14 +62,14 @@ def dump_threads():
         if reqinfo:
             reqinfo = " (%s)" % reqinfo
 
-        mysql_info = 'no query'
+        mysql_info = ''
         f = frame
         try:
           from Products.ZMySQLDA.db import DB
           while f is not None:
             code = f.f_code
             if code is DB._query.func_code:
-              mysql_info = str(f.f_locals['query'])
+              mysql_info = "MySQL query:\n%s\n" % f.f_locals['query']
               break
             f = f.f_back
         except ImportError:
@@ -77,7 +77,7 @@ def dump_threads():
 
         output = StringIO()
         traceback.print_stack(frame, file=output)
-        res.append("Thread %s%s:\n%s\nMySQL query:\n%s\n" %
+        res.append("Thread %s%s:\n%s\n%s" %
             (thread_id, reqinfo, output.getvalue(), mysql_info))
 
     res.append("End of dump\n")
