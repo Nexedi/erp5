@@ -30,6 +30,9 @@ import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
 from urllib import url2pathname
+from ZODB.DemoStorage import DemoStorage
+from ZODB import DB
+from OFS.XMLExportImport import importXML
 
 if int(os.environ.get('erp5_report_new_simulation_failures') or 0):
   newSimulationExpectedFailure = lambda test: test
@@ -98,64 +101,25 @@ class BusinessTemplateInfoBase:
         self.allowed_content_types[portal_type].append(item.childNodes[0].data)
 
   def setUpActions(self):
-    class Handler:
-      cur_key = None
-      old_tag = None
-      cur_tag = None
-      key_val = None
-      value_val = None
 
-      def __init__(self):
-        self.data = {}
-
-      def start(self, name, attrs):
-        if not name in ('item', 'key', 'value', 'string', 'int', 'float'):
-          return
-        self.old_tag = self.cur_tag
-        self.cur_tag = name
-        if name=='key':
-          self.cur_key = name
-
-      def end(self, name):
-        self.cur_tag = None
-        if name=='item':
-          self.data[self.key_val] = self.value_val
-          self.cur_key = None
-          self.key_val = None
-          self.value_val = None
-
-      def char(self, data):
-        if self.cur_tag in ('string', 'int', 'float'):
-          f = getattr(self, 'to%s' % self.cur_tag)
-          if self.old_tag=='key':
-            self.key_val = f(data)
-          elif self.old_tag=='value':
-            self.value_val = f(data)
-
-      def tostring(self, value):
-        return str(value)
-
-      def toint(self, value):
-        return int(value)
-
-      def tofloat(self, value):
-        return float(value)
-
-    def parse(source):
-      handler = Handler()
-      p = xml.parsers.expat.ParserCreate()
-      p.StartElementHandler = handler.start
-      p.EndElementHandler = handler.end
-      p.CharacterDataHandler = handler.char
-      p.Parse(source)
-      return handler.data
+    def parse(file_path):
+      db = DB(DemoStorage())
+      _connection = db.open()
+      action_information = importXML(_connection, file_path)
+      action_information.__repr__()
+      for key, value in action_information.__dict__.iteritems():
+        if value not in (None, "") and key in ('action', 'condition') :
+          setattr(action_information, key, value.text)
+      actions = action_information.__dict__.copy()
+      db.close()
+      return actions
 
     name = '%s/ActionTemplateItem/portal_types/' % self.getPrefix()
     for i in self.findFileInfosByName(startswith=name, endswith='.xml'):
       portal_type = url2pathname(self.getFileInfoName(i).split('/')[-2])
       if not portal_type in self.actions:
         self.actions[portal_type] = []
-      data = parse(self.readFileInfo(i))
+      data = parse(i)
       self.actions[portal_type].append(data)
 
 
