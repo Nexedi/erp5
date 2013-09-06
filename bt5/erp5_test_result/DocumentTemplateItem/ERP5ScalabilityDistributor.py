@@ -255,9 +255,11 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
       return next_test
     return json.dumps(next_test)
 
-
   security.declarePublic("isTestCaseAlive")
-  def isTestCaseAlive(self, test_result_line_path):
+  def isTestCaseAlive(self, test_result_line_path, batch_mode=0):
+    """
+    Is a test result line alive or not.
+    """
     portal = self.getPortalObject()
     test_result_line = portal.restrictedTraverse(test_result_line_path)
     return test_result_line.getSimulationState() == "started"
