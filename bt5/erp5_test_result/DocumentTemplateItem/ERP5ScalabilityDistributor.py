@@ -91,7 +91,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     master_test_node_list = [ x.getObject() for x in test_node_list if x.getMaster()==True ]
 
     # Get test suites and aggregate them to all valid testnode
-    test_suite_list = [ x.getTitle() for x in test_suite_module.searchFolder(
+    test_suite_list = [ x.getRelativeUrl() for x in test_suite_module.searchFolder(
                         portal_type="Scalability Test Suite",
                         validation_state="validated", specialise_uid=self.getUid())]
     for test_node in test_node_list:
@@ -155,7 +155,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
 
 
   security.declarePublic("startTestSuite")
-  def startTestSuite(self,title, batch_mode=0):
+  def startTestSuite(self,title, batch_mode=0, computer_guid='unknown'):
     """
     startTestSuite : subscribe node + return testsuite list to the master
     """
@@ -169,54 +169,15 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     # he does not have to receive any testsuites
     master_test_node_title = [x.getTitle() for x in test_node_module.searchFolder(
                 validatation_state = 'validated') if (x.getMaster() == True) ][0]
-
-    if title != master_test_node_title:
+    
+    if title == master_test_node_title:
+      return super(ERP5ScalabilityDistributor,
+                        self).startTestSuite(title=title, batch_mode=batch_mode, computer_guid=computer_guid)
+    else:
       if batch_mode:
         return []
       return json.dumps([])
 
-    if test_node != None:
-      test_suite_list = test_node.getAggregateList()
-      # We sort the list according to timestamp
-      choice_list = []
-      if len(test_suite_list):
-        choice_list = [x.getObject() for x in test_suite_module.searchFolder(
-                sort_on=[('indexation_timestamp','ascending')],
-                      )  if x.getTitle() in test_suite_list] 
-      # XXX we should have first test suite with no test node working on
-      # them since a long time. However we do not have this information yet,
-      # so random sort is better for now.
-      choice_list.sort(key=lambda x: random.random())
-      for test_suite in choice_list:
-        config = {}
-        config["project_title"] = test_suite.getSourceProjectTitle()
-        config["test_suite"] = test_suite.getTestSuite()
-        config["test_suite_title"] = test_suite.getTitle()
-        config["additional_bt5_repository_id"] = test_suite.getAdditionalBt5RepositoryId()
-        config["test_suite_reference"] = test_suite.getReference()
-#        config["cluster_configuration"] = test_suite.getClusterConfiguration()
-#        config["cluster_constraint"] = test_suite.getClusterConstraint()
-        #config["number_configuration"] = test_suite.getNumberConfiguration()
-        config["number_configuration"] = len(test_suite.getGraphCoordinate())
-        vcs_repository_list = []
-        #In this case objectValues is faster than searchFolder
-        for repository in test_suite.objectValues(portal_type="Test Suite Repository"):
-          repository_dict = {}
-          for property_name in ["git_url", "profile_path", "buildout_section_id", "branch"]:
-            property_value = repository.getProperty(property_name)
-            # the property name url returns the object's url, so it is mandatory use another name.
-            if property_name == "git_url":
-              property_name="url"
-            if property_value is not None:
-              repository_dict[property_name] = property_value
-          vcs_repository_list.append(repository_dict)
-        config["vcs_repository_list"] = vcs_repository_list
-        to_delete_key_list = [x for x,y in config.items() if y==None]
-        [config.pop(x) for x in to_delete_key_list]
-        config_list.append(config)
-    if batch_mode:
-      return config_list
-    return json.dumps(config_list)    
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):
