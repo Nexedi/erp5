@@ -38,6 +38,7 @@ from Products.ERP5Type.Base import Base
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
@@ -272,7 +273,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       # not searched.
       method = getattr(context, 'Movement_getPriceCalculationOperandDict', None)
     if method is not None:
-      operand_dict = method(**kw)
+      operand_dict = unrestricted_apply(method, kw=kw)
       if operand_dict is None:
         return default
       assert 'price' in operand_dict 

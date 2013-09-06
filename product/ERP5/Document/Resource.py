@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.mixin.variated import VariatedMixin
@@ -747,7 +748,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       # (i.e. a movement).
       method = self._getTypeBasedMethod('getPriceCalculationOperandDict')
       if method is not None:
-        return method(default=default, movement=context, REQUEST=REQUEST, **kw)
+        return unrestricted_apply(method, kw=dict(
+            default=default, movement=context, REQUEST=REQUEST, **kw))
 
       # Next, try an old type-based method which returns only a final result.
       method = self._getTypeBasedMethod('getPrice')
