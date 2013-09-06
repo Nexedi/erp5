@@ -487,12 +487,12 @@ class TaskDistributor(RPCRetry):
             raise ValueError('Unsupported protocol revision: %r',
                 protocol_revision)
 
-    def startTestSuite(self,node_title):
+    def startTestSuite(self,node_title,computer_guid='unknown'):
       """
         Returns None if no test suite is needed.
         therwise, returns a JSON with all the test suite parameters.
       """
-      result = self._retryRPC('startTestSuite',(node_title,))
+      result = self._retryRPC('startTestSuite',(node_title,computer_guid,))
       return result
 
     def getTestType(self):
