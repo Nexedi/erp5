@@ -137,7 +137,7 @@ class ERP5_scalability(_ERP5):
     return 'erp5/util/benchmark/examples/scalabilityUsers'
 
   def getUserNumber(self, test_number):
-    return [45, 195, 240, 330, 330][test_number]
+    return [45, 90, 120, 180, 300][test_number]
 
   # Test duration in seconds
   def getTestDuration(self, test_number):
