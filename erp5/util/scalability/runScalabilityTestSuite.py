@@ -317,8 +317,41 @@ class ScalabilityLauncher(object):
         user_number = suite.getUserNumber(current_test_number)
 
         self.log("user_number: %s" %str(user_number))
+
+        # WARMING UP
+        self.log("Warming up run.. for 60s")
+        # Generate commands to run
+        command_list = []
+        user_index = 0
+        for test_suite in test_suite_list:
+          command_list.append([tester_path,
+               self.__argumentNamespace.erp5_url,
+               str(user_number/len(test_suite_list)),
+               test_suite,
+               '--benchmark-path-list', benchmarks_path,
+               '--users-file-path', user_file_path,
+               '--users-file', user_file,
+               '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
+               '--report-directory', self.__argumentNamespace.log_path,
+               '--repeat', "%s" %str(MAX_DOCUMENTS),
+               '--max-errors', str(1000000),
+               '--user-index', str(user_index),
+          ])
+          user_index += user_number/len(test_suite_list)
+        # Launch
+        tester_process_list = []
+        for command in command_list:
+          self.log("command: %s" %str(command))
+          tester_process_list.append(subprocess.Popen(command))
+        # Sleep
+        time.sleep(60)
+        # Stop
+        for tester_process in tester_process_list:
+          tester_process.send_signal(signal.SIGINT)
+        # /WARMING UP
+
         self.log("test_duration: %ss" %str(test_duration))
-        
+
         # Generate commands to run
         command_list = []
         user_index = 0
