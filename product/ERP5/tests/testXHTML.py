@@ -575,32 +575,35 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
           break
         # create the object in portal_trash module
         module_id = 'portal_trash'
-
-      for action_information in business_template_info.actions[portal_type]:
-        if (action_information['category'] in ('object_view', 'object_list') and
-            action_information['visible']==1 and
-            action_information['text'].startswith('string:${object_url}/') and
-            len(action_information['text'].split('/'))==2):
-          view_name = action_information['text'].split('/')[-1].split('?')[0]
-          method = makeTestMethod(validator,
-                                  module_id,
-                                  portal_path,
-                                  view_name,
-                                  business_template_info.title)
-          method_name = ('test_%s_%s_%s' %
-                         (business_template_info.title,
-                          str(portal_type).replace(' ','_'), # can be unicode
-                          view_name))
-          method.__name__ = method_name
-          setattr(test_class, method_name, method)
-          module_id = backuped_module_id
-          business_template_info = backuped_business_template_info
+      for business_template_info in business_template_info_list:
+        if portal_type not in business_template_info.actions:
+          continue
+        for action_information in business_template_info.actions[portal_type]:
+          if (action_information['category'] in ('object_view', 'object_list') and
+              action_information['visible']==1 and
+              action_information['action'].startswith('string:${object_url}/') and
+              len(action_information['action'].split('/'))==2):
+            view_name = action_information['action'].split('/')[-1].split('?')[0]
+            method = makeTestMethod(validator,
+                                    module_id,
+                                    portal_path,
+                                    view_name,
+                                    business_template_info.title)
+            method_name = ('test_%s_%s_%s' %
+                          (business_template_info.title,
+                            str(portal_type).replace(' ','_'), # can be unicode
+                            view_name))
+            method.__name__ = method_name
+            setattr(test_class, method_name, method)
+            module_id = backuped_module_id
 
       # add the portal_type to the tested portal_types. This avoid to test many
       # times a Portal Type wich is many bt.
       tested_portal_type_list.append(portal_type)
 
-      new_portal_type_list = business_template_info.allowed_content_types.get(portal_type, ())
+      new_portal_type_list = []
+      for tmp_business_template_info in business_template_info_list:
+        new_portal_type_list.extend(tmp_business_template_info.allowed_content_types.get(portal_type, ()))
       new_portal_type_path_dict = {}
 
       if base_path != '':
