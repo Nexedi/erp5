@@ -300,9 +300,7 @@ class ScalabilityLauncher(object):
 
       # Do not run a test while there are pending activities
       waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-      # Get the number of documents present before running the test.
-      previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-      self.log("previous_document_number: %d" %previous_document_number)
+      previous_document_number=0
       self.log("Test Case %s is running..." %(current_test.title))
       
       try:
@@ -319,7 +317,7 @@ class ScalabilityLauncher(object):
         self.log("user_number: %s" %str(user_number))
 
         # WARMING UP
-        self.log("Warming up run.. for 60s")
+        self.log("Warming up run.. for 180s")
         # Generate commands to run
         command_list = []
         user_index = 0
@@ -344,12 +342,20 @@ class ScalabilityLauncher(object):
           self.log("command: %s" %str(command))
           tester_process_list.append(subprocess.Popen(command))
         # Sleep
-        time.sleep(60)
+        time.sleep(180)
         # Stop
         for tester_process in tester_process_list:
           tester_process.send_signal(signal.SIGINT)
+          self.log("%s signal send to tester" %str(signal.SIGINT))
         # /WARMING UP
 
+        # Wait for 0 activities
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
+        # Get the number of documents present before running the test.
+        previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+        self.log("previous_document_number: %d" %previous_document_number)
+
+        
         self.log("test_duration: %ss" %str(test_duration))
 
         # Generate commands to run
@@ -383,6 +389,7 @@ class ScalabilityLauncher(object):
         # Stop
         for tester_process in tester_process_list:
           tester_process.send_signal(signal.SIGINT)
+          self.log("%s signal send to tester" %str(signal.SIGINT))
 
         # Ok
         error_count = 0
