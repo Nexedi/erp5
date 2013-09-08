@@ -9,12 +9,10 @@ class TestDiscussionThread(SecurityTestCase):
   def getTitle(self):
     return "TestDiscussionThread"
 
-  def setUpOnce(self):
+  def afterSetUp(self):
     """
-       Create users to interact with the discussion forums
-       This is ran only once
+    This is ran before each and every test, used to set up the environment
     """
-    self.portal.portal_types['Person Module'].updateRoleMapping()
     user_list = [
       # This is Dictator, a user of our portal and a forum admin
       dict(title='Dictator', reference='admin', function='forum/administrator'),
@@ -31,10 +29,9 @@ class TestDiscussionThread(SecurityTestCase):
     for user in user_list:
       self.createSimpleUser(**user)
 
-  def afterSetUp(self):
-    """
-    This is ran before each and every test, used to set up the environment
-    """
+    self.commit()
+    self.tic()
+
     self.forum_module = self.portal.getDefaultModule(portal_type='Discussion Thread')
     self.assertTrue(self.forum_module is not None)
 

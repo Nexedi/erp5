@@ -99,6 +99,16 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     #    pass
     #    #self.REQUEST.other.pop(key, None) # XXX
 
+    def createSimpleUser(self, title, reference, *args, **kwargs):
+      """
+      Convenient helper to avoid recreating user every time (in non-Live Test, data
+      is not kept and usually these users are only created in setUpOnce() (not
+      used in favor of afterSetUp() in Live Tests)
+      """
+      if not self.portal.acl_users.getUserById(reference):
+        return super(ERP5TypeLiveTestCase,
+                     self).createSimpleUser(title, reference, *args, **kwargs)
+
     def _close(self):
       '''Closes the ZODB connection.'''
       revert = transaction.get().__hash__() != self.initial_transaction_hash
