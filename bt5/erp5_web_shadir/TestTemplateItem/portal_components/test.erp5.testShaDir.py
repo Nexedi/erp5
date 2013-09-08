@@ -33,7 +33,7 @@ import urlparse
 import json
 import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from ShaDirMixin import ShaDirMixin
+from erp5.component.test.ShaDirMixin import ShaDirMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):

@@ -699,7 +699,7 @@ class TemplateTool (BaseTool):
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
-                       'dependency', 'provision', 'copyright')
+                       'dependency', 'test_dependency', 'provision', 'copyright')
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
@@ -749,6 +749,8 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('license', [''])[0]
               property_dict['dependency_list'] = \
                   temp_property_dict.get('dependency', ())
+              property_dict['test_dependency_list'] = \
+                  temp_property_dict.get('test_dependency', ())
               property_dict['provision_list'] = \
                   temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
@@ -878,8 +880,9 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
-    @transactional_cached(lambda self, bt: bt)
-    def getDependencyList(self, bt):
+    @transactional_cached(lambda self, bt, with_test_dependency_list=False:
+                          (bt, with_test_dependency_list))
+    def getDependencyList(self, bt, with_test_dependency_list=False):
       """
        Return the list of missing dependencies for a business
        template, given a tuple : (repository, id)
@@ -892,7 +895,11 @@ class TemplateTool (BaseTool):
           if repository == bt[0]:
             for property_dict in property_dict_list:
               if property_dict['id'] == bt[1]:
-                dependency_list = [q for q in property_dict['dependency_list'] if q]
+                dependency_list = [q.strip() for q in
+                                   property_dict['dependency_list'] if q]
+                if with_test_dependency_list:
+                  dependency_list.extend([q.strip() for q in
+                                          property_dict['test_dependency_list'] if q])
                 for dependency_couple in dependency_list:
                   # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
                   dependency_couple_list = dependency_couple.split(' ', 1)
@@ -1231,7 +1238,9 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
-    def resolveBusinessTemplateListDependency(self, template_title_list):
+    def resolveBusinessTemplateListDependency(self,
+                                              template_title_list,
+                                              with_test_dependency_list=False):
       available_bt5_list = self.getRepositoryBusinessTemplateList()
 
       template_title_list = set(template_title_list)
@@ -1244,7 +1253,9 @@ class TemplateTool (BaseTool):
           bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
           bt5_set.add(bt5)
           meta_dependency_set = set()
-          for dep_repository, dep_id in self.getDependencyList(bt5):
+          for dep_repository, dep_id in self.getDependencyList(
+              bt5,
+              with_test_dependency_list):
             if dep_repository != 'meta':
               bt5_set.add((dep_repository, dep_id))
             else:

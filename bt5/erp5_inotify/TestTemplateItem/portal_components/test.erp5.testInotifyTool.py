@@ -33,10 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.ERP5Site import addERP5Tool
 
 class TestInotifyTool(ERP5TypeTestCase):
-
-  def getBusinessTemplateList(self):
-    return "erp5_core_proxy_field_legacy", "erp5_inotify"
-
   def test_inotify(self):
     from Products.ERP5.Tool.InotifyTool import IN_CREATE, IN_MODIFY, IN_DELETE
     addERP5Tool(self.portal, 'portal_inotify', 'Inotify Tool')

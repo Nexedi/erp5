@@ -1,3 +1,6 @@
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
 2011-08-04 gabriel.oliveira
 * Export knowledge pad and gadget preserving its state
 

@@ -39,25 +39,6 @@ class ShaDirMixin(object):
   """
     ShaDir - Mixin Class
   """
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ('erp5_full_text_myisam_catalog',
-            'erp5_base',
-            'erp5_jquery',
-            'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_ingestion',
-            'erp5_web',
-            'erp5_dms',
-            'erp5_pdm',
-            'erp5_data_set',
-            'erp5_web_download_theme',
-            'erp5_web_shacache',
-            'erp5_web_shadir',)
-
-
   def afterSetUp(self):
     """
       Initialize the ERP5 site.

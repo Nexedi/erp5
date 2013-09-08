@@ -54,17 +54,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     """
     return "ERP5 Live DMS - URL Ingestion"
 
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ('erp5_base',
-            'erp5_ingestion',
-            'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web',
-            'erp5_crm',
-            'erp5_dms')
-
   def afterSetUp(self):
     """
       Initialize the ERP5 site.

@@ -44,36 +44,6 @@ class TestUNG(ERP5TypeTestCase):
   def getTitle(self):
     return "UNG Tests"
 
-  def getBusinessTemplateList(self):
-    return ('erp5_ingestion_mysql_innodb_catalog',
-            'erp5_full_text_myisam_catalog',
-            'erp5_base',
-            'erp5_jquery',
-            'erp5_web',
-            'erp5_core_proxy_field_legacy',
-            'erp5_ingestion',
-            'erp5_jquery_ui',
-            'erp5_dms',
-            'erp5_crm',
-            'erp5_knowledge_pad',
-            'erp5_jquery_plugin_spinbtn',
-            'erp5_jquery_plugin_jgraduate',
-            'erp5_jquery_plugin_svgicon',
-            'erp5_jquery_plugin_hotkey',
-            'erp5_jquery_plugin_jquerybbq',
-            'erp5_jquery_plugin_svg_editor',
-            'erp5_jquery_plugin_sheet',
-            'erp5_jquery_plugin_mbmenu',
-            'erp5_jquery_plugin_jqchart',
-            'erp5_jquery_plugin_colorpicker',
-            'erp5_jquery_plugin_elastic',
-            'erp5_jquery_plugin_wdcalendar',
-            'erp5_jquery_sheet_editor',
-            'erp5_xinha_editor',
-            'erp5_svg_editor',
-            'erp5_web_ung_core',
-            'erp5_web_ung_theme',)
-
   def afterSetUp(self):
     """Clean up form"""
     self.portal.REQUEST.form.clear()

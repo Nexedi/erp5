@@ -5,11 +5,6 @@ from Products.ERP5.Document.ERP5ProjectUnitTestDistributor import \
 import json 
 
 class TestTaskDistribution(ERP5TypeTestCase):
-
-  def getBusinessTemplateList(self):
-    return ("erp5_base",
-            "erp5_test_result")
-
   def afterSetUp(self):
     self.portal = portal = self.getPortalObject()
     self.test_node_module = self.portal.getDefaultModule(portal_type = 'Test Node Module')

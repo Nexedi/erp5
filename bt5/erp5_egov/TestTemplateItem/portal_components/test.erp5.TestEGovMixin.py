@@ -110,10 +110,6 @@ class TestEGovMixin(SecurityTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-  def getBusinessTemplateList(self):
-    """return list of business templates to be installed. """
-    return ( 'erp5_base',)
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

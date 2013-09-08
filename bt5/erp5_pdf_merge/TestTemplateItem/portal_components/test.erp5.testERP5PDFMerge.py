@@ -29,15 +29,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testDms import makeFileUpload
 
 class TestERP5PDFMerge(ERP5TypeTestCase):
-  def getBusinessTemplateList(self):
-    """Tuple of Business Templates we need to install
-    """
-    return ( 'erp5_base',
-             'erp5_web',
-             'erp5_ingestion',
-             'erp5_dms',
-             'erp5_pdf_merge' )
-
   def test_erp5_merge_pdf(self):
     document = self.portal.portal_contributions.newContent(
       file=makeFileUpload('REF-en-001.pdf'))

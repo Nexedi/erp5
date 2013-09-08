@@ -1,4 +1,5 @@
-import glob, os, subprocess, re
+from glob import glob
+import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
 import sys
@@ -28,11 +29,19 @@ class _ERP5(ERP5TypeTestSuite):
 
   def _getAllTestList(self):
     test_list = []
+    path = sys.path[0]
+    component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
+                              "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob.glob('%s/product/*/tests/test*.py' % sys.path[0]) +
-        glob.glob('%s/bt5/*/TestTemplateItem/test*.py' % sys.path[0]) +
-        glob.glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % sys.path[0])):
-      test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+        glob('%s/product/*/tests/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+      component_re_match = component_re.match(test_path)
+      if component_re_match is not None:
+        test_case = "%s:%s" % (component_re_match.group(1),
+                               component_re_match.group(2))
+      else:
+        test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
@@ -64,35 +73,36 @@ class ERP5(_ERP5):
 
   def getTestList(self):
     test_list = []
-    for test_case in self._getAllTestList():
+    for full_test_case in self._getAllTestList():
+      test_case = (':' in full_test_case and full_test_case.split(':')[1]
+                   or full_test_case)
+
       # skip some tests
-      if ('testLive' in test_case or
-          'testVifib' in test_case or
-          test_case.find('Performance') > 0 or
-          # XXX (Ivan), until LDAP server is available this test will alway fail
-          test_case.endswith('testERP5LdapCatalog') or
-          # tests reading selenium tables from erp5.com
-          test_case.endswith('testFunctionalStandaloneUserTutorial') or
-          test_case.endswith('testFunctionalRunMyDocSample') or
-          test_case.endswith('testFunctionalConfigurator') or
-          test_case.endswith('testFunctionalConfiguratorConsulting') or
-          # not maintained
-          test_case.endswith('testERP5eGov') or
-          test_case.endswith('testAccounting_l10n_fr_m9')):
+      if test_case.startswith('testLive') or test_case.startswith('testVifib') \
+         or test_case.find('Performance') > 0 \
+         or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
+                          # tests reading selenium tables from erp5.com
+                          'testFunctionalStandaloneUserTutorial',
+                          'testFunctionalRunMyDocSample',
+                          'testFunctionalConfigurator',
+                          'testFunctionalConfiguratorConsulting',
+                          # not maintained
+                          'testERP5eGov',
+                          'testAccounting_l10n_fr_m9'):
         continue
-      test_list.append(test_case)
+      test_list.append(full_test_case)
     return test_list
 
-  def run(self, test):
-    if (test.endswith('testConflictResolution') or
-        test.endswith('testInvalidationBug')):
-      status_dict = self.runUnitTest('--save', test)
+  def run(self, full_test):
+    test = ':' in full_test and full_test.split(':')[1] or full_test
+    if test in ('testConflictResolution', 'testInvalidationBug'):
+      status_dict = self.runUnitTest('--save', full_test)
       if not status_dict['status_code']:
-        status_dict = self.runUnitTest('--load', '--activity_node=2', test)
+        status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
     if test.startswith('testFunctional'):
-      return self._updateFunctionalTestResponse(self.runUnitTest(test))
-    return super(ERP5, self).run(test)
+      return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
+    return super(ERP5, self).run(full_test)
 
   def _updateFunctionalTestResponse(self, status_dict):
     """ Convert the Unit Test output into more accurate information

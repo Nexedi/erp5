@@ -55,10 +55,6 @@ SOAPBinding.registerServiceClass(HelloWorldService)
 
 
 class TestSoapBinding(ERP5TypeTestCase):
-
-  def getBusinessTemplateList(self):
-    return 'erp5_interfaces',
-
   def createBinding(self, target_namespace, service_class):
     return self.portal.portal_interfaces.newContent(
       self._testMethodName, 'SOAP Binding',

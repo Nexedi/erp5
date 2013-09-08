@@ -45,6 +45,7 @@ revision
 description
 license
 dependency_list
+test_dependency_list
 provision_list
 copyright_list
 '''.strip().splitlines()
