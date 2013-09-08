@@ -9,19 +9,6 @@ class TestDiscussionThread(SecurityTestCase):
   def getTitle(self):
     return "TestDiscussionThread"
 
-  def getBusinessTemplateList(self):
-    """
-    A tuple of Business Templates names to specify the dependencies we need to
-    install.
-    """
-    return (
-      'erp5_base',
-      'erp5_web',
-      'erp5_ingestion_mysql_innodb_catalog',
-      'erp5_ingestion',
-      'erp5_dms',
-      'erp5_forum_tutorial')
-
   def setUpOnce(self):
     """
        Create users to interact with the discussion forums

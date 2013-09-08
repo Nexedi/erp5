@@ -10,9 +10,6 @@ class TestERP5BearerToken(ERP5TypeTestCase):
 
   test_token_extraction_id = 'bearer_test_extraction'
 
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_bearer_token')
-
   def generateNewId(self):
     return str(self.portal.portal_ids.generateNewId(
                                      id_group=('bearer_token_test_id')))

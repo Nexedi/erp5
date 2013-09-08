@@ -32,8 +32,8 @@ import base64
 import httplib
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from ShaCacheMixin import ShaCacheMixin
-from ShaSecurityMixin import ShaSecurityMixin
+from erp5.component.test.ShaCacheMixin import ShaCacheMixin
+from erp5.component.test.ShaSecurityMixin import ShaSecurityMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
@@ -47,14 +47,6 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       Return the title of the current test set.
     """
     return "SHACACHE External - Real Usage Of ShaCache"
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ShaCacheMixin().getBusinessTemplateList() + \
-                         ('erp5_data_set',
-                          'networkcache_erp5',)
 
   def afterSetUp(self):
     """

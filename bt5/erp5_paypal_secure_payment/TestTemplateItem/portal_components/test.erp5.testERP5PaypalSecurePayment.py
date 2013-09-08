@@ -40,14 +40,6 @@ class TestERP5PaypalSecurePaymentMixin(ERP5TypeTestCase):
   def getTitle(self):
     return "ERP5 Paypal Secure Payment"
 
-  def getBusinessTemplateList(self):
-    """
-    Tuple of Business Templates we need to install
-    """
-    return ('erp5_base',
-            'erp5_secure_payment',
-            'erp5_paypal_secure_payment')
-
   def afterSetUp(self):
     self.portal = self.getPortalObject()
     if not self.portal.hasObject('portal_secure_payments'):

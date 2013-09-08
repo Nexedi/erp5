@@ -37,12 +37,6 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
   def getTitle(self):
     return "Test SyncML with asynchronous engine"
 
-  def getBusinessTemplateList(self):
-    """
-    Tuple of Business Templates we need to install
-    """
-    return ('erp5_base', 'erp5_syncml', 'erp5_syncml_test_data')  # bt5 for test data
-
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment

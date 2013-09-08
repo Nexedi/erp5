@@ -124,6 +124,7 @@
                       <list>
                         <string>my_change_log</string>
                         <string>my_dependency_list</string>
+                        <string>my_test_dependency_list</string>
                         <string>my_provision_list</string>
                         <string>my_copyright_list</string>
                         <string>my_license</string>

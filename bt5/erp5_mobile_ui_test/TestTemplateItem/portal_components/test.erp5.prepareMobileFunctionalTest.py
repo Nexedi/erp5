@@ -35,12 +35,7 @@ import unittest
 from Products.ERP5Type.tests.prepareFunctionalTest import TestZelenium
 
 class MobileTestZelenium(TestZelenium):
-    def getBusinessTemplateList(self):
-        """
-          Return the list of business templates.
-        """
-        return ('erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
-                'erp5_mobile', 'erp5_mobile_ui_test',)
+    pass
 
 def test_suite():
     suite = unittest.TestSuite()

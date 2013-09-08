@@ -30,8 +30,8 @@
 
 from AccessControl import Unauthorized
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from ShaDirMixin import ShaDirMixin
-from ShaSecurityMixin import ShaSecurityMixin
+from erp5.component.test.ShaDirMixin import ShaDirMixin
+from erp5.component.test.ShaSecurityMixin import ShaSecurityMixin
 
 
 class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
@@ -44,13 +44,6 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
       Return the title of the current test set.
     """
     return "SHADIR Security Test Case"
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of required business templates.
-    """
-    return ShaDirMixin().getBusinessTemplateList() + \
-                         ('networkcache_erp5',)
 
   def afterSetUp(self):
     """

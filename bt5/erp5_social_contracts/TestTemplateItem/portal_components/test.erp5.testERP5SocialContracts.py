@@ -34,9 +34,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 class TestERP5SocialContracts(ERP5TypeTestCase):
   """Test for erp5_social_contracts business template.
   """
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_social_contracts', )
-
   def afterSetUp(self):
     self.person_1 = self.portal.person_module.newContent(
                                       portal_type='Person',
