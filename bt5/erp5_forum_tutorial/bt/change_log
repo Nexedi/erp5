@@ -1,3 +1,6 @@
+2013-09-09 arnaud.fontaine
+* ZODB Components: Migrate bt5 test to Live Test.
+
 2013-09-08 arnaud.fontaine
 * ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
 
