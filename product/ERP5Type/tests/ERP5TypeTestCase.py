@@ -476,6 +476,58 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
            DeprecationWarning)
       return self.createUserAssignment(user, assignment_kw)
 
+    @staticmethod
+    def _getBTPathAndIdList(template_list):
+      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
+        ERP5Site.getBootstrapDirectory()
+      bt5_path = os.environ.get('erp5_tests_bt5_path')
+      if bt5_path:
+        bt5_path_list = bt5_path.split(',')
+        bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
+      else:
+        bt5_path = os.path.join(instancehome, 'bt5')
+        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
+
+      def search(path, template):
+        urltype, url = urllib.splittype(path + '/' + template)
+        if urltype == 'http':
+          host, selector = urllib.splithost(url)
+          user_passwd, host = urllib.splituser(host)
+          host = urllib.unquote(host)
+          h = httplib.HTTP(host)
+          h.putrequest('HEAD', selector)
+          h.putheader('Host', host)
+          if user_passwd:
+            h.putheader('Authorization',
+                        'Basic %s' % base64.b64encode(user_passwd).strip())
+          h.endheaders()
+          errcode, errmsg, headers = h.getreply()
+          if errcode == 200:
+            return urltype + ':' + url
+        else:
+          path_list = glob(os.path.join(path, template))
+          if path_list:
+            return path_list[0]
+
+      not_found_list = []
+      new_template_list = []
+      for template in template_list:
+        id = template.split('/')[-1]
+        for path in bt5_path_list:
+          path = search(path, template) or search(path, template + '.bt5')
+          if path:
+            break
+        else:
+          path = os.path.join(bootstrap_path, template)
+          if not os.path.exists(path):
+            not_found_list.append(template)
+            continue
+        new_template_list.append((path, id))
+      if not_found_list:
+        raise RuntimeError("Following BT can't be found on your system : %s"
+                           % ', '.join(not_found_list))
+      return new_template_list
+
     def setupAutomaticBusinessTemplateRepository(self, accept_public=True,
                               searchable_business_template_list=None):
      # Try to setup some valid Repository List by reusing ERP5TypeTestCase API.
@@ -737,58 +789,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       You can override this. Return if we should create (1) or not (0) an activity tool
       """
       return 0
-
-    @staticmethod
-    def _getBTPathAndIdList(template_list):
-      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
-        ERP5Site.getBootstrapDirectory()
-      bt5_path = os.environ.get('erp5_tests_bt5_path')
-      if bt5_path:
-        bt5_path_list = bt5_path.split(',')
-        bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
-      else:
-        bt5_path = os.path.join(instancehome, 'bt5')
-        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
-
-      def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
-        if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
-          h.putrequest('HEAD', selector)
-          h.putheader('Host', host)
-          if user_passwd:
-            h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(user_passwd).strip())
-          h.endheaders()
-          errcode, errmsg, headers = h.getreply()
-          if errcode == 200:
-            return urltype + ':' + url
-        else:
-          path_list = glob(os.path.join(path, template))
-          if path_list:
-            return path_list[0]
-
-      not_found_list = []
-      new_template_list = []
-      for template in template_list:
-        id = template.split('/')[-1]
-        for path in bt5_path_list:
-          path = search(path, template) or search(path, template + '.bt5')
-          if path:
-            break
-        else:
-          path = os.path.join(bootstrap_path, template)
-          if not os.path.exists(path):
-            not_found_list.append(template)
-            continue
-        new_template_list.append((path, id))
-      if not_found_list:
-        raise RuntimeError("Following BT can't be found on your system : %s"
-                           % ', '.join(not_found_list))
-      return new_template_list
 
     def manuallyInstallBusinessTemplate(self, *template_list):
       new_template_list = self._getBTPathAndIdList(template_list)
