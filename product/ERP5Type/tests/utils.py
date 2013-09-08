@@ -306,12 +306,11 @@ def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
       raise RuntimeError("Can't bind to %s:%s" % host_port)
     except ValueError:
       default_host = host_port[1]
-  port_list = []
-  for i in xrange(3):
-    port_list.append(instance_random.randint(55000, 55500))
-    yield default_host, port_list[-1]
-  raise RuntimeError("Can't find free port (tried ports %s)\n"
-                     % ', '.join(map(str, port_list)))
+
+  for port in xrange(55000, 55500):
+    yield default_host, port
+
+  raise RuntimeError("Can't find free port (tried ports 55000 to 55500)")
 
 def createZServer(log=os.devnull, zserver_type='http'):
   import ZServer
