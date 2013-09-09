@@ -80,6 +80,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_crm',
 
       'erp5_jquery',
+      'erp5_jquery_ui',
       'erp5_web',
       'erp5_dms',
       'erp5_email_reader',
@@ -273,7 +274,7 @@ class TestXHTML(ERP5TypeTestCase):
     for script_path, script in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['File','DTML Method','DTML Document'], search_sub=1):
       is_required_check_path = True
-      ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor']
+      ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor', 'erp5_jquery_ui']
       ignore_files = ['require.js','require.min.js','wz_dragdrop.js']
       if script_path.endswith('.js'):
         for ignore_bt_name in ignore_bts:
