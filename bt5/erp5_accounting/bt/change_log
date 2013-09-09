@@ -1,5 +1,5 @@
 2013-09-09 Gabriel Monnerat
-* Refactor ERP5Site_getAccountItemList to search only for validated accounts.
+* Refactor ERP5Site_getAccountItemList and AccountingTransactionLine_getProjectItemList to not search for Movements becauses it generate slow queries
 
 2013-04-17 arnaud.fontaine
 * erp5_simulation should not be required as some system do not use simulation.
