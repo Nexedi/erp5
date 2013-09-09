@@ -30,6 +30,7 @@ CREATE TABLE `message` (
   KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
   KEY `processing_node_priority_date` (`processing_node`, `priority`, `date`),
+  KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
   KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
   KEY (`priority`),
   KEY (`tag`),
