@@ -84,6 +84,8 @@ class ScalabilityTestRunner():
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
                                         key, certificate, self.slapos_url, self.testnode.config)
     self.slapos_communicator = None
+    # Dict containing used to store which SR is not yet correctly installed.
+    # looks like: {'comp_id1':'SR_urlA', 'comp_id2':'SR_urlA',..}
     self.remaining_software_installation_dict = {}
     
     # Protection to prevent installation of softwares after checking
