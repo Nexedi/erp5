@@ -428,10 +428,12 @@ class ScalabilityLauncher(object):
       results = "created docs=%d\n"\
                 "duration=%d\n"\
                 "number of tests=%d\n"\
+                "number of users=%d\n"\
                 %(
                   created_document_number,
                   test_duration,
-                  len(test_suite_list)
+                  len(test_suite_list),
+                  (user_number/len(test_suite_list))*len(test_suite_list)
                 )
       self.log("results: %s" %results)
       self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
