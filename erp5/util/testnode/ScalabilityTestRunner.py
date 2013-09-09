@@ -428,8 +428,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         test_result_proxy.reportFailure(stdout=error_message)
         break
 
-      # Test cancelled or in an undeterminate state.
+      # Test cancelled, finished or in an undeterminate state.
       if not test_result_proxy.isAlive():
+        # Test finished
+        if count == len(configuration_list):
+          break
+        # Cancelled or in an undeterminate state.
         error_message = "Test cancelled or undeterminate state."
         error = ValueError(error_message)
         break
@@ -445,8 +449,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if error:
       test_result_proxy.fail()
       raise error
-    #else:
-      #test_result_proxy.stop()
+    # Test is finished.
+    self.log("Test finished.")
     return {'status_code' : 0}
 
   def _cleanUpOldInstance(self):
