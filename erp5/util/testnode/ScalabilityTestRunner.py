@@ -228,7 +228,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Instance(s) not in %s state yet." % state)
       time.sleep(15)
     if (time.time()-start_time) > max_time:
-      raise ValueError("Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time)))
+      error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
+      self.log(error_message)
+      self.log("Do you use instance state propagation in your project?")
+      self.log("Instance '%s' will be stopped and test avorted." %instance_title)
+      # What if we wanted to stop ?
+      self.slapos_controler.stopInstance(instance_title)
+      # XXX: _waitInstance call here ? recursive call ?
+      # XXX: sleep 60 seconds.
+      time.sleep(60) 
+      raise ValueError(error_message)
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
   def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
