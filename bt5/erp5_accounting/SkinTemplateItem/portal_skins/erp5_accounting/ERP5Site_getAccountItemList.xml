@@ -63,42 +63,18 @@ def getAccountItemList(section_category,\n
                        from_date,\n
                        lang):\n
 \n
-  def sorted(seq, key):\n
-    seq = seq[::]\n
-    seq.sort(key=key)\n
-    return seq\n
-\n
-  account_dict = dict()\n
+  account_list = [(\'\', \'\')]\n
   for account in portal.account_module.searchFolder(\n
-                            portal_type=\'Account\',\n
-                            validation_state=(\'validated\',), ):\n
-    account = account.getObject()\n
+                           portal_type=\'Account\',\n
+                           select_list=["relative_url"],\n
+                           validation_state=(\'validated\',)):\n
+    account_list.append((\n
+      account.Account_getFormattedTitle(),\n
+      account.relative_url,))\n
 \n
-    account_dict[account.getUid()] = [\n
-        account.Account_getFormattedTitle(),\n
-        account.getRelativeUrl(), ]\n
+  account_list.sort(key=lambda x: x[0])\n
 \n
-  search_kw = dict(\n
-      portal_type=portal.getPortalAccountingMovementTypeList(),\n
-      ignore_group_by=True,\n
-      group_by_node=True,)\n
-  if from_date:\n
-    search_kw[\'from_date\'] = from_date\n
-  if section_category_strict:\n
-    search_kw[\'section_category_strict_membership\'] = section_category\n
-  else:\n
-    search_kw[\'section_category\'] = section_category\n
-\n
-  # add to this the accounts that have been used in accounting transactions.\n
-  for brain in portal.portal_simulation.getCurrentInventoryList( **search_kw ):\n
-    if brain.node_uid and brain.node_uid not in account_dict:\n
-      account = portal.portal_catalog.getObject(brain.node_uid)\n
-      account_dict[brain.node_uid] = [\n
-        account.Account_getFormattedTitle(),\n
-        account.getRelativeUrl(), ]\n
-\n
-  return [(\'\', \'\')] + sorted(account_dict.values(),\n
-                key=lambda item: item[0])\n
+  return account_list\n
 \n
 getAccountItemList = CachingMethod(getAccountItemList,\n
                                    id=script.getId(),\n
