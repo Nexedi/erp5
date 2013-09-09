@@ -50,10 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Returns all validated accounts + all accounts used by this group on existing\n
-movements.\n
-\n
-\'\'\'\n
+            <value> <string>\'\'\'Returns all validated accounts \'\'\'\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 portal = context.getPortalObject()\n
