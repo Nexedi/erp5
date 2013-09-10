@@ -65,7 +65,10 @@ for tl in test_result_lines:\n
   if stdout:\n
     count = count + 1\n
     stdout_lines = filter(None, stdout.split(\'\\n\'))\n
-    current_stats = dict( [(l.split("=")[0].replace(" ", "_"), int(l.split("=")[1])) for l in stdout_lines ])\n
+    current_stats = dict( [(l.split("=")[0].replace(" ", "_"), \\\n
+                     l.split("=")[1].isdigit() and int(l.split("=")[1]) or str(l.split("=")[1])) \\\n
+                     for l in stdout_lines ])\n
+\n
     tests.append(current_stats)\n
 \n
 test_suite = context.getPortalObject().test_suite_module.searchFolder(title=context.getTitle())[0]\n
