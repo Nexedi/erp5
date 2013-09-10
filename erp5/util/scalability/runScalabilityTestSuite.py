@@ -289,75 +289,39 @@ class ScalabilityLauncher(object):
     # Main loop
     while True:
 
-      
+      # Loop for getting new test case
       current_test = self.getRunningTest()
       while not current_test:
         time.sleep(15)
         current_test = self.getRunningTest()
-        
-
-      error_count = 1
-
-      # Do not run a test while there are pending activities
-      waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-      previous_document_number=0
-      self.log("Test Case %s is running..." %(current_test.title))
+      self.log("Test Case %s going to be run." %(current_test.title))
       
-      try:
-        # Prepare command parameters
-        current_test_number = int(current_test.title)
-        test_duration = suite.getTestDuration(current_test_number)
-        benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
-        user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
-        user_file_path = os.path.split(user_file_full_path)[0]
-        user_file = os.path.split(user_file_full_path)[1]
-        tester_path = self.__argumentNamespace.runner_path
-        user_number = suite.getUserNumber(current_test_number)
+      # Prepare configuration
+      current_test_number = int(current_test.title)
+      test_duration = suite.getTestDuration(current_test_number)
+      benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
+      user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
+      user_file_path = os.path.split(user_file_full_path)[0]
+      user_file = os.path.split(user_file_full_path)[1]
+      tester_path = self.__argumentNamespace.runner_path
+      user_number = suite.getUserNumber(current_test_number)
+      repetition = suite.getTestRepetition(current_test_number)
 
-        self.log("user_number: %s" %str(user_number))
+      self.log("user_number: %s" %str(user_number))
+      self.log("test_duration: %s seconds" %str(test_duration))
 
-        # WARMING UP
-        self.log("Warming up run.. for 180s")
-        # Generate commands to run
-        command_list = []
-        user_index = 0
-        for test_suite in test_suite_list:
-          command_list.append([tester_path,
-               self.__argumentNamespace.erp5_url,
-               str(user_number/len(test_suite_list)),
-               test_suite,
-               '--benchmark-path-list', benchmarks_path,
-               '--users-file-path', user_file_path,
-               '--users-file', user_file,
-               '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
-               '--report-directory', self.__argumentNamespace.log_path,
-               '--repeat', "%s" %str(MAX_DOCUMENTS),
-               '--max-errors', str(1000000),
-               '--user-index', str(user_index),
-          ])
-          user_index += user_number/len(test_suite_list)
-        # Launch
-        tester_process_list = []
-        for command in command_list:
-          self.log("command: %s" %str(command))
-          tester_process_list.append(subprocess.Popen(command))
-        # Sleep
-        time.sleep(180)
-        # Stop
-        for tester_process in tester_process_list:
-          tester_process.send_signal(signal.SIGINT)
-          self.log("%s signal send to tester" %str(signal.SIGINT))
-        # /WARMING UP
-
-        # Wait for 0 activities
-        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
+      # Store the number of documents generated for each iteration
+      document_number = []
+      
+      # Repeat the same test several times to accurate test result
+      for i in range(1, repetition+1):
+        self.log("Repetition: %d/%d" %(i, repetition))
+        
         # Get the number of documents present before running the test.
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
         previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         self.log("previous_document_number: %d" %previous_document_number)
 
-        
-        self.log("test_duration: %ss" %str(test_duration))
-
         # Generate commands to run
         command_list = []
         user_index = 0
@@ -369,7 +333,7 @@ class ScalabilityLauncher(object):
                '--benchmark-path-list', benchmarks_path,
                '--users-file-path', user_file_path,
                '--users-file', user_file,
-               '--filename-prefix', "%s_%s_" %(LOG_FILE_PREFIX, current_test.title),
+               '--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
                '--report-directory', self.__argumentNamespace.log_path,
                '--repeat', "%s" %str(MAX_DOCUMENTS),
                '--max-errors', str(1000000),
@@ -377,7 +341,7 @@ class ScalabilityLauncher(object):
           ])
           user_index += user_number/len(test_suite_list)
             
-        # Launch
+        # Launch commands
         tester_process_list = []
         for command in command_list:
           self.log("command: %s" %str(command))
@@ -389,31 +353,29 @@ class ScalabilityLauncher(object):
         # Stop
         for tester_process in tester_process_list:
           tester_process.send_signal(signal.SIGINT)
-          self.log("%s signal send to tester" %str(signal.SIGINT))
+          self.log("End signal sent to the tester.")
 
-        # Ok
-        error_count = 0
+        # Count created documents
+        # Wait for 0 pending activities before counting
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)        
+        current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+        created_document_number = current_document_number - previous_document_number
+        self.log("previous_document_number: %d" %previous_document_number)
+        self.log("current_document_number: %d" %current_document_number)
+        self.log("created_document_number: %d" %created_document_number)
+        document_number[i] = created_document_number
+        # Move csv/logs
+        self.moveLogs(current_test.title)
       
-      except:
-        self.log("Error during tester call.")
-        raise ValueError("Tester call failed")
       self.log("Test Case %s is finish" %(current_test.title))
-      self.log("Going to count the number of created documents")
 
-      # Wait for 0 pending activities before counting
-      waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)        
-      # Count created documents
-      current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-      created_document_number = current_document_number - previous_document_number
-      self.log("previous_document_number: %d" %previous_document_number)
-      self.log("current_document_number: %d" %current_document_number)
-      self.log("created_document_number: %d" %created_document_number)
-      created_document_per_hour_number = ( (float(created_document_number)*60*60) / float(test_duration) )
+      # Get the maximum as choice
+      maximum = 0
+      for i in range(0,len(document_number)):
+        if document_number[i] > maximum:
+          maximum = document_number[i]
 
-      # Move csv/logs
-      self.moveLogs(current_test.title)
-
-      # Make a connection with ERP5 master
+      # Send results to ERP5 master
       retry_time = 2.0
       proxy = taskdistribution.ServerProxy(
                   self.__argumentNamespace.test_suite_master_url,
@@ -424,29 +386,27 @@ class ScalabilityLauncher(object):
                                 current_test.relative_path,
                                 current_test.title
                               )
-      # Generate output                        
       results = "created docs=%d\n"\
                 "duration=%d\n"\
                 "number of tests=%d\n"\
                 "number of users=%d\n"\
                 "tests=%s\n"\
                 %(
-                  created_document_number,
+                  maximum,
                   test_duration,
                   len(test_suite_list),
                   (user_number/len(test_suite_list))*len(test_suite_list),
                   '_'.join(test_suite_list)
                 )
-      self.log("results: %s" %results)
-      self.log("%s doc in %s secs = %s docs per hour" %(created_document_number, test_duration, created_document_per_hour_number))
-      
-      # Stop test case
+      self.log("Results: %s" %results)
       test_result_line_test.stop(stdout=results,
                       test_count=len(test_suite_list),
-                      error_count=error_count,
                       duration=test_duration)
       self.log("Test Case Stopped")
 
+    #
+    error_message_set = None
+    exit_status = 0
     return error_message_set, exit_status
 
 def main():
