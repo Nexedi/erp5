@@ -167,9 +167,6 @@ return '%s\\n%s %s COUNTRY' % \\
        (context.getStreetAddress(),
         context.getZipCode(), context.getCity())
 """)
-    # Flush the cache because _getTypeBasedMethod caches the result,
-    # so that script will not be used.
-    self.getPortal().portal_caches.clearCache(cache_factory_list=('erp5_content_long',))
   
   def stepCheckAddressAsTextScript(self, sequence=None,
                                    sequence_list=None, **kw):
