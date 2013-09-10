@@ -237,9 +237,6 @@ class TestDocument(TestDocumentMixin):
     document_module = self.portal.document_module
     return getattr(document_module, id)
 
-  def clearCache(self):
-    self.portal.portal_caches.clearAllCache()
-
   def getPreferences(self, image_display):
     preference_tool = self.portal.getPortalObject().portal_preferences
     height_preference = 'preferred_%s_image_height' % (image_display,)
