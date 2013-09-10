@@ -517,7 +517,7 @@ ignore-ssl-certificate = true
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title):
+    def patch_startTestSuite(self,test_node_title, *args, **kw):
       global counter
       config_list = []
       # Sclalability slave testnode is not directly in charge of testsuites
@@ -699,7 +699,7 @@ ignore-ssl-certificate = true
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title):
+    def patch_startTestSuite(self,test_node_title, *args, **kw):
       global counter
       config_list = [test_self.getTestSuiteData(reference='aa')[0],
                      test_self.getTestSuiteData(reference='bb')[0]]
@@ -947,7 +947,7 @@ ignore-ssl-certificate = true
       return result
     global startTestSuiteDone
     startTestSuiteDone = False
-    def patch_startTestSuite(self,test_node_title):
+    def patch_startTestSuite(self,test_node_title, *args, **kw):
       config_list = []
       global startTestSuiteDone
       if not startTestSuiteDone:
