@@ -186,9 +186,7 @@ class CacheTool(BaseTool):
                                             (cache_factory_list,))
     ram_cache_root = self.getRamCacheRoot()
     for cf_key in cache_factory_list:
-      if ram_cache_root.has_key(cf_key):
-        for cp in ram_cache_root[cf_key].getCachePluginList():
-          cp.clearCache()
+      self.clearCacheFactory(cf_key)
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache cleared.')
 
