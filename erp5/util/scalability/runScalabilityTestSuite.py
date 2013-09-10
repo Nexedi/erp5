@@ -363,7 +363,7 @@ class ScalabilityLauncher(object):
         self.log("previous_document_number: %d" %previous_document_number)
         self.log("current_document_number: %d" %current_document_number)
         self.log("created_document_number: %d" %created_document_number)
-        document_number[i] = created_document_number
+        document_number.append(created_document_number)
         # Move csv/logs
         self.moveLogs(current_test.title)
       
