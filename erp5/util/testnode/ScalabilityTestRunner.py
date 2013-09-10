@@ -384,7 +384,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       node_test_suite.project_title)
   
     count = 0
-    error = None
+    error_message = None
 
     # Each cluster configuration are tested
     for configuration in configuration_list:
@@ -419,7 +419,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       # 
       if test_result_line_proxy == None :
         error_message = "Test case already tested."
-        error = ValueError(error_message)
         break
 
       self.log("Test for count : %d is in a running state." %count)
@@ -435,7 +434,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       if test_result_line_proxy.isTestCaseAlive():
         error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
                             %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
-        error = ValueError(error_message)
         test_result_proxy.reportFailure(stdout=error_message)
         break
 
@@ -446,7 +444,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
           break
         # Cancelled or in an undeterminate state.
         error_message = "Test cancelled or undeterminate state."
-        error = ValueError(error_message)
         break
 
     # Stop current instance
@@ -457,9 +454,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self._cleanUpOldInstance()
 
     # If error appears then that's a test failure.    
-    if error:
+    if error_message:
       test_result_proxy.fail()
-      raise error
+      self.log("Test Failed.")
+      return {'status_code' : 1, 'error_message': error_message} 
     # Test is finished.
     self.log("Test finished.")
     return {'status_code' : 0}

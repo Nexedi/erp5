@@ -390,17 +390,30 @@ from the distributor.")
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
-              #time.sleep(20)
+              time.sleep(20)
               if my_test_type == 'UnitTest':
                 runner.runTestSuite(node_test_suite, portal_url)
-              else:
-                if status_dict['status_code'] == 0:
-                  runner.runTestSuite(node_test_suite, portal_url)
+              elif my_test_type == 'ScalabilityTest':
+                error_message = None
+                # A problem is appeared during runTestSuite
+                if status_dict['status_code'] == 1:
+                  error_message = "Software installation too long or error(s) are present during SR install."
                 else:
+                  status_dict = runner.runTestSuite(node_test_suite, portal_url)
+                  # A problem is appeared during runTestSuite
+                  if status_dict['status_code'] == 1:
+                    error_message = status_dict['error_message']
+
+                # If an error is appeared
+                if error_message:
                   test_result.reportFailure(
-                      command="runner.prepareSlapOSForTestSuite()",
-                      stdout="Software installation too long or error(s) are present."
+                      stdout=error_message
                   )
+                  self.log(error_message)
+                  raise ValueError(error_message)
+              else:
+                raise NotImplementedError
+                  
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
