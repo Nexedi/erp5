@@ -44,6 +44,8 @@
   <tal:block metal:define-macro="master"\n
              tal:define="css_list_jquery_template python:[\'jquery/plugin/sheet/jquery.sheet.css\',\n
                                   \'jquery/plugin/colorpicker/jquery.colorPicker.css\',\n
+                                  \'jquery.sheet.erp5.css\',\n
+                                  \'jquery_sheet_theme/sheet_default_theme.css\',\n
 ];\n
                         js_list_jquery_template python:[\'jquery/core/jquery.js\',\n
                                                   \'jquery/plugin/sheet/jquery.sheet.js\',\n
