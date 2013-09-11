@@ -155,11 +155,13 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
 
 
   security.declarePublic("startTestSuite")
-  def startTestSuite(self,title, batch_mode=0, computer_guid='unknown'):
+  def startTestSuite(self,title, computer_guid='unknown', batch_mode=0):
     """
     startTestSuite : subscribe node + return testsuite list to the master
     """
     config_list = []
+    super(ERP5ScalabilityDistributor,
+                        self).subscribeNode(title=title, computer_guid=computer_guid, batch_mode=batch_mode)
     test_node = self.getTestNode(title,batch_mode)
     test_suite_module =  self._getTestSuiteModule()
     test_node_module =  self._getTestNodeModule()
@@ -167,11 +169,14 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
 
     # If the testnode wich request testsuites is not the master
     # he does not have to receive any testsuites
-    master_test_node_title = [x.getTitle() for x in test_node_module.searchFolder(
-                validatation_state = 'validated') if (x.getMaster() == True) ][0]
+    master_test_node_title_list = [x.getTitle() for x in test_node_module.searchFolder(
+                validatation_state = 'validated') if (x.getMaster() == True) ]
+
+    if len(master_test_node_title_list) > 0:
+      master_test_node_title = master_test_node_title_list[0]
     
-    if title == master_test_node_title:
-      return super(ERP5ScalabilityDistributor,
+      if title == master_test_node_title:
+        return super(ERP5ScalabilityDistributor,
                         self).startTestSuite(title=title, batch_mode=batch_mode, computer_guid=computer_guid)
     else:
       if batch_mode:
