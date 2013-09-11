@@ -434,7 +434,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       if test_result_line_proxy.isTestCaseAlive():
         error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
                             %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
-        test_result_proxy.reportFailure(stdout=error_message)
         break
 
       # Test cancelled, finished or in an undeterminate state.
@@ -455,6 +454,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
     # If error appears then that's a test failure.    
     if error_message:
+      test_result_line_proxy.stop(error_count=1, failure_count=1,
+                                  stdout=error_message, stderr=error_message)
       test_result_proxy.reportFailure(stdout=error_message)
       self.log("Test Failed.")
       return {'status_code' : 1, 'error_message': error_message} 
