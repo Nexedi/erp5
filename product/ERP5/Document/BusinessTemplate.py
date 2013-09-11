@@ -5098,6 +5098,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if self.getBtForDiff():
           item.is_bt_for_diff = 1
         item.build(self)
+      # update _p_jar property of objects cleaned by removeProperties
+      transaction.savepoint(optimistic=True)
 
     def publish(self, url, username=None, password=None):
       """

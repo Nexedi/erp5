@@ -188,8 +188,6 @@ class WorkingCopy(Implicit):
     if business_template.getBuildingState() == 'draft':
       business_template.edit()
     business_template.build()
-    # XXX: Big hack to make export work as expected.
-    transaction.commit()
     self._export(business_template)
 
   def _export(self, business_template):
