@@ -172,12 +172,11 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     master_test_node_title_list = [x.getTitle() for x in test_node_module.searchFolder(
                 validatation_state = 'validated') if (x.getMaster() == True) ]
 
-    if len(master_test_node_title_list) > 0:
-      master_test_node_title = master_test_node_title_list[0]
-    
-      if title == master_test_node_title:
-        return super(ERP5ScalabilityDistributor,
-                        self).startTestSuite(title=title, batch_mode=batch_mode, computer_guid=computer_guid)
+    if len(master_test_node_title_list) == 1 and title == master_test_node_title_list[0]:
+      return super(ERP5ScalabilityDistributor,
+                   self).startTestSuite(title=title,
+                                        batch_mode=batch_mode,
+                                        computer_guid=computer_guid)     
     else:
       if batch_mode:
         return []
