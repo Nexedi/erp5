@@ -43,12 +43,6 @@ from zLOG import LOG, INFO
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase
 
-# Pylint imports
-from pylint.lint import Run
-from pylint.reporters.text import TextReporter
-import cStringIO
-import tempfile
-import sys
 import re
 pylint_message_re = re.compile('^(?P<type>[CRWEF]):\s*\d+,\s*\d+:\s*.*$')
 
@@ -303,6 +297,16 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     # checkConsistency() ensures that it cannot happen once validated/modified
     if not source_code:
       return [], []
+
+    try:
+      from pylint.lint import Run
+      from pylint.reporters.text import TextReporter
+    except ImportError:
+      return ['F: Cannot check Source Code: Pylint is not available'], []
+
+    import cStringIO
+    import tempfile
+    import sys
 
     #import time
     #started = time.time()
