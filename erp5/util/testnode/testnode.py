@@ -336,8 +336,6 @@ branch = %(branch)s
           test_suite_data = Utils.deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
-          # TODO : implement this method for each distributor
-          # into nexedi/master-erp5..
           try:
             my_test_type = self.test_suite_portal.getTestType()
           except:
