@@ -369,12 +369,6 @@ class TestResultProxy(RPCRetry):
         """
         return self._retryRPC('stopTest', [self._test_result_path])
         
-    def fail(self):
-        """
-        
-        """
-        return self._retryRPC('failTest', [self._test_result_path])
-        
 class TestResultProxyProxy(TestResultProxy):
     """
     A wrapper/proxy to TestResultProxy

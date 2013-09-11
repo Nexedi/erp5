@@ -455,7 +455,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
     # If error appears then that's a test failure.    
     if error_message:
-      test_result_proxy.fail()
+      test_result_proxy.reportFailure(stdout=error_message)
       self.log("Test Failed.")
       return {'status_code' : 1, 'error_message': error_message} 
     # Test is finished.
