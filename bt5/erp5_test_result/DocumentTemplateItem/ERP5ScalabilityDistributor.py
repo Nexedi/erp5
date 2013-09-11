@@ -198,7 +198,8 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     getRunningTestCase : return informations about the running test case,
               if no running test_case, return None
     """
-    test_result = self.getTestResult(test_result_path)
+    portal = self.getPortalObject()
+    test_result = portal.restrictedTraverse(test_result_path)
     test_result_lines = test_result.objectValues(portal_type="Test Result Line",
                                                   sort_on='int_index')
     count = 0
