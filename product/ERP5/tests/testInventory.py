@@ -2680,6 +2680,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     to_date=DateTime(self.two_resource_full_inventory2_start_date)
     self.getPortalObject().portal_simulation.getCurrentInventoryList(
       to_date=to_date,
+      section=section_value.getRelativeUrl(),
       node=node_value.getRelativeUrl(),
       group_by_variation=1,
       group_by_sub_variation=1,
