@@ -328,11 +328,17 @@ branch = %(branch)s
           remote_test_result_needs_cleanup = False
           begin = time.time()
           portal_url = config['test_suite_master_url']
-          portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
+          portal = taskdistribution.TaskDistributionTool(portal_url,
+                                                         logger=DummyLogger(log))
           self.portal = portal
-          self.test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
-          self.test_suite_portal.subscribeNode(node_title=config['test_node_title'], computer_guid=config['computer_id'])                  
-          test_suite_json =  self.test_suite_portal.startTestSuite(node_title=config['test_node_title'], computer_guid=config['computer_id'])
+          self.test_suite_portal = taskdistribution.TaskDistributor(
+                                                        portal_url,
+                                                        logger=DummyLogger(log))
+          self.test_suite_portal.subscribeNode(node_title=config['test_node_title'],
+                                               computer_guid=config['computer_id'])                  
+          test_suite_json = self.test_suite_portal.startTestSuite(
+                                               node_title=config['test_node_title'],
+                                               computer_guid=config['computer_id'])
           test_suite_data = Utils.deunicodeData(json.loads(test_suite_json))
           log("Got following test suite data from master : %r" % \
               (test_suite_data,))
@@ -371,7 +377,8 @@ from the distributor.")
             self.process_manager.killPreviousRun()
             self.getAndUpdateFullRevisionList(node_test_suite)
             # Write our own software.cfg to use the local repository
-            self.constructProfile(node_test_suite, my_test_type, runner.getRelativePathUsage())
+            self.constructProfile(node_test_suite, my_test_type, 
+                                  runner.getRelativePathUsage())
             # Make sure we have local repository
             test_result = portal.createTestResult(node_test_suite.revision, [],
                      config['test_node_title'], False,

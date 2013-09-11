@@ -517,7 +517,7 @@ ignore-ssl-certificate = true
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title, *args, **kw):
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       global counter
       config_list = []
       # Sclalability slave testnode is not directly in charge of testsuites
@@ -566,6 +566,8 @@ ignore-ssl-certificate = true
         result =  TestResultProxy(self._proxy, self._retry_time,
                 self._logger, test_result_path, node_title, revision)
       return result
+    def patch_runTestSuite(self, *argv, **kw):
+      return {'status_code':0}
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -607,7 +609,7 @@ ignore-ssl-certificate = true
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass._prepareSlapOS = doNothing
-    RunnerClass.runTestSuite = doNothing
+    RunnerClass.runTestSuite = patch_runTestSuite
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
     test_node.run()
@@ -699,7 +701,7 @@ ignore-ssl-certificate = true
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title, *args, **kw):
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       global counter
       config_list = [test_self.getTestSuiteData(reference='aa')[0],
                      test_self.getTestSuiteData(reference='bb')[0]]
@@ -715,6 +717,8 @@ ignore-ssl-certificate = true
       result = TestResultProxy(self._proxy, self._retry_time,
                self._logger, test_result_path, node_title, revision)
       return result
+    def patch_runTestSuite(self,*argv, **kw):
+      return {'status_code':0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
@@ -775,9 +779,15 @@ ignore-ssl-certificate = true
     test_node = self.getTestNode()
     # Change UnitTestRunner class methods
     original_prepareSlapOS = RunnerClass._prepareSlapOS
-    RunnerClass._prepareSlapOS = doNothing
+
     original_runTestSuite = RunnerClass.runTestSuite
-    RunnerClass.runTestSuite = doNothing
+ 
+    if my_test_type == "ScalabilityTest":
+      RunnerClass.runTestSuite = patch_runTestSuite
+    else:
+      RunnerClass.runTestSuite = doNothing
+
+    RunnerClass._prepareSlapOS = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
     self.assertEquals(counter, 3)
@@ -947,7 +957,7 @@ ignore-ssl-certificate = true
       return result
     global startTestSuiteDone
     startTestSuiteDone = False
-    def patch_startTestSuite(self,test_node_title, *args, **kw):
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       config_list = []
       global startTestSuiteDone
       if not startTestSuiteDone:
@@ -980,6 +990,8 @@ ignore-ssl-certificate = true
       return True
     def patch_isRegisteredHostingSubscription(self, *args, **kw):
       return True     
+    def patch_runTestSuite(self, *args, **kw):
+      return {'status_code':0}
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -1020,7 +1032,7 @@ ignore-ssl-certificate = true
     TaskDistributor.getTestType = patch_getTestType    
     TaskDistributionTool.createTestResult = patch_createTestResult
     RunnerClass._prepareSlapOS = doNothing
-    RunnerClass.runTestSuite = doNothing
+    RunnerClass.runTestSuite = patch_runTestSuite
     SlapOSControler.supply = doNothing
     SlapOSControler.request = doNothing
     SlapOSControler.updateInstanceXML = doNothing
