@@ -88,6 +88,14 @@
                           <string>ERP5 Project Unit Test Distributor</string>
                           <string>ERP5 Project Unit Test Distributor</string>
                         </tuple>
+                        <tuple>
+                          <string>ERP5 Scalability Distributor</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5 Scalability Distributor</string>
+                          <string></string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -7,8 +7,17 @@
  <portal_type id="Benchmark Result Line">
   <item>Task</item>
  </portal_type>
+ <portal_type id="ERP5 Scalability Distributor">
+  <item>ScalabilityDistributor</item>
+ </portal_type>
+ <portal_type id="Scalability Test Suite">
+  <item>Arrow</item>
+  <item>ScalabilityTestSuite</item>
+  <item>TestSuite</item>
+ </portal_type>
  <portal_type id="Test Node">
   <item>DublinCore</item>
+  <item>TestNode</item>
  </portal_type>
  <portal_type id="Test Result">
   <item>Comment</item>

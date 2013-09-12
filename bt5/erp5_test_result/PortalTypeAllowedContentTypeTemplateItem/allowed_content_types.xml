@@ -2,9 +2,13 @@
  <portal_type id="Benchmark Result">
   <item>Benchmark Result Line</item>
  </portal_type>
+ <portal_type id="Scalability Test Suite">
+  <item>Test Suite Repository</item>
+ </portal_type>
  <portal_type id="Task Distribution Tool">
   <item>Cloud Performance Unit Test Distributor</item>
   <item>ERP5 Project Unit Test Distributor</item>
+  <item>ERP5 Scalability Distributor</item>
  </portal_type>
  <portal_type id="Test Node Module">
   <item>Test Node</item>
@@ -21,6 +25,7 @@
   <item>Test Suite Repository</item>
  </portal_type>
  <portal_type id="Test Suite Module">
+  <item>Scalability Test Suite</item>
   <item>Test Suite</item>
  </portal_type>
 </allowed_content_type_list>

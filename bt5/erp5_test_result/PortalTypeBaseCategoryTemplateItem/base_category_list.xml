@@ -2,6 +2,9 @@
  <portal_type id="Benchmark Result">
   <item>source_project</item>
  </portal_type>
+ <portal_type id="Scalability Test Suite">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Test Node">
   <item>aggregate</item>
   <item>specialise</item>
