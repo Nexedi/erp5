@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html>\n
+  <head>\n
+<style>\n
+body {\n
+  font: 10px sans-serif;\n
+  text-align:center;\n
+  margin-top: 50px;\n
+}\n
+.axis path,\n
+.axis line {\n
+  fill: none;\n
+  stroke: #000;\n
+  shape-rendering: crispEdges;\n
+}\n
+.bar {\n
+  fill: steelblue;\n
+}\n
+.x.axis path {\n
+  display: none;\n
+}\n
+.bullet .title { font-size: 14px; font-weight: bold; }\n
+</style>\n
+\n
+ <script src="http://d3js.org/d3.v3.js"></script>\n
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>\n
+\n
+ \n
+ </head>\n
+  <body>\n
+  <script>\n
+  \n
+\n
+  //get data from erp5\n
+  var current_url = $(document)[0].baseURI;\n
+  var test_result_url = current_url.substr(0, current_url.lastIndexOf(\'/\'));\n
+  var url = test_result_url+"/TestResult_getJsonScalabilityStats";\n
+  json = $.ajax({\n
+     async: false,\n
+     url: url,\n
+     dataType:"json",\n
+     success: function(data) {\n
+       ret = data;\n
+     }\n
+   }).responseText;\n
+  stats = JSON.parse(json);\n
+  xs = stats.xs;\n
+\n
+if (xs.length != stats.test.length){\n
+  bracket_left = \'<\';\n
+  bracket_right = \'>\';\n
+  bracket_right_end = \'/>\';\n
+  text = bracket_left+"h1 style=\'color:red\'"+bracket_right+"The number of configuration to test ("+xs.length+", defined on test suite document) is \\\n
+not equal to the number of tested configurations for this test result document ("+stats.test.length+").<br> \\\n
+x-scale may not be respected."+bracket_left+"h1"+bracket_right_end;\n
+  document.write(text)\n
+  for(var i=xs.length; i<stats.test.length; i++){\n
+    xs[i]=xs[xs.length-1]+1;\n
+  }\n
+}\n
+\n
+if (xs[0]>1){\n
+  document.write("*Speedup and efficiency determined using case n="+xs[0]+" as perfect.");\n
+}\n
+\n
+x_max = xs[stats.test.length-1];\n
+// just for fun..\n
+//x_max = xs[xs.length-1]+xs[xs.length-1]/4;\n
+// polynomial interpolation using Lagrande method\n
+var n = stats.test.length;\n
+// compute and assign value to display\n
+for(var i=0; i<n; i++) {\n
+  stats.test[i]["value"] = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
+}\n
+// Lagrange interpolation\n
+var L=[];\n
+for (var i=0; i<n; i++) {\n
+  L[i] = 1;\n
+  for (var j = 0; j<n; j++) {\n
+    if(j != i) {\n
+      L[i] *= xs[i]-xs[j];\n
+    }\n
+  }\n
+  L[i] = 1/L[i];\n
+}\n
+function determinate(z,interpolation){\n
+  var a = 0;\n
+  var b = 0;\n
+  var c = 0;\n
+  for (var i=0; i<n; i++) {\n
+    if (z == xs[i]) return stats.test[i].value;\n
+    a = L[i] / (z-xs[i]);\n
+    b += a * stats.test[i].value;\n
+    c += a;\n
+  }\n
+  if (interpolation){\n
+    return  b / c;\n
+  }\n
+  return 0;\n
+}\n
+//used to display histogram\n
+var obj = [];\n
+for(var x=xs[0]; x<=x_max; x++){\n
+  obj[x] = determinate(x,1);\n
+}\n
+//used to plot curve\n
+var obj_raw = [];\n
+for(var x=xs[0]; x<=x_max; x++){\n
+  obj_raw[x] = determinate(x,0);\n
+}\n
+var data = [obj_raw];\n
+var data2 = [obj];\n
+\n
+\n
+var margin = {top: 20, right: 20, bottom: 30, left: 40},\n
+    width = 960 - margin.left - margin.right,\n
+    height = 500 - margin.top - margin.bottom;\n
+\n
+var x0 = d3.scale.ordinal()\n
+    .rangeRoundBands([0, width], .1);\n
+var x1 = d3.scale.ordinal();\n
+\n
+\n
+var y = d3.scale.linear()\n
+    .range([height, 0]);\n
+\n
+function getMaxCoef(){\n
+  var max_coef = 0;\n
+  for(var i=0; i<stats.test.length; i++){\n
+    var coef = 1.0*(3600 * stats.test[i].created_docs / stats.test[i].duration) / xs[i];\n
+    if (coef > max_coef){\n
+      max_coef = coef;\n
+    }\n
+  }\n
+  return max_coef;\n
+}\n
+function getColor(name, value){\n
+  var perfect_value = getMaxCoef()*name;\n
+  var relative_distance = 100*(perfect_value - value) / perfect_value;\n
+  return "rgba("+(parseInt((255.0*relative_distance)/x_max))+","+(parseInt(255-(255.0*relative_distance)/x_max))+",50,0.8)";  \n
+}\n
+\n
+var xAxis = d3.svg.axis()\n
+    .scale(x0)\n
+    .orient("bottom")\n
+    .tickValues(\'\')\n
+\n
+var commasFormatter = d3.format(".2s")\n
+var yAxis = d3.svg.axis()\n
+    .scale(y)\n
+    .orient("left")\n
+    .tickFormat(function(d) { return commasFormatter(d); });\n
+\n
+var svg = d3.select("body").append("svg")\n
+    .attr("width", width + margin.left + margin.right)\n
+    .attr("height", height + margin.top + margin.bottom)\n
+  .append("g")\n
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");\n
+\n
+    \n
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });\n
+  data.forEach(function(d) {\n
+    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });\n
+  });\n
+\n
+  // Domain interval\n
+  x0.domain(data.map(function(d) { return d.State; }));\n
+  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);\n
+  //y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);\n
+  y.domain([0, getMaxCoef()*xs[stats.test.length-1]]);\n
+\n
+  // Trace axis\n
+  svg.append("g")\n
+      .attr("class", "x axis")\n
+      .attr("transform", "translate(0," + height + ")")\n
+      .call(xAxis)\n
+    .append("text")\n
+      .attr("x", width/2)\n
+      .attr("y", 28)\n
+      .attr("dx", ".71em")\n
+      .style("text-anchor", "end")\n
+      .text("X coordinate (count value)");\n
+  \n
+  svg.append("g")\n
+      .attr("class", "y axis")\n
+      .call(yAxis)\n
+    .append("text")\n
+      .attr("transform", "rotate(-90)")\n
+      .attr("y", 6)\n
+      .attr("dy", ".71em")\n
+      .style("text-anchor", "end")\n
+      .text("Documents per hour");\n
+\n
+\n
+\n
+  // Trace perfect scalability: x1*x\n
+  var a = data2[0][xs[0]]/xs[0];\n
+  svg.append("line")\n
+    .attr("x1", x1(xs[0])+x0(0))\n
+    .attr("y1", y(a*xs[0]))\n
+    .attr("x2", x1(x_max)+x0(0))\n
+    .attr("y2", y(a*x_max))\n
+    .attr("stroke-width", 2)\n
+    .attr("stroke", "black");\n
+    \n
+  // Trace perfect all scalability: xi*x | max(\n
+  var max_a = 0;\n
+  for(var i=xs[0]; i<x_max; i++){\n
+    var temp = data2[0][xs[i]]/xs[i];\n
+    if(temp > max_a){\n
+      max_a = temp;\n
+    }\n
+  }\n
+  // There is a better perfect scalability than given by the first test.\n
+  if(a < max_a){\n
+    svg.append("line")\n
+      .attr("x1", x1(xs[0])+x0(0))\n
+      .attr("y1", y(max_a*xs[0]))\n
+      .attr("x2", x1(x_max)+x0(0))\n
+      .attr("y2", y(max_a*x_max))\n
+      .attr("stroke-width", 1)\n
+      .attr("stroke", "red");\n
+  }\n
+  \n
+  //smoothed curve data computation\n
+  var v_1 = [];\n
+  var v_2 = [];\n
+  var data_smoothed = [];\n
+  \n
+  // copy of the vector\n
+  for(var x=xs[0]; x<=x_max; x++){\n
+    v_1[x] = obj[x];\n
+  }\n
+  // smooth\n
+  for(var i=0; i<x_max*2; i++){\n
+    v_2[xs[0]] = v_1[xs[0]];\n
+    for(var x=xs[0]+1; x<=x_max-1; x++){\n
+      v_2[x] = v_1[x]/2 + v_1[x-1]/4 + v_1[x+1]/4;\n
+    }\n
+    v_2[x_max] = v_1[x_max];\n
+    for(var x=xs[0]; x<=x_max; x++){\n
+      v_1[x] = v_2[x];\n
+    }\n
+    data_smoothed = [v_1]; \n
+    // Trace smoothed curve\n
+    var mod_val = parseInt(x_max/5);\n
+    if ( 2 > mod_val ) mod_val = 2;\n
+    if(i % mod_val ==0){\n
+      for(var j=2; j<data2[0].length; j++){\n
+        \n
+        var smoothed_curve_color =  getColor(j-1, data_smoothed[0][j]);\n
+\n
+        svg.append("line")\n
+        .attr("x1", x1(j-1)+x0(0))\n
+        .attr("y1", y(data_smoothed[0][j-1]))\n
+        .attr("x2", x1(j)+x0(0))\n
+        .attr("y2", y(data_smoothed[0][j]))\n
+        .attr("stroke-width", 1)\n
+        .attr("stroke", smoothed_curve_color)\n
+      }\n
+    }\n
+  }\n
+      \n
+  // Trace histogram\n
+  var state = svg.selectAll(".state")\n
+      .data(data)\n
+    .enter().append("g")\n
+      .attr("class", "g")\n
+      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });\n
+\n
+  // Bars\n
+  state.selectAll("rect")\n
+      .data(function(d) { return d.ages; })\n
+    .enter().append("rect")\n
+      .attr("width", x1.rangeBand())\n
+      .attr("x", function(d) { return x1(d.name); })\n
+      .attr("y", function(d) { return y(d.value); }) \n
+      .attr("height", function(d) { return height - y(d.value); })\n
+      .style("fill", function(d) { return getColor(d.name, d.value); });\n
+\n
+  for(var i=0; i<stats.test.length; i++){\n
+    var title = svg.append("g")\n
+    title.append("text")\n
+        .attr("width", x1.rangeBand())\n
+        .attr("x", function(d) { return x1(xs[i])+x0(0); })\n
+        .attr("y", function(d) { return height; }) \n
+        .attr("dy", "1.0em")\n
+        .attr("class", "title")\n
+        .text(xs[i]+"\\n("+(i+1)+")");\n
+  } \n
+\n
+  // trace smoothed curve\n
+  for(var j=2; j<data2[0].length; j++){\n
+\n
+    var smoothed_curve_color =  getColor(j-1, data_smoothed[0][j]);\n
+\n
+    \n
+    svg.append("line")\n
+    .attr("x1", x1(j-1)+x0(0))\n
+    .attr("y1", y(data_smoothed[0][j-1]))\n
+    .attr("x2", x1(j)+x0(0))\n
+    .attr("y2", y(data_smoothed[0][j]))\n
+    .attr("stroke-width", 2)\n
+    .attr("stroke", smoothed_curve_color)\n
+  }\n
+\n
+  // Add number of docs per hour on the top of bars\n
+  for(var j=1; j<data2[0].length; j++){\n
+    if(data[0][j] > 0){\n
+      svg.append("text")\n
+      .attr("x", x1(j)+x0(0))\n
+      .attr("y", y(data[0][j]))\n
+      .attr("dy", "1.0em")\n
+      .attr("stroke-width", 2)\n
+      .attr("class", "title")\n
+      .text(data[0][j]);\n
+    }\n
+  }\n
+\n
+\n
+      \n
+</script>\n
+\n
+\n
+\n
+<!-- speedup / efficiency -->\n
+<table border="1">\n
+<tr><th>n</th><th>Speedup</th><th>Efficiency</th></tr>\n
+\n
+<script type="text/javascript">\n
+bracket_left = \'<\';\n
+\n
+F1 = (3600 * stats.test[0].created_docs / stats.test[0].duration)/xs[0];\n
+for(var i=0; i<stats.test.length; i++){\n
+  document.write(bracket_left+"tr>");\n
+  docs = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
+  speedup = docs/F1;\n
+  document.write(bracket_left+"td>"+xs[i]+bracket_left+"/td>");\n
+  document.write(bracket_left+"td>"+speedup.toFixed(2)+bracket_left+"/td>");\n
+  document.write(bracket_left+"td>"+parseInt(100*speedup/xs[i])+"%"+bracket_left+"/td>");\n
+}\n
+</script>\n
+</table>\n
+\n
+  </body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_result_graph.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>test_result_graphhttps://192.168.242.72:1234/erp5/portal_skins/erp5_test_results/externalEdit_/test_result_graph.html.zem</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

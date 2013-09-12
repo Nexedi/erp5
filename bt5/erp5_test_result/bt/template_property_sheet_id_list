@@ -2,3 +2,6 @@ TestSuite
 TestSuiteRepository
 TestSuiteRepositoryConstraint
 TestSuiteConstraint
+ScalabilityTestSuite
+TestNode
+ScalabilityDistributor

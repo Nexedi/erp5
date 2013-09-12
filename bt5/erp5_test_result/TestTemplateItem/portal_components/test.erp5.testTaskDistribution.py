@@ -1,8 +1,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG,INFO,ERROR 
-from Products.ERP5.Document.ERP5ProjectUnitTestDistributor import \
-  ERP5ProjectUnitTestDistributor
 import json 
+from Products.ERP5Type.Log import log
 
 class TestTaskDistribution(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -18,8 +17,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
     if getattr(tool, "TestPerformanceTaskDistribution", None) is None:
       tool.newContent(id="TestPerformanceTaskDistribution",
            portal_type="Cloud Performance Unit Test Distributor")
+    if getattr(tool, "TestScalabilityTaskDistribution", None) is None:
+      tool.newContent(id="TestScalabilityTaskDistribution",
+           portal_type="ERP5 Scalability Distributor")
     self.distributor = tool.TestTaskDistribution
     self.performance_distributor = tool.TestPerformanceTaskDistribution
+    self.scalability_distributor = tool.TestScalabilityTaskDistribution
     if getattr(portal, "test_test_node_module", None) is None:
       portal.newContent(portal_type="Test Node Module",
                         id="test_test_node_module")
@@ -32,21 +35,40 @@ class TestTaskDistribution(ERP5TypeTestCase):
       x for x in self.test_suite_module.objectIds()])
     self.test_node_module.manage_delObjects(ids=[
       x for x in self.test_node_module.objectIds()])
-    original_class = ERP5ProjectUnitTestDistributor
+
+    original_class = self.distributor.__class__
+    original_scalability_class = self.scalability_distributor.__class__
+    original_performance_class = self.performance_distributor.__class__
+
     self._original_getTestNodeModule = original_class._getTestNodeModule
     def _getTestNodeModule(self):
       return self.getPortalObject().test_test_node_module
     original_class._getTestNodeModule = _getTestNodeModule
+    original_scalability_class._getTestNodeModule = _getTestNodeModule
+    original_performance_class._getTestNodeModule = _getTestNodeModule
+
     self._original_getTestSuiteModule = original_class._getTestSuiteModule
     def _getTestSuiteModule(self):
       return self.getPortalObject().test_test_suite_module
     original_class._getTestSuiteModule = _getTestSuiteModule
+    original_scalability_class._getTestSuiteModule = _getTestSuiteModule
+    original_performance_class._getTestSuiteModule = _getTestSuiteModule
+
     self._cleanupTestResult()
 
   def beforeTearDown(self):
-    original_class = ERP5ProjectUnitTestDistributor
+    original_class = self.distributor.__class__
+    original_scalability_class = self.scalability_distributor.__class__
+    original_performance_class = self.performance_distributor.__class__
+    
     original_class._getTestNodeModule = self._original_getTestNodeModule
     original_class._getTestSuiteModule = self._original_getTestSuiteModule
+    original_scalability_class._getTestNodeModule = self._original_getTestNodeModule
+    original_scalability_class._getTestSuiteModule = self._original_getTestSuiteModule
+    original_performance_class._getTestNodeModule = self._original_getTestNodeModule
+    original_performance_class._getTestSuiteModule = self._original_getTestSuiteModule
+
+
 
   def _createTestNode(self, quantity=1, reference_correction=0,
                       specialise_value=None):
@@ -63,7 +85,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     return test_node_list
 
   def _createTestSuite(self,quantity=1,priority=1, reference_correction=0,
-                       specialise_value=None, title=None):
+                       specialise_value=None, title=None, portal_type="Test Suite",
+                       graph_coordinate="1", cluster_configuration='{ "test": {{ count }} }'):
     if title is None:
       title = ""
     if specialise_value is None:
@@ -73,13 +96,20 @@ class TestTaskDistribution(ERP5TypeTestCase):
       test_suite_title = "test suite %i" % (i + 1 + reference_correction)
       if title:
         test_suite_title += " %s" % title
+
       test_suite =  self.test_suite_module.newContent(
+                    portal_type = portal_type,
                     title = test_suite_title,
                     test_suite_title = test_suite_title,
                     test_suite = 'B%i' % i,
                     int_index = priority,
                     specialise_value = specialise_value,
                    )
+      if portal_type == "Scalability Test Suite":
+        test_suite.setGraphCoordinate(graph_coordinate)
+        test_suite.setClusterConfiguration(cluster_configuration)
+
+
       test_suite.newContent( portal_type= 'Test Suite Repository',
                         branch = 'master',
                         git_url = 'http://git.erp5.org/repos/erp5.git',
@@ -95,8 +125,20 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEquals(test_node.getPortalType(), "Test Node")
 
   def test_02_createTestSuite(self):
+    # Test Test Suite
     test_suite,  = self._createTestSuite()
     self.assertEquals(test_suite.getPortalType(), "Test Suite")
+    self.assertEquals(test_suite.getSpecialise(), self.distributor.getRelativeUrl())
+    # Test Scalability Test Suite
+    scalability_test_suite,  = self._createTestSuite(
+                                 portal_type="Scalability Test Suite",
+                                 specialise_value = self.scalability_distributor
+                               )
+    self.assertEquals(scalability_test_suite.getPortalType(),
+                       "Scalability Test Suite")
+    self.assertEquals(scalability_test_suite.getSpecialise(),
+                       self.scalability_distributor.getRelativeUrl())
+
 
   def _callOptimizeAlarm(self):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
@@ -469,3 +511,233 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEquals(set(['test suite 1-COMP32-Node1',
                            'test suite 2-COMP32-Node1']),
                       set([x['test_suite_title'] for x in config_list]))
+
+  def test_14_subscribeNodeCheckERP5ScalabilityDistributor(self):
+    """
+    Check test node subscription.
+    """
+    test_node_module = self.test_node_module
+    
+    # Generate informations for nodes to subscribe
+    nodes = dict([("COMP%d-Scalability-Node_test14" %i, "COMP-%d" %i) for i in range(0,5)])
+    # Subscribe nodes
+    for node_title in nodes.keys():
+      self.scalability_distributor.subscribeNode(node_title, computer_guid=nodes[node_title])
+    self.tic()
+    # Get validated test nodes
+    test_nodes = test_node_module.searchFolder(validation_state = 'validated')
+    # Get test node title list
+    test_node_titles = [x.getTitle() for x in test_nodes]
+    # Check subscription
+    for node_title in nodes.keys():
+      self.assertTrue(node_title in test_node_titles)
+    # Check ping date
+    # TODO..
+
+  def test_15_optimizeConfigurationCheckElectionERP5ScalabilityDistributor(self):
+    """
+    Check optimizeConfiguration method of scalability distributor.
+     - Check the master election
+    """
+    test_node_module = self.test_node_module
+    
+    ## 1 (check election, classic)
+    # Subscribe nodes
+    self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
+    self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2")
+    self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3")
+    self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")
+    self.tic()
+    # Check test node election
+    def getMasterAndSlaveNodeList():
+      """
+      Optimize the configuration and return which nodes are master/slave
+      """
+      self._callOptimizeAlarm()
+      master_test_node_list = [x for x in test_node_module.searchFolder()\
+                               if (x.getMaster() == True  and x.getValidationState() == 'validated')]
+      slave_test_node_list =  [x for x in test_node_module.searchFolder()\
+                               if (x.getMaster() == False and x.getValidationState() == 'validated')]
+      return master_test_node_list, slave_test_node_list
+    master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
+
+    # -Only one master must be elected
+    self.assertEquals(1, len(master_test_node_list))
+    # -Others test node must not be the matser
+    self.assertEquals(3, len(slave_test_node_list))
+    
+    # Get the current master test node 
+    current_master_test_node_1 = master_test_node_list[0]
+    
+    ## 2 (check election, with adding new nodes)
+    # Add new nodes
+    self.scalability_distributor.subscribeNode("COMP5-Scalability-Node5", computer_guid="COMP-5")
+    self.scalability_distributor.subscribeNode("COMP6-Scalability-Node6", computer_guid="COMP-6")
+    self.tic()
+    # Check test node election
+    master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
+    # -Only one master must be elected
+    self.assertEquals(1, len(master_test_node_list))
+    # -Others test node must not be the matser
+    self.assertEquals(5, len(slave_test_node_list))
+
+    # Get the current master test node
+    current_master_test_node_2 =  master_test_node_list[0]
+    # Master test node while he is alive
+    self.assertEquals(current_master_test_node_1.getTitle(),
+                      current_master_test_node_2.getTitle())
+
+    ## 3 (check election, with master deletion)
+    # Invalidate master
+    current_master_test_node_2.invalidate()
+    # Check test node election
+    master_test_node_list, slave_test_node_list = getMasterAndSlaveNodeList()
+    # -Only one master must be elected
+    self.assertEquals(1, len(master_test_node_list))
+    # -Others test node must not be the matser
+    self.assertEquals(4, len(slave_test_node_list))
+
+    # Get the current master test node 
+    current_master_test_node_3 = master_test_node_list[0]
+    # Master test node must be an other test node than previously
+    self.assertNotEquals(current_master_test_node_2.getTitle(), 
+                         current_master_test_node_3.getTitle())
+    
+
+  def test_16_startTestSuiteERP5ScalabilityDistributor(self):
+    """
+    Check test suite getting, for the scalability case only the master
+    test node receive test suite.
+    """
+    test_node_module = self.test_node_module
+
+    # Subscribe nodes
+    nodes = [self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1"),
+             self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2"),
+             self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3"),
+             self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")]
+     # Create test suite
+    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")  
+    self.tic()
+    self._callOptimizeAlarm()
+    # Get current master test node
+    master_test_nodes = [x for x in test_node_module.searchFolder()\
+                         if (x.getMaster() == True and x.getValidationState() == "validated")]     
+    current_master_test_node = master_test_nodes[0]
+    self.tic()
+    # Each node run startTestSuite
+    config_nodes = {
+                     'COMP1-Scalability-Node1' :
+                        json.loads(self.scalability_distributor.startTestSuite(
+                                   title="COMP1-Scalability-Node1")),
+                     'COMP2-Scalability-Node2' :
+                        json.loads(self.scalability_distributor.startTestSuite(
+                                   title="COMP2-Scalability-Node2")),
+                     'COMP3-Scalability-Node3' :
+                        json.loads(self.scalability_distributor.startTestSuite(
+                                   title="COMP3-Scalability-Node3")),
+                     'COMP4-Scalability-Node4' :
+                        json.loads(self.scalability_distributor.startTestSuite(
+                                   title="COMP4-Scalability-Node4"))
+                   }
+    # Check if master has got a non empty configuration
+    self.assertNotEquals(config_nodes[current_master_test_node.getTitle()], [])
+    # -Delete master test node suite from dict
+    del config_nodes[current_master_test_node.getTitle()]
+    # Check if slave test node have got empty list
+    for suite in config_nodes.values():
+      self.assertEquals(suite, [])
+
+  def test_17_isMasterTestnodeERP5ScalabilityDistributor(self):
+    """
+    Check the method isMasterTestnode()
+    """
+    test_node_module = self.test_node_module
+
+    # Subscribe nodes
+    self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
+    self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2")
+    self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3")
+    self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")
+    self.tic()
+    self._callOptimizeAlarm()
+    # Optimize configuration
+    self.scalability_distributor.optimizeConfiguration()
+    self.tic()
+    # Get test nodes 
+    master_test_nodes = [x for x in test_node_module.searchFolder()
+                         if (x.getMaster() == True and x.getValidationState() == 'validated')]
+    slave_test_nodes = [x for x in test_node_module.searchFolder()
+                         if (x.getMaster() == False and x.getValidationState() == 'validated')]
+    # Check isMasterTestnode method
+    for master in master_test_nodes:
+      self.assertTrue(self.scalability_distributor.isMasterTestnode(master.getTitle()))
+    for slave in slave_test_nodes:
+      self.assertTrue(not self.scalability_distributor.isMasterTestnode(slave.getTitle()))
+
+  def test_18_checkConfigurationGenerationERP5ScalabilityDistributor(self):
+    """
+    Check configuration generation
+    """
+    test_node_module = self.test_node_module
+
+    # Subscribe nodes
+    node_list = [self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1"),
+             self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2"),
+             self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3"),
+             self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")]
+    self.tic()
+    self._callOptimizeAlarm()
+
+    #
+    def generateZopePartitionDict(i):
+      """
+      Generate a configuration wich uses jinja2
+      """
+      partition_dict = ""
+      for j in range(0,i):
+        family_name = ['user', 'activity'][j%2]
+        partition_dict += '"%s-%s":{\n' %(family_name, node_list[j].getReference())
+        partition_dict += ' "instance-count": {{ count }},\n'
+        partition_dict += ' "family": "%s",\n' %family_name
+        partition_dict += ' "computer_guid": "%s"\n' %node_list[j].getReference()
+        partition_dict += '}' 
+        if j != i-1:
+          partition_dict += ',\n'
+        else:
+          partition_dict += '\n'
+      return partition_dict
+
+
+    # Generate a test suite
+    # -Generate a configuration adapted to the test node list length
+    cluster_configuration = '{"zope-partition-dict":{\n'
+    zope_partition_dict = ""
+    for i in range(1, len(node_list)+1):
+      zope_partition_dict += "{%% if count == %d %%}\n" %i
+      zope_partition_dict += generateZopePartitionDict(i)
+      zope_partition_dict += "{% endif %}\n"
+    cluster_configuration += zope_partition_dict + '\n}}'
+    # -Generate graph coordinate
+    graph_coordinate = range(1, len(node_list)+1)
+    # -Create the test suite
+    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+                       specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",
+                       graph_coordinate=graph_coordinate, cluster_configuration=cluster_configuration)
+    self.tic()
+
+    # Master test node launch startTestSuite
+    for node in node_list:
+      if node.getMaster():
+        test_suite_title = self.scalability_distributor.startTestSuite(title=node.getTitle())
+#        log("test_suite_title: %s" %test_suite_title)
+        break
+    # Get configuration list generated from test suite
+#    configuration_list = self.scalability_distributor.generateConfiguration(test_suite_title)
+   
+    # logs
+#    log(configuration_list)    
+
+    def test_19_testMultiDistributor(self):
+      pass
