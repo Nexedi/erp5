@@ -102,6 +102,10 @@ x-scale may not be respected."+bracket_left+"h1"+bracket_right_end;\n
   }\n
 }\n
 \n
+if (xs[0]>1){\n
+  document.write("*Speedup and efficiency determined using case n="+xs[0]+" as perfect.");\n
+}\n
+\n
 x_max = xs[stats.test.length-1];\n
 // just for fun..\n
 //x_max = xs[xs.length-1]+xs[xs.length-1]/4;\n
@@ -368,10 +372,8 @@ var svg = d3.select("body").append("svg")\n
 \n
 <script type="text/javascript">\n
 bracket_left = \'<\';\n
-bracket_right = \'>\';\n
-bracket_right_end = \'/>\';\n
 \n
-F1 = (3600 * stats.test[0].created_docs / stats.test[0].duration);\n
+F1 = (3600 * stats.test[0].created_docs / stats.test[0].duration)/xs[0];\n
 for(var i=0; i<stats.test.length; i++){\n
   document.write(bracket_left+"tr>");\n
   docs = 3600 * stats.test[i].created_docs / stats.test[i].duration;\n
