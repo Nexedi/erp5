@@ -48,6 +48,11 @@ class IComponent(Interface):
     then if no error is returned, validate it
     """
 
+  def checkSourceCode(self):
+    """
+    Check source code statically
+    """
+
   def _getFilesystemPath():
     """
     Return the filesystem Component path for import into ZODB
