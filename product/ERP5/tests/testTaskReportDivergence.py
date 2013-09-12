@@ -33,8 +33,9 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from testTask import TestTaskMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
+from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 
-class TestTaskReportDivergenceMixin(TestTaskMixin):
+class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
   """
     Test business template erp5_project
   """
@@ -132,6 +133,25 @@ class TestTaskReportDivergenceMixin(TestTaskMixin):
     """
     task_report = sequence.get('task_report')
     self.assertEquals('foo', task_report.getComment())
+  
+  def stepCloneTaskReportAndDoWfTransitions(self, sequence=None, **kw):
+    """
+    Create a second task report  by cloning the existing one.
+    """
+    task_report = sequence.get('task_report')
+    self.logout()
+    self.login('alex')
+    cloned_task_report = task_report.Base_createCloneDocument(batch_mode=1)
+    self.tic()
+    self.assertEquals(cloned_task_report.getCausalityState(), 'draft')
+    self.assertEquals(cloned_task_report.getSimulationState(), 'draft')
+    self.assertUserCanPassWorkflowTransition('alex', 'confirm_action', cloned_task_report)
+    cloned_task_report.confirm()
+    self.tic()
+    self.assertEquals(cloned_task_report.getCausalityState(), 'draft')
+    self.assertUserCanPassWorkflowTransition('alex', 'start_action', cloned_task_report)
+    self.assertUserCanPassWorkflowTransition('alex', 'stop_action', cloned_task_report)
+
 
 class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) :
 
@@ -323,6 +343,23 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_05_ClonedTaskReportWorkflowEvolution(self, quiet=quiet, run=run_all_test):
+    """
+
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetStrictSecurity \
+                      ' + self.default_task_sequence + '\
+                      stepCheckTaskReportIsSolved \
+                      \
+                      stepCloneTaskReportAndDoWfTransitions \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTaskReportDivergence))
