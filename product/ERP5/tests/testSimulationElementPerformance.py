@@ -132,7 +132,7 @@ EXPECTED_MIN_MAX_TIME = {
 
   'Creation Of New Sale Invoices': (9, 14),
 
-  'Addition of New Invoices Lines': (36, 44),
+  'Addition of New Invoices Lines': (32, 39),
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
