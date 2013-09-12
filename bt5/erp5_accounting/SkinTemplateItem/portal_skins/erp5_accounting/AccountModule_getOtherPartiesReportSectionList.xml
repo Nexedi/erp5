@@ -65,8 +65,11 @@ simulation_state = request[\'simulation_state\']\n
 role_filter_list = request.get(\'mirror_section_category_list\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
-gap_root = request.get(\'gap_root\', None)\n
 project = request.get(\'project\', None)\n
+\n
+currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
+precision = portal.account_module.getQuantityPrecisionFromResource(currency)\n
+request.set(\'precision\', precision)\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
@@ -140,11 +143,12 @@ for party in context.Account_zDistinctSectionList(\n
     if omit_balanced_accounts and (\n
         round(simulation_tool.getInventoryAssetPrice(\n
                     mirror_section_uid=party.uid,\n
+                    precision=precision,\n
                     node_category_strict_membership=(\n
                           \'account_type/asset/receivable\',\n
                           \'account_type/liability/payable\'),\n
                     **params\n
-                    ), 3) == 0.):\n
+                    ), precision) == 0.):\n
       pass\n
     else:\n
       title = o.getTitle()\n
