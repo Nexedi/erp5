@@ -136,9 +136,14 @@ if memcache is not None:
         for key, action in self.scheduled_action_dict.iteritems():
           encoded_key = encodeKey(key)
           if action is UPDATE_ACTION:
-            succeed = self.memcached_connection.set(encoded_key,
-                                                    self.local_cache[key],
-                                                    expiration_time)
+            if key.endswith('/_revision'):
+              # We want to keep the revision value as long as possible.
+              succeed = self.memcached_connection.set(encoded_key,
+                                                      self.local_cache[key])
+            else:
+              succeed = self.memcached_connection.set(encoded_key,
+                                                      self.local_cache[key],
+                                                      expiration_time)
             if not succeed:
               self._initialiseConnection()
               succeed = self.memcached_connection.set(encoded_key,
@@ -226,15 +231,18 @@ if memcache is not None:
       Each "user" of the dictionary must get an instance of this class.
     """
 
-    def __init__(self, dictionary, prefix):
+    def __init__(self, dictionary, prefix, uid=None):
       """
         dictionary
           Instance of dictionary to share.
         prefix
           Prefix used by the "user" owning an instance of this class.
+        uid
+          Unique ID for the different scope of the revision.
       """
       self._dictionary = dictionary
       self.prefix = prefix
+      self._uid = uid
 
     def _prefixKey(self, key):
       if not isinstance(key, basestring):
@@ -260,6 +268,16 @@ if memcache is not None:
 
     def set(self, key, value):
       self._dictionary.set(self._prefixKey(key), value)
+
+    def getRevision(self):
+      revision = self.get('%s/_revision' % self._uid, None)
+      if revision is None:
+        revision = time.time()
+        self.set('%s/_revision' % self._uid, revision)
+      return revision
+
+    def increaseRevision(self):
+      self.set('%s/_revision' % self._uid, time.time())
 
   allow_class(SharedDict)
 
@@ -291,7 +309,7 @@ if memcache is not None:
       global_prefix = self.erp5_site_global_id
       if global_prefix:
         key_prefix = global_prefix + '_' + key_prefix
-      return SharedDict(memcached_plugin.getConnection(), prefix=key_prefix)
+      return SharedDict(memcached_plugin.getConnection(), prefix=key_prefix, uid=plugin_path)
 
   InitializeClass(MemcachedTool)
 else:

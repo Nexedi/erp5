@@ -56,6 +56,7 @@ class DistributedRamCache(BaseCache):
     )
 
   def __init__(self, uid, params={}):
+    self._uid = uid
     self._servers = params.get('server', '')
     self._expiration_time = params.get('expiration_time', 0)
     self._server_max_key_length = params.get('server_max_key_length', 250)
@@ -93,14 +94,15 @@ class DistributedRamCache(BaseCache):
   def getCacheStorage(self, **kw):
     """Follow MemcachedTool.getMemcachedDict implementation
     """
-    return SharedDict(self._getMemcachedDict(), prefix=self._key_prefix)
+    return SharedDict(self._getMemcachedDict(), prefix=self._key_prefix, uid=self._uid)
 
   def _getCacheId(self, cache_id, scope):
     return '%s_%s' % (scope, cache_id)
 
   def get(self, cache_id, scope, default=_MARKER):
     cache_storage = self.getCacheStorage()
-    cache_id = self._getCacheId(cache_id, scope)
+    revision = cache_storage.getRevision()
+    cache_id = '%s:%s' % (revision, self._getCacheId(cache_id, scope))
     cache_entry = cache_storage.get(cache_id)
     if isinstance(cache_entry, CacheEntry):
       # since some memcached-like products does not support expiration, we
@@ -117,7 +119,8 @@ class DistributedRamCache(BaseCache):
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache_storage = self.getCacheStorage()
-    cache_id = self._getCacheId(cache_id, scope)
+    revision = cache_storage.getRevision()
+    cache_id = '%s:%s' % (revision, self._getCacheId(cache_id, scope))
     cache_entry = CacheEntry(value, cache_duration, calculation_time)
     cache_storage.set(cache_id, cache_entry)
     self.markCacheMiss()
@@ -135,12 +138,14 @@ class DistributedRamCache(BaseCache):
 
   def delete(self, cache_id, scope):
     cache_storage = self.getCacheStorage()
-    cache_id = self._getCacheId(cache_id, scope)
+    revision = cache_storage.getRevision()
+    cache_id = '%s:%s' % (revision, self._getCacheId(cache_id, scope))
     del cache_storage[cache_id]
 
   def has_key(self, cache_id, scope):
     cache_storage = self.getCacheStorage()
-    cache_id = self._getCacheId(cache_id, scope)
+    revision = cache_storage.getRevision()
+    cache_id = '%s:%s' % (revision, self._getCacheId(cache_id, scope))
     cache_entry = cache_storage.get(cache_id)
     to_return = False
     if isinstance(cache_entry, CacheEntry):
@@ -164,7 +169,7 @@ class DistributedRamCache(BaseCache):
     Use expiration time instead.
     """
     BaseCache.clearCache(self)
-    LOG('DistributedRamCache', WARNING, 'not allowed to clear memcache storage')
+    self.getCacheStorage().increaseRevision()
 
   def clearCacheForScope(self, scope):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list.
