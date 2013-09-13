@@ -3022,6 +3022,86 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       }
     )
 
+  def test_17_GetInventoryWithoutDateNoCache(self):
+    """
+     Check getInventory without date when there is no cache.
+    """
+    self.assertEquals(
+      self.INVENTORY_QUANTITY_1 + \
+      self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_3,
+      self.getInventory(node_uid=self.node_uid)
+    )
+
+  def test_17b_GetInventoryWithoutDateCacheEnable(self):
+    """
+     Check getInventory without date. Without date means specifying
+     infinite future date. So it try to retrieve the latest cache.
+
+     Note: This behavior is compatible with the old caching implementation
+     that was using inventory_stock table. In other words, this brings backs
+     the backword compatibility in invetory caching.
+    """
+    # store the right cache
+    self._fillCache()
+    # Check we can get right cache
+    # Note: The real stock value is doubled in assertInventoryEquals().
+    # Thus this equals must be fail when we can not get cache.
+    self.assertInventoryEquals(
+      self.INVENTORY_QUANTITY_1 + \
+      self.INVENTORY_QUANTITY_2 + self.INVENTORY_QUANTITY_3,
+      inventory_kw={
+        'node_uid': self.node_uid,
+      },
+    )
+
+  def test_18_GetInventoryListWithoutDateNoCache(self):
+    """
+     Check that getInventoryList without date.
+    """
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid),
+      [{
+        'date': self.INVENTORY_DATE_3,
+        'inventory': self.INVENTORY_QUANTITY_3,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_2,
+        'inventory': self.INVENTORY_QUANTITY_2,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }],
+    )
+
+
+  def test_18b_GetInventoryListWithoutDateCacheEnable(self):
+    """
+     Check that getInventoryList without date retrives the latest caches.
+   """
+    # store the right cache
+    self._fillCache(True)
+    # break the stock
+    self.doubleStockValue()
+    # Check we get right cache not wrong stock
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid),
+      [{
+        'date': self.INVENTORY_DATE_3,
+        'inventory': self.INVENTORY_QUANTITY_3,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_2,
+        'inventory': self.INVENTORY_QUANTITY_2,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }],
+    )
+
 
 class BaseTestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_DICT = {}
