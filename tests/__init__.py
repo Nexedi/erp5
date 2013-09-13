@@ -140,4 +140,23 @@ class ERP5_simulation(_ERP5):
     return super(ERP5_simulation, self).runUnitTest(
       erp5_report_new_simulation_failures='1', *args, **kw)
 
+class ERP5_scalability(_ERP5):
 
+  def getTestList(self):
+    return ['createPerson', 'createSaleOrder', 'createWebPage']
+
+  def getTestPath(self):
+    return 'erp5/util/benchmark/examples/'
+    
+  def getUsersFilePath(self):
+    return 'erp5/util/benchmark/examples/scalabilityUsers'
+
+  def getUserNumber(self, test_number):
+    return [45, 135, 170, 220, 250][test_number]
+
+  # Test duration in seconds
+  def getTestDuration(self, test_number):
+    return 60*10
+
+  def getTestRepetition(self, test_number):
+    return 3
