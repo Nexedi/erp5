@@ -3022,6 +3022,45 @@ class TestInventoryCacheTable(InventoryAPITestCase):
       }
     )
 
+  def test_17_GetInventoryWithoutDate(self):
+    """
+     Check getInventory without date. Without date means specifying
+     infinite future date. So it try to retrieve the latest cache.
+
+     Note: This behavior is compatible with the old caching implementation
+     that was using inventory_stock table. In other words, this brings backs
+     the backword compatibility in invetory caching.
+    """
+    self.assertInventoryEquals(
+      self._fillCache(),
+      inventory_kw={
+        'node_uid': self.node_uid,
+      },
+    )
+
+  def test_18_GetInventoryWithoutDate(self):
+    """
+     Check that getInventoryList without date retrives the latest caches.
+    """
+    self._fillCache(True)
+    # Check we got all results
+    self._checkInventoryList(
+      self.getInventoryList(node_uid=self.node_uid),
+      [{
+        'date': self.INVENTORY_DATE_3,
+        'inventory': self.INVENTORY_QUANTITY_3,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_2,
+        'inventory': self.INVENTORY_QUANTITY_2,
+        'node_uid': self.node_uid,
+      }, {
+        'date': self.INVENTORY_DATE_1,
+        'inventory': self.INVENTORY_QUANTITY_1,
+        'node_uid': self.node_uid,
+      }],
+    )
+
 
 class BaseTestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_DICT = {}
