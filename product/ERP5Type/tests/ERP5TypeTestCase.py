@@ -909,6 +909,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       connection_dict = _getVolatileMemcachedServerDict()
       url_string = '%(hostname)s:%(port)s' % connection_dict
       portal_memcached.default_memcached_plugin.setUrlString(url_string)
+      portal_caches = self.portal.portal_caches
+      portal_caches.updateCache()
 
     def _recreateCatalog(self, quiet=0):
       """Clear activities and catalog and recatalog everything.
@@ -1053,6 +1055,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               # Release locks
               self.commit()
             self.portal = portal = self.getPortal()
+            self._updateMemcachedConfiguration()
 
             if len(setup_done) == 1: # make sure it is run only once
               self._setUpDummyMailHost()
@@ -1066,7 +1069,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                               light_install=light_install,
                                               quiet=quiet)
             self._updateConversionServerConfiguration()
-            self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
