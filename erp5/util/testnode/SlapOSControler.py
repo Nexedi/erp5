@@ -33,6 +33,8 @@ import xml_marshaller
 import shutil
 import sys
 import glob
+import argparse
+from slapos import client
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
@@ -47,6 +49,20 @@ def createFolders(folder):
   if not(os.path.exists(folder)):
     os.makedirs(folder)
 
+def isDir(folder):
+  return os.path.isdir(folder)
+
+def createFile(path, mode, content):
+  f = open(path, mode)
+  if os.path.exists(path):
+    f.write(content)
+    f.close()
+  else:
+    # error
+    pass
+
+
+
 class SlapOSControler(object):
 
   def __init__(self, working_directory, config, log):
@@ -54,8 +70,175 @@ class SlapOSControler(object):
     self.software_root = os.path.join(working_directory, 'soft')
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
-    self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.log = log
+    self.proxy_database = os.path.join(working_directory, 'proxy.db')
+    self.instance_config = {}
+
+  #TODO: implement a method to get all instance related the slapOS account
+  # and deleting all old instances (based on creation date or name etc...)
+
+  def createSlaposConfigurationFileAccount(self, key, certificate, slapos_url, config):
+    # Create "slapos_account" directory in the "slapos_directory"
+    slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
+    createFolder(slapos_account_directory)
+    # Create slapos-account files
+    slapos_account_key_path = os.path.join(slapos_account_directory, "key")
+    slapos_account_certificate_path = os.path.join(slapos_account_directory, "certificate")
+    configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
+    configuration_file_value = "[slapos]\nmaster_url = %s\n\
+[slapconsole]\ncert_file = %s\nkey_file = %s" %(
+                                  slapos_url,
+                                  slapos_account_certificate_path,
+                                  slapos_account_key_path)
+    createFile(slapos_account_key_path, "w", key)
+    createFile(slapos_account_certificate_path, "w", certificate)
+    createFile(configuration_file_path, "w", configuration_file_value)
+    self.configuration_file_path = configuration_file_path
+    return slapos_account_key_path, slapos_account_certificate_path, configuration_file_path
+
+  def supply(self, software_url, computer_id, state="available"):
+    """
+    Request the installation of a software release on a specific node
+    Ex :
+    my_controler.supply('kvm.cfg', 'COMP-726')
+    """
+    self.log('SlapOSControler : supply')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("configuration_file")
+    parser.add_argument("software_url")
+    parser.add_argument("node")
+    if os.path.exists(self.configuration_file_path):
+      args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
+      config = client.Config()
+      config.setConfig(args, args.configuration_file)
+      try:
+        local = client.init(config)
+        local['supply'](software_url, computer_guid=computer_id, state=state)
+        self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
+      except:
+        self.log("SlapOSControler.supply, \
+                 exception in registerOpenOrder", exc_info=sys.exc_info())
+        raise ValueError("Unable to supply (or remove)")
+    else:
+      raise ValueError("Configuration file not found.")
+
+  def destroy(self, software_url, computer_id):
+    """
+    Request Deletetion of a software release on a specific node
+    Ex :
+    my_controler.destroy('kvm.cfg', 'COMP-726')
+    """
+    self.supply(self, software_url, computer_id, state="destroyed")
+    
+  def getInstanceRequestedState(self, reference):
+    try:
+      return self.instance_config[reference]['requested_state']
+    except:
+      raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
+      
+  def request(self, reference, software_url, software_type=None,
+            software_configuration=None, computer_guid=None, state='started'):
+    """
+    configuration_file_path (slapos acount)
+    reference : instance title
+    software_url : software path/url
+    software_type : scalability
+    software_configuration : dict { "_" : "{'toto' : 'titi'}" } 
+
+    Ex :
+    my_controler._request('Instance16h34Ben',
+                               'kvm.cfg', 'cluster', { "_" : "{'toto' : 'titi'}" } )
+
+    """
+    self.log('SlapOSControler : request-->SlapOSMaster')
+    current_intance_config = {'software_type':software_type,
+                              'software_configuration':software_configuration,
+                              'computer_guid':computer_guid,
+                              'software_url':software_url,
+                              'requested_state':state,
+                              'partition':None
+                              }
+    self.instance_config[reference] = current_intance_config
+
+    filter_kw = None
+    if computer_guid != None:
+      filter_kw = { "computer_guid": computer_guid }
+    if os.path.exists(self.configuration_file_path):
+      parser = argparse.ArgumentParser()
+      parser.add_argument("configuration_file")
+      args = parser.parse_args([self.configuration_file_path])
+      config = client.Config()
+      config.setConfig(args, args.configuration_file)
+      try:
+        local = client.init(config)
+        partition = local['request'](
+          software_release = software_url,
+          partition_reference = reference,
+          partition_parameter_kw = software_configuration,
+          software_type = software_type,
+          filter_kw = filter_kw,
+          state = state)
+        self.instance_config[reference]['partition'] = partition
+        if state == 'destroyed':
+          del self.instance_config[reference]
+        if state == 'started':
+          self.log('Instance started with configuration: %s' %str(software_configuration))
+      except:
+        self.log("SlapOSControler.request, \
+              exception in registerOpenOrder", exc_info=sys.exc_info())
+        raise ValueError("Unable to do this request")
+    else:
+      raise ValueError("Configuration file not found.")
+
+  def _requestSpecificState(self, reference, state):
+    self.request(reference,
+        self.instance_config[reference]['software_url'],
+        self.instance_config[reference]['software_type'],
+        self.instance_config[reference]['software_configuration'],
+        self.instance_config[reference]['computer_guid'],
+        state=state
+    )    
+  
+  def destroyInstance(self, reference):
+    self.log('SlapOSControler : delete instance')
+    try:
+      self._requestSpecificState(reference, 'destroyed')
+    except:
+      raise ValueError("Can't delete instance '%s' (instance may not been created?)" %reference)
+    
+  def stopInstance(self, reference):
+    self.log('SlapOSControler : stop instance')
+    try:
+      self._requestSpecificState(reference, 'stopped')
+    except:
+      raise ValueError("Can't stop instance '%s' (instance may not been created?)" %reference)
+  
+  def startInstance(self, reference):
+    self.log('SlapOSControler : start instance')
+    try:
+      self._requestSpecificState(reference, 'started')
+    except:
+      raise ValueError("Can't start instance '%s' (instance may not been created?)" %reference)
+
+  def updateInstanceXML(self, reference, software_configuration):
+    """
+    Update the XML configuration of an instance
+    # Request same instance with different parameters.
+    """
+    self.log('SlapOSControler : updateInstanceXML')
+    self.log('SlapOSControler : updateInstanceXML will request same'
+             'instance with new XML configuration...')
+
+    try:
+      self.request(reference,
+        self.instance_config[reference]['software_url'],
+        self.instance_config[reference]['software_type'],
+        software_configuration,
+        self.instance_config[reference]['computer_guid'],
+        state='started'
+      )
+    except:
+      raise ValueError("Can't update instance '%s' (may not exist?)" %reference)
 
   def _resetSoftware(self):
     self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %
@@ -64,7 +247,6 @@ class SlapOSControler(object):
       shutil.rmtree(self.software_root)
     os.mkdir(self.software_root)
     os.chmod(self.software_root, 0750)
-
 
   def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
         reset_software=False, software_path_list=None):
