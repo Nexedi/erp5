@@ -61,7 +61,7 @@ if len(kw):\n
 \n
 catalog_kw = {\'limit\' : limit}\n
 if min_id and id_list:\n
-  raise NotImplementError\n
+  raise NotImplementedError\n
 \n
 if min_id:\n
   catalog_kw[\'id\'] = {\'query\': min_id, \'range\': \'nlt\'}\n
