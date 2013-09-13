@@ -1160,7 +1160,7 @@ class ContextMainForm(MainForm):
 
       column_type = 'td'
 
-    xpath_str = '%s//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
+    xpath_str = '%s//tbody//tr[%d]//%s[%d]/*[not(@type="hidden") and ' \
         'not(contains(@class, "hidden"))][%d]' % \
         (listbox_basic_xpath_str,
          relative_line_number,
