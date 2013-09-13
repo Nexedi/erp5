@@ -60,8 +60,10 @@ FROM \n
   inventory_cache \n
 WHERE \n
   inventory_cache.query=<dtml-sqlvar query type="string"> \n
+<dtml-if date>\n
   AND \n
-  inventory_cache.date <= <dtml-sqlvar date type="datetime"> \n
+  inventory_cache.date <= <dtml-sqlvar date type="datetime">\n
+</dtml-if>\n
 ORDER BY \n
   date DESC
 
