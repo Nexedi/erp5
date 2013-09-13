@@ -41,7 +41,7 @@ class ArgumentType(object):
 
   @classmethod
   def objectFromModule(cls, module_name, object_name=None,
-                       callable_object=False):
+                       callable_object=False, searchable_path_list=None):
     if module_name.endswith('.py'):
       module_name = module_name[:-3]
 
@@ -50,6 +50,10 @@ class ArgumentType(object):
 
     import sys
     sys.path.append(os.getcwd())
+    
+    if searchable_path_list:
+      for path in searchable_path_list:
+        sys.path.append(path)
 
     try:
       module = __import__(module_name, globals(), locals(), [object_name], -1)
