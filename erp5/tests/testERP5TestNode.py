@@ -1,12 +1,16 @@
 from unittest import TestCase
 
 from erp5.util.testnode.testnode import TestNode
-from erp5.util.testnode.testnode import SlapOSInstance
+from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 from erp5.util.testnode.Updater import Updater
 
+from erp5.util.testnode.SlapOSMasterCommunicator import SlapOSMasterCommunicator
 from erp5.util.testnode.SlapOSControler import SlapOSControler
+from erp5.util.testnode.UnitTestRunner import UnitTestRunner
+from erp5.util.testnode.ScalabilityTestRunner import ScalabilityTestRunner
 from erp5.util.testnode.SlapOSControler import createFolder
+
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TaskDistributionTool
 from erp5.util.taskdistribution import TestResultProxy
@@ -25,6 +29,7 @@ class ERP5TestNode(TestCase):
     self._temp_dir = tempfile.mkdtemp()
     self.working_directory = os.path.join(self._temp_dir, 'testnode')
     self.slapos_directory = os.path.join(self._temp_dir, 'slapos')
+    self.software_directory = os.path.join(self._temp_dir, 'software_directory')
     self.test_suite_directory = os.path.join(self._temp_dir,'test_suite')
     self.environment = os.path.join(self._temp_dir,'environment')
     self.log_directory = os.path.join(self._temp_dir,'var/log/testnode')
@@ -36,6 +41,7 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
     os.mkdir(self.test_suite_directory)
+    os.mkdir(self.software_directory)
     os.mkdir(self.environment)
     os.mkdir(self.system_temp_folder)
     os.makedirs(self.log_directory)
@@ -45,8 +51,16 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository2)
     def log(*args,**kw):
       for arg in args:
-        print "TESTNODE LOG : %r" % (arg,)
+        print "TESTNODE LOG : %r, %r" % (arg, kw)
     self.log = log
+
+  def returnGoodClassRunner(self, test_type):
+      if test_type == 'UnitTest':
+        return UnitTestRunner
+      elif test_type == 'ScalabilityTest':
+        return ScalabilityTestRunner
+      else:
+        raise NotImplementedError
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
@@ -55,15 +69,23 @@ class ERP5TestNode(TestCase):
     # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "git"
-    config["slapos_directory"] = config["working_directory"] = self.working_directory
+    config["slapos_directory"] = self.slapos_directory
+    config["working_directory"] = self.working_directory
+    config["software_directory"] = self.software_directory
     config["node_quantity"] = 3
     config["test_suite_directory"] = self.test_suite_directory
     config["environment"] = self.environment
     config["log_directory"] = self.log_directory
     config["log_file"] = self.log_file
     config["test_suite_master_url"] = None
+    config["hateoas_slapos_master_url"] = None
     config["test_node_title"] = "Foo-Test-Node"
     config["system_temp_folder"] = self.system_temp_folder
+    config["computer_id"] = "COMP-TEST"
+    config["server_url"] = "http://foo.bar"
+    config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
+    config["httpd_software_access_port"] = "9080"
+    
     return TestNode(self.log, config)
 
   def getTestSuiteData(self, add_third_repository=False, reference="foo"):
@@ -91,6 +113,9 @@ class ERP5TestNode(TestCase):
 
   def updateNodeTestSuiteData(self, node_test_suite,
                               add_third_repository=False):
+    """
+    Update from zero/Regenerate the testsuite
+    """
     node_test_suite.edit(working_directory=self.working_directory,
        **self.getTestSuiteData(add_third_repository=add_third_repository)[0])
 
@@ -143,7 +168,7 @@ class ERP5TestNode(TestCase):
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
     return commit_dict
 
-  def test_01_getDelNodeTestSuite(self):
+  def test_01_getDelNodeTestSuite(self, my_test_type='UnitTest'):
     """
     We should be able to get/delete NodeTestSuite objects inside test_node
     """
@@ -156,7 +181,7 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
 
-  def test_02_NodeTestSuiteWorkingDirectory(self):
+  def test_02_NodeTestSuiteWorkingDirectory(self, my_test_type='UnitTest'):
     """
     Make sure we extend the working path with the node_test_suite reference
     """
@@ -168,7 +193,7 @@ class ERP5TestNode(TestCase):
     self.assertEquals("%s/foo/test_suite" % self.working_directory,
                       node_test_suite.test_suite_directory)
 
-  def test_03_NodeTestSuiteCheckDataAfterEdit(self):
+  def test_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='UnitTest'):
     """
     When a NodeTestSuite instance is edited, the method _checkData
     analyse properties and add new ones
@@ -184,18 +209,22 @@ class ERP5TestNode(TestCase):
                      "%s/rep1" % node_test_suite.working_directory]
     self.assertEquals(expected_list, repository_path_list)
 
-  def test_04_constructProfile(self):
+  def test_04_constructProfile(self, my_test_type='UnitTest'):
     """
     Check if the software profile is correctly generated
-    """
+    """  
     test_node = self.getTestNode()
+    test_node.test_suite_portal = TaskDistributor
+    test_node.test_suite_portal.getTestNode = TaskDistributor.getTestType
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    test_node.constructProfile(node_test_suite)
+    node_test_suite.revision = 'rep1=1234-azerty,rep2=3456-qwerty'
+    test_node.constructProfile(node_test_suite,my_test_type)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
     profile = open(node_test_suite.custom_profile_path, 'r')
-    expected_profile = """
+    if my_test_type=='UnitTest':
+      expected_profile = """
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
@@ -207,10 +236,27 @@ branch = master
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
 """ % {'temp_dir': self._temp_dir}
+    else:
+      revision1 = "azerty"
+      revision2 = "qwerty"
+      expected_profile = """
+[buildout]
+extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
+
+[rep1]
+repository = <obfuscated_url>/rep1/rep1.git
+revision = %(revision1)s
+ignore-ssl-certificate = true
+
+[rep2]
+repository = <obfuscated_url>/rep2/rep2.git
+revision = %(revision2)s
+ignore-ssl-certificate = true
+""" % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_05_getAndUpdateFullRevisionList(self):
+  def test_05_getAndUpdateFullRevisionList(self, my_test_type='UnitTest'):
     """
     Check if we clone correctly repositories and get right revisions
     """
@@ -234,7 +280,7 @@ branch = foo
     for vcs_repository in node_test_suite.vcs_repository_list:
       self.assertTrue(os.path.exists(vcs_repository['repository_path']))
 
-  def test_05b_changeRepositoryBranch(self):
+  def test_05b_changeRepositoryBranch(self, my_test_type='UnitTest'):
     """
     It could happen that the branch is changed for a repository. Testnode must
     be able to reset correctly the branch
@@ -307,7 +353,7 @@ branch = foo
     finally:
       Updater.deleteRepository = original_deleteRepository
 
-  def test_06_checkRevision(self):
+  def test_06_checkRevision(self, my_test_type='UnitTest'):
     """
     Check if we are able to restore older commit hash if master decide so
     """
@@ -344,7 +390,7 @@ branch = foo
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
 
-  def test_07_checkExistingTestSuite(self):
+  def test_07_checkExistingTestSuite(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
@@ -360,7 +406,7 @@ branch = foo
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_08_getSupportedParamaterSet(self):
+  def test_08_getSupportedParamaterSet(self, my_test_type='UnitTest'):
     original_spawn = ProcessManager.spawn
     try:
       def get_help(self, *args, **kw):
@@ -377,7 +423,7 @@ branch = foo
     finally:
       ProcessManager.spawn = original_spawn
 
-  def test_09_runTestSuite(self):
+  def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
     Check parameters passed to runTestSuite
     Also make sure that --firefox_bin and --xvfb_bin are passed when needed
@@ -385,36 +431,46 @@ branch = foo
     original_getSupportedParameter = ProcessManager.getSupportedParameterSet
     original_spawn = ProcessManager.spawn
     try:
+      # Create a file
       def _createPath(path_to_create, end_path):
         os.makedirs(path_to_create)
         return os.close(os.open(os.path.join(path_to_create,
                                  end_path),os.O_CREAT))
+      
       def get_parameters(self, *args, **kw):
         call_parameter_list.append({'args': [x for x in args], 'kw':kw})
+      
       def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
        if '--firefox_bin' and '--xvfb_bin' in parameter_list:
          return set(['--firefox_bin','--xvfb_bin'])
        else:
          return []
+      
       test_node = self.getTestNode()
-      test_node.slapos_controler = SlapOSControler(self.working_directory,
-                                               test_node.config, self.log)
+      RunnerClass = self.returnGoodClassRunner(my_test_type)
+      runner = RunnerClass(test_node)
+      # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
       self.updateNodeTestSuiteData(node_test_suite)
       node_test_suite.revision = 'dummy'
+      # Path to the dummy runable
       run_test_suite_path = _createPath(
-          os.path.join(test_node.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+          os.path.join(runner.slapos_controler.instance_root,'a/bin'),'runTestSuite')
+
       def checkRunTestSuiteParameters(additional_parameter_list=None):
         ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
         ProcessManager.spawn = get_parameters
-        test_node.runTestSuite(node_test_suite,"http://foo.bar")
+        RunnerClass = self.returnGoodClassRunner(my_test_type)
+        runner = RunnerClass(test_node)
+        runner.runTestSuite(node_test_suite,"http://foo.bar")
         expected_parameter_list = ['%s/a/bin/runTestSuite'
-             %(test_node.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
-             'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
-             'http://foo.bar']
+           %(runner.slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
+           'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
+           'http://foo.bar']
         if additional_parameter_list:
           expected_parameter_list.extend(additional_parameter_list)
         self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
+
       call_parameter_list = []
       checkRunTestSuiteParameters()
       _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
@@ -427,12 +483,14 @@ branch = foo
         '%s/soft/a/parts/xserver/bin/Xvfb'
           %(test_node.config['slapos_directory'])])
     finally:
-      ProcessManager.getSupportedParameterSet   = original_getSupportedParameter
+      ProcessManager.getSupportedParameterSet = original_getSupportedParameter
       ProcessManager.spawn = original_spawn
 
-  def test_10_prepareSlapOS(self):
+  def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
     test_node_slapos = SlapOSInstance()
+    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    runner = RunnerClass(test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
     status_dict = {"status_code" : 0}
@@ -448,39 +506,72 @@ branch = foo
                          "args": [x for x in args],
                           "kw": kw})
         return {"status_code": self.status_code}
+    
     SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
     SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
     SlapOSControler.runComputerPartition = Patch("runComputerPartition")
-    test_node.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease"],
+    method_list_for_prepareSlapOSForTestNode = ["initializeSlapOSControler",
+                                                   "runSoftwareRelease"]
+    method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
+                                 "runSoftwareRelease", "runComputerPartition"]
+    runner.prepareSlapOSForTestNode(test_node_slapos)
+    self.assertEquals(method_list_for_prepareSlapOSForTestNode,
                       [x["method_name"] for x in call_list])
     call_list = []
-    test_node.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEquals(["initializeSlapOSControler", "runSoftwareRelease",
-                       "runComputerPartition"],
+    runner.prepareSlapOSForTestSuite(node_test_suite)
+    self.assertEquals(method_list_for_prepareSlapOSForTestSuite,
                       [x["method_name"] for x in call_list])
     call_list = []
     SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
-    self.assertRaises(SubprocessError, test_node.prepareSlapOSForTestSuite,
+    # TODO : write a test for scalability case
+    self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
                      node_test_suite)
 
-  def test_11_run(self):
+  def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
         pass
+    # Used in case of 'ScalabilityTest'
+    def patch_getTestType(self, *args, **kw):
+      return my_test_type
+    def patch_getSlaposAccountKey(self, *args, **kw):
+      return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+      return "Certificate"
+    def patch_getSlaposUrl(self, *args, **kw):
+      return "http://Foo"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
+    def patch_generateConfiguration(self, *args, **kw):
+      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
+"launchable": False, "randomized_path" : "azertyuiop"})
+    def patch_isMasterTestnode(self, *args, **kw):
+      return (grade == 'master')
+    def patch_isHostingSubscriptionReady(self, *args, **kw):
+      return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True      
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title):
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       global counter
       config_list = []
+      # Sclalability slave testnode is not directly in charge of testsuites
+      if my_test_type == 'ScalabilityTest' and grade == 'slave':
+        if counter == 5:
+          raise StopIteration
+        counter += 1
+        return json.dumps([])
+          
       def _checkExistingTestSuite(reference_set):
         test_self.assertEquals(set(reference_set),
-                    set(os.listdir(test_node.config["working_directory"])))
+                  set(os.listdir(test_node.working_directory)))
         for x in reference_set:
           test_self.assertTrue(os.path.exists(os.path.join(
-                               test_node.config["working_directory"],x)),True)
+                             test_node.working_directory,x)),True)
       if counter == 0:
         config_list.append(test_self.getTestSuiteData(reference='foo')[0])
         config_list.append(test_self.getTestSuiteData(reference='bar')[0])
@@ -514,28 +605,75 @@ branch = foo
         result =  TestResultProxy(self._proxy, self._retry_time,
                 self._logger, test_result_path, node_title, revision)
       return result
+    def patch_runTestSuite(self, *argv, **kw):
+      return {'status_code':0}
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
+    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    # Patch
+    if my_test_type == "ScalabilityTest":
+      original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+      original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+      original_getSlaposUrl = TaskDistributor.getSlaposUrl
+      original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
+      original_generateConfiguration = TaskDistributor.generateConfiguration
+      original_isMasterTestnode = TaskDistributor.isMasterTestnode
+      original_updateInstanceXML = RunnerClass._updateInstanceXML
+      original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
+      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
+      original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
+      TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+      TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
+      TaskDistributor.generateConfiguration = patch_generateConfiguration
+      TaskDistributor.isMasterTestnode = patch_isMasterTestnode
+      RunnerClass._updateInstanceXML = doNothing
+      SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
+      SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
-    TaskDistributor.startTestSuite = patch_startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
     original_createTestResult = TaskDistributionTool.createTestResult
+    TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType
     TaskDistributionTool.createTestResult = patch_createTestResult
-    test_node = self.getTestNode()
-    original_prepareSlapOS = test_node._prepareSlapOS
-    test_node._prepareSlapOS = doNothing
-    original_runTestSuite = test_node.runTestSuite
-    test_node.runTestSuite = doNothing
+
+    # TestNode
+    test_node = self.getTestNode()  
+    # Modify class UnitTestRunner(or more after) method 
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+    original_runTestSuite = RunnerClass.runTestSuite
+    RunnerClass._prepareSlapOS = doNothing
+    RunnerClass.runTestSuite = patch_runTestSuite
     SlapOSControler.initializeSlapOSControler = doNothing
+    # Inside test_node a runner is created using new UnitTestRunner methods
     test_node.run()
     self.assertEquals(5, counter)
     time.sleep = original_sleep
+    # Restore old class methods
+    if my_test_type == "ScalabilityTest":
+      TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+      TaskDistributor.getSlaposUrl = original_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
+      TaskDistributor.generateConfiguration = original_generateConfiguration
+      TaskDistributor.isMasterTestnode = original_isMasterTestnode
+      RunnerClass._updateInstanceXML = original_updateInstanceXML
+      SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
+      SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    test_node._prepareSlapOS = original_prepareSlapOS
-    test_node.runTestSuite = original_runTestSuite
+    TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_12_spawn(self):
+  def test_12_spawn(self, my_test_type='UnitTest'):
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
@@ -545,7 +683,7 @@ branch = foo
     # it will be automatically killed
     self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
 
-  def test_13_SlaposControlerResetSoftware(self):
+  def test_13_SlaposControlerResetSoftware(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
     controler = SlapOSControler(self.working_directory,
                                 test_node.config, self.log)
@@ -557,7 +695,7 @@ branch = foo
     controler._resetSoftware()
     self.assertEquals([], os.listdir(controler.software_root))
 
-  def test_14_createFolder(self):
+  def test_14_createFolder(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
@@ -572,15 +710,37 @@ branch = foo
     createFolder(folder, clean=True)
     self.assertEquals(False, os.path.exists(to_drop_path))
 
-  def test_15_suite_log_directory(self):
+  def test_15_suite_log_directory(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
-        pass
+      pass
+    # Used in case of 'ScalabilityTest'
+    def patch_getTestType(self, *args, **kw):
+      return my_test_type
+    def patch_getSlaposAccountKey(self, *args, **kw):
+      return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+      return "Certificate"
+    def patch_getSlaposUrl(self, *args, **kw):
+      return "http://Foo"
+      return "Certificate"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
+    def patch_generateConfiguration(self, *args, **kw):
+      return json.dumps({"configuration_list": [], "involved_nodes_computer_guid"\
+: [], "error_message": "No error.", "launcher_nodes_computer_guid": [], \
+"launchable": False, "randomized_path" : "azertyuiop"})
+    def patch_isMasterTestnode(self, *args, **kw):
+      return grade == 'master'
+    def patch_isHostingSubscriptionReady(self, *args, **kw):
+      return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True     
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
     global counter
     counter = 0
-    def patch_startTestSuite(self,test_node_title):
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
       global counter
       config_list = [test_self.getTestSuiteData(reference='aa')[0],
                      test_self.getTestSuiteData(reference='bb')[0]]
@@ -596,6 +756,8 @@ branch = foo
       result = TestResultProxy(self._proxy, self._retry_time,
                self._logger, test_result_path, node_title, revision)
       return result
+    def patch_runTestSuite(self,*argv, **kw):
+      return {'status_code':0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
@@ -616,29 +778,82 @@ branch = foo
         self.assertEquals(1, len([x for x in suite_log.readlines() \
                               if x.find("Activated logfile")>=0]))
 
+    RunnerClass = self.returnGoodClassRunner(my_test_type)
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
+    if my_test_type == "ScalabilityTest":
+      original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+      original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+      original_getSlaposUrl = TaskDistributor.getSlaposUrl
+      original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
+      original_generateConfiguration = TaskDistributor.generateConfiguration
+      original_isMasterTestnode = TaskDistributor.isMasterTestnode
+      original_supply = SlapOSControler.supply
+      original_request = SlapOSControler.request
+      original_updateInstanceXML = RunnerClass._updateInstanceXML
+      original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
+      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
+      original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
+      TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+      TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
+      TaskDistributor.generateConfiguration = patch_generateConfiguration
+      TaskDistributor.isMasterTestnode = patch_isMasterTestnode
+      SlapOSControler.supply = doNothing
+      SlapOSControler.request = doNothing
+      RunnerClass._updateInstanceXML = doNothing
+      SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
+      SlapOSMasterCommunicator.__init__ = doNothing
     original_startTestSuite = TaskDistributor.startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
     TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType
     original_createTestResult = TaskDistributionTool.createTestResult
     TaskDistributionTool.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
-    original_prepareSlapOS = test_node._prepareSlapOS
-    test_node._prepareSlapOS = doNothing
-    original_runTestSuite = test_node.runTestSuite
-    test_node.runTestSuite = doNothing
+    # Change UnitTestRunner class methods
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+
+    original_runTestSuite = RunnerClass.runTestSuite
+ 
+    if my_test_type == "ScalabilityTest":
+      RunnerClass.runTestSuite = patch_runTestSuite
+    else:
+      RunnerClass.runTestSuite = doNothing
+
+    RunnerClass._prepareSlapOS = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
     self.assertEquals(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
+    # Restore old class methods
+    if my_test_type == "ScalabilityTest":
+      TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+      TaskDistributor.getSlaposUrl = original_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
+      TaskDistributor.generateConfiguration = original_generateConfiguration
+      TaskDistributor.isMasterTestnode = original_isMasterTestnode
+      SlapOSControler.supply =original_supply
+      SlapOSControler.request = original_request
+      SlapOSControler.updateInstanceXML = original_updateInstanceXML
+      SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
+      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
+      SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.startTestSuite = original_startTestSuite
     TaskDistributionTool.createTestResult = original_createTestResult
-    test_node._prepareSlapOS = original_prepareSlapOS
-    test_node.runTestSuite = original_runTestSuite
+    TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_16_cleanupLogDirectory(self):
+  def test_16_cleanupLogDirectory(self, my_test_type='UnitTest'):
     # Make sure that we are able to cleanup old log folders
     test_node = self.getTestNode()
     def check(file_list):
@@ -659,7 +874,7 @@ branch = foo
     test_node._cleanupLog()
     check(set(['a_file']))
 
-  def test_17_cleanupTempDirectory(self):
+  def test_17_cleanupTempDirectory(self, my_test_type='UnitTest'):
     # Make sure that we are able to cleanup old temp folders
     test_node = self.getTestNode()
     temp_directory = self.system_temp_folder
@@ -681,7 +896,7 @@ branch = foo
     test_node._cleanupTemporaryFiles()
     check(set(['something']))
 
-  def test_18_resetSoftwareAfterManyBuildFailures(self):
+  def test_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='UnitTest'):
     """
     Check that after several building failures that the software is resetted
     """
@@ -689,6 +904,8 @@ branch = foo
       SlapOSControler.initializeSlapOSControler
     initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
+    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    runner = RunnerClass(test_node)    
     node_test_suite = test_node.getNodeTestSuite('foo')
     init_call_kw_list = []
     def initializeSlapOSControler(self, **kw):
@@ -698,10 +915,11 @@ branch = foo
     SlapOSControler.initializeSlapOSControler = initializeSlapOSControler
     SlapOSControler.runSoftwareRelease = runSoftwareRelease
     def callPrepareSlapOS():
-      test_node._prepareSlapOS(self.working_directory, node_test_suite,
+      runner._prepareSlapOS(self.working_directory, node_test_suite,
          test_node.log, create_partition=0)
     def callRaisingPrepareSlapos():
       self.assertRaises(SubprocessError, callPrepareSlapOS)
+  
     self.assertEquals(node_test_suite.retry_software_count, 0)
     for x in xrange(0,11):
       callRaisingPrepareSlapos()
@@ -717,3 +935,169 @@ branch = foo
     SlapOSControler.initializeSlapOSControler = \
       initial_initializeSlapOSControler
     SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
+
+  def test_scalability_01_getDelNodeTestSuite(self, my_test_type='ScalabilityTest'):
+    self.test_01_getDelNodeTestSuite(my_test_type)
+  def test_scalability_02_NodeTestSuiteWorkingDirectory(self, my_test_type='ScalabilityTest'):
+    self.test_02_NodeTestSuiteWorkingDirectory(my_test_type)
+  def test_scalability_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='ScalabilityTest'):
+    self.test_03_NodeTestSuiteCheckDataAfterEdit(my_test_type)
+  def test_scalability_04_constructProfile(self, my_test_type='ScalabilityTest'):
+    self.test_04_constructProfile(my_test_type)
+  def test_scalability_05_getAndUpdateFullRevisionList(self, my_test_type='ScalabilityTest'):
+    self.test_05_getAndUpdateFullRevisionList(my_test_type)
+  def test_scalability_05b_changeRepositoryBranch(self, my_test_type='ScalabilityTest'):
+    self.test_05b_changeRepositoryBranch(my_test_type)
+  def test_scalability_06_checkRevision(self, my_test_type='ScalabilityTest'):
+    self.test_06_checkRevision(my_test_type)
+  def test_scalability_07_checkExistingTestSuite(self, my_test_type='ScalabilityTest'):
+    self.test_07_checkExistingTestSuite(my_test_type)
+  def test_scalability_08_getSupportedParamaterSet(self, my_test_type='ScalabilityTest'):
+    self.test_08_getSupportedParamaterSet(my_test_type)
+  def test_scalability_09_runTestSuite(self, my_test_type='ScalabilityTest'):
+    # TODO : write own scalability test
+    pass
+  def test_scalability_10_prepareSlapOS(self, my_test_type='ScalabilityTest'):
+    # TODO : write own scalability test
+    # This case test may be dispensable on ScalabilityTest case
+    # so..
+    pass
+  def test_scalability_as_master_11_run(self, my_test_type='ScalabilityTest'):
+    self.test_11_run(my_test_type, grade='master')
+  # TODO : add a test with master and a launchable testsuite -> patch a lot of methods
+  def test_scalability_as_slave_11_run(self, my_test_type='ScalabilityTest'):
+    self.test_11_run(my_test_type, grade='slave')
+  def test_scalability_12_spawn(self, my_test_type='ScalabilityTest'):
+    self.test_12_spawn(my_test_type)
+  def test_scalability_13_SlaposControlerResetSoftware(self, my_test_type='ScalabilityTest'):
+    self.test_13_SlaposControlerResetSoftware(my_test_type)
+  def test_scalability_14_createFolder(self, my_test_type='ScalabilityTest'):
+    self.test_14_createFolder(my_test_type)
+  def test_scalability_as_master_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
+    self.test_15_suite_log_directory(my_test_type, grade='master')
+  def test_scalability_as_slave_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
+    self.test_15_suite_log_directory(my_test_type, grade='slave')
+  def test_scalability_16_cleanupLogDirectory(self, my_test_type='ScalabilityTest'):
+    self.test_16_cleanupLogDirectory(my_test_type)
+  def test_scalability_17_cleanupTempDirectory(self, my_test_type='ScalabilityTest'):
+    self.test_17_cleanupTempDirectory(my_test_type)
+  def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='ScalabilityTest'):
+    # TODO : write own scalability test
+    pass
+
+  def test_zzzz_scalability_19_xxxx(self):
+    # TODO : fill the dummy slapos answer
+    # by patching isSoftwareReleaseReady method.
+    def patch_createTestResult(self, revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+      test_result_path = os.path.join(test_result_path_root, test_title)
+      result =  TestResultProxy(self._proxy, self._retry_time,
+                self._logger, test_result_path, node_title, revision)
+      return result
+    global startTestSuiteDone
+    startTestSuiteDone = False
+    def patch_startTestSuite(self,node_title,computer_guid='unknown'):
+      config_list = []
+      global startTestSuiteDone
+      if not startTestSuiteDone:
+        startTestSuiteDone = True
+        config_list.append(test_self.getTestSuiteData(reference='foo')[0])
+        config_list.append(test_self.getTestSuiteData(reference='bar')[0])
+      else:
+        raise StopIteration
+      return json.dumps(config_list)
+    def patch_isMasterTestnode(self, *args, **kw):
+      return True
+    def patch_generateConfiguration(self, *args, **kw):
+      return json.dumps({"configuration_list": [{"ok":"ok"}], "involved_nodes_computer_guid"\
+: ["COMP1", "COMP2", "COMP3"], "error_message": "No error.", "launcher_nodes_computer_guid": ["COMP1"], \
+"launchable": True, "randomized_path" : "azertyuiop"})
+    def doNothing(self, *args, **kw):
+        pass
+    def patch_getSlaposAccountKey(self, *args, **kw):
+      return "key"
+    def patch_getSlaposAccountCertificate(self, *args, **kw):
+      return "Certificate"
+    def patch_getSlaposUrl(self, *args, **kw):
+      return "http://Foo"
+      return "Certificate"
+    def patch_getSlaposHateoasUrl(self, *args, **kw):
+      return "http://Foo"
+    def patch_getTestType(self, *args, **kw):
+      return "ScalabilityTest"
+    def patch_isHostingSubscriptionReady(self, *args, **kw):
+      return True
+    def patch_isRegisteredHostingSubscription(self, *args, **kw):
+      return True     
+    def patch_runTestSuite(self, *args, **kw):
+      return {'status_code':0}
+    test_self = self
+    test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
+    os.makedirs(test_result_path_root)
+    self.generateTestRepositoryList()
+    # Select the good runner to modify
+    RunnerClass = self.returnGoodClassRunner('ScalabilityTest')
+    # Patch methods
+    original_sleep = time.sleep
+    original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
+    original_getSlaposAccountCertificate = TaskDistributor.getSlaposAccountCertificate
+    original_getSlaposUrl = TaskDistributor.getSlaposUrl
+    original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
+    original_generateConfiguration = TaskDistributor.generateConfiguration
+    original_isMasterTestnode = TaskDistributor.isMasterTestnode
+    original_startTestSuite = TaskDistributor.startTestSuite
+    original_subscribeNode = TaskDistributor.subscribeNode
+    original_getTestType = TaskDistributor.getTestType
+    original_createTestResult = TaskDistributionTool.createTestResult
+    original_prepareSlapOS = RunnerClass._prepareSlapOS
+    original_runTestSuite = RunnerClass.runTestSuite
+    original_supply = SlapOSControler.supply
+    original_request = SlapOSControler.request
+    original_updateInstanceXML = SlapOSControler.updateInstanceXML
+    original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
+    original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
+    original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
+
+    #
+    time.sleep = doNothing
+    TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
+    TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
+    TaskDistributor.getSlaposUrl = patch_getSlaposUrl
+    TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
+    TaskDistributor.generateConfiguration = patch_generateConfiguration
+    TaskDistributor.isMasterTestnode = patch_isMasterTestnode
+    TaskDistributor.startTestSuite = patch_startTestSuite
+    TaskDistributor.subscribeNode = doNothing
+    TaskDistributor.getTestType = patch_getTestType    
+    TaskDistributionTool.createTestResult = patch_createTestResult
+    RunnerClass._prepareSlapOS = doNothing
+    RunnerClass.runTestSuite = patch_runTestSuite
+    SlapOSControler.supply = doNothing
+    SlapOSControler.request = doNothing
+    SlapOSControler.updateInstanceXML = doNothing
+    SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
+    SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
+    SlapOSMasterCommunicator.__init__ = doNothing
+    # Run
+    test_node = self.getTestNode()  
+    test_node.run()
+    # Restore methods
+    TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+    TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+    TaskDistributor.getSlaposUrl = original_getSlaposUrl
+    TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
+    TaskDistributor.generateConfiguration = original_generateConfiguration
+    TaskDistributor.isMasterTestnode = original_isMasterTestnode
+    TaskDistributor.startTestSuite = original_startTestSuite
+    TaskDistributionTool.createTestResult = original_createTestResult
+    TaskDistributionTool.subscribeNode = original_subscribeNode
+    TaskDistributionTool.getTestType = original_getTestType
+    RunnerClass._prepareSlapOS = original_prepareSlapOS
+    RunnerClass.runTestSuite = original_runTestSuite
+    SlapOSControler.supply = original_supply
+    SlapOSControler.request = original_request
+    SlapOSControler.updateInstanceXML = original_updateInstanceXML
+    SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
+    SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
+    SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
+    time.sleep =original_sleep
