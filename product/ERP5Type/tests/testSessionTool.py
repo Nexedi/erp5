@@ -266,6 +266,7 @@ class TestSessionTool(ERP5TypeTestCase):
 
   def test_02_RamSession(self):
     """ Test RamSession which uses local RAM based cache plugin. """
+    self._changeCachePlugin('Ram Cache')
     sequence_list = SequenceList()
     sequence_string =  'stepTestSetGet  \
                     stepTestAcquisitionRamSessionStorage \
