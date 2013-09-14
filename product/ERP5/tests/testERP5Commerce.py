@@ -34,6 +34,7 @@ import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.backportUnittest import skip
+from Products.ERP5Type.Tool.SessionTool import SESSION_CACHE_FACTORY
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -110,6 +111,15 @@ class TestCommerce(ERP5TypeTestCase):
             'erp5_simulation_test')
 
   def afterSetUp(self):
+    # erp5_commerce puts (temporary) persistent object into cache,
+    # that is not possible with Distributed Ram Cache.
+    portal_caches = self.portal.portal_caches
+    session_cache_factory = portal_caches[SESSION_CACHE_FACTORY]
+    for i in session_cache_factory.objectValues(portal_type='Distributed Ram Cache'):
+      session_cache_factory.manage_delObjects(ids=[i.getId(),])
+    self.commit()
+    portal_caches.updateCache()
+
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
     uf._doAddUser('customer', '', ['Auditor', 'Author'], [])
