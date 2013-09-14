@@ -71,6 +71,17 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_web_ui_test',
                 )
 
+    def afterSetUp(self):
+        super(TestZeleniumCore, self).afterSetUp()
+        # erp5_ooo_import puts (temporary) persistent object into cache,
+        # that is not possible with Distributed Ram Cache.
+        portal_caches = self.portal.portal_caches
+        session_cache_factory = portal_caches[SESSION_CACHE_FACTORY]
+        for i in session_cache_factory.objectValues(portal_type='Distributed Ram Cache'):
+            session_cache_factory.manage_delObjects(ids=[i.getId(),])
+        self.commit()
+        portal_caches.updateCache()
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestZeleniumCore))
