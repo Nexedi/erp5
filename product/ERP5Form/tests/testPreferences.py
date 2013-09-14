@@ -191,6 +191,7 @@ class TestPreferences(PropertySheetTestCase):
     site.edit(
       preferred_accounting_transaction_simulation_state_list=
       ['stopped', 'delivered'])
+    self.commit()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(site.getPreferredAccountingTransactionSimulationStateList()))
@@ -205,12 +206,14 @@ class TestPreferences(PropertySheetTestCase):
 
     group.edit(
       preferred_accounting_transaction_simulation_state_list=['draft'])
+    self.commit()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
     person1.edit(preferred_accounting_transaction_simulation_state_list=
               ['cancelled'])
+    self.commit()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
