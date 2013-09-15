@@ -29,7 +29,6 @@
 
 import unittest
 import os
-import popen2
 import urllib
 
 from subprocess import Popen, PIPE
@@ -443,12 +442,13 @@ class W3Validator(object):
     source = 'fragment=%s&output=soap12' % urllib.quote_plus(page_source)
     os.environ['CONTENT_LENGTH'] = str(len(source))
     os.environ['REQUEST_METHOD'] = 'POST'
-    stdout, stdin, stderr = popen2.popen3(self.validator_path)
-    stdin.write(source)
-    stdin.close()
-    while stdout.readline() != '\n':
-      pass
-    result = stdout.read()
+    process = Popen([self.validator_path],
+                    stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+    try:
+      stdout, stderr = process.communicate(source)
+    finally:
+      del process
+    result = stdout.split('\n\n', 1)[-1]
     return self._parse_validation_results(result)
 
 
@@ -489,9 +489,15 @@ class TidyValidator(object):
     '''
       retrun two list : a list of errors and an other for warnings
     '''
-    stdout, stdin, stderr = popen2.popen3('%s -e -q -utf8' % self.validator_path)
-    stdin.write(page_source)
-    stdin.close()
+    if isinstance(page_source, unicode):
+      # Zope 2.12 renders page templates as unicode
+      page_source = page_source.encode('utf-8')
+    process = Popen([self.validator_path, '-e', '-q', '-utf8'],
+                    stdin=PIPE, stdout=PIPE, stderr=PIPE, close_fds=True)
+    try:
+      stdout, stderr = process.communicate(page_source)
+    finally:
+      del process
     return self._parse_validation_results(stderr)
 
 
