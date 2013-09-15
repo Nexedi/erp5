@@ -97,6 +97,8 @@ class HBTreeObjectIds(object):
         return self._keys()
 
     def __getitem__(self, item):
+        if isinstance(item, slice):
+            return map(self.__getitem__, xrange(*item.indices(self._count())))
         if item < 0:
             item += self._count()
         i = self._index
@@ -119,6 +121,8 @@ class HBTreeObjectItems(HBTreeObjectIds):
         return ((x, getOb(x)) for x in self._keys())
 
     def __getitem__(self, item):
+        if isinstance(item, slice):
+            return map(self.__getitem__, xrange(*item.indices(self._count())))
         object_id = HBTreeObjectIds.__getitem__(self, item)
         return object_id, self._tree._getOb(object_id)
 ContainerAssertions[HBTreeObjectItems] = 1
@@ -130,6 +134,8 @@ class HBTreeObjectValues(HBTreeObjectIds):
         return (getOb(x) for x in self._keys())
 
     def __getitem__(self, item):
+        if isinstance(item, slice):
+            return map(self.__getitem__, xrange(*item.indices(self._count())))
         return self._tree._getOb(HBTreeObjectIds.__getitem__(self, item))
 ContainerAssertions[HBTreeObjectValues] = 1
 
