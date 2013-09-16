@@ -61,7 +61,7 @@ portal = context.getPortalObject()\n
 # case 1: script is used for reports, we display all validated projects.\n
 if context.getPortalType() == \'Accounting Transaction Module\':\n
   project_list = []\n
-  for project in portal.project_module.searchFolder(\n
+  for project in portal.portal_catalog(\n
                            portal_type=\'Project\',\n
                            select_list=[\'relative_url\', \'title\'],\n
                            validation_state=(\'validated\',),\n
