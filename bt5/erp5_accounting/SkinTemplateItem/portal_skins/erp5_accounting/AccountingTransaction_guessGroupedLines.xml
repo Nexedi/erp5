@@ -59,9 +59,8 @@ of related accounting transactions using causality.\n
 \n
 from Products.ERP5Type.Utils import int2letter\n
 \n
-# this dict associates (node, section, mirror_section,\n
-# extra_grouping_parameter) to a list of\n
-# accounting lines info (total_price, date and path).\n
+# this dict associates (node, section, mirror_section, mirror_node, extra_grouping_parameter) to a list of\n
+# accounting lines info (total_price, date and path)\n
 lines_per_node = {}\n
 \n
 portal = context.getPortalObject()\n
@@ -100,6 +99,7 @@ for line in accounting_transaction_line_value_list:\n
                   (line.getSource(portal_type=\'Account\'),\n
                    section_relative_url,\n
                    line.getDestinationSection(),\n
+                   line.getDestination(portal_type=\'Account\'),\n
                    line.AccountingTransactionLine_getGroupingExtraParameterList(source=True),\n
                    ), []).append(\n
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,\n
@@ -117,14 +117,15 @@ for line in accounting_transaction_line_value_list:\n
               (line.getDestination(portal_type=\'Account\'),\n
                section_relative_url,\n
                line.getSourceSection(),\n
-                   line.AccountingTransactionLine_getGroupingExtraParameterList(source=False),\n
+               line.getSource(portal_type=\'Account\'),\n
+               line.AccountingTransactionLine_getGroupingExtraParameterList(source=False),\n
                ), []).append(\n
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,\n
          date=line.getStopDate(),\n
          path=line.getRelativeUrl()))\n
 \n
 changed_line_list = []\n
-for (node, section, mirror_section, extra_parameter), line_info_list in lines_per_node.items():\n
+for (node, section, mirror_section, mirror_node, extra_parameter), line_info_list in lines_per_node.items():\n
   if node is None:\n
     continue\n
   total_price = sum([l[\'total_price\'] for l in line_info_list])\n
@@ -136,12 +137,14 @@ for (node, section, mirror_section, extra_parameter), line_info_list in lines_pe
   if default_currency is not None:\n
     total_price = round(total_price, default_currency.getQuantityPrecision())\n
   if total_price == 0 or allow_grouping_with_different_quantity:\n
+    # we should include mirror node in the id_group, but this would reset\n
+    # id generators and generate grouping references that were already used.\n
     id_group = (\'grouping_reference\', node, section, mirror_section)\n
     previous_default = context.portal_ids.getLastGeneratedId(id_group=id_group, default=0)\n
     grouping_reference = portal.portal_ids.generateNewId(id_generator=\'uid\',\n
                                                   id_group=id_group,\n
                                                   default=previous_default + 1)\n
-\n
+                                                  \n
     # convert from int to letters\n
     string_reference = int2letter(grouping_reference)\n
 \n
