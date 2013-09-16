@@ -106,6 +106,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>specialise_title</string>
+                          <string>Computer Model</string>
+                        </tuple>
+                        <tuple>
                           <string>default_network_address_host_name</string>
                           <string>Hostname</string>
                         </tuple>
@@ -179,6 +183,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>specialise_title</string>
+                          <string>Computer Model</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -212,6 +220,10 @@
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Computer Model</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
