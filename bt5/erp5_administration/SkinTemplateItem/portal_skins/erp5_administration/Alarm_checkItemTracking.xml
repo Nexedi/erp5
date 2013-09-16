@@ -53,13 +53,16 @@
             <value> <string>"""Check the tracking history of all items.\n
 """\n
 \n
-active_process = context.newActiveProcess().getRelativeUrl()\n
+item_portal_type_list = context.getProperty(\'item_portal_type_list\')\n
 \n
-context.getPortalObject().portal_catalog.searchAndActivate(\n
-   method_id=\'Item_checkTrackingList\',\n
-   method_kw=dict(fixit=fixit, active_process=active_process),\n
-   activate_kw=dict(tag=tag, priority=5),\n
-   portal_type=context.getPortalItemTypeList() or [\'Nothing\'])\n
+if item_portal_type_list:\n
+  active_process = context.newActiveProcess().getRelativeUrl()\n
+\n
+  context.getPortalObject().portal_catalog.searchAndActivate(\n
+     method_id=\'Item_checkTrackingList\',\n
+     method_kw=dict(fixit=fixit, active_process=active_process),\n
+     activate_kw=dict(tag=tag, priority=5),\n
+     portal_type=item_portal_type_list)\n
 </string> </value>
         </item>
         <item>
