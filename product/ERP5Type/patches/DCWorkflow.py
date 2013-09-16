@@ -737,3 +737,71 @@ def getAvailableScriptIds(self):
 
 TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
 
+if True:
+    def Guard_check(self, sm, wf_def, ob, **kw):
+        """Checks conditions in this guard
+        """
+        u_roles = None
+        # PATCH BEGIN
+        # This method returns roles, considering proxy roles in caller
+        # scripts.
+        # XXX : If we need this method somewhere else, it should be
+        # added in SecurityManager class.
+        def getRoles():
+            stack = sm._context.stack
+            if stack:
+                eo = stack[-1]
+                proxy_roles = getattr(eo, '_proxy_roles', None)
+                if proxy_roles:
+                    return proxy_roles
+            return sm.getUser().getRolesInContext(ob)
+        # PATCH END
+        if wf_def.manager_bypass:
+            # Possibly bypass.
+            # PATCH BEGIN
+            u_roles = getRoles()
+            # PATCH END
+            if 'Manager' in u_roles:
+                return 1
+        if self.permissions:
+            for p in self.permissions:
+                if _checkPermission(p, ob):
+                    break
+            else:
+                return 0
+        if self.roles:
+            # Require at least one of the given roles.
+            if u_roles is None:
+                # PATCH BEGIN
+                u_roles = getRoles()
+                # PATCH END
+            for role in self.roles:
+                if role in u_roles:
+                    break
+            else:
+                return 0
+        if self.groups:
+            # Require at least one of the specified groups.
+            u = sm.getUser()
+            b = aq_base( u )
+            if hasattr( b, 'getGroupsInContext' ):
+                u_groups = u.getGroupsInContext( ob )
+            elif hasattr( b, 'getGroups' ):
+                u_groups = u.getGroups()
+            else:
+                u_groups = ()
+            for group in self.groups:
+                if group in u_groups:
+                    break
+            else:
+                return 0
+        expr = self.expr
+        if expr is not None:
+            econtext = createExprContext(
+                StateChangeInfo(ob, wf_def, kwargs=kw))
+            res = expr(econtext)
+            if not res:
+                return 0
+        return 1
+
+Guard.check = Guard_check
