@@ -122,7 +122,7 @@ def getSiteMapItemTree(section, depth=0, level=None):   \n
                     })\n
   if include_subsection or (include_subsection is None and section.isSiteMapSectionParent()):\n
     for subsection in section.contentValues(portal_type=\'Web Section\',\n
-                                            sort_on=(\'int_index\', \'translated_title\')\n
+                                            sort_on=(\'int_index\', \'translated_title\'),\n
                                             checked_permission=\'View\'):\n
       if subsection.isVisible():\n
         subsection_result = getSiteMapItemTree(subsection, depth=depth - 1, level=level + 1)\n
