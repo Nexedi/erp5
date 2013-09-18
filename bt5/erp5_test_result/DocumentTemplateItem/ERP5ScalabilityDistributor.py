@@ -175,8 +175,7 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor):
     if len(master_test_node_title_list) == 1 and title == master_test_node_title_list[0]:
       return super(ERP5ScalabilityDistributor,
                    self).startTestSuite(title=title,
-                                        batch_mode=batch_mode,
-                                        computer_guid=computer_guid)     
+                                        batch_mode=batch_mode)
     else:
       if batch_mode:
         return []
