@@ -50,8 +50,8 @@ import signal
 MAX_INSTANCE_TIME = 60*60*2
 # max time to register instance to slapOSMaster: 5 minutes
 MAX_CREATION_INSTANCE_TIME = 60*10
-# max time for a test: 1 hour
-MAX_TEST_CASE_TIME = 60*60
+# max time for a test: 6 hour
+MAX_TEST_CASE_TIME = 6*60*60
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
