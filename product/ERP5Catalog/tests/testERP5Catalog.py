@@ -1250,7 +1250,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     for i in range(0,100):
       message_list = portal_activities.getMessageList()
       for message in message_list:
-        #if message.method_id=='setHotReindexingState':
+        #if message.method_id=='_setHotReindexingState':
         #  import pdb;pdb.set_trace()
         if message.method_id in method_id_list:
           try:
@@ -1383,7 +1383,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                          'recursiveImmediateReindexObject',
                          'playBackRecordedObjectList',
                          'getId',
-                         'setHotReindexingState'))
+                         '_setHotReindexingState'))
     self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_DOUBLE_INDEXING_STATE)
     # Now we have started an double indexing

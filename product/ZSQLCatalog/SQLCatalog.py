@@ -22,6 +22,8 @@ from App.special_dtml import DTMLFile
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import access_contents_information, \
+    manage_zcatalog_entries
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
@@ -670,12 +672,14 @@ class Catalog(Folder,
       pass
     super(Catalog, self).manage_afterClone(item)
 
+  security.declarePrivate('getCacheSequenceNumber')
   def getCacheSequenceNumber(self):
     return self._cache_sequence_number
 
   def _clearCaches(self):
     self._cache_sequence_number += 1
 
+  security.declarePrivate('getSQLCatalogRoleKeysList')
   def getSQLCatalogRoleKeysList(self):
     """
     Return the list of role keys.
@@ -686,6 +690,7 @@ class Catalog(Folder,
       role_key_dict[role.strip()] = column.strip()
     return role_key_dict.items()
 
+  security.declarePrivate('getSQLCatalogSecurityUidGroupsColumnsDict')
   def getSQLCatalogSecurityUidGroupsColumnsDict(self):
     """
     Return a mapping of local_roles_group_id name to the name of the column
@@ -698,6 +703,7 @@ class Catalog(Folder,
       local_roles_group_id_dict[local_roles_group_id.strip()] = column.strip()
     return local_roles_group_id_dict
 
+  security.declarePrivate('getSQLCatalogLocalRoleKeysList')
   def getSQLCatalogLocalRoleKeysList(self):
     """
     Return the list of local role keys.
@@ -708,6 +714,7 @@ class Catalog(Folder,
       local_role_key_dict[role.strip()] = column.strip()
     return local_role_key_dict.items()
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_exportProperties')
   def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
     """
       Export properties to an XML file.
@@ -767,6 +774,7 @@ class Catalog(Folder,
                           'inline;filename=properties.xml')
     return f.getvalue()
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_importProperties')
   def manage_importProperties(self, file):
     """
       Import properties from an XML file.
@@ -821,6 +829,7 @@ class Catalog(Folder,
       finally:
         doc.unlink()
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
     return Catalog.inheritedAttribute('manage_historyCompare')(
@@ -898,6 +907,7 @@ class Catalog(Folder,
 
     return (local_roles_group_id_to_security_uid_mapping, optimised_roles_and_users)
 
+  security.declarePrivate('getRoleAndSecurityUidList')
   def getRoleAndSecurityUidList(self):
     """
       Return a list of 3-tuples, suitable for direct use in a zsqlmethod.
@@ -958,7 +968,7 @@ class Catalog(Folder,
     self.subject_set_uid_dict[subject_list] = subject_set_uid
     return (subject_set_uid, subject_list)
 
-  def clear(self):
+  def _clear(self):
     """
     Clears the catalog by calling a list of methods
     """
@@ -975,7 +985,7 @@ class Catalog(Folder,
         raise
 
     # Reserved uids have been removed.
-    self.clearReserved()
+    self._clearReserved()
 
     id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
     if id_tool is None:
@@ -986,6 +996,7 @@ class Catalog(Folder,
     self._clearSubjectCache()
     self._clearCaches()
 
+  security.declarePrivate('insertMaxUid')
   def insertMaxUid(self):
     """
       Add a dummy item so that SQLCatalog will not use existing uids again.
@@ -996,7 +1007,7 @@ class Catalog(Folder,
       self._max_uid.change(1)
       method(uid = [self._max_uid()])
 
-  def clearReserved(self):
+  def _clearReserved(self):
     """
     Clears reserved uids
     """
@@ -1013,6 +1024,7 @@ class Catalog(Folder,
       raise
     self._last_clear_reserved_time += 1
 
+  security.declarePrivate('getRecordForUid')
   def getRecordForUid(self, uid):
     """
     Get an object by UID
@@ -1032,6 +1044,7 @@ class Catalog(Folder,
       return search_result[0]
     raise KeyError, uid
 
+  security.declarePrivate('editSchema')
   def editSchema(self, names_list):
     """
     Builds a schema from a list of strings
@@ -1051,6 +1064,7 @@ class Catalog(Folder,
     self.schema = schema
     self.names = names
 
+  security.declarePrivate('getCatalogSearchTableIds')
   def getCatalogSearchTableIds(self):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
@@ -1108,6 +1122,7 @@ class Catalog(Folder,
       add_key(scriptable_tuple[0].strip())
     return sorted(keys)
 
+  security.declarePrivate('getColumnIds')
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1115,6 +1130,7 @@ class Catalog(Folder,
     """
     return self._getColumnIds()[:]
 
+  security.declarePrivate('getColumnMap')
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
   @caching_instance_method(id='SQLCatalog.getColumnMap',
     cache_factory='erp5_content_long',
@@ -1132,6 +1148,7 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
+  security.declarePrivate('getResultColumnIds')
   @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
   @caching_instance_method(id='SQLCatalog.getResultColumnIds',
     cache_factory='erp5_content_long',
@@ -1148,6 +1165,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
+  security.declarePrivate('getSortColumnIds')
   @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
   @caching_instance_method(id='SQLCatalog.getSortColumnIds',
       cache_factory='erp5_content_long',
@@ -1164,6 +1182,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
+  security.declarePrivate('getTableIds')
   def getTableIds(self):
     """
     Calls the show table method and returns dictionnary of
@@ -1182,6 +1201,7 @@ class Catalog(Folder,
       pass
     return keys
 
+  security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
     global global_uid_buffer_dict
     klass = self.__class__
@@ -1197,6 +1217,7 @@ class Catalog(Folder,
     return uid_buffer_dict[thread_key]
 
   # the cataloging API
+  security.declarePrivate('produceUid')
   def produceUid(self):
     """
       Produces reserved uids in advance
@@ -1233,6 +1254,7 @@ class Catalog(Folder,
         uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       uid_buffer.extend(uid_list)
 
+  security.declarePrivate('isIndexable')
   def isIndexable(self):
     """
     This is required to check in many methods that
@@ -1247,6 +1269,7 @@ class Catalog(Folder,
       return False
     return True
 
+  security.declarePrivate('getSiteRoot')
   def getSiteRoot(self):
     """
     Returns the root of the site
@@ -1257,6 +1280,7 @@ class Catalog(Folder,
       site_root = self.aq_parent
     return site_root
 
+  security.declarePrivate('getZopeRoot')
   def getZopeRoot(self):
     """
     Returns the root of the zope
@@ -1267,6 +1291,7 @@ class Catalog(Folder,
       zope_root = self.getPhysicalRoot()
     return zope_root
 
+  security.declarePrivate('newUid')
   def newUid(self):
     """
       This is where uid generation takes place. We should consider a multi-threaded environment
@@ -1306,6 +1331,7 @@ class Catalog(Folder,
     finally:
       klass._reserved_uid_lock.release()
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogObject')
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ index Zope object(s) that 'urls' point to """
     if urls:
@@ -1321,6 +1347,7 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Cataloged')
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_uncatalogObject')
   def manage_uncatalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ removes Zope object(s) 'urls' from catalog """
 
@@ -1333,6 +1360,7 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Uncataloged')
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogReindex')
   def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, urls=None):
     """ clear the catalog, then re-index everything """
     elapse = time.time()
@@ -1349,25 +1377,28 @@ class Catalog(Folder,
                      'Total time: %s<br>'
                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClear')
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     self.beforeCatalogClear()
 
-    self.clear()
+    self._clear()
 
     if RESPONSE and URL1:
       RESPONSE.redirect('%s/manage_catalogAdvanced?' \
                         'manage_tabs_message=Catalog%%20Cleared' % URL1)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClearReserved')
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ clears reserved uids """
-    self.clearReserved()
+    self._clearReserved()
 
     if RESPONSE and URL1:
       RESPONSE.redirect('%s/manage_catalogAdvanced?' \
                         'manage_tabs_message=Catalog%%20Cleared' % URL1)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogFoundItems')
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
                  obj_ids=None, obj_searchterm=None,
@@ -1404,6 +1435,7 @@ class Catalog(Folder,
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
               urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
+  security.declarePrivate('catalogObject')
   def catalogObject(self, object, path, is_object_moved=0):
     """Add an object to the Catalog by calling all SQL methods and
     providing needed arguments.
@@ -1411,6 +1443,7 @@ class Catalog(Folder,
     'object' is the object to be catalogged."""
     self._catalogObjectList([object])
 
+  security.declarePrivate('catalogObjectList')
   def catalogObjectList(self, object_list, method_id_list=None,
                         disable_cache=0, check_uid=1, idxs=None):
     """Add objects to the Catalog by calling all SQL methods and
@@ -1696,6 +1729,7 @@ class Catalog(Folder,
   if psyco is not None:
     psyco.bind(_catalogObjectList)
 
+  security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
     """
     Set the path as deleted
@@ -1716,6 +1750,7 @@ class Catalog(Folder,
     method = getattr(self, method_name)
     method(uid = uid)
 
+  security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
     """
     Uncatalog and object from the Catalog.
@@ -1743,6 +1778,7 @@ class Catalog(Folder,
       method = getattr(self, method_name)
       method(uid = uid)
 
+  security.declarePrivate('catalogTranslationList')
   def catalogTranslationList(self, object_list):
     """Catalog translations.
     """
@@ -1750,6 +1786,7 @@ class Catalog(Folder,
     return self.catalogObjectList(object_list, method_id_list = (method_name,),
                                   check_uid=0)
 
+  security.declarePrivate('deleteTranslationList')
   def deleteTranslationList(self):
     """Delete translations.
     """
@@ -1762,16 +1799,19 @@ class Catalog(Folder,
     except:
       LOG('SQLCatalog', WARNING, 'could not delete translations', error=sys.exc_info())
 
+  security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
     method = getattr(self, self.sql_unique_values)
     return method(column=name)
 
+  security.declarePrivate('getPaths')
   def getPaths(self):
     """ Returns all object paths stored inside catalog """
     method = getattr(self, self.sql_catalog_paths)
     return method()
 
+  security.declarePrivate('getUidForPath')
   def getUidForPath(self, path):
     """ Looks up into catalog table to convert path into uid """
     #try:
@@ -1786,6 +1826,7 @@ class Catalog(Folder,
     else:
       return None
 
+  security.declarePrivate('getUidDictForPathList')
   def getUidDictForPathList(self, path_list):
     """ Looks up into catalog table to convert path into uid """
     # Get the appropriate SQL Method
@@ -1807,6 +1848,7 @@ class Catalog(Folder,
           path_uid_dict[path] = search_result[0].uid
     return path_uid_dict
 
+  security.declarePrivate('getPathDictForUidList')
   def getPathDictForUidList(self, uid_list):
     """ Looks up into catalog table to convert uid into path """
     # Get the appropriate SQL Method
@@ -1828,10 +1870,12 @@ class Catalog(Folder,
           uid_path_dict[uid] = search_result[0].path
     return uid_path_dict
 
+  security.declarePrivate('hasPath')
   def hasPath(self, path):
     """ Checks if path is catalogued """
     return self.getUidForPath(path) is not None
 
+  security.declarePrivate('getPathForUid')
   def getPathForUid(self, uid):
     """ Looks up into catalog table to convert uid into path """
     try:
@@ -1857,6 +1901,7 @@ class Catalog(Folder,
       LOG('SQLCatalog', WARNING, "could not find path from uid %s" % (uid,))
       return None
 
+  security.declarePrivate('getMetadataForUid')
   def getMetadataForUid(self, uid):
     """ Accesses a single record for a given uid """
     if uid is None:
@@ -1869,10 +1914,12 @@ class Catalog(Folder,
       result[k] = getattr(brain,k)
     return result
 
+  security.declarePrivate('getIndexDataForUid')
   def getIndexDataForUid(self, uid):
     """ Accesses a single record for a given uid """
     return self.getMetadataForUid(uid)
 
+  security.declarePrivate('getMetadataForPath')
   def getMetadataForPath(self, path):
     """ Accesses a single record for a given path """
     try:
@@ -1892,10 +1939,12 @@ class Catalog(Folder,
           "could not find metadata from path %s" % (path,))
       return None
 
+  security.declarePrivate('getIndexDataForPath')
   def getIndexDataForPath(self, path):
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
+  security.declarePrivate('getCatalogMethodIds')
   def getCatalogMethodIds(self,
       valid_method_meta_type_list=valid_method_meta_type_list):
     """Find Z SQL methods in the current folder and above
@@ -1922,6 +1971,7 @@ class Catalog(Folder,
     ids.sort()
     return ids
 
+  security.declarePrivate('getPythonMethodIds')
   def getPythonMethodIds(self):
     """
       Returns a list of all python scripts available in
@@ -1949,6 +1999,7 @@ class Catalog(Folder,
       column_set.add(related_key_id)
     return column_set
 
+  security.declarePrivate('getSQLCatalogRelatedKeyList')
   def getSQLCatalogRelatedKeyList(self, key_list=None):
     """
     Return the list of related keys.
@@ -1966,6 +2017,7 @@ class Catalog(Folder,
   # Compatibililty SQL Sql
   getSqlCatalogRelatedKeyList = getSQLCatalogRelatedKeyList
 
+  security.declarePrivate('getSQLCatalogScriptableKeyList')
   def getSQLCatalogScriptableKeyList(self):
     """
     Return the list of scriptable keys.
@@ -1989,12 +2041,14 @@ class Catalog(Folder,
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
     return table_index
 
+  security.declarePrivate('getTableIndex')
   def getTableIndex(self, table):
     """
     Return a map between index and column for a given table
     """
     return self._getTableIndex(table).copy()
 
+  security.declareProtected(access_contents_information, 'isValidColumn')
   def isValidColumn(self, column_id):
     """
       Tells wether given name is or not an existing column.
@@ -2009,6 +2063,7 @@ class Catalog(Folder,
         result = self.getRelatedKeyDefinition(column_id) is not None
     return result
 
+  security.declarePrivate('getRelatedKeyDefinition')
   def getRelatedKeyDefinition(self, key):
     """
       Returns the definition of given related key name if found, None
@@ -2049,9 +2104,11 @@ class Catalog(Folder,
         result[key] = script
     return result
 
+  security.declarePrivate('getScriptableKeyScript')
   def getScriptableKeyScript(self, key):
     return self._getgetScriptableKeyDict().get(key)
 
+  security.declarePrivate('getColumnSearchKey')
   def getColumnSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance for given key, using search_key_name
@@ -2077,9 +2134,11 @@ class Catalog(Folder,
       search_key = self.getSearchKey(key, 'RelatedKey')
     return search_key, related_key_definition
 
+  security.declarePrivate('hasColumn')
   def hasColumn(self, column):
     return self.getColumnSearchKey(column)[0] is not None
 
+  security.declarePrivate('getColumnDefaultSearchKey')
   def getColumnDefaultSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance which would ultimately receive the value
@@ -2095,6 +2154,7 @@ class Catalog(Folder,
           related_key_definition=related_key_definition)
     return search_key
 
+  security.declareProtected(access_contents_information, 'buildSingleQuery')
   def buildSingleQuery(self, key, value, search_key_name=None, logical_operator=None, comparison_operator=None):
     """
       From key and value, determine the SearchKey to use and generate a Query
@@ -2178,6 +2238,7 @@ class Catalog(Folder,
         result = None
     return result
 
+  security.declareProtected(access_contents_information, 'buildQueryFromAbstractSyntaxTreeNode')
   def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x, ignore_unknown_columns=False):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
@@ -2223,6 +2284,7 @@ class Catalog(Folder,
       is_valid = self.isValidColumn
     return search_key.parseSearchText(search_text, is_valid)
 
+  security.declareProtected(access_contents_information, 'parseSearchText')
   def parseSearchText(self, search_text, column=None, search_key=None,
                       is_valid=None):
     if column is None and search_key is None:
@@ -2231,6 +2293,7 @@ class Catalog(Folder,
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
+  security.declareProtected(access_contents_information, 'buildQuery')
   def buildQuery(self, kw, ignore_empty_string=True, operator='and', ignore_unknown_columns=False):
     query_list = []
     append = query_list.append
@@ -2324,6 +2387,7 @@ class Catalog(Folder,
     return ComplexQuery(query_list, logical_operator=operator,
         unknown_column_dict=unknown_column_dict)
 
+  security.declarePrivate('buildOrderByList')
   def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
     """
       Internal method. Should not be used by code outside buildSQLQuery.
@@ -2373,6 +2437,7 @@ class Catalog(Folder,
           append([x])
     return order_by_list
 
+  security.declarePrivate('buildEntireQuery')
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
                        limit=None, extra_column_list=(),
                        ignore_unknown_columns=False):
@@ -2414,6 +2479,7 @@ class Catalog(Folder,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
 
+  security.declarePrivate('buildSQLQuery')
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
@@ -2434,7 +2500,7 @@ class Catalog(Folder,
   # Compatibililty SQL Sql
   buildSqlQuery = buildSQLQuery
 
-  security.declarePublic('getCannonicalArgumentDict')
+  security.declareProtected(access_contents_information, 'getCannonicalArgumentDict')
   def getCannonicalArgumentDict(self, kw):
     """
     Convert some catalog arguments to generic arguments.
@@ -2518,6 +2584,7 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Wrong configuration for sql_catalog_search_keys: %r' % line)
     return result
 
+  security.declarePrivate('getSearchKey')
   def getSearchKey(self, column, search_key=None):
     """
       Return an instance of a SearchKey class.
@@ -2533,6 +2600,7 @@ class Catalog(Folder,
       search_key = self._getSearchKeyDict().get(column, 'DefaultKey')
     return getSearchKeyInstance(search_key, column)
 
+  security.declarePrivate('getComparisonOperator')
   def getComparisonOperator(self, operator):
     """
       Return an instance of an Operator class.
@@ -2544,6 +2612,7 @@ class Catalog(Folder,
     return getComparisonOperatorInstance(operator)
 
 
+  security.declarePrivate('queryResults')
   def queryResults(
         self,
         sql_method,
@@ -2578,9 +2647,11 @@ class Catalog(Folder,
       limit_expression=query['limit_expression'],
     )
 
+  security.declarePrivate('getSearchResultsMethod')
   def getSearchResultsMethod(self):
     return getattr(self, self.sql_search_results)
 
+  security.declarePrivate('searchResults')
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if 'only_group_columns' in kw:
@@ -2596,9 +2667,11 @@ class Catalog(Folder,
 
   __call__ = searchResults
 
+  security.declarePrivate('getCountResultsMethod')
   def getCountResultsMethod(self):
     return getattr(self, self.sql_count_results)
 
+  security.declarePrivate('countResults')
   def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the where_expression """
     return self.queryResults(
@@ -2609,9 +2682,11 @@ class Catalog(Folder,
       **kw
     )
 
+  security.declarePrivate('isAdvancedSearchText')
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)
 
+  security.declarePrivate('recordObjectList')
   def recordObjectList(self, path_list, catalog=1):
     """
       Record the path of an object being catalogged or uncatalogged.
@@ -2619,6 +2694,7 @@ class Catalog(Folder,
     method = getattr(self, self.sql_record_object_list)
     method(path_list=path_list, catalog=catalog)
 
+  security.declarePrivate('deleteRecordedObjectList')
   def deleteRecordedObjectList(self, uid_list=()):
     """
       Delete all objects which contain any path.
@@ -2626,6 +2702,7 @@ class Catalog(Folder,
     method = getattr(self, self.sql_delete_recorded_object_list)
     method(uid_list=uid_list)
 
+  security.declarePrivate('readRecordedObjectList')
   def readRecordedObjectList(self, catalog=1):
     """
       Read objects. Note that this might not return all objects since ZMySQLDA limits the max rows.
@@ -2634,6 +2711,7 @@ class Catalog(Folder,
     return method(catalog=catalog)
 
   # Filtering
+  security.declareProtected(manage_zcatalog_entries, 'manage_editFilter')
   def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None):
     """
     This methods allows to set a filter on each zsql method called,
@@ -2679,6 +2757,7 @@ class Catalog(Folder,
     if RESPONSE and URL1:
       RESPONSE.redirect(URL1 + '/manage_catalogFilter?manage_tabs_message=Filter%20Changed')
 
+  security.declarePrivate('isMethodFiltered')
   def isMethodFiltered(self, method_name):
     """
     Returns 1 if the method is already filtered,
@@ -2695,6 +2774,7 @@ class Catalog(Folder,
         return 0
     return 0
 
+  security.declarePrivate('getExpression')
   def getExpression(self, method_name):
     """ Get the filter expression text for this method.
     """
@@ -2708,6 +2788,7 @@ class Catalog(Folder,
         return ""
     return ""
 
+  security.declarePrivate('getExpressionCacheKey')
   def getExpressionCacheKey(self, method_name):
     """ Get the key string which is used to cache results
         for the given expression.
@@ -2722,6 +2803,7 @@ class Catalog(Folder,
         return ""
     return ""
 
+  security.declarePrivate('getExpressionInstance')
   def getExpressionInstance(self, method_name):
     """ Get the filter expression instance for this method.
     """
@@ -2735,6 +2817,7 @@ class Catalog(Folder,
         return None
     return None
 
+  security.declarePrivate('setFilterExpression')
   def setFilterExpression(self, method_name, expression):
     """ Set the Expression for a certain method name. This allow set
         expressions by scripts.
@@ -2749,6 +2832,7 @@ class Catalog(Folder,
       else:
         self.filter_dict[method_name]['expression_instance'] = None
 
+  security.declarePrivate('isPortalTypeSelected')
   def isPortalTypeSelected(self, method_name, portal_type):
     """ Returns true if the portal type is selected for this method.
       XXX deprecated
@@ -2763,6 +2847,7 @@ class Catalog(Folder,
         return 0
     return 0
 
+  security.declarePrivate('getFilteredPortalTypeList')
   def getFilteredPortalTypeList(self, method_name):
     """ Returns the list of portal types which define
         the filter.
@@ -2778,6 +2863,7 @@ class Catalog(Folder,
         return []
     return []
 
+  security.declarePrivate('getFilterDict')
   def getFilterDict(self):
     """
       Utility Method.
@@ -2797,6 +2883,7 @@ class Catalog(Folder,
       return filter_dict
     return None
 
+  security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self):
     """
     Returns only zsql methods wich catalog or uncatalog objets
@@ -2812,6 +2899,7 @@ class Catalog(Folder,
     method_list = map(lambda method_id: getattr(self, method_id, None), method_dict.keys())
     return filter(lambda method: method is not None, method_list)
 
+  security.declarePrivate('getExpressionContext')
   def getExpressionContext(self, ob):
       '''
       An expression context provides names for TALES expressions.

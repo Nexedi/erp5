@@ -24,6 +24,7 @@ from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
+from AccessControl.Permissions import manage_zcatalog_entries
 from SQLCatalog import CatalogError
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.security import RestrictedDTML
@@ -206,9 +207,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.id=id
     self.title=title
 
+  security.declarePrivate('getSQLCatalogIdList')
   def getSQLCatalogIdList(self):
     return self.objectIds(spec=('SQLCatalog',))
 
+  security.declarePublic('getSQLCatalog')
   def getSQLCatalog(self, id=None, default_value=None):
     """
       Get the default SQL Catalog.
@@ -224,6 +227,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     return self._getOb(id, default_value)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogExportProperties')
   def manage_catalogExportProperties(self, REQUEST=None, RESPONSE=None, sql_catalog_id=None):
     """
       Export properties to an XML file.
@@ -232,6 +236,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.manage_exportProperties(REQUEST=REQUEST, RESPONSE=RESPONSE)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogImportProperties')
   def manage_catalogImportProperties(self, file, sql_catalog_id=None):
     """
       Import properties from an XML file.
@@ -246,6 +251,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return 0
     return len(catalog)
 
+  security.declarePrivate('getHotReindexingState')
   def getHotReindexingState(self):
     """
       Return the current hot reindexing state.
@@ -255,14 +261,14 @@ class ZCatalog(Folder, Persistent, Implicit):
       return HOT_REINDEXING_FINISHED_STATE
     return value
 
-  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None, archive_path=None):
+  def _setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None, archive_path=None):
     """
       Set the state of hot reindexing.
 
       Do not use setProperty because the state should not modified from the ZMI directly.
       It must be maintained very carefully.
     """
-    #LOG("setHotReindexingState call", 300, state)
+    #LOG("_setHotReindexingState call", 300, state)
     if source_sql_catalog_id is None:
       source_sql_catalog_id = self.default_sql_catalog_id
 
@@ -280,7 +286,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     else:
       raise CatalogError, 'unknown hot reindexing state %s' % state
 
-  def finishHotReindexing(self, source_sql_catalog_id,
+  def _finishHotReindexing(self, source_sql_catalog_id,
                           destination_sql_catalog_id, skin_selection_dict,
                           sql_connection_id_dict):
     """
@@ -292,16 +298,17 @@ class ZCatalog(Folder, Persistent, Implicit):
     else:
       current_archive = None
     default_catalog_id = self.default_sql_catalog_id
-    self.exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
+    self._exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
                            destination_sql_catalog_id=destination_sql_catalog_id,
                            skin_selection_dict=skin_selection_dict,
                            sql_connection_id_dict=sql_connection_id_dict)
     # cancel archive use as current catalog before archiving
     if current_archive is not None:
       current_archive.cancel()
-    self.setHotReindexingState(state=HOT_REINDEXING_FINISHED_STATE)
+    self._setHotReindexingState(state=HOT_REINDEXING_FINISHED_STATE)
     clearCache(cache_factory_list=('erp5_content_short',))
 
+  security.declarePrivate('cancelHotReindexing')
   def cancelHotReindexing(self):
     """
       Cancel a hot reindexing.
@@ -314,18 +321,19 @@ class ZCatalog(Folder, Persistent, Implicit):
       raise Exception, 'cancelHotReindexing called while no Hot Reindexing '\
                        'was runing. Nothing done.'
     # Remove hot reindexing state
-    self.setHotReindexingState(HOT_REINDEXING_FINISHED_STATE)
+    self._setHotReindexingState(HOT_REINDEXING_FINISHED_STATE)
     portal_activities = getToolByName(self, 'portal_activities')
     if portal_activities is not None:
       object_path = self.getPhysicalPath()
       # Activities must be removed in the reverse order they were inserted
       # to make sure removing one does not accidntaly trigger the next one.
-      method_id_list = ('finishHotReindexing', 'runInventoryMethod',
+      method_id_list = ('_finishHotReindexing', 'runInventoryMethod',
                         'playBackRecordedObjectList', 'InventoryModule_reindexMovementList'
-                        'setHotReindexingState')
+                        '_setHotReindexingState')
       for method_id in method_id_list:
         portal_activities.flush(object_path, method_id=method_id)
 
+  security.declarePrivate('playBackRecordedObjectList')
   def playBackRecordedObjectList(self, sql_catalog_id, catalog=0):
     """
       Play back the actions scheduled while hot reindexing was in "record"
@@ -371,6 +379,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                                        catalog=1)
       # If we were replaying index actions, there is nothing else to do.
 
+  security.declarePrivate('changeSQLConnectionIds')
   def changeSQLConnectionIds(self, folder, sql_connection_id_dict):
     if sql_connection_id_dict is not None:
       if folder.meta_type == 'Z SQL Method':
@@ -381,7 +390,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         for object in folder.objectValues():
           self.changeSQLConnectionIds(object,sql_connection_id_dict)
 
-  def exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
+  def _exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
                         skin_selection_dict, sql_connection_id_dict):
     """
       Exchange two databases.
@@ -395,18 +404,19 @@ class ZCatalog(Folder, Persistent, Implicit):
         # generated uids since destination catalog was created.
         self[destination_sql_catalog_id].insertMaxUid()
 
-    LOG('exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
+    LOG('_exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
     if skin_selection_dict is not None:
-      #LOG('exchangeDatabases skin_selection_dict:',0,'we will do manage_skinLayers')
+      #LOG('_exchangeDatabases skin_selection_dict:',0,'we will do manage_skinLayers')
       for skin_name, selection in self.portal_skins.getSkinPaths():
         if skin_name in skin_selection_dict:
           new_selection = tuple(skin_selection_dict[skin_name])
           self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
 
-    LOG('exchangeDatabases sql_connection_id_dict :',0,sql_connection_id_dict)
+    LOG('_exchangeDatabases sql_connection_id_dict :',0,sql_connection_id_dict)
     if sql_connection_id_dict is not None:
       self.changeSQLConnectionIds(self.portal_skins, sql_connection_id_dict)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_hotReindexAll')
   def manage_hotReindexAll(self, source_sql_catalog_id,
                            destination_sql_catalog_id,
                            archive_path=None,
@@ -505,7 +515,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     # Mark the hot reindex as begun. Each object indexed in the still-current
     # catalog will be scheduled for reindex in the future catalog.
     LOG('hotReindexObjectList', 0, 'Starting recording')
-    self.setHotReindexingState(HOT_REINDEXING_RECORDING_STATE,
+    self._setHotReindexingState(HOT_REINDEXING_RECORDING_STATE,
                                source_sql_catalog_id=source_sql_catalog_id,
                                destination_sql_catalog_id=destination_sql_catalog_id,
                                archive_path=archive_path)
@@ -518,12 +528,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     # Once reindexing is finished, change the hot reindexing state so that
     # new catalog changes are applied in both catalogs.
     self.activate(after_tag=final_activity_tag,
-                  priority=base_priority).setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
+                  priority=base_priority)._setHotReindexingState(HOT_REINDEXING_DOUBLE_INDEXING_STATE,
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       archive_path=archive_path)
     # Once in double-indexing mode, planned reindex can be replayed.
-    self.activate(after_method_id='setHotReindexingState',
+    self.activate(after_method_id='_setHotReindexingState',
                   priority=base_priority).playBackRecordedObjectList(
                       sql_catalog_id=destination_sql_catalog_id)
     # Once there is nothing to replay, databases are sync'ed, so the new
@@ -531,7 +541,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.activate(after_method_id=('playBackRecordedObjectList',
                                    'InventoryModule_reindexMovementList'),
                   after_tag='InventoryModule_reindexMovementList',
-                  priority=base_priority).finishHotReindexing(
+                  priority=base_priority)._finishHotReindexing(
                       source_sql_catalog_id=source_sql_catalog_id,
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       skin_selection_dict=skin_selection_dict,
@@ -540,6 +550,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       URL1 = REQUEST.get('URL1')
       RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=HotReindexing%20Started')
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_edit')
   def manage_edit(self, RESPONSE, URL1, threshold=1000, REQUEST=None):
     """ edit the catalog """
     if type(threshold) is not type(1):
@@ -549,6 +560,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     RESPONSE.redirect(URL1 + '/manage_main?manage_tabs_message=Catalog%20Changed')
 
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogObject')
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ index Zope object(s) that 'urls' point to """
     if sql_catalog_id is None:
@@ -559,6 +571,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       catalog.manage_catalogObject(REQUEST, RESPONSE, URL1, urls=urls)
 
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_uncatalogObject')
   def manage_uncatalogObject(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ removes Zope object(s) 'urls' from catalog """
     if sql_catalog_id is None:
@@ -569,6 +582,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       catalog.manage_uncatalogObject(REQUEST, RESPONSE, URL1, urls=urls)
 
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogReindex')
   def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ clear the catalog, then re-index everything """
     if sql_catalog_id is None:
@@ -578,6 +592,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_catalogReindex(REQUEST, RESPONSE, URL1, urls=urls)
 
+  security.declarePrivate('refreshCatalog')
   def refreshCatalog(self, clear=0, sql_catalog_id=None):
     """ re-index everything we can find """
 
@@ -585,7 +600,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       paths = catalog.getPaths()
       if clear:
-        catalog.clear()
+        catalog._clear()
 
       for p in paths:
         obj = self.resolve_path(p.path)
@@ -594,6 +609,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         if obj is not None:
           self.catalog_object(obj, p.path, sql_catalog_id=sql_catalog_id)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClear')
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     if REQUEST is not None and sql_catalog_id is None:
@@ -603,6 +619,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_catalogClear(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClearReserved')
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     if REQUEST is not None and sql_catalog_id is None:
@@ -612,6 +629,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_catalogClearReserved(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_catalogFoundItems')
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
                  obj_ids=None, obj_searchterm=None,
@@ -661,6 +679,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
               urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_editSchema')
   def manage_editSchema(self, names, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ add a column """
     if REQUEST is not None and sql_catalog_id is None:
@@ -671,6 +690,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if REQUEST and RESPONSE:
       RESPONSE.redirect(URL1 + '/manage_catalogSchema?manage_tabs_message=Schema%20Saved')
 
+  security.declarePrivate('newUid')
   def newUid(self, sql_catalog_id=None):
     """
         Allocates a new uid value.
@@ -679,12 +699,14 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.newUid()
 
+  security.declarePrivate('getDynamicRelatedKeyList')
   def getDynamicRelatedKeyList(self, sql_catalog_id=None,**kw):
     """
     Return the list of dynamic related keys.
     """
     return []
 
+  security.declarePrivate('wrapObject')
   def wrapObject(self, object, **kw):
     """
       Return a wrapped object for reindexing.
@@ -694,10 +716,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     #LOG('ZSQLCatalog wrapObject', 0, 'object = %r, kw = %r' % (object, kw))
     return object
 
+  security.declarePrivate('catalog_object')
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None, **kw):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
+  security.declarePrivate('catalogObjectList')
   def catalogObjectList(self, object_list, sql_catalog_id=None, disable_archive=0,
                         immediate_reindex_archive=1, **kw):
     """Catalog a list of objects.
@@ -842,6 +866,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     object_list[:] = failed_object_list
 
+  security.declarePrivate('uncatalog_object')
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     if uid is None:
@@ -879,16 +904,19 @@ class ZCatalog(Folder, Persistent, Implicit):
             destination_catalog.uncatalogObject(uid=uid)
 
 
+  security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.beforeUncatalogObject(uid=uid,path=path)
 
+  security.declarePrivate('beforeCatalogClear')
   def beforeCatalogClear(self):
     """ allow to override this method """
     pass
 
+  security.declarePrivate('catalogTranslationList')
   def catalogTranslationList(self, object_list, sql_catalog_id=None):
     """Catalog translations.
     """
@@ -896,6 +924,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.catalogTranslationList(object_list)
 
+  security.declarePrivate('deleteTranslationList')
   def deleteTranslationList(self, sql_catalog_id=None):
     """Delete translations.
     """
@@ -903,6 +932,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.deleteTranslationList()
 
+  security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name, sql_catalog_id=None):
     """ returns the unique values for a given FieldIndex """
     catalog = self.getSQLCatalog(sql_catalog_id)
@@ -911,6 +941,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     return ()
 
+  security.declarePrivate('getpath')
   def getpath(self, uid, sql_catalog_id=None):
     """
     Return the path to a cataloged object given its uid
@@ -924,6 +955,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         return None
   getPath = getpath
 
+  security.declarePrivate('hasPath')
   def hasPath(self, path, sql_catalog_id=None):
     """
     Checks if path is catalogued
@@ -932,6 +964,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.hasPath(path)
 
+  security.declarePrivate('getobject')
   def getobject(self, uid, REQUEST=None, sql_catalog_id=None):
     """
     Return a cataloged object given its uid
@@ -948,6 +981,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     return obj
   getObject = getobject
 
+  security.declarePrivate('getObjectList')
   def getObjectList(self, uid_list, REQUEST=None, sql_catalog_id=None):
     """
     Return a cataloged object given its uid
@@ -957,6 +991,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       obj_list.append(self.getObject(uid, REQUEST, sql_catalog_id=sql_catalog_id))
     return obj_list
 
+  security.declarePrivate('getMetadataForUid')
   def getMetadataForUid(self, rid, sql_catalog_id=None):
     # !!! do not use docstring here (CVE-2011-0720).
     # return the correct metadata for the cataloged uid
@@ -965,6 +1000,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getMetadataForUid(int(rid))
     return {}
 
+  security.declarePrivate('getIndexDataForUid')
   def getIndexDataForUid(self, rid, sql_catalog_id=None):
     # !!! do not use docstring here (CVE-2011-0720).
     # return the current index contents for the specific uid
@@ -977,30 +1013,36 @@ class ZCatalog(Folder, Persistent, Implicit):
   getMetadataForRID = getMetadataForUid
   getIndexDataForRID = getIndexDataForUid
 
+  security.declarePrivate('schema')
   def schema(self, sql_catalog_id=None):
     return self.getColumnIds(sql_catalog_id=sql_catalog_id)
 
+  security.declarePrivate('indexes')
   def indexes(self, sql_catalog_id=None):
     return self.getColumnIds(sql_catalog_id=sql_catalog_id)
 
+  security.declarePrivate('names')
   def names(self, sql_catalog_id=None):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       return catalog.names
     return {}
 
+  security.declarePrivate('getColumnIds')
   def getColumnIds(self, sql_catalog_id=None):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       return catalog.getColumnIds()
     return []
 
+  security.declarePublic('hasColumn')
   def hasColumn(self, column, sql_catalog_id=None):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       return catalog.hasColumn(column)
     return False
 
+  security.declarePrivate('getAttributesForColumn')
   def getAttributesForColumn(self, column, sql_catalog_id=None):
     """
       Return the attribute names as a single string
@@ -1013,6 +1055,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getColumnIds(sql_catalog_id=sql_catalog_id)
     return []
 
+  security.declarePrivate('editSchema')
   def editSchema(self,names, sql_catalog_id=None):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
@@ -1050,6 +1093,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   security.declarePublic('buildSqlQuery')
   buildSqlQuery = buildSQLQuery
 
+  security.declarePublic('searchResults')
   def searchResults(self, REQUEST=None, sql_catalog_id=None, **kw):
     """
     Search the catalog according to the ZTables search interface.
@@ -1063,6 +1107,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   __call__=searchResults
 
+  security.declarePublic('countResults')
   def countResults(self, REQUEST=None, sql_catalog_id=None, **kw):
     """
     Counts the number of items which satisfy the query defined in kw.
@@ -1076,6 +1121,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   meta_types=() # Sub-object types that are specific to this object
 
+  security.declarePrivate('valid_roles')
   def valid_roles(self):
     "Return list of valid roles"
     obj=self
@@ -1096,6 +1142,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     roles.sort()
     return roles
 
+  security.declarePrivate('ZopeFindAndApply')
   def ZopeFindAndApply(self, obj, obj_ids=None, obj_metatypes=None,
              obj_searchterm=None, obj_expr=None,
              obj_mtime=None, obj_mspec=None,
@@ -1196,6 +1243,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     return result
 
+  security.declarePrivate('resolve_url')
   def resolve_url(self, path, REQUEST):
     """
     Attempt to resolve a url into an object in the Zope
@@ -1213,6 +1261,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     except:
       pass
 
+  security.declarePrivate('resolve_path')
   def resolve_path(self, path):
     # !!! do not use docstring here (CVE-2011-0720).
     # Attempt to resolve a url into an object in the Zope
@@ -1226,6 +1275,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     except:
       pass
 
+  security.declarePrivate('manage_normalize_paths')
   def manage_normalize_paths(self, REQUEST, sql_catalog_id=None):
     """Ensure that all catalog paths are full physical paths
 
@@ -1271,6 +1321,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           '%s unchanged.' % (len(fixed), len(removed), unchanged),
       action='./manage_main')
 
+  security.declarePrivate('getTableIds')
   def getTableIds(self, sql_catalog_id=None):
     """Returns all tables of this catalog
     """
@@ -1279,6 +1330,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getTableIds()
     return []
 
+  security.declarePrivate('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
@@ -1288,6 +1340,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.sql_search_result_keys
     return []
 
+  security.declarePrivate('getCatalogSearchTableIds')
   def getCatalogSearchTableIds(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
@@ -1297,6 +1350,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getCatalogSearchTableIds()
     return []
 
+  security.declarePrivate('getResultColumnIds')
   def getResultColumnIds(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used
        as metadata
@@ -1306,6 +1360,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getResultColumnIds()
     return []
 
+  security.declarePrivate('getCatalogMethodIds')
   def getCatalogMethodIds(self, sql_catalog_id=None):
     """Find Z SQL methods in the current folder and above
     This function return a list of ids.
@@ -1315,6 +1370,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       return catalog.getCatalogMethodIds()
     return {}
 
+  security.declareProtected(manage_zcatalog_entries, 'manage_editFilter')
   def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """
     This methods allows to set a filter on each zsql method called,
@@ -1328,6 +1384,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_editFilter(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
+  security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self, sql_catalog_id=None):
     """
     Returns only zsql methods wich catalog or uncatalog objets
