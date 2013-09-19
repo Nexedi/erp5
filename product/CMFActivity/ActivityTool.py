@@ -901,7 +901,7 @@ class ActivityTool (Folder, UniqueObject):
       """Check we have been provided a good node name"""
       return isinstance(node_name, str)
 
-    security.declarePublic('manage_setDistributingNode')
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_setDistributingNode')
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):
         """ set the distributing node """
         if not distributingNode or self._isValidNodeName(distributingNode):
