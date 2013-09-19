@@ -38,125 +38,18 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 from xml.dom import minidom
+# You can invoke same tests in your favourite collection of business templates
+# by using TestXHTMLMixin like the following :
+#
+# from Products.ERP5.tests.testERP5XHTML import TestXHTMLMixin
+# class TestMyXHTML(TestXHTMLMixin):
+#   def getBusinessTemplateList(self):
+#     return (...)
 
-# some forms have intentionally empty listbox selections like RSS generators
-FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
+class TestXHTMLMixin(ERP5TypeTestCase):
 
-class TestXHTML(ERP5TypeTestCase):
-
-  run_all_test = 1
-
-  def getTitle(self):
-    return "XHTML Test"
-
-  @staticmethod
-  def getBusinessTemplateList():
-    """  """
-    return ( # dependency order
-      'erp5_core_proxy_field_legacy',
-      'erp5_base',
-      'erp5_simulation',
-      'erp5_trade',
-
-      'erp5_pdf_editor',
-      'erp5_pdm',
-      'erp5_accounting',
-      'erp5_invoicing',
-
-      'erp5_apparel',
-
-##    'erp5_banking_core',
-##    'erp5_banking_cash',
-##    'erp5_banking_check',
-##    'erp5_banking_inventory',
-
-      'erp5_budget',
-      'erp5_public_accounting_budget',
-
-      'erp5_consulting',
-
-      'erp5_ingestion',
-      'erp5_ingestion_mysql_innodb_catalog',
-      'erp5_crm',
-
-      'erp5_jquery',
-      'erp5_jquery_ui',
-      'erp5_web',
-      'erp5_dms',
-      'erp5_email_reader',
-      'erp5_commerce',
-      'erp5_credential',
-
-      'erp5_forge',
-
-      'erp5_immobilisation',
-
-      'erp5_item',
-
-      'erp5_mrp',
-
-      'erp5_payroll',
-
-      'erp5_project',
-
-      'erp5_calendar',
-
-      'erp5_advanced_invoicing',
-
-      'erp5_odt_style',
-      'erp5_documentation',
-
-      'erp5_administration',
-
-      'erp5_knowledge_pad',
-      'erp5_knowledge_pad_ui_test',
-      'erp5_km',
-      'erp5_ui_test',
-      'erp5_dms_ui_test',
-
-      'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
-                                       # reviewed. Many bt like erp5_project are
-                                       # using obsolete field library of trade
-      'erp5_xhtml_style',
-      'erp5_jquery_plugin_svg_editor',
-      'erp5_jquery_plugin_spinbtn',
-      'erp5_jquery_plugin_jquerybbq',
-      'erp5_jquery_plugin_svgicon',
-      'erp5_jquery_plugin_jgraduate',
-      'erp5_jquery_plugin_hotkey',
-      'erp5_jquery_plugin_elastic',
-      'erp5_jquery_plugin_colorpicker',
-      'erp5_jquery_plugin_jqchart',
-      'erp5_jquery_plugin_sheet',
-      'erp5_jquery_plugin_mbmenu',
-      'erp5_jquery_plugin_wdcalendar',
-      'erp5_xinha_editor',
-      'erp5_svg_editor',
-      'erp5_jquery_sheet_editor',
-      'erp5_web_ung_core',
-      'erp5_web_ung_theme',
-      'erp5_web_ung_role',
-      'erp5_ui_test',
-      'erp5_web_ung_ui_test',
-      'erp5_l10n_fr', # install at least one localization business template
-                      # because some language switching widgets are only
-                      # present if there is more than one available language.
-    )
-
-  def afterSetUp(self):
-    self.portal = self.getPortal()
-
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-
-    self.login('seb')
-    self.enableDefaultSitePreference()
-
-  def enableDefaultSitePreference(self):
-    portal_preferences = getToolByName(self.portal, 'portal_preferences')
-    default_site_preference = portal_preferences.default_site_preference
-    if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
-      default_site_preference.enable()
+  # some forms have intentionally empty listbox selections like RSS generators
+  FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
 
   def changeSkin(self, skin_name):
     """
@@ -252,7 +145,7 @@ class TestXHTML(ERP5TypeTestCase):
         if field.getRecursiveTemplateField().meta_type == 'ListBox':
           selection_name = field.get_value("selection_name")
           if selection_name in ("",None) and \
-            form_path not in FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
+            form_path not in self.FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
             error_list.append(form_path)
     self.assertEquals(error_list, [])
 
@@ -393,6 +286,123 @@ class TestXHTML(ERP5TypeTestCase):
       if len(location_list) > 1:
         error_list.extend(location_list)
     self.assertEqual(error_list, [])
+
+class TestXHTML(TestXHTMLMixin):
+
+  run_all_test = 1
+
+  def getTitle(self):
+    return "XHTML Test"
+
+  @staticmethod
+  def getBusinessTemplateList():
+    """  """
+    return ()
+    return ( # dependency order
+      'erp5_core_proxy_field_legacy',
+      'erp5_base',
+      'erp5_simulation',
+      'erp5_trade',
+
+      'erp5_pdf_editor',
+      'erp5_pdm',
+      'erp5_accounting',
+      'erp5_invoicing',
+
+      'erp5_apparel',
+
+##    'erp5_banking_core',
+##    'erp5_banking_cash',
+##    'erp5_banking_check',
+##    'erp5_banking_inventory',
+
+      'erp5_budget',
+      'erp5_public_accounting_budget',
+
+      'erp5_consulting',
+
+      'erp5_ingestion',
+      'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_crm',
+
+      'erp5_jquery',
+      'erp5_jquery_ui',
+      'erp5_web',
+      'erp5_dms',
+      'erp5_email_reader',
+      'erp5_commerce',
+      'erp5_credential',
+
+      'erp5_forge',
+
+      'erp5_immobilisation',
+
+      'erp5_item',
+
+      'erp5_mrp',
+
+      'erp5_payroll',
+
+      'erp5_project',
+
+      'erp5_calendar',
+
+      'erp5_advanced_invoicing',
+
+      'erp5_odt_style',
+      'erp5_documentation',
+
+      'erp5_administration',
+
+      'erp5_knowledge_pad',
+      'erp5_knowledge_pad_ui_test',
+      'erp5_km',
+      'erp5_ui_test',
+      'erp5_dms_ui_test',
+
+      'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
+                                       # reviewed. Many bt like erp5_project are
+                                       # using obsolete field library of trade
+      'erp5_xhtml_style',
+      'erp5_jquery_plugin_svg_editor',
+      'erp5_jquery_plugin_spinbtn',
+      'erp5_jquery_plugin_jquerybbq',
+      'erp5_jquery_plugin_svgicon',
+      'erp5_jquery_plugin_jgraduate',
+      'erp5_jquery_plugin_hotkey',
+      'erp5_jquery_plugin_elastic',
+      'erp5_jquery_plugin_colorpicker',
+      'erp5_jquery_plugin_jqchart',
+      'erp5_jquery_plugin_sheet',
+      'erp5_jquery_plugin_mbmenu',
+      'erp5_jquery_plugin_wdcalendar',
+      'erp5_xinha_editor',
+      'erp5_svg_editor',
+      'erp5_jquery_sheet_editor',
+      'erp5_web_ung_core',
+      'erp5_web_ung_theme',
+      'erp5_web_ung_role',
+      'erp5_ui_test',
+      'erp5_web_ung_ui_test',
+      'erp5_l10n_fr', # install at least one localization business template
+                      # because some language switching widgets are only
+                      # present if there is more than one available language.
+    )
+
+  def afterSetUp(self):
+    self.portal = self.getPortal()
+
+    uf = self.getPortal().acl_users
+    uf._doAddUser('seb', '', ['Manager'], [])
+
+    self.login('seb')
+    self.enableDefaultSitePreference()
+
+  def enableDefaultSitePreference(self):
+    portal_preferences = getToolByName(self.portal, 'portal_preferences')
+    default_site_preference = portal_preferences.default_site_preference
+    if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
+      default_site_preference.enable()
 
 class W3Validator(object):
 
