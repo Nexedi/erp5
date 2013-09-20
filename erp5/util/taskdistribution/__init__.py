@@ -369,26 +369,9 @@ class TestResultProxy(RPCRetry):
         """
         return self._retryRPC('stopTest', [self._test_result_path])
         
-class TestResultProxyProxy(TestResultProxy):
-    """
-    A wrapper/proxy to TestResultProxy
-    """
-    def __init__(self, test_suite_master_url, retry_time, logger, test_result_path,
-                node_title, revision):
-      try:
-        proxy = ServerProxy(
-                test_suite_master_url,
-                allow_none=True,
-            ).portal_task_distribution
-      except:
-        raise ValueError("Cannot instanciate ServerProxy")
-      TestResultProxy.__init__(self, proxy, retry_time, logger, test_result_path,
-                node_title, revision)
-
     def getRunningTestCase(self):
       """
-      A proxy to getNextTestCase
-      Return the relative path of the test with the running state
+      Return the relative path of the next test with the running state
       """
       return self._retryRPC('getRunningTestCase', [self._test_result_path])
 
