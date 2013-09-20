@@ -155,7 +155,7 @@ class PerformanceTester(object):
                         nargs='+',
                         metavar='BENCHMARK_SUITES',
                         help='Benchmark suite modules')
-                        
+
 
   @staticmethod
   def _check_parsed_arguments(namespace):
@@ -166,9 +166,9 @@ class PerformanceTester(object):
     namespace.user_tuple = ArgumentType.objectFromModule(namespace.user_info_filename,
                                                          object_name='user_tuple',
                                                          searchable_path_list=users_file_path_list)
-    
+
     namespace.benchmark_suite_list = namespace.benchmark_suite_list[0].split(" ")
-    
+
     object_benchmark_suite_list = []
     for benchmark_suite in namespace.benchmark_suite_list:
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
@@ -222,7 +222,7 @@ class PerformanceTester(object):
         ERP5BenchmarkResult.createResultDocument(self._argument_namespace.erp5_publish_url,
                                                  self._argument_namespace.erp5_publish_project,
                                                  self._argument_namespace.repeat,
-                                                 self._argument_namespace.users)          
+                                                 self._argument_namespace.users)
 
   def postRun(self, error_message_set):
     if not self._argument_namespace.erp5_publish_url:
