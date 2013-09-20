@@ -188,7 +188,7 @@ class ScalabilityLauncher(object):
     self.log = logger.info
 
     # Proxy to with erp5 master test_result
-    self.test_result = taskdistribution.TestResultProxyProxy(
+    self.test_result = taskdistribution.TestResultProxy(
                         self.__argumentNamespace.test_suite_master_url,
                         1.0, DummyLogger(self.log),
                         self.__argumentNamespace.test_result_path,
