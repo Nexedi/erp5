@@ -34,7 +34,7 @@ class DummyLogger(object):
 def getConnection(erp5_url, log):
   """
   Return a connection with the erp5 instance.
-  """  
+  """
   start_time = time.time()
   count = 0
   while MAX_GETTING_CONNECTION_TIME > time.time()-start_time:
@@ -84,7 +84,7 @@ def waitFor0PendingActivities(erp5_url, log):
       if len(message_list)==1 :
         log("1 pending activity but ok.")
         ok = True
-        
+
       log("There is %d pending activities" %len(message_list))
       time.sleep(5)
     except:
@@ -139,7 +139,7 @@ class ScalabilityTest(object):
   def __init__(self, data, test_result):
     self.__dict__ = {}
     self.__dict__.update(data)
-    self.test_result = test_result    
+    self.test_result = test_result
 
 def doNothing(**kwargs):
   pass
@@ -186,7 +186,7 @@ class ScalabilityLauncher(object):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     self.log = logger.info
-    
+
     # Proxy to with erp5 master test_result
     self.test_result = taskdistribution.TestResultProxyProxy(
                         self.__argumentNamespace.test_suite_master_url,
@@ -205,40 +205,40 @@ class ScalabilityLauncher(object):
     parser.add_argument('--test-result-path',
                         metavar='ERP5_TEST_RESULT_PATH',
                         help='ERP5 relative path of the test result')
-                             
+
     parser.add_argument('--revision',
                         metavar='REVISION',
                         help='Revision of the test_suite')
-                              
+
     parser.add_argument('--test-suite',
                         metavar='TEST_SUITE',
                         help='Name of the test suite')
-                        
+
     parser.add_argument('--node-title',
                         metavar='NODE_TITLE',
                         help='Title of the testnode which is running this'
                               'launcher')
-                              
+
     parser.add_argument('--test-suite-master-url',
                         metavar='TEST_SUITE_MASTER_URL',
                         help='Url to connect to the ERP5 Master testsuite taskditributor')
-                        
+
     parser.add_argument('--log-path',
                         metavar='LOG_PATH',
                         help='Log Path')
-                        
+
     parser.add_argument('--erp5-location',
                         metavar='ERP5_LOCATION',
                         help='Path to erp5 depository')
-                        
+
     parser.add_argument('--runner-path',
                         metavar='Runner_PATH',
                         help='runner Path')
-   
+
   @staticmethod
   def _checkParsedArguments(namespace):
     return namespace
-    
+
   @staticmethod
   def _parseArguments(parser):
     ScalabilityLauncher._addParserArguments(parser)
@@ -270,7 +270,7 @@ class ScalabilityLauncher(object):
       return None
     decoded_data = Utils.deunicodeData(json.loads(data))
     return ScalabilityTest(decoded_data, self.test_result)
-    
+
   def run(self):
     self.log("Scalability Launcher started, with:")
     self.log("Test suite master url: %s" %self.__argumentNamespace.test_suite_master_url)
@@ -279,12 +279,12 @@ class ScalabilityLauncher(object):
     self.log("Revision: %s" %self.__argumentNamespace.revision)
     self.log("Node title: %s" %self.__argumentNamespace.node_title)
     self.log("ERP5 url: %s" %self.__argumentNamespace.erp5_url)
-    
+
     error_message_set, exit_status = set(), 0
 
     # Get suite informations
     suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
-    test_suite_list = suite.getTestList()    
+    test_suite_list = suite.getTestList()
 
     # Main loop
     while True:
@@ -295,7 +295,7 @@ class ScalabilityLauncher(object):
         time.sleep(15)
         current_test = self.getRunningTest()
       self.log("Test Case %s going to be run." %(current_test.title))
-      
+
       # Prepare configuration
       current_test_number = int(current_test.title)
       test_duration = suite.getTestDuration(current_test_number)
@@ -312,11 +312,11 @@ class ScalabilityLauncher(object):
 
       # Store the number of documents generated for each iteration
       document_number = []
-      
+
       # Repeat the same test several times to accurate test result
       for i in range(1, repetition+1):
         self.log("Repetition: %d/%d" %(i, repetition))
-        
+
         # Get the number of documents present before running the test.
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
         previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
@@ -340,7 +340,7 @@ class ScalabilityLauncher(object):
                '--user-index', str(user_index),
           ])
           user_index += user_number/len(test_suite_list)
-            
+
         # Launch commands
         tester_process_list = []
         for command in command_list:
@@ -357,7 +357,7 @@ class ScalabilityLauncher(object):
 
         # Count created documents
         # Wait for 0 pending activities before counting
-        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)        
+        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
         current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
         created_document_number = current_document_number - previous_document_number
         self.log("previous_document_number: %d" %previous_document_number)
@@ -366,7 +366,7 @@ class ScalabilityLauncher(object):
         document_number.append(created_document_number)
         # Move csv/logs
         self.moveLogs(current_test.title)
-      
+
       self.log("Test Case %s is finish" %(current_test.title))
 
       # Get the maximum as choice
