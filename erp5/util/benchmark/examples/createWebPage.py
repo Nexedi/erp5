@@ -26,7 +26,7 @@ def createWebPage(result, browser):
   """
   # Open ERP5 homepage
   browser.open(sleep=(TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT))
- 
+
   # Log in unless already logged in by a previous test suite
   browser.mainForm.submitLogin(sleep=(TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT))
 
@@ -58,25 +58,25 @@ def createWebPage(result, browser):
   selectRandomOption(browser, "subfield_field_my_site_list_default:list")
   selectRandomOption(browser, "subfield_field_my_function_list_default:list")
   browser.mainForm.getControl(name='field_my_subject_list').value = generateString(30)
- 
-  
+
+
   ## Fill the Follow-up input
   fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", NUMMAX_FOLLOW_UP,
-               "FollowUp", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)                                        
-  
+               "FollowUp", TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT)
+
   # Submit the changes, record the time elapsed in seconds
   result('Save', browser.mainForm.submitSave(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
   web_page_url = browser.url
-  
-  
+
+
   ## Edit the relations with other existing documents
   # Go to the Related Documents view
   browser.open(web_page_url+"/Document_viewRelated")
-    
+
   # Fill the Referenced Documents input
   fillRelatedObjects(browser, result,
       "portal_selections/viewSearchRelatedDocumentDialog0:method", 3,
@@ -102,6 +102,6 @@ def createWebPage(result, browser):
   result('Waiting for publish_action', waiting_for_publish_action)
   result('Show publish', show_publish_time)
   result('Published', browser.mainForm.submitDialogConfirm())
-  
+
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Status changed.'
