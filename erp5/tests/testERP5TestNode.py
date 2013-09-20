@@ -168,7 +168,7 @@ class ERP5TestNode(TestCase):
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
     return commit_dict
 
-  def test_01_getDelNodeTestSuite(self, my_test_type='UnitTest'):
+  def test_01_getDelNodeTestSuite(self):
     """
     We should be able to get/delete NodeTestSuite objects inside test_node
     """
@@ -181,7 +181,7 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
 
-  def test_02_NodeTestSuiteWorkingDirectory(self, my_test_type='UnitTest'):
+  def test_02_NodeTestSuiteWorkingDirectory(self):
     """
     Make sure we extend the working path with the node_test_suite reference
     """
@@ -193,7 +193,7 @@ class ERP5TestNode(TestCase):
     self.assertEquals("%s/foo/test_suite" % self.working_directory,
                       node_test_suite.test_suite_directory)
 
-  def test_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='UnitTest'):
+  def test_03_NodeTestSuiteCheckDataAfterEdit(self):
     """
     When a NodeTestSuite instance is edited, the method _checkData
     analyse properties and add new ones
@@ -256,7 +256,7 @@ ignore-ssl-certificate = true
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_05_getAndUpdateFullRevisionList(self, my_test_type='UnitTest'):
+  def test_05_getAndUpdateFullRevisionList(self):
     """
     Check if we clone correctly repositories and get right revisions
     """
@@ -353,7 +353,7 @@ ignore-ssl-certificate = true
     finally:
       Updater.deleteRepository = original_deleteRepository
 
-  def test_06_checkRevision(self, my_test_type='UnitTest'):
+  def test_06_checkRevision(self):
     """
     Check if we are able to restore older commit hash if master decide so
     """
@@ -390,7 +390,7 @@ ignore-ssl-certificate = true
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
 
-  def test_07_checkExistingTestSuite(self, my_test_type='UnitTest'):
+  def test_07_checkExistingTestSuite(self):
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
@@ -406,7 +406,7 @@ ignore-ssl-certificate = true
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_08_getSupportedParamaterSet(self, my_test_type='UnitTest'):
+  def test_08_getSupportedParamaterSet(self):
     original_spawn = ProcessManager.spawn
     try:
       def get_help(self, *args, **kw):
@@ -673,7 +673,7 @@ ignore-ssl-certificate = true
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_12_spawn(self, my_test_type='UnitTest'):
+  def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
@@ -683,7 +683,7 @@ ignore-ssl-certificate = true
     # it will be automatically killed
     self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
 
-  def test_13_SlaposControlerResetSoftware(self, my_test_type='UnitTest'):
+  def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()
     controler = SlapOSControler(self.working_directory,
                                 test_node.config, self.log)
@@ -695,7 +695,7 @@ ignore-ssl-certificate = true
     controler._resetSoftware()
     self.assertEquals([], os.listdir(controler.software_root))
 
-  def test_14_createFolder(self, my_test_type='UnitTest'):
+  def test_14_createFolder(self):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     node_test_suite.edit(working_directory=self.working_directory)
@@ -853,7 +853,7 @@ ignore-ssl-certificate = true
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
-  def test_16_cleanupLogDirectory(self, my_test_type='UnitTest'):
+  def test_16_cleanupLogDirectory(self):
     # Make sure that we are able to cleanup old log folders
     test_node = self.getTestNode()
     def check(file_list):
@@ -874,7 +874,7 @@ ignore-ssl-certificate = true
     test_node._cleanupLog()
     check(set(['a_file']))
 
-  def test_17_cleanupTempDirectory(self, my_test_type='UnitTest'):
+  def test_17_cleanupTempDirectory(self):
     # Make sure that we are able to cleanup old temp folders
     test_node = self.getTestNode()
     temp_directory = self.system_temp_folder
@@ -936,24 +936,10 @@ ignore-ssl-certificate = true
       initial_initializeSlapOSControler
     SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
 
-  def test_scalability_01_getDelNodeTestSuite(self, my_test_type='ScalabilityTest'):
-    self.test_01_getDelNodeTestSuite(my_test_type)
-  def test_scalability_02_NodeTestSuiteWorkingDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_02_NodeTestSuiteWorkingDirectory(my_test_type)
-  def test_scalability_03_NodeTestSuiteCheckDataAfterEdit(self, my_test_type='ScalabilityTest'):
-    self.test_03_NodeTestSuiteCheckDataAfterEdit(my_test_type)
   def test_scalability_04_constructProfile(self, my_test_type='ScalabilityTest'):
     self.test_04_constructProfile(my_test_type)
-  def test_scalability_05_getAndUpdateFullRevisionList(self, my_test_type='ScalabilityTest'):
-    self.test_05_getAndUpdateFullRevisionList(my_test_type)
   def test_scalability_05b_changeRepositoryBranch(self, my_test_type='ScalabilityTest'):
     self.test_05b_changeRepositoryBranch(my_test_type)
-  def test_scalability_06_checkRevision(self, my_test_type='ScalabilityTest'):
-    self.test_06_checkRevision(my_test_type)
-  def test_scalability_07_checkExistingTestSuite(self, my_test_type='ScalabilityTest'):
-    self.test_07_checkExistingTestSuite(my_test_type)
-  def test_scalability_08_getSupportedParamaterSet(self, my_test_type='ScalabilityTest'):
-    self.test_08_getSupportedParamaterSet(my_test_type)
   def test_scalability_09_runTestSuite(self, my_test_type='ScalabilityTest'):
     # TODO : write own scalability test
     pass
@@ -967,20 +953,10 @@ ignore-ssl-certificate = true
   # TODO : add a test with master and a launchable testsuite -> patch a lot of methods
   def test_scalability_as_slave_11_run(self, my_test_type='ScalabilityTest'):
     self.test_11_run(my_test_type, grade='slave')
-  def test_scalability_12_spawn(self, my_test_type='ScalabilityTest'):
-    self.test_12_spawn(my_test_type)
-  def test_scalability_13_SlaposControlerResetSoftware(self, my_test_type='ScalabilityTest'):
-    self.test_13_SlaposControlerResetSoftware(my_test_type)
-  def test_scalability_14_createFolder(self, my_test_type='ScalabilityTest'):
-    self.test_14_createFolder(my_test_type)
   def test_scalability_as_master_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
     self.test_15_suite_log_directory(my_test_type, grade='master')
   def test_scalability_as_slave_15_suite_log_directory(self, my_test_type='ScalabilityTest'):
     self.test_15_suite_log_directory(my_test_type, grade='slave')
-  def test_scalability_16_cleanupLogDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_16_cleanupLogDirectory(my_test_type)
-  def test_scalability_17_cleanupTempDirectory(self, my_test_type='ScalabilityTest'):
-    self.test_17_cleanupTempDirectory(my_test_type)
   def test_scalability_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='ScalabilityTest'):
     # TODO : write own scalability test
     pass
@@ -1020,7 +996,6 @@ ignore-ssl-certificate = true
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
-      return "Certificate"
     def patch_getSlaposHateoasUrl(self, *args, **kw):
       return "http://Foo"
     def patch_getTestType(self, *args, **kw):
