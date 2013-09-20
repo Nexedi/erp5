@@ -50,7 +50,7 @@ class ArgumentType(object):
 
     import sys
     sys.path.append(os.getcwd())
-    
+ 
     if searchable_path_list:
       for path in searchable_path_list:
         sys.path.append(path)
