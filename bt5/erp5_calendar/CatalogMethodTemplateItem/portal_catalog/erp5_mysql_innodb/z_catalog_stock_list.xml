@@ -114,7 +114,7 @@ WHERE\n
                       getSourceSectionUid[loop_item],\n
                       getSourceUid[loop_item],\n
                       getResourceUid[loop_item],\n
-                      getInventoriatedQuantity[loop_item],\n
+                      -(mov_item.getInventoriatedQuantity() or 0),\n
                       isCancellationAmount[loop_item],\n
                       isAccountable[loop_item],\n
                       mov_item.getStopDate(),\n
