@@ -55,6 +55,12 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
     self.resource = self.portal.product_module.newContent(
                                     portal_type='Product',
                                     title='Resource')
+    self.variated_resource = self.portal.product_module.newContent(
+                                    portal_type='Product',
+                                    title='Variated Resource',
+                                    variation_base_category_list=['size'],
+                                    variation_category_list=['size/small',
+                                                             'size/big'])
     self.currency = self.portal.currency_module.newContent(
                                     portal_type='Currency',
                                     title='Currency')
@@ -301,6 +307,59 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                  quantity=1)
     # using the supply line inside trade condition
     self.assertEquals(2, line.getPrice())
+
+  def test_supply_cell_priority(self):
+    # supply lines from related trade condition should have priority over
+    # supply cells from supply modules
+    other_supply = self.portal.getDefaultModule(self.supply_type
+                             ).newContent(portal_type=self.supply_type,
+                                          resource_value=self.resource,
+                                          source_section_value=self.vendor,
+                                          destination_section_value=self.client)
+    other_supply.validate()
+    other_supply_line = other_supply.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.variated_resource)
+    other_supply_line.setPVariationBaseCategoryList(['size'])
+    other_supply_line.updateCellRange(base_id='path')
+    self.tic()
+    other_small_cell = other_supply_line.newCell(base_id='path', *['size/small'])
+    other_small_cell.setMappedValuePropertyList(['base_price'])
+    other_small_cell.setVariationCategoryList(['size/small'])
+    other_small_cell.setMembershipCriterionBaseCategoryList(['size'])
+    other_small_cell.setMembershipCriterionCategoryList(['size/small'])
+    other_small_cell.setBasePrice(1)
+
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.variated_resource,)
+    supply_line.setPVariationBaseCategoryList(['size'])
+    supply_line.updateCellRange(base_id='path')
+    self.tic()
+
+    small_cell = supply_line.newCell(base_id='path', *['size/small'])
+    small_cell.setMappedValuePropertyList(['base_price'])
+    small_cell.setVariationCategoryList(['size/small'])
+    small_cell.setMembershipCriterionBaseCategoryList(['size'])
+    small_cell.setMembershipCriterionCategoryList(['size/small'])
+    small_cell.setBasePrice(2)
+
+    self.order.setSpecialiseValue(self.trade_condition)
+    self.order.setSourceSectionValue(self.vendor)
+    self.order.setDestinationSectionValue(self.client)
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.variated_resource,)
+    self.assertEquals(None, line.getPrice())
+    line.setVariationBaseCategoryList(['size'])
+    line.setVariationCategoryList(['size/small'])
+    line.updateCellRange(base_id='movement')
+    self.tic()
+
+    cell = line.newCell(base_id='movement', *['size/small'])
+    cell.setQuantity(1)
+    self.assertEquals(2, cell.getPrice())
 
   def test_supply_line_in_invalidated_trade_condition_does_not_apply(self):
     # supply lines from supply modules
