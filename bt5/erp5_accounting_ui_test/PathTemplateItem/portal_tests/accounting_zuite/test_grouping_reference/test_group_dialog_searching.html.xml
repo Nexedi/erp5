@@ -78,113 +78,115 @@ Sorting in Grouping Dialog\n
   <td>4 records</td>\n
 </tr>\n
 \n
-<!-- Sort by date asc {{{ -->\n
+<tr>\n
+  <td>type</td>\n
+  <!-- debit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>  \n
+  <td>2200</td>\n
+</tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:asc"]</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
-  <td>Client 1 Sale Invoice</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset debit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- credit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[4]/input</td>  \n
+  <td>2200</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[7]/a</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset credit -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[4]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- explanation reference. As this is generated, we just use % -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>  \n
+  <td>%</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td> <!-- in our test data set, only invoices have reference, not payments -->\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset explanation reference -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- date -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[6]/input</td>  \n
+  <td>2005/01/02</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2 records</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <!-- reset date -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[6]/input</td>  \n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <!-- title -->\n
+  <td>//tr[@class=\'listbox-search-line\']/th[7]/input</td>  \n
   <td>Client 1 Payment</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[7]/a</td>\n
-  <td>Client 2 Sale Invoice</td>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@class="listbox-select-action"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[7]/a</td>\n
-  <td>Client 2 Payment</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
 </tr>\n
-<!-- }}} -->\n
 \n
-<!-- Sort by date desc {{{ -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[6]/button[@value="listbox.date:desc"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[7]/a</td>\n
-  <td>Client 1 Sale Invoice</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[7]/a</td>\n
-  <td>Client 1 Payment</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[7]/a</td>\n
-  <td>Client 2 Sale Invoice</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
-  <td>Client 2 Payment</td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
-<!-- Sort by grouping reference asc {{{ -->\n
-<tr>\n
-  <!-- XXX-Tatuya: For what purpose of this sort? -->\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:asc"]</td>\n
-  <td></td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
-\n
-<!-- Sort by Account Name asc {{{ -->\n
-<tr>\n
-  <td>assertElementPresent</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <!-- reset grouping reference sorting -->\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[2]/button[@value="listbox.grouping_reference:none"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:asc"]</td>\n
-  <td></td>\n
-</tr>\n
-<!-- all lines have the same account here. -->\n
-<!-- }}} -->\n
-\n
-<!-- Sort by third party title asc {{{ -->\n
-<tr>\n
-  <td>assertElementPresent</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <!-- reset Account Name sorting -->\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[9]/button[@value="listbox.node_title:none"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//tr[@class=\'listbox-label-line\']/th[10]/button[@value="listbox.Movement_getMirrorSectionTitle:asc"]</td>\n
-  <td></td>\n
-</tr>\n
-<!-- this is not really sorting by title, but by uid just to make sure lines\n
-for the same party are grouped together.\n
--->\n
-<!-- }}} -->\n
 \n
 </tbody></table>\n
 </body>\n
@@ -203,7 +205,7 @@ for the same party are grouped together.\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_group_dialog_sorting.html</string> </value>
+            <value> <string>test_group_dialog_searching.html</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
