@@ -297,7 +297,6 @@ class TestXHTML(TestXHTMLMixin):
   @staticmethod
   def getBusinessTemplateList():
     """  """
-    return ()
     return ( # dependency order
       'erp5_core_proxy_field_legacy',
       'erp5_base',
