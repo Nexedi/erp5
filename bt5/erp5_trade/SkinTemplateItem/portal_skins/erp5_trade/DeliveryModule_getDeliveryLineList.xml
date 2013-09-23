@@ -55,12 +55,21 @@ line_list = []\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
 \n
-checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(module_selection_name)\n
-if checked_uid_list:\n
-  getObject = portal.portal_catalog.getObject\n
-  delivery_list = [getObject(uid) for uid in checked_uid_list]\n
-else:\n
-  delivery_list = portal.portal_selections.callSelectionFor(module_selection_name, context=context)\n
+# XXX use a larger limit\n
+saved_selection_params = context.getPortalObject().portal_selections.getSelectionParamsFor(module_selection_name)\n
+selection_params = saved_selection_params.copy()\n
+selection_params[\'limit\'] = 10000\n
+context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, selection_params)\n
+\n
+try:\n
+  checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(module_selection_name)\n
+  if checked_uid_list:\n
+    getObject = portal.portal_catalog.getObject\n
+    delivery_list = [getObject(uid) for uid in checked_uid_list]\n
+  else:\n
+    delivery_list = portal.portal_selections.callSelectionFor(module_selection_name, context=context)\n
+finally:\n
+  context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, saved_selection_params)\n
 \n
 account_title_cache = dict()\n
 def getAccountTitle(relative_url):\n
@@ -95,6 +104,8 @@ for delivery in delivery_list:\n
         destination_section_title=movement.getDestinationSectionTitle(),\n
         source_administration_title=movement.getSourceAdministrationTitle(),\n
         destination_administration_title=movement.getDestinationAdministrationTitle(),\n
+        source_trade_title=movement.getSourceTradeTitle(),\n
+        destination_trade_title=movement.getDestinationTradeTitle(),\n
         source_function_title=movement.getSourceFunctionTitle(),\n
         destination_function_title=movement.getDestinationFunctionTitle(),\n
         source_decision_title=movement.getSourceDecisionTitle(),\n
