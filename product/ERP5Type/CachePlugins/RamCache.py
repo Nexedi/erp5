@@ -37,17 +37,15 @@ from Products.ERP5Type import interfaces
 import zope.interface
 
 def calcPythonObjectMemorySize(i):
-  """ Recursive function that will 'walk' over complex python types and caclulate
-      their RAM memory usage. """
-  from mx.Tools import sizeof
-  s = sizeof(i)
-  if isinstance(i, dict):
-    for k, v in i.items():
-      s += calcPythonObjectMemorySize(k) + calcPythonObjectMemorySize(v)
-  elif isinstance(i, (list, tuple)):
-    for v in i:
-      s += calcPythonObjectMemorySize(v)
-  return s
+  """
+  Returns the memory size of an object.
+  (returns 0 if the required library is missing).
+  """
+  try:
+    from pympler.asizeof import asizeof
+    return asizeof(i)
+  except ImportError:
+    return 0
 
 _MARKER = []
 class RamCache(BaseCache):
