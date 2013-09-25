@@ -224,6 +224,7 @@ for history in history_list:\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

@@ -112,6 +112,7 @@ if debit_required:\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

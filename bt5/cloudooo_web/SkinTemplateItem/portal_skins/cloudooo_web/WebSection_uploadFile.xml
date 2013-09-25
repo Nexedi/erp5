@@ -129,6 +129,7 @@ context.Base_redirect(\'WebSection_viewWaitingConversion\',\n
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

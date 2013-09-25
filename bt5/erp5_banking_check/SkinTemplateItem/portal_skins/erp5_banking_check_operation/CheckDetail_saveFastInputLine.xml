@@ -156,6 +156,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

@@ -215,6 +215,7 @@ return context.Base_redirect(redirect_url=redirect_url,\n
               <tuple>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

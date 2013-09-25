@@ -125,6 +125,7 @@ else:\n
               <tuple>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

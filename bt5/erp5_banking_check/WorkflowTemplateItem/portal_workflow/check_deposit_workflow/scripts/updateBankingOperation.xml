@@ -76,6 +76,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

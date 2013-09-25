@@ -77,6 +77,7 @@ return benchmark_report\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

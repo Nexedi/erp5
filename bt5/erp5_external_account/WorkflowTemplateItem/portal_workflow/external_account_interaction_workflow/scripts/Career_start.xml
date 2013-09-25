@@ -91,6 +91,7 @@ if domain in portal.portal_preferences.getPreferredManagedExternalDomainNameList
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

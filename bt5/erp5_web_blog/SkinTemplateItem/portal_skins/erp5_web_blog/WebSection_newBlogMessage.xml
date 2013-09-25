@@ -99,6 +99,7 @@ return context.Base_redirect(\'\', keep_items = dict(portal_status_message=porta
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

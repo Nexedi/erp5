@@ -117,6 +117,7 @@ return current_object.EmailDocument_viewAttachmentListRenderer()\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

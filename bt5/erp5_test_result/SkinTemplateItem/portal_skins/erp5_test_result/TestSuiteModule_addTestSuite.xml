@@ -79,6 +79,7 @@ if batch_mode:\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>

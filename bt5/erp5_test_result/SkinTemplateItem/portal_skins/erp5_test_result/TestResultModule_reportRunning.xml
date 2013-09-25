@@ -81,6 +81,7 @@ test_report.start(date=DateTime(form.get(\'launch_date\')))\n
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
