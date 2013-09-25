@@ -102,7 +102,7 @@ def checkGuard(guard, ob):
   # returns 1 if guard passes against ob, else 0.
   # TODO : implement TALES evaluation by defining an appropriate
   # context.
-  u = None
+  sm = None
   if guard.permissions:
     for p in guard.permissions:
       if _checkPermission(p, ob):
@@ -110,10 +110,19 @@ def checkGuard(guard, ob):
       else:
         return 0
   if guard.roles:
-    if u is None:
-      u = getSecurityManager().getUser()
+    if sm is None:
+      sm = getSecurityManager()
+      u = sm.getUser()
+    def getRoles():
+      stack = sm._context.stack
+      if stack and len(stack) > 1:
+        eo = stack[-2] # -1 is the current script.
+        proxy_roles = getattr(eo, '_proxy_roles', None)
+        if proxy_roles:
+          return proxy_roles
+      return u.getRolesInContext(ob)
     # Require at least one of the given roles.
-    u_roles = u.getRolesInContext(ob)
+    u_roles = getRoles()
     for role in guard.roles:
       if role in u_roles:
         break
@@ -121,8 +130,9 @@ def checkGuard(guard, ob):
       return 0
   if guard.groups:
     # Require at least one of the specified groups.
-    if u is None:
-      u = getSecurityManager().getUser()
+    if sm is None:
+      sm = getSecurityManager()
+      u = sm.getUser()
     b = aq_base( u )
     if hasattr( b, 'getGroupsInContext' ):
       u_groups = u.getGroupsInContext( ob )
