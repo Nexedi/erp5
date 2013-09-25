@@ -1,0 +1,28 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<form action="manage_setGuard" method="POST">
+<table>
+
+<tr>
+<th align="left" valign="top">Guard</th>
+<td>
+<dtml-with getGuard>
+<table>
+<tr>
+<th align="left">Permission(s)</th>
+<td><input type="text" name="guard_permissions" value="&dtml-getPermissionsText;" /></td>
+<th align="left">Role(s)</th>
+<td><input type="text" name="guard_roles" value="&dtml-getRolesText;" /></td>
+<th align="left">Group(s)</th>
+<td><input type="text" name="guard_groups" value="&dtml-getGroupsText;" /></td>
+</tr>
+</table>
+</dtml-with>
+</td>
+</tr>
+
+</table>
+<input type="submit" name="submit" value="Save changes" />
+</form>
+<dtml-var manage_page_footer>
