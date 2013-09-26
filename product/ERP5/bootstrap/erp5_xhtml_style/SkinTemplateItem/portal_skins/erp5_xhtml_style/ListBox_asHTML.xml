@@ -297,7 +297,6 @@
                                                    or \'Sort\';\n
                                   listbox_field_id string:${field_id}.${sql};">                 \n
                     <!-- Button in normal view -->\n
-                    <span tal:condition="is_gadget_mode" i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
                     <span tal:condition="not:is_gadget_mode" class="listbox-table-header-column-title" i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
                     <button tal:condition="not:is_gadget_mode"\n
                             type="submit"\n
@@ -329,24 +328,37 @@
                     </button>\n
 \n
                     <!-- Button in gadget mode -->\n
-                    <button tal:condition="is_gadget_mode" \n
-                              tal:define ="params python: {\'setSelectionQuickSortOrder:method\':listbox_field_id};"\n
-                              type="button"  \n
-                              tal:attributes="title title; \n
-                                              onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
-                                              class bt_class;"\n
-                              i18n:domain="ui" i18n:attributes="title">\n
-                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    <span tal:condition="is_gadget_mode" class="listbox-table-header-column-title" i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    <button tal:condition="is_gadget_mode"\n
+                            type="button"\n
+                            title="Ascending Display"\n
+                            class="sort-button sort-button-asc"\n
+                            tal:define ="value python:test(sort_order==\'ascending\', listbox_field_id+\':none\', listbox_field_id+\':asc\');\n
+                                         params python: {\'setSelectionQuickSortOrder:method\':value};"\n
+                            tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
+                            i18n:domain="ui" i18n:attributes="title">\n
+                      <img src="images/transparent-image.gif"\n
+                           alt="Ascending Display"\n
+                           title="Ascending Display"\n
+                           tal:attributes="src string:${portal_url_string}/images/transparent-image.gif;\n
+                                           class python:test(sort_order==\'ascending\', \'sort-button sort-button-arrow sort-button-asc-selected\', \'sort-button sort-button-arrow sort-button-asc-not-selected\');"\n
+                           i18n:domain="ui" i18n:attributes="title;alt" />\n
                     </button>\n
-  \n
-                    <!-- Icon showing sort order -->\n
-                    <img tal:condition="is_gadget_mode"\n
-                         src="images/transparent-image.gif"\n
-                         tal:attributes="alt   bt_title;\n
-                                         title   bt_title;\n
-                                         class bt_class;\n
-                                         src string:${portal_url_string}/images/transparent-image.gif"\n
-                         i18n:domain="ui" i18n:attributes="title;alt" />\n
+                    <button tal:condition="is_gadget_mode"\n
+                            type="button"\n
+                            title="Descending Display"\n
+                            class="sort-button sort-button-desc"\n
+                            tal:define ="value python:test(sort_order==\'descending\', listbox_field_id+\':none\', listbox_field_id+\':desc\');\n
+                                         params python: {\'setSelectionQuickSortOrder:method\':value};"\n
+                            tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
+                            i18n:domain="ui" i18n:attributes="title">\n
+                      <img src="images/transparent-image.gif"\n
+                           alt="Descending Display"\n
+                           title="Descending Display"\n
+                           tal:attributes="src string:${portal_url_string}/images/transparent-image.gif;\n
+                                           class python:test(sort_order==\'descending\', \'sort-button sort-button-arrow sort-button-desc-selected\', \'sort-button sort-button-arrow sort-button-desc-not-selected\');"\n
+                           i18n:domain="ui" i18n:attributes="title;alt" />\n
+                    </button>\n
                     \n
                   </th>\n
 \n
