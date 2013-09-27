@@ -102,15 +102,9 @@ class PresencePeriod(Movement, PeriodicityMixin):
     single destination.
     """
     result = []
-    if self.getDestinationUid() is None:
-      return result
-    group_calendar = self.getParentValue()
-    presence_period_list = group_calendar.objectValues(portal_type="Group Presence Period")
-    for presence_period in presence_period_list:
-      for from_date, to_date in presence_period._getDatePeriodList():
-        if from_date.greaterThanEqualTo(self.getStartDate()) and to_date.lessThanEqualTo(self.getStopDate() or group_calendar.getStopDate()):
-          result.append(self.asContext(self, start_date=to_date, stop_date=from_date))
-
+    for from_date, to_date in self._getDatePeriodList():
+      result.append(self.asContext(self, start_date=to_date,
+                                   stop_date=from_date))
     return result
 
   def _getDatePeriodList(self):

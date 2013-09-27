@@ -34,5 +34,30 @@ class GroupCalendarAssignment(PresencePeriod):
   meta_type = 'ERP5 Group Calendar Assignment'
   portal_type = 'Group Calendar Assignment'
 
+  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'asMovementList')
+  def asMovementList(self):
+    """
+    Generate multiple movement from a single one.
+    It is used for cataloging a movement multiple time in
+    the movement/stock tables.
+
+    Ex: a movement have multiple destinations.
+    asMovementList returns a list a movement context with different
+    single destination.
+    """
+    result = []
+    if self.getDestinationUid() is None:
+      return result
+    group_calendar = self.getParentValue()
+    presence_period_list = group_calendar.objectValues(portal_type="Group Presence Period")
+    for presence_period in presence_period_list:
+      for from_date, to_date in presence_period._getDatePeriodList():
+        if from_date.greaterThanEqualTo(self.getStartDate()) and \
+            to_date.lessThanEqualTo(self.getStopDate() or group_calendar.getStopDate()):
+          result.append(self.asContext(self, start_date=to_date, stop_date=from_date))
+    return result
