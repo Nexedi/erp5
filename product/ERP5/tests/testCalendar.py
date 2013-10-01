@@ -55,7 +55,7 @@ class TestCalendar(ERP5ReportTestCase):
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Author', 'Assignor', 
+    uf._doAddUser('rc', '', ['Manager', 'Author', 'Assignor',
                              'Assignee', 'Auditor'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
@@ -130,7 +130,7 @@ class TestCalendar(ERP5ReportTestCase):
         person=person,
     )
 
-  def stepCreateGroupCalendar(self, sequence=None, 
+  def stepCreateGroupCalendar(self, sequence=None,
                                  sequence_list=None, **kw):
     """
     Create an personal calendar
@@ -142,7 +142,7 @@ class TestCalendar(ERP5ReportTestCase):
         group_calendar=pc,
     )
 
-  def stepSetGroupCalendarSource(self, sequence=None, 
+  def stepSetGroupCalendarSource(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Set the source
@@ -153,13 +153,13 @@ class TestCalendar(ERP5ReportTestCase):
     if len(assignment_list) != 0:
       assignment = assignment_list[0]
     else:
-      assignment = person.newContent( 
+      assignment = person.newContent(
         portal_type = 'Assignment',
       )
     assignment.setCalendarList(
         assignment.getCalendarList()+[group_calendar.getRelativeUrl()])
 
-  def stepCreateGroupPresencePeriod(self, sequence=None, 
+  def stepCreateGroupPresencePeriod(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Create an personal calendar period
@@ -173,14 +173,14 @@ class TestCalendar(ERP5ReportTestCase):
         group_presence_period=group_presence_period,
     )
 
-  def stepSetGroupPresencePeriodValues(self, sequence=None, 
+  def stepSetGroupPresencePeriodValues(self, sequence=None,
                                          sequence_list=None, **kw):
     """
     Set values on personal calendar period
     """
     group_presence_period = sequence.get('group_presence_period')
 
-  def stepSetGroupPresencePeriodDates(self, sequence=None, 
+  def stepSetGroupPresencePeriodDates(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     Set values on personal calendar period
@@ -191,7 +191,7 @@ class TestCalendar(ERP5ReportTestCase):
       stop_date=self.stop_date,
     )
 
-  def stepSetGroupPresencePeriodPerStopDate(self, sequence=None, 
+  def stepSetGroupPresencePeriodPerStopDate(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     Set values on personal calendar period
@@ -201,7 +201,7 @@ class TestCalendar(ERP5ReportTestCase):
       periodicity_stop_date=self.periodicity_stop_date,
     )
 
-  def stepSetGroupPresencePeriodToCheck(self, sequence=None, 
+  def stepSetGroupPresencePeriodToCheck(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Set personal calendar period to check
@@ -209,7 +209,7 @@ class TestCalendar(ERP5ReportTestCase):
     group_presence_period = sequence.get('group_presence_period')
     sequence.edit(obj_to_check=group_presence_period)
 
-  def stepSetGroupCalendarEventPerStopDate(self, sequence=None, 
+  def stepSetGroupCalendarEventPerStopDate(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     Set values on personal calendar event
@@ -219,7 +219,7 @@ class TestCalendar(ERP5ReportTestCase):
       periodicity_stop_date=self.periodicity_stop_date,
     )
 
-  def stepConfirmGroupCalendar(self, sequence=None, 
+  def stepConfirmGroupCalendar(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Confirm group calendar
@@ -228,7 +228,7 @@ class TestCalendar(ERP5ReportTestCase):
     group_calendar.confirm()
     self.assertEqual('confirmed', group_calendar.getSimulationState())
 
-  def stepConfirmActionGroupCalendar(self, sequence=None, 
+  def stepConfirmActionGroupCalendar(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Confirm group calendar with user interface transition
@@ -241,7 +241,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual('confirmed', group_calendar.getSimulationState())
 
 
-  def stepCreateLeaveRequest(self, sequence=None, 
+  def stepCreateLeaveRequest(self, sequence=None,
                                  sequence_list=None, **kw):
     """
     Create a personal calendar
@@ -253,7 +253,7 @@ class TestCalendar(ERP5ReportTestCase):
         leave_request=pc,
     )
 
-  def stepSetLeaveRequestDestination(self, sequence=None, 
+  def stepSetLeaveRequestDestination(self, sequence=None,
                                          sequence_list=None, **kw):
     """
     Set the destination
@@ -262,7 +262,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = sequence.get('person')
     leave_request.setDestinationValue(person)
 
-  def stepCreatePersonalLeavePeriod(self, sequence=None, 
+  def stepCreatePersonalLeavePeriod(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Create an personal calendar period
@@ -276,7 +276,7 @@ class TestCalendar(ERP5ReportTestCase):
         personal_leave_period=personal_leave_period,
     )
 
-  def stepSetPersonalLeavePeriodToCheck(self, sequence=None, 
+  def stepSetPersonalLeavePeriodToCheck(self, sequence=None,
                                         sequence_list=None, **kw):
     """
     Set personal leave period to check
@@ -284,14 +284,14 @@ class TestCalendar(ERP5ReportTestCase):
     personal_leave_period = sequence.get('personal_leave_period')
     sequence.edit(obj_to_check=personal_leave_period)
 
-  def stepSetPersonalLeavePeriodValues(self, sequence=None, 
+  def stepSetPersonalLeavePeriodValues(self, sequence=None,
                                        sequence_list=None, **kw):
     """
     Set values on personal calendar event
     """
     personal_leave_period = sequence.get('personal_leave_period')
 
-  def stepSetPersonalLeavePeriodDates(self, sequence=None, 
+  def stepSetPersonalLeavePeriodDates(self, sequence=None,
                                       sequence_list=None, **kw):
     """
     Set values on personal calendar
@@ -302,7 +302,7 @@ class TestCalendar(ERP5ReportTestCase):
       stop_date=self.stop_date,
     )
 
-  def stepSetPersonalLeavePeriodPerStopDate(self, sequence=None, 
+  def stepSetPersonalLeavePeriodPerStopDate(self, sequence=None,
                                             sequence_list=None, **kw):
     """
     Set values on personal calendar event
@@ -312,7 +312,7 @@ class TestCalendar(ERP5ReportTestCase):
       periodicity_stop_date=self.periodicity_stop_date,
     )
 
-  def stepPlanLeaveRequest(self, sequence=None, 
+  def stepPlanLeaveRequest(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Plan personal calendar
@@ -321,7 +321,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.plan()
     self.assertEqual('planned', leave_request.getSimulationState())
 
-  def stepConfirmLeaveRequest(self, sequence=None, 
+  def stepConfirmLeaveRequest(self, sequence=None,
                                sequence_list=None, **kw):
     """
     Confirm personal calendar
@@ -350,7 +350,7 @@ class TestCalendar(ERP5ReportTestCase):
     uid_list = [x.uid for x in result]
     return uid_list
 
-  def stepCheckNotCatalogued(self, sequence=None, 
+  def stepCheckNotCatalogued(self, sequence=None,
                              sequence_list=None, **kw):
     """
     Create an personal calendar period
@@ -359,7 +359,7 @@ class TestCalendar(ERP5ReportTestCase):
     obj_to_check = sequence.get('obj_to_check')
     self.assertFalse(obj_to_check.getUid() in uid_list)
 
-  def stepCheckCatalogued(self, sequence=None, 
+  def stepCheckCatalogued(self, sequence=None,
                           sequence_list=None, **kw):
     """
     Create an personal calendar period
@@ -371,7 +371,7 @@ class TestCalendar(ERP5ReportTestCase):
 #     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
 
-  def stepCheckCataloguedAsMovement(self, sequence=None, 
+  def stepCheckCataloguedAsMovement(self, sequence=None,
                                     sequence_list=None, **kw):
     """
     Create an personal calendar period
@@ -387,7 +387,7 @@ class TestCalendar(ERP5ReportTestCase):
     Test indexing
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -416,7 +416,7 @@ class TestCalendar(ERP5ReportTestCase):
     Test indexing
     """
     if not run: return
-    
+
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -441,7 +441,7 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckGetTimeAvailability(self, sequence=None, 
+  def stepCheckGetTimeAvailability(self, sequence=None,
                                    sequence_list=None, **kw):
     """
     Check getTimeAvailability
@@ -455,27 +455,27 @@ class TestCalendar(ERP5ReportTestCase):
 
     # Check 1 period
     self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
     self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
     self.assertEqual(second_availability / 2,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=self.middle_date))
     self.assertEqual(second_availability / 2,
-                      person.getAvailableTime(from_date=self.middle_date, 
+                      person.getAvailableTime(from_date=self.middle_date,
                                                      to_date=stop_date))
     # Check 2 periods
     self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
-                                         from_date=start_date, 
+                                         from_date=start_date,
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
-  def stepCheckDoubleGetTimeAvailability(self, sequence=None, 
+  def stepCheckDoubleGetTimeAvailability(self, sequence=None,
                                          sequence_list=None, **kw):
     """
     Check getTimeAvailability
@@ -491,18 +491,18 @@ class TestCalendar(ERP5ReportTestCase):
 
     # Check 1 period
     self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                                  to_date=stop_date))
     # Check 2 periods
     self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
-                                         from_date=start_date, 
+                                         from_date=start_date,
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
-  def stepCheckPersonalTimeAvailability(self, sequence=None, 
+  def stepCheckPersonalTimeAvailability(self, sequence=None,
                                    sequence_list=None, **kw):
     """
     Check getTimeAvailability
@@ -516,27 +516,27 @@ class TestCalendar(ERP5ReportTestCase):
 
     # Check 1 period
     self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
     self.assertEqual(second_availability,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
     self.assertEqual(second_availability / 2,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=self.middle_date))
     self.assertEqual(second_availability / 2,
-                      person.getAvailableTime(from_date=self.middle_date, 
+                      person.getAvailableTime(from_date=self.middle_date,
                                                      to_date=stop_date))
     # Check 2 periods
     self.assertEqual(2 * second_availability,
                       person.getAvailableTime(
-                                         from_date=start_date, 
+                                         from_date=start_date,
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
-  def stepCheckCumulativeTimeAvailability(self, sequence=None, 
+  def stepCheckCumulativeTimeAvailability(self, sequence=None,
                                           sequence_list=None, **kw):
     """
     Check getTimeAvailability
@@ -550,12 +550,12 @@ class TestCalendar(ERP5ReportTestCase):
 
     # Check 1 period
     self.assertEqual(0,
-                      person.getAvailableTime(from_date=start_date, 
+                      person.getAvailableTime(from_date=start_date,
                                               to_date=stop_date))
     # Check 2 periods
     self.assertEqual(second_availability,
                       person.getAvailableTime(
-                                         from_date=start_date, 
+                                         from_date=start_date,
                                          to_date=date_period_list[1][1]))
 #     # Check all periods
 #     self.assertEqual(len(date_period_list) * second_availability,
@@ -566,7 +566,7 @@ class TestCalendar(ERP5ReportTestCase):
     Test indexing
     """
     if not run: return
-    
+
     # Test that calendar group increase time availability
     sequence_list = SequenceList()
     sequence_string = '\
@@ -585,7 +585,7 @@ class TestCalendar(ERP5ReportTestCase):
               CheckGetTimeAvailability \
               '
     sequence_list.addSequenceString(sequence_string)
-    
+
     # Test getTimeAvailability does not interfere with other documents
     sequence_list = SequenceList()
     sequence_string = '\
@@ -605,7 +605,7 @@ class TestCalendar(ERP5ReportTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-    
+
     # Test getTimeAvailability is cumulative
     sequence_list = SequenceList()
     sequence_string = '\
@@ -625,7 +625,7 @@ class TestCalendar(ERP5ReportTestCase):
               CheckDoubleGetTimeAvailability \
               '
     sequence_list.addSequenceString(sequence_string)
-    
+
     # Test that leave period decrease time availability
     sequence_list = SequenceList()
     sequence_string = '\
@@ -645,7 +645,7 @@ class TestCalendar(ERP5ReportTestCase):
               CheckPersonalTimeAvailability \
               '
     sequence_list.addSequenceString(sequence_string)
-    
+
     # Combine object
     sequence_list = SequenceList()
     sequence_string = '\
@@ -703,7 +703,7 @@ class TestCalendar(ERP5ReportTestCase):
               CheckGetTimeAvailability \
               '
     sequence_list.addSequenceString(sequence_string)
-    
+
     # Test getTimeAvailability does not interfere with other documents
     sequence_list = SequenceList()
     sequence_string = '\
@@ -723,7 +723,7 @@ class TestCalendar(ERP5ReportTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-    
+
     # Test getTimeAvailability is cumulative
     sequence_list = SequenceList()
     sequence_string = '\
@@ -820,7 +820,7 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(total_time, person.getAvailableTime(
                                 from_date=self.start_date-1,
                                 to_date=self.stop_date+1))
-    self.assertEqual([total_time], [x.total_quantity for x in 
+    self.assertEqual([total_time], [x.total_quantity for x in
                               person.getAvailableTimeSequence(
                                 year=1,
                                 from_date=self.start_date-1,
@@ -845,18 +845,18 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual(0, person.getAvailableTime(
                                 from_date=self.start_date-1,
                                 to_date=self.stop_date+1))
-    self.assertEqual([0], [x.total_quantity for x in 
+    self.assertEqual([0], [x.total_quantity for x in
                               person.getAvailableTimeSequence(
                                 year=1,
                                 from_date=self.start_date-1,
                                 to_date=self.stop_date+1)])
-                              
+
     available_time_movement_list = person.Person_getAvailableTimeMovementList(
                                             from_date=self.start_date-1,
                                             to_date=self.stop_date+1)
@@ -885,11 +885,11 @@ class TestCalendar(ERP5ReportTestCase):
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
     self.tic()
-    
+
     self.assertEqual((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18 - 14 + 12 - 8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -916,13 +916,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual(0, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([0],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -954,7 +954,7 @@ class TestCalendar(ERP5ReportTestCase):
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
     self.tic()
-    
+
     # 2008/01/07 was a Monday
     self.assertEqual((18 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 6).earliestTime(),
@@ -986,13 +986,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual(0, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 6).earliestTime(),
                             to_date=DateTime(2008, 1, 7).latestTime()))
-                            
+
     self.assertEqual([0],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=2,
@@ -1018,11 +1018,11 @@ class TestCalendar(ERP5ReportTestCase):
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
     self.tic()
-    
+
     self.assertEqual((18 - 8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18 - 8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1048,13 +1048,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((9-8 + 18-17) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(9-8 + 18-17) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1098,13 +1098,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((18-9) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18-9) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1145,13 +1145,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((17-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(17-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1198,13 +1198,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((18-13 + 12-10 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18-13 + 12-10 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1255,13 +1255,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18-11 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1310,13 +1310,13 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type1)
     leave_request.setDestinationValue(person)
     leave_request.confirm()
-    
+
     self.tic()
-    
+
     self.assertEqual((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
                             from_date=DateTime(2008, 1, 1).earliestTime(),
                             to_date=DateTime(2008, 1, 1).latestTime()))
-                            
+
     self.assertEqual([(18-11 + 9-8) * 60 * 60],
       [x.total_quantity for x in person.getAvailableTimeSequence(
                   day=1,
@@ -1396,17 +1396,17 @@ class TestCalendar(ERP5ReportTestCase):
 
     self.tic()
 
-    # set request variables and render                 
+    # set request variables and render
     request_form = self.portal.REQUEST
     request_form['from_date'] = DateTime(2008, 1, 1)
     request_form['to_date'] = DateTime(2009, 1, 1)
     request_form['node_category'] = 'group/my_group'
-    
+
     report_section_list = self.getReportSectionList(
                              self.portal.person_module,
                              'PersonModule_viewLeaveRequestReport')
     self.assertEqual(1, len(report_section_list))
-      
+
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(2, len(data_line_list))
@@ -1432,7 +1432,7 @@ class TestCalendar(ERP5ReportTestCase):
                              total=3.5,
                              **{'calendar_period_type/type2': 2.0,
                                 'calendar_period_type/type3': 1.5,})
-                             
+
 
 
 import unittest
