@@ -63,6 +63,7 @@ div.web-toolbar h3 {\n
   margin: 0em;\n
   cursor:pointer;\n
   display:block;\n
+  box-sizing:border-box;\n
 }\n
 div.web-toolbar h3:hover {\n
   background:#ccf;\n
@@ -126,7 +127,10 @@ div.web-toolbar fieldset {               /* Should be the same as "fieldset" rul
   background: none;\n
   border: inherit;\n
   margin: 0;\n
+  padding: 0;\n
   border: 0;\n
+  position: fixed;\n
+  bottom: 0;\n
 }\n
 div.web-toolbar fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
   padding: 0;\n
@@ -218,6 +222,89 @@ div.web-toolbar div.menu ul li a:link{\n
   color:auto !important;\n
 }\n
 \n
+/* Web Toolbar */\n
+div.web-toolbar{\n
+  background-color: #000000;\n
+}\n
+\n
+div.web-toolbar h3{\n
+  color:#FFFFFF;\n
+  padding-top: 4px;\n
+}\n
+\n
+div.web-toolbar h3 a{\n
+  color:#FFFFFF;\n
+  font-weight: bold;\n
+}\n
+\n
+#wrapper_footer div.web-toolbar ul{\n
+  padding: 0em;\n
+  margin: 0em;\n
+}\n
+\n
+#wrapper_footer div.web-toolbar li.toolboxSection:hover, \n
+#wrapper_footer div.web-toolbar li.toolboxSection h3:hover {\n
+  background:#A8A799;\n
+}\n
+ \n
+div.web-toolbar div.menu{\n
+  background:#818364;\n
+  padding: 0em;\n
+  border-style: none;\n
+}\n
+\n
+div.web-toolbar div.menu ul li{\n
+  padding:0;\n
+  margin:0;\n
+  float:left;\n
+  width:100%;\n
+}\n
+\n
+div.web-toolbar div.menu li > a span, div.web-toolbar div.menu button, div.web-toolbar div.menu label{\n
+  color: #FFFFFF;\n
+}\n
+\n
+div.web-toolbar li > a span {\n
+  padding: 0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu label{\n
+  font-weight: bold;\n
+  margin-top:1em;\n
+  margin-bottom:1em;\n
+  margin-left:0.5em;\n
+  width:100%;\n
+}\n
+div.web-toolbar div.menu input{\n
+  margin-left:0.5em;\n
+}\n
+div.web-toolbar div.menu button,\n
+div.web-toolbar div.menu a{\n
+  color: #FFFFFF!important;\n
+  background-color: transparent;\n
+  padding-left: 1em;\n
+  padding-bottom:0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu li:hover{\n
+  background-color: #000000;\n
+}\n
+\n
+div.web-toolbar li > a, div.web-toolbar button{\n
+  border-style: none;\n
+}\n
+div.web-toolbar div.menu div.field{\n
+  padding-left: 0.5em;\n
+  padding-right: 0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field select, div.web-toolbar div.menu div.field button{\n
+  max-width: 90%;\n
+}\n
+\n
+#clone_action_button{\n
+  width: 80%;\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>
