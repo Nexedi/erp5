@@ -58,6 +58,7 @@ if owner_id_list:\n
   found_user_list = getUserByLogin(context.getPortalObject(), tuple(owner_id_list))\n
   if found_user_list:\n
     return found_user_list[0].getTitle()\n
+  return owner_id_list[0]\n
 </string> </value>
         </item>
         <item>
