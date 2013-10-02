@@ -33,6 +33,7 @@ import errno, json, os, re, shutil
 from base64 import b64encode, b64decode
 from tempfile import gettempdir
 from AccessControl import Unauthorized
+from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base, Implicit
 from App.config import getConfiguration
@@ -127,7 +128,8 @@ class WorkingCopy(Implicit):
     if restricted and not any(
         issubdir(allowed, path) or issubdir(allowed, real_path)
         for allowed in (getConfiguration().instancehome, gettempdir())):
-      raise Unauthorized("Unauthorized access to path %r."
+      if 'Developer' not in getSecurityManager().getUser().getRoles():
+        raise Unauthorized("Unauthorized access to path %r."
                          " It is NOT in your Zope home instance." % path)
     if os.path.isdir(real_path):
       return real_path
