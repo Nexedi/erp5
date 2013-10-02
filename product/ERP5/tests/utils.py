@@ -40,6 +40,11 @@ else:
   from Products.ERP5Type.tests.backportUnittest import \
     expectedFailure as newSimulationExpectedFailure
 
+# Keep a global reference to a ZODB storage so that we can import business
+# template xml files. XXX this connection will remain open.
+db = DB(DemoStorage())
+connection = db.open()
+
 
 class BusinessTemplateInfoBase:
 
@@ -103,15 +108,12 @@ class BusinessTemplateInfoBase:
   def setUpActions(self):
 
     def parse(file_path):
-      db = DB(DemoStorage())
-      _connection = db.open()
-      action_information = importXML(_connection, file_path)
+      action_information = importXML(connection, file_path)
       action_information.__repr__()
       for key, value in action_information.__dict__.iteritems():
         if value not in (None, "") and key in ('action', 'condition') :
           setattr(action_information, key, value.text)
       actions = action_information.__dict__.copy()
-      db.close()
       return actions
 
     name = '%s/ActionTemplateItem/portal_types/' % self.getPrefix()
