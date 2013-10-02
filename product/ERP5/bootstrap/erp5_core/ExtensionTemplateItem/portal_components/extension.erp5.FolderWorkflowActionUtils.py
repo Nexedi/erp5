@@ -198,3 +198,25 @@ def getWorkflowActionDocumentList(self, **kw):
 
   return document_list
 
+def getPossibleWorkflowActionItemList(self, brain, **kw):
+  """
+  SECURITY AUDIT - CHECKED
+  This external method should be safe, because we cannot pass brain
+  from URL.
+  """
+  portal = self.getPortalObject()
+  Base_translateString = portal.Base_translateString
+  item_list = [('', '')]
+  for action in portal.portal_actions.listFilteredActionsFor(brain).get('workflow', []):
+    transition = action.get('transition', None)
+    if transition is not None:
+      workflow_id = action['transition'].aq_parent.aq_parent.getId()
+      if workflow_id == brain.workflow_id:
+        dialog_id = action['url'].split('?', 1)[0].split('/')[-1]
+        dialog_object = getattr(portal, dialog_id, None)
+        if dialog_object is None or dialog_object.meta_type != 'ERP5 Form':
+          dialog_id = portal.Base_viewWorkflowActionDialog.getId()
+        item_list.append((Base_translateString(action['title']),
+                          '%s/%s/%s' % (workflow_id, action['id'], dialog_id)))
+
+  return item_list
