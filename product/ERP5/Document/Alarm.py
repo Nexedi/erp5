@@ -119,7 +119,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       if not checkPermission(Permissions.ManagePortal, self):
         raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
 
-    # Use UnrestrictedMethod, so that the behavior would not
+    # Use UnrestrictedMethod, so that the behaviour would not
     # change even if this method is invoked by random users.
     @UnrestrictedMethod
     def _activeSense():
@@ -143,8 +143,8 @@ class Alarm(XMLObject, PeriodicityMixin):
         except AttributeError:
           # XXX guess presence of *args and **kw
           name_list = func_code.co_varnames[func_code.co_argcount:]
-          has_args = int(name_list and name_list[0] == 'args')
-          has_kw = int(len(name_list) > has_args and
+          has_args = bool(name_list and name_list[0] == 'args')
+          has_kw = bool(len(name_list) > has_args and
                        name_list[has_args] == 'kw')
         name_list = func_code.co_varnames[:func_code.co_argcount]
         if 'params' in name_list or has_kw:
@@ -160,7 +160,7 @@ class Alarm(XMLObject, PeriodicityMixin):
           self.activate(after_tag=tag).notify(include_active=True, params=params)
 
     # switch to nobody temporarily so that unrestricted _activeSense
-    # is already invoked by system user.
+    # is always invoked by system user.
     sm = getSecurityManager()
     newSecurityManager(None, nobody)
     try:

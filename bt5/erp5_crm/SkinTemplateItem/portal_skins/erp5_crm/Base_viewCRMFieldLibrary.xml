@@ -145,6 +145,12 @@
                         <string>my_source_project_title</string>
                         <string>your_format</string>
                         <string>my_content_type</string>
+                        <string>my_dialog_mode_description</string>
+                        <string>my_dialog_mode_title</string>
+                        <string>my_dialog_mode_text_content</string>
+                        <string>your_dialog_mode_single_event</string>
+                        <string>your_dialog_mode_follow_up</string>
+                        <string>my_dialog_mode_direction</string>
                       </list>
                     </value>
                 </item>

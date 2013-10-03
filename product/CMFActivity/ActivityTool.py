@@ -226,10 +226,16 @@ class Message(BaseMessage):
       group_method_id = 'portal_activities/dummyGroupMethod/' + self.method_id
     return group_method_id + '\0' + get('group_id', '')
 
+  def _getObject(self, activity_tool):
+    obj = activity_tool.getPhysicalRoot()
+    for id in self.object_path[1:]:
+      obj = obj[id]
+    return obj
+
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
     try:
-      obj = activity_tool.unrestrictedTraverse(self.object_path)
+      obj = self._getObject(activity_tool)
     except KeyError:
       LOG('CMFActivity', WARNING, "Message dropped (no object found at path %r)"
           % (self.object_path,), error=sys.exc_info())
@@ -255,7 +261,7 @@ class Message(BaseMessage):
   def getObjectCount(self, activity_tool):
     if 'expand_method_id' in self.activity_kw:
       try:
-        obj = activity_tool.unrestrictedTraverse(self.object_path)
+        obj = self._getObject(activity_tool)
         return len(getattr(obj, self.activity_kw['expand_method_id'])())
       except StandardError:
         pass
@@ -373,7 +379,7 @@ Named Parameters: %r
 
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
-    obj = activity_tool.unrestrictedTraverse(self.object_path)
+    obj = self._getObject(activity_tool)
     old_security_manager = getSecurityManager()
     try:
       # Change user if required (TO BE DONE)
@@ -1468,7 +1474,7 @@ class ActivityTool (Folder, UniqueObject):
       object_list = []
       for sql_message in message_list:
         message = self.newContent(temp_object=1)
-        message.edit (**sql_message.__dict__)
+        message.__dict__.update(**sql_message.__dict__)
         object_list.append(message)
       return object_list
 

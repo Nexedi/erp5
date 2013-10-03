@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title tal:content="template/getId"/>\n
+</head>\n
+<body >\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+</thead><tbody>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+<tr>\n
+\t<td>openAndWait</td>\n
+\t<td>${base_url}/view</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>Add tab</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>add_new_tab_dialog_link</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>new_pad_title</td>\n
+\t<td>test tab person</td>\n
+</tr>\n
+<tr>\n
+\t<td>keyPressAndWait</td>\n
+\t<td>new_pad_title</td>\n
+\t<td>\\13</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>test tab person</td>\n
+\t<td></td>\n
+</tr>\n
+<!-- check adding gadgets  By clicking -->\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>Add gadgets</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>waitForTextPresent</td>\n
+\t<td>Your tab is empty.</td>\n
+\t<td></td>\n
+</tr>\n
+<!--  add "Persons" gadget to front-->\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+\t<td>openAndWait</td>\n
+\t<td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>waitForText</td>\n
+\t<td>transition_message</td>\n
+\t<td>regexp:knowledge_pad_module/.*</td>\n
+</tr>\n
+<tr>\n
+\t<td>storeText</td>\n
+\t<td>transition_message</td>\n
+\t<td>erp5_persons_url</td>\n
+</tr>\n
+<tr>\n
+\t<td>openAndWait</td>\n
+\t<td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_url}</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>storeText</td>\n
+\t<td>transition_message</td>\n
+\t<td>erp5_persons_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>waitForElementPresent</td>\n
+\t<td>//th[@class="listbox-table-header-cell"][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//th[@class="listbox-table-header-cell"][1]</td>\n
+\t<td>Name</td>\n
+</tr>\n
+<tr>\n
+\t<td>assertElementPresent</td>\n
+\t<td>//th[@class="listbox-table-header-cell"][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//th[@class="listbox-table-header-cell"][2]</td>\n
+\t<td>Email</td>\n
+</tr>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testPersonGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

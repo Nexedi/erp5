@@ -66,7 +66,7 @@ class PreferenceMethod(Method):
     self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
 
   def __call__(self, instance, default=_marker, *args, **kw):
-    def _getPreference(*args, **kw):
+    def _getPreference(default, *args, **kw):
       # XXX: sql_catalog_id is passed when calling getPreferredArchive
       # This is inconsistent with regular accessor API, and indicates that
       # there is a design problem in current archive API.
@@ -78,17 +78,14 @@ class PreferenceMethod(Method):
         #     user to mask a non-null global value with a null value.
         if value not in (_marker, None, '', (), []):
           return value
-      return _marker
+      if default is _marker:
+        return self._preference_default
+      return default
     _getPreference = CachingMethod(_getPreference,
             id='%s.%s' % (self._preference_cache_id,
                           getSecurityManager().getUser().getId()),
             cache_factory='erp5_ui_short')
-    value = _getPreference(*args, **kw)
-    if value is not _marker:
-      return value
-    elif default is _marker:
-      return self._preference_default
-    return default
+    return _getPreference(default, *args, **kw)
 
 class PreferenceTool(BaseTool):
   """

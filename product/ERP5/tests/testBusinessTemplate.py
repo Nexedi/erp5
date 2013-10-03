@@ -41,7 +41,6 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
-from Products.ERP5Type.tests.testDynamicClassGeneration import TestDeveloperMixin
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
@@ -58,7 +57,7 @@ from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor):
+class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',
@@ -6830,6 +6829,84 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCreateTextFile(self, sequence=None, **kw):
+    skin_tool = self.getSkinsTool()
+    skin_folder = skin_tool._getOb(sequence.get('skin_folder_id'))
+
+    file_id = 'fake_js_file'
+    file_content = """  
+   var 
+ 
+        debug =  [42  
+ ];
+ 
+    """
+
+    from Products.ERP5Type.tests.utils import createZODBFile
+    createZODBFile(skin_folder, file_id, 'text/javascript', file_content)
+
+    sequence.edit(fake_file_id=file_id,
+                  fake_file_content=file_content)
+
+  def stepCheckTextFileContent(self, sequence=None, **kw):
+    skin_folder = self.getSkinsTool()._getOb(sequence.get('skin_folder_id'))
+    file_content = getattr(skin_folder, sequence.get('fake_file_id')).data
+    expected_file_content = sequence.get('fake_file_content')
+
+    self.assertEquals(file_content, expected_file_content)
+    self.assertEquals(len(file_content), len(expected_file_content))
+
+  def test_text_file_import_export(self):
+    """
+    When importing back ace.js containing a last line with whitespaces only,
+    the last line was not imported, and thus the file could never been
+    downloaded completely as its really size was less than the one on the File
+    ZODB object
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+       CreateSkinFolder
+       CreateTextFile
+       CheckTextFileContent
+
+       CreateNewBusinessTemplate
+       UseExportBusinessTemplate
+       AddSkinFolderToBusinessTemplate
+       CheckModifiedBuildingState
+       CheckNotInstalledInstallationState
+       BuildBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       CheckObjectPropertiesInBusinessTemplate
+       SaveBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       RemoveSkinFolder
+       RemoveBusinessTemplate
+       RemoveAllTrashBins
+
+       ImportBusinessTemplate
+       UseImportBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       InstallWithoutForceBusinessTemplate
+       Tic
+       CheckInstalledInstallationState
+       CheckBuiltBuildingState
+       CheckNoTrashBin
+       CheckSkinsLayers
+       CheckSkinFolderExists
+       CheckTextFileContent
+
+       UninstallBusinessTemplate
+       CheckBuiltBuildingState
+       CheckNotInstalledInstallationState
+       CheckSkinFolderRemoved
+       """
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 class TestDocumentTemplateItem(BusinessTemplateMixin):
@@ -7127,38 +7204,56 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  # Specific to ZODB Components *only*
-  def getBusinessTemplateList(self):
-    return (super(TestDocumentTemplateItem, self).getBusinessTemplateList() +
-            ('erp5_core_component',))
-
-  component_module = DocumentComponent._getDynamicModuleNamespace()
+  component_id_prefix = DocumentComponent._getIdPrefix()
   component_portal_type = DocumentComponent.portal_type
 
   def stepCreateZodbDocument(self, sequence=None, **kw):
-    document_id = self.component_module + '.erp5.' + self.document_title
-    self.getPortalObject().portal_components.newContent(
+    document_id = self.component_id_prefix + '.erp5.' + self.document_title
+    component = self.portal.portal_components.newContent(
       id=document_id,
       version='erp5',
       reference=self.document_title,
       text_content=self.document_data,
       portal_type=self.component_portal_type)
 
+    component.validate()
     sequence.edit(document_title=self.document_title,
                   document_id=document_id,
                   document_data=self.document_data)
 
   def stepAddZodbDocumentToBusinessTemplate(self, sequence=None, **kw):
-    getattr(sequence['current_bt'], self.set_template_id_method_name)(
-      sequence['document_id'])
+    sequence['current_bt'].setProperty(self.template_property,
+                                       sequence['document_id'])
+
+  def stepCheckZodbDocumentWorkflowHistoryUnchanged(self, sequence=None, **kw):
+    component = getattr(self.getPortalObject().portal_components,
+                        sequence['document_id'], None)
+
+    self.assertNotEqual(component, None)
+    self.assertEquals(sorted(list(component.workflow_history)),
+                      ['component_validation_workflow', 'edit_workflow'])
+    self.failIf(len(component.workflow_history['component_validation_workflow']) <= 1)
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.getPortalObject().portal_components.deleteContent(
       sequence['document_id'])
 
-  def stepCheckZodbDocumentExists(self, sequence=None, **kw):
-    self.assertHasAttribute(self.getPortalObject().portal_components,
-                            sequence['document_id'])
+  def stepCheckZodbDocumentExistsAndValidated(self, sequence=None, **kw):
+    component = getattr(self.getPortalObject().portal_components,
+                        sequence['document_id'], None)
+
+    self.assertNotEqual(component, None)
+    self.assertEquals(component.getValidationState(), 'validated')
+
+    # Only the last Workflow History should have been exported
+    self.assertEquals(list(component.workflow_history),
+                      ['component_validation_workflow'])
+
+    validation_state_only_list = []
+    for validation_dict in list(component.workflow_history['component_validation_workflow']):
+      validation_state_only_list.append(validation_dict.get('validation_state'))
+
+    self.assertEquals(validation_state_only_list, ['validated'])
 
   def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
     component_tool = self.getPortalObject().portal_components
@@ -7179,7 +7274,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
 
     self.assertTrue(os.path.exists(component_bt_tool_path))
 
-    component_id = self.component_module + '.erp5.' + sequence['document_title']
+    component_id = self.component_id_prefix + '.erp5.' + sequence['document_title']
     base_path = os.path.join(component_bt_tool_path, component_id)
 
     python_source_code_path = base_path + '.py'
@@ -7214,6 +7309,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckForkedMigrationExport \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7227,7 +7323,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
                        CheckSkinsLayers \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -7279,6 +7375,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckForkedMigrationExport \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
@@ -7292,7 +7389,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
                        CheckSkinsLayers \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -7300,8 +7397,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  set_template_id_method_name = 'setTemplateDocumentId'
 
   def stepCopyAndMigrateDocumentBusinessTemplate(self, sequence=None, **kw):
     """
@@ -7315,30 +7410,23 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     cb_data = template_tool.manage_copyObjects([current_bt.getId()])
     copied, = template_tool.manage_pasteObjects(cb_data)
     copied_bt = template_tool._getOb(copied['new_id'])
-    getattr(copied_bt, self.set_template_id_method_name)(sequence['document_id'])
-    self.commit()
+
+    copied_bt.migrateSourceCodeFromFilesystem(
+      {self.component_portal_type: {sequence['document_title']: 'erp5'}})
+
     sequence.edit(current_bt=copied_bt)
-
-  importFromFilesystem = DocumentComponent.importFromFilesystem
-
-  def stepImportDocumentFromFilesystem(self, sequence=None, **kw):
-    """
-    Import a Component from Filesystem to ZODB
-    """
-    component_tool = self.getPortalObject().portal_components
-
-    document_object = self.importFromFilesystem(
-      component_tool,
-      sequence['document_title'],
-      'erp5')
-
-    sequence.edit(document_id=document_object.getId())
 
   def stepCheckDocumentMigration(self, sequence=None, **kw):
     """
-    Check migration of Document from the Filesystem to ZODB
+    Check bt5 migration of Document from the Filesystem to ZODB
     """
-    component_id = sequence['document_id']
+    bt = sequence.get('current_bt')
+    component_id = '%s.erp5.%s' % (self.component_id_prefix,
+                                   sequence.get('document_title'))
+
+    self.assertEquals(bt.getProperty(self.template_property),
+                      [component_id])
+
     component_tool = self.getPortalObject().portal_components
     self.failUnless(component_id in component_tool.objectIds())
 
@@ -7346,11 +7434,14 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     self.assertEquals(component.getReference(), sequence['document_title'])
     self.assertEquals(component.getTextContent(), sequence['document_data'])
     self.assertEquals(component.getPortalType(), self.component_portal_type)
+    sequence.edit(document_id=component_id)
 
   def test_BusinessTemplateWithZodbDocumentMigrated(self):
-    """Checks that if Business Template defines Document and PropertySheet
-    Document is not removed after Property Sheet was migrated and Business Template
-    was updated"""
+    """
+    Checks that if Business Template defines filesystem Document, they are
+    properly migrated to ZODB, can be imported again and the ZODB Document is
+    properly removed upon uninstall
+    """
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateDocument \
@@ -7380,11 +7471,8 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckNoTrashBin \
                        CheckDocumentExists \
                        \
-                       ImportDocumentFromFilesystem \
-                       Tic \
-                       CheckDocumentRemoved \
-                       CheckDocumentMigration \
                        CopyAndMigrateDocumentBusinessTemplate \
+                       CheckDocumentMigration \
                        Tic \
                        \
                        CheckDraftBuildingState \
@@ -7398,6 +7486,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        RemoveBusinessTemplate \
+                       CheckZodbDocumentWorkflowHistoryUnchanged \
                        RemoveZodbDocument \
                        Tic \
                        ImportBusinessTemplate \
@@ -7407,7 +7496,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        InstallWithoutForceBusinessTemplate \
                        Tic \
                        \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
                        \
@@ -7416,6 +7505,67 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckNotInstalledInstallationState \
                        CheckZodbDocumentRemoved \
                        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepUseCurrentBusinessTemplateForInstall(self, sequence=None, **kw):
+    sequence.edit(import_bt=sequence.get('current_bt'))
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb(self):
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyAndMigrateDocumentBusinessTemplate
+      CheckDocumentMigration
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      SaveBusinessTemplate
+      RemoveBusinessTemplate
+      CheckZodbDocumentWorkflowHistoryUnchanged
+      RemoveZodbDocument
+      CheckDocumentExists
+      CheckZodbDocumentRemoved
+
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentRemoved
+      CheckZodbDocumentExistsAndValidated
+
+      UseExportBusinessTemplate
+      CheckReplacedInstallationState
+      UseImportBusinessTemplate
+
+      UninstallBusinessTemplate
+      RemoveAllTrashBins
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckZodbDocumentRemoved
+      """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -7444,10 +7594,8 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_extension_id_list'
 
   # Specific to ZODB Extension Component
-  component_module = ExtensionComponent._getDynamicModuleNamespace()
+  component_id_prefix = ExtensionComponent._getIdPrefix()
   component_portal_type = ExtensionComponent.portal_type
-  importFromFilesystem = ExtensionComponent.importFromFilesystem
-  set_template_id_method_name = 'setTemplateExtensionId'
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
@@ -7465,10 +7613,8 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_test_id_list'
 
   # Specific to ZODB Extension Component
-  component_module = TestComponent._getDynamicModuleNamespace()
+  component_id_prefix = TestComponent._getIdPrefix()
   component_portal_type = TestComponent.portal_type
-  importFromFilesystem = TestComponent.importFromFilesystem
-  set_template_id_method_name = 'setTemplateTestId'
 
   def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence['current_bt']
@@ -7563,6 +7709,9 @@ TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefor
 
 TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
     skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb)
 
 def test_suite():
   suite = unittest.TestSuite()

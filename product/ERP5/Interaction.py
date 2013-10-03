@@ -57,6 +57,7 @@ class InteractionDefinition (SimpleItem):
     activate_script_name = ()  # Executed as activity
     method_id = ()
     portal_type_filter = None
+    portal_type_group_filter = None
     once_per_transaction = False
     temporary_document_disallowed = False
 
@@ -117,6 +118,7 @@ class InteractionDefinition (SimpleItem):
 
     def setProperties(self, title,
                       portal_type_filter=None,
+                      portal_type_group_filter=None,
                       trigger_type=TRIGGER_WORKFLOW_METHOD,
                       once_per_transaction=False,
                       temporary_document_disallowed=False,
@@ -139,6 +141,8 @@ class InteractionDefinition (SimpleItem):
             self.method_id = method_id
         if portal_type_filter is not None and 'None' in portal_type_filter:
           portal_type_filter = None
+        if portal_type_group_filter is not None and 'None' in portal_type_group_filter:
+          portal_type_group_filter = None
         if 'None' in after_script_name:
           after_script_name = ()
         if 'None' in activate_script_name:
@@ -146,6 +150,7 @@ class InteractionDefinition (SimpleItem):
         if 'None' in script_name:
           script_name = ()
         self.portal_type_filter = portal_type_filter
+        self.portal_type_group_filter = portal_type_group_filter
         self.title = str(title)
         self.description = str(description)
         self.trigger_type = int(trigger_type)

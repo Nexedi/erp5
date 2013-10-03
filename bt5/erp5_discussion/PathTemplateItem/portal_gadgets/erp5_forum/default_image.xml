@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="erp5.portal_type"/>
+      <global name="Embedded File" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts69504885.24</string> </value>
+            <value> <string>ts75270774.51</string> </value>
         </item>
         <item>
             <key> <string>_count</string> </key>
@@ -26,14 +26,6 @@
             <key> <string>_tree</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/management</string>
-              </tuple>
             </value>
         </item>
         <item>
@@ -616,16 +608,6 @@ Z/SOfrpfc8fDS+C+vv2D5WzXz9PfsHyvUuZsD/Ziv+Tb/wC1R5kvAWf0jn66X3PPKaDEGSmyqW62
 OOOd2s9f/9k=</string> </value>
         </item>
         <item>
-            <key> <string>default_source_reference</string> </key>
-            <value> <string>forum.jpg</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>height</string> </key>
             <value> <int>272</int> </value>
         </item>
@@ -635,23 +617,11 @@ OOOd2s9f/9k=</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Image</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Embedded File</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
             <value> <int>32327</int> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>width</string> </key>

@@ -50,22 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-object = state_change[\'object\']\n
-N_ = object.Base_translateString\n
-\n
-check_result = object.checkConsistency()\n
-\n
-if len(check_result) > 0:\n
-  check_type    = N_(check_result[0][-1])\n
-  # TODO: use nice url encoding method there instead of replace()\n
-  check_details = check_result[0][-2].replace(\'<\', \'&lt;\').replace(\'>\', \'&gt;\')\n
-  raise ValidationFailed, "%s : %s" % (check_type, check_details)\n
-
-
-]]></string> </value>
+            <value> <string>state_change[\'object\'].Base_checkConsistency()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

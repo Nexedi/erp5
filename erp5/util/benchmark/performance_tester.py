@@ -77,6 +77,10 @@ class PerformanceTester(object):
                         metavar='MODULE',
                         help="Import users from ``user_tuple'' in MODULE")
 
+    parser.add_argument('--users-file-path',
+                        metavar='USER_FILE_PATH',
+                        help='User file path')
+
     parser.add_argument('--users-range-increment',
                         type=ArgumentType.checkIntValueWrapper(minimum=1),
                         default=1,
@@ -132,6 +136,13 @@ class PerformanceTester(object):
                         metavar='ERP5_PUBLISH_PROJECT',
                         help='ERP5 publish project')
 
+
+    parser.add_argument('--benchmark-path-list',
+                        default=[],
+                        nargs='+',
+                        metavar='BENCHMARK_PATH',
+                        help='Benchmark paths')
+
     # Mandatory arguments
     parser.add_argument('erp5_base_url', metavar='ERP5_URL')
 
@@ -145,15 +156,24 @@ class PerformanceTester(object):
                         metavar='BENCHMARK_SUITES',
                         help='Benchmark suite modules')
 
+
   @staticmethod
   def _check_parsed_arguments(namespace):
+    if namespace.users_file_path:
+      users_file_path_list = [namespace.users_file_path]
+    else:
+      users_file_path_list = []
     namespace.user_tuple = ArgumentType.objectFromModule(namespace.user_info_filename,
-                                                         object_name='user_tuple')
+                                                         object_name='user_tuple',
+                                                         searchable_path_list=users_file_path_list)
+
+    namespace.benchmark_suite_list = namespace.benchmark_suite_list[0].split(" ")
 
     object_benchmark_suite_list = []
     for benchmark_suite in namespace.benchmark_suite_list:
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
-                                                                       callable_object=True))
+                                                                       callable_object=True,
+                                                                       searchable_path_list=namespace.benchmark_path_list))
 
     if namespace.repeat > 0:
       namespace.max_error_number = \
@@ -202,7 +222,7 @@ class PerformanceTester(object):
         ERP5BenchmarkResult.createResultDocument(self._argument_namespace.erp5_publish_url,
                                                  self._argument_namespace.erp5_publish_project,
                                                  self._argument_namespace.repeat,
-                                                 self._argument_namespace.users)          
+                                                 self._argument_namespace.users)
 
   def postRun(self, error_message_set):
     if not self._argument_namespace.erp5_publish_url:

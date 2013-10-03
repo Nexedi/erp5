@@ -1,0 +1,41 @@
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
+2011-07-07 arnaud.fontaine
+* Add Benchmark Result and Benchmark Result Line for scalability testing results.
+
+2010-10-27 nicolas.dumazet
+* fix TestResultModule_viewTestResultDiff: id is meaningless for test lines, title should be used instead
+
+2010-10-22 nicolas.dumazet
+* color test result lines depending on test result
+
+2010-09-29 nicolas.dumazet
+* add TestResultModule_viewTestResultDiff report to be able to compare two successive test runs from the Test Result Module view.
+
+2010-03-11 lucas
+* some Test Result documents have the project revision set in comment, so it would be good change the e-mail subject to  .... rREVISION Webproject@REVISION .... This patch solves the bug #1615
+
+2010-01-12 jerome
+* category function/robot and portal type roles moved to configuration business templates
+
+2008-10-2 yusei
+* Stop to acquire Access Contents information permission and define it on each role explicitly.
+
+2008-10-1 yusei
+* Update xml format.
+
+2008-10-1 yusei
+* Turned off Acquire Local Roles option on Test Result type information.
+
+2008-06-30 Jérome
+* Handle the case of tests that have errors due to syntax error or missing import and don't even print a traceback when sending notification.
+
+2007-07-12 Ivan
+* Create

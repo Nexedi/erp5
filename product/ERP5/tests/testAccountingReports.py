@@ -4013,9 +4013,15 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     preference._edit(
         preferred_accounting_transaction_line_function_base_category=None,
         preferred_accounting_transaction_line_analytic_base_category_list=())
+    for module_id in ('project_module',):
+      module = self.portal[module_id]
+      module.manage_delObjects([x for x in module.objectIds()])
     self.commit()
 
   def testJournalAnalyticsShown(self):
+    self.project_1.validate()
+    self.project_2.validate()
+    self.tic()
     request_form = self.portal.REQUEST.form
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
@@ -4113,6 +4119,9 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
 
   def testAccountStatementAnalyticsShown(self):
+    self.project_1.validate()
+    self.project_2.validate()
+    self.tic()
     request_form = self.portal.REQUEST.form
     request_form['node'] = \
                 self.portal.account_module.goods_sales.getRelativeUrl()
@@ -4203,6 +4212,9 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
 
   def testGeneralLedgerAnalyticsShown(self):
+    self.project_1.validate()
+    self.project_2.validate()
+    self.tic()
     request_form = self.portal.REQUEST.form
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)

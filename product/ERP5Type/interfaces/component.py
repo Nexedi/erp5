@@ -48,20 +48,9 @@ class IComponent(Interface):
     then if no error is returned, validate it
     """
 
-  def hasErrorMessageList(obj):
+  def checkSourceCode(self):
     """
-    Check whether there are error messages
-    """
-
-  def getErrorMessageList(obj):
-    """
-    Return errors, if any, which may have arised when the Component has been
-    modified after being validated
-    """
-
-  def load(obj, namespace_dict, validated_only=False, text_content=None):
-    """
-    Load the source code into the given dict
+    Check source code statically
     """
 
   def _getFilesystemPath():
@@ -72,6 +61,11 @@ class IComponent(Interface):
   def _getDynamicModuleNamespace():
     """
     Return the module name where Component module are loaded into
+    """
+
+  def _getIdPrefix():
+    """
+    Return the ID prefix for Component objects
     """
 
   def importFromFilesystem(cls, context, reference, version,

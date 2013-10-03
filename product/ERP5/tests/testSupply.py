@@ -41,9 +41,8 @@ class TestSupplyMixin:
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade')
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
-    portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.domain_tool = self.getDomainTool()
     self.catalog_tool = self.getCatalogTool()
@@ -63,7 +62,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   """
     Test Supplies usage
   """
-  run_all_test = 1
 
   supply_portal_type = 'Sale Supply'
   supply_line_portal_type = 'Sale Supply Line'
@@ -71,9 +69,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
   generic_supply_line_portal_type = 'Supply Line'
   generic_supply_cell_portal_type = 'Supply Cell'
   predicate_portal_type = 'Predicate'
-
-  def getTitle(self):
-    return "Sale Supply"
 
   @reindex
   def _makeMovement(self, **kw):
@@ -109,18 +104,18 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply_cell.edit(**kw)
     return supply_cell
 
-  def test_01_MovementAndSupplyModification(self, quiet=0, run=run_all_test):
+  def test_MovementAndSupplyModification(self):
     """
       Check that moving timeframe of supply
       and then setting movement into that timeframe works.
     """
-    if not run: return
     
     # movement is in middle of timeframe...
     movement = self._makeMovement(start_date='2009/01/15')
 
     supply = self._makeSupply(start_date_range_min='2009/01/01',
                               start_date_range_max='2009/01/31')
+    supply.validate()
 
     supply_line = self._makeSupplyLine(supply)
     supply_cell = self._makeSupplyCell(supply_line)
@@ -164,19 +159,18 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertSameSet(res_line, [supply_line])
     self.assertSameSet(res_cell, [supply_cell])
 
-  def test_02_checkLineIsReindexedOnSupplyChange(self, quiet=0, run=run_all_test):
+  def test_checkLineIsReindexedOnSupplyChange(self):
     """
       Check that Supply Line is properly reindexed (in predicate table)
-      when date is change on Supply.
+      when date is changed on Supply.
     """
-    if not run: return
-    
     original_date = DateTime().earliestTime() # lower precision of date
     new_date = DateTime(original_date + 10)
 
     self.assertNotEquals(original_date, new_date)
 
     supply = self._makeSupply(start_date_range_min=original_date)
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
 
     kw = {}
@@ -194,24 +188,22 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.tic()
     
     # ...and check supply line
-    kw['predicate.uid'] = supply_line.getUid()
     result = self.catalog_tool(**kw)
     self.assertEquals(1, len(result) )
     result = result[0]
     self.assertEquals(result.start_date_range_min, new_date.toZone('UTC'))
 
 
-  def test_03_SupplyLineApplied(self, quiet=0, run=run_all_test):
+  def test_SupplyLineApplied(self):
     """
       Test supply line being found.
       XXX: This tests fails for second run due to bug #1248.
     """
-    if not run: return
-
     portal = self.portal
     original_date = DateTime().earliestTime()
 
     supply = self._makeSupply(start_date_range_min=original_date)
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
     self.tic()
 
@@ -234,6 +226,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
       supply_line
     """
     supply = self._makeSupply(start_date_range_min=DateTime())
+    supply.validate()
     supply_line = self._makeSupplyLine(supply)
     supply_line.setSourceReference('my_source_reference')
     self.assertEquals(supply_line.getSourceReference(), 'my_source_reference')
@@ -283,7 +276,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self._testSubContentReindexing(generic_supply_line, [generic_supply_cell,
       generic_supply_predicate])
 
-  def testSupplyCellPropertyAndAccessor(self, quiet=0, run=run_all_test):
+  def testSupplyCellPropertyAndAccessor(self):
     """
       Check that getter/setter and get/setProperty methods works the same
       on supply cell. This test is added due to a bug introduced by revision
@@ -330,32 +323,69 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='orange')), 0)
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='banana')), 1)
 
+  def test_getBaseUnitPrice(self):
+    currency = self.portal.currency_module.newContent(
+      portal_type='Currency',
+      base_unit_quantity=0.01)
+    product = self.portal.product_module.newContent(portal_type="Product",
+                                                    title=self.id())
+    supply = self._makeSupply()
+    supply.validate()
+    supply_line = self._makeSupplyLine(supply, resource_value=product)
+    another_supply_line = self._makeSupplyLine(supply, resource_value=product)
+
+    # A new supply line has no no base unit price
+    self.assertEqual(None, supply_line.getBaseUnitPrice())
+
+    movement = self.portal.sale_order_module.newContent(
+        portal_type='Sale Order',
+      ).newContent(
+        portal_type='Sale Order Line',
+        resource_value=product)
+
+    # A new movement has no no base unit price
+    self.assertEqual(None, movement.getBaseUnitPrice())
+
+    # When a price currency is set, the price precision uses the precision from
+    # price currency
+    movement.setPriceCurrencyValue(currency)
+    self.tic()
+
+    self.assertEqual(None, movement.getBaseUnitPrice())
+    self.assertEqual(2, movement.getPricePrecision())
+
+    # If base unit price is set on an applicable supply line, then the base
+    # unit price of this movement will use the one from the supply line
+    supply_line.setBaseUnitPrice(0.001)
+    self.assertEqual(3, supply_line.getPricePrecision())
+    self.tic()
+
+    self.assertEqual(0.001, movement.getBaseUnitPrice())
+    self.assertEqual(3, movement.getPricePrecision())
+
+    # Base unit pice have been copied on the movement
+    self.assertTrue(movement.hasBaseUnitPrice())
+
+    # Supply lines does not lookup base unit price from other supply lines
+    self.assertEqual(None, another_supply_line.getBaseUnitPrice())
+
 
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
   """
-  run_all_test = 1
-
   supply_portal_type = 'Purchase Supply'
   supply_line_portal_type = 'Purchase Supply Line'
   supply_cell_portal_type = 'Purchase Supply Cell'
-
-  def getTitle(self):
-    return "Purchase Supply"
 
 class TestInternalSupply(TestSaleSupply):
   """
     Test Internal Supplies usage
   """
-  run_all_test = 1
-
   supply_portal_type = 'Internal Supply'
   supply_line_portal_type = 'Internal Supply Line'
   supply_cell_portal_type = 'Internal Supply Cell'
 
-  def getTitle(self):
-    return "Internal Supply"
 
 def test_suite():
   suite = unittest.TestSuite()

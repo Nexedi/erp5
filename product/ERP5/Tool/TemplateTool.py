@@ -699,7 +699,7 @@ class TemplateTool (BaseTool):
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
-                       'dependency', 'provision', 'copyright')
+                       'dependency', 'test_dependency', 'provision', 'copyright')
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
@@ -749,6 +749,8 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('license', [''])[0]
               property_dict['dependency_list'] = \
                   temp_property_dict.get('dependency', ())
+              property_dict['test_dependency_list'] = \
+                  temp_property_dict.get('test_dependency', ())
               property_dict['provision_list'] = \
                   temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
@@ -878,8 +880,9 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
-    @transactional_cached(lambda self, bt: bt)
-    def getDependencyList(self, bt):
+    @transactional_cached(lambda self, bt, with_test_dependency_list=False:
+                          (bt, with_test_dependency_list))
+    def getDependencyList(self, bt, with_test_dependency_list=False):
       """
        Return the list of missing dependencies for a business
        template, given a tuple : (repository, id)
@@ -892,7 +895,11 @@ class TemplateTool (BaseTool):
           if repository == bt[0]:
             for property_dict in property_dict_list:
               if property_dict['id'] == bt[1]:
-                dependency_list = [q for q in property_dict['dependency_list'] if q]
+                dependency_list = [q.strip() for q in
+                                   property_dict['dependency_list'] if q]
+                if with_test_dependency_list:
+                  dependency_list.extend([q.strip() for q in
+                                          property_dict['test_dependency_list'] if q])
                 for dependency_couple in dependency_list:
                   # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
                   dependency_couple_list = dependency_couple.split(' ', 1)
@@ -1231,7 +1238,9 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
-    def resolveBusinessTemplateListDependency(self, template_title_list):
+    def resolveBusinessTemplateListDependency(self,
+                                              template_title_list,
+                                              with_test_dependency_list=False):
       available_bt5_list = self.getRepositoryBusinessTemplateList()
 
       template_title_list = set(template_title_list)
@@ -1244,7 +1253,9 @@ class TemplateTool (BaseTool):
           bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
           bt5_set.add(bt5)
           meta_dependency_set = set()
-          for dep_repository, dep_id in self.getDependencyList(bt5):
+          for dep_repository, dep_id in self.getDependencyList(
+              bt5,
+              with_test_dependency_list):
             if dep_repository != 'meta':
               bt5_set.add((dep_repository, dep_id))
             else:
@@ -1314,9 +1325,7 @@ class TemplateTool (BaseTool):
 
       activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
 
-      missing_dependency_list.extend([x for x in resolved_template_list if 
-                                      x[1] in template_list])
-      for repository, bt_id in missing_dependency_list:
+      for repository, bt_id in resolved_template_list:
         bt_url = '%s/%s' % (repository, bt_id)
         param_dict = dict(download_url=bt_url, only_newer=only_newer)
         if update_catalog is not _MARKER:
@@ -1341,7 +1350,7 @@ class TemplateTool (BaseTool):
                                          keep_original_list=None,
                                          before_triggered_bt5_id_list=None,
                                          after_triggered_bt5_id_list=None,
-                                         update_catalog=_MARKER,
+                                         update_catalog=False,
                                          reinstall=False,
                                          active_process=None,
                                          force_keep_list=None,
@@ -1378,7 +1387,9 @@ class TemplateTool (BaseTool):
       imported_bt5 = self.download(url = download_url, id = id)
       bt_title = imported_bt5.getTitle()
 
-      if not reinstall:
+      if reinstall:
+        install_kw = None
+      else:
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
         if (previous_bt5 is not None) and only_newer:
           try:
@@ -1426,14 +1437,8 @@ class TemplateTool (BaseTool):
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
-      if update_catalog is _MARKER and install_kw != {}:
-        update_catalog = imported_bt5.isCatalogUpdatable()
-
-      if reinstall:
-        imported_bt5.install(force=True,update_catalog=update_catalog)
-      else:
-        imported_bt5.install(object_to_update=install_kw,
-                             update_catalog=update_catalog)
+      imported_bt5.install(object_to_update=install_kw,
+                           update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
@@ -1525,7 +1530,7 @@ class TemplateTool (BaseTool):
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
         if not(dry_run):
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
-          self.updateBusinessTemplateFromUrl(bt5_url)
+          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall)
       if delete_orphaned:
         if keep_bt5_id_set is None:
           keep_bt5_id_set = set()

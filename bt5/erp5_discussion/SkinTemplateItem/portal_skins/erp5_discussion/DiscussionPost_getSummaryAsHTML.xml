@@ -36,13 +36,14 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="discussion_post_object here/getObject;\n
+<tal:block i18n:domain="ui"\n
+           tal:define="discussion_post_object here/getObject;\n
                  author_dict discussion_post_object/DiscussionPost_getAuthorDict;\n
                  author_url author_dict/author_url;\n
                  author_signature author_dict/author_signature;\n
                  author_title author_dict/author_title;\n
                  author_thumbnail_url author_dict/author_thumbnail_url;\n
-                 is_author_thumbnai_available python: author_thumbnail_url is not None;\n
+                 is_author_thumbnail_available python: author_thumbnail_url is not None;\n
                  discussion_post_id discussion_post_object/getId;\n
                  discussion_post_uid discussion_post_object/getUid;\n
                  discussion_post_title discussion_post_object/getTitle;\n
@@ -50,32 +51,39 @@
                  discussion_post_creation_date python: here.Base_FormatDate(discussion_post_object.getCreationDate());\n
                  discussion_post_validation_state_title discussion_post_object/getTranslatedValidationStateTitle;\n
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
+                 attachment_list discussion_post_object/DiscussionPost_getAttachmentList;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
   <div class="discussion-post-header">\n
 \n
     <div class="thumbnail"\n
-         tal:condition="is_author_thumbnai_available">\n
+         tal:condition="is_author_thumbnail_available">\n
       <img tal:attributes="src string:${author_thumbnail_url}?display=thumbnail&amp;format=png" />\n
     </div>\n
 \n
-    <div class="title">\n
-      <a class="discussion-post-title"\n
-         tal:attributes="href string:${discussion_post_url}/view;\n
-                        name discussion_post_uid"\n
-         tal:content="discussion_post_title"></a>\n
+    <div class="title" i18n:translate="">\n
+      <a class="discussion-post-title" i18n:name="discussion_post_title" tal:attributes="href string:${discussion_post_url}/view; name discussion_post_uid" tal:content="discussion_post_title"></a>\n
         by\n
-        <a class="discussion-post-creator-title-link"\n
-           tal:attributes="href author_url"\n
-           tal:content="author_title"></a>\n
+        <a class="discussion-post-creator-title-link" i18n:name="discussion_post_author" tal:attributes="href author_url" tal:content="author_title"></a>\n
         at \n
-        <span tal:content="discussion_post_creation_date"></span>\n
+        <span tal:content="discussion_post_creation_date" i18n:name="discussion_post_creation_date"></span>\n
     </div>\n
 \n
   </div>\n
 \n
   <div class="discussion-post-body-container"\n
        tal:content="structure discussion_post_stripped_html"></div>\n
+  \n
+  <div class="attachment"\n
+       tal:condition="python: len(attachment_list)">\n
+    <p i18n:translate="">Attachments:</p>\n
+    <ul>\n
+      <li tal:repeat="attachment attachment_list">\n
+        <a tal:attributes="href attachment/url"\n
+           tal:content="attachment/title"></a>\n
+      </li>\n
+    </ul>\n
+  </div>\n
 \n
   <div tal:condition="python: author_signature is not None"\n
        class="discussion-post-author-signature-container"\n
@@ -84,9 +92,11 @@
   <div class="discussion-post-actions">\n
     <button tal:condition="isUserAllowedToPost"\n
             type="submit" title="Reply"\n
+            i18n:attributes="title"\n
             name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
-            tal:attributes="onclick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
-            class="discussion-post-action-button">Reply</button>\n
+            tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
+            class="discussion-post-action-button"\n
+            i18n:translate="">Reply</button>\n
   </div>\n
 \n
 </tal:block>

@@ -35,8 +35,9 @@ import sys
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from AccessControl.Permission import Permission
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.dynamic import aq_method_lock
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
@@ -60,6 +61,53 @@ class ComponentTool(BaseTool):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  @classmethod
+  def _applyAllStaticSecurity(cls):
+    """
+    Apply static security on portal_components to ensure that nobody can
+    change Permissions, only 'ghost' Developer Role has Permissions to
+    add/modify/delete Components. Also, make these permissions read-only
+    thanks to 'property'.
+
+    cls is erp5.portal_type.Component Tool and not this class as this function
+    is called on Portal Type class when loading Componet Tool Portal Type
+    class
+    """
+    # XXX-Cosmetic: From Zope >= 2.13, getPermissions() can be used instead of
+    # protected _registeredPermissions module attribute
+    from AccessControl.Permission import _registeredPermissions, pname
+    for permission_name in _registeredPermissions:
+      if permission_name == 'Reset dynamic classes':
+        permission_function = lambda self: ('Manager',)
+      elif permission_name in ('Change permissions', 'Define permissions'):
+        permission_function = lambda self: ()
+      elif (permission_name.startswith('Access ') or
+            permission_name.startswith('View') or
+            permission_name == 'WebDAV access'):
+        permission_function = lambda self: ('Developer', 'Manager')
+      else:
+        permission_function = lambda self: ('Developer',)
+
+      setattr(cls, pname(permission_name), property(permission_function))
+
+  def _isBootstrapRequired(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+
+    XXX-arnau: Only bt5 items for now
+    """
+    return False
+
+  def _bootstrap(self):
+    """
+    Required by synchronizeDynamicModules() to bootstrap an empty site and
+    thus create portal_components
+
+    XXX-arnau: Only bt5 items for now
+    """
+    pass
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self,
@@ -95,30 +143,17 @@ class ComponentTool(BaseTool):
 
     LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
 
-    type_tool = portal.portal_types
-
-    # One Component Package per allowed Portal Types on Component Tool
-    allowed_content_type_list = type_tool.getTypeInfo(
-      self.getPortalType()).getTypeAllowedContentTypeList()
-
-    import erp5.component
-
     # Make sure that it is not possible to load Components or load Portal Type
     # class when Components are reset through aq_method_lock
-    with Base.aq_method_lock:
-      for content_type in allowed_content_type_list:
-        package_name = content_type.split(' ')[0].lower()
-
-        try:
-          package = getattr(erp5.component, package_name)
-        # XXX-arnau: not everything is defined yet...
-        except AttributeError:
-          pass
-        else:
+    import erp5.component
+    from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
+    with aq_method_lock:
+      for package in erp5.component.__dict__.itervalues():
+        if isinstance(package, ComponentDynamicPackage):
           package.reset()
 
     if reset_portal_type_at_transaction_boundary:
-      type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+      portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
     else:
       from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
       synchronizeDynamicModules(self, force)

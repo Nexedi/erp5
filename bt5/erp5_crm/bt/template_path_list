@@ -1,2 +1,3 @@
 portal_alarms/upgrader_migrate_event_workflow_history
 portal_contribution_registry/crm_ingestion
+portal_domains/ticket_use_domain

@@ -68,6 +68,7 @@ logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 start_date = DateTime()\n
 \n
 organisation = None\n
+person = None\n
 if logged_in_user_value is not None:\n
   person = logged_in_user_value.getRelativeUrl()\n
   organisation = logged_in_user_value.getSubordination()\n

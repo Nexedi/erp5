@@ -37,6 +37,7 @@ from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
+from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
@@ -232,7 +233,9 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         if custom_render_method_id is not None:
           if document is None:
             document = self
-          return getattr(document, custom_render_method_id)()
+          result = getattr(document, custom_render_method_id)()
+          _setCacheHeaders(_ViewEmulator().__of__(self), {})
+          return result
         elif document is not None:
           return document()
       return Domain.__call__(self)

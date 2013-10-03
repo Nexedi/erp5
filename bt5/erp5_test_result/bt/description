@@ -1,0 +1,2 @@
+This module is used from external test frameworks as buildbot and/or edos to save results from running of automated tests.
+It parses test log files supplied by external script (as POST request) and saves important details.

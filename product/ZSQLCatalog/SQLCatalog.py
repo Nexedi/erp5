@@ -289,7 +289,6 @@ class LazyIndexationParameterList(tuple):
 
 ContainerAssertions[LazyIndexationParameterList] = 1
 
-related_key_definition_cache = {}
 related_key_warned_column_set = set()
 
 class Catalog(Folder,
@@ -2031,21 +2030,22 @@ class Catalog(Folder,
       Returns the definition of given related key name if found, None
       otherwise.
     """
+    related_key_definition_cache = getTransactionalVariable().setdefault(
+      'SQLCatalog.getRelatedKeyDefinition', {})
     try:
       result = related_key_definition_cache[key]
     except KeyError:
-      result = None
       for entire_definition in self.getSQLCatalogRelatedKeyList([key]):
         split_entire_definition = entire_definition.split('|')
         if len(split_entire_definition) != 2:
           LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
           continue
-        name, definition = [x.strip() for x in split_entire_definition]
-        if name == key:
-          result = definition
+        if split_entire_definition[0].strip() == key:
+          result = split_entire_definition[1].strip()
           break
-      if result is not None:
-        related_key_definition_cache[key] = result
+      else:
+        result = None
+      related_key_definition_cache[key] = result
     return result
 
   @transactional_cache_decorator('SQLCatalog._getgetScriptableKeyDict')
@@ -2805,7 +2805,8 @@ class CatalogError(Exception): pass
 from Query.Query import Query as _Query
 from Query.SimpleQuery import SimpleQuery
 from Query.ComplexQuery import ComplexQuery
-from Query.AutoQuery import AutoQuery as Query
+from Query.AutoQuery import AutoQuery
+Query = AutoQuery
 
 def NegatedQuery(query):
   return ComplexQuery(query, logical_operator='not')

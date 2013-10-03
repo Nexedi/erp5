@@ -1,3 +1,12 @@
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-30 arnaud.fontaine
+* Some actions were never committed and prevented rebuild/save of bt5.
+
+2013-08-30 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-02-07 gabriel
 * Added erp5_crm as dependency
 * Update Fields

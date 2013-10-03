@@ -43,6 +43,9 @@ from zLOG import LOG, INFO
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase
 
+import re
+pylint_message_re = re.compile('^(?P<type>[CRWEF]):\s*\d+,\s*\d+:\s*.*$')
+
 class RecordablePropertyMetaClass(ExtensionClass):
   """
   Meta-class for extension classes with registered setters and getters wrapped
@@ -132,8 +135,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   (ERP5Type.patches.{User,PropertiedUser}) and modifications in
   ERP5Security.ERP5UserFactory.
 
-  XXX-arnau: add tests to ERP5 itself to make sure all securities are defined
-  properly everywhere (see naming convention test)
+  Component source code is checked upon modification of text_content property
+  whatever its Workflow state (checkSourceCode). On validated and modified
+  state, checkConsistency() is called to check id, reference, version and
+  errors/warnings messages (set when the Component is modified).
   """
   __metaclass__ = RecordablePropertyMetaClass
 
@@ -152,7 +157,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                      'DublinCore',
                      'Version',
                      'Reference',
-                     'TextDocument')
+                     'TextDocument',
+                     'Component')
 
   _recorded_property_name_tuple = (
     'reference',
@@ -165,10 +171,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
   _message_version_not_set = "Version must be set"
   _message_invalid_version = "Version cannot start with '_'"
+  _message_duplicated_version_reference = "${id} is validated has the same "\
+       "Reference and Version"
+
   _message_text_content_not_set = "No source code"
-  _message_invalid_text_content = "Source code: ${error_message}"
-  _message_text_content_syntax_error = "Syntax error in source code: "\
-      "${error_message} (line: ${line_number}, column: ${column_number})"
+  _message_text_content_error = "Error in Source Code: ${error_message}"
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
@@ -185,9 +192,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     error_list = super(ComponentMixin, self).checkConsistency(*args, **kw)
     object_relative_url = self.getRelativeUrl()
-
     reference = self.getReference()
+    reference_has_error = False
     if not reference:
+      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -197,6 +205,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     elif (reference.endswith('_version') or
           reference[0] == '_' or
           reference in ('find_module', 'load_module', 'reset')):
+      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -214,6 +223,26 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                            object_relative_url,
                                            message=self._message_invalid_version,
                                            mapping={}))
+    else:
+      package = __import__(self._getDynamicModuleNamespace(), globals(),
+                           fromlist=[self._getDynamicModuleNamespace()], level=0)
+      component_id = None
+      component_uid = None
+      from Products.ERP5Type.dynamic import aq_method_lock
+      with aq_method_lock:
+        component_id_uid_tuple = package._registry_dict.get(
+          self.getReference(), {}).get(self.getVersion(), None)
+        if component_id_uid_tuple:
+          component_id, component_uid = component_id_uid_tuple
+
+      if (component_id is not None and component_uid is not None and
+          not reference_has_error and
+          component_uid != self.getUid() and component_id != self.getId()):
+        error_list.append(
+          ConsistencyMessage(self,
+                             object_relative_url,
+                             message=self._message_duplicated_version_reference,
+                             mapping=dict(id=component_id)))
 
     text_content = self.getTextContent()
     if not text_content:
@@ -223,27 +252,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                              message=self._message_text_content_not_set,
                              mapping={}))
     else:
-      message = None
-      try:
-        # Check for any error in the source code by trying to load it
-        self.load({}, text_content=text_content)
-      except SyntaxError, e:
-        mapping = dict(error_message=str(e),
-                       line_number=e.lineno,
-                       column_number=e.offset)
-
-        message = self._message_text_content_syntax_error
-
-      except Exception, e:
-        mapping = dict(error_message=str(e))
-        message = self._message_invalid_text_content
-
-      if message:
-        error_list.append(
-          ConsistencyMessage(self,
-                             object_relative_url=self.getRelativeUrl(),
-                             message=message,
-                             mapping=mapping))
+      for error_message in self.getTextContentErrorMessageList():
+        error_list.append(ConsistencyMessage(self,
+                                             object_relative_url=object_relative_url,
+                                             message=self._message_text_content_error,
+                                             mapping=dict(error_message=error_message)))
 
     return error_list
 
@@ -257,56 +270,83 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     stays in modified state and previously validated values are used for
     reference, version and text_content
     """
-    error_list = self.checkConsistency()
-    if error_list:
-      workflow = self.workflow_history['component_validation_workflow'][-1]
+    if not self.checkConsistency():
+      text_content = self.getTextContent()
+      # Even if pylint should report all errors, make sure that there is no
+      # error when executing the source code pylint before validating
+      try:
+        exec text_content in {}
+      except BaseException, e:
+        self.setErrorMessageList(self.getTextContentErrorMessageList() +
+                                 [str(e)])
+      else:
+        for property_name in self._recorded_property_name_tuple:
+          self.clearRecordedProperty(property_name)
 
-      # When checking consistency with validate_action, messages are stored
-      # into error_message workflow attribute as Message instances
-      workflow['error_message'] = [error.getMessage() for error in error_list]
-    else:
-      for property_name in self._recorded_property_name_tuple:
-        self.clearRecordedProperty(property_name)
+        self.validate()
 
-      self.validate()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getErrorMessageList')
-  def hasErrorMessageList(self):
+  security.declareProtected(Permissions.ModifyPortalContent, 'checkSourceCode')
+  def checkSourceCode(self):
     """
-    Check whether there are error messages, useful to display errors in the UI
-    without calling getErrorMessageList() as it translates error messages
-    """
-    workflow = self.workflow_history['component_validation_workflow'][-1]
-    return bool(workflow['error_message'])
+    Check source code with pylint
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getErrorMessageList')
-  def getErrorMessageList(self):
+    TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
+                allow passing a string)
     """
-    Return the checkConsistency errors which may have occurred when
-    the Component has been modified after being validated once
-    """
-    current_workflow = self.workflow_history['component_validation_workflow'][-1]
-    return [error.translate()
-            for error in current_workflow.get('error_message', [])]
+    source_code = self.getTextContent()
+    # checkConsistency() ensures that it cannot happen once validated/modified
+    if not source_code:
+      return [], []
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'load')
-  def load(self, namespace_dict, validated_only=False, text_content=None):
-    """
-    Load the source code into the given dict. Using exec() rather than
-    imp.load_source() as the latter would required creating an intermediary
-    file. Also, for traceback readability sake, the destination module
-    __dict__ is given rather than creating an empty dict and returning it.
+    try:
+      from pylint.lint import Run
+      from pylint.reporters.text import TextReporter
+    except ImportError:
+      return ['F: Cannot check Source Code: Pylint is not available'], []
 
-    Initially, namespace_dict default parameter value was an empty dict to
-    allow checking the source code before validate, but this is completely
-    wrong as the object reference is kept accross each call
-    """
-    if text_content is None:
-      text_content = self.getTextContent(validated_only=validated_only)
+    import cStringIO
+    import tempfile
+    import sys
 
-    exec text_content in namespace_dict
+    #import time
+    #started = time.time()
+    error_list = []
+    warning_list = []
+    output_file = cStringIO.StringIO()
+
+    # pylint prints directly on stderr/stdout (only reporter content matters)
+    stderr = sys.stderr
+    stdout = sys.stdout
+    try:
+      sys.stderr = cStringIO.StringIO()
+      sys.stdout = cStringIO.StringIO()
+
+      with tempfile.NamedTemporaryFile() as input_file:
+        input_file.write(source_code)
+        input_file.seek(0)
+
+        Run([input_file.name, '--reports=n', '--indent-string="  "', '--zope=y',
+             '--disable=C'], reporter=TextReporter(output_file), exit=False)
+
+      output_file.reset()
+      for line in output_file:
+        message_obj = pylint_message_re.match(line)
+        if message_obj:
+          line = line.strip()
+          if line[0] in ('E', 'F'):
+            error_list.append(line)
+          else:
+            warning_list.append(line)
+
+    finally:
+      output_file.close()
+      sys.stderr = stderr
+      sys.stdout = stdout
+
+      #LOG('component', INFO, 'Checking time (pylint): %.2f' % (time.time() -
+      #                                                         started))
+
+    return error_list, warning_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
@@ -350,9 +390,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     be loaded straightaway provided validate() does not raise any error of
     course
     """
-    object_id = '%s.%s.%s' % (cls._getDynamicModuleNamespace(), version,
-                              reference)
-
+    object_id = '%s.%s.%s' % (cls._getIdPrefix(), version, reference)
     obj = context._getOb(object_id, None)
     if obj is not None:
       if not erase_existing:
@@ -382,8 +420,5 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     # Validate the Component once it is imported so it can be used
     # straightaway as there should be no error
     new_component.validate()
-
-    # Remove now useless Component on filesystem
-    os.remove(path)
 
     return new_component

@@ -94,6 +94,7 @@
                         <string>my_title</string>
                         <string>my_agent_title</string>
                         <string>my_subordination_title</string>
+                        <string>my_reference</string>
                         <string>my_career_role</string>
                         <string>my_career_grade</string>
                         <string>my_career_function</string>

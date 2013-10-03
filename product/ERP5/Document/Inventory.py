@@ -123,7 +123,8 @@ class Inventory(Delivery):
             connection_id = method.connection_id
             break
 
-    default_inventory_calculation_list = ({ "inventory_params" : {"node" : self.getDestination(),
+    default_inventory_calculation_list = ({ "inventory_params" : {"section": self.getDestinationSection(),
+                                                                  "node" : self.getDestination(),
                                                                           "group_by_sub_variation" : 1,
                                                                           "group_by_variation" : 1,
                                                                           "group_by_resource" : 1,

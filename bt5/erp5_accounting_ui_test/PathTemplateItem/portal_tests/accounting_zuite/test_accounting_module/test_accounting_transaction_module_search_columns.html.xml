@@ -58,11 +58,6 @@ Accounting Transaction Module Search Columns\n
 \n
 <!-- filter on title  {{{ -->\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>type</td>\n
   <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>Client 1 Sale Invoice</td>\n
@@ -122,6 +117,11 @@ as title is a search key -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@value=\'listbox.operation_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -190,6 +190,11 @@ as title is a search key -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@value=\'listbox.operation_date:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -499,8 +504,7 @@ XXX shall we really test i18n issues here?\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

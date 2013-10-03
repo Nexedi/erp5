@@ -1,3 +1,12 @@
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2011-03-01 gabriel
 * Add roles to allow erp5 user manage events in Event Module
 * Initial commit to testUNGSecurity

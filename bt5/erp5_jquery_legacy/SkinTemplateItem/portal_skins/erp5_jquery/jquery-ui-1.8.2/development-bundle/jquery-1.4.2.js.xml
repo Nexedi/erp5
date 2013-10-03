@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77895639.22</string> </value>
+            <value> <string>ts74199327.37</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>163855</int> </value>
+            <value> <int>163907</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -45,10 +45,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Pdata" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Pdata" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3877,7 +3874,8 @@ jQuery.fn.extend({\n
 \t\tif ( !elem || typeof elem === "string" ) {\n
 \t\t\treturn jQuery.inArray( this[0],\n
 \t\t\t\t// If it receives a string, the selector is used\n
-\t\t\t\t// If it r
+\t\t\t\t// If it receives nothing, the siblings are used\n
+\t\t\t\telem ? jQ
 
 ]]></string> </value>
         </item>
@@ -3892,10 +3890,7 @@ jQuery.fn.extend({\n
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Pdata" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Pdata" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3903,8 +3898,7 @@ jQuery.fn.extend({\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-eceives nothing, the siblings are used\n
-\t\t\t\telem ? jQuery( elem ) : this.parent().children() );\n
+uery( elem ) : this.parent().children() );\n
 \t\t}\n
 \t\t// Locate the position of the desired element\n
 \t\treturn jQuery.inArray(\n
@@ -5404,7 +5398,7 @@ jQuery.extend({\n
 \t\t\treturn !xhr.status && location.protocol === "file:" ||\n
 \t\t\t\t// Opera returns 0 when status is 304\n
 \t\t\t\t( xhr.status >= 200 && xhr.status < 300 ) ||\n
-\t\t\t\txhr.status === 304 || xhr.status === 1223 || xhr.status === 0;\n
+\t\t\t\txhr.status === 304 || xhr.status === 1223 || (jQuery.browser.opera && xhr.status === 0);\n
 \t\t} catch(e) {}\n
 \n
 \t\treturn false;\n
@@ -5424,7 +5418,7 @@ jQuery.extend({\n
 \t\t}\n
 \n
 \t\t// Opera returns 0 when status is 304\n
-\t\treturn xhr.status === 304 || xhr.status === 0;\n
+\t\treturn xhr.status === 304 || (jQuery.browser.opera && xhr.status === 0);\n
 \t},\n
 \n
 \thttpData: function( xhr, type, s ) {\n

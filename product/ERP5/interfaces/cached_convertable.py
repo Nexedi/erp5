@@ -54,7 +54,7 @@ class ICachedConvertable(Interface):
     Saves in the cache the converted data and mime type of a document,
     and records the date of conversion.
 
-    data -- the converted data (string or PData)
+    data -- the converted data (string or Pdata)
 
     mime -- the mime type of the converted data (string)
 
@@ -65,9 +65,10 @@ class ICachedConvertable(Interface):
 
   def getConversion(**kw):
     """
-    Returns the converted mime type and data of a document if any,
-    otherwise, raises an KeyError exception. mime type is a string.
-    data is either or PData instance (preferred) or a string.
+    Returns a tuple containing converted mime type and data of a document if
+    any, otherwise, raises an KeyError exception.
+    mime type is a string.
+    data is a string.
 
     **kw -- conversion parameters
     """

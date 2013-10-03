@@ -76,12 +76,15 @@
                     tal:content="python:here.Base_getFormViewDialogActionButtonTitle(form)">Do Action</span>\n
             </button>\n
           </div>\n
+          <script type="text/javascript"\n
+            tal:define="message python:context.Base_translateString(\'This dialog has already been submitted. Do you want to submit again ?\').replace(\'\\\\\', \'\\\\\\\\\').replace(\'\\\'\', \'\\\\\\\'\')"\n
+            tal:content="structure string:installDoubleSubmitDialogPrevention(\'$message\');">\n
+          </script>\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

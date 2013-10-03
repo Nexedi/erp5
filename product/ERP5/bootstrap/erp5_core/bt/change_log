@@ -1,3 +1,51 @@
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
+2013-08-23 arnaud.fontaine
+* ZODB Components: Shorten ID by removing common erp5.component prefix.
+
+2013-08-20 arnaud.fontaine
+* ZODB Components: Add field to specify the object paths whose only last workflow history must be kept.
+
+2013-08-20 arnaud.fontaine
+* ZODB Components: ID and Reference may be quite long so make fields wider in Component_view.
+
+2013-08-15 arnaud.fontaine
+* ZODB Components: Add pylint support and use a property for error message rather than workflow variable (error messages are now reported everytime the source code is changed).
+
+2013-07-19 arnaud.fontaine
+* Add save button to Ace Editor to save source code while staying on the same page.
+
+2013-07-09 arnaud.fontaine
+* ZODB COmponents: Cosmetic: Fix Component Validation Workflow description.
+
+2013-07-09 arnaud.fontaine
+* ZODB Components: Only Developer Role must be able to invalidate/delete/validate Components.
+
+2013-07-04 arnaud.fontaine
+* ZODB Components: Version was not displayed properly in Component view.
+
+2013-07-04 arnaud.fontaine
+* ZODB Components: Do not always display bt5 Migrate Action.
+
+2013-06-26 arnaud.fontaine
+* ZODB Components: Must be able to really delete a Component and not only in 'deleted' state. Folder_delete calls Workflow 'delete_action' if the object has any Workflow History. Before, component_validation_workflow was acting like validation_workflow for deleting objects, e.g. 'delete_action' triggers 'delete' state which is fine for normal documents but not Components.
+
+2013-06-25 arnaud.fontaine
+* ZODB Components: Migration must be all or nothing to avoid partial modifications of bt5 properties.
+
+2013-06-25 arnaud.fontaine
+* ZODB Components: Fix bootstrap of migrated bt5s.
+
+2013-06-24 arnaud.fontaine
+* Meaningless to remove ZODB Components migrated from FS. This will not work when there are several nodes anyway, so just display a message to the user.
+
 2013-06-19 arnaud.fontaine
 * Add 'does' to the closed-class words list in naming convention checking script.
 

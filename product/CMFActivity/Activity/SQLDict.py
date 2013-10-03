@@ -105,9 +105,7 @@ class SQLDict(SQLBase):
     if message_id in uid_set:
       return
     uid_set.add(message_id)
-    message_list = activity_buffer.getMessageList(self)
-    message_list.append(m)
-    m.is_registered = True
+    super(SQLDict, self).registerMessage(activity_buffer, activity_tool, m)
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = False # This prevents from inserting deleted messages into the queue

@@ -47,20 +47,13 @@ Test filter in Account Module\n
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">\n
 <tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
 \n
-<!-- Setup {{{ -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_module</td>\n
   <td>Accounts</td>\n
 </tr>\n
-<!-- }}} -->\n
 \n
 <!-- 10 accounts -> 10 records in the list {{{ -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
@@ -175,6 +168,11 @@ Test filter in Account Module\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -340,6 +338,11 @@ Test filter in Account Module\n
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>10 records</td>\n
@@ -349,8 +352,7 @@ Test filter in Account Module\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

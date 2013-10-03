@@ -122,13 +122,18 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """ show the content in the left pane of the ZMI """
     return self.objectValues()
 
-  # Price should be acquired
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getPrice')
   def getPrice(self, default=None, context=None, REQUEST=None, **kw):
-    """
+    """Get the price set locally, without lookup.
     """
     return self._baseGetPrice(default) # Call the price method
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
+  def getBaseUnitPrice(self, context=None, **kw):
+    """Get the base unit price set locally, without lookup.
+    """
+    return self._baseGetBaseUnitPrice()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSimulationState')

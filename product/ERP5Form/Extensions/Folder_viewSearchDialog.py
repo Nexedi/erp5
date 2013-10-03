@@ -60,7 +60,8 @@ def getSearchDialog(self, REQUEST=None):
     # this one is for categories
     request_key = field_id
     field_id = 'your_%s_relative_url' % field_id
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -83,7 +84,8 @@ def getSearchDialog(self, REQUEST=None):
             ['title', 'items', 'default'])
 
     field_id = 'your_%s_relative_url_is_strict_' % request_key
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewFieldLibrary',
@@ -100,7 +102,8 @@ def getSearchDialog(self, REQUEST=None):
   def addFloatField(field_id, field_title):
     request_key = field_id
     field_id = 'your_%s' % field_id
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -111,7 +114,8 @@ def getSearchDialog(self, REQUEST=None):
             'here/portal_selections/%s/%s_value_ | nothing' 
                 % (selection_name, request_key))), ['title', 'default'])
     field_id = 'your_%s_usage_' % request_key
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -138,7 +142,8 @@ def getSearchDialog(self, REQUEST=None):
   def addDateTimeField(field_id, field_title):
     request_key = field_id
     field_id = 'your_%s' % field_id
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -149,7 +154,8 @@ def getSearchDialog(self, REQUEST=None):
             'here/portal_selections/%s/%s_value_ | nothing' 
                 % (selection_name, request_key))), ['title', 'default'])
     field_id = 'your_%s_usage_' % request_key
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -174,7 +180,8 @@ def getSearchDialog(self, REQUEST=None):
   def addStringField(field_id, field_title):
     request_key = field_id
     field_id = 'your_%s' % field_id
-    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -197,7 +204,8 @@ def getSearchDialog(self, REQUEST=None):
     addStringField(column_id, column_title)
     request_key = column_id
     field_id = 'your_%s_search_key' % column_id
-    temp_form.manage_addField(field_id, column_title, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, column_title, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -220,7 +228,7 @@ def getSearchDialog(self, REQUEST=None):
             ['title', 'items', 'default'])
 
 
-  base_category_list = category_tool.getBaseCategoryList()
+  base_category_list = set(category_tool.getBaseCategoryList())
   catalog_schema = portal.portal_catalog.schema()
   sql_catalog = portal.portal_catalog.getSQLCatalog()
   sql_catalog_keyword_search_keys = sql_catalog.sql_catalog_keyword_search_keys
@@ -233,13 +241,14 @@ def getSearchDialog(self, REQUEST=None):
   search_list = ListBoxListRenderer(
                       listbox.widget, listbox, request).getSearchColumnIdSet()
 
-  full_text_search_added = False
+  added_column_set = set()
+
   for column_id, column_title in column_list:
-    # is it a base category ?
-    if column_id == "SearchableText":
-      full_text_search_added = True
+    if column_id in added_column_set:
+      continue
+    added_column_set.add(column_id)
     short_column_id = column_id
-    # strip the usuale default_ and _title that are on standard fields.
+    # strip the usual default_ and _title that are on standard fields.
     if short_column_id.endswith('_translated_title'):
       short_column_id = short_column_id[:-len('_translated_title')]
     if short_column_id.endswith('_title'):
@@ -249,6 +258,7 @@ def getSearchDialog(self, REQUEST=None):
       short_column_id = short_column_id[:-len('_reference')]
     if short_column_id.startswith('default_'):
       short_column_id = short_column_id[len('default_'):]
+    # is it a base category ?
     if short_column_id in base_category_list:
       # is this base category empty ? then it might be used to relate documents,
       # in that case, simply provide a text input
@@ -305,7 +315,8 @@ def getSearchDialog(self, REQUEST=None):
         continue
 
       field_id = 'your_%s' % state_var
-      temp_form.manage_addField(field_id, field_id, 'ProxyField')
+      if field_id not in temp_form.objectIds():
+        temp_form.manage_addField(field_id, field_id, 'ProxyField')
       field = temp_form._getOb(field_id)
       field.manage_edit_xmlrpc(dict(
           form_id='Base_viewDialogFieldLibrary',
@@ -329,7 +340,8 @@ def getSearchDialog(self, REQUEST=None):
   # if more than 1 allowed content types -> list possible content types
   if len(allowed_content_types) > 1:
     field_id = 'your_portal_type'
-    temp_form.manage_addField(field_id, field_id, 'ProxyField')
+    if field_id not in temp_form.objectIds():
+      temp_form.manage_addField(field_id, field_id, 'ProxyField')
     field = temp_form._getOb(field_id)
     field.manage_edit_xmlrpc(dict(
         form_id='Base_viewDialogFieldLibrary',
@@ -347,8 +359,7 @@ def getSearchDialog(self, REQUEST=None):
             ['title', 'items', 'default'])
 
 
-  if not full_text_search_added:
-    addFullTextStringField('SearchableText', 'Full Text Search')
+  addFullTextStringField('SearchableText', 'Full Text Search')
 
   # Order fields
   default_group = temp_form.group_list[0]

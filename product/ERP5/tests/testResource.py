@@ -739,6 +739,7 @@ class TestResource(ERP5TypeTestCase):
                                      portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
                                      destination_section_value=node)
+        supply.validate()
         self.logMessage("Creating fake supply line %s..." % i, tab=1)
         supply_line = supply.newContent(
               portal_type=self.sale_supply_line_portal_type,
@@ -779,6 +780,7 @@ class TestResource(ERP5TypeTestCase):
     generic_supply = supply_module.newContent(
                      portal_type=self.sale_supply_portal_type,
                      title='FakeGenericSupply',)
+    generic_supply.validate()
     # Create empty supply line
     supply_line = generic_supply.newContent(
           portal_type=self.sale_supply_line_portal_type)
@@ -803,6 +805,7 @@ class TestResource(ERP5TypeTestCase):
                                      portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
                                      destination_section_value=node)
+        supply.validate()
 
         if 0:
           # XXX if both a supply line for the resource and a supply cell for

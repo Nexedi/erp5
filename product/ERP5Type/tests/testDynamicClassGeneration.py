@@ -1244,31 +1244,7 @@ from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from App.config import getConfiguration
 
-class TestDeveloperMixin:
-
-  def login(self, user_name='ERP5TypeTestCase', quiet=0):
-    """
-    Make sure that the test user has Developer Role, otherwise the user cannot
-    do anything on Components...
-    """
-    config = getConfiguration()
-    product_config = getattr(config, 'product_config', None)
-    if product_config is None:
-      product_config = config.product_config = {}
-
-    if product_config.get('erp5') is None:
-      class DummyDeveloperConfig(object):
-        pass
-      dummy_developer_config = DummyDeveloperConfig()
-      dummy_developer_config.developer_list = [user_name]
-      product_config['erp5'] = dummy_developer_config
-
-    elif user_name not in product_config['erp5'].developer_list:
-      product_config['erp5'].developer_list.append(user_name)
-
-    return ERP5TypeTestCase.login(self, user_name, quiet)
-
-class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
+class _TestZodbComponent(SecurityTestCase):
   """
   Abstract class which defined convenient methods used by any Component Test
   and tests ran for all Component Test classes
@@ -1285,12 +1261,23 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     self._component_tool.reset(force=True,
                                reset_portal_type_at_transaction_boundary=True)
 
-  @abc.abstractmethod
-  def _newComponent(self, reference, text_content, version='erp5'):
+  def _newComponent(self, reference, text_content, version='erp5', id_=None):
     """
-    Abstract method to create a new Component
+    Create new Component
     """
-    pass
+    full_id = '%s.%s.%s' % (self._getComponentModuleName(),
+                            version + '_version',
+                            reference)
+
+    if id_ is not None:
+      full_id += '.%s' % id_
+
+    return self._component_tool.newContent(
+      id=full_id,
+      version=version,
+      reference=reference,
+      text_content=text_content,
+      portal_type=self._component_portal_type)
 
   @abc.abstractmethod
   def _getComponentModuleName(self):
@@ -1307,51 +1294,146 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     Check that the given module name is *not* importable (ZODB Components
     relies solely on import hooks)
     """
-    full_module_name = self._getComponentFullModuleName(module_name)
-
     try:
-      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
-                 level=0)
+      self._importModule(module_name)
     except ImportError:
       pass
     else:
       self.fail("Component '%s' should not have been generated" % \
                   full_module_name)
 
-  def assertModuleImportable(self, module_name):
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=False)
+
+  def assertModuleImportable(self,
+                             module_name,
+                             expected_default_version=None,
+                             expected_additional_version_tuple=(),
+                             reset=True):
     """
     Check that the given module name is importable (ZODB Components relies
     solely on import hooks)
     """
-    full_module_name = self._getComponentFullModuleName(module_name)
-
     try:
-      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
-                 level=0)
+      self._importModule(module_name)
     except ImportError:
       self.fail("Component '%s' should have been generated" % \
                   full_module_name)
 
-  def testValidateInvalidate(self):
+    if expected_default_version is not None:
+      top_module_name = self._getComponentModuleName()
+      top_module = __import__(top_module_name, level=0, fromlist=[top_module_name])
+
+      # The module must be available in its default version
+      self.assertHasAttribute(top_module, expected_default_version)
+      self.assertHasAttribute(getattr(top_module, expected_default_version),
+                              module_name)
+      self.assertModuleImportable('%s.%s' % (expected_default_version, module_name),
+                                  reset=False)
+
+      for expected_version in expected_additional_version_tuple:
+        # But other version with lowest attribute should not even be there
+        # until there is an explicit import
+        self.failIfHasAttribute(top_module, expected_version)
+
+        self.assertModuleImportable('%s.%s' % (expected_version, module_name),
+                                    reset=False)
+
+        self.assertHasAttribute(top_module, expected_version)
+        self.assertHasAttribute(getattr(top_module, expected_version), module_name)
+
+    if reset:
+      # There should be no side-effect by calling this function so reset
+      # everything (it hide a bug in ExternalMethod when adding a new one, the
+      # Extension Component was not loaded at all)
+      self._component_tool.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=False)
+
+  def _importModule(self, module_name):
+    return __import__(self._getComponentFullModuleName(module_name),
+                      fromlist=[self._getComponentModuleName()],
+                      level=0)
+
+  def testValidateInvalidateDelete(self):
     """
     The new Component should only be in erp5.component.XXX when validated,
     otherwise it should not be importable at all
     """
+    uf = self.portal.acl_users
+    if not uf.getUser('ERP5TypeTestCase_NonDeveloper'):
+      uf._doAddUser('ERP5TypeTestCase_NonDeveloper',
+                    '', ['Manager', 'Member', 'Assignee',
+                         'Assignor', 'Author', 'Auditor', 'Associate'], [])
+
     test_component = self._newComponent(
       'TestValidateInvalidateComponent',
       'def foobar(*args, **kwargs):\n  return "ValidateInvalidate"')
 
-    test_component.validate()
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase_NonDeveloper',
+                                             'validate_action',
+                                             test_component)
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'invalidate_action',
+                                             test_component)
+
+    from AccessControl.SecurityManagement import getSecurityManager
+    from AccessControl.SecurityManagement import setSecurityManager
+    from Products.CMFCore.WorkflowCore import WorkflowException
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser('ERP5TypeTestCase_NonDeveloper')
+      self.assertRaises(WorkflowException,
+                        self.portal.portal_workflow.doActionFor,
+                        test_component, 'delete_action')
+    finally:
+      setSecurityManager(sm)
+
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+    self.portal.portal_workflow.doActionFor(test_component, 'validate_action')
     self.tic()
 
     self.assertModuleImportable('TestValidateInvalidateComponent')
-    test_component.invalidate()
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase_NonDeveloper',
+                                             'invalidate_action',
+                                             test_component)
+
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'validate_action',
+                                             test_component)
+
+    self.assertRaises(WorkflowException,
+                      self.portal.portal_workflow.doActionFor,
+                      test_component, 'delete_action')
+
+    self.portal.portal_workflow.doActionFor(test_component, 'invalidate_action')
     self.tic()
     self.failIfModuleImportable('TestValidateInvalidateComponent')
 
-    test_component.validate()
+    self.portal.portal_workflow.doActionFor(test_component, 'validate_action')
     self.tic()
     self.assertModuleImportable('TestValidateInvalidateComponent')
+
+    self.portal.portal_workflow.doActionFor(test_component, 'invalidate_action')
+    self.tic()
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser('ERP5TypeTestCase_NonDeveloper')
+      self.assertRaises(WorkflowException,
+                        self.portal.portal_workflow.doActionFor,
+                        test_component, 'delete_action')
+    finally:
+      setSecurityManager(sm)
+
+    self.portal.portal_workflow.doActionFor(test_component, 'delete_action')
+    self.tic()
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
+    self.assertEqual([o for o in self.portal.portal_components.contentValues()
+                      if o.getReference() == 'TestValidateInvalidateComponent'],
+                     [])
 
   def testReferenceWithReservedKeywords(self):
     """
@@ -1366,7 +1448,7 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component = self._newComponent(valid_reference,
-                                     'def foobar(*args, **kwargs):\n  return 42')
+                                     'def foobar():\n  return 42')
 
       component.validate()
       self.tic()
@@ -1377,7 +1459,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getReference(), valid_reference)
     self.assertEquals(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
@@ -1385,7 +1469,6 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     # Check that checkConsistency returns the proper error message for the
     # following reserved keywords
     invalid_reference_dict = {
-      None: ComponentMixin._message_reference_not_set,
       # '_version' could clash with Version package name
       'ReferenceReservedKeywords_version': ComponentMixin._message_invalid_reference,
       # Besides of clashing with protected attributes/methods, it does not
@@ -1408,10 +1491,11 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEquals(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertEquals(error_message, error_list[0])
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        [error_message])
+      self.assertEquals(component.getTextContentErrorMessageList(), [])
+      self.assertEquals(component.getTextContentWarningMessageList(), [])
       self.assertEquals(component.getReference(), invalid_reference)
       self.assertEquals(component.getReference(validated_only=True), valid_reference)
       self._component_tool.reset(force=True,
@@ -1431,7 +1515,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getReference(), valid_reference)
     self.assertEquals(component.getReference(validated_only=True), valid_reference)
     self.assertModuleImportable(valid_reference)
@@ -1450,7 +1536,7 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component = self._newComponent(reference,
-                                     'def foobar(*args, **kwargs):\n  return 42',
+                                     'def foobar():\n  return 42',
                                      valid_version)
 
       component.validate()
@@ -1462,7 +1548,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getVersion(), valid_version)
     self.assertEquals(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
@@ -1486,10 +1574,11 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEquals(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertEquals(error_message, error_list[0])
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        [error_message])
+      self.assertEquals(component.getTextContentErrorMessageList(), [])
+      self.assertEquals(component.getTextContentWarningMessageList(), [])
       self.assertEquals(component.getVersion(), invalid_version)
       self.assertEquals(component.getVersion(validated_only=True), valid_version)
       self._component_tool.reset(force=True,
@@ -1509,7 +1598,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getVersion(), valid_version)
     self.assertEquals(component.getVersion(validated_only=True), valid_version)
     self.assertModuleImportable(reference)
@@ -1523,10 +1614,35 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     validated but not when an error was encountered (implemented in
     dynamic_class_generation_interaction_workflow)
     """
-    valid_code = 'def foobar(*args, **kwargs):\n  return 42'
+    # Error/Warning properties must be set everytime the source code is
+    # modified, even in Draft state
+    component = self._newComponent('TestComponentWithSyntaxError', 'print "ok"')
+    self.tic()
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
+
+    component.setTextContent('import sys')
+    self.tic()
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(),
+                      ["W:  1, 0: Unused import sys (unused-import)"])
+
+    component.setTextContent('import unexistent_module')
+    self.tic()
+    self.assertEquals(
+      [m.getMessage().translate() for m in component.checkConsistency()],
+      ["Error in Source Code: F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+    self.assertEquals(component.getTextContentErrorMessageList(),
+                      ["F:  1, 0: Unable to import 'unexistent_module' (import-error)"])
+    self.assertEquals(component.getTextContentWarningMessageList(),
+                      ["W:  1, 0: Unused import unexistent_module (unused-import)"])
+
+    valid_code = 'def foobar():\n  return 42'
     ComponentTool.reset = assertResetCalled
     try:
-      component = self._newComponent('TestComponentWithSyntaxError', valid_code)
+      component.setTextContent(valid_code)
       component.validate()
       self.tic()
 
@@ -1536,7 +1652,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
@@ -1544,13 +1662,27 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
     # Check that checkConsistency returns the proper error message for the
     # following Python errors
     invalid_code_dict = (
-      (None, ComponentMixin._message_text_content_not_set),
-      ('def foobar(*args, **kwargs)\n  return 42', 'Syntax error in source code:'),
+      (None,
+       # There could be no source code until validated, so checkConsistency()
+       # is used instead
+       [ComponentMixin._message_text_content_not_set],
+       [],
+       []),
+      ('def foobar(*args, **kwargs)\n  return 42',
+       ["Error in Source Code: E:  1, 0: invalid syntax (syntax-error)"],
+       ["E:  1, 0: invalid syntax (syntax-error)"],
+       []),
       # Make sure that foobar NameError is at the end to make sure that after
       # defining foobar function, it is not available at all
-      ('foobar', 'Source code:'))
+      ('foobar',
+       ["Error in Source Code: E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
+       ["E:  1, 0: Undefined variable 'foobar' (undefined-variable)"],
+       ["W:  1, 0: Statement seems to have no effect (pointless-statement)"]))
 
-    for invalid_code, error_message in invalid_code_dict:
+    for (invalid_code,
+         check_consistency_list,
+         error_list,
+         warning_list) in invalid_code_dict:
       # Reset should not be performed
       ComponentTool.reset = assertResetNotCalled
       try:
@@ -1561,10 +1693,12 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
 
       # Should be in modified state as an error has been encountered
       self.assertEquals(component.getValidationState(), 'modified')
-      error_list = component.getErrorMessageList()
-      self.assertNotEqual(error_list, [])
-      self.assertEquals(len(error_list), 1)
-      self.assertTrue(error_list[0].startswith(error_message))
+      self.assertEquals([m.getMessage().translate()
+                         for m in component.checkConsistency()],
+                        check_consistency_list)
+      self.assertEquals(component.getTextContentErrorMessageList(), error_list)
+      self.assertEquals(component.getTextContentWarningMessageList(), warning_list)
+
       self.assertEquals(component.getTextContent(), invalid_code)
       self.assertEquals(component.getTextContent(validated_only=True), valid_code)
       self._component_tool.reset(force=True,
@@ -1584,7 +1718,9 @@ class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.checkConsistency(), [])
+    self.assertEquals(component.getTextContentErrorMessageList(), [])
+    self.assertEquals(component.getTextContentWarningMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
@@ -1620,8 +1756,8 @@ def bar(*args, **kwargs):
     self.tic()
 
     # Versioned package and its alias must be available
-    self.assertModuleImportable('TestImportVersionedComponentOnly')
-    self.assertModuleImportable('erp5_version.TestImportVersionedComponentOnly')
+    self.assertModuleImportable('TestImportVersionedComponentOnly',
+                                expected_default_version='erp5_version')
 
     # Versioned Component of imported Component must be importable and check
     # later that the module has not been added to the top-level package
@@ -1629,6 +1765,8 @@ def bar(*args, **kwargs):
 
     top_module = __import__(top_module_name, level=0,
                             fromlist=[top_module_name])
+
+    self._importModule('erp5_version.TestImportedVersionedComponentOnly')
 
     # Function defined in versioned Component must be available and callable
     self.assertHasAttribute(
@@ -1643,6 +1781,7 @@ def bar(*args, **kwargs):
     self.failIfHasAttribute(top_module, 'TestImportedVersionedComponentOnly')
 
     # As well as functions defined on unversioned Component
+    self._importModule('TestImportVersionedComponentOnly')
     self.assertHasAttribute(top_module.TestImportVersionedComponentOnly, 'bar')
 
     self.assertEquals(
@@ -1674,8 +1813,9 @@ def bar(*args, **kwargs):
     component_foo_version.validate()
     self.tic()
 
-    self.assertModuleImportable('TestVersionPriority')
-    self.assertModuleImportable('erp5_version.TestVersionPriority')
+    self.assertModuleImportable('TestVersionPriority',
+                                expected_default_version='erp5_version')
+
     # Component for 'foo_version' must not be importable as 'foo' has not been
     # added to ERP5Site version priorities
     self.failIfModuleImportable('foo_version.TestVersionPriority')
@@ -1684,6 +1824,7 @@ def bar(*args, **kwargs):
     top_module = __import__(top_module_name, level=0,
                             fromlist=[top_module_name])
 
+    self._importModule('TestVersionPriority')
     self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
     self.assertEquals(top_module.TestVersionPriority.function_foo(),
                       "TestERP5VersionPriority")
@@ -1700,10 +1841,12 @@ def bar(*args, **kwargs):
 
       self.assertEquals(ComponentTool._reset_performed, True)
 
-      self.assertModuleImportable('TestVersionPriority')
-      self.assertModuleImportable('erp5_version.TestVersionPriority')
-      self.assertModuleImportable('foo_version.TestVersionPriority')
+      self.assertModuleImportable(
+        'TestVersionPriority',
+        expected_default_version='foo_version',
+        expected_additional_version_tuple=('erp5_version',))
 
+      self._importModule('TestVersionPriority')
       self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
       self.assertEquals(top_module.TestVersionPriority.function_foo(),
                         "TestFooVersionPriority")
@@ -1723,6 +1866,12 @@ def bar(*args, **kwargs):
                                    'def foo():\n  print "ok"')
 
     self.tic()
+
+    # Anonymous should not even be able to view/access Component Tool
+    self.failIfUserCanViewDocument(None, self._component_tool)
+    self.failIfUserCanAccessDocument(None, self._component_tool)
+    self.failIfUserCanViewDocument(None, component)
+    self.failIfUserCanAccessDocument(None, component)
 
     user_id = 'ERP5TypeTestCase'
 
@@ -1757,6 +1906,45 @@ def bar(*args, **kwargs):
     self.assertUserCanModifyDocument(user_id, component)
     self.assertUserCanDeleteDocument(user_id, component)
 
+  def testValidateComponentWithSameReferenceVersionAlreadyValidated(self):
+    reference = 'ValidateComponentWithSameReferenceVersionAlreadyValidated'
+
+    component = self._newComponent(reference, 'def foo():\n  print "ok"')
+    component.validate()
+    self.tic()
+
+    component_dup = self._newComponent(reference, 'def foo():\n  print "ok"',
+                                       id_='duplicated')
+
+    self.tic()
+
+    from Products.DCWorkflow.DCWorkflow import ValidationFailed
+    self.assertRaises(ValidationFailed,
+                      self.portal.portal_workflow.doActionFor,
+                      component_dup, 'validate_action')
+
+    self.assertEquals(component_dup.getValidationState(), 'draft')
+
+    component_dup.setReference(reference + '_copy')
+    component_dup.validate()
+    self.tic()
+
+    component_dup.setReference(reference)
+    self.tic()
+    self.assertEquals(component_dup.getValidationState(), 'modified')
+    self.assertEquals(component_dup.getReference(), reference)
+    self.assertEquals(component_dup.getReference(validated_only=True),
+                      reference + '_copy')
+
+    component_dup.invalidate()
+    self.tic()
+    component_dup.setReference(reference)
+    self.assertRaises(ValidationFailed,
+                      self.portal.portal_workflow.doActionFor,
+                      component_dup, 'validate_action')
+
+    self.assertEquals(component_dup.getValidationState(), 'invalidated')
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(_TestZodbComponent):
@@ -1764,15 +1952,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
   Tests specific to ZODB Extension Component (previously defined in bt5 and
   installed on the filesystem in $INSTANCE_HOME/Extensions)
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version',
-                       reference),
-      version=version,
-      reference=reference,
-      text_content=text_content,
-      portal_type='Extension Component')
+  _component_portal_type = 'Extension Component'
 
   def _getComponentModuleName(self):
     return ExtensionComponent._getDynamicModuleNamespace()
@@ -1805,6 +1985,19 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     external_method = self.getPortal().TestExternalMethod
     self.assertEqual(external_method(), 42)
 
+    # Check that the External Method returns expected result through Publisher
+    # with or without DevelopmentMode
+    path = '%s/TestExternalMethod' % self.portal.getId()
+    self.assertEqual(self.publish(path).getBody(), '42')
+
+    import Globals
+    previous_development_mode = Globals.DevelopmentMode
+    Globals.DevelopmentMode = not Globals.DevelopmentMode
+    try:
+      self.assertEqual(self.publish(path).getBody(), '42')
+    finally:
+      Globals.DevelopmentMode = previous_development_mode
+
     # Add a Python Script with the External Method defined above and check
     # that it returns 42
     from Products.PythonScripts.PythonScript import manage_addPythonScript
@@ -1836,14 +2029,7 @@ class TestZodbDocumentComponent(_TestZodbComponent):
   previously defined in bt5 and installed on the filesystem in
   $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version', reference),
-      reference=reference,
-      version=version,
-      text_content=text_content,
-      portal_type='Document Component')
+  _component_portal_type = 'Document Component'
 
   def _getComponentModuleName(self):
     return DocumentComponent._getDynamicModuleNamespace()
@@ -1893,7 +2079,9 @@ class TestPortalType(Person):
     # There is no reason that TestPortalType Document Component has been
     # assigned to a Person
     self.failIfHasAttribute(person, 'test42')
-    self.assertFalse(self._module.TestPortalType in person.__class__.mro())
+    self.failIfHasAttribute(self._module, 'TestPortalType')
+    for klass in person.__class__.mro():
+      self.assertNotEqual(klass.__name__, 'TestPortalType')
 
     # Reset Portal Type classes to ghost to make sure that everything is reset
     self._component_tool.reset(force=True,
@@ -1910,7 +2098,7 @@ class TestPortalType(Person):
 
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component
-      self.assertModuleImportable('TestPortalType')
+      self.assertHasAttribute(self._module, 'TestPortalType')
       self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
       self.assertTrue(PersonDocument in person.__class__.mro())
 
@@ -1972,14 +2160,7 @@ class TestZodbTestComponent(_TestZodbComponent):
   Tests specific to ZODB Test Component (known as Live Tests, and previously
   defined in bt5 and installed in $INSTANCE_HOME/test)
   """
-  def _newComponent(self, reference, text_content, version='erp5'):
-    return self._component_tool.newContent(
-      id='%s.%s.%s' % (self._getComponentModuleName(),
-                       version + '_version', reference),
-      reference=reference,
-      version=version,
-      text_content=text_content,
-      portal_type='Test Component')
+  _component_portal_type = 'Test Component'
 
   def _getComponentModuleName(self):
     return TestComponent._getDynamicModuleNamespace()

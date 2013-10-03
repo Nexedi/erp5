@@ -57,6 +57,7 @@ if selection_name is None:\n
 \n
 ps = context.portal_selections\n
 ps.setSelectionToAll(selection_name, REQUEST=request, reset_domain_tree=True, reset_report_tree=True)\n
+ps.setSelectionSortOrder(selection_name, [])\n
 url = ps.getSelectionListUrlFor(selection_name, REQUEST=request)\n
 request.RESPONSE.redirect(url)\n
 </string> </value>

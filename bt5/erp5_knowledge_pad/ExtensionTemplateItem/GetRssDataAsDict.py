@@ -16,26 +16,29 @@ def getRssDataAsDict(self, url, username=None, password=None):
     passman.add_password(None, url, username, password)
     auth_handler = urllib2.HTTPBasicAuthHandler(passman)
     handlers.append(auth_handler)
-  
+
   # set shorter timeouts and revert default at enf of read  
   default_timeout = socket.getdefaulttimeout()
   socket.setdefaulttimeout(60.0)
-  d = feedparser.parse(url, handlers=handlers)  
-  socket.setdefaulttimeout(default_timeout)    
-  
+  try:
+    d = feedparser.parse(url, handlers=handlers)
+  finally:
+    socket.setdefaulttimeout(default_timeout)
+
   if d.bozo and isinstance(d.bozo_exception, urllib2.URLError):
     # we have an URL error
     return {'status':-2}
   elif d.bozo:
-    print d.bozo, d.bozo_exception
-    return {'status': -5}
+    # some bozo exceptions can be ignored
+    if not isinstance(d.bozo_exception, (
+        feedparser.CharacterEncodingOverride,
+      )):
+      return {'status': -5}
   if d.status == 401:
     return {'status':-3}
   elif d.status == 404:
     return {'status':-4}
-  
 
-  
   result['items'] = []
   # some feeds may not provide logo
   if d.feed.get('image', None) is not None:

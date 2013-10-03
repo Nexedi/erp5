@@ -1303,7 +1303,6 @@ class SimulationTool(BaseTool):
       # Get cached data
       if getattr(self, "Resource_zGetInventoryCacheResult", None) is not None and \
               optimisation__ and (not kw.get('from_date')) and \
-              (bool(kw.get("at_date")) ^ bool(kw.get("to_date"))) and \
               'transformed_resource' not in kw:
         # Here is the different kind of date
         # from_date : >=
@@ -1314,7 +1313,7 @@ class SimulationTool(BaseTool):
         # of the same line
         at_date = kw.pop("at_date", None)
         if at_date is None:
-          to_date = kw.pop("to_date")
+          to_date = kw.pop("to_date", None)
         else:
           # add one second so that we can use to_date
           to_date = at_date + MYSQL_MIN_DATETIME_RESOLUTION
@@ -1402,10 +1401,9 @@ class SimulationTool(BaseTool):
         **kw)).digest()
       # Try to get result from cache
       Resource_zGetInventoryCacheResult = self.Resource_zGetInventoryCacheResult
-      inventory_cache_kw = {
-        'query': sql_text_hash,
-        'date': to_date,
-      }
+      inventory_cache_kw = {'query': sql_text_hash}
+      if to_date is not None:
+        inventory_cache_kw['date'] = to_date
       try:
           cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
       except ProgrammingError:
@@ -1434,10 +1432,10 @@ class SimulationTool(BaseTool):
       else:
         cached_result = []
       cache_lag = self.getInventoryCacheLag()
-      if cached_sql_result and to_date - DateTime(cached_sql_result[0].date) < cache_lag:
+      if cached_sql_result and (to_date is None or (to_date - DateTime(cached_sql_result[0].date) < cache_lag)):
         cached_date = DateTime(cached_sql_result[0].date)
         result = cached_result
-      else:
+      elif to_date is not None:
         # Cache miss, or hit with old data: store a new entry in cache.
         # Don't store it at to_date, as it risks being flushed soon (ie, when
         # any document older than to_date gets reindexed in stock table).
@@ -1475,6 +1473,12 @@ class SimulationTool(BaseTool):
               'data': result._data,
             }),
           )
+      else:
+        # Cache miss and this getInventory() not specifying to_date,
+        # and other getInventory() have not created usable caches.
+        # In such case, do not create cache, do not use cache.
+        result = []
+        cached_date = None
       if src__:
         result = sql_source_list
       return result, cached_date

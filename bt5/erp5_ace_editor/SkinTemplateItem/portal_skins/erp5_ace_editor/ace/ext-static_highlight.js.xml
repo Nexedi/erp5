@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155553.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-static_highlight.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ *\n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/ext/static_highlight\', [\'require\', \'exports\', \'module\' , \'ace/edit_session\', \'ace/layer/text\', \'ace/config\'], function(require, exports, module) {\n
+\n
+\n
+var EditSession = require("../edit_session").EditSession;\n
+var TextLayer = require("../layer/text").Text;\n
+var baseStyles = ".ace_editor {\\\n
+font-family: \'Monaco\', \'Menlo\', \'Droid Sans Mono\', \'Courier New\', monospace;\\\n
+font-size: 12px;\\\n
+}\\\n
+.ace_editor .ace_gutter {\\\n
+width: 25px !important;\\\n
+display: block;\\\n
+float: left;\\\n
+text-align: right;\\\n
+padding: 0 3px 0 0;\\\n
+margin-right: 3px;\\\n
+}\\\n
+.ace_line { clear: both; }\\\n
+*.ace_gutter-cell {\\\n
+-moz-user-select: -moz-none;\\\n
+-khtml-user-select: none;\\\n
+-webkit-user-select: none;\\\n
+user-select: none;\\\n
+}";\n
+var config = require("../config");\n
+\n
+exports.render = function(input, mode, theme, lineStart, disableGutter, callback) {\n
+    var waiting = 0\n
+    if (typeof theme == "string") {\n
+        waiting++;\n
+        config.loadModule([\'theme\', theme], function(m) {\n
+            theme = m;\n
+            --waiting || done();\n
+        });\n
+    }\n
+\n
+    if (typeof mode == "string") {\n
+        waiting++;\n
+        config.loadModule([\'mode\', mode], function(m) {\n
+            mode = new m.Mode()\n
+            --waiting || done();\n
+        });\n
+    }\n
+    function done() {\n
+        var result = exports.renderSync(input, mode, theme, lineStart, disableGutter);\n
+        return callback ? callback(result) : result;\n
+    }\n
+    return waiting || done();\n
+};\n
+\n
+exports.renderSync = function(input, mode, theme, lineStart, disableGutter) {\n
+    lineStart = parseInt(lineStart || 1, 10);\n
+\n
+    var session = new EditSession("");\n
+    session.setUseWorker(false);\n
+    session.setMode(mode);\n
+\n
+    var textLayer = new TextLayer(document.createElement("div"));\n
+    textLayer.setSession(session);\n
+    textLayer.config = {\n
+        characterWidth: 10,\n
+        lineHeight: 20\n
+    };\n
+\n
+    session.setValue(input);\n
+\n
+    var stringBuilder = [];\n
+    var length =  session.getLength();\n
+\n
+    for(var ix = 0; ix < length; ix++) {\n
+        stringBuilder.push("<div class=\'ace_line\'>");\n
+        if (!disableGutter)\n
+            stringBuilder.push("<span class=\'ace_gutter ace_gutter-cell\' unselectable=\'on\'>" + (ix + lineStart) + "</span>");\n
+        textLayer.$renderLine(stringBuilder, ix, true, false);\n
+        stringBuilder.push("</div>");\n
+    }\n
+    var html = "<div class=\':cssClass\'>\\\n
+        <div class=\'ace_editor ace_scroller ace_text-layer\'>\\\n
+            :code\\\n
+        </div>\\\n
+    </div>".replace(/:cssClass/, theme.cssClass).replace(/:code/, stringBuilder.join(""));\n
+\n
+    textLayer.destroy();\n
+\n
+    return {\n
+        css: baseStyles + theme.cssText,\n
+        html: html\n
+    };\n
+};\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4310</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

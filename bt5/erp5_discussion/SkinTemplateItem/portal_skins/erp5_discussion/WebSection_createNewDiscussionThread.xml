@@ -127,6 +127,19 @@ discussion_post = discussion_thread.newContent(\n
 portal_status_message = "New discussion created in background."\n
 discussion_thread.publish()\n
 \n
+# handle attachments\n
+if getattr(file, \'filename\', \'\') != \'\':\n
+  document_kw = {\'batch_mode\': True,\n
+                 \'redirect_to_document\': False,\n
+                 \'file\': file}\n
+  document = context.Base_contribute(**document_kw)\n
+\n
+  # set relation between post and document\n
+  discussion_post.setSuccessorValueList([document])\n
+\n
+  # depending on security model this should be changed accordingly\n
+  document.publish()\n
+\n
 if send_notification_text not in (\'\', None):\n
   # we can send notifications\n
   person_list = []\n
@@ -171,13 +184,14 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None,**kw</string> </value>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None, file=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

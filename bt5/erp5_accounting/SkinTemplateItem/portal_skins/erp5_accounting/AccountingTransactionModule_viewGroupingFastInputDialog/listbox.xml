@@ -15,6 +15,8 @@
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
+                <string>search</string>
+                <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
                 <string>sort</string>
@@ -147,7 +149,7 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>parent_title</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -178,6 +180,10 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
@@ -204,6 +210,37 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>debit_price</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit_price</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_reference</string>
+                          <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -246,7 +283,7 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>parent_title</string>
+                          <string>title</string>
                           <string>Title</string>
                         </tuple>
                       </list>

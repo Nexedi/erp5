@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155553.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-options.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+define(\'ace/ext/options\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+var modesByName = modelist.modesByName;\n
+\n
+var options = [\n
+    ["Document", function(name) {\n
+        doclist.loadDoc(name, function(session) {\n
+            if (!session)\n
+                return;\n
+            session = env.split.setSession(session);\n
+            updateUIEditorOptions();\n
+            env.editor.focus();\n
+        });\n
+    }, doclist.all],\n
+\t["Mode", function(value) {\n
+        env.editor.session.setMode(modesByName[value].mode || modesByName.text.mode);\n
+        env.editor.session.modeName = value;\n
+\t}, function(value) {\n
+\t\treturn env.editor.session.modeName || "text"\n
+\t}, modelist.modes],\n
+\t["Split", function(value) {\n
+\t\tvar sp = env.split;\n
+\t\tif (value == "none") {\n
+\t\t\tif (sp.getSplits() == 2) {\n
+\t\t\t\tenv.secondSession = sp.getEditor(1).session;\n
+        }\n
+        sp.setSplits(1);\n
+    } else {\n
+        var newEditor = (sp.getSplits() == 1);\n
+        if (value == "below") {\n
+            sp.setOrientation(sp.BELOW);\n
+        } else {\n
+            sp.setOrientation(sp.BESIDE);\n
+        }\n
+        sp.setSplits(2);\n
+\n
+        if (newEditor) {\n
+\t\t\t\tvar session = env.secondSession || sp.getEditor(0).session;\n
+            var newSession = sp.setSession(session, 1);\n
+            newSession.name = session.name;\n
+        }\n
+    }\n
+\t}, ["None", "Beside", "Below"]],\n
+\t["Theme", function(value) {\n
+\t\tif (!value)\n
+\t\t\treturn;\n
+\t\tenv.editor.setTheme("ace/theme/" + value);\n
+\t\tthemeEl.selectedValue = value;\n
+\t}, function() {\n
+\t\treturn env.editor.getTheme();\n
+\t}, {\n
+\t\t"Bright": {\n
+            chrome: "Chrome",\n
+            clouds: "Clouds",\n
+            crimson_editor: "Crimson Editor",\n
+            dawn: "Dawn",\n
+            dreamweaver: "Dreamweaver",\n
+            eclipse: "Eclipse",\n
+            github: "GitHub",\n
+            solarized_light: "Solarized Light",\n
+            textmate: "TextMate",\n
+            tomorrow: "Tomorrow",\n
+            xcode: "XCode"\n
+        },\n
+        "Dark": {\n
+            ambiance: "Ambiance",\n
+            chaos: "Chaos",\n
+            clouds_midnight: "Clouds Midnight",\n
+            cobalt: "Cobalt",\n
+            idle_fingers: "idleFingers",\n
+            kr_theme: "krTheme",\n
+            merbivore: "Merbivore",\n
+            merbivore_soft: "Merbivore Soft",\n
+            mono_industrial: "Mono Industrial",\n
+            monokai: "Monokai",\n
+            pastel_on_dark: "Pastel on dark",\n
+            solarized_dark: "Solarized Dark",\n
+            twilight: "Twilight",\n
+            tomorrow_night: "Tomorrow Night",\n
+            tomorrow_night_blue: "Tomorrow Night Blue",\n
+            tomorrow_night_bright: "Tomorrow Night Bright",\n
+            tomorrow_night_eighties: "Tomorrow Night 80s",\n
+            vibrant_ink: "Vibrant Ink",\n
+        }\n
+\t}],\n
+\t["Code Folding", function(value) {\n
+\t\tenv.editor.getSession().setFoldStyle(value);\n
+\t\tenv.editor.setShowFoldWidgets(value !== "manual");\n
+\t}, ["manual", "mark begin", "mark begin and end"]],\n
+\t["Soft Wrap", function(value) {\n
+\t\tvalue = value.toLowerCase()\n
+\t\tvar session = env.editor.getSession();\n
+\t\tvar renderer = env.editor.renderer;\n
+\t\tsession.setUseWrapMode(value == "off");\n
+\t\tvar col = parseInt(value) || null;\n
+\t\trenderer.setPrintMarginColumn(col || 80);\n
+\t\tsession.setWrapLimitRange(col, col);\n
+\t}, ["Off", "40 Chars", "80 Chars", "Free"]],\n
+\t["Key Binding", function(value) {\n
+\t\tenv.editor.setKeyboardHandler(keybindings[value]);\n
+\t}, ["Ace", "Vim", "Emacs", "Custom"]],\n
+\t["Font Size", function(value) {\n
+\t\tenv.split.setFontSize(value + "px");\n
+\t}, [10, 11, 12, 14, 16, 20, 24]],\n
+    ["Full Line Selection", function(checked) {\n
+\t\tenv.editor.setSelectionStyle(checked ? "line" : "text");\n
+\t}],\n
+\t["Highlight Active Line", function(checked) {\n
+\t\tenv.editor.setHighlightActiveLine(checked);\n
+\t}],\n
+\t["Show Invisibles", function(checked) {\n
+\t\tenv.editor.setShowInvisibles(checked);\n
+\t}],\n
+\t["Show Gutter", function(checked) {\n
+\t\tenv.editor.renderer.setShowGutter(checked);\n
+\t}],\n
+    ["Show Indent Guides", function(checked) {\n
+\t\tenv.editor.renderer.setDisplayIndentGuides(checked);\n
+\t}],\n
+\t["Show Print Margin", function(checked) {\n
+\t\tenv.editor.renderer.setShowPrintMargin(checked);\n
+\t}],\n
+\t["Persistent HScroll", function(checked) {\n
+\t\tenv.editor.renderer.setHScrollBarAlwaysVisible(checked);\n
+\t}],\n
+\t["Animate Scrolling", function(checked) {\n
+\t\tenv.editor.setAnimatedScroll(checked);\n
+\t}],\n
+\t["Use Soft Tab", function(checked) {\n
+\t\tenv.editor.getSession().setUseSoftTabs(checked);\n
+\t}],\n
+\t["Highlight Selected Word", function(checked) {\n
+\t\tenv.editor.setHighlightSelectedWord(checked);\n
+\t}],\n
+\t["Enable Behaviours", function(checked) {\n
+\t\tenv.editor.setBehavioursEnabled(checked);\n
+\t}],\n
+\t["Fade Fold Widgets", function(checked) {\n
+\t\tenv.editor.setFadeFoldWidgets(checked);\n
+\t}],\n
+\t["Show Token info", function(checked) {\n
+\t\tenv.editor.setFadeFoldWidgets(checked);\n
+\t}]\n
+]\n
+\n
+var createOptionsPanel = function(options) {\n
+\tvar html = []\n
+\tvar container = document.createElement("div");\n
+\tcontainer.style.cssText = "position: absolute; overflow: hidden";\n
+\tvar inner = document.createElement("div");\n
+\tinner.style.cssText = "width: 120%;height:100%;overflow: scroll";\n
+\tcontainer.appendChild(inner);\n
+\thtml.push("<table><tbody>");\n
+\t\n
+\toptions.forEach(function(o) {\n
+\t\t\n
+    });\n
+\n
+\thtml.push(\n
+\t\t\'<tr>\',\n
+\t\t  \'<td>\',\n
+\t\t\t\'<label for="\', s,\'"></label>\',\n
+\t\t  \'</td><td>\',\n
+\t\t\t\'<input type="\', s,\'" name="\', s,\'" id="\',s ,\'">\',\n
+\t\t  \'</td>\',\n
+\t\t\'</tr>\'\n
+\t)\n
+\thtml.push("</tbody></table>");\t\n
+\treturn container;\n
+}\n
+\n
+function bindCheckbox(id, callback) {\n
+    var el = document.getElementById(id);\n
+    if (localStorage && localStorage.getItem(id))\n
+        el.checked = localStorage.getItem(id) == "1";\n
+\n
+    var onCheck = function() {\n
+        callback(!!el.checked);\n
+        saveOption(el);\n
+    };\n
+    el.onclick = onCheck;\n
+    onCheck();\n
+}\n
+\n
+function bindDropdown(id, callback) {\n
+    var el = document.getElementById(id);\n
+    if (localStorage && localStorage.getItem(id))\n
+        el.value = localStorage.getItem(id);\n
+\n
+    var onChange = function() {\n
+        callback(el.value);\n
+        saveOption(el);\n
+    };\n
+\n
+    el.onchange = onChange;\n
+    onChange();\n
+}\n
+\n
+function fillOptgroup(list, el) {\n
+    list.forEach(function(item) {\n
+        var option = document.createElement("option");\n
+        option.setAttribute("value", item.name);\n
+        option.innerHTML = item.desc;\n
+        el.appendChild(option);\n
+    });\n
+}\n
+\n
+function fillDropdown(list, el) {\n
+\tif (Array.isArray(list)) {\n
+\t\tfillOptgroup(list, el);\n
+\t\treturn;\n
+\t}\n
+\tfor(var i in list) {\n
+\t\tvar group = document.createElement("optgroup");\n
+\t\tgroup.setAttribute("label", i);\n
+\t\tfillOptgroup(list[i], group);\n
+\t\tel.appendChild(group);\n
+\t}\n
+}\n
+\n
+function createOptionControl(opt) {\n
+    if (opt.values) {\n
+        var el = dom.createElement("select");\n
+        el.setAttribute("size", opt.visibleSize || 1);\n
+        fillDropdown(opt.values, el)        \n
+    } else {\n
+        var el = dom.createElement("checkbox");\n
+    }\n
+    el.setAttribute("name", "opt_" + opt.name)\n
+    return el;\n
+}\n
+\n
+function createOptionCell(opt) {\n
+    if (opt.values) {\n
+        var el = dom.createElement("select");\n
+        el.setAttribute("size", opt.visibleSize || 1);\n
+        fillDropdown(opt.values, el)        \n
+    } else {\n
+        var el = dom.createElement("checkbox");\n
+    }\n
+    el.setAttribute("name", "opt_" + opt.name)\n
+    return el;\n
+}\n
+\n
+\n
+createOptionsPanel(options)\n
+\n
+\n
+\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7247</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

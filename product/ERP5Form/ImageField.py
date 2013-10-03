@@ -156,10 +156,7 @@ class ImageFieldWidget(Widget.TextWidget):
       # is displayed in the form as a thumbnail, it will be added in the odg
       # document as thumbnail size/quality
       content_type, image_data = image_object.convert(**image_parameter_dict)
-      if isinstance(image_data, str):
-        image = OFSImage('', '', image_data)
-      else:
-        image = image_data
+      image = OFSImage('', '', image_data)
       width = image.width
       height = image.height
       if image_data is None:

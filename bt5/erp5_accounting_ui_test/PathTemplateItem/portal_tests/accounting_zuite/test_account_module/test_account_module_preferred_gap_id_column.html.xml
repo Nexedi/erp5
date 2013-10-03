@@ -70,6 +70,17 @@ Test `preferred_gap_id` column of Account Module\n
 \n
 <!-- Filter on preferred_gap_id {{{ -->\n
 <tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <!-- sort by preferred_gap_id -->\n
+  <td>clickAndWait</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>type</td>\n
   <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>4</td>\n
@@ -83,26 +94,6 @@ Test `preferred_gap_id` column of Account Module\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>4 records</td>\n
-</tr>\n
-\n
-<!-- make sure we are sorted by preferred_gap_id ASC -->\n
-<tr>\n
-  <td>storeLocation</td>\n
-  <td>current_account_url</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <!-- reset any sort on preferred_gap_id. previously here was sorting by title, \n
-       but now we can sort by multiple columns, so sort by title does not reset sorting. -->\n
-  <td>openAndWait</td>\n
-  <td>${current_account_url}&reset=int:1</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <!-- sort by preferred_gap_id -->\n
-  <td>clickAndWait</td>\n
-  <td>//button[@value=\'listbox.preferred_gap_id:asc\']</td>\n
-  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

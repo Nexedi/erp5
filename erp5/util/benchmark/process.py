@@ -35,7 +35,7 @@ import socket
 from ..testbrowser.browser import Browser
 from .result import NothingFlushedException
 
-REPEAT_NUMBER_BEFORE_FLUSHING = 10
+REPEAT_NUMBER_BEFORE_FLUSHING = 1
 
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, result_klass, argument_namespace,

@@ -218,6 +218,21 @@ def _parse_args(self, *args, **kw):
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
 
+def addUserToDeveloperRole(user_name):
+  config = getConfiguration()
+  product_config = getattr(config, 'product_config', None)
+  if product_config is None:
+    product_config = config.product_config = {}
+
+  if product_config.get('erp5') is None:
+    class DummyDeveloperConfig(object):
+      pass
+    dummy_developer_config = DummyDeveloperConfig()
+    dummy_developer_config.developer_list = [user_name]
+    product_config['erp5'] = dummy_developer_config
+  elif user_name not in product_config['erp5'].developer_list:
+    product_config['erp5'].developer_list.append(user_name)
+
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
@@ -460,6 +475,58 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
            'Use createUserAssignment instead',
            DeprecationWarning)
       return self.createUserAssignment(user, assignment_kw)
+
+    @staticmethod
+    def _getBTPathAndIdList(template_list):
+      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
+        ERP5Site.getBootstrapDirectory()
+      bt5_path = os.environ.get('erp5_tests_bt5_path')
+      if bt5_path:
+        bt5_path_list = bt5_path.split(',')
+        bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
+      else:
+        bt5_path = os.path.join(instancehome, 'bt5')
+        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
+
+      def search(path, template):
+        urltype, url = urllib.splittype(path + '/' + template)
+        if urltype == 'http':
+          host, selector = urllib.splithost(url)
+          user_passwd, host = urllib.splituser(host)
+          host = urllib.unquote(host)
+          h = httplib.HTTP(host)
+          h.putrequest('HEAD', selector)
+          h.putheader('Host', host)
+          if user_passwd:
+            h.putheader('Authorization',
+                        'Basic %s' % base64.b64encode(user_passwd).strip())
+          h.endheaders()
+          errcode, errmsg, headers = h.getreply()
+          if errcode == 200:
+            return urltype + ':' + url
+        else:
+          path_list = glob(os.path.join(path, template))
+          if path_list:
+            return path_list[0]
+
+      not_found_list = []
+      new_template_list = []
+      for template in template_list:
+        id = template.split('/')[-1]
+        for path in bt5_path_list:
+          path = search(path, template) or search(path, template + '.bt5')
+          if path:
+            break
+        else:
+          path = os.path.join(bootstrap_path, template)
+          if not os.path.exists(path):
+            not_found_list.append(template)
+            continue
+        new_template_list.append((path, id))
+      if not_found_list:
+        raise RuntimeError("Following BT can't be found on your system : %s"
+                           % ', '.join(not_found_list))
+      return new_template_list
 
     def setupAutomaticBusinessTemplateRepository(self, accept_public=True,
                               searchable_business_template_list=None):
@@ -723,58 +790,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       return 0
 
-    @staticmethod
-    def _getBTPathAndIdList(template_list):
-      bootstrap_path = os.environ.get('erp5_tests_bootstrap_path') or \
-        ERP5Site.getBootstrapDirectory()
-      bt5_path = os.environ.get('erp5_tests_bt5_path')
-      if bt5_path:
-        bt5_path_list = bt5_path.split(',')
-        bt5_path_list += [os.path.join(path, "*") for path in bt5_path_list]
-      else:
-        bt5_path = os.path.join(instancehome, 'bt5')
-        bt5_path_list = bt5_path, os.path.join(bt5_path, '*')
-
-      def search(path, template):
-        urltype, url = urllib.splittype(path + '/' + template)
-        if urltype == 'http':
-          host, selector = urllib.splithost(url)
-          user_passwd, host = urllib.splituser(host)
-          host = urllib.unquote(host)
-          h = httplib.HTTP(host)
-          h.putrequest('HEAD', selector)
-          h.putheader('Host', host)
-          if user_passwd:
-            h.putheader('Authorization',
-                        'Basic %s' % base64.b64encode(user_passwd).strip())
-          h.endheaders()
-          errcode, errmsg, headers = h.getreply()
-          if errcode == 200:
-            return urltype + ':' + url
-        else:
-          path_list = glob(os.path.join(path, template))
-          if path_list:
-            return path_list[0]
-
-      not_found_list = []
-      new_template_list = []
-      for template in template_list:
-        id = template.split('/')[-1]
-        for path in bt5_path_list:
-          path = search(path, template) or search(path, template + '.bt5')
-          if path:
-            break
-        else:
-          path = os.path.join(bootstrap_path, template)
-          if not os.path.exists(path):
-            not_found_list.append(template)
-            continue
-        new_template_list.append((path, id))
-      if not_found_list:
-        raise RuntimeError("Following BT can't be found on your system : %s"
-                           % ', '.join(not_found_list))
-      return new_template_list
-
     def manuallyInstallBusinessTemplate(self, *template_list):
       new_template_list = self._getBTPathAndIdList(template_list)
       light_install = self.enableLightInstall()
@@ -998,6 +1013,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                           'Assignor', 'Author', 'Auditor', 'Associate'], [])
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
             newSecurityManager(None, user)
+
+            # bt5s contain ZODB Components which can be only installed if the
+            # user has Developer Role
+            addUserToDeveloperRole('ERP5TypeTestCase')
+
             # Add ERP5 Site
             reindex = 1
             if hot_reindexing:

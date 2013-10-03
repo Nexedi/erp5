@@ -6,6 +6,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
+from . import aq_method_lock
 from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
@@ -193,9 +194,17 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       pmc_init_of(subclass)
 
   def setupSecurity(cls):
+    apply_security_function = getattr(cls, '_applyAllStaticSecurity', None)
+    if apply_security_function:
+      apply_security_function()
+
     # note that after this call the 'security' attribute will be gone.
     InitializeClass(cls)
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
+      apply_security_function = getattr(cls, '_applyAllStaticSecurity', None)
+      if apply_security_function:
+        apply_security_function()
+
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
@@ -311,8 +320,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     portal_type = klass.__name__
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
-    ERP5Base.aq_method_lock.acquire()
-    try:
+    with aq_method_lock:
       try:
         class_definition = generatePortalTypeClass(site, portal_type)
       except AttributeError:
@@ -350,12 +358,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         klass.generatePortalTypeAccessors(site, portal_type_category_list)
         # need to set %s__roles__ for generated methods
         cls.setupSecurity()
-
-    except Exception:
-      import traceback; traceback.print_exc()
-      raise
-    finally:
-      ERP5Base.aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name,

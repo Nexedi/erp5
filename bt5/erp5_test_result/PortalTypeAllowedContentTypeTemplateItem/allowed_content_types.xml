@@ -1,0 +1,26 @@
+<allowed_content_type_list>
+ <portal_type id="Benchmark Result">
+  <item>Benchmark Result Line</item>
+ </portal_type>
+ <portal_type id="Task Distribution Tool">
+  <item>Cloud Performance Unit Test Distributor</item>
+  <item>ERP5 Project Unit Test Distributor</item>
+ </portal_type>
+ <portal_type id="Test Node Module">
+  <item>Test Node</item>
+ </portal_type>
+ <portal_type id="Test Result">
+  <item>Test Result Line</item>
+  <item>Test Result Node</item>
+ </portal_type>
+ <portal_type id="Test Result Module">
+  <item>Benchmark Result</item>
+  <item>Test Result</item>
+ </portal_type>
+ <portal_type id="Test Suite">
+  <item>Test Suite Repository</item>
+ </portal_type>
+ <portal_type id="Test Suite Module">
+  <item>Test Suite</item>
+ </portal_type>
+</allowed_content_type_list>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts51698417.06</string> </value>
+            <value> <string>ts74657307.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -33,8 +33,7 @@
  */\n
 Selenium.prototype.assertFloat = function(locator, text) {\n
     var actualValueText = getText(this.page().findElement(locator));\n
-    var actualValue = parseFloat(actualValueText\n
-                          .replace(/ /g, "").replace(/&nbsp;/g, ""));\n
+    var actualValue = parseFloat(actualValueText.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
     var expectedValue = parseFloat(text.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
 \n
     if (isNaN(actualValue)) {\n
@@ -50,8 +49,7 @@ Selenium.prototype.assertFloat = function(locator, text) {\n
  */\n
 Selenium.prototype.assertFloatValue = function(locator, text) {\n
     var actualValueText = getInputValue(this.page().findElement(locator));\n
-    var actualValue = parseFloat(actualValueText\n
-                            .replace(/ /g, "").replace(/&nbsp;/g, ""));\n
+    var actualValue = parseFloat(actualValueText.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
     var expectedValue = parseFloat(text.replace(/ /g, "").replace(/&nbsp;/g, ""));\n
 \n
     if (isNaN(actualValue)) {\n
@@ -106,8 +104,9 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){\n
     var maximumPositionTop = parseFloat(rangeList[1]);\n
     if (positionTop < minimumPositionTop || positionTop > maximumPositionTop ){\n
       Assert.fail(positionTop + " is not between " + minimumPositionTop + " and " + maximumPositionTop);\n
-    };\n
-};
+    }\n
+};\n
+
 
 ]]></string> </value>
         </item>
@@ -117,7 +116,7 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3435</int> </value>
+            <value> <int>3379</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

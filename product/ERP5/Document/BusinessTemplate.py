@@ -28,6 +28,7 @@
 ##############################################################################
 
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
+from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -72,7 +73,7 @@ from Products.ERP5Type.patches.ppml import importXML
 customImporters={
     XMLExportImport.magic: importXML,
     }
-
+from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 from zLOG import LOG, WARNING, INFO
 from warnings import warn
 from gzip import GzipFile
@@ -536,7 +537,16 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(item=self)
 
-  def removeProperties(self, obj, export, keep_workflow_history=False):
+  def _removeAllButLastWorkflowHistory(self, obj):
+    for workflow_id in obj.workflow_history.keys():
+      obj.workflow_history[workflow_id] = WorkflowHistoryList(
+        obj.workflow_history[workflow_id][-1])
+
+  def removeProperties(self,
+                       obj,
+                       export,
+                       keep_workflow_history=False,
+                       keep_workflow_history_last_history_only=False):
     """
     Remove unneeded properties for export
     """
@@ -548,7 +558,9 @@ class BaseTemplateItem(Implicit, Persistent):
                     'last_id', 'uid',
                     '__ac_local_roles__', '__ac_local_roles_group_id_dict__'))
     if export:
-      if not keep_workflow_history:
+      if keep_workflow_history_last_history_only:
+        self._removeAllButLastWorkflowHistory(obj)
+      elif not keep_workflow_history:
         attr_set.add('workflow_history')
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
@@ -675,8 +687,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
-      obj = self.removeProperties(obj, 1, keep_workflow_history)
+      obj = self.removeProperties(obj, 1,
+                                  self.isKeepWorkflowObject(relative_url),
+                                  self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
       id_list = obj.objectIds() # FIXME duplicated variable name
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -703,8 +716,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       except AttributeError:
         raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
       _recursiveRemoveUid(obj)
-      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
-      obj = self.removeProperties(obj, 1, keep_workflow_history)
+      obj = self.removeProperties(obj, 1,
+                                  self.isKeepWorkflowObject(relative_url),
+                                  self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -1385,8 +1399,9 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
-        keep_workflow_history = self.isKeepWorkflowObject(relative_url)
-        obj = self.removeProperties(obj, 1, keep_workflow_history)
+        obj = self.removeProperties(obj, 1,
+                                    self.isKeepWorkflowObject(relative_url),
+                                    self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -1405,6 +1420,7 @@ class PathTemplateItem(ObjectTemplateItem):
 
     p = context.getPortalObject()
     portal_type_role_list_len_dict = {}
+    update_dict = defaultdict(list)
     for path in self._objects:
       obj = p.unrestrictedTraverse(path)
 
@@ -1429,10 +1445,17 @@ class PathTemplateItem(ObjectTemplateItem):
             len(p.portal_types[portal_type].getRoleInformationList())
 
       if portal_type_role_list_len_dict[portal_type]:
-        p.portal_types[portal_type].updateLocalRolesOnDocument(obj)
-        LOG("BusinessTemplate", INFO,
-            "Updated Local Roles for '%s' (%s)" % (portal_type,
-                                                   obj.getRelativeUrl()))
+        update_dict[portal_type].append(obj)
+    if update_dict:
+      def updateLocalRolesOnDocument():
+        for portal_type, obj_list in update_dict.iteritems():
+          update = p.portal_types[portal_type].updateLocalRolesOnDocument
+          for obj in obj_list:
+            update(obj)
+            LOG("BusinessTemplate", INFO,
+                "Updated Local Roles for '%s' (%s)"
+                % (portal_type, obj.getRelativeUrl()))
+      transaction.get().addBeforeCommitHook(updateLocalRolesOnDocument)
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
@@ -1538,8 +1561,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
-      obj = self.removeProperties(obj, 1, keep_workflow_history)
+      obj = self.removeProperties(obj, 1,
+                                  self.isKeepWorkflowObject(relative_url),
+                                  self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
       id_list = obj.objectIds()
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
@@ -1561,8 +1585,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
         else:
           raise ValueError, "%s not found" % relative_url
       _recursiveRemoveUid(obj)
-      keep_workflow_history = self.isKeepWorkflowObject(relative_url)
-      obj = self.removeProperties(obj, 1, keep_workflow_history)
+      obj = self.removeProperties(obj, 1,
+                                  self.isKeepWorkflowObject(relative_url),
+                                  self.isKeepWorkflowObjectLastHistoryOnly(relative_url))
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -2910,8 +2935,11 @@ class ActionTemplateItem(ObjectTemplateItem):
           continue
         raise NotFound('Action %r not found' % id)
       key = posixpath.join(url[-2], url[-1], value)
-      keep_workflow_history = self.isKeepWorkflowObject(key)
-      self._objects[key] = self.removeProperties(action, 1, keep_workflow_history)
+      self._objects[key] = self.removeProperties(
+        action, 1,
+        self.isKeepWorkflowObject(key),
+        self.isKeepWorkflowObjectLastHistoryOnly(key))
+
       self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):
@@ -3931,6 +3959,8 @@ class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+
 class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   """
   Documents are now stored in ZODB rather than on the filesystem. However,
@@ -3956,7 +3986,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.document.' + id
+    return DocumentComponent._getIdPrefix() + '.' + id
 
   @staticmethod
   def _getFilesystemPath(class_id):
@@ -3964,6 +3994,28 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     return os.path.join(getConfiguration().instancehome,
                         "Document",
                         class_id + ".py")
+
+  def isKeepWorkflowObjectLastHistoryOnly(self, path):
+    """
+    Component Validation Workflow last History of ZODB Components must always be
+    kept, without explicitly adding them to the field which requires an extra
+    action for developers
+    """
+    return path.startswith(self._tool_id + '/')
+
+  def _removeAllButLastWorkflowHistory(self, obj):
+    """
+    Only export the last state of component_validation_workflow, because only
+    the source code and its state to load it is necessary for ZODB Components
+    and too much history would be exported (edit_workflow)
+    """
+    for wf_id in obj.workflow_history.keys():
+      if wf_id != 'component_validation_workflow':
+        del obj.workflow_history[wf_id]
+        continue
+
+      wf_history_list = obj.workflow_history[wf_id]
+      obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history_list[-1]])
 
   def _importFile(self, file_name, file_obj):
     """
@@ -4064,6 +4116,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       self.portal_components.reset(force=True,
                                    reset_portal_type_at_transaction_boundary=True)
 
+from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
+
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
   Extensions are now stored in ZODB rather than on the filesystem. However,
@@ -4079,10 +4133,12 @@ class ExtensionTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.extension.' + id
+    return ExtensionComponent._getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateExtensionIdList()
+
+from Products.ERP5Type.Core.TestComponent import TestComponent
 
 class TestTemplateItem(DocumentTemplateItem):
   """
@@ -4098,7 +4154,7 @@ class TestTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.test.' + id
+    return TestComponent._getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateTestIdList()
@@ -4257,11 +4313,9 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       setattr(catalog, self.key_list_attr, catalog_key_list)
 
   def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
-    catalog_key_list = list(catalog_key_list) # copy
-    for key in new_key_list:
-      if key not in catalog_key_list:
-        catalog_key_list.append(key)
-    return catalog_key_list
+    catalog_key_set = set(catalog_key_list) # copy
+    catalog_key_set.update(new_key_list)
+    return sorted(catalog_key_set)
 
   def uninstall(self, context, **kw):
     catalog = _getCatalogValue(self)
@@ -4791,6 +4845,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     # This is a global variable
     # Order is important for installation
     # We want to have:
+    #  * workflow and portal_type* before ZODB Component {Document,Extension...}
     #  * path after module, because path can be module content
     #  * path after categories, because path can be categories content
     #  * path after portal types roles so that roles in the current bt can be used
@@ -4801,6 +4856,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     #    ( and more )
     _item_name_list = [
       '_registered_version_priority_selection_item',
+      '_workflow_item',
       '_product_item',
       '_document_item',
       '_property_sheet_item',
@@ -4810,7 +4866,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_role_item',
       '_tool_item',
       '_message_translation_item',
-      '_workflow_item',
       '_site_property_item',
       '_portal_type_item',
       #'_portal_type_workflow_chain_item',
@@ -5043,6 +5098,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if self.getBtForDiff():
           item.is_bt_for_diff = 1
         item.build(self)
+      # update _p_jar property of objects cleaned by removeProperties
+      transaction.savepoint(optimistic=True)
 
     def publish(self, url, username=None, password=None):
       """
@@ -5149,7 +5206,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return modified_object_list
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
-                 update_catalog=_MARKER, **kw):
+                 update_catalog=False, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
@@ -5500,11 +5557,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_tool_id')
 
-    def isKeepObject(self, path):
-      """
-      Return True if path is included in keep object list.
-      """
-      keep_list = self.getTemplateKeepPathList()
+    def _isInKeepList(self, keep_list, path):
       for keep_path in keep_list:
         if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
           return True
@@ -5512,17 +5565,24 @@ Business Template is a set of definitions, such as skins, portal types and categ
           return True
       return False
 
+    def isKeepObject(self, path):
+      """
+      Return True if path is included in keep object list.
+      """
+      return self._isInKeepList(self.getTemplateKeepPathList(), path)
+
     def isKeepWorkflowObject(self, path):
       """
       Return True if path is included in keep workflow object list.
       """
-      keep_list = self.getTemplateKeepWorkflowPathList()
-      for keep_path in keep_list:
-        if keep_path.endswith('**') and path.startswith(keep_path[:-2]):
-          return True
-        elif path == keep_path:
-          return True
-      return False
+      return self._isInKeepList(self.getTemplateKeepWorkflowPathList(), path)
+
+    def isKeepWorkflowObjectLastHistoryOnly(self, path):
+      """
+      Return True if path is included in keep workflow last state only list
+      """
+      return self._isInKeepList(self.getTemplateKeepLastWorkflowHistoryOnlyPathList(),
+                                path)
 
     def getExportPath(self):
       preferences = self.getPortalObject().portal_preferences

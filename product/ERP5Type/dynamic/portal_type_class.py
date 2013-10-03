@@ -33,7 +33,8 @@ import inspect
 import transaction
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
-from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
+from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
+from . import aq_method_lock
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
@@ -193,13 +194,23 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      try:
-        klass = getattr(__import__('erp5.component.document.' + type_class,
-                                   fromlist=['erp5.component.document'],
-                                   level=0),
-                        type_class)
-      except (ImportError, AttributeError):
-        pass
+      import erp5.component.document
+      module_fullname = 'erp5.component.document.' + type_class
+      module_loader = erp5.component.document.find_module(module_fullname)
+      if module_loader is not None:
+        try:
+          module = module_loader.load_module(module_fullname)
+        except ImportError, e:
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not load Component module '%s': %s" % (module_fullname, e))
+        else:
+          try:
+            klass = getattr(module, type_class)
+          except AttributeError:
+            LOG("ERP5Type.dynamic", WARNING,
+                "Could not get class '%s' in Component module '%s'" % \
+                (type_class,
+                 module_fullname))
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
@@ -308,9 +319,7 @@ def synchronizeDynamicModules(context, force=False):
     last_sync = cookie
 
   import erp5
-
-  Base.aq_method_lock.acquire()
-  try:
+  with aq_method_lock:
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.
@@ -324,8 +333,9 @@ def synchronizeDynamicModules(context, force=False):
       migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
+      from Products.ERP5Type.Tool.ComponentTool import ComponentTool
       try:
-        for tool_class in TypesTool, PropertySheetTool:
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
@@ -378,9 +388,6 @@ def synchronizeDynamicModules(context, force=False):
       # exception is catched later and re-raised as a BadRequest
       import traceback; traceback.print_exc()
       raise
-
-  finally:
-    Base.aq_method_lock.release()
 
   # It's okay for classes to keep references to old methods - maybe.
   # but we absolutely positively need to clear the workflow chains

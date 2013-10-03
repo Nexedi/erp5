@@ -1,4 +1,5 @@
-import glob, os, subprocess, re
+from glob import glob
+import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
 import sys
@@ -28,9 +29,19 @@ class _ERP5(ERP5TypeTestSuite):
 
   def _getAllTestList(self):
     test_list = []
-    for test_path in glob.glob('%s/product/*/tests/test*.py' % sys.path[0]) + \
-                 glob.glob('%s/bt5/*/TestTemplateItem/test*.py' % sys.path[0]):
-      test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+    path = sys.path[0]
+    component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
+                              "/test\.[^.]+\.([^.]+).py$")
+    for test_path in (
+        glob('%s/product/*/tests/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+      component_re_match = component_re.match(test_path)
+      if component_re_match is not None:
+        test_case = "%s:%s" % (component_re_match.group(1),
+                               component_re_match.group(2))
+      else:
+        test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
@@ -62,7 +73,10 @@ class ERP5(_ERP5):
 
   def getTestList(self):
     test_list = []
-    for test_case in self._getAllTestList():
+    for full_test_case in self._getAllTestList():
+      test_case = (':' in full_test_case and full_test_case.split(':')[1]
+                   or full_test_case)
+
       # skip some tests
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
          or test_case.find('Performance') > 0 \
@@ -76,18 +90,19 @@ class ERP5(_ERP5):
                           'testERP5eGov',
                           'testAccounting_l10n_fr_m9'):
         continue
-      test_list.append(test_case)
+      test_list.append(full_test_case)
     return test_list
 
-  def run(self, test):
+  def run(self, full_test):
+    test = ':' in full_test and full_test.split(':')[1] or full_test
     if test in ('testConflictResolution', 'testInvalidationBug'):
-      status_dict = self.runUnitTest('--save', test)
+      status_dict = self.runUnitTest('--save', full_test)
       if not status_dict['status_code']:
-        status_dict = self.runUnitTest('--load', '--activity_node=2', test)
+        status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
     if test.startswith('testFunctional'):
-      return self._updateFunctionalTestResponse(self.runUnitTest(test))
-    return super(ERP5, self).run(test)
+      return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
+    return super(ERP5, self).run(full_test)
 
   def _updateFunctionalTestResponse(self, status_dict):
     """ Convert the Unit Test output into more accurate information
@@ -125,4 +140,23 @@ class ERP5_simulation(_ERP5):
     return super(ERP5_simulation, self).runUnitTest(
       erp5_report_new_simulation_failures='1', *args, **kw)
 
+class ERP5_scalability(_ERP5):
 
+  def getTestList(self):
+    return ['createPerson', 'createSaleOrder', 'createWebPage']
+
+  def getTestPath(self):
+    return 'erp5/util/benchmark/examples/'
+
+  def getUsersFilePath(self):
+    return 'erp5/util/benchmark/examples/scalabilityUsers'
+
+  def getUserNumber(self, test_number):
+    return [45, 135, 170, 220, 250][test_number]
+
+  # Test duration in seconds
+  def getTestDuration(self, test_number):
+    return 60*10
+
+  def getTestRepetition(self, test_number):
+    return 3

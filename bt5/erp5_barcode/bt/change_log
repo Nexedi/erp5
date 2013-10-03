@@ -1,1 +1,7 @@
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 First Build

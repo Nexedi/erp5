@@ -50,34 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns the item list of possible projects to use on accounting lines.\n
+            <value> <string>"""Returns all validated projects.\n
 \n
 This script is indented to be used on custom listfields for accounting lines, and on reports.\n
 If this script returns an empty list, it means that reports by project are disabled.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
-request = portal.REQUEST\n
 \n
-# case 1: script is used for reports, we display all project that have been used in accounting.\n
+# case 1: script is used for reports, we display all validated projects.\n
 if context.getPortalType() == \'Accounting Transaction Module\':\n
-  getObject = portal.portal_catalog.getObject\n
-  search_kw=dict(portal_type=portal.getPortalAccountingMovementTypeList(),\n
-                 group_by=(\'stock.project_uid\',))\n
-  section_category = request.get(\'your_section_category\',\n
-       portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())\n
-  if section_category:\n
-    section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-                               section_category=section_category,\n
-                               strict_membership=request.get(\'your_section_category_strict\', False))\n
-    search_kw[\'section_uid\'] = section_uid\n
-\n
   project_list = []\n
-  for brain in portal.portal_simulation.getInventoryList(**search_kw):\n
-    if brain.project_uid:\n
-      project = getObject(brain.project_uid)\n
-      project_list.append((project.getTitle(), project.getRelativeUrl(),))\n
-  project_list.sort(key=lambda x:x[0])\n
+  for project in portal.portal_catalog(\n
+                           portal_type=\'Project\',\n
+                           select_list=[\'relative_url\', \'title\'],\n
+                           validation_state=(\'validated\',),\n
+                           sort_on=((\'title\', \'ASC\'),)):\n
+    project_list.append((project.title, project.relative_url,))\n
+\n
   if not project_list:\n
     return [] # returning an empty list, not to add project column on reports\n
   return [(\'\', \'\'), (translateString(\'No Project\'), \'None\')] + project_list\n

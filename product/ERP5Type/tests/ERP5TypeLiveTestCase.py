@@ -99,6 +99,16 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     #    pass
     #    #self.REQUEST.other.pop(key, None) # XXX
 
+    def createSimpleUser(self, title, reference, *args, **kwargs):
+      """
+      Convenient helper to avoid recreating user every time (in non-Live Test, data
+      is not kept and usually these users are only created in setUpOnce() (not
+      used in favor of afterSetUp() in Live Tests)
+      """
+      if not self.portal.acl_users.getUserById(reference):
+        return super(ERP5TypeLiveTestCase,
+                     self).createSimpleUser(title, reference, *args, **kwargs)
+
     def _close(self):
       '''Closes the ZODB connection.'''
       revert = transaction.get().__hash__() != self.initial_transaction_hash
@@ -237,4 +247,12 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
     output = StringIO()
   output.write("**Running Live Test:\n")
   ZopeTestCase._print = output.write
-  result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+
+  # Test may login/logout with different users, so ensure that at the end the
+  # original SecurityManager is restored
+  from AccessControl.SecurityManagement import getSecurityManager, setSecurityManager
+  sm = getSecurityManager()
+  try:
+    result = TestRunner(stream=output, verbosity=verbosity).run(suite)
+  finally:
+    setSecurityManager(sm)

@@ -50,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = container.REQUEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery\n
+\n
+request = container.REQUEST\n
 portal = context.getPortalObject()\n
 ctool = portal.portal_catalog\n
 stool = portal.portal_simulation\n
@@ -89,22 +93,42 @@ if mirror_section:\n
                                           mirror_section).getUid()\n
 \n
 if grouping == \'grouping\':\n
-  where_expression = \'catalog.grouping_reference is NULL\'\n
+  search_kw[\'grouping_reference\'] = None\n
 else:\n
   assert grouping == \'ungrouping\', grouping\n
-  where_expression = \'catalog.grouping_reference is not NULL\'\n
-    \n
+  search_kw[\'grouping_reference\'] = NegatedQuery(Query(grouping_reference=None))\n
+\n
+if title:\n
+  search_kw[\'title_query\'] = ComplexQuery(Query(title=title),\n
+                                          Query(parent_title=title),\n
+                                          operator=\'OR\')\n
+if delivery_reference:\n
+  search_kw[\'parent_reference\'] = delivery_reference\n
+if debit_price:\n
+  search_kw[\'stock.total_price\'] = debit_price\n
+if credit_price:\n
+  try:\n
+    search_kw[\'stock.total_price\'] = - float(credit_price[\'query\'])\n
+  except ValueError, e:\n
+    # happens when user entered a complex query (like "> 100 AND < 200")\n
+    # in that case, there is not much we can do.\n
+    search_kw[\'stock.total_price\'] = credit_price[\'query\']\n
+if date:\n
+  search_kw[\'stock.date\'] = date\n
+\n
+\n
 return stool.getMovementHistoryList(\n
                           section_uid=section_uid,\n
                           simulation_state=[\'stopped\', \'delivered\'],\n
-                          where_expression=where_expression,\n
                           sort_on=sort_on,\n
                           **search_kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, grouping=\'grouping\', node=\'\', mirror_section=\'\', **kw</string> </value>
+            <value> <string>selection=None, grouping=\'grouping\', node=\'\', mirror_section=\'\', title=None, delivery_reference=None, debit_price=None, credit_price=None, date=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

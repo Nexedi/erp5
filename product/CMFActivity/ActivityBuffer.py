@@ -24,68 +24,46 @@
 ##############################################################################
 
 from Shared.DC.ZRDB.TM import TM
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, ERROR
 import sys
+from collections import defaultdict
 
 import transaction
 
 class ActivityBuffer(TM):
-
-  _p_oid=_p_changed=_registered=None
+  activity_tool = None
 
   def __init__(self):
-    self.queued_activity = []
-    self.message_list_dict = {}
-    self.uid_set_dict = {}
+    self.message_list_dict = defaultdict(list)
+    self.uid_set_dict = defaultdict(set)
 
   def _clear(self):
-    del self.queued_activity[:]
     self.message_list_dict.clear()
     self.uid_set_dict.clear()
     self.activity_tool = None
 
   def getMessageList(self, activity):
-    return self.message_list_dict.setdefault(activity, [])
+    return self.message_list_dict[activity]
 
   def getUidSet(self, activity):
-    return self.uid_set_dict.setdefault(activity, set())
+    return self.uid_set_dict[activity]
 
   def _register(self, activity_tool):
-    if not self._registered:
+    TM._register(self)
+    if self.activity_tool is None:
       self.activity_tool = activity_tool
-      self._activity_tool_path = activity_tool.getPhysicalPath()
-      TM._register(self)
-      self._prepare_args = 0,
-    if self._prepare_args:
-      transaction.get().addBeforeCommitHook(self._prepare, self._prepare_args)
-      self._prepare_args = None
-
-  # Keeps a list of messages to add and remove
-  # at end of transaction
-  def _begin(self):
-    # LOG('ActivityBuffer', 0, '_begin %r' % (self,))
-    from ActivityTool import activity_dict
-    try:
-      # Reset registration for each transaction.
-      for activity in activity_dict.itervalues():
-        activity.registerActivityBuffer(self)
-    except:
-      LOG('ActivityBuffer', ERROR, "exception during _begin",
-          error=sys.exc_info())
-      raise
+      transaction.get().addBeforeCommitHook(self._prepare)
 
   _abort = _finish = _clear
 
-  def _prepare(self, queued):
+  def _prepare(self):
     try:
       activity_tool = self.activity_tool
       # Try to push all messages
-      activity_dict = {}
-      for activity, message in self.queued_activity[queued:]:
-        activity_dict.setdefault(activity, []).append(message)
-      for activity, message_list in activity_dict.iteritems():
+      for activity, message_list in self.message_list_dict.iteritems():
         activity.prepareQueueMessageList(activity_tool, message_list)
-      self._prepare_args = len(self.queued_activity),
+      self.message_list_dict.clear()
+      self.activity_tool = None
     except:
       LOG('ActivityBuffer', ERROR, "exception during _prepare",
           error=sys.exc_info())
@@ -95,8 +73,6 @@ class ActivityBuffer(TM):
     self._register(activity_tool)
     assert not message.is_registered, message
     activity.registerMessage(self, activity_tool, message)
-    if message.is_registered:
-      self.queued_activity.append((activity, message))
 
   def sortKey(self, *ignored):
     """Activities must be finished before databases commit transactions."""

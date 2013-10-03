@@ -1,3 +1,12 @@
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
+2013-09-03 arnaud.fontaine
+* ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
+
+2013-08-28 arnaud.fontaine
+* ZODB Components: Migrate Documents, Extensions and Tests.
+
 2012/05/16 Łukasz Nowak
 * use volatile memcached to store tokens, as there is not need to touch ZODB
 * use global token key in order to decouple fully from ERP5 loggable objects

@@ -78,6 +78,19 @@ discussion_post = discussion_thread.newContent(\n
                     language = portal.Localizer.get_selected_language(),\n
                     text_format = \'text/html\')\n
 \n
+# handle attachments\n
+if getattr(file, \'filename\', \'\') != \'\':\n
+  document_kw = {\'batch_mode\': True,\n
+                 \'redirect_to_document\': False,\n
+                 \'file\': file}\n
+  document = context.Base_contribute(**document_kw)\n
+\n
+  # set relation between post and document\n
+  discussion_post.setSuccessorValueList([document])\n
+\n
+  # depending on security model this should be changed accordingly\n
+  document.publish()\n
+\n
 # depending on security model Post can be submitted for review\n
 portal_status_message = context.Base_translateString("New post created.")\n
 \n
@@ -104,7 +117,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id=\'view\', predecessor=None,**kw</string> </value>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, file=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

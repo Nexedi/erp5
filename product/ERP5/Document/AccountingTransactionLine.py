@@ -68,23 +68,6 @@ class AccountingTransactionLine(DeliveryLine):
     """
     return Amount.getInventoriatedQuantity(self)
 
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedStartDate')
-  def getInventoriatedStartDate(self):
-    """
-      Get the start date.
-    """
-    return self.getStartDate()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedStopDate')
-  def getInventoriatedStopDate(self):
-    """
-      Get the stop date.
-    """
-    return self.getStopDate()
- 
   # Pricing in standard currency
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None):
@@ -94,7 +77,7 @@ class AccountingTransactionLine(DeliveryLine):
       converted value for source in getSourceInventoriatedTotalAssetPrice
       and getDestinationInventoriatedTotalAssetPrice for destination.
     """
-    return 1.0 
+    return 1.0
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSourceAssetPrice')
@@ -102,9 +85,8 @@ class AccountingTransactionLine(DeliveryLine):
     """
       The price is set to 1.0 because we do not want to implement
       automatic currency conversion in accounting. Users must define the
-      conversion manually in accounting.  This is required by accounting
-      law. One can not account USD (in a EUR based company) without
-      defining the equivalent in EUR.
+      conversion manually in accounting. One can not account USD (in a EUR
+      based company) without defining the equivalent in EUR.
     """
     return 1.0
 
@@ -114,9 +96,8 @@ class AccountingTransactionLine(DeliveryLine):
     """
       The price is set to 1.0 because we do not want to implement
       automatic currency conversion in accounting. Users must define the
-      conversion manually in accounting.  This is required by accounting
-      law. One can not account USD (in a EUR based company) without
-      defining the equivalent in EUR.
+      conversion manually in accounting. One can not account USD (in a EUR
+      based company) without defining the equivalent in EUR.
     """
     return 1.0
 

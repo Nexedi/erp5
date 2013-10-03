@@ -70,11 +70,14 @@ if failed_import_dict:\n
   failed_import_formatted_list.append("%s (%s)" % (name, error))\n
 \n
  message = "The following component could not be imported: " + \', \'.join(failed_import_formatted_list)\n
+ abort_transaction = True\n
 else:\n
- message = "All components were successfully imported from filesystem to ZODB."\n
+ message = "All components were successfully imported from filesystem to ZODB. You can now delete them from your instance home."\n
+ abort_transaction=False\n
 \n
 return context.Base_redirect(\'view\',\n
-                             keep_items={\'portal_status_message\': message})\n
+                             keep_items={\'portal_status_message\': message},\n
+                             abort_transaction=abort_transaction)\n
 </string> </value>
         </item>
         <item>

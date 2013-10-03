@@ -533,7 +533,7 @@
   </record>
   <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -599,7 +599,7 @@
   </record>
   <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -816,7 +816,7 @@
   </record>
   <record id="17" aka="AAAAAAAAABE=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1472,7 +1472,7 @@
   </record>
   <record id="26" aka="AAAAAAAAABo=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3136,7 +3136,7 @@
   </record>
   <record id="83" aka="AAAAAAAAAFM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3268,7 +3268,7 @@
   </record>
   <record id="84" aka="AAAAAAAAAFQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3851,7 +3851,7 @@
   </record>
   <record id="97" aka="AAAAAAAAAGE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3980,7 +3980,7 @@
   </record>
   <record id="98" aka="AAAAAAAAAGI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5427,7 +5427,7 @@
   </record>
   <record id="129" aka="AAAAAAAAAIE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5946,7 +5946,7 @@
   </record>
   <record id="133" aka="AAAAAAAAAIU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6028,7 +6028,7 @@
   </record>
   <record id="134" aka="AAAAAAAAAIY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6587,7 +6587,7 @@
   </record>
   <record id="147" aka="AAAAAAAAAJM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6677,7 +6677,7 @@
   </record>
   <record id="148" aka="AAAAAAAAAJQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6761,7 +6761,7 @@ INSERT INTO term_data (vid, name) VALUES (1, \'DIAGNE\')\n
   </record>
   <record id="149" aka="AAAAAAAAAJU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6877,7 +6877,7 @@ INSERT INTO term_data (vid, name) VALUES (1, \'DIAGNE\')\n
   </record>
   <record id="150" aka="AAAAAAAAAJY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6986,7 +6986,7 @@ INSERT INTO term_data (vid, name) VALUES (1, \'DIAGNE\')\n
   </record>
   <record id="151" aka="AAAAAAAAAJc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7624,7 +7624,7 @@ INSERT INTO term_data (vid, name) VALUES (1, \'DIAGNE\')\n
   </record>
   <record id="164" aka="AAAAAAAAAKQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7679,7 +7679,7 @@ INSERT INTO term_data (vid, name) VALUES (1, \'DIAGNE\')\n
   </record>
   <record id="165" aka="AAAAAAAAAKU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7761,7 +7761,7 @@ http://10.8.1.18/drupal/modules/tiosafe_connector/deleteSaleOrder.php?id=4&
   </record>
   <record id="166" aka="AAAAAAAAAKY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7893,7 +7893,7 @@ http://10.8.1.18/drupal/modules/tiosafe_connector/deleteSaleOrder.php?id=4&
   </record>
   <record id="167" aka="AAAAAAAAAKc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8000,7 +8000,7 @@ http://10.8.1.18/drupal/modules/tiosafe_connector/deleteSaleOrder.php?id=4&
   </record>
   <record id="168" aka="AAAAAAAAAKg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8105,7 +8105,7 @@ http://10.8.1.18/drupal/modules/tiosafe_connector/deleteSaleOrder.php?id=4&
   </record>
   <record id="169" aka="AAAAAAAAAKk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>

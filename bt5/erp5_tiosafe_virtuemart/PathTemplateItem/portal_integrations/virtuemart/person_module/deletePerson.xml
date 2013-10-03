@@ -667,7 +667,7 @@
   </record>
   <record id="15" aka="AAAAAAAAAA8=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -737,7 +737,7 @@
   </record>
   <record id="16" aka="AAAAAAAAABA=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1277,7 +1277,7 @@
   </record>
   <record id="24" aka="AAAAAAAAABg=">
     <pickle>
-      <global name="WebServiceConnector" module="erp5.document.WebServiceConnector"/>
+      <global name="WebServiceConnector" module="erp5.component.document.WebServiceConnector"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3053,7 +3053,7 @@
   </record>
   <record id="82" aka="AAAAAAAAAFI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3144,7 +3144,7 @@ INSERT INTO gvi_users\n
   </record>
   <record id="83" aka="AAAAAAAAAFM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3754,7 +3754,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="98" aka="AAAAAAAAAGI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -3881,7 +3881,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="99" aka="AAAAAAAAAGM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -4041,7 +4041,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="101" aka="AAAAAAAAAGU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -4172,7 +4172,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="102" aka="AAAAAAAAAGY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -4769,7 +4769,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="115" aka="AAAAAAAAAHM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -4899,7 +4899,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="116" aka="AAAAAAAAAHQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5746,7 +5746,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="132" aka="AAAAAAAAAIQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5837,7 +5837,7 @@ INSERT INTO gvi_users\n
   </record>
   <record id="133" aka="AAAAAAAAAIU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5919,7 +5919,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="134" aka="AAAAAAAAAIY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -5983,7 +5983,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="135" aka="AAAAAAAAAIc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6149,7 +6149,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="136" aka="AAAAAAAAAIg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6248,7 +6248,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="137" aka="AAAAAAAAAIk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6392,7 +6392,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="138" aka="AAAAAAAAAIo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6476,7 +6476,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="139" aka="AAAAAAAAAIs=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -6993,7 +6993,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="150" aka="AAAAAAAAAJY=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7076,7 +7076,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="151" aka="AAAAAAAAAJc=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7158,7 +7158,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="152" aka="AAAAAAAAAJg=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7408,7 +7408,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="153" aka="AAAAAAAAAJk=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -7516,7 +7516,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="154" aka="AAAAAAAAAJo=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8665,7 +8665,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="177" aka="AAAAAAAAALE=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8709,7 +8709,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="178" aka="AAAAAAAAALI=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8815,7 +8815,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="179" aka="AAAAAAAAALM=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -8923,7 +8923,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="180" aka="AAAAAAAAALQ=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -9004,7 +9004,7 @@ Query successfully processed!</string> </value>
   </record>
   <record id="181" aka="AAAAAAAAALU=">
     <pickle>
-      <global name="WebServiceRequest" module="erp5.document.WebServiceRequest"/>
+      <global name="WebServiceRequest" module="erp5.component.document.WebServiceRequest"/>
     </pickle>
     <pickle>
       <dictionary>

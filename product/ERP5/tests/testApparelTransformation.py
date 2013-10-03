@@ -27,19 +27,6 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
-
-
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -55,7 +42,6 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
 
     Therefore, it's better to use testTransformation for future tests
   """
-  run_all_test = 1
   transformation_portal_type = 'Transformation'
   component_portal_type = 'Apparel Component'
   component_variation_portal_type = 'Apparel Component Variation'
@@ -65,25 +51,16 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Transformation"
 
+  def createCategories(self):
+    TestOrderMixin.createCategories(self)
+    self.portal.portal_categories.quantity_unit.newContent(
+      id='time').newContent(id='min')
+
   def getBusinessTemplateList(self):
     """
     """
     return list(TestOrderMixin.getBusinessTemplateList(self)) + ['erp5_mrp']
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-  
   def stepCreateComponentDict(self, sequence=None, sequence_list=None, \
                                  **kw):
     """
@@ -717,13 +694,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       # self.failIf(error, error_msg)
        
                
-  def test_01_getAggregatedAmountList(self, quiet=0, run=run_all_test):
+  def test_01_getAggregatedAmountList(self):
     """
       Test the method getAggregatedAmountList
     """
-    if not run: return
     sequence_list = SequenceList()
-
     # Test with a simply order without cell
     sequence_string = '\
                       CreateComponentDict \

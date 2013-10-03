@@ -309,32 +309,52 @@ ppml.Object = Object
 
 blanck_line_expression = re.compile('^ +$')
 
-# For optmization.
 class NoBlanks:
-
+    """
+    This allows to ignore at least whitespaces between elements and also
+    correctly handle string/unicode
+    """
     previous_stack_end = None
     previous_discarded_data = None
 
     def handle_data(self, data):
+        """
+        Called for each character lines of element data, twice in this
+        example:
+
+        <string>abc
+        bar</string>
+        """
+        # Ignore element data between elements (eg '<e> <f> </f> </e>')...
         if data.strip():
-            # Horrible conditions to try fixing some weird removal of spaces.
-            # It happened that javascript files with a line like
-            # "  ];\n" was replaced by "];\n", so the indent was lost.
-            # Indeed the parser was calling this handle_data function first
-            # for "  ", then for "];". So original code was dropping the "  ".
-            # Disabling the above if was the initial idea, but it give
-            # other troubles, so such conditions were introduced.
-            if data.startswith(']') \
-                  and self.previous_discarded_data \
-                  and blanck_line_expression.match(self.previous_discarded_data) \
-                  and self._stack[-1] == self.previous_stack_end:
-              data = self.previous_discarded_data + data
             if isinstance(data, unicode):
                 data = data.encode('raw_unicode_escape')
             self.append(data)
-        else:
-          self.previous_stack_end = self._stack[-1]
-          self.previous_discarded_data = data
+
+        # Except for strings and unicode data as whitespaces should be
+        # kept. It happened that javascript files with a line like " ];\n" was
+        # replaced by "];\n", so the indent was lost. Indeed the parser was
+        # calling this handle_data function first for " ", then for "];". So
+        # original code was dropping the " ".
+        elif (isinstance(self._stack[-1], list) and
+              self._stack[-1][0] in ('string', 'unicode')):
+            # If the first character data of this element is a whitespace, it
+            # will be concatenated with the next line (if any, but at
+            # this point it is not possible to know anyway)
+            if len(self._stack[-1]) == 2:
+                self.previous_stack_end = self._stack[-1]
+                self.previous_discarded_data = data
+            else:
+                if (self._stack[-1] == self.previous_stack_end and
+                    self.previous_discarded_data):
+                    data = self.previous_discarded_data + data
+                    self.previous_discarded_data = None
+                    self.previous_stack_end = None
+
+                if isinstance(data, unicode):
+                    data = data.encode('raw_unicode_escape')
+
+                self.append(data)
 
 ppml.NoBlanks = NoBlanks
 

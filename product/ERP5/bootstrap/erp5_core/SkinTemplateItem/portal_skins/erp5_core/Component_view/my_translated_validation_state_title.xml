@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>css_class</string>
+              </list>
             </value>
         </item>
         <item>
@@ -69,6 +71,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>ace_editor_validation_state</string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_translated_workflow_state_title</string> </value>

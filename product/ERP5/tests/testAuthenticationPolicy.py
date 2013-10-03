@@ -88,8 +88,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       self.tic()
 
   def _clearCache(self):
-    for cache_factory in [x for x in self.portal.portal_caches.getCacheFactoryList() if x!="erp5_session_cache"]:
-      self.portal.portal_caches.clearCacheFactory(cache_factory)
+    self.portal.portal_caches.clearCache(
+      cache_factory_list=('erp5_ui_short', # for preference cache
+                          'erp5_content_short', # for authentication cache
+                          ))
 
   def _getPasswordEventList(self, person):
     return [x.getObject() for x in self.portal.portal_catalog(

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>test_result = sci[\'object\']\n
+kw = sci[\'kwargs\']\n
+stop_date = kw.get(\'date\') or DateTime()\n
+test_result.setStopDate(stop_date)\n
+if test_result.getPortalType() == \'Test Result\':\n
+  if test_result:\n
+    edit_kw = dict(duration=0,\n
+                   all_tests=0,\n
+                   errors=0,\n
+                   failures=0,\n
+                   skips=0)\n
+    for line in test_result.objectValues(portal_type=\'Test Result Line\'):\n
+      for prop in edit_kw:\n
+        edit_kw[prop] = edit_kw[prop] + line.getProperty(prop, 0)\n
+    if edit_kw[\'errors\'] or edit_kw[\'failures\']:\n
+      status = \'FAIL\'\n
+    else:\n
+      status = \'PASS\'\n
+    test_result.edit(string_index=status, **edit_kw)\n
+  test_result.activate().TestResult_afterComplete()\n
+elif test_result.getPortalType() == \'Test Result Line\':\n
+  all_tests = kw.get(\'test_count\')\n
+  errors = kw.get(\'error_count\', 0)\n
+  failures = kw.get(\'failure_count\', 0)\n
+  skips = kw.get(\'skip_count\', 0)\n
+  if all_tests is None:\n
+    status = \'UNKNOWN\'\n
+    all_tests = 0\n
+  elif errors or failures:\n
+    status = \'FAILED\'\n
+  else:\n
+    status = \'PASSED\'\n
+  duration = kw.get(\'duration\') or (\n
+    stop_date - test_result.getStartDate()) * (24*60*60)\n
+  cmdline = kw.get(\'command\', getattr(test_result, \'cmdline\', \'\'))\n
+  if same_type(cmdline, []):\n
+    cmdline = \' \'.join(map(repr, cmdline))\n
+  stdout = kw.get(\'stdout\', getattr(test_result, \'stdout\', \'\'))\n
+  stderr = kw.get(\'stderr\', getattr(test_result, \'stderr\', \'\'))\n
+  html_test_result = kw.get(\'html_test_result\', getattr(test_result, \'html_test_result\', \'\'))\n
+  test_result.edit(cmdline=cmdline,\n
+                   stdout=stdout,\n
+                   stderr=stderr,\n
+                   string_index=status,\n
+                   duration=duration,\n
+                   all_tests=all_tests,\n
+                   errors=errors,\n
+                   failures=failures,\n
+                   skips=skips,\n
+                   html_test_result=html_test_result)\n
+else:\n
+  raise NotImplementedError("unknown type : %r" % test_result.getPortalType())\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestResult_complete</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

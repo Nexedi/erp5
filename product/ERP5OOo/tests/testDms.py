@@ -237,9 +237,6 @@ class TestDocument(TestDocumentMixin):
     document_module = self.portal.document_module
     return getattr(document_module, id)
 
-  def clearCache(self):
-    self.portal.portal_caches.clearAllCache()
-
   def getPreferences(self, image_display):
     preference_tool = self.portal.getPortalObject().portal_preferences
     height_preference = 'preferred_%s_image_height' % (image_display,)
@@ -1143,12 +1140,12 @@ class TestDocument(TestDocumentMixin):
                    version = '003',
                    language = 'bg',
                    reference = 'tlv-test-doc-1')
+    self.login()
     contributor_list = document_4.getContributorValueList()
     contributor_list.append(person1)
     document_4.setContributorValueList(contributor_list)
     document_4.publish()
     self.tic()
-    self.login()
 
     # search arbitrary word
     kw = {'searchabletext_any': 'software'}
@@ -1329,6 +1326,21 @@ class TestDocument(TestDocumentMixin):
     # empty PDF have no content information
     self.assertEquals(dict(), content_information)
 
+  def test_apple_PDF_metadata(self):
+    # PDF created with Apple software have a special 'AAPL:Keywords' info tag
+    # and when pypdf extracts pdf information, it is returned as an
+    # IndirectObject instance which is not picklable
+    document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      file=makeFileUpload('apple_metadata.pdf'))
+    # content_information is picklable
+    content_information = document.getContentInformation()
+    from pickle import dumps
+    dumps(content_information)
+    # so document can be saved in ZODB
+    self.commit()
+    self.tic()
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
@@ -1336,6 +1348,65 @@ class TestDocument(TestDocumentMixin):
     # because only edit method set filename as filename.
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
+
+  def test_PDF_watermark(self):
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('REF-en-001.pdf'))
+    # This watermark.pdf document is a pdf with a transparent background. Such
+    # document can be created using GIMP
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=False)
+
+    # this looks like a pdf
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+
+    # and ERP5 can make a PDF Document out of it
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('1', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
+
+  def test_PDF_watermark_repeat(self):
+    # watermark a pdf, repeating the watermark
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=True)
+
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('42', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
+
+  def test_PDF_watermark_start_page(self):
+    # watermark a pdf, starting on the second page
+    original_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('Forty-Two.Pages-en-001.pdf'))
+    watermark_document = self.portal.portal_contributions.newContent(
+      file=makeFileUpload('watermark.pdf'))
+    watermarked_data = original_document.getWatermarkedData(
+      watermark_data=watermark_document.getData(),
+      repeat_watermark=False,
+      watermark_start_page=1) # This is 0 based.
+
+    self.assertTrue(watermarked_data.startswith('%PDF-1.3'))
+    watermarked_document = self.portal.document_module.newContent(
+      portal_type='PDF',
+      data=watermarked_data)
+    self.assertEqual('42', watermarked_document.getContentInformation()['Pages'])
+    self.assertNotEqual(original_document.getData(),
+      watermarked_document.getData())
 
   def test_Document_getStandardFilename(self):
     upload_file = makeFileUpload('metadata.pdf')

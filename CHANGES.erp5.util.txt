@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.36 (2013-06-30)
+-------------------
+
+ * erp5.util.testsuite:
+
+  - delete git repos if url has changed [Sebastien Robin]
+
 0.4.35 (2013-06-21)
 -------------------
 

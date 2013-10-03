@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Document_setContributor</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <list>
-                <string>Document_setContributor</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>

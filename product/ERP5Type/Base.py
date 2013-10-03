@@ -86,7 +86,6 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -588,9 +587,18 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   for wf_id, v in interaction_workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
+      # Check portal type filter
       if (tdef.portal_type_filter is not None and \
           portal_type not in tdef.portal_type_filter):
         continue
+
+      # Check portal type group filter
+      if tdef.portal_type_group_filter is not None:
+        getPortalGroupedTypeSet = portal_workflow.getPortalObject()._getPortalGroupedTypeSet
+        if not any(portal_type in getPortalGroupedTypeSet(portal_type_group) for
+                   portal_type_group in tdef.portal_type_group_filter):
+          continue
+
       for imethod_id in tdef.method_id:
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
@@ -711,7 +719,6 @@ class Base( CopyContainer,
   isTempDocument = ConstantGetter('isTempDocument', value=False)
 
   # Dynamic method acquisition system (code generation)
-  aq_method_lock = ImportLock()
   aq_method_generated = set()
   aq_method_generating = []
   aq_portal_type = {}

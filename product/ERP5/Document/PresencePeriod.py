@@ -38,7 +38,7 @@ from Products.ERP5Type.DateUtils import addToDate
 
 class PresencePeriod(Movement, PeriodicityMixin):
   """
-  Presence Period is used to add available time of the user in a 
+  Presence Period is used to add available time of the user in a
   period of Time
   """
 
@@ -94,8 +94,8 @@ class PresencePeriod(Movement, PeriodicityMixin):
     """
     quantity = self.getQuantity(*args, **kw)
     if quantity in [None, 0]:
-      calendar_start_date = self.getStartDate() 
-      calendar_stop_date = self.getStopDate() 
+      calendar_start_date = self.getStartDate()
+      calendar_stop_date = self.getStopDate()
       if (calendar_start_date is not None) and (calendar_stop_date is not None):
         # Convert Days to second
         quantity = int(calendar_stop_date) - int(calendar_start_date)
@@ -108,11 +108,11 @@ class PresencePeriod(Movement, PeriodicityMixin):
   def asMovementList(self):
     """
     Generate multiple movement from a single one.
-    It is used for cataloging a movement multiple time in 
+    It is used for cataloging a movement multiple time in
     the movement/stock tables.
 
     Ex: a movement have multiple destinations.
-    asMovementList returns a list a movement context with different 
+    asMovementList returns a list a movement context with different
     single destination.
     """
     result = []
@@ -163,7 +163,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
              (current_exception_date < next_start_date.Date()):
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
-            result.append([next_start_date, 
+            result.append([next_start_date,
                addToDate(next_start_date, second=second_duration)])
             # Update the next exception date
             if len(exception_date_list) != 0:
@@ -173,7 +173,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
           else:
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
-            result.append([next_start_date, 
+            result.append([next_start_date,
                addToDate(next_start_date, second=second_duration)])
           next_start_date = self.getNextPeriodicalDate(next_start_date)
 
@@ -198,7 +198,6 @@ class PresencePeriod(Movement, PeriodicityMixin):
       day_count = int(current_date-next_start_date)
       next_start_date = next_start_date + day_count
 
-    previous_date = next_start_date
     next_start_date = addToDate(next_start_date, day=1)
     while 1:
       if (self._validateDay(next_start_date)) and \

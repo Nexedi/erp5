@@ -10,14 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>default_params</string>
-                <string>list_method</string>
                 <string>columns</string>
+                <string>default_params</string>
+                <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_action</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -179,6 +179,14 @@
                           <string>Destination Account</string>
                         </tuple>
                         <tuple>
+                          <string>source_trade_title</string>
+                          <string>Source Trade</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_trade_title</string>
+                          <string>Destination Trade</string>
+                        </tuple>
+                        <tuple>
                           <string>start_date</string>
                           <string>Shipping Date</string>
                         </tuple>
@@ -278,6 +286,14 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string>list</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

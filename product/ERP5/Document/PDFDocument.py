@@ -26,17 +26,19 @@
 #
 ##############################################################################
 
-import tempfile, os
+import tempfile, os, pickle
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError,\
                                             VALID_TEXT_FORMAT_LIST
 from subprocess import Popen, PIPE
-from zLOG import LOG
+from zLOG import LOG, INFO, PROBLEM
 import errno
+from StringIO import StringIO
 
 class PDFDocument(Image):
   """
@@ -65,6 +67,48 @@ class PDFDocument(Image):
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
                     )
+
+  zope.interface.implements(interfaces.IWatermarkable)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWatermarkedData')
+  def getWatermarkedData(self, watermark_data, repeat_watermark=True,
+                         watermark_start_page=0, **kw):
+    """See interface
+
+    * watermark_data is the PDF data (as a string) to use as a watermark.
+    * If repeat_watermark is true, then the watermark will be applied on all
+      pages, otherwise it is applied only once.
+    * Watermark is applied at all pages starting watermark_start_page (this
+      index is 0 based)
+    """
+    from pyPdf import PdfFileWriter, PdfFileReader, pdf
+    if not watermark_data:
+      raise ValueError("watermark_data cannot not be empty")
+    if not self.hasData():
+      raise ValueError("Cannot watermark an empty document")
+    self_reader = PdfFileReader(StringIO(self.getData()))
+    watermark_reader = PdfFileReader(StringIO(watermark_data))
+    watermark_page_count = watermark_reader.getNumPages()
+
+    output = PdfFileWriter()
+
+    for page_number in range(self_reader.getNumPages()):
+      self_page = self_reader.getPage(page_number)
+      watermark_page = None
+      if page_number >= watermark_start_page:
+        if repeat_watermark:
+          watermark_page = watermark_reader.getPage(
+            (page_number - watermark_start_page) % watermark_page_count)
+        elif page_number < (watermark_page_count + watermark_start_page):
+          watermark_page = watermark_reader.getPage(page_number - watermark_start_page)
+        if watermark_page is not None:
+          self_page.mergePage(watermark_page)
+      output.addPage(self_page)
+
+    outputStream = StringIO()
+    output.write(outputStream)
+    return outputStream.getvalue()
 
   # Conversion API
   def _convert(self, format, **kw):
@@ -174,11 +218,7 @@ class PDFDocument(Image):
 
   security.declarePrivate('_convertToHTML')
   def _convertToHTML(self):
-    """
-    Convert the PDF text content to HTML with pdftohtml
-
-    NOTE: XXX check that command exists and was executed
-    successfully
+    """Convert the PDF text content to HTML with pdftohtml
     """
     if not self.hasData():
       return ''
@@ -208,8 +248,7 @@ class PDFDocument(Image):
 
   security.declarePrivate('_convertToDJVU')
   def _convertToDJVU(self):
-    """
-    Convert the PDF text content to DJVU with pdf2djvu
+    """Convert the PDF text content to DJVU with pdf2djvu
     """
     if not self.hasData():
       return ''
@@ -277,14 +316,25 @@ class PDFDocument(Image):
             info_key = info_key.lstrip("/")
             if isinstance(info_value, unicode):
               info_value = info_value.encode("utf-8")
-            result.setdefault(info_key, info_value)
+
+            # Ignore values that cannot be pickled ( such as AAPL:Keywords )
+            try:
+              pickle.dumps(info_value)
+            except pickle.PicklingError, err:
+              LOG("PDFDocument.getContentInformation", INFO,
+                "Ignoring non picklable document info on %s: %s (%r)" % (
+                self.getRelativeUrl(), info_key, info_value))
+            else:
+              result.setdefault(info_key, info_value)
         except PdfReadError:
-          LOG("PDFDocument.getContentInformation", 0,
+          LOG("PDFDocument.getContentInformation", PROBLEM,
             "pyPdf is Unable to read PDF, probably corrupted PDF here : %s" % \
             (self.getRelativeUrl(),))
     finally:
       tmp.close()
 
+    # Store cache as an instance of document. FIXME: we usually try to avoid this
+    # pattern and cache the result of methods using content md5 as a cache key.
     self._content_information = result
     return result.copy()
 

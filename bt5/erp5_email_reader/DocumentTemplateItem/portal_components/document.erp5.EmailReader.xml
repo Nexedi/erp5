@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Document Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>EmailReader</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>document.erp5.EmailReader</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Document Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple>
+                <string>E: 43, 0: No name \'ZRDB\' in module \'Shared.DC\' (no-name-in-module)</string>
+                <string>F: 43, 0: Unable to import \'Shared.DC.ZRDB.TM\' (import-error)</string>
+                <string>E:217, 2: Explicit return in __init__ (return-in-init)</string>
+                <string>E:229, 2: Explicit return in __init__ (return-in-init)</string>
+                <string>E:381, 6: Instance of \'list\' has no \'newContent\' member (but some types could not be inferred) (maybe-no-member)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W: 73, 0: XXX - Rewrite everything to use UID! (fixme)</string>
+                <string>W: 89, 0: XXX What about port ? (fixme)</string>
+                <string>W: 91, 0: XXX response not taken into account (fixme)</string>
+                <string>W: 92, 0: XXX What about failures ? (fixme)</string>
+                <string>W: 94, 0: XXX - This leaves a small probability of failure (to be researched) (fixme)</string>
+                <string>W:137, 0: XXX response not taken into account (fixme)</string>
+                <string>W:139, 0: XXX response not taken into account (fixme)</string>
+                <string>W:141, 0: XXX (fixme)</string>
+                <string>W:146, 0: XXX (fixme)</string>
+                <string>W:157, 0: XXX - reponse not taken into account (fixme)</string>
+                <string>W:166, 0: XXX - Danger - because we are in multithreaded environment (fixme)</string>
+                <string>W:172, 0: XXX - reponse not taken into account (fixme)</string>
+                <string>W:176, 0: XXX - Here we consider that (fixme)</string>
+                <string>W:193, 0: XXX - reponse not taken into account  (fixme)</string>
+                <string>W:226, 0: XXX - Not implemented yet (fixme)</string>
+                <string>W:246, 0: XXX) (fixme)</string>
+                <string>W:248, 0: TODO: (fixme)</string>
+                <string>W:310, 0: XXX - Start with default one and only use filtered mailboxes if defined (fixme)</string>
+                <string>W:319, 0: XXX - TODO: crawl 10 folders at once (fixme)</string>
+                <string>W:335, 0: XXX (fixme)</string>
+                <string>W:342, 0: XXX-JPS (fixme)</string>
+                <string>W:345, 0: XXX maybe there is a faster way to compute this (fixme)</string>
+                <string>W:370, 0: XXX - double check whether this is consistent with  (fixme)</string>
+                <string>W:374, 0: XXX Is this a good way of processing exceptions (fixme)</string>
+                <string>W:443, 0: XXX Add read only transaction cache (fixme)</string>
+                <string>W:467, 0: XXX - Danger: if the server Url is changed, we (fixme)</string>
+                <string>W:482, 0: XXX - Here we need to add a switch (POP vs. IMAP vs. IMAPS etc.) (fixme)</string>
+                <string>W:143, 0: Found indentation with tabs instead of spaces (mixed-indentation)</string>
+                <string>W:144, 0: Found indentation with tabs instead of spaces (mixed-indentation)</string>
+                <string>W:146, 0: Found indentation with tabs instead of spaces (mixed-indentation)</string>
+                <string>R: 67, 0: Too many instance attributes (8/7) (too-many-instance-attributes)</string>
+                <string>W: 79, 2: __init__ method from base class \'MailServer\' is not called (super-init-not-called)</string>
+                <string>W: 93, 4: Access to a protected member _register of a client class (protected-access)</string>
+                <string>W: 91,14: Unused variable \'message_count\' (unused-variable)</string>
+                <string>W: 91, 4: Unused variable \'response\' (unused-variable)</string>
+                <string>W: 97, 0: Unused argument \'ignored\' (unused-argument)</string>
+                <string>W:113, 0: Unused argument \'ignored\' (unused-argument)</string>
+                <string>W:157, 4: Unused variable \'response\' (unused-variable)</string>
+                <string>W:179, 8: Unused variable \'folder_type\' (unused-variable)</string>
+                <string>W:172, 4: Unused variable \'response\' (unused-variable)</string>
+                <string>W:143, 1: Attribute \'message_count\' defined outside __init__ (attribute-defined-outside-init)</string>
+                <string>W:220, 0: Method \'getMessageFolderList\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:220, 0: Method \'getMessageUIDList\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:220, 0: Method \'__init__\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:220, 0: Method \'getMessageData\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:228, 0: Method \'getMessageFolderList\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:228, 0: Method \'getMessageUIDList\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>W:228, 0: Method \'getMessageData\' is abstract in class \'MailServer\' but is not overridden (abstract-method)</string>
+                <string>R:233, 0: Too many ancestors (45/7) (too-many-ancestors)</string>
+                <string>W:298,20: Used builtin function \'filter\' (bad-builtin)</string>
+                <string>W:298,20: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
+                <string>W:339,23: Used builtin function \'filter\' (bad-builtin)</string>
+                <string>W:339,23: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
+                <string>W:348,23: Used builtin function \'filter\' (bad-builtin)</string>
+                <string>W:348,23: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
+                <string>W:335,23: Unused variable \'error_message\' (unused-variable)</string>
+                <string>R:430, 2: Method could be a function (no-self-use)</string>
+                <string>R:233, 0: Too many public methods (398/20) (too-many-public-methods)</string>
+                <string>W:427, 4: Attribute \'_latest_uid\' defined outside __init__ (attribute-defined-outside-init)</string>
+                <string>W: 34, 0: Unused import XMLObject (unused-import)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>validate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ERP5TypeTestCase</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1377850660.74</float>
+                        <string>GMT+9</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>validated</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

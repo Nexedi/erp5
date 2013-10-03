@@ -486,6 +486,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -496,14 +500,25 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>domain_root_list</string> </key>
+                    <key> <string>display_style_list</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ticket_use_domain</string>
+                          <string>Type</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -539,6 +554,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -565,6 +584,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -785,6 +808,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Tickets</string> </value>
                 </item>
@@ -856,10 +885,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -872,10 +898,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

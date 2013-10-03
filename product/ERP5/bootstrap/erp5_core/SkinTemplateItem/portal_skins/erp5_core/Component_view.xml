@@ -98,7 +98,8 @@
                         <string>my_id</string>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_error_message_list</string>
+                        <string>my_text_content_error_message_list</string>
+                        <string>my_text_content_warning_message_list</string>
                       </list>
                     </value>
                 </item>

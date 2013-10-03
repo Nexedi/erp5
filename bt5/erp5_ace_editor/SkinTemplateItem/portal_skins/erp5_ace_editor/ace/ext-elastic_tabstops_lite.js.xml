@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77155552.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ext-elastic_tabstops_lite.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2012, Ajax.org B.V.\n
+ * All rights reserved.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ *\n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/ext/elastic_tabstops_lite\', [\'require\', \'exports\', \'module\' , \'ace/editor\', \'ace/config\'], function(require, exports, module) {\n
+\n
+\n
+var ElasticTabstopsLite = function(editor) {\n
+    this.$editor = editor;\n
+    var self = this;\n
+    var changedRows = [];\n
+    var recordChanges = false;\n
+    this.onAfterExec = function() {\n
+        recordChanges = false;\n
+        self.processRows(changedRows);\n
+        changedRows = [];\n
+    };\n
+    this.onExec = function() {\n
+        recordChanges = true;\n
+    };\n
+    this.onChange = function(e) {\n
+        var range = e.data.range\n
+        if (recordChanges) {\n
+            if (changedRows.indexOf(range.start.row) == -1)\n
+                changedRows.push(range.start.row);\n
+            if (range.end.row != range.start.row)\n
+                changedRows.push(range.end.row);\n
+        }\n
+    };\n
+};\n
+\n
+(function() {\n
+    this.processRows = function(rows) {\n
+        this.$inChange = true;\n
+        var checkedRows = [];\n
+\n
+        for (var r = 0, rowCount = rows.length; r < rowCount; r++) {\n
+            var row = rows[r];\n
+\n
+            if (checkedRows.indexOf(row) > -1)\n
+                continue;\n
+\n
+            var cellWidthObj = this.$findCellWidthsForBlock(row);\n
+            var cellWidths = this.$setBlockCellWidthsToMax(cellWidthObj.cellWidths);\n
+            var rowIndex = cellWidthObj.firstRow;\n
+\n
+            for (var w = 0, l = cellWidths.length; w < l; w++) {\n
+                var widths = cellWidths[w];\n
+                checkedRows.push(rowIndex);\n
+                this.$adjustRow(rowIndex, widths);\n
+                rowIndex++;\n
+            }\n
+        }\n
+        this.$inChange = false;\n
+    };\n
+\n
+    this.$findCellWidthsForBlock = function(row) {\n
+        var cellWidths = [], widths;\n
+        var rowIter = row;\n
+        while (rowIter >= 0) {\n
+            widths = this.$cellWidthsForRow(rowIter);\n
+            if (widths.length == 0)\n
+                break;\n
+\n
+            cellWidths.unshift(widths);\n
+            rowIter--;\n
+        }\n
+        var firstRow = rowIter + 1;\n
+        rowIter = row;\n
+        var numRows = this.$editor.session.getLength();\n
+\n
+        while (rowIter < numRows - 1) {\n
+            rowIter++;\n
+\n
+            widths = this.$cellWidthsForRow(rowIter);\n
+            if (widths.length == 0)\n
+                break;\n
+\n
+            cellWidths.push(widths);\n
+        }\n
+\n
+        return { cellWidths: cellWidths, firstRow: firstRow };\n
+    };\n
+\n
+    this.$cellWidthsForRow = function(row) {\n
+        var selectionColumns = this.$selectionColumnsForRow(row);\n
+\n
+        var tabs = [-1].concat(this.$tabsForRow(row));\n
+        var widths = tabs.map(function(el) { return 0; } ).slice(1);\n
+        var line = this.$editor.session.getLine(row);\n
+\n
+        for (var i = 0, len = tabs.length - 1; i < len; i++) {\n
+            var leftEdge = tabs[i]+1;\n
+            var rightEdge = tabs[i+1];\n
+\n
+            var rightmostSelection = this.$rightmostSelectionInCell(selectionColumns, rightEdge);\n
+            var cell = line.substring(leftEdge, rightEdge);\n
+            widths[i] = Math.max(cell.replace(/\\s+$/g,\'\').length, rightmostSelection - leftEdge);\n
+        }\n
+\n
+        return widths;\n
+    };\n
+\n
+    this.$selectionColumnsForRow = function(row) {\n
+        var selections = [], cursor = this.$editor.getCursorPosition();\n
+        if (this.$editor.session.getSelection().isEmpty()) {\n
+            if (row == cursor.row)\n
+                selections.push(cursor.column);\n
+        }\n
+\n
+        return selections;\n
+    };\n
+\n
+    this.$setBlockCellWidthsToMax = function(cellWidths) {\n
+        var startingNewBlock = true, blockStartRow, blockEndRow, maxWidth;\n
+        var columnInfo = this.$izip_longest(cellWidths);\n
+\n
+        for (var c = 0, l = columnInfo.length; c < l; c++) {\n
+            var column = columnInfo[c];\n
+            if (!column.push) {\n
+                console.error(column);\n
+                continue;\n
+            }\n
+            column.push(NaN);\n
+\n
+            for (var r = 0, s = column.length; r < s; r++) {\n
+                var width = column[r];\n
+                if (startingNewBlock) {\n
+                    blockStartRow = r;\n
+                    maxWidth = 0;\n
+                    startingNewBlock = false;\n
+                }\n
+                if (isNaN(width)) {\n
+                    blockEndRow = r;\n
+\n
+                    for (var j = blockStartRow; j < blockEndRow; j++) {\n
+                        cellWidths[j][c] = maxWidth;\n
+                    }\n
+                    startingNewBlock = true;\n
+                }\n
+\n
+                maxWidth = Math.max(maxWidth, width);\n
+            }\n
+        }\n
+\n
+        return cellWidths;\n
+    };\n
+\n
+    this.$rightmostSelectionInCell = function(selectionColumns, cellRightEdge) {\n
+        var rightmost = 0;\n
+\n
+        if (selectionColumns.length) {\n
+            var lengths = [];\n
+            for (var s = 0, length = selectionColumns.length; s < length; s++) {\n
+                if (selectionColumns[s] <= cellRightEdge)\n
+                    lengths.push(s);\n
+                else\n
+                    lengths.push(0);\n
+            }\n
+            rightmost = Math.max.apply(Math, lengths);\n
+        }\n
+\n
+        return rightmost;\n
+    };\n
+\n
+    this.$tabsForRow = function(row) {\n
+        var rowTabs = [], line = this.$editor.session.getLine(row),\n
+            re = /\\t/g, match;\n
+\n
+        while ((match = re.exec(line)) != null) {\n
+            rowTabs.push(match.index);\n
+        }\n
+\n
+        return rowTabs;\n
+    };\n
+\n
+    this.$adjustRow = function(row, widths) {\n
+        var rowTabs = this.$tabsForRow(row);\n
+\n
+        if (rowTabs.length == 0)\n
+            return;\n
+\n
+        var bias = 0, location = -1;\n
+        var expandedSet = this.$izip(widths, rowTabs);\n
+\n
+        for (var i = 0, l = expandedSet.length; i < l; i++) {\n
+            var w = expandedSet[i][0], it = expandedSet[i][1];\n
+            location += 1 + w;\n
+            it += bias;\n
+            var difference = location - it;\n
+\n
+            if (difference == 0)\n
+                continue;\n
+\n
+            var partialLine = this.$editor.session.getLine(row).substr(0, it );\n
+            var strippedPartialLine = partialLine.replace(/\\s*$/g, "");\n
+            var ispaces = partialLine.length - strippedPartialLine.length;\n
+\n
+            if (difference > 0) {\n
+                this.$editor.session.getDocument().insertInLine({row: row, column: it + 1}, Array(difference + 1).join(" ") + "\\t");\n
+                this.$editor.session.getDocument().removeInLine(row, it, it + 1);\n
+\n
+                bias += difference;\n
+            }\n
+\n
+            if (difference < 0 && ispaces >= -difference) {\n
+                this.$editor.session.getDocument().removeInLine(row, it + difference, it);\n
+                bias += difference;\n
+            }\n
+        }\n
+    };\n
+    this.$izip_longest = function(iterables) {\n
+        if (!iterables[0])\n
+            return [];\n
+        var longest = iterables[0].length;\n
+        var iterablesLength = iterables.length;\n
+\n
+        for (var i = 1; i < iterablesLength; i++) {\n
+            var iLength = iterables[i].length;\n
+            if (iLength > longest)\n
+                longest = iLength;\n
+        }\n
+\n
+        var expandedSet = [];\n
+\n
+        for (var l = 0; l < longest; l++) {\n
+            var set = [];\n
+            for (var i = 0; i < iterablesLength; i++) {\n
+                if (iterables[i][l] === "")\n
+                    set.push(NaN);\n
+                else\n
+                    set.push(iterables[i][l]);\n
+            }\n
+\n
+            expandedSet.push(set);\n
+        }\n
+\n
+\n
+        return expandedSet;\n
+    };\n
+    this.$izip = function(widths, tabs) {\n
+        var size = widths.length >= tabs.length ? tabs.length : widths.length;\n
+\n
+        var expandedSet = [];\n
+        for (var i = 0; i < size; i++) {\n
+            var set = [ widths[i], tabs[i] ];\n
+            expandedSet.push(set);\n
+        }\n
+        return expandedSet;\n
+    };\n
+\n
+}).call(ElasticTabstopsLite.prototype);\n
+\n
+exports.ElasticTabstopsLite = ElasticTabstopsLite;\n
+\n
+var Editor = require("../editor").Editor;\n
+require("../config").defineOptions(Editor.prototype, "editor", {\n
+    useElasticTabstops: {\n
+        set: function(val) {\n
+            if (val) {\n
+                if (!this.elasticTabstops)\n
+                    this.elasticTabstops = new ElasticTabstopsLite(this);\n
+                this.commands.on("afterExec", this.elasticTabstops.onAfterExec);\n
+                this.commands.on("exec", this.elasticTabstops.onExec);\n
+                this.on("change", this.elasticTabstops.onChange);\n
+            } else if (this.elasticTabstops) {\n
+                this.commands.removeListener("afterExec", this.elasticTabstops.onAfterExec);\n
+                this.commands.removeListener("exec", this.elasticTabstops.onExec);\n
+                this.removeListener("change", this.elasticTabstops.onChange);\n
+            }\n
+        }\n
+    }\n
+});\n
+\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10301</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -78,6 +78,8 @@ def addBackgroundOnPdfFile(orginal_pdf, background_pdf):
 def mergePDF(pdf_document_list):
   '''Merge all pdf in the pdf_document_list in one using pdftk and return it'''
 
+  from warnings import warn
+  warn("mergePDF is deprecated, use erp5_pdf_merge business template instead")
   tmp_pdf_list = []
   # create as tmp file as there is pdf_documents
   for pdf_document in pdf_document_list:

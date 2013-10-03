@@ -113,6 +113,7 @@ if memcache is not None:
     def _initialiseConnection(self):
       self.memcached_connection = memcache.Client(
         self.server_list,
+        pickleProtocol=-1, # use the highest available version
         server_max_key_length=self.server_max_key_length,
         server_max_value_length=self.server_max_value_length,
       )

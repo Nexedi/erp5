@@ -86,6 +86,12 @@
                     <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -103,7 +109,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1)</string> </value>
+            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category=0, omit_individual_variation=1, local_sort_id=(\'int_index\', \'translated_title\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

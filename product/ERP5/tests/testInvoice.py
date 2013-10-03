@@ -118,6 +118,10 @@ class TestInvoiceMixin(TestPackingListMixin):
             'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
             'quantity_unit/%s' % self.mass_quantity_unit,
+            'base_amount/tax1',
+            'base_amount/tax2',
+            'base_amount/tax3',
+            'use/trade/tax',
         )
 
 
@@ -1601,17 +1605,17 @@ class TestInvoice(TestInvoiceMixin):
     product_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
                             quantity=10,
-                            base_contribution='tax1',
+                            base_contribution='base_amount/tax1',
                             price=3)
     product_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
                             quantity=20,
-                            base_contribution='tax1',
+                            base_contribution='base_amount/tax1',
                             price=5)
     product_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
                             quantity=60,
-                            base_contribution='tax2',
+                            base_contribution='base_amount/tax2',
                             price=5)
     product_line4 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
@@ -1624,19 +1628,19 @@ class TestInvoice(TestInvoiceMixin):
     tax_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource_tax,
                             use='trade/tax',
-                            base_contribution='tax1',
+                            base_contribution='base_amount/tax1',
                             quantity=130,
                             price=0.2)
     tax_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource_tax,
                             use='trade/tax',
-                            base_contribution='tax2',
+                            base_contribution='base_amount/tax2',
                             quantity=300,
                             price=0.05)
     tax_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource_tax,
                             use='trade/tax',
-                            base_contribution='tax3',
+                            base_contribution='base_amount/tax3',
                             quantity=20,
                             price=0.1)
     invoice.confirm()

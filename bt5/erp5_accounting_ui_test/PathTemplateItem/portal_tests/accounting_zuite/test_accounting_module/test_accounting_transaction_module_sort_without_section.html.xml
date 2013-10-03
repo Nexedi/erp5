@@ -53,11 +53,6 @@ Test sort for Accounting module main listbox, without section\n
   <td>select_module</td>\n
   <td>Accounting</td>\n
 </tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
 <!-- we unselect section -->\n
 <tr>\n
   <td>clickAndWait</td>\n

@@ -79,7 +79,7 @@ if not len(user_preference_list):\n
                                          portal_type=\'Preference\', \n
                                          title=\'Preference for %s\' %user)\n
     user_preference.enable()\n
-  except Unautorized:\n
+  except Unauthorized:\n
     # user is not allowed to have its own preference\n
     user_preference = None\n
 else:\n

@@ -1,0 +1,30 @@
+<workflow_chain>
+ <chain>
+  <type>Benchmark Result</type>
+  <workflow>edit_workflow, test_result_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Benchmark Result Line</type>
+  <workflow>edit_workflow, test_result_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Node</type>
+  <workflow>edit_workflow, test_node_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Result</type>
+  <workflow>edit_workflow, test_result_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Result Line</type>
+  <workflow>edit_workflow, test_result_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Result Node</type>
+  <workflow>test_result_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Suite</type>
+  <workflow>edit_workflow, test_suite_workflow</workflow>
+ </chain>
+</workflow_chain>

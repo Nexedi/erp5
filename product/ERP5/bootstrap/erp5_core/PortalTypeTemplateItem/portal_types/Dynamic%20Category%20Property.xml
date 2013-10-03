@@ -40,6 +40,14 @@
             <value> <string>addDynamicCategoryProperty</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>property</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Dynamic Category Property</string> </value>
         </item>
@@ -62,6 +70,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>DynamicCategoryProperty</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>

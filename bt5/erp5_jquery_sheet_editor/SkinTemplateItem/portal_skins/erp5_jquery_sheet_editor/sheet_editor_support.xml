@@ -36,13 +36,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<link rel="stylesheet" href="jquery/plugin/sheet/jquery.sheet.css" type="text/css"/>\n
-<link rel="stylesheet" href="jquery.sheet.erp5.css" type="text/css"/>\n
-<link rel="stylesheet" href="jquery/plugin/colorpicker/jquery.colorPicker.css" type="text/css"/>\n
-<!--<link rel="stylesheet" href="jquery/plugin/colorpicker/menu.css" type="text/css"/> -->\n
-<!-- XXX: use user preference to get preferred theme --> \n
-<link rel="stylesheet" href="jquery_sheet_theme/sheet_default_theme.css" type="text/css"/>\n
-\n
 <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/sheet/jquery.sheet.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/mbmenu/mbMenu.min.js"></script>\n

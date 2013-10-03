@@ -371,7 +371,23 @@ if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n
 $(document).ready(addOnChangeEventHandler);\n
-$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);
+$(document).ready(indexAllCheckBoxesAtBTInstallationOnLoad);\n
+\n
+\n
+\n
+function installDoubleSubmitDialogPrevention(confirmation_message) {\n
+  /* Install an handler to prevent submitting a dialog twice. */\n
+  $(document).ready( function() {\n
+    $(".dialog_submit_button").on("click", function(e){\n
+      $(this).on("click.confirm", function(event) {\n
+        $(this).off(".confirm");\n
+        if (! confirm(confirmation_message) ) {\n
+          event.preventDefault();\n
+        }\n
+      });\n
+    });\n
+  });\n
+}
 
 ]]></string> </value>
         </item>

@@ -175,16 +175,16 @@ def initializeInstanceHome(tests_framework_home,
   assert (os.path.isabs(tests_framework_home)
       and os.path.isabs(real_instance_home)
       and os.path.isabs(instance_home))
-  if not os.path.exists(instance_home):
-    os.mkdir(instance_home)
-    if not WIN:
-      # Try to use relative symlinks
-      if tests_framework_home.startswith(os.path.join(real_instance_home,
-                                                      'Products', '')):
-        tests_framework_home = tests_framework_home[len(real_instance_home)+1:]
-      if real_instance_home == os.path.dirname(instance_home):
-        real_instance_home = 'real_instance'
-        os.symlink('..', os.path.join(instance_home, real_instance_home))
+  os.path.exists(instance_home) or os.mkdir(instance_home)
+  if not WIN:
+    # Try to use relative symlinks
+    if tests_framework_home.startswith(os.path.join(real_instance_home,
+                                                    'Products', '')):
+      tests_framework_home = tests_framework_home[len(real_instance_home)+1:]
+    if real_instance_home == os.path.dirname(instance_home):
+      real_instance_home = 'real_instance'
+      d = os.path.join(instance_home, real_instance_home)
+      os.path.exists(d) or os.symlink('..', d)
   old_pwd = os.getcwd()
   try:
     os.chdir(instance_home)
@@ -277,7 +277,6 @@ else:
   real_instance_home = os.path.sep.join(
       tests_framework_home.split(os.path.sep)[:-3])
 
-
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
@@ -289,14 +288,38 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     lambda self, value: None)
 
   def loadTestsFromName(self, name, module=None):
-    """This method is here for compatibility with old style arguments.
+    """
+    This method is here for compatibility with old style arguments:
     - It is possible to have the .py prefix for the test file
-    - It is possible to separate test classes with : instead of .
+
+    And, also to load ZODB Test Component before passing it to unittest
+    TestLoader().
     """
     # backward compatibility 
     if name.endswith('.py'):
       name = name[:-3]
-    name = name.replace(':', '.')
+
+    if ':' in name:
+      from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+      from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
+
+      # Bootstrap has been done in loadTestsFromNames, so the test can now
+      # be loaded like any Live Test on a real instance
+      if ERP5TypeLiveTestCase not in ERP5TypeTestCase.__bases__:
+        ERP5TypeTestCase.__bases__ = ERP5TypeLiveTestCase,
+
+      # TestLoader() does not perform any import so import the Module manually
+      module = __import__('erp5.component.test',
+                          fromlist=['erp5.component.test'],
+                          level=0)
+
+      # TODO-arnau: What about loading a test for a specific Component Version?
+      name = name.split(':')[1]
+
+      __import__('erp5.component.test.%s' % name.split('.')[0],
+                 ['erp5.component.test'],
+                 level=0)
+
     return super(ERP5TypeTestLoader, self).loadTestsFromName(name, module)
 
   def loadTestsFromModule(self, module):
@@ -305,6 +328,108 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     if hasattr(module, 'test_suite'):
       return self.suiteClass(module.test_suite())
     return super(ERP5TypeTestLoader, self).loadTestsFromModule(module)
+
+  def loadTestsFromNames(self, test_list):
+    # ZODB Test Components requires bootstrap to install BTs before running the
+    # actual test
+    test_list_len = len(test_list)
+    if test_list_len > 0 and ':' in test_list[0]:
+      # TODO-arnau: Does anyone specifies multiple test file on command line, at
+      # least test bot does not...
+      if test_list_len > 1:
+        raise NotImplementedError("Cannot specify multiple Unit Tests to run "
+                                  "with ZODB Test Components")
+
+      # Cannot be imported at top-level as importing ERP5TypeTestCase has side
+      # effects and a lot of magic has to be done before. Otherwise,
+      # getLogger('CMFActivity') was failing because no handlers were set up.
+      from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeCommandLineTestCase
+
+      class _ZodbTestComponentBootstrapOnly(ERP5TypeCommandLineTestCase):
+        """
+        Bootstrap class for ZODB Test Components which reuses as much as possible
+        code with "normal" tests as the only difference is how Business Templates are
+        installed.
+
+        With legacy tests, a test is directly loaded from the filesystem by adding BTs
+        TestTemplateItem directories to sys.path and the list of Business Templates is
+        given by its getBusinessTemplateList() method.
+
+        However, with ZODB Components, importing erp5.component.* modules and using
+        Component Versions require ERP5 site to be loaded and dependencies BTs to be
+        installed beforehand (and the entry point is thus the BT title and the test to
+        be loaded as specified on the command line (BT:TEST_NAME instead of
+        TEST_NAME)). Any other way would be adhoc and would meant having a different
+        behavior between running an Unit Test and a Live Test.
+        """
+        def __init__(self, test_list):
+          self._test_list = test_list
+          self._bt_already_installed_list = []
+
+        def getBusinessTemplateList(self):
+          """
+          Only return the Business Template specifies on the command line, its
+          dependencies will be resolved through bt5list and Template Tool
+          (dependency_list and test_dependency_list BT properties)
+          """
+          return [ test.split(':')[0] for test in self._test_list ]
+
+        @staticmethod
+        def _getBTPathAndIdList(bt_list):
+          """
+          Overriden as the original method manually checks BT URLs, handled through
+          Template Tool resolveBusinessTemplateList() methods for ZODB Components
+          """
+          return bt_list
+
+        def _installBusinessTemplateList(self,
+                                         bt_list,
+                                         update_repository_bt_list=True,
+                                         *args,
+                                         **kwargs):
+          """
+          Before installing BTs by calling the original method:
+
+          1/ Get filesystem BT repositories and set them to Template Tool
+          2/ Update BT repositories
+          3/ Resolve dependencies:
+             * dependency_list: recursive.
+             * test_dependency_list: non-recursive.
+          4/ Install BTs as before
+          """
+          template_tool = self.portal.portal_templates
+
+          from Products.ERP5.ERP5Site import getBootstrapDirectory
+          bt5_path_list = [os.environ.get('erp5_tests_bootstrap_path') or
+                           getBootstrapDirectory()]
+
+          bt5_path = os.environ.get('erp5_tests_bt5_path')
+          if bt5_path:
+            bt5_path_list.extend([ bt5_path.replace('*', '')
+                                   for bt5_path in bt5_path.split(',') ])
+          else:
+            from App.config import getConfiguration
+            instancehome = getConfiguration().instancehome
+            bt5_path_list.append(os.path.join(instancehome, 'bt5'))
+
+          bt5_path_list = [bt5_path for bt5_path in bt5_path_list
+                           if os.path.exists(bt5_path)]
+
+          template_tool.updateRepositoryBusinessTemplateList(bt5_path_list)
+
+          url_bt_tuple_list = [
+            ('%s/%s' % (repository, bt_title), bt_title) for repository, bt_title in
+            template_tool.resolveBusinessTemplateListDependency(
+              bt_list,
+              with_test_dependency_list=True)]
+
+          return super(_ZodbTestComponentBootstrapOnly,
+                       self)._installBusinessTemplateList(url_bt_tuple_list,
+                                                          *args, **kwargs)
+
+      _ZodbTestComponentBootstrapOnly(test_list).setUp()
+
+    return super(ERP5TypeTestLoader, self).loadTestsFromNames(test_list)
 
   def getTestCaseNames(self, testCaseClass):
     """Return a sorted sequence of method names found within testCaseClass
@@ -429,9 +554,16 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   project_bt5_test_list = []
   for bt5_path in bt5_path_list:
     bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem')))
+    bt5_test_list.extend(glob(os.path.join(bt5_path,'*','TestTemplateItem',
+                                           'portal_components')))
+
     # also suport instance_home/bt5/project_bt5/*
     project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
-                                                         'TestTemplateItem')))
+                                                   'TestTemplateItem')))
+    project_bt5_test_list.extend(glob(os.path.join(bt5_path, '*', '*',
+                                                   'TestTemplateItem',
+                                                   'portal_components')))
+
   sys.path.extend(bt5_test_list)
   sys.path.extend(project_bt5_test_list)
 

@@ -27,11 +27,12 @@
 import errno
 import os
 import re
+import shutil
 import subprocess
 import sys
 import threading
 
-from testnode import SubprocessError
+from ProcessManager import SubprocessError
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
@@ -46,7 +47,8 @@ class Updater(object):
   stdin = file(os.devnull)
 
   def __init__(self, repository_path, log, revision=None, git_binary=None,
-      branch=None, realtime_output=True, process_manager=None):
+      branch=None, realtime_output=True, process_manager=None, url=None,
+      working_directory=None):
     self.log = log
     self.revision = revision
     self._path_list = []
@@ -55,6 +57,8 @@ class Updater(object):
     self.git_binary = git_binary
     self.realtime_output = realtime_output
     self.process_manager = process_manager
+    self.url = url
+    self.working_directory = working_directory
 
   def getRepositoryPath(self):
     return self.repository_path
@@ -88,14 +92,41 @@ class Updater(object):
               raise
 
   def spawn(self, *args, **kw):
+    cwd = kw.pop("cwd", None)
+    if cwd is None:
+      cwd = self.getRepositoryPath()
     return self.process_manager.spawn(*args, 
                                       log_prefix='git',
-                                      cwd=self.getRepositoryPath(),
+                                      cwd=cwd,
                                       **kw)
 
   def _git(self, *args, **kw):
     return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()
 
+  def git_update_server_info(self):
+    return self._git('update-server-info', '-f')
+
+  def git_create_repository_link(self):
+    """ Create a link in depository to the ".git" directory.
+        ex:
+        for "../erp5/.git"
+        "../erp5/erp5.git"->"../erp5/.git" will be created.
+    """
+    git_repository_path = os.path.join(self.getRepositoryPath(), '.git')
+    name = os.path.basename(os.path.normpath(self.getRepositoryPath()))
+    git_repository_link_path = os.path.join(self.getRepositoryPath(), '%s.git' %name)
+    self.log("checking link %s -> %s.."
+                %(git_repository_link_path,git_repository_path))
+    if ( not os.path.lexists(git_repository_link_path) and \
+         not os.path.exists(git_repository_link_path) ):
+      try:
+        os.symlink(git_repository_path, git_repository_link_path)
+        self.log("link: %s -> %s created"
+                %(git_repository_link_path,git_repository_path))
+      except:
+        self.log("Cannot create link from %s -> %s"
+                %(git_repository_link_path,git_repository_path))
+  
   def _git_find_rev(self, ref):
     try:
       return self._git_cache[ref]
@@ -120,7 +151,33 @@ class Updater(object):
       return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
     raise NotImplementedError
 
+  def deleteRepository(self):
+    self.log("Wrong repository or wrong url, deleting repos %s" % \
+             self.repository_path)
+    shutil.rmtree(self.repository_path)
+
+  def checkRepository(self):
+    # make sure that the repository is like we expect
+    if self.url:
+      if os.path.exists(self.repository_path):
+        correct_url = False
+        try:
+          remote_url = self._git("config", "--get", "remote.origin.url")
+          if remote_url == self.url:
+            correct_url = True
+        except (SubprocessError,) as e:
+          self.log("SubprocessError", exc_info=sys.exc_info())
+        if not(correct_url):
+          self.deleteRepository()
+      if not os.path.exists(self.repository_path):
+        parameter_list = ['clone', self.url]
+        if self.branch is not None:
+          parameter_list.extend(['-b', self.branch])
+        parameter_list.append(self.repository_path)
+        self._git(*parameter_list, cwd=self.working_directory)
+
   def checkout(self, *path_list):
+    self.checkRepository()
     if not path_list:
       path_list = '.',
     revision = self.revision
@@ -180,3 +237,4 @@ class Updater(object):
     else:
       raise NotImplementedError
     self._path_list += path_list
+    self.git_update_server_info()
