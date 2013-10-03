@@ -122,7 +122,7 @@ if __name__=='__main__':
   tags=('<b>','</b>')
   trail=5
   maxlines=5
-  for p in cutFound(None,txt,sw,tags,trail,maxlines):
+  for p in getExcerptText(None,txt,sw,tags,trail,maxlines):
     print p
 
 
