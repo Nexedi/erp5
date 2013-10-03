@@ -1785,7 +1785,20 @@ from Products.ERP5Type.Core.Folder import FolderMixIn
 from ZPublisher.mapply import mapply
 
 method_id_filter_list = [x for x in FolderMixIn.__dict__ if callable(getattr(FolderMixIn, x))]
-candidate_method_id_list = [x for x in SelectionTool.__dict__ if callable(getattr(SelectionTool, x)) and not x.startswith('_') and not x.endswith('__roles__') and x not in method_id_filter_list]
+candidate_method_id_list = []
+for x in SelectionTool.__dict__:
+  if not callable(getattr(SelectionTool, x)):
+    continue
+  if x.startswith('_') or x.endswith('__roles__'):
+    continue
+  if x in method_id_filter_list:
+    continue
+  roles = getattr(SelectionTool, '%s__roles__' % x, None)
+  if roles is None:
+    continue
+  if roles.__name__ == ERP5Permissions.ManagePortal:
+    continue
+  candidate_method_id_list.append(x)
 
 # Monkey patch FolderMixIn with SelectionTool methods
 #   kept here for compatibility with previous implementations
