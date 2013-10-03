@@ -81,20 +81,13 @@ Don\'t hesitate to draw this on a paper in order to debug this query.\n
 SET @result := 0,\n
     @current_start_date := <dtml-sqlvar expr="from_date" type="datetime">,\n
     @current_stop_date := <dtml-sqlvar expr="from_date" type="datetime">,\n
-    @countable := -1;\n
+    @countable := -1,\n
+    @total_quantity := 0;\n
+
 <dtml-var sql_delimiter>\n
 \n
 SELECT \n
-  @result :=\n
-    IF(@countable <= 0,\n
-       @result,\n
-       @result + TIME_TO_SEC(TIMEDIFF(@current_stop_date, @current_start_date))) AS result,\n
-  CASE WHEN @result < 0 THEN\n
-    0\n
-  ELSE\n
-    <dtml-comment>CAST to num explicitly otherwise it may be treated as binary in MySQL-5.0.x</dtml-comment>\n
-    0 + @result\n
-  END AS total_quantity,\n
+  @total_quantity AS total_quantity,\n
 \n
   <dtml-sqlvar expr="from_date" type="datetime"> AS from_date,\n
   <dtml-sqlvar expr="to_date" type="datetime"> AS to_date\n
@@ -134,6 +127,9 @@ SELECT\n
          @result + TIME_TO_SEC(TIMEDIFF(@date, @current_start_date)))) AS result,\n
 \n
   @countable := @next_countable AS countable,\n
+  @total_quantity := IF(quantity < 0,\n
+    @total_quantity - TIME_TO_SEC(TIMEDIFF(@mirror_date, @date)),\n
+    @total_quantity + TIME_TO_SEC(TIMEDIFF(@mirror_date, @date))) AS total_quantity,\n
   @current_start_date := @next_start_date AS current_start_date,\n
   @current_stop_date := @next_stop_date AS current_stop_date\n
 FROM\n
@@ -149,6 +145,7 @@ AND\n
       <dtml-unless sequence-end>, </dtml-unless>\n
     </dtml-in node> )\n
 \n
+AND is_accountable = 1\n
 <dtml-if resource>\n
   AND\n
   resource_uid in (\n
@@ -172,7 +169,7 @@ AND\n
     <dtml-in portal_type>\n
       <dtml-sqlvar sequence-item type="string">\n
       <dtml-unless sequence-end>, </dtml-unless>\n
-    </dtml-in portal_type> )\n
+    </dtml-in portal_type>)\n
 ORDER BY date ASC, mirror_date ASC) AS calculated_result LIMIT 1
 
 ]]></string> </value>
