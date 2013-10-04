@@ -1,3 +1,6 @@
+2013-10-04 arnaud.fontaine
+* ZODB Components: Rename common view to ComponentMixin_view (naming conventions and clash with erp5_pdm).
+
 2013-10-03 arnaud.fontaine
 * erp5_core: Cosmetic: Get rid of a pylint warning.
 
