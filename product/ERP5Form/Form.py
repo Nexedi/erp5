@@ -48,9 +48,38 @@ from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ERP5Type.PsycoWrapper import psyco
 import sys
 
-_field_value_cache = {}
-def purgeFieldValueCache():
-  _field_value_cache.clear()
+class FieldValueCacheDict(dict):
+  _last_sync = -1
+
+  def clear(self):
+    super(FieldValueCacheDict, self).clear()
+
+    from Products.ERP5.ERP5Site import getSite
+    try:
+      portal = getSite()
+    except IndexError:
+      pass
+    else:
+      portal.newCacheCookie('form_field_value_cache')
+      self._last_sync = portal.getCacheCookie('form_field_value_cache')
+
+  def __getitem__(self, cache_id):
+    from Products.ERP5.ERP5Site import getSite
+    try:
+      portal = getSite()
+    except IndexError:
+      pass
+    else:
+      cookie = portal.getCacheCookie('form_field_value_cache')
+      if cookie != self._last_sync:
+        LOG("ERP5Form.Form", 0, "Resetting form field value cache")
+        self._last_sync = cookie
+        self.clear()
+        raise KeyError('Field cache is outdated and has been reset')
+
+    return super(FieldValueCacheDict, self).__getitem__(cache_id)
+
+field_value_cache = FieldValueCacheDict()
 
 # Patch the fiels methods to provide improved namespace handling
 
@@ -343,7 +372,7 @@ def get_value(self, id, REQUEST=None, **kw):
               id)
 
   try:
-    value = _field_value_cache[cache_id]
+    value = field_value_cache[cache_id]
   except KeyError:
     # either returns non callable value (ex. "Title")
     # or a FieldValue instance of appropriate class
@@ -353,7 +382,7 @@ def get_value(self, id, REQUEST=None, **kw):
     # and caching sometimes break these field settings at initialization.
     # As the result, we would see broken field editing screen in ZMI.
     if cacheable and self._p_oid:
-      _field_value_cache[cache_id] = value
+      field_value_cache[cache_id] = value
 
   if callable(value):
     return value(field, id, **kw)

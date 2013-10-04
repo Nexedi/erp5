@@ -30,8 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
-from Products.ERP5Form.ProxyField import purgeFieldValueCache
-
+from Products.ERP5Form.Form import field_value_cache
 
 class TestProxify(ERP5TypeTestCase):
 
@@ -103,12 +102,12 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.is_delegated('description'), True)
     self.assertEqual(field.get_value('description'), '')
 
-    purgeFieldValueCache() # must purge cache before changing internal field value.
+    field_value_cache.clear() # must purge cache before changing internal field value.
     template_field = self.base_view.my_string_field
     template_field.values['description'] = 'Description'
     self.assertEqual(field.get_value('description'), 'Description')
 
-    purgeFieldValueCache()
+    field_value_cache.clear()
 
     # ListField
     self.person_view.manage_addField('my_gender', 'Gender', 'ListField')
@@ -119,7 +118,7 @@ class TestProxify(ERP5TypeTestCase):
     self.assertEqual(field.is_delegated('items'), True)
     self.assertEqual(field.get_value('items'), [('Male', 'Male'), ('Female', 'Female')])
 
-    purgeFieldValueCache()
+    field_value_cache.clear()
 
 
   def test_multi_level_proxify(self):
@@ -146,7 +145,7 @@ class TestProxify(ERP5TypeTestCase):
 
     self.assertEqual(field.has_value('scrap_variable'), 0)
 
-    purgeFieldValueCache() # must purge cache before changing internal field value.
+    field_value_cache.clear() # must purge cache before changing internal field value.
     template_field = self.address_view.my_region
     template_field.values['title'] = 'Region'
     self.assertEqual(field.get_value('title'), 'Region')
@@ -192,7 +191,7 @@ class TestProxify(ERP5TypeTestCase):
     #Proxify First
     self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
     self.person_view.proxifyField({'my_default_region':'Address_view.my_region'})
-    purgeFieldValueCache()
+    field_value_cache.clear()
     #UnProxify
     self.person_view.unProxifyField({'my_default_region':'on'})
     field = self.person_view.my_default_region
@@ -204,7 +203,7 @@ class TestProxify(ERP5TypeTestCase):
     #Test unproxify with old instance.
     #Proxify First
     self.person_view.proxifyField({'my_career_subordination_title':'Base_view.my_relation_string_field'})
-    purgeFieldValueCache()
+    field_value_cache.clear()
     #UnProxify
     self.person_view.unProxifyField({'my_career_subordination_title':'on'})
     field = self.person_view.my_career_subordination_title

@@ -70,23 +70,23 @@ class TestFieldValueCache(ERP5TypeTestCase):
     # Get form value
     field = form.my_first_name
     id = 'title'
-    from Products.ERP5Form.ProxyField import _field_value_cache
+    from Products.ERP5Form.Form import field_value_cache
     cache_id = ('ProxyField.get_value',
                 field._p_oid,
                 field._p_oid,
                 id)
     # Make sure cache has field
-    self.assertTrue(_field_value_cache.has_key(cache_id))
+    self.assertTrue(field_value_cache.has_key(cache_id))
     # Make sure cache and field are equal
-    self.assertEquals(field.get_value(id), _field_value_cache[cache_id])
+    self.assertEquals(field.get_value(id), field_value_cache[cache_id])
     # Call manage_renameObject
     form.manage_renameObject('my_first_name', 'my_first_name2')
     form.manage_renameObject('my_first_name2', 'my_first_name')
     # Make sure cache has no field
-    self.assertFalse(_field_value_cache.has_key(cache_id))
+    self.assertFalse(field_value_cache.has_key(cache_id))
     # Render
     form()
     # Make sure cache has field
-    self.assertTrue(_field_value_cache.has_key(cache_id))
+    self.assertTrue(field_value_cache.has_key(cache_id))
     # Make sure cache and field are equal
-    self.assertEquals(field.get_value(id), _field_value_cache[cache_id])
+    self.assertEquals(field.get_value(id), field_value_cache[cache_id])

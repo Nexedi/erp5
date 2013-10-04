@@ -42,10 +42,6 @@ from hashlib import md5
 import time
 from zope.interface import Interface
 from zope.interface import implements
-
-_field_value_cache = {}
-def purgeFieldValueCache():
-  _field_value_cache.clear()
   
 class ICaptchaProvider(Interface):
   """The CaptchaProvider interface provides a captcha generator."""

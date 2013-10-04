@@ -52,6 +52,5 @@ class FieldValueCacheInteractor(Interactor):
       Interaction method (defined at the Interactor level).
       Make sure all field value caches are purged
     """
-    from Products.ERP5Form import Form, ProxyField
-    Form.purgeFieldValueCache()
-    ProxyField.purgeFieldValueCache()
+    from Products.ERP5Form.Form import field_value_cache
+    field_value_cache.clear()

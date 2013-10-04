@@ -46,7 +46,7 @@ from Products.Formulator.TALESField import TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Form.Form import ERP5Form
-from Products.ERP5Form.Form import purgeFieldValueCache
+from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import Form
 from Products.ERP5Form import ProxyField
@@ -130,7 +130,7 @@ class TestFloatField(ERP5TypeTestCase):
     # value is rounded
     self.assertEquals('13', self.widget.format_value(self.field, 12.9))
 
-    purgeFieldValueCache() # call this before changing internal field values.
+    field_value_cache.clear() # call this before changing internal field values.
     self.field.values['precision'] = 2
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded
@@ -934,42 +934,50 @@ class TestFieldValueCache(ERP5TypeTestCase):
     self.assertEqual(False, value.value is field.values['external_validator'])
     self.assertEqual(True, type(value.value) is Method)
 
+  def _getCacheSize(self, cache_id):
+    count = 0
+    for cache_key in field_value_cache.viewkeys():
+      if cache_key[0] == cache_id:
+        count += 1
+
+    return count
+
   def test_using_cache_or_not(self):
     # check standard field in zodb
     # make sure that this will use cache.
-    cache_size = len(Form._field_value_cache)
+    cache_size = self._getCacheSize('Form.get_value')
     self.root.form.field.get_value('title')
-    self.assertEqual(True, cache_size < len(Form._field_value_cache))
+    self.assertEqual(True, cache_size < self._getCacheSize('Form.get_value'))
 
     # check on-memory field
     # make sure that this will not use cache.
-    cache_size = len(Form._field_value_cache)
+    cache_size = self._getCacheSize('Form.get_value')
     self.assertEqual(repr(self.root),
       self.root.form.my_on_memory_tales_field.get_value('default'))
     self.assertEqual('123',
       self.root.form.my_on_memory_field.get_value('default'))
-    self.assertEqual(True, cache_size == len(Form._field_value_cache))
+    self.assertEqual(True, cache_size == self._getCacheSize('Form.get_value'))
 
     # check proxy field
     # make sure that this will use cache.
-    cache_size = len(ProxyField._field_value_cache)
+    cache_size = self._getCacheSize('ProxyField.get_value')
     self.root.form.proxy_field.get_value('title')
-    self.assertEqual(True, cache_size < len(ProxyField._field_value_cache))
+    self.assertEqual(True, cache_size < self._getCacheSize('ProxyField.get_value'))
 
     # check proxy field with tales
     # make sure that this will not use cache.
-    cache_size = len(ProxyField._field_value_cache)
+    cache_size = self._getCacheSize('ProxyField.get_value')
     self.root.form.proxy_field_tales.get_value('title')
-    self.assertEqual(True, cache_size == len(ProxyField._field_value_cache))
+    self.assertEqual(True, cache_size == self._getCacheSize('ProxyField.get_value'))
 
   def test_datetime_field(self):
-    purgeFieldValueCache()
+    field_value_cache.clear()
     
     # make sure that boundmethod must not be cached.
     year_field = self.root.form.datetime_field.sub_form.get_field('year', include_disabled=1)
     self.assertEqual(True, type(year_field.overrides['items']) is BoundMethod)
 
-    cache_size = len(Form._field_value_cache)
+    cache_size = len(field_value_cache)
     year_field.get_value('items')
 
     # See Formulator/StandardFields.py(line:174)
@@ -981,22 +989,22 @@ class TestFieldValueCache(ERP5TypeTestCase):
                             self.root.form.datetime_field._p_oid,
                             self.root.form.datetime_field._p_oid,
                             'start_datetime'
-                            ) in Form._field_value_cache)
+                            ) in field_value_cache)
     self.assertEqual(True, ('Form.get_value',
                             self.root.form.datetime_field._p_oid,
                             self.root.form.datetime_field._p_oid,
                             'end_datetime'
-                            ) in Form._field_value_cache)
+                            ) in field_value_cache)
     self.assertEqual(False, ('Form.get_value',
                             year_field._p_oid,
                             year_field._p_oid,
                             'items'
-                            ) in Form._field_value_cache)
-    self.assertEqual(cache_size, len(Form._field_value_cache))
+                            ) in field_value_cache)
+    self.assertEqual(cache_size, len(field_value_cache))
 
     year_field.get_value('size')
     year_field.get_value('default')
-    self.assertEqual(cache_size+2, len(Form._field_value_cache))
+    self.assertEqual(cache_size+2, len(field_value_cache))
 
 def makeDummyOid():
   import time, random
