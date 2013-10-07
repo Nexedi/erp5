@@ -190,3 +190,8 @@ ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeVa
 ModuleSecurityInfo('Products.ERP5Type.collections').declarePublic('OrderedDict')
 ModuleSecurityInfo('Products.ERP5Type.DiffUtils').declarePublic('DiffFile')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
+
+import zExceptions
+ModuleSecurityInfo('zExceptions').declarePublic(*filter(
+  lambda x: Exception in getattr(getattr(zExceptions, x), '__mro__', ()),
+  dir(zExceptions)))
