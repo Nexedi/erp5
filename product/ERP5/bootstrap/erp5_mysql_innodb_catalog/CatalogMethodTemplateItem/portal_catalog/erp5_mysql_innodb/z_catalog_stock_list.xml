@@ -95,6 +95,7 @@ WHERE\n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">\n
+      <dtml-if "getDestinationSectionUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n
                     uid[loop_item], \n
@@ -120,7 +121,8 @@ WHERE\n
                     getSimulationState[loop_item], \n
                     getVariationText[loop_item],\n
                     getSubVariationText[loop_item]])">\n
-       \n
+      </dtml-if>\n
+      <dtml-if "getSourceSectionUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n
                     uid[loop_item], \n
@@ -146,6 +148,7 @@ WHERE\n
                     getSimulationState[loop_item], \n
                     getVariationText[loop_item],\n
                     getSubVariationText[loop_item]])">\n
+      </dtml-if>\n
     </dtml-if>\n
   </dtml-in>  \n
   <dtml-if "row_list">\n
