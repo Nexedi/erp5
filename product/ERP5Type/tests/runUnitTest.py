@@ -215,15 +215,6 @@ def initializeInstanceHome(tests_framework_home,
         os.symlink(src, d)
   finally:
     os.chdir(old_pwd)
-  kw = {
-    "PYTHON": sys.executable,
-    "INSTANCE_HOME": instance_home,
-    "SOFTWARE_HOME": software_home,
-    }
-  from Zope2.utilities import copyzopeskel
-  kw['ZOPE_SCRIPTS'] = os.environ['ZOPE_SCRIPTS']
-  skelsrc = os.path.abspath(os.path.join(tests_framework_home, 'skel'))
-  copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
