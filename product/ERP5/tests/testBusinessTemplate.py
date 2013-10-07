@@ -7053,41 +7053,41 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.organisation_amount = 2
     self.email_amount = 2
     sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateOrganisation \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddOrganisationToBusinessTemplate \
-                       Tic \
-                       BuildBusinessTemplate \
-                       SaveBusinessTemplate \
-                       Tic \
-                       RemoveOrganisation \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       Tic \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckOrganisationRestored\
-                       ModifyOrganisation \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddOrganisationToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       SaveBusinessTemplate \
-                       RevertOrganisation \
-                       Tic \
-                       CheckOrganisationRestored \
-                       RewriteWithBrokenOrganisation \
-                       Tic \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckOrganisationModified \
-                       '
+    sequence_string = """
+                       CreateOrganisation
+                       CreateNewBusinessTemplate
+                       UseExportBusinessTemplate
+                       AddOrganisationToBusinessTemplate
+                       Tic
+                       BuildBusinessTemplate
+                       SaveBusinessTemplate
+                       Tic
+                       RemoveOrganisation
+                       RemoveBusinessTemplate
+                       RemoveAllTrashBins
+                       Tic
+                       ImportBusinessTemplate
+                       UseImportBusinessTemplate
+                       InstallBusinessTemplate
+                       Tic
+                       CheckOrganisationRestored
+                       ModifyOrganisation
+                       CreateNewBusinessTemplate
+                       UseExportBusinessTemplate
+                       AddOrganisationToBusinessTemplate
+                       BuildBusinessTemplate
+                       SaveBusinessTemplate
+                       RevertOrganisation
+                       Tic
+                       CheckOrganisationRestored
+                       RewriteWithBrokenOrganisation
+                       Tic
+                       ImportBusinessTemplate
+                       UseImportBusinessTemplate
+                       InstallBusinessTemplate
+                       Tic
+                       CheckOrganisationModified
+                      """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 

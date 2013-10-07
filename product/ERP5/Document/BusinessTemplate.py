@@ -941,7 +941,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       This situation triggers a FATAL problem on SQLCatalog.catalogObjectList
       when upgrading a broken path by ObjectTemplateItem with BusinessTemplate.
       We often get this problem when we are upgrading a quite old ERP5 site
-      to new one, as several old classes may be already removed/replaced 
+      to new one, as several old classes may be already removed/replaced
       in the file system, thus several objects tend to be broken.
 
       Keyword arguments:
@@ -958,10 +958,10 @@ class ObjectTemplateItem(BaseTemplateItem):
 
     class fakeobject:
        def __init__(self, path):
-         self._physical_path = tuple(path.split('/')) 
+         self._physical_path = tuple(path.split('/'))
        def getPhysicalPath(self):
          return self._physical_path
- 
+
     def recursiveUnindex(catalog, item_path, root_document_path):
       # search the object + sub-objects
       result = catalog(relative_url=(item_path,
