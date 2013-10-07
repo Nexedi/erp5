@@ -49,6 +49,7 @@ import random
 import string
 import tempfile
 import glob
+import sys
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -56,6 +57,14 @@ from Products.MimetypesRegistry.common import MimeTypeException
 from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
+
+from Products.ERP5.Document.Organisation import Organisation
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from ZODB.broken import Broken
+
+class MockBrokenOrganisation(Organisation, Broken):
+  meta_type = 'ERP5 Mock Broken Organisation'
+  portal_type = 'Mock Broken Organisation'
 
 class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
@@ -6906,6 +6915,182 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def stepCreateOrganisation(self, sequence=None, **kw):
+    """
+    Organisation
+    """
+    organisation_module = self.portal.organisation_module
+    id_list = []
+    for i in range(self.organisation_amount):
+      organisation = organisation_module.newContent(
+                       portal_type = 'Organisation')
+      self.failUnless(organisation is not None)
+      organisation.setTitle('organisation %d' % (i + 1))
+      for j in range(self.email_amount):
+        organisation.newContent(id='email%d' % (j+1),
+                                title='my email%d' % (j+1),
+                                portal_type='Email')
+      id_list.append(organisation.getId())
+    self.assertNotEquals(id_list, [])
+    sequence.edit(organisation_id_list=id_list)
+
+  def stepModifyOrganisation(self, sequence=None, **kw):
+    """ Modify Organisation """
+    organisation_id_list = sequence.get('organisation_id_list', [])
+    self.assertNotEquals(organisation_id_list, [])
+    for organisation_id in organisation_id_list:
+      organisation_module = self.portal.organisation_module
+      organisation = organisation_module[organisation_id]
+      organisation.setTitle('[modified] ' + organisation.getTitle())
+      for j in range(self.email_amount):
+        email = organisation['email%d' % (j+1)]
+        email.setTitle('[modified] ' + email.getTitle())
+
+  def stepRewriteWithBrokenOrganisation(self, sequence=None, **kw):
+    """
+      Rewrite the organisation with a broken object.
+
+      [Note]: In fact, it is a *mock* broken object. It behave like a broken
+      object but it's not broken. To use *real* broken object is better.
+      However it is rather difficult to create a real broken
+      object in ZODB without restart Zope. Even if removing
+      sys.modules['Products.ERP5.Document'].MockBrokenOrganisation, and
+      retrieve it with a new connection, it does not become a broken object.
+      Probablly there is remaing the object-cache somewhere in Zope.
+    """
+    setattr(sys.modules['Products.ERP5.Document'],
+           'MockBrokenOrganisation', MockBrokenOrganisation)
+
+    from Products.ERP5Type.Utils import registerDocumentClass
+    registerDocumentClass('Products.ERP5.Document',
+                          'MockBrokenOrganisation')
+    self.commit()
+    pt = self.getTypeTool()
+    # create module object portal type
+    pt.newContent('Mock Broken Organisation', 'Base Type',
+                  type_class='MockBrokenOrganisation')
+    pt['Organisation Module'].edit(
+      type_allowed_content_type_list=('Organisation',
+                                      'Mock Broken Organisation',))
+
+    self.commit()
+    self.portal.organisation_module.manage_delObjects(['1'])
+    broken = self.portal.organisation_module.newContent(
+                   portal_type='Mock Broken Organisation', id='1')
+    self.commit()
+    self.tic() # triger undex/index the document
+
+    # set unindexable so that it will act as Broken object
+    self.portal.organisation_module['1'].isIndexable = \
+        ConstantGetter('isIndexable', value=False)
+    self.commit()
+
+    # to reproduce this problem we need to clear portal_caches
+    self.portal.portal_caches.clearAllCache()
+
+  def stepCheckOrganisationModified(self, sequence=None, **kw):
+    organisation_id_list = sequence.get('organisation_id_list', [])
+    self.assertNotEquals(organisation_id_list, [])
+    for organisation_id in organisation_id_list:
+      organisation_module = self.portal.organisation_module
+      organisation = organisation_module[organisation_id]
+      self.assertTrue(organisation.getTitle().startswith('[modified]'))
+      for j in range(self.email_amount):
+        email = organisation['email%d' % (j+1)]
+        self.assertTrue(email.getTitle().startswith('[modified]'))
+
+  def stepAddOrganisationToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    if bt.getTemplatePathList():
+      path_list = bt.getTemplatePathList()[:]
+      path_list = path_list + ('organisation_module/**',)
+      bt.edit(template_path_list=path_list)
+    else:
+      bt.edit(template_path_list=['organisation_module/**'])
+
+  def stepRevertOrganisation(self, sequence=None, **kw):
+    organisation_id_list = sequence.get('organisation_id_list', [])
+    self.assertNotEquals(organisation_id_list, [])
+    for organisation_id in organisation_id_list:
+      organisation_module = self.portal.organisation_module
+      organisation = organisation_module[organisation_id]
+      organisation.setTitle(organisation.getTitle().replace('[modified] ', ''))
+      for j in range(self.email_amount):
+        email = organisation['email%d' % (j+1)]
+        email.setTitle(email.getTitle().replace('[modified] ', ''))
+
+  def stepRemoveOrganisation(self, sequence=None, **kw):
+    id_list = sequence.get('organisation_id_list', None)
+    self.assertNotEquals(id_list, [])
+    organisation_id_list = id_list[:]
+    organisation_module = self.portal.organisation_module
+    organisation_module.manage_delObjects(organisation_id_list)
+    self.assertNotEquals(id_list, [])
+
+  def stepCheckOrganisationRestored(self, sequence=None, **kw):
+    organisation_id_list = sequence.get('organisation_id_list', [])
+    self.assertNotEquals(organisation_id_list, [])
+    for organisation_id in organisation_id_list:
+      organisation_module = self.portal.organisation_module
+      organisation = organisation_module[organisation_id]
+      self.assertTrue(organisation.getTitle().startswith('organisation'))
+      for j in range(self.email_amount):
+        email = organisation['email%d' % (j+1)]
+        self.assertTrue(email.getTitle().startswith('my email'))
+
+  def test_UpgradeBrokenObject(self):
+    """
+      Test a case that there is an broken object and upgrade the path.
+
+      [Test summary]
+      1. create organisation_module/1
+      2. set organisation_module/1 as a broken object (in fact it's a mock)
+      3. upgrade organisation_module/1 by the PathTemplateItem
+    """
+    self.portal.portal_activities.manage_enableActivityTracking()
+    self.organisation_amount = 2
+    self.email_amount = 2
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateOrganisation \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddOrganisationToBusinessTemplate \
+                       Tic \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       Tic \
+                       RemoveOrganisation \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckOrganisationRestored\
+                       ModifyOrganisation \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddOrganisationToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RevertOrganisation \
+                       Tic \
+                       CheckOrganisationRestored \
+                       RewriteWithBrokenOrganisation \
+                       Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckOrganisationModified \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
