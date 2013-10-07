@@ -932,7 +932,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     keys.sort()
     return keys
 
-  def unindexBrokenObject(self, new_obj, item_path):
+  def unindexBrokenObject(self, item_path):
     """
       Unindex broken objects.
 
@@ -945,7 +945,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       in the file system, thus several objects tend to be broken.
 
       Keyword arguments:
-      new_obj -- the object in the BusinessTemplate
       item_path -- the path specified by the ObjectTemplateItem
     """
     def flushActivity(obj, invoke=0, **kw):
@@ -986,18 +985,16 @@ class ObjectTemplateItem(BaseTemplateItem):
                        serialization_tag=root_document_path
                        ).unindexObject(uid=uid)
 
-    # check isIndexable with new one, because the old one is broken
-    if new_obj.isIndexable():
-      portal = self.getPortalObject()
-      try:
-        catalog = portal.portal_catalog
-      except AttributeError:
-        pass
-      else:
-        # given item_path is a relative_url in reality
-        root_path = "/".join(item_path.split('/')[:2])
-        root_document_path = '/%s/%s' % (portal.getId(), root_path)
-        recursiveUnindex(catalog, item_path, root_document_path)
+    portal = self.getPortalObject()
+    try:
+      catalog = portal.portal_catalog
+    except AttributeError:
+      pass
+    else:
+      # given item_path is a relative_url in reality
+      root_path = "/".join(item_path.split('/')[:2])
+      root_document_path = '/%s/%s' % (portal.getId(), root_path)
+      recursiveUnindex(catalog, item_path, root_document_path)
 
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
@@ -1100,7 +1097,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             # unindex here when it is a broken object
             if isinstance(old_obj, Broken):
               new_obj = self._objects[path]
-              self.unindexBrokenObject(new_obj, path)
+              # check isIndexable with new one, because the old one is broken
+              if new_obj.isIndexable():
+                self.unindexBrokenObject(path)
 
           # install object
           obj = self._objects[path]
