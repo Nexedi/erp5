@@ -798,10 +798,12 @@ class ActivityTool (Folder, UniqueObject):
           url += urllib.quote('Cancel and invoke links visible')
           RESPONSE.redirect(url)
 
+    security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
         Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
-
+    
+    security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
         self.subscribe()
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)

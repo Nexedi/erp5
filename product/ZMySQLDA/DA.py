@@ -99,6 +99,7 @@ from App.ImageFile import ImageFile
 from DateTime import DateTime
 from . import DABase
 from .db import DB, DeferredDB
+from AccessControl import ClassSecurityInfo
 
 SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
@@ -132,6 +133,7 @@ class Connection(DABase.Connection):
     id='%s_database_connection' % database_type
     meta_type=title='Z %s Database Connection' % database_type
     icon='misc_/Z%sDA/conn' % database_type
+    security = ClassSecurityInfo()
 
     manage_properties=HTMLFile('connectionEdit', globals())
 
@@ -139,6 +141,7 @@ class Connection(DABase.Connection):
 
     def factory(self): return DB
 
+    security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
         database_connection_pool.get(self._p_oid, {}).pop(self._p_jar, None)
 

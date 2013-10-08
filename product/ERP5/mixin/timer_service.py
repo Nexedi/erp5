@@ -68,12 +68,12 @@ class TimerServiceMixin(object):
       return "Usubscribed from Timer Service"
     return "TimerService not available"
 
-  security.declareProtected(Permissions.ManageProperties, 'manage_beforeDelete')
+  security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, *args, **kw):
     self.unsubscribe()
     super(TimerServiceMixin, self).manage_beforeDelete(*args, **kw)
 
-  security.declareProtected(Permissions.ManageProperties, 'manage_afterAdd')
+  security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, *args, **kw):
     self.unsubscribe()
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)

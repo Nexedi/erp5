@@ -55,6 +55,7 @@ class Bug(Ticket):
                       , PropertySheet.Bug
                       )
 
+    security.declarePrivate('manage_afterClone')
     def manage_afterClone(self, item):
       Ticket.manage_afterClone(self, item)
       # delete existing bug lines

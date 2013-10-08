@@ -66,6 +66,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
       #result.extend(self.portal_catalog())
       return result
 
+    security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
       """
          Reset Accessors

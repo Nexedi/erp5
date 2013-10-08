@@ -474,6 +474,7 @@ class RuleMixin(Predicate):
 
 
 class SimulableMixin(Base):
+  security = ClassSecurityInfo()
 
   def updateSimulation(self, **kw):
     """Create/update related simulation trees by activity
@@ -600,6 +601,7 @@ class SimulableMixin(Base):
         return applied_rule
       raise SimulationError("No such rule as %r is found" % rule_reference)
 
+  security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
     """Delete related Applied Rule"""
     for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):

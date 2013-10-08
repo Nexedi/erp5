@@ -64,7 +64,8 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Amount
                     )
-
+  
+  security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
     """
     The right of deleting must be define by workflows

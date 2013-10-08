@@ -234,6 +234,7 @@ class CopyContainer:
               return self.manage_main(self, REQUEST, update_menu=1)
 
   # Copy and paste support
+  security.declarePrivate('manage_afterClone')
   def manage_afterClone(self, item):
     """
         Add self to the workflow.
@@ -316,6 +317,7 @@ class CopyContainer:
       script()
 
 
+  security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, item, container):
       """
           Add self to the catalog.
@@ -328,6 +330,7 @@ class CopyContainer:
           if getattr(self, 'isIndexable', 1):
             self.__recurse('manage_afterAdd', item, container)
 
+  security.declarePrivate('manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
       """
           Remove self from the catalog.

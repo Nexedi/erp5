@@ -554,7 +554,7 @@ class ZMIField(
                 getattr(self, method_name)(values[key])
 
 
-    security.declareProtected('Change Formulator Forms', 'manage_beforeDelete')
+    security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
         """Remove name from list if object is deleted.
         """
@@ -562,7 +562,7 @@ class ZMIField(
         if hasattr(item.aq_explicit, 'is_field'):
             container.field_removed(item.id)
 
-    security.declareProtected('Change Formulator Forms', 'manage_afterAdd')
+    security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
         """What happens when we add a field.
         """

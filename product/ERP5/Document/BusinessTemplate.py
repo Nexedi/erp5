@@ -4789,7 +4789,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       XMLObject.__init__(self, *args, **kw)
       self._clean()
 
-    security.declareProtected(Permissions.ManagePortal, 'manage_afterAdd')
+    security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
       """
         This is called when a new business template is added or imported.
