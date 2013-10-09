@@ -33,8 +33,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.Document import ConversionError,\
-                                            VALID_TEXT_FORMAT_LIST
+from Products.ERP5.Document.Document import ConversionError
 from subprocess import Popen, PIPE
 from zLOG import LOG, INFO, PROBLEM
 import errno
@@ -82,7 +81,7 @@ class PDFDocument(Image):
     * Watermark is applied at all pages starting watermark_start_page (this
       index is 0 based)
     """
-    from pyPdf import PdfFileWriter, PdfFileReader, pdf
+    from pyPdf import PdfFileWriter, PdfFileReader
     if not watermark_data:
       raise ValueError("watermark_data cannot not be empty")
     if not self.hasData():
@@ -177,8 +176,8 @@ class PDFDocument(Image):
     else:
       # Try to use OCR
       # As high dpi images are required, it may take some times to convert the
-      # pdf. 
-      # It may be required to use activities to fill the cache and at the end, 
+      # pdf.
+      # It may be required to use activities to fill the cache and at the end,
       # to calculate the final result
       text = ''
       content_information = self.getContentInformation()
@@ -320,7 +319,7 @@ class PDFDocument(Image):
             # Ignore values that cannot be pickled ( such as AAPL:Keywords )
             try:
               pickle.dumps(info_value)
-            except pickle.PicklingError, err:
+            except pickle.PicklingError:
               LOG("PDFDocument.getContentInformation", INFO,
                 "Ignoring non picklable document info on %s: %s (%r)" % (
                 self.getRelativeUrl(), info_key, info_value))
