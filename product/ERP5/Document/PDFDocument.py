@@ -81,33 +81,37 @@ class PDFDocument(Image):
     * Watermark is applied at all pages starting watermark_start_page (this
       index is 0 based)
     """
-    from pyPdf import PdfFileWriter, PdfFileReader
-    if not watermark_data:
-      raise ValueError("watermark_data cannot not be empty")
-    if not self.hasData():
-      raise ValueError("Cannot watermark an empty document")
-    self_reader = PdfFileReader(StringIO(self.getData()))
-    watermark_reader = PdfFileReader(StringIO(watermark_data))
-    watermark_page_count = watermark_reader.getNumPages()
+    try:
+      from PyPDF2 import PdfFileWriter, PdfFileReader
+    except ImportError:
+      pass
+    else:
+      if not watermark_data:
+        raise ValueError("watermark_data cannot not be empty")
+      if not self.hasData():
+        raise ValueError("Cannot watermark an empty document")
+      self_reader = PdfFileReader(StringIO(self.getData()))
+      watermark_reader = PdfFileReader(StringIO(watermark_data))
+      watermark_page_count = watermark_reader.getNumPages()
 
-    output = PdfFileWriter()
+      output = PdfFileWriter()
 
-    for page_number in range(self_reader.getNumPages()):
-      self_page = self_reader.getPage(page_number)
-      watermark_page = None
-      if page_number >= watermark_start_page:
-        if repeat_watermark:
-          watermark_page = watermark_reader.getPage(
-            (page_number - watermark_start_page) % watermark_page_count)
-        elif page_number < (watermark_page_count + watermark_start_page):
-          watermark_page = watermark_reader.getPage(page_number - watermark_start_page)
-        if watermark_page is not None:
-          self_page.mergePage(watermark_page)
-      output.addPage(self_page)
+      for page_number in range(self_reader.getNumPages()):
+        self_page = self_reader.getPage(page_number)
+        watermark_page = None
+        if page_number >= watermark_start_page:
+          if repeat_watermark:
+            watermark_page = watermark_reader.getPage(
+              (page_number - watermark_start_page) % watermark_page_count)
+          elif page_number < (watermark_page_count + watermark_start_page):
+            watermark_page = watermark_reader.getPage(page_number - watermark_start_page)
+          if watermark_page is not None:
+            self_page.mergePage(watermark_page)
+        output.addPage(self_page)
 
-    outputStream = StringIO()
-    output.write(outputStream)
-    return outputStream.getvalue()
+      outputStream = StringIO()
+      output.write(outputStream)
+      return outputStream.getvalue()
 
   # Conversion API
   def _convert(self, format, **kw):
@@ -301,12 +305,12 @@ class PDFDocument(Image):
         value = ':'.join(item_list[1:]).strip()
         result[key] = value
 
-      # Then we use pyPdf to get extra metadata
+      # Then we use PyPDF2 to get extra metadata
       try:
-        from pyPdf import PdfFileReader
-        from pyPdf.utils import PdfReadError
+        from PyPDF2 import PdfFileReader
+        from PyPDF2.utils import PdfReadError
       except ImportError:
-        # if pyPdf not found, pass
+        # if PyPDF2 not found, pass
         pass
       else:
         try:
@@ -327,7 +331,7 @@ class PDFDocument(Image):
               result.setdefault(info_key, info_value)
         except PdfReadError:
           LOG("PDFDocument.getContentInformation", PROBLEM,
-            "pyPdf is Unable to read PDF, probably corrupted PDF here : %s" % \
+            "PyPDF2 is Unable to read PDF, probably corrupted PDF here : %s" % \
             (self.getRelativeUrl(),))
     finally:
       tmp.close()
