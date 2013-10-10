@@ -321,8 +321,7 @@ class ConfiguratorTool(BaseTool):
         business_configuration=business_configuration)
     return response
 
-  security.declarePublic(Permissions.AccessContentsInformation,
-                         'getInstallationStatusReport')
+  security.declarePublic('getInstallationStatusReport')
   def getInstallationStatusReport(self,
                           active_process_id=None, REQUEST=None):
     """ Query local ERP5 instance for installation status.

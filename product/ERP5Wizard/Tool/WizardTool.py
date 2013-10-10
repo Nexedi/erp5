@@ -808,8 +808,7 @@ class WizardTool(BaseTool):
       REQUEST.set('portal_status_message', html)
       return self.view(REQUEST=REQUEST)
 
-  security.declarePublic(Permissions.AccessContentsInformation,
-                         'getInstallationStatusReportFromClient')
+  security.declarePublic('getInstallationStatusReportFromClient')
   def getInstallationStatusReportFromClient(self,
                           active_process_id=None, REQUEST=None):
     """ Query local ERP5 instance for installation status.
@@ -836,8 +835,7 @@ class WizardTool(BaseTool):
         'text/html; charset=utf-8')
     return html
 
-  security.declarePublic(Permissions.AccessContentsInformation,
-      'getInstallationStatusReportFromServer')
+  security.declarePublic('getInstallationStatusReportFromServer')
   def getInstallationStatusReportFromServer(self, active_process_id=None,
       REQUEST=None):
     """ Query remote server (usually only once for some installation status report """
@@ -956,8 +954,7 @@ class WizardTool(BaseTool):
     if portal_preferences.getActivePreference() is not None:
       portal_preferences.setPreference(preference_id, value)
 
-  security.declarePublic(Permissions.AccessContentsInformation,
-                         'isSingleSignOnEnabled')  
+  security.declarePublic('isSingleSignOnEnabled')
   def isSingleSignOnEnabled(self):
     """
       Check that a ERP5 Remote User manager is 
