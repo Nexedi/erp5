@@ -602,7 +602,7 @@ class ERP5TypeInformation(XMLObject,
       __traceback_info__ = self.getId(), target
       return ob.restrictedTraverse(target)
 
-    security.declarePrivate('getCachedActionList')
+    security.declarePrivate('getCacheableActionList')
     def getCacheableActionList(self):
       """Return a cacheable list of enabled actions"""
       return [action.getCacheableAction()
