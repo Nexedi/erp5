@@ -1341,6 +1341,22 @@ class TestDocument(TestDocumentMixin):
     self.commit()
     self.tic()
 
+  def test_upload_bad_pdf_file(self):
+    """ Test that pypdf2 handle wrong formatted PDF """
+    path = os.path.join(os.path.dirname(__file__), 'test_document',
+      'FEUILLE BLANCHE.pdf')
+    file_upload = FileUpload(path, 'FEUILLE BLANCHE.pdf')
+    pdf = self.portal.document_module.newContent(
+      portal_type='PDF',
+      file=file_upload,
+      title='Bad PDF')
+    self.tic()
+    pdf.share()
+    self.tic()
+    self.assertEquals(pdf.getValidationState(), "shared")
+    result = pdf.getContentInformation()
+    self.assertNotEquals(result, None)
+
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
