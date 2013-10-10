@@ -1593,21 +1593,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     key = ('default_reindex_parameter', )
     return tv.get(key)
 
-  security.declareProtected(Permissions.ManagePortal, 'getERP5SiteGlobalId')
-  def getERP5SiteGlobalId(self):
-    """Returns site global ID without any fallback"""
-    return getattr(self, 'erp5_site_global_id', None)
-
-  security.declareProtected(Permissions.ManagePortal, 'setERP5SiteGlobalId')
-  def setERP5SiteGlobalId(self, global_id):
-    """Sets site global ID, only in case if not set yet
-    
-    Such id should be very big and random, for example uuid version 4, as
-    defined in RFC 4122.
-    """
-    if self.getERP5SiteGlobalId() in [None, '']:
-      self.erp5_site_global_id = global_id
-
   security.declareProtected(Permissions.ManagePortal,
                             'migrateToPortalTypeClass')
   def migrateToPortalTypeClass(self):

@@ -255,40 +255,6 @@ class TypesTool(TypeProvider):
     from Products.ERP5Type import interfaces
     return [name for name, cls in inspect.getmembers(interfaces, inspect.isclass)]
 
-  security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
-  def listDefaultTypeInformation(self):
-      # FIXME: This method is only used by manage_addTypeInformation below, and
-      # should be removed when that method starts raising NotImplementedError.
-      #
-      # Scans for factory_type_information attributes
-      # of all products and factory dispatchers within products.
-      import Products
-      res = []
-      products = self.aq_acquire('_getProducts')()
-      for product in products.objectValues():
-          product_id = product.getId()
-
-          if hasattr(aq_base(product), 'factory_type_information'):
-              ftis = product.factory_type_information
-          else:
-              package = getattr(Products, product_id, None)
-              dispatcher = getattr(package, '__FactoryDispatcher__', None)
-              ftis = getattr(dispatcher, 'factory_type_information', None)
-
-          if ftis is not None:
-              if callable(ftis):
-                  ftis = ftis()
-
-              for fti in ftis:
-                  mt = fti.get('meta_type', None)
-                  id = fti.get('id', '')
-
-                  if mt:
-                      p_id = '%s: %s (%s)' % (product_id, id, mt)
-                      res.append( (p_id, fti) )
-
-      return res
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetDynamicDocumentsOnceAtTransactionBoundary')
   def resetDynamicDocumentsOnceAtTransactionBoundary(self):
@@ -319,60 +285,6 @@ class TypesTool(TypeProvider):
     resetDynamicDocumentsOnceAtTransactionBoundary can't be used instead.
     """
     synchronizeDynamicModules(self, force=True)
-
-  security.declareProtected(Permissions.AddPortalContent,
-                            'manage_addTypeInformation')
-  def manage_addTypeInformation(self, add_meta_type, id=None,
-                                typeinfo_name=None, RESPONSE=None):
-    # FIXME: This method is deprecated and should be reimplemented as a blocker
-    # i.e. a method that always raises a NotImplementedError
-    """
-    Create a TypeInformation in self.
-
-    This method is mainly a copy/paste of CMF Types Tool
-    which means that the entire file is ZPLed for now.
-    """
-    if add_meta_type != 'ERP5 Type Information' or RESPONSE is not None:
-      raise ValueError
-
-    fti = None
-    if typeinfo_name:
-      info = self.listDefaultTypeInformation()
-      # Nasty workaround to stay backwards-compatible
-      # This workaround will disappear in CMF 1.7
-      if typeinfo_name.endswith(')'):
-        # This is a new-style name. Proceed normally.
-        for name, ft in info:
-          if name == typeinfo_name:
-            fti = ft
-            break
-      else:
-        # Attempt to work around the old way
-        # This attempt harbors the problem that the first match on
-        # meta_type will be used. There could potentially be more
-        # than one TypeInformation sharing the same meta_type.
-        warnings.warn('Please switch to the new format for typeinfo names '
-                      '\"product_id: type_id (meta_type)\", the old '
-                      'spelling will disappear in CMF 1.7', DeprecationWarning,
-                      stacklevel=2)
-        ti_prod, ti_mt = [x.strip() for x in typeinfo_name.split(':')]
-        for name, ft in info:
-          if name.startswith(ti_prod) and name.endswith('(%s)' % ti_mt):
-            fti = ft
-            break
-      if fti is None:
-        raise ValueError('%s not found.' % typeinfo_name)
-      if not id:
-        id = fti.get('id')
-    if not id:
-      raise ValueError('An id is required.')
-    type_info = self.newContent(id, 'Base Type')
-    if fti:
-      if 'actions' in fti:
-        warnings.warn('manage_addTypeInformation does not create default'
-                      ' actions automatically anymore.')
-      type_info.__dict__.update((k, v) for k, v in fti.iteritems()
-        if k not in ('id', 'actions'))
 
   def _finalizeMigration(self):
     """Compatibility code to finalize migration from CMF Types Tool"""

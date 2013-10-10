@@ -167,18 +167,6 @@ def add_and_edit(self, id, REQUEST):
         u = "%s/%s" % (u, quote(id))
     REQUEST.RESPONSE.redirect(u+'/manage_main')
 
-def manage_add_report(self, id, title="", unicode_mode=0, REQUEST=None):
-    """Add form to folder.
-    id     -- the id of the new form to add
-    title  -- the title of the form to add
-    Result -- empty string
-    """
-    # add actual object
-    id = self._setObject(id, ZMIForm(id, title, unicode_mode))
-    # respond to the add_and_edit button if necessary
-    add_and_edit(self, id, REQUEST)
-    return ''
-
 class ReportSection:
   """ A section in an ERP5Report.
 
