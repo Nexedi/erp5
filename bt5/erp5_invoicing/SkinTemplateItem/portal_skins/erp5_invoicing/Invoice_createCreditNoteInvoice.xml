@@ -86,7 +86,7 @@ reverse_invoice = context.getParentValue().newContent(\n
 )\n
 # Separate edit to have stable outcome WRT category_list\n
 reverse_invoice.edit(\n
-  causality_value_list=context.getCausalityValueList() + [context],\n
+  causality_value=context,\n
   specialise_list=context.getSpecialiseList(),\n
   price_currency_list=context.getPriceCurrencyList(),\n
   resource_list=context.getResourceList(),\n
