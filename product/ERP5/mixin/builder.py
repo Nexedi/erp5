@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
@@ -816,3 +817,4 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   _deliveryLineGroupProcessing = _processDeliveryLineGroup
   _deliveryCellGroupProcessing = _processDeliveryCellGroup
 
+InitializeClass(BuilderMixin)

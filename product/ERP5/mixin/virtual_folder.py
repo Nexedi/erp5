@@ -31,6 +31,7 @@
 _marker=[]
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
@@ -89,3 +90,5 @@ class VirtualFolderMixin:
       if default is _marker:
         raise
       return default
+
+InitializeClass(VirtualFolderMixin)

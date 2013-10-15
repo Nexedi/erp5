@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -130,3 +131,5 @@ class PropertyRecordableMixin:
 
   def _getRecordedPropertyDict(self, *args):
     return getattr(aq_base(self), '_recorded_property_dict', *args)
+
+InitializeClass(PropertyRecordableMixin)

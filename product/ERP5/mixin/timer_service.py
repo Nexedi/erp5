@@ -28,6 +28,7 @@
 
 import warnings
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.CMFActivity.ActivityTool import ActivityTool
 from Products.ERP5Type import Permissions
 try:
@@ -84,3 +85,5 @@ class TimerServiceMixin(object):
   getServerAddress = ActivityTool.getServerAddress.im_func
 
   _isValidNodeName = ActivityTool._isValidNodeName.im_func
+
+InitializeClass(TimerServiceMixin)

@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -80,3 +81,5 @@ class ConfigurableMixin:
     if getattr(aq_base(self), '_configuration_property_dict', None) is None:
       self._configuration_property_dict = PersistentMapping()
     return self._configuration_property_dict
+
+InitializeClass(ConfigurableMixin)

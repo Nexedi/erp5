@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import normaliseUrl
 
@@ -138,3 +139,5 @@ class UrlMixin:
     """
     if self.hasUrlString():
       return normaliseUrl(self.asURL(), base_url=base_url)
+
+InitializeClass(UrlMixin)

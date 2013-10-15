@@ -28,6 +28,7 @@
 ##############################################################################
 from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from cStringIO import StringIO
@@ -144,3 +145,5 @@ class DocumentMixin:
     By default it doens't
     """
     return False
+
+InitializeClass(DocumentMixin)

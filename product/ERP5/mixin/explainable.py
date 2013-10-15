@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 
 class ExplainableMixin:
@@ -143,3 +144,5 @@ class ExplainableMixin:
     """Returns the UID of the root explanation
     """
     return self.getRootExplanationValue().getUid()
+
+InitializeClass(ExplainableMixin)

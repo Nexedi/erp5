@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from warnings import warn
 
@@ -67,3 +68,5 @@ class DocumentProxyMixin:
     if proxied_document is None:
       raise DocumentProxyError("Unable to find a proxied document")
     return proxied_document
+
+InitializeClass(DocumentProxyMixin)

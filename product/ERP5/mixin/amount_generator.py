@@ -30,6 +30,7 @@ from collections import defaultdict, deque
 import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base, Implicit
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5Type import Permissions, interfaces
@@ -541,3 +542,5 @@ class AmountGeneratorMixin:
                   % (x.getResourceTitle(), x.getQuantity(), x.getPrice())
                   for x in result_list))
     return result_list
+
+InitializeClass(AmountGeneratorMixin)

@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type.Message import Message
@@ -212,3 +213,5 @@ class EquivalenceTesterMixin:
     tested_property = self.getTestedProperty()
     return {tested_property: self._getTestedPropertyValue(prevision_movement,
                                                           tested_property)}
+
+InitializeClass(EquivalenceTesterMixin)

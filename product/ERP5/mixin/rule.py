@@ -29,6 +29,7 @@
 import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Base import Base
@@ -607,3 +608,5 @@ class SimulableMixin(Base):
     for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
       o.getParentValue().deleteContent(o.getId())
     super(SimulableMixin, self).manage_beforeDelete(item, container)
+
+InitializeClass(RuleMixin)

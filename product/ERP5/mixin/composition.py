@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
@@ -256,3 +257,5 @@ class CompositionMixin:
     return specialise_list
 
 del asComposedDocument # to be unhidden (and renamed ?) if needed
+
+InitializeClass(CompositionMixin)

@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from warnings import warn
 
@@ -69,3 +70,5 @@ class TextConvertableMixin:
     warn("asTextContent() function is deprecated. Use asText() instead.", \
           DeprecationWarning, stacklevel=2)
     return self.asText(**kw)
+
+InitializeClass(TextConvertableMixin)

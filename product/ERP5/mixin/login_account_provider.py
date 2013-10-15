@@ -30,6 +30,7 @@
 from Products.ERP5Type import Permissions
 from AccessControl.AuthEncoding import pw_validate
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 
 class LoginAccountProviderMixin:
   """
@@ -113,3 +114,5 @@ class LoginAccountProviderMixin:
       if pw_validate(encoded_password, password):
         return True
     return False
+
+InitializeClass(LoginAccountProviderMixin)

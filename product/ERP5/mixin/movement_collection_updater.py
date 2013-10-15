@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.MovementCollectionDiff import (
   MovementCollectionDiff, _getPropertyAndCategoryList)
@@ -187,3 +188,5 @@ class MovementCollectionUpdaterMixin:
       # Force update of local indexes on linked objects
       # (important for 'delivery').
       movement._setCategoryList(categories)
+
+InitializeClass(MovementCollectionUpdaterMixin)

@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import normaliseUrl
 from Products.ERP5Type.DateUtils import convertDateToHour,\
@@ -163,3 +164,5 @@ class CrawlableMixin:
       # if domain is empty (relative link) or domain is same, then OK
       url_list.append(url)
     return url_list
+
+InitializeClass(CrawlableMixin)

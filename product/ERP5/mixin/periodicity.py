@@ -29,6 +29,7 @@
 
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
 
@@ -258,3 +259,5 @@ class PeriodicityMixin:
         if day in day_list:
           new_list += [day]
     return new_list
+
+InitializeClass(PeriodicityMixin)

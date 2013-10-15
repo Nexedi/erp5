@@ -28,6 +28,7 @@
 ##############################################################################
 from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from cStringIO import StringIO
@@ -98,3 +99,5 @@ class BaseConvertableFileMixin:
       file = StringIO(data)
       data, size = self._read_data(file)
     self._baseSetBaseData(data)
+
+InitializeClass(BaseConvertableFileMixin)

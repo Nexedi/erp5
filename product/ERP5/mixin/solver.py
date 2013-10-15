@@ -29,6 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.ERP5Type.XMLObject import XMLObject
@@ -116,3 +117,5 @@ class ConfigurablePropertySolverMixin(SolverMixin,
       portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
       tested_property_list = portal_type.getTestedPropertyList()
     return tested_property_list
+
+InitializeClass(SolverMixin)

@@ -33,8 +33,8 @@ import string
 
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from OFS.Image import Pdata, Image as OFSImage
 from DateTime import DateTime
@@ -293,3 +293,5 @@ class CachedConvertableMixin:
       into the specified target format.
     """
     return format in self.getTargetFormatList()
+
+InitializeClass(CachedConvertableMixin)

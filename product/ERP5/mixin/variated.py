@@ -29,6 +29,7 @@
 
 from warnings import warn
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
 import zope.interface
@@ -388,3 +389,5 @@ class VariatedMixin:
     category_list = list(self.getVariationCategoryList())
     category_list.sort()
     return '\n'.join(category_list)
+
+InitializeClass(VariatedMixin)
