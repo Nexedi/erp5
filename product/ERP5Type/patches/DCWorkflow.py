@@ -22,7 +22,10 @@ from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
+from Products.DCWorkflow.permissions import ManagePortal
 from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import  _getAuthenticatedUser
@@ -805,3 +808,10 @@ if True:
         return 1
 
 Guard.check = Guard_check
+
+# Add class security in DCWorkflow.Variables.Variables.
+from Products.DCWorkflow.Variables import Variables
+security = ClassSecurityInfo()
+security.declareObjectProtected(ManagePortal)
+Variables.security = security
+InitializeClass(Variables)
