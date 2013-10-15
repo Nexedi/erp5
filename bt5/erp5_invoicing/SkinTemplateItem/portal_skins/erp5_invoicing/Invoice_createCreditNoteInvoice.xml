@@ -54,6 +54,27 @@
 This script is supposed to be the common denominator for invoice reversing operations.\n
 Instead of extending it, call it from project-specific script and edit returned document (or its lines).\n
 """\n
+def recursiveCopyLine(to_document, from_document):\n
+  newContent = to_document.newContent\n
+  for line in from_document.objectValues(portal_type=\'Invoice Line\'):\n
+    reverse_line = newContent(\n
+      description=line.getDescription(),\n
+      int_index=line.getIntIndex(),\n
+      portal_type=line.getPortalType(),\n
+      price=line.getPrice(),\n
+      quantity=-line.getQuantity(), # Notice the "-" !\n
+      reference=line.getReference(),\n
+      category_list=line.getCategoryList(),\n
+    )\n
+    recursiveCopyLine(reverse_line, line)\n
+    newCell = reverse_line.newContent\n
+    for cell in line.objectValues(portal_type=\'Invoice Cell\'):\n
+      raise NotImplementedError\n
+      newCell(\n
+        # TODO: what properties ?\n
+        portal_type=cell.getPortalType(),\n
+        category_list=cell.getCategoryList(),\n
+      )\n
 \n
 portal = context.getPortalObject()\n
 reverse_invoice = context.getParentValue().newContent(\n
@@ -70,18 +91,7 @@ reverse_invoice.edit(\n
   price_currency_list=context.getPriceCurrencyList(),\n
   resource_list=context.getResourceList(),\n
 )\n
-newContent = reverse_invoice.newContent\n
-for line in context.objectValues():\n
-  if not line.isGeneratedBySimulation():\n
-    newContent(\n
-      description=line.getDescription(),\n
-      int_index=line.getIntIndex(),\n
-      portal_type=line.getPortalType(),\n
-      price=line.getPrice(),\n
-      quantity=-line.getQuantity(), # Notice the "-" !\n
-      reference=line.getReference(),\n
-      category_list=line.getCategoryList(),\n
-    )\n
+recursiveCopyLine(reverse_invoice, context)\n
 return reverse_invoice\n
 </string> </value>
         </item>
