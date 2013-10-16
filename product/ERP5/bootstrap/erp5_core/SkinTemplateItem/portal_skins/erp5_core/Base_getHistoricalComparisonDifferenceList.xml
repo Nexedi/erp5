@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
 from ZODB.POSException import ConflictError\n
+from zExceptions import Unauthorized\n
 Base_translateString = context.Base_translateString\n
 \n
 serial = context.REQUEST[\'serial\']\n
@@ -59,9 +60,9 @@ next_serial = context.REQUEST[\'next_serial\']\n
 \n
 try:\n
   context.HistoricalRevisions[serial]\n
-except ConflictError:\n
+except (ConflictError, Unauthorized):\n
   raise\n
-except: # POSKeyError\n
+except Exception: # POSKeyError\n
   return [Object(property_name=Base_translateString(\'Historical revisions are\'\n
                       \' not available, maybe the database has been packed\'))]\n
 \n
