@@ -1,8 +1,8 @@
 from SearchTextParser import parse, isAdvancedSearchText
 
 def dequote(value):
-  assert isinstance(value, basestring), value
-  if len(value) >= 2 and value[0] == value[-1] == '"' and value[-2] != '\\':
+  if isinstance(value, basestring) and len(value) >= 2 and \
+     value[0] == value[-1] == '"' and value[-2] != '\\':
     escaped = False
     value_list = []
     append = value_list.append

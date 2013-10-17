@@ -264,7 +264,9 @@ class AdvancedSearchTextParser(lexer):
 
   def p_value(self, p):
     '''value : OPERATOR string
-             | string'''
+             | OPERATOR NULL
+             | string
+             | NULL'''
     if len(p) == 2:
       p[0] = ValueNode(p[1])
     else:
