@@ -116,10 +116,7 @@ if __name__ == '__main__':
       return (self.column, self.value, self.comparison_operator)
 
     def __repr__(self):
-      value = self.value
-      if len(value) == 1:
-        value = value[0]
-      return 'Query(%r, %r, %r)' % (self.column, value, self.comparison_operator)
+      return 'Query(%r, %r, %r)' % (self.column, self.value, self.comparison_operator)
 
     def __eq__(self, other):
       if isinstance(other, Query):
