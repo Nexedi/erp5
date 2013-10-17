@@ -119,7 +119,7 @@ class SyncMLSubscription(XMLObject):
       # We index everything at once
       limit=None
       packet_size=None
-      search_kw=None
+      search_kw={}
     try:
       r = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
                                                             # the result is sorted
@@ -340,7 +340,7 @@ class SyncMLSubscription(XMLObject):
                             max_gid=r[i+packet_size-1],
                             message_id=message_id_list.pop(),
                             activate_kw=activate_kw)
-          final_min = i +  packet_size - 1
+          final_min = i + packet_size
         else:
           final_min = 0
         # Final activity must be tell there is no upper limit
