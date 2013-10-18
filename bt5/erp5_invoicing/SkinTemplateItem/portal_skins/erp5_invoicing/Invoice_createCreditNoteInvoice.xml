@@ -50,69 +50,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-from ZODB.POSException import ConflictError\n
-from zExceptions import Unauthorized\n
-Base_translateString = context.Base_translateString\n
+            <value> <string>"""\n
+This script is supposed to be the common denominator for invoice reversing operations.\n
+Instead of extending it, call it from project-specific script and edit returned document (or its lines).\n
+"""\n
+def recursiveCopyLine(to_document, from_document):\n
+  newContent = to_document.newContent\n
+  for line in from_document.objectValues(portal_type=\'Invoice Line\'):\n
+    reverse_line = newContent(\n
+      description=line.getDescription(),\n
+      int_index=line.getIntIndex(),\n
+      portal_type=line.getPortalType(),\n
+      price=line.getPrice(),\n
+      quantity=-line.getQuantity(), # Notice the "-" !\n
+      reference=line.getReference(),\n
+      category_list=line.getCategoryList(),\n
+    )\n
+    recursiveCopyLine(reverse_line, line)\n
+    newCell = reverse_line.newContent\n
+    for cell in line.objectValues(portal_type=\'Invoice Cell\'):\n
+      raise NotImplementedError\n
+      newCell(\n
+        # TODO: what properties ?\n
+        portal_type=cell.getPortalType(),\n
+        category_list=cell.getCategoryList(),\n
+      )\n
 \n
-serial = context.REQUEST[\'serial\']\n
-next_serial = context.REQUEST[\'next_serial\']\n
-\n
-try:\n
-  context.HistoricalRevisions[serial]\n
-except (ConflictError, Unauthorized):\n
-  raise\n
-except Exception: # POSKeyError\n
-  return [Object(property_name=Base_translateString(\'Historical revisions are\'\n
-                      \' not available, maybe the database has been packed\'))]\n
-\n
-if next_serial == \'0.0.0.0\':\n
-  new_getProperty = context.getProperty\n
-else:\n
-  new = context.HistoricalRevisions[next_serial]\n
-  new_getProperty = new.getProperty\n
-old = context.HistoricalRevisions[serial]\n
-result = []\n
-\n
-binary_data_explanation = Base_translateString("Binary data can\'t be displayed")\n
-\n
-for prop_dict in context.getPropertyMap():\n
-  prop = prop_dict[\'id\']\n
-  current_value=context.getProperty(prop)\n
-  old_value = old.getProperty(prop)\n
-  new_value = new_getProperty(prop)\n
-  if new_value != old_value:\n
-    # check if values are unicode convertible (binary are not)\n
-    if isinstance(new_value, (str, unicode)):\n
-      try:\n
-        unicode(str(new_value), \'utf-8\')\n
-      except UnicodeDecodeError:\n
-        new_value = binary_data_explanation\n
-    if isinstance(old_value, (str, unicode)):\n
-      try:\n
-        unicode(str(old_value), \'utf-8\')\n
-      except UnicodeDecodeError:\n
-        old_value = binary_data_explanation\n
-    if isinstance(current_value, (str, unicode)):\n
-      try:\n
-        unicode(str(current_value), \'utf-8\')\n
-      except UnicodeDecodeError:\n
-        current_value = binary_data_explanation\n
-\n
-    result.append( Object( property_name=prop,\n
-                           new_value=new_value,\n
-                           old_value=old_value,\n
-                           current_value=current_value))\n
-return result\n
+portal = context.getPortalObject()\n
+reverse_invoice = context.getParentValue().newContent(\n
+  portal_type=context.getPortalType(),\n
+  created_by_builder=1, # tell init script to not create lines\n
+  # Copy over all Arrow-ish relations\n
+  # XXX: it would be cleaner to query property sheet definition and check it applies to context\n
+  category_list=[x for x in context.getCategoryList() if x.startswith(\'source\') or x.startswith(\'destination\')],\n
+)\n
+# Separate edit to have stable outcome WRT category_list\n
+reverse_invoice.edit(\n
+  causality_value=context,\n
+  specialise_list=context.getSpecialiseList(),\n
+  price_currency_list=context.getPriceCurrencyList(),\n
+  resource_list=context.getResourceList(),\n
+)\n
+recursiveCopyLine(reverse_invoice, context)\n
+return reverse_invoice\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getHistoricalComparisonDifferenceList</string> </value>
+            <value> <string>Invoice_createCreditNoteInvoice</string> </value>
         </item>
       </dictionary>
     </pickle>

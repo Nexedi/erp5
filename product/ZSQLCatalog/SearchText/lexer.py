@@ -27,7 +27,6 @@
 ##############################################################################
 
 from ply import lex, yacc
-import os
 import sys
 from cStringIO import StringIO
 
@@ -36,8 +35,6 @@ try:
 except ImportError:
   def LOG(channel, level, message):
     print >>sys.stderr, message
-
-module_path = os.path.dirname(os.path.abspath(__file__))
 
 class ParserOrLexerError(Exception):
   pass
@@ -56,8 +53,7 @@ class lexer(object):
     self.lexer = lex.lex(object=self, **kw)
     self.parser = yacc.yacc(module=self, debug=debug,
                             debugfile="%s.out" % (self.__class__.__name__, ),
-                            tabmodule="%s_parsetab" % (self.__class__.__name__, ),
-                            outputdir=module_path)
+                            write_tables=False)
     sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
     # Emit all logs with regular Zope logging
     for line in output.getvalue().split('\n'):

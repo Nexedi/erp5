@@ -227,7 +227,6 @@
       </span>\n
     </h3>\n
     <div class="menu">\n
-      <fieldset style="display:block;">\n
         <div class="field">\n
           <label i18n:translate="" i18n:domain="ui">Title</label>\n
           <div class="input">\n
@@ -294,8 +293,6 @@
             </button>\n
           </div>\n
         </div>\n
-      </fieldset>\n
-\n
     </div>\n
   </li>\n
 \n

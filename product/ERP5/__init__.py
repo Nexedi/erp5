@@ -102,8 +102,6 @@ def initialize( context ):
   
   # Allow some usefull classes and fonctions in TTW code
   ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
-  ModuleSecurityInfo('zExceptions').declarePublic('BadRequest', 'NotFound',
-                                                  'Redirect', 'Unauthorized')
   ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(
                                                    'WorkflowException')
   ModuleSecurityInfo('Products.ERP5.Document.Image').declarePublic(

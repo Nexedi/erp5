@@ -36,7 +36,7 @@ def mergePDFList(self, pdf_data_list, start_on_recto=False):
   merged pdf in recto/verso mode.
   """
   from StringIO import StringIO
-  from pyPdf import PdfFileWriter, PdfFileReader
+  from PyPDF2 import PdfFileWriter, PdfFileReader
   
   output = PdfFileWriter()
   

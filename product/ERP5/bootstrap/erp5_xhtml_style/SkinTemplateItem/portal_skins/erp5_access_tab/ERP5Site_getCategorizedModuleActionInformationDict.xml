@@ -192,8 +192,11 @@ def getModuleActionInformationDict(**kw):\n
 getModuleActionInformationDict = CachingMethod(getModuleActionInformationDict,\n
                                                id=\'ERP5Site_getModuleActionInformationDict\',\n
                                                cache_factory=\'erp5_ui_long\')\n
+\n
+# those parameters are only used for the caching key\n
 return getModuleActionInformationDict(\n
-         user = context.portal_membership.getAuthenticatedMember().getId(), \\\n
+         user = context.portal_membership.getAuthenticatedMember().getId(),\n
+         server_url = context.REQUEST.SERVER_URL,\n
          language = context.Localizer.get_selected_language())\n
 </string> </value>
         </item>
