@@ -8,7 +8,9 @@ delivery
 destination
 destination_account
 destination_administration
+destination_carrier_administration
 destination_decision
+destination_decision_administration
 destination_function
 destination_funding
 destination_payment
@@ -16,6 +18,7 @@ destination_payment_region
 destination_payment_request
 destination_project
 destination_section
+destination_section_administration
 destination_trade
 elementary_type
 local_role_group
@@ -30,7 +33,9 @@ size
 source
 source_account
 source_administration
+source_carrier_administration
 source_decision
+source_decision_administration
 source_function
 source_funding
 source_payment
@@ -38,5 +43,6 @@ source_payment_region
 source_payment_request
 source_project
 source_section
+source_section_administration
 source_trade
 specialise
