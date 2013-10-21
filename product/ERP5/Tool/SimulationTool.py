@@ -46,7 +46,7 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, NegatedQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
@@ -572,6 +572,10 @@ class SimulationTool(BaseTool):
         # catalog
         new_kw.pop('ignore_group_by', None)
         new_kw.pop('movement_list_mode', None)
+        
+        # if node have not been filtered, apply a simple filter here
+        if new_kw.pop('no_node_filter', False):
+          new_kw['node_query'] = NegatedQuery(Query(**{'%s.node_uid' % table: None}))
 
         sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
@@ -773,6 +777,14 @@ class SimulationTool(BaseTool):
 
       new_kw['related_key_dict'] = related_key_dict.copy()
       new_kw['related_key_dict_passthrough'] = kw
+      
+      # We'll apply a 'node_uid is not NULL' criterion if node is not filtered,
+      # to preserve compatibility with the time where movements without source
+      # or destination where not in stock table.
+      if not column_value_dict.get('node_uid') and\
+          not related_key_dict.get('node_category_uid') and\
+          not related_key_dict.get('node_category_strict_membership_uid'):
+        new_kw['no_node_filter'] = True
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
