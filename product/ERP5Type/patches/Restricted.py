@@ -189,6 +189,7 @@ ModuleSecurityInfo('os.path').declarePublic(
 # Alias modules - only applied to restricted python.
 MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
+  'calendar': 'Products.ERP5Type.Calendar',
 }
 for alias, real in MNAME_MAP.items():
   assert '.' not in alias, alias # TODO: support this
