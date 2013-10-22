@@ -110,6 +110,15 @@ class TestFloatField(ERP5TypeTestCase):
     self.field.values['input_style'] = '-1,234.5'
     self.field.values['precision'] = 0
     self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.25))
+    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.49))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.99))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.80))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.70))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.60))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.59))
+    self.assertEquals('-1,001', self.widget.format_value(self.field, -1000.51))
+    # this is not -1,001 (is this a specification?)
+    self.assertEquals('-1,000', self.widget.format_value(self.field, -1000.50))
 
   def test_format_percent_style(self):
     self.field.values['input_style'] = '-12.3%'
