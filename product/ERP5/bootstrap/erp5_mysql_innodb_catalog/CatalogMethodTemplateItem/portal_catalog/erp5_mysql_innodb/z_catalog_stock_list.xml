@@ -157,7 +157,7 @@ VALUES\n
   <dtml-sqlvar expr="row_item[0]" type="int">,\n
   <dtml-sqlvar expr="row_item[1]" type="int">,\n
   <dtml-sqlvar expr="row_item[2]" type="int" optional>,\n
-  <dtml-sqlvar expr="row_item[3]" type="int">,\n
+  <dtml-sqlvar expr="row_item[3]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[4]" type="int" optional>, \n
   <dtml-sqlvar expr="row_item[5]" type="int" optional>, \n
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,\n
