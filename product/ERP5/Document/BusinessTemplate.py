@@ -1489,18 +1489,19 @@ class PathTemplateItem(ObjectTemplateItem):
   def install(self, context, *args, **kw):
     super(PathTemplateItem, self).install(context, *args, **kw)
 
+    # Regenerate local roles for all paths in this business template
     p = context.getPortalObject()
     portal_type_role_list_len_dict = {}
     update_dict = defaultdict(list)
     for path in self._objects:
-      obj = p.unrestrictedTraverse(path)
+      obj = p.unrestrictedTraverse(path, None)
 
       try:
         portal_type = aq_base(obj).getPortalType()
       except Exception, e:
         LOG("BusinessTemplate", WARNING,
-            "Could not update Local Roles as Portal Type for '%s' is not "
-            "available (%s)" % (obj, e))
+            "Could not update Local Roles as Portal Type for '%s' (obj: %s)"
+            " is not available" % (path, obj), error=True)
 
         continue
 
