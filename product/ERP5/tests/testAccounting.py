@@ -1292,7 +1292,7 @@ class TestClosingPeriod(AccountingTestCase):
     # now check content of stock table
     q = self.portal.erp5_sql_connection.manage_test
     # 3 lines, one with quantity 3.3, 2 with quantity 0
-    self.assertEquals(1, q(
+    self.assertEquals(2, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
     self.assertAlmostEquals(3.3, q(
@@ -1308,10 +1308,10 @@ class TestClosingPeriod(AccountingTestCase):
       "'Balance Transaction Line'")[0][0])
     self.assertEquals(self.section.getUid(), q(
       "SELECT section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[1][0])
     self.assertEquals(None, q(
       "SELECT mirror_section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[1][0])
     self.assertEquals(pl.getUid(), q(
       "SELECT node_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
@@ -1428,7 +1428,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     # now check content of stock table
     q = self.portal.erp5_sql_connection.manage_test
-    self.assertEquals(1, q(
+    self.assertEquals(2, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
     self.assertAlmostEquals(3.3, q(
@@ -1444,10 +1444,10 @@ class TestClosingPeriod(AccountingTestCase):
       "'Balance Transaction Line'")[0][0])
     self.assertEquals(self.section.getUid(), q(
       "SELECT section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[1][0])
     self.assertEquals(None, q(
       "SELECT mirror_section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[1][0])
     self.assertEquals(pl.getUid(), q(
       "SELECT node_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
