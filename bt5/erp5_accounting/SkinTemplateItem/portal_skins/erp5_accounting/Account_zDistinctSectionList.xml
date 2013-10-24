@@ -154,7 +154,7 @@ ORDER BY\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX It's better to use getInventoryList group by mirror section</string> </value>
+            <value> <string>XXX It is better to use getInventoryList group by mirror section</string> </value>
         </item>
       </dictionary>
     </pickle>
