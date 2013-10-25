@@ -3283,7 +3283,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           for role_property_dict in type_roles_list:
             obj._importRole(role_property_dict)
         else:
-          raise AttributeError("Path '%r' not found while "
+          raise AttributeError("Path %r not found while "
                                "installing roles" % (path, ))
 
   def uninstall(self, context, **kw):
