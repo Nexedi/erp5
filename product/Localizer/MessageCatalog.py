@@ -46,6 +46,7 @@ from zope.i18n import interpolate
 from zope.i18n.interfaces import ITranslationDomain
 from zope.interface import implements
 from zLOG import LOG, INFO
+from zExceptions import Forbidden
 
 # Import from Localizer
 from interfaces import IMessageCatalog
@@ -737,6 +738,8 @@ class POFile(SimpleItem):
     security.declareProtected('Manage messages', 'PUT')
     def PUT(self, REQUEST, RESPONSE):
         """ """
+        if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+            raise Forbidden, 'REQUEST_METHOD should be PUT.'
         body = REQUEST['BODY']
         self.po_import(self.id, body)
         RESPONSE.setStatus(204)

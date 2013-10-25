@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from zExceptions import Forbidden
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
@@ -220,9 +221,10 @@ class Coordinate(Base):
       """
           Handle HTTP / WebDAV / FTP PUT requests.
       """
-      if not NoWL:
-        self.dav__init(REQUEST, RESPONSE)
-        self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+      self.dav__init(REQUEST, RESPONSE)
+      self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+      if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+        raise Forbidden, 'REQUEST_METHOD should be PUT.'
       body = REQUEST.get('BODY', '')
       try:
         self._writeFromPUT( body )

@@ -45,6 +45,7 @@ from ZODB.POSException import ConflictError
 from zExceptions import Redirect
 from Acquisition import aq_base
 from Products.PageTemplates.Expressions import SecureModuleImporter
+from zExceptions import Forbidden
 
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.Base import Base
@@ -772,6 +773,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         """Handle HTTP PUT requests."""
         self.dav__init(REQUEST, RESPONSE)
         self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+        if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+            raise Forbidden, 'REQUEST_METHOD should be PUT.'
         body=REQUEST.get('BODY', '')
         # Empty the form (XMLToForm is unable to empty things before reopening)
         for k in self.get_field_ids():

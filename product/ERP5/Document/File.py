@@ -201,10 +201,6 @@ class File(Document, CMFFile):
     else:
       return str(data)
 
-  security.declareProtected(Permissions.ModifyPortalContent,'PUT')
-  def PUT(self, REQUEST, RESPONSE):
-    CMFFile.PUT(self, REQUEST, RESPONSE)
-
   # DAV Support
   PUT = CMFFile.PUT
   security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
