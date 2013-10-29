@@ -3956,6 +3956,192 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           credit_price=0,
           debit_price=300,)
 
+  def createAgedBalanceDataSet(self):
+    """Create data set for aged balance:
+    2013/07/30: Purchase invoice 1 (500)
+    2013/07/30: Sale invoice 2 (300)
+    2013/09/09: Payment 1 (500)
+    2013/08/08: Payment 2 (300)
+    """
+    account_module = self.account_module
+    bank1 = self.section.newContent(portal_type='Bank Account', title='Bank1')
+    bank1.validate()
+
+    purchase1 = self._makeOne(
+              portal_type='Purchase Invoice Transaction',
+              title='Purchase invoice 1',
+              destination_reference='1',
+              source_reference='no',
+              reference='ref1',
+              simulation_state='delivered',
+              source_section_value=self.organisation_module.supplier,
+              start_date=DateTime(2013, 7, 30),
+              lines=(dict(destination_value=account_module.goods_purchase,
+                          destination_debit=500.0),
+                     dict(destination_value=account_module.payable,
+                          destination_credit=500.0)))
+    sale2 = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Sale invoice 2',
+              source_reference='2',
+              destination_reference='no',
+              reference='ref2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2013, 7, 30),
+              lines=(dict(source_value=account_module.goods_sales,
+                          source_credit=300.0),
+                     dict(source_value=account_module.receivable,
+                          source_debit=300.0),))
+    self.tic()
+    payment3 = self._makeOne(
+              portal_type='Payment Transaction',
+              title='Payment 1',
+              source_reference='3',
+              destination_reference='no',
+              simulation_state='delivered',
+              causality_value=purchase1,
+              payment_mode='payment_mode',
+              destination_section_value=self.organisation_module.supplier,
+              start_date=DateTime(2013, 9, 9),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=500.0),
+                     dict(source_value=account_module.bank,
+                          source_credit=500.0)))
+
+    payment4 = self._makeOne(
+              portal_type='Payment Transaction',
+              title='Payment 2',
+              source_reference='4',
+              destination_reference='4',
+              simulation_state='delivered',
+              causality_value=sale2,
+              payment_mode='payment_mode',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2013, 8, 8),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=300.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=300.0)))
+    self.tic()
+
+    # we should have all receivable and payable lines grouped.
+    for at in (purchase1, sale2, payment3, payment4):
+      for line in at.getMovementList():
+        if line.getSourceValue() in (account_module.receivable,
+                                     account_module.payable) or\
+      line.getDestinationValue() in (account_module.receivable,
+                                     account_module.payable):
+          self.failUnless(line.getGroupingReference())
+          self.failUnless(line.getGroupingDate())
+
+  def test_simple_aged_creditor_report_detailed(self):
+    self.createAgedBalanceDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2013, 8, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['detailed'] = True
+    request_form['account_type'] = 'account_type/asset/receivable'
+    request_form['period_list'] = (1, 2, 3)
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                    self.portal.accounting_module,
+                    'AccountingTransactionModule_viewAgedBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             date=DateTime(2013, 7, 30),
+                             mirror_section_title='Client 1',
+                             portal_type='Sale Invoice Transaction',
+                             explanation_title='Sale invoice 2',
+                             total_price=300,
+                             period_1=300)
+
+  def test_simple_aged_creditor_report_summary(self):
+    self.createAgedBalanceDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2013, 8, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['detailed'] = False
+    request_form['account_type'] = 'account_type/asset/receivable'
+    request_form['period_list'] = (1, 2, 3)
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                    self.portal.accounting_module,
+                    'AccountingTransactionModule_viewAgedBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             mirror_section_title='Client 1',
+                             total_price=300,
+                             period_1=300)
+
+  def test_simple_aged_debtor_report_detailed(self):
+    self.createAgedBalanceDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2013, 8, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['detailed'] = True
+    request_form['account_type'] = 'account_type/liability/payable'
+    request_form['period_list'] = (1, 2, 3)
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                    self.portal.accounting_module,
+                    'AccountingTransactionModule_viewAgedBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             date=DateTime(2013, 7, 30),
+                             mirror_section_title='Supplier',
+                             portal_type='Purchase Invoice Transaction',
+                             explanation_title='Purchase invoice 1',
+                             total_price=500,
+                             period_1=500)
+
+  def test_simple_aged_debtor_report_summary(self):
+    self.createAgedBalanceDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2013, 8, 1)
+    request_form['section_category_strict'] = False
+    request_form['detailed'] = False
+    request_form['section_category'] = 'group/demo_group'
+    request_form['account_type'] = 'account_type/liability/payable'
+    request_form['period_list'] = (1, 2, 3)
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+                    self.portal.accounting_module,
+                    'AccountingTransactionModule_viewAgedBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             mirror_section_title='Supplier',
+                             total_price=500,
+                             period_1=500)
+
+
 
 class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 

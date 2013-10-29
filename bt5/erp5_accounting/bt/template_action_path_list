@@ -20,6 +20,8 @@ Accounting Transaction Line | view
 Accounting Transaction Module | account_statement_export
 Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | accounting_line_export
+Accounting Transaction Module | aged_balance_export
+Accounting Transaction Module | aged_balance_report
 Accounting Transaction Module | balance_sheet_report
 Accounting Transaction Module | bank_accounts_report
 Accounting Transaction Module | create_related_payments
