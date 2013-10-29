@@ -16,12 +16,16 @@ Sale Order Milestone | requirement
 Sale Order | requirement
 Sale Packing List Line | predecessor
 Sale Packing List Line | requirement
+Task Line | journal
 Task Line | requirement
 Task Module | business_application
+Task Report Line | journal
 Task Report Line | requirement
 Task Report Module | business_application
 Task Report | aggregate
+Task Report | journal
 Task Report | predecessor
 Task Report | requirement
+Task | journal
 Task | predecessor
 Task | requirement

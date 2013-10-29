@@ -40,10 +40,12 @@
   <item>requirement</item>
  </portal_type>
  <portal_type id="Task">
+  <item>journal</item>
   <item>predecessor</item>
   <item>requirement</item>
  </portal_type>
  <portal_type id="Task Line">
+  <item>journal</item>
   <item>requirement</item>
  </portal_type>
  <portal_type id="Task Module">
@@ -51,10 +53,12 @@
  </portal_type>
  <portal_type id="Task Report">
   <item>aggregate</item>
+  <item>journal</item>
   <item>predecessor</item>
   <item>requirement</item>
  </portal_type>
  <portal_type id="Task Report Line">
+  <item>journal</item>
   <item>requirement</item>
  </portal_type>
  <portal_type id="Task Report Module">
