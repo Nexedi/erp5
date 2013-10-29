@@ -56,8 +56,7 @@
 def getSubLineList(obj):\n
   sub_list = []\n
   for x in obj.contentValues(portal_type=context.getPortalOrderMovementTypeList(),\n
-                             sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')],\n
-                             checked_permission=\'View\'):\n
+                             sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')]):\n
     if x.getPortalType() in obj.getPortalTaxMovementTypeList():\n
       continue\n
     sub_list.append(x)\n

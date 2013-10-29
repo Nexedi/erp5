@@ -67,7 +67,7 @@ class Part:
 
 
 
-def generateParts(context,text,sw,tags,trail,maxlines):
+def generateParts(_,text,sw,tags,trail,maxlines):
   par=Part(tags,trail)
   sw=sw.translate(tr).strip().lower().split()
   test=lambda w:w.translate(tr).strip().lower() in sw
@@ -122,7 +122,7 @@ if __name__=='__main__':
   tags=('<b>','</b>')
   trail=5
   maxlines=5
-  for p in cutFound(None,txt,sw,tags,trail,maxlines):
+  for p in getExcerptText(None,txt,sw,tags,trail,maxlines):
     print p
 
 

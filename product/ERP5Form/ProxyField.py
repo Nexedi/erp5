@@ -60,10 +60,6 @@ from thread import get_ident
 
 _USE_ORIGINAL_GET_VALUE_MARKER = []
 
-_field_value_cache = {}
-def purgeFieldValueCache():
-  _field_value_cache.clear()
-
 class WidgetDelegatedMethod(Method):
   """Method delegated to the proxied field's widget.
   """
@@ -740,14 +736,15 @@ class ProxyField(ZMIField):
                 field._p_oid,
                 id)
 
+    from Products.ERP5Form.Form import field_value_cache
     try:
-      value = _field_value_cache[cache_id]
+      value = field_value_cache[cache_id]
     except KeyError:
       # either returns non callable value (ex. "Title")
       # or a FieldValue instance of appropriate class
       value, cacheable = self.getFieldValue(field, id, **kw)
       if cacheable:
-        _field_value_cache[cache_id] = value
+        field_value_cache[cache_id] = value
 
     if value is _USE_ORIGINAL_GET_VALUE_MARKER:
       return proxy_field.get_value(id, **kw)

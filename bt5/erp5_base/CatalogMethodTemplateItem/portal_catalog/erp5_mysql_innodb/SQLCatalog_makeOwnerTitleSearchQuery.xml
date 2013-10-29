@@ -60,7 +60,7 @@ reference_list = [x.reference for x in\n
                                         select_list=[\'reference\'],\n
                                         portal_type="Person", title=value)]\n
 \n
-return SimpleQuery(owner=reference_list or -1)\n
+return SimpleQuery(owner=reference_list or value or -1)\n
 </string> </value>
         </item>
         <item>

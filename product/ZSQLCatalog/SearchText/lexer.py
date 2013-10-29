@@ -82,7 +82,9 @@ class lexer(object):
     'WORD',
     'OPERATOR',
     'LEFT_PARENTHESE',
-    'RIGHT_PARENTHESE')
+    'RIGHT_PARENTHESE',
+    'NULL',
+  )
 
   t_ignore = ' '
 
@@ -121,6 +123,11 @@ class lexer(object):
 
   def t_WORD(self, t):
     r'[^><= :\(\)"][^ :\(\)"]*'
+    return t
+
+  def t_NULL(self, t):
+    r'NULL'
+    t.value = None
     return t
 
   def parse(self, *args, **kw):

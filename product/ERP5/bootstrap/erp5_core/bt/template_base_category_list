@@ -8,6 +8,7 @@ delivery
 destination
 destination_account
 destination_administration
+destination_advice
 destination_carrier_administration
 destination_decision
 destination_decision_administration
@@ -33,6 +34,7 @@ size
 source
 source_account
 source_administration
+source_advice
 source_carrier_administration
 source_decision
 source_decision_administration

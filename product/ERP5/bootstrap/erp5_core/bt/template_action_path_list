@@ -88,6 +88,7 @@ Preference Type | role_view
 Preference Type | translation_view
 Preference Type | update_local_roles
 Preference Type | view
+Preference | change_password
 Preference | html_style_preferences
 Preference | view
 Preference | view_template

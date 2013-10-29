@@ -294,12 +294,7 @@ class SearchKey(object):
     if logical_operator is None:
       logical_operator = default_logical_operator
     operator_value_dict = {}
-    if None in search_value:
-      if comparison_operator not in (None, 'is'):
-        LOG('KeywordKey', 100,
-            'None value requires an "is" comparison operator. Fixed.')
-      operator_value_dict['is'] = search_value
-    elif comparison_operator is None:
+    if comparison_operator is None:
       if issubclass(reference_class, basestring):
         if get_operator_from_value:
           parsed = True

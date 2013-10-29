@@ -29,7 +29,6 @@
 
 import unittest
 import os
-import popen2
 import urllib
 
 from subprocess import Popen, PIPE
@@ -450,15 +449,14 @@ class W3Validator(object):
       # Zope 2.12 renders page templates as unicode
       page_source = page_source.encode('utf-8')
     source = 'fragment=%s&output=soap12' % urllib.quote_plus(page_source)
-    os.environ['CONTENT_LENGTH'] = str(len(source))
-    os.environ['REQUEST_METHOD'] = 'POST'
-    stdout, stdin, stderr = popen2.popen3(self.validator_path)
-    stdin.write(source)
-    stdin.close()
-    while stdout.readline() != '\n':
-      pass
-    result = stdout.read()
-    return self._parse_validation_results(result)
+    stdout, stderr = Popen(self.validator_path,
+            stdin=PIPE, stdout=PIPE, stderr=PIPE,
+            close_fds=True,
+            env={"CONTENT_LENGTH": str(len(source)),
+                 "REQUEST_METHOD": "POST"}).communicate(source)
+    # Output is a set of headers then the XML content.
+    return self._parse_validation_results(
+      stdout.split('<?xml version="1.0" encoding="UTF-8"?>')[1])
 
 
 class TidyValidator(object):
@@ -498,9 +496,9 @@ class TidyValidator(object):
     '''
       retrun two list : a list of errors and an other for warnings
     '''
-    stdout, stdin, stderr = popen2.popen3('%s -e -q -utf8' % self.validator_path)
-    stdin.write(page_source)
-    stdin.close()
+    stdout, stderr = Popen('%s -e -q -utf8' % self.validator_path,
+            stdin=PIPE, stdout=PIPE, stderr=PIPE,
+            close_fds=True).communicate(page_source)
     return self._parse_validation_results(stderr)
 
 

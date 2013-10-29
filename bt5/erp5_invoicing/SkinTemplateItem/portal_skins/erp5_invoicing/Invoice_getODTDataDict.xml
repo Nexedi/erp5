@@ -86,8 +86,7 @@ excluded_portal_type_list = context.getPortalTaxMovementTypeList() \\\n
 def getSubLineList(obj):\n
   sub_list = []\n
   for x in obj.contentValues(portal_type=context.getPortalInvoiceMovementTypeList(),\n
-                             sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')],\n
-                             checked_permission=\'View\'):\n
+                             sort_on=[(\'int_index\', \'ascending\'), (\'reference\', \'ascending\')],):\n
     if x.getPortalType() in excluded_portal_type_list:\n
       continue\n
     sub_list.append(x)\n
