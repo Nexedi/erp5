@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>restrictedTraverse = context.getPortalObject().restrictedTraverse\n
+            <value> <string>if not len(path_list):\n
+  return\n
+restrictedTraverse = context.getPortalObject().restrictedTraverse\n
 argument_getter_dict = {}\n
 if subscription_path:\n
   subscription = restrictedTraverse(subscription_path)\n
@@ -75,10 +77,7 @@ for property in method.arguments_src.split():\n
   if getter is None:\n
     getter = lambda obj, property=property: getattr(obj, property)()\n
   append((parameter_value_list, getter))\n
-return parameter_dict, parameter_append_list\n
 \n
-\n
-parameter_dict, parameter_append_list = generateParameterList()\n
 for path in path_list:\n
   obj = restrictedTraverse(path)\n
   for value_list, getter in parameter_append_list:\n
