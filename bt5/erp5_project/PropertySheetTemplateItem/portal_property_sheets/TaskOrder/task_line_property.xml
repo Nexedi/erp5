@@ -24,6 +24,24 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
@@ -49,12 +67,23 @@
                 <string>requirement_value</string>
                 <string>requirement_uid_list</string>
                 <string>requirement_logical_path</string>
+                <string>aggregate</string>
+                <string>aggregate_value_list</string>
+                <string>aggregate_value</string>
+                <string>aggregate_uid_list</string>
+                <string>aggregate_title</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_portal_type</string> </key>
             <value> <string>python: (\'Task Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>

@@ -89,6 +89,7 @@
                         <string>listbox_start_date</string>
                         <string>listbox_quantity</string>
                         <string>listbox_quantity_unit</string>
+                        <string>listbox_aggregate</string>
                       </list>
                     </value>
                 </item>

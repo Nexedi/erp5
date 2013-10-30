@@ -91,6 +91,7 @@
                         <string>my_source_title</string>
                         <string>my_destination_title</string>
                         <string>my_source_project_title</string>
+                        <string>my_aggregate_title</string>
                       </list>
                     </value>
                 </item>

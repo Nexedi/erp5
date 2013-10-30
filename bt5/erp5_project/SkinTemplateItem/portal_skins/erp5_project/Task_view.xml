@@ -75,6 +75,7 @@
                       <list>
                         <string>my_description</string>
                         <string>my_task_line_requirement_logical_path_list</string>
+                        <string>my_task_line_aggregate_title</string>
                         <string>my_outcome_description</string>
                       </list>
                     </value>
