@@ -53,6 +53,7 @@
                DateTime nocall: modules/DateTime/DateTime;\n
                selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n
+               untranslatable_columns python: [x[0] for x in listbox.get_value(\'untranslatable_columns\', REQUEST=request)];\n
                editable_fields python: dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                is_report_tree_mode selection/report_tree_mode | python: 0;\n
@@ -118,8 +119,8 @@
                                         table:style-name=\'report-column-title\'\n
                                         table:number-columns-spanned=\'1\'\n
                                         office:value-type=\'string\'>\n
-                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property">\n
-                        </text:p>\n
+                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property" tal:condition="python: column_id in untranslatable_columns"/>\n
+                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property" tal:condition="python: column_id not in untranslatable_columns"/>\n
                       </table:table-cell>\n
                     </tal:block>\n
                   </tal:block>\n
