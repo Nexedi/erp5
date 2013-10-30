@@ -65,7 +65,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
       subscription.sendModifications()  # Worfklow action
 
     syncml_response = None
-    tag = subscription_path = subscription.getRelativeUrl()
+    tag = subscription.getRelativeUrl()
 
     # Do action according to synchronization state
     if subscription.getSynchronizationState() == "initializing":
@@ -75,10 +75,13 @@ class SyncMLAsynchronousEngine(EngineMixin):
       if subscription.getSyncmlAlertCode() in ("one_way_from_server",
                                                "refresh_from_server_only"):
         # We only get data from server
-        syncml_response = self._generateBaseResponse(subscription)
+        syncml_response = subscription.generateBaseResponse()
         syncml_response.addFinal()
       else:
-        self.runGetAndActivate(subscription=subscription, tag=tag)
+        # Make sure it is launched after indexation step
+        self.runGetAndActivate(subscription=subscription, tag=tag,
+                               after_method_id=("getAndIndex",
+                                                "SQLCatalog_indexSyncMLSignatureList"))
         syncml_logger.info("X-> Client is sendind modification in activities")
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
@@ -99,7 +102,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
                            % (len(syncml_request.sync_command_list)))
       if syncml_request.isFinal:
         if not syncml_response:
-          syncml_response = self._generateBaseResponse(subscription)
+          syncml_response = subscription.generateBaseResponse()
         # We got and process all sync command from server
         # notify it that all modifications were applied
         syncml_response.addFinal()
@@ -163,10 +166,10 @@ class SyncMLAsynchronousEngine(EngineMixin):
 
       # Apply command & send modifications
       # Apply status about object send & synchronized if any
-      sync_status_counter = self._readStatusList(syncml_request, subscriber,
+      self._readStatusList(syncml_request, subscriber,
                                                  generate_alert=True)
       syncml_response = None
-      tag = subscription_path = subscriber.getRelativeUrl()
+      tag = subscriber.getRelativeUrl()
       after_method_id = None
       if subscriber.getSynchronizationState() == "sending_modifications":
         if syncml_request.isFinal:
@@ -202,15 +205,13 @@ class SyncMLAsynchronousEngine(EngineMixin):
         if syncml_request.isFinal:
           # Server then sends its modifications
           subscriber.sendModifications()
-          # Now that everything is ok, init sync information
-          if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
-                                                     "refresh_from_client_only"):
-            # Reset signature only if we have to check modifications on server side
-            subscriber.initialiseSynchronization()
-
+          # Run indexation only once client have sent its modifications
+          subscriber.indexSourceData()
           # Start to send modification only once we have processed
           # all message from client
-          after_method_id='processServerSynchronization',
+          after_method_id=('processServerSynchronization',
+                           'SQLCatalog_indexSyncMLDocumentList')
+          # XXX after tag might also be required to make sure all data are indexed
           tag = (tag, "%s_reset" % subscriber.getPath(),)
       # Do not continue in elif, as sending modifications is done in the same
       # package as sending notifications
@@ -230,7 +231,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
           # Server has no modification to send to client, return final message
           syncml_logger.info("X-> Server sending final message")
           if not syncml_response:
-            syncml_response = self._generateBaseResponse(subscriber)
+            syncml_response = subscriber.generateBaseResponse()
           syncml_response.addFinal()
 
       if subscriber.getSynchronizationState() == "finished":
@@ -242,10 +243,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
                           after_tag=tag).sendMessage(
                             xml=str(syncml_response))
 
-
   def runGetAndActivate(self, subscription, tag, after_method_id=None):
     """
-    Generate tag and method parameter and call the getAndActivate method
+    Launch the browsing of GID that will call the generation of syncml commands
     """
     activate_kw = {
       'activity' : 'SQLQueue',
@@ -253,20 +253,20 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'tag' :tag,
       'priority' :ACTIVITY_PRIORITY
       }
-    method_kw = {
-      'subscription_path' : subscription.getRelativeUrl(),
-      }
     pref = getSite().portal_preferences
-    count = subscription.getAndActivate(
+    subscription.getAndActivate(
       callback="sendSyncCommand",
-      method_kw=method_kw,
       activate_kw=activate_kw,
       packet_size=pref.getPreferredDocumentRetrievedPerActivityCount(),
       activity_count=pref.getPreferredRetrievalActivityCount(),
       )
-    # Then get deleted document
-    # this will send also the final message of this sync part
-    subscription.activate(after_tag=tag)._getDeletedData()
+    # then send the final message of this sync part
+    if pref.getPreferredCheckDeleteAtEnd():
+      subscription.activate(after_tag=tag,
+                          priority=ACTIVITY_PRIORITY+1).getDeletedSyncMLData()
+    else:
+      subscription.activate(after_tag=tag,
+                            priority=ACTIVITY_PRIORITY+1)._sendFinalMessage()
     return True
 
 
@@ -284,9 +284,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
       response_id_list = [None for x in
                           xrange(len(syncml_request.sync_command_list))]
     split = getSite().portal_preferences.getPreferredSyncActionPerActivityCount()
-    if not split:
+    if not split:  # We do not use activities
       if send_response:
-        syncml_response = self._generateBaseResponse(subscription)
+        syncml_response = subscription.generateBaseResponse()
       else:
         syncml_response = None
       subscription.applyActionList(syncml_request, syncml_response)
@@ -295,10 +295,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
           activity="SQLQueue",
           priority=ACTIVITY_PRIORITY,
           tag=subscription.getRelativeUrl()).sendMessage(xml=str(syncml_response))
-
     else:
       # XXX For now always split by one
-      activate = subscription.getPortalObject().portal_synchronizations.activate
+      activate = subscription.activate
       activate_kw = {
         "activity" :"SQLQueue",
         "priority" : ACTIVITY_PRIORITY,
@@ -309,10 +308,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
       for action in syncml_request.sync_command_list:
         syncml_logger.info("---> launch action in activity %s" %(action,))
         activate(**activate_kw).applySyncCommand(
-          subscription_path=subscription.getRelativeUrl(),
           response_message_id=response_id_list.pop(),
           activate_kw=activate_kw,
           action=action,
           request_message_id=syncml_request.header["message_id"],
           simulate=False)
-        # XXX Response is not send here
+        # Response is sent by the activity

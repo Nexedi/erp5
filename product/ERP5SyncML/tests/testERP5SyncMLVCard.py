@@ -28,9 +28,7 @@
 #
 ##############################################################################
 
-
 from testERP5SyncML import TestERP5SyncMLMixin
-from zLOG import LOG
 
 class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 
@@ -44,6 +42,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
       /person_client2 : empty
     """
     return ('erp5_base', 'erp5_syncml',)
+
+  def afterSetUp(self):
+    self.portal.z_drop_syncml()
+    self.portal.z_create_syncml()
 
   def getTitle(self):
     return 'testERP5SyncMLVCard'

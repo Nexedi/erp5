@@ -33,6 +33,7 @@ from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from zLOG import LOG, INFO, ERROR, WARNING
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 
 class IntegrationSite(Folder):
@@ -187,7 +188,12 @@ class IntegrationSite(Folder):
         base_mapping = the base property mapping
         property = string of the property we want the mapping
     """
-    mapping_line = base_mapping.searchFolder(portal_type='Integration Property Mapping',
+    tv = getTransactionalVariable()
+    key = "%s-%s" % (base_mapping.getPath(), property_name)
+    try:
+      mapping_line = tv[key]
+    except KeyError:
+      tv[key] = mapping_line = base_mapping.searchFolder(portal_type='Integration Property Mapping',
                                              path = "%s%%" %(base_mapping.getPath()),
                                              destination_reference=property_name,
                                              )

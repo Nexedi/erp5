@@ -50,20 +50,48 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>signature = state_change[\'object\']\n
-if signature.hasPartialData():\n
-  signature.setPartialData(None)\n
-if signature.hasTemporaryData():\n
-  signature.setTemporaryData(None)\n
+            <value> <string>if not len(path_list):\n
+  return\n
+restrictedTraverse = context.getPortalObject().restrictedTraverse\n
+argument_getter_dict = {}\n
+if subscription_path:\n
+  subscription = restrictedTraverse(subscription_path)\n
+  getId = subscription.getGidFromObject\n
+  getData = subscription.getDataFromDocument\n
+else:\n
+  getId = getData = None\n
+\n
+method = context.z_catalog_syncml_document_list\n
+\n
+parameter_append_list = []\n
+append = parameter_append_list.append\n
+parameter_dict = {}\n
+for property in method.arguments_src.split():\n
+  parameter_dict[property] = parameter_value_list = []\n
+  if property == \'getData\':\n
+    getter = getData\n
+  elif property == \'getId\':\n
+    getter = getId\n
+  else:\n
+    getter = None\n
+  if getter is None:\n
+    getter = lambda obj, property=property: getattr(obj, property)()\n
+  append((parameter_value_list, getter))\n
+\n
+for path in path_list:\n
+  obj = restrictedTraverse(path)\n
+  for value_list, getter in parameter_append_list:\n
+    value_list.append(getter(obj))\n
+method(**parameter_dict)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>path_list, subscription_path=None, activate_kw=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SyncMLSignature_afterDrift</string> </value>
+            <value> <string>SQLCatalog_indexSyncMLDocumentList</string> </value>
         </item>
       </dictionary>
     </pickle>

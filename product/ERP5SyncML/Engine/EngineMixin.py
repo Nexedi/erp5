@@ -46,15 +46,6 @@ class EngineMixin(object):
 
   security = ClassSecurityInfo()
 
-  def _generateBaseResponse(self, subscription):
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=subscription.getSessionId(),
-      message_id=subscription.getNextMessageId(),
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString())
-    syncml_response.addBody()
-    return syncml_response
 
   security.declarePrivate('_readStatusList')
   def _readStatusList(self, syncml_request, domain, syncml_response=None,
@@ -63,6 +54,7 @@ class EngineMixin(object):
     Read status (answer to command) and act according to them
     """
     sync_status_counter = 0
+    path_list = []
     for status in syncml_request.status_list:
       if status["command"] == "SyncHdr":  # Check for authentication
         if domain.getSynchronizationState() != "initializing":
@@ -83,7 +75,7 @@ class EngineMixin(object):
                                         status['authentication_type']))
           # XXX Not working To Review !
           raise NotImplementedError("Adding credentials")
-          syncml_response = self._generateBaseResponse(domain)
+          syncml_response = domain.generateBaseResponse()
           syncml_response.addCredentialMessage(domain)
           return syncml_response
         elif status['status_code'] == \
@@ -124,7 +116,7 @@ class EngineMixin(object):
               'conflict_resolved_with_merge'):
             # We will have to apply the update, and we should not care
             # about conflicts, so we have to force the update
-            signature.drift()
+            signature.noConflict()
             signature.setForce(True)
             syncml_logger.error("\tObject merged %s" %
                                 (status['source'] or status['target']))
@@ -134,20 +126,25 @@ class EngineMixin(object):
                                            'conflict_resolved_with_client_command_winning')):
             syncml_logger.error("\tObject synchronized %s" %
                                 (status['source'] or status['target'],))
+            if signature.getValidationState() != "no_conflict":
+              signature.noConflict()
             signature.synchronize()
           elif status['status_code'] == resolveSyncmlStatusCode('chunk_accepted'):
             syncml_logger.info("Chunk was accepted for %s" % (object_gid,))
           else:
             raise ValueError("Unknown status code : %r" % (status['status_code'],))
+          # Index signature now to fill the data column
+          path_list.append(signature.getPath())
       elif status['command'] == 'Delete':
         sync_status_counter += 1
         object_gid = status['source'] or status['target']
         signature = domain.getSignatureFromGid(object_gid)
         if status['status_code'] == resolveSyncmlStatusCode('success'):
           if signature:
+            domain.z_delete_data_from_path(path=signature.getPath())
             domain._delObject(signature.getId())
           else:
-            raise ValueError("Found no signature to delete")
+            raise ValueError("Found no signature to delete for gid %s" %(object_gid,))
         else:
           raise ValueError("Unknown status code : %r" % (status['status_code'],))
         syncml_logger.error("\tObject deleted %s" %
@@ -155,6 +152,8 @@ class EngineMixin(object):
 
       else:
         raise ValueError("Unknown status command : %r" % (status['command'],))
+    if len(path_list):
+      domain.SQLCatalog_indexSyncMLDocumentList(path_list)
     return sync_status_counter
 
   #
@@ -191,10 +190,8 @@ class EngineMixin(object):
     if subscription.getAuthenticationState() != 'logged_in':
       # Workflow action
       subscription.login()
-    if subscription.getSyncmlAlertCode() not in ("one_way_from_server",
-                                                 "refresh_from_server_only"):
-      # Reset signature only if client send its modification to server
-      subscription.initialiseSynchronization()
+
+    subscription.indexSourceData(client=True)
 
     # Create the package 1
     syncml_response = SyncMLResponse()
@@ -301,7 +298,9 @@ class EngineMixin(object):
                               'one_way_from_server',
                               'refresh_from_client_only',
                               'one_way_from_client'):
-      # XXX Why re-editing here ?
+      # Make sure we update configuration based on publication data
+      # so that manual edition is propagated
+      # XXX Must check all properties that must be setted
       subscriber.setXmlBindingGeneratorMethodId(
         publication.getXmlBindingGeneratorMethodId())
       subscriber.setConduitModuleId(publication.getConduitModuleId())

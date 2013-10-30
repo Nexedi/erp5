@@ -31,11 +31,12 @@ from hashlib import md5
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5SyncML.Utils import PdataHelper
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+
 
 _MARKER = []
 
@@ -50,7 +51,6 @@ class SyncMLSignature(XMLObject):
   """
   meta_type = 'ERP5 Signature'
   portal_type = 'SyncML Signature'
-
   isIndexable = ConstantGetter('isIndexable', value=False)
 
   security = ClassSecurityInfo()
@@ -65,6 +65,32 @@ class SyncMLSignature(XMLObject):
                     , PropertySheet.Data
                     , PropertySheet.Document
                     , PropertySheet.SyncMLSignature )
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'synchronize')
+  def synchronize(self):
+    """
+    This is call when subscription get confirmation of the data synchronization
+    This copy & reset some properties if needed
+    """
+    edit_kw = {}
+    temporary_data = self.getTemporaryData()
+    if temporary_data is not None:
+      # This happens when we have sent the xml
+      # and we just get the confirmation
+      self.setData(temporary_data)
+      edit_kw["temporary_data"] = None
+    if self.isForce():
+      edit_kw["force"] = False
+    if self.hasPartialData():
+      edit_kw["partial_data"] = None
+    if self.hasSubscriberXupdate():
+      edit_kw["subscriber_xupdate"] = None
+    if self.hasPublisherXupdate():
+      edit_kw["publisher_xupdate"] = None
+
+    if len(edit_kw):
+      self.edit(**edit_kw)
+
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setData')
   def setData(self, value):
@@ -250,46 +276,12 @@ class SyncMLSignature(XMLObject):
       return self._baseGetPublisherXupdate(default)
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                            'reset')
-  def reset(self, no_conflict=False):
-    """
-    Clear Signature and change validation_state to not_synchronized
-    no_conflict : prevent the reset of signature for which conflict
-                  has not been marked resolved, this is usefull when
-                  resetting all signature at the beginning of a sync process
-                  XXX Use a better name and a positive value by default
-    """
-    if no_conflict and self.getValidationState() in (
-      'conflict',
-      'conflict_resolved_with_merge',
-      'conflict_resolved_with_client_command_winning'):
-      return
-    if self.getValidationState() != 'not_synchronized':
-      self.drift()
-
-  security.declareProtected(Permissions.ModifyPortalContent,
                             'getConflictList')
   def getConflictList(self):
     """
     Return the actual action for a partial synchronization
     """
     return self.contentValues()
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setConflictList')
-  def setConflictList(self, conflict_list):
-    """
-    XXX is it still usefull ?
-    """
-    return
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetConflictList')
-  def resetConflictList(self):
-    """
-    XXX is it still usefull ?
-    """
-    return
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'delConflict')

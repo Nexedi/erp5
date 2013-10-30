@@ -4,8 +4,8 @@
   <item>source_section</item>
  </portal_type>
  <portal_type id="Integration Site">
-  <item>resource</item>
   <item>destination_payment</item>
+  <item>resource</item>
   <item>source_account</item>
   <item>source_payment</item>
  </portal_type>

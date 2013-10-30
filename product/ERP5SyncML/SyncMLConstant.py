@@ -28,51 +28,14 @@
 ##############################################################################
 
 
-# Namespaces.
+
 SYNCML_NAMESPACE = 'SYNCML:SYNCML1.2'
-# In SyncML Representation Protocol OMA
-# we use URN as format of namespace
-# List namespaces supported
-URN_LIST = ('SYNCML:SYNCML1.1', 'SYNCML:SYNCML1.2')
-
 NSMAP = {'syncml': SYNCML_NAMESPACE}
-## SyncML Alert Codes
-#TWO_WAY = 200
-#SLOW_SYNC = 201 # This means we get the data from the publication
-#ONE_WAY_FROM_SERVER = 204
-#CODE_LIST = (TWO_WAY, ONE_WAY_FROM_SERVER,)
-
-# SyncML Status Codes
-#SUCCESS = 200
-#ITEM_ADDED = 201
-#WAITING_DATA = 214
-#REFRESH_REQUIRED = 508
-
-#CHUNK_OK = 214
-#CONFLICT = 409 # A conflict is detected
-#CONFLICT_MERGE = 207 # We have merged the two versions, sending
-                     ## whatever is needed to change(replace)
-#CONFLICT_CLIENT_WIN = 208 # The client is the "winner", we keep
-                          ## the version of the client
-#UNAUTHORIZED = 401
-#AUTH_REQUIRED = 407
-#AUTH_ACCEPTED = 212
 
 NULL_ANCHOR = '00000000T000000Z'
 
-# ERP5 Sync Codes for Signatures
-SYNCHRONIZED = 1
-#SENT = 2
-#NOT_SENT = 3
-PARTIAL = 4
-NOT_SYNCHRONIZED = 5
-PUB_CONFLICT_MERGE = 6
-PUB_CONFLICT_CLIENT_WIN = 8
-
-#MAX_LINES = 5000
 MAX_OBJECTS = 300
 MAX_LEN = 1<<16
-MAX_DOCUMENT_PER_MESSAGE = 2
 
 XUPDATE_INSERT_LIST = ('xupdate:insert-after', 'xupdate:insert-before')
 XUPDATE_ADD = 'xupdate:append'
@@ -84,20 +47,7 @@ XUPDATE_INSERT_OR_ADD_LIST = XUPDATE_INSERT_LIST + (XUPDATE_ADD,)
 ADD_ACTION = 'Add'
 REPLACE_ACTION = 'Replace'
 
-##media types :
-#MEDIA_TYPE = {}
-#MEDIA_TYPE['TEXT_XML'] = 'text/xml'
-#MEDIA_TYPE['TEXT_VCARD'] = 'text/vcard'
-#MEDIA_TYPE['TEXT_XVCARD'] = 'text/x-vcard'
-
-##content types :
-#CONTENT_TYPE = {}
-#CONTENT_TYPE['SYNCML_XML'] = 'application/vnd.syncml+xml'
-#CONTENT_TYPE['SYNCML_WBXML'] = 'application/vnd.syncml+wbxml'
-
-#Activity priority
 ACTIVITY_PRIORITY = 5
-
 
 class SynchronizationError(Exception):
     pass

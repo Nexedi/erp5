@@ -5155,7 +5155,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
         try:
           self.setRevision(self.getVcsTool().newRevision())
-        except NotAWorkingCopyError:
+        except (NotAWorkingCopyError, IOError):
           raise ImportError
       except ImportError:
         self.updateRevisionNumber()

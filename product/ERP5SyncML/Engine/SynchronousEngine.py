@@ -54,7 +54,7 @@ class SyncMLSynchronousEngine(EngineMixin):
       # Must check what server tell about database synchronization
       # and update the mode if required
 
-    syncml_response = self._generateBaseResponse(subscription)
+    syncml_response = subscription.generateBaseResponse()
 
     # Read & apply status about databases & synchronizations
     try:
@@ -80,16 +80,16 @@ class SyncMLSynchronousEngine(EngineMixin):
                                                "refresh_from_server_only"):
         # We only get data from server
         finished = True
-      else:
-        finished = subscription._getSyncMLData(
-          syncml_response=syncml_response,
-          )
-        syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
-      if finished:
-        # Add deleted objets
-        subscription._getDeletedData(syncml_response=syncml_response)
-        # Notify that all modifications were sent
         syncml_response.addFinal()
+      else:
+        finished = subscription._getSyncMLData(syncml_response=syncml_response,
+                                               min_gid=None, max_gid=None)
+        if finished:
+          # Delete message will contain final tag
+          subscription.getDeletedSyncMLData(syncml_response=syncml_response)
+
+      syncml_logger.info("-> Client sendind modification, finished %s" % (finished,))
+      if finished:
         # Will then start processing sync commands from server
         subscription.processSyncRequest()
 
@@ -149,7 +149,8 @@ class SyncMLSynchronousEngine(EngineMixin):
         raise ValueError("Authentication failed, impossible to sync data")
 
       # Apply command & send modifications
-      syncml_response = self._generateBaseResponse(subscriber)
+      # XXX This can be called on subscription instead
+      syncml_response = subscriber.generateBaseResponse()
 
       # Apply status about object send & synchronized if any
       self._readStatusList(syncml_request, subscriber, syncml_response, True)
@@ -191,10 +192,8 @@ class SyncMLSynchronousEngine(EngineMixin):
         if syncml_request.isFinal:
           # Server will now send its modifications
           subscriber.sendModifications()
-          if subscriber.getSyncmlAlertCode() not in ("one_way_from_client",
-                                                     "refresh_from_client_only"):
-            # Reset signature only if we have to check modifications on server side
-            subscriber.initialiseSynchronization()
+          # Run indexation only once client has sent its modifications
+          subscriber.indexSourceData()
 
       # Do not continue in elif, as sending modifications is done in the same
       # package as sending notifications
@@ -204,13 +203,16 @@ class SyncMLSynchronousEngine(EngineMixin):
                                                "refresh_from_client_only"):
           # We only get data from client
           finished = True
+          syncml_response.addFinal()
         else:
-          finished = subscriber._getSyncMLData(
-            syncml_response=syncml_response)
+          finished = subscriber._getSyncMLData(syncml_response=syncml_response,
+                                               min_gid=None, max_gid=None)
+          if finished:
+            # Delete message will contain final tag
+            subscriber.getDeletedSyncMLData(syncml_response=syncml_response)
+
         syncml_logger.info("-> Server sendind data, finished %s" % (finished,))
         if finished:
-          subscriber._getDeletedData(syncml_response=syncml_response)
-          syncml_response.addFinal()
           subscriber.waitNotifications()
           # Do not go into finished here as we must wait for
           # notifications from client

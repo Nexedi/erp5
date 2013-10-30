@@ -24,6 +24,7 @@
               <tuple>
                 <string>change_to_partial</string>
                 <string>do_sync</string>
+                <string>no_conflict</string>
                 <string>synchronize</string>
               </tuple>
             </value>

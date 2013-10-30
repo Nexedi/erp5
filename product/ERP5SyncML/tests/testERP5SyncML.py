@@ -98,6 +98,8 @@ class TestERP5SyncMLMixin(TestMixin):
   def afterSetUp(self):
     """Setup."""
     self.login()
+    self.portal.z_drop_syncml()
+    self.portal.z_create_syncml()
     # This test creates Person inside Person, so we modifiy type information to
     # allow anything inside Person (we'll cleanup on teardown)
     self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
@@ -228,6 +230,7 @@ class TestERP5SyncMLMixin(TestMixin):
       result = portal_sync.processClientSynchronization(subscription.getPath())
       self.tic()
       nb_message += 1
+    self.tic()
     return nb_message
 
   def synchronizeWithBrokenMessage(self, id):
@@ -329,33 +332,33 @@ class TestERP5SyncMLMixin(TestMixin):
     for person in person_server.objectValues():
       state_list = self.getSynchronizationState(person)
       for state in state_list:
-        self.assertEquals(state[1], 'synchronized')
+        self.assertEquals(state[1], 'no_conflict')
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
       state_list = self.getSynchronizationState(person)
       for state in state_list:
-        self.assertEquals(state[1], 'synchronized')
+        self.assertEquals(state[1], 'no_conflict')
     person_client2 = self.getPersonClient2()
     for person in person_client2.objectValues():
       state_list = self.getSynchronizationState(person)
       for state in state_list:
-        self.assertEquals(state[1], 'synchronized')
+        self.assertEquals(state[1], 'no_conflict')
     # Check for each signature that the tempXML is None
     for sub in portal_sync.contentValues(portal_type='SyncML Subscription'):
       for m in sub.contentValues():
         self.assertEquals(m.getTemporaryData(), None)
         self.assertEquals(m.getPartialData(), None)
-        self.assertEquals(m.getValidationState(), "synchronized")
+        self.assertEquals(m.getValidationState(), "no_conflict")
     for pub in portal_sync.contentValues(portal_type='SyncML Publication'):
       for sub in pub.contentValues(portal_type='SyncML Subscription'):
         for m in sub.contentValues():
           self.assertEquals(m.getPartialData(), None)
-          self.assertEquals(m.getValidationState(), "synchronized")
+          self.assertEquals(m.getValidationState(), "no_conflict")
 
   def verifyFirstNameAndLastNameAreNotSynchronized(self, first_name,
       last_name, person_server, person_client):
     """
-      verify that the first and last name are NOT synchronized
+      verify that the first and last name are NOT no_conflict
     """
     self.assertNotEqual(person_server.getFirstName(), first_name)
     self.assertNotEqual(person_server.getLastName(), last_name)
@@ -481,7 +484,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     pub.setConduitModuleId('ERP5ConduitTitleGid')
 
   def checkSynchronizationStateIsConflict(self):
-    portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     for person in person_server.objectValues():
       if person.getId()==self.id1:
@@ -751,7 +753,6 @@ return [context[%r]]
     # We will try to get the state of objects
     # that are just synchronized
     self.test_08_FirstSynchronization()
-    portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     state_list_s = self.getSynchronizationState(person1_s)
@@ -782,6 +783,8 @@ return [context[%r]]
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
     #person1_c.setModificationDate(DateTime()+1)
+    # import ipdb
+    # ipdb.set_trace()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
     person1_s = person_server._getOb(self.id1)
@@ -1543,7 +1546,7 @@ return [context[%r]]
     self.assertEquals(client_person.getLastName(), self.last_name1)
 
     # reset for refresh sync
-    # after synchronize, the client object retrieve value of server
+    # after synchronization, the client retrieves value from server
     self.resetSignaturePublicationAndSubscription()
     self.synchronize(self.sub_id1)
 
@@ -1596,7 +1599,7 @@ return [context[%r]]
     publication = self.addPublication()
     self.addRefreshFormClientOnlySubscription()
 
-    nb_person = self.populatePersonClient1()
+    self.populatePersonClient1()
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync[self.sub_id1]
     self.assertEquals(subscription1.getSyncmlAlertCode(),

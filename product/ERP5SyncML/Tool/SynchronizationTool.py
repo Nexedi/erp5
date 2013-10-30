@@ -26,7 +26,6 @@
 ##############################################################################
 
 from os import path
-from lxml import etree
 from logging import getLogger, Formatter
 
 from AccessControl import ClassSecurityInfo
@@ -36,25 +35,13 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY, \
     SynchronizationError
-from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse, SyncMLRequest
+from Products.ERP5SyncML.SyncMLMessage import SyncMLRequest
 from Products.ERP5SyncML.Engine.SynchronousEngine import SyncMLSynchronousEngine
 from Products.ERP5SyncML.Engine.AsynchronousEngine import SyncMLAsynchronousEngine
-from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
-from Products.ERP5SyncML.Transport.File import FileTransport
-from Products.ERP5SyncML.Transport.Mail import MailTransport
 from Products.ERP5.ERP5Site import getSite
 
 synchronous_engine = SyncMLSynchronousEngine()
 asynchronous_engine = SyncMLAsynchronousEngine()
-
-transport_scheme_dict = {
-  "http" : HTTPTransport(),
-  "https" : HTTPTransport(),
-  "file" : FileTransport(),
-  "mail" : MailTransport(),
-  }
-
-parser = etree.XMLParser(remove_blank_text=True)
 
 # Logging channel definitions
 # Main logging channel
@@ -390,7 +377,6 @@ class SynchronizationTool(BaseTool):
         return engine.processClientSynchronization(syncml_request, subscription)
 
     # Send the message
-    # XXX This must depends on activity enables property, maybe use engine
     if subscription.getIsActivityEnabled():
       subscription.activate(
         after_tag="%s_reset" %(subscription.getPath(),),
@@ -401,80 +387,5 @@ class SynchronizationTool(BaseTool):
       subscription.sendMessage(str(syncml_response))
 
     return str(syncml_response)
-
-  def applySyncCommand(self, subscription_path, response_message_id,
-                       activate_kw, **kw):
-    """
-    This methods is intented to be called by asynchronous engine in activity to
-    apply sync commands for a subset of data
-    As engines are not zodb object, the tool acts as a placeholder for method
-    that need to be called in activities
-    """
-    subscription = self.restrictedTraverse(subscription_path)
-    assert subscription is not None, "Impossible to find subscription %s" \
-        % (subscription_path)
-    # Build Message
-    if response_message_id:
-      syncml_response = SyncMLResponse()
-      syncml_response.addHeader(
-        session_id=subscription.getSessionId(),
-        message_id=response_message_id,
-        target=subscription.getUrlString(),
-        source=subscription.getSubscriptionUrlString())
-      syncml_response.addBody()
-    else:
-      syncml_response = None
-
-    subscription.applySyncCommand(syncml_response=syncml_response, **kw)
-
-    # Send the message in activity to prevent recomputing data in case of
-    # transport failure
-    if syncml_response:
-      syncml_logger("---- %s sending %s notifications of sync"
-                    % (subscription.getTitle(),
-                       syncml_response.sync_confirmation_counter))
-      subscription.activate(activity="SQLQueue",
-                            # group_method_id=None,
-                            # group_method_cost=.05,
-                            tag=activate_kw).sendMessage(xml=str(syncml_response))
-
-
-
-  def sendSyncCommand(self, id_list, message_id, subscription_path,
-                      activate_kw, is_final_message=False):
-    """
-    This methods is intented to be called by asynchronous engine in activity to
-    send sync commands for a subset of data
-    As engines are not zodb object, the tool acts as a placeholder for method
-    that need to be called in activities
-    """
-    subscription = self.restrictedTraverse(subscription_path)
-    assert subscription is not None, "Impossible to find subscription %s" \
-        % (subscription_path)
-    # Build Message
-    syncml_response = SyncMLResponse()
-    syncml_response.addHeader(
-      session_id=subscription.getSessionId(),
-      message_id=message_id,
-      target=subscription.getUrlString(),
-      source=subscription.getSubscriptionUrlString())
-    syncml_response.addBody()
-
-
-    subscription._getSyncMLData(
-      syncml_response=syncml_response,
-      id_list=id_list,
-      )
-
-    if is_final_message:
-      # Notify that all modifications were sent
-      syncml_response.addFinal()
-
-    # Send the message in activity to prevent recomputing data in case of
-    # transport failure
-    # activate_kw["group_method_id"] = None
-    # activate_kw["group_method_cost"] = .05
-    subscription.activate(**activate_kw).sendMessage(xml=str(syncml_response))
-
 
 InitializeClass(SynchronizationTool)

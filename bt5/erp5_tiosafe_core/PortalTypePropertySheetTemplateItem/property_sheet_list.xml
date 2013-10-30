@@ -2,7 +2,7 @@
  <portal_type id="Integration Module">
   <item>IntegrationModule</item>
  </portal_type>
-  <portal_type id="Integration Site">
+ <portal_type id="Integration Site">
   <item>Arrow</item>
   <item>Resource</item>
  </portal_type>
