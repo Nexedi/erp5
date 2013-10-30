@@ -3195,6 +3195,26 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         credit=500, final_debit_balance=500, final_credit_balance=500,
         final_balance_if_debit=500, final_balance_if_credit=500)
 
+
+  def testTrialBalanceFunctionWithCache(self):
+    # trial balance restricted to a function
+    # Make it fill cache by asking it a later date
+    self.createProjectAndFunctionDataSet()
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2010, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['per_account_class_summary'] = 0
+    request_form['show_empty_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['function'] = ''
+    request_form['group_analytic'] = ["function"]
+    report_section_list = self.portal.accounting_module.AccountModule_getTrialBalanceReportSectionList()
+    line_list = self.getListBoxLineList(report_section_list[0])
+
+
   def testTrialBalanceProject(self):
     # trial balance restricted to a project
     self.createProjectAndFunctionDataSet()
