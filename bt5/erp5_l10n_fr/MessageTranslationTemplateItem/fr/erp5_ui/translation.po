@@ -633,6 +633,9 @@ msgstr "Recherche avancée"
 msgid "Advantage in nature"
 msgstr "Avantage en nature"
 
+msgid "Aged Balance"
+msgstr "Balance agée"
+
 msgid "Agent"
 msgstr "Mandataire"
 
@@ -2898,6 +2901,9 @@ msgstr "Compte naturellement créditeur"
 msgid "Credit Transactions"
 msgstr "Mouvements crédit"
 
+msgid "Creditors"
+msgstr "Créditeurs"
+
 msgid "Currencies"
 msgstr "Devises"
 
@@ -3102,6 +3108,9 @@ msgstr "Débit autorisé"
 msgid "Debit Transactions"
 msgstr "Mouvements débits"
 
+msgid "Debtors"
+msgstr "Débiteurs"
+
 msgid "December"
 msgstr "Décembre"
 
@@ -3233,6 +3242,9 @@ msgstr "Définit un délai en jours qui prolonge un délai de paiement \"fin de 
 
 msgid "Defines the maximum number of links which can be followed in the crawling process. If set to 0 (default), no crawling happens"
 msgstr "Définit le nombre maximum de liens à suivre dans le processus d'exploration; si c'est à 0(valeur par défaut), pas d'exploration."
+
+msgid "Defines the number of days between each period"
+msgstr "Défini le nombre de jours entre chaque période"
 
 msgid "Defines to who the invoice will be sent"
 msgstr "Définit la personne à qui la facture doit être envoyée."
@@ -3664,8 +3676,14 @@ msgstr "Lieu de livraison"
 msgid "Detail Analytics"
 msgstr "Détail de l'analytique"
 
+msgid "Detailed Aged Balance"
+msgstr "Balance agée détaillée"
+
 msgid "Detailed Beginning Balance"
 msgstr "Détail du solde initial"
+
+msgid "Detailed Mode"
+msgstr "Mode détaillé"
 
 msgid "Detailed Report"
 msgstr "Rapport détaillé"
@@ -3774,6 +3792,9 @@ msgstr "Page affichée par défaut"
 
 msgid "Display Method ID"
 msgstr "Méthode d'affichage"
+
+msgid "Display a detailed list of all non reconciled lines"
+msgstr "Affiche une liste détaillée de toutes les lignes non lettrées"
 
 msgid "Distributed RAM Cache Plugin"
 msgstr "Greffon de cache de ram distribué"
@@ -6602,6 +6623,9 @@ msgstr "Document Office"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
+msgid "Older (more than ${day_count} days)"
+msgstr "Ancien (plus de ${day_count} jours)"
+
 msgid "Omit Balanced Accounts"
 msgstr "Sans comptes soldés"
 
@@ -7154,6 +7178,9 @@ msgstr "Pourcentage du total"
 msgid "Percentage of total"
 msgstr "% sur Total"
 
+msgid "Period ${period_number} (from ${from} to ${to} days)"
+msgstr "Période ${period_number} (de ${from} à ${to} jours)"
+
 msgid "Period Start Date"
 msgstr "Date de début de la période"
 
@@ -7165,6 +7192,12 @@ msgstr "Date de début de périodicité"
 
 msgid "Periodicity Stop Date"
 msgstr "Date de fin de périodicité"
+
+msgid "Periods (in Days)"
+msgstr "Périodes (en nombre de jours)"
+
+msgid "Periods must be numbers."
+msgstr "Les périodes doivent être des nombres."
 
 msgid "Person"
 msgstr "Personne"
@@ -10081,6 +10114,9 @@ msgstr "Soumis"
 
 msgid "Summary"
 msgstr "Résumé"
+
+msgid "Summary Aged Balance"
+msgstr "Balance agée par tiers"
 
 msgid "Summary for each Account Class"
 msgstr "Solde intermédiaire pour chaque classe"
