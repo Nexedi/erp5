@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="FTP Connector">
+  <item>FTPConnector</item>
+  <item>Login</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
+</property_sheet_list>

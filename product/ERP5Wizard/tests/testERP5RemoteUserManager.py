@@ -92,6 +92,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return (
         'erp5_base',
+        'erp5_web_service',
         'erp5_wizard',
         )
 

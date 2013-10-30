@@ -53,6 +53,7 @@ handler_module_dict = {
   'xml-rpc': 'XMLRPCConnection',
   'soap': 'SOAPConnection',
   'soap_wsdl': 'SOAPWSDLConnection',
+  'sftp' : "SFTPConnection",
 }
 for handler_id, module_id in handler_module_dict.iteritems():
   # Ignore non-functionnal plugins.
