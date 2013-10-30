@@ -4,6 +4,7 @@ aggregate
 business_application
 callable_type
 causality
+constraint_type
 delivery
 destination
 destination_account

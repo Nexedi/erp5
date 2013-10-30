@@ -15,6 +15,11 @@ portal_caches/erp5_ui_short
 portal_caches/erp5_ui_short/default_ram_cache
 portal_categories/action_type/*
 portal_categories/callable_type/**
+portal_categories/constraint_type/audit
+portal_categories/constraint_type/configuration
+portal_categories/constraint_type/default
+portal_categories/constraint_type/post_upgrade
+portal_categories/constraint_type/pre_upgrade
 portal_categories/elementary_type/**
 portal_contribution_registry/default_predicate
 portal_contribution_registry/image_extension
