@@ -655,6 +655,7 @@ class SimulationTool(BaseTool):
         group_by_date=0,
         # sort_on
         sort_on=None,
+        group_by=None,
         # keywords for related keys
         **kw):
       """
@@ -773,6 +774,44 @@ class SimulationTool(BaseTool):
 
       new_kw['related_key_dict'] = related_key_dict.copy()
       new_kw['related_key_dict_passthrough'] = kw
+      # Check we do not get a known group_by
+      if group_by:
+        if isinstance(group_by, basestring):
+          group_by = (group_by,)
+        related_group_by = []
+        for value in group_by:
+          if value == "node_uid":
+            group_by_node = 1
+          elif value == 'mirror_node_uid':
+            group_by_mirror_node = 1
+          elif value ==  'section_uid':
+            group_by_section = 1
+          elif value == 'mirror_section_uid':
+            group_by_mirror_section = 1
+          elif value == 'payment_uid':
+            group_by_payment = 1
+          elif value == 'sub_variation_text':
+            group_by_sub_variation = 1
+          elif value == 'variation_text':
+            group_by_variation = 1
+          elif value == 'uid':
+            group_by_movement = 1
+          elif value == 'resource_uid':
+            group_by_resource = 1
+          elif value == 'project_uid':
+            group_by_project = 1
+          elif value == 'funding_uid':
+            group_by_funding = 1
+          elif value == 'payment_request_uid':
+            group_by_payment_request = 1
+          elif value == "function_uid":
+            group_by_function = 1
+          elif value == 'date':
+            group_by_date = 1
+          else:
+            related_group_by.append(value)
+        if len(related_group_by):
+          new_kw['related_key_dict_passthrough']['group_by'] = related_group_by
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
