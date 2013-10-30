@@ -80,7 +80,7 @@ SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",\n
   "TioSafe", "will"))\n
 \n
 CLOSED_CLASS_WORD_LIST = """\n
-  a about above across after against aged all along alongside already although\n
+  a about above across after against all along alongside already although\n
   amid among amongst an and another any anybody anyone anything are around as\n
   at be because been before behind below beneath beside between beyond both but\n
   by concerning could despite did do does down during each either enough every\n
