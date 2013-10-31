@@ -30,6 +30,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
      _getConversionServerDict
+from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
@@ -46,8 +47,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   content_type = None
 
   def getBusinessTemplateList(self):
-    return ('erp5_core_proxy_field_legacy',
-            'erp5_base', 'erp5_ods_style', 'erp5_odt_style',)
+    return ('erp5_core_proxy_field_legacy', 'erp5_ui_test', 'erp5_base',
+            'erp5_ods_style', 'erp5_odt_style',)
 
   def afterSetUp(self):
     if not self.skin:
@@ -388,7 +389,40 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       parser.openFromString(body)
       content_xml = parser.oo_files['content.xml']
       self.assert_('&lt;Escape&gt;&amp;<text:line-break/>newline' in content_xml)
-     
+
+  def test_untranslatable_columns(self):
+    self.portal.ListBoxZuite_reset()
+    self.portal.Localizer = DummyLocalizer()
+    message_catalog = self.portal.Localizer.erp5_ui
+    # XXX odt style does not seem to display a listbox if it is empty ???
+    self.portal.foo_module.newContent(portal_type='Foo')
+    message = self.id()
+    self.portal.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_columns = ['do_not_translate | %s' % message,],
+      field_untranslatablecolumns = ['do_not_translate | %s' % message,],
+    )
+    self.tic()
+    self.portal.changeSkin(self.skin)
+    response = self.publish(
+                   '/%s/foo_module/FooModule_viewFooList?portal_skin='
+                   % self.portal.getId(), self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('attachment', content_disposition.split(';')[0])
+    body = response.getBody()
+    self._validate(body)
+
+    from Products.ERP5OOo.OOoUtils import OOoParser
+    parser = OOoParser()
+    parser.openFromString(body)
+    content_xml = parser.oo_files['content.xml']
+    self.assertTrue(message in content_xml)
+
+    # This untranslatable column have not been translated
+    self.assertTrue(message not in message_catalog._translated)
+
 
 class TestODTStyle(TestOOoStyle):
   skin = 'ODT'
