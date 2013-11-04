@@ -39,7 +39,6 @@ from Products.ERP5Type.patches import sqlvar
 from Products.ERP5Type.patches import CMFCatalogAware
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
-from Products.ERP5Type.patches import PluggableAuthService
 from Products.ERP5Type.patches import States
 from Products.ERP5Type.patches import FSZSQLMethod
 from Products.ERP5Type.patches import ActionInformation
