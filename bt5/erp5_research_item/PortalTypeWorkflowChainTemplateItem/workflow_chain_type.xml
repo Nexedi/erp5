@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Research Item</type>
+  <workflow>edit_workflow, item_workflow</workflow>
+ </chain>
+</workflow_chain>
