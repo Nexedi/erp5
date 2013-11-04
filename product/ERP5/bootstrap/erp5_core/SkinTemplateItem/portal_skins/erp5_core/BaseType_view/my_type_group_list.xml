@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getAvailableGroupList</string> </value>
+            <value> <string>python: [(x, x) for x in here.getAvailableGroupList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
