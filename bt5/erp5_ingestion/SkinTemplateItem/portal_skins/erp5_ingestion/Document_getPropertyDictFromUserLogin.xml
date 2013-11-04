@@ -55,11 +55,11 @@ Gets document properties discovered from the user who contributes / owns the doc
 User would be usually the current user, but sometimes the name has to be given explicitly\n
 if e.g. the doc is contributed by email, and the script is run by zope user.\n
 """\n
-career_dict = context.ERP5Site_getPersonCareerDict(user_name=user_name)\n
+assignment_dict = context.ERP5Site_getPersonAssignmentDict(user_name=user_name)\n
 \n
 # XXX: make list of properties configurable through preferences\n
-return {\'group_list\': career_dict[\'group_list\'],\n
-        \'site_list\': career_dict[\'site_list\']}\n
+return {\'group_list\': assignment_dict[\'group_list\'],\n
+        \'function_list\': assignment_dict[\'function_list\']}\n
 </string> </value>
         </item>
         <item>
