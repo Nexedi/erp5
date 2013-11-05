@@ -1455,17 +1455,18 @@ class TestIngestion(ERP5TypeTestCase):
     contribution_tool = getToolByName(portal, 'portal_contributions')
     # create an user to simulate upload from him
     user = self.createUser(reference='contributor1')
-    organisation = self.portal.organisation_module.newContent(**dict(group='anybody',
-                                                                     site='arctic/spitsbergen'))
-
-    user.setSubordinationValue(organisation)
+    assignment = self.createUserAssignment(user, \
+                                           dict(group='anybody',
+                                                function='function/musician/wind/saxophone',
+                                                site='site/arctic/spitsbergen'))
     portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
     self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
-    document.discoverMetadata(document.getFilename(), 'contributor1') 
-    self.tic()
-    self.assertEquals(document.getFilename(), 'TEST-en-002.doc')
+    document.discoverMetadata(document.getSourceReference(), 'contributor1') 
+    self.stepTic()
+    self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
+    self.assertEquals('function/musician/wind/saxophone', document.getFunction())
     self.assertEquals('anybody', document.getGroup())
     self.assertEquals('arctic/spitsbergen', document.getSite())
 
