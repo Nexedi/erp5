@@ -5989,7 +5989,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       elif item_name in item_list_3:
         # Diff between text objects
+        if hasattr(new_object, 'getTextContent'): # ZODB component
+          new_object = new_object.getTextContent()
         new_obj_lines = new_object.splitlines()
+        if hasattr(installed_object, 'getTextContent'):
+          installed_object = installed_object.getTextContent()
         installed_obj_lines = installed_object.splitlines()
         diff_list = list(unified_diff(installed_obj_lines, new_obj_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
