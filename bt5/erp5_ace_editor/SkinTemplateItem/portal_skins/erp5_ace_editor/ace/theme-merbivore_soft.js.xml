@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.01</string> </value>
+            <value> <string>ts83646620.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #1C1C1C;\\\n
 color: #E6E1DC\\\n
 }\\\n
 .ace-merbivore-soft .ace_cursor {\\\n
-border-left: 2px solid #FFFFFF\\\n
-}\\\n
-.ace-merbivore-soft .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #FFFFFF\\\n
+color: #FFFFFF\\\n
 }\\\n
 .ace-merbivore-soft .ace_marker-layer .ace_selection {\\\n
 background: #494949\\\n
@@ -144,9 +140,6 @@ color: #AC4BB8\\\n
 .ace-merbivore-soft .ace_entity.ace_other.ace_attribute-name {\\\n
 color: #EAF1A3\\\n
 }\\\n
-.ace-merbivore-soft .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-merbivore-soft .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQkpLyZfD09PwPAAfYAnaStpHRAAAAAElFTkSuQmCC) right repeat-y;\\\n
 }";\n
@@ -162,7 +155,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4614</int> </value>
+            <value> <int>4404</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155563.96</string> </value>
+            <value> <string>ts83646621.24</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var ShHighlightRules = require("./sh_highlight_rules").ShHighlightRules;\n
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new ShHighlightRules().getRules());\n
+    this.HighlightRules = ShHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -74,7 +74,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
 \n
         if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
@@ -103,7 +103,7 @@ oop.inherits(Mode, TextMode);\n
         if (input !== "\\r\\n" && input !== "\\r" && input !== "\\n")\n
             return false;\n
 \n
-        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;\n
+        var tokens = this.getTokenizer().getLineTokens(line.trim(), state).tokens;\n
 \n
         if (!tokens)\n
             return false;\n
@@ -179,12 +179,28 @@ var ShHighlightRules = function() {\n
     var func = "(?:" + variableName + "\\\\s*\\\\(\\\\))";\n
 \n
     this.$rules = {\n
-        "start" : [ {\n
+        "start" : [{\n
+            token : "constant",\n
+            regex : /\\\\./\n
+        }, {\n
             token : ["text", "comment"],\n
             regex : /(^|\\s)(#.*)$/\n
         }, {\n
-            token : "string",           // " string\n
-            regex : \'"(?:[^\\\\\\\\]|\\\\\\\\.)*?"\'\n
+            token : "string",\n
+            regex : \'"\',\n
+            push : [{\n
+                token : "constant.language.escape",\n
+                regex : /\\\\(?:[$abeEfnrtv\\\\\'"]|x[a-fA-F\\d]{1,2}|u[a-fA-F\\d]{4}([a-fA-F\\d]{4})?|c.|\\d{1,3})/\n
+            }, {\n
+                token : "constant",\n
+                regex : /\\$\\w+/\n
+            }, {\n
+                token : "string",\n
+                regex : \'"\',\n
+                next: "pop"\n
+            }, {\n
+                defaultToken: "string"\n
+            }]\n
         }, {\n
             token : "variable.language",\n
             regex : builtinVariable\n
@@ -199,7 +215,7 @@ var ShHighlightRules = function() {\n
             regex : fileDescriptor\n
         }, {\n
             token : "string",           // \' string\n
-            regex : "\'(?:[^\\\\\\\\]|\\\\\\\\.)*?\'"\n
+            start : "\'", end : "\'"\n
         }, {\n
             token : "constant.numeric", // float\n
             regex : floatNumber\n
@@ -220,6 +236,8 @@ var ShHighlightRules = function() {\n
             regex : "[\\\\]\\\\)\\\\}]"\n
         } ]\n
     };\n
+    \n
+    this.normalizeRules();\n
 };\n
 \n
 oop.inherits(ShHighlightRules, TextHighlightRules);\n
@@ -236,7 +254,7 @@ exports.ShHighlightRules = ShHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6999</int> </value>
+            <value> <int>7477</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155558.0</string> </value>
+            <value> <string>ts83646622.08</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,9 +67,8 @@ var HaskellHighlightRules = require("./haskell_highlight_rules").HaskellHighligh
 var FoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new HaskellHighlightRules();\n
+    this.HighlightRules = HaskellHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -353,7 +352,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15935</int> </value>
+            <value> <int>15872</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

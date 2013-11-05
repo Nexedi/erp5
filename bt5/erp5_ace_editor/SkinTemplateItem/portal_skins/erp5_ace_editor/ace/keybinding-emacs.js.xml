@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155554.27</string> </value>
+            <value> <string>ts83646622.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -95,7 +95,7 @@ exports.handler.attach = function(editor) {\n
                 background-color: rgba(0,250,0,0.9);\\\n
                 opacity: 0.5;\\\n
             }\\\n
-            .emacs-mode .ace_cursor.ace_hidden{\\\n
+            .emacs-mode .ace_hidden-cursors .ace_cursor{\\\n
                 opacity: 1;\\\n
                 background-color: transparent;\\\n
             }\\\n
@@ -219,7 +219,7 @@ exports.handler.bindKey = function(key, command) {\n
     if (!key)\n
         return;\n
 \n
-    var ckb = this.commmandKeyBinding;\n
+    var ckb = this.commandKeyBinding;\n
     key.split("|").forEach(function(keyPart) {\n
         keyPart = keyPart.toLowerCase();\n
         ckb[keyPart] = command;\n
@@ -260,7 +260,7 @@ exports.handler.handleKeyboard = function(data, hashId, key, keyCode) {\n
     data.universalArgument = false;\n
     if (modifier) key = modifier + key;\n
     if (data.keyChain) key = data.keyChain += " " + key;\n
-    var command = this.commmandKeyBinding[key];\n
+    var command = this.commandKeyBinding[key];\n
     data.keyChain = command == "null" ? key : "";\n
     if (!command) return undefined;\n
     if (command === "null") return {command: "null"};\n
@@ -1090,7 +1090,7 @@ exports.Occur = Occur;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>36738</int> </value>
+            <value> <int>36745</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

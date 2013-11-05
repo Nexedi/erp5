@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155554.74</string> </value>
+            <value> <string>ts83646622.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var AdaHighlightRules = require("./ada_highlight_rules").AdaHighlightRules;\n
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new AdaHighlightRules().getRules());\n
+    this.HighlightRules = AdaHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -148,7 +148,7 @@ exports.AdaHighlightRules = AdaHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4503</int> </value>
+            <value> <int>4475</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

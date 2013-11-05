@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155553.93</string> </value>
+            <value> <string>ts83646622.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -88,7 +88,7 @@ function applyStyles(elm, styles) {\n
 \n
 function setupContainer(element, getValue) {\n
     if (element.type != \'textarea\') {\n
-        throw "Textarea required!";\n
+        throw new Error("Textarea required!");\n
     }\n
 \n
     var parentNode = element.parentNode;\n
@@ -247,21 +247,18 @@ function setupApi(editor, editorDiv, settingDiv, ace, options, loader) {\n
             settingDiv.hideButton.focus();\n
             editor.on("focus", function onFocus() {\n
                 editor.removeListener("focus", onFocus);\n
-                settingDiv.style.display = "none"\n
+                settingDiv.style.display = "none";\n
             });\n
         } else {\n
             editor.focus();\n
-        };\n
+        }\n
     };\n
 \n
+    editor.$setOption = editor.setOption;\n
     editor.setOption = function(key, value) {\n
         if (options[key] == value) return;\n
 \n
         switch (key) {\n
-            case "gutter":\n
-                renderer.setShowGutter(toBool(value));\n
-            break;\n
-\n
             case "mode":\n
                 if (value != "text") {\n
                     loader("mode-" + value + ".js", "ace/mode/" + value, function() {\n
@@ -323,18 +320,9 @@ function setupApi(editor, editorDiv, settingDiv, ace, options, loader) {\n
                     break;\n
                 }\n
             break;\n
-\n
-            case "useSoftTabs":\n
-                session.setUseSoftTabs(toBool(value));\n
-            break;\n
-\n
-            case "showPrintMargin":\n
-                renderer.setShowPrintMargin(toBool(value));\n
-            break;\n
-\n
-            case "showInvisibles":\n
-                editor.setShowInvisibles(toBool(value));\n
-            break;\n
+            \n
+            default:\n
+                editor.$setOption(key, toBool(value));\n
         }\n
 \n
         options[key] = value;\n
@@ -348,9 +336,7 @@ function setupApi(editor, editorDiv, settingDiv, ace, options, loader) {\n
         return options;\n
     };\n
 \n
-    for (var option in exports.options) {\n
-        editor.setOption(option, exports.options[option]);\n
-    }\n
+    editor.setOptions(exports.options);\n
 \n
     return editor;\n
 }\n
@@ -450,7 +436,7 @@ function setupSettingPanel(settingDiv, settingOpener, editor, options) {\n
                     cValue == "true" ? "checked=\'true\'" : "",\n
                "\'></input>"\n
             );\n
-            return\n
+            return;\n
         }\n
         builder.push("<select title=\'" + option + "\'>");\n
         for (var value in obj) {\n
@@ -524,7 +510,7 @@ exports.options = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16096</int> </value>
+            <value> <int>15735</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

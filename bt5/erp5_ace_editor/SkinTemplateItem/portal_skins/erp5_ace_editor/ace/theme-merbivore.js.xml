@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155567.87</string> </value>
+            <value> <string>ts83646620.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #161616;\\\n
 color: #E6E1DC\\\n
 }\\\n
 .ace-merbivore .ace_cursor {\\\n
-border-left: 2px solid #FFFFFF\\\n
-}\\\n
-.ace-merbivore .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #FFFFFF\\\n
+color: #FFFFFF\\\n
 }\\\n
 .ace-merbivore .ace_marker-layer .ace_selection {\\\n
 background: #454545\\\n
@@ -143,9 +139,6 @@ color: #AD2EA4\\\n
 .ace-merbivore .ace_entity.ace_other.ace_attribute-name {\\\n
 color: #FFFF89\\\n
 }\\\n
-.ace-merbivore .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-merbivore .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQFxf3ZXB1df0PAAdsAmERTkEHAAAAAElFTkSuQmCC) right repeat-y;\\\n
 }";\n
@@ -161,7 +154,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4390</int> </value>
+            <value> <int>4190</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

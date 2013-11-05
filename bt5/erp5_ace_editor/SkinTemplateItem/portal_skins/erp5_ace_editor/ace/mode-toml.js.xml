@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155565.12</string> </value>
+            <value> <string>ts83646621.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>/* ***** BEGIN LICENSE BLOCK *****\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
  * Distributed under the BSD license:\n
  *\n
  * Copyright (c) 2013, Ajax.org B.V.\n
@@ -55,19 +57,18 @@
  *\n
  * ***** END LICENSE BLOCK ***** */\n
 \n
-define(\'ace/mode/toml\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/toml_highlight_rules\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
+define(\'ace/mode/toml\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/toml_highlight_rules\', \'ace/mode/folding/ini\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../lib/oop");\n
 var TextMode = require("./text").Mode;\n
 var Tokenizer = require("../tokenizer").Tokenizer;\n
 var TomlHighlightRules = require("./toml_highlight_rules").TomlHighlightRules;\n
-var FoldMode = require("./folding/cstyle").FoldMode;\n
+var FoldMode = require("./folding/ini").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new TomlHighlightRules();\n
+    this.HighlightRules = TomlHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -147,60 +148,59 @@ oop.inherits(TomlHighlightRules, TextHighlightRules);\n
 exports.TomlHighlightRules = TomlHighlightRules;\n
 });\n
 \n
-define(\'ace/mode/folding/cstyle\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
+define(\'ace/mode/folding/ini\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../../lib/oop");\n
 var Range = require("../../range").Range;\n
 var BaseFoldMode = require("./fold_mode").FoldMode;\n
 \n
-var FoldMode = exports.FoldMode = function(commentRegex) {\n
-    if (commentRegex) {\n
-        this.foldingStartMarker = new RegExp(\n
-            this.foldingStartMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.start)\n
-        );\n
-        this.foldingStopMarker = new RegExp(\n
-            this.foldingStopMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.end)\n
-        );\n
-    }\n
+var FoldMode = exports.FoldMode = function() {\n
 };\n
 oop.inherits(FoldMode, BaseFoldMode);\n
 \n
 (function() {\n
 \n
-    this.foldingStartMarker = /(\\{|\\[)[^\\}\\]]*$|^\\s*(\\/\\*)/;\n
-    this.foldingStopMarker = /^[^\\[\\{]*(\\}|\\])|^[\\s\\*]*(\\*\\/)/;\n
+    this.foldingStartMarker = /^\\s*\\[([^\\])]*)]\\s*(?:$|[;#])/;\n
 \n
     this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var re = this.foldingStartMarker;\n
         var line = session.getLine(row);\n
-        var match = line.match(this.foldingStartMarker);\n
-        if (match) {\n
-            var i = match.index;\n
+        \n
+        var m = line.match(re);\n
+        \n
+        if (!m) return;\n
+        \n
+        var startName = m[1] + ".";\n
+        \n
+        var startColumn = line.length;\n
+        var maxRow = session.getLength();\n
+        var startRow = row;\n
+        var endRow = row;\n
 \n
-            if (match[1])\n
-                return this.openingBracketBlock(session, match[1], row, i);\n
+        while (++row < maxRow) {\n
+            line = session.getLine(row);\n
+            if (/^\\s*$/.test(line))\n
+                continue;\n
+            m = line.match(re);\n
+            if (m && m[1].lastIndexOf(startName, 0) !== 0)\n
+                break;\n
 \n
-            return session.getCommentFoldRange(row, i + match[0].length, 1);\n
+            endRow = row;\n
         }\n
 \n
-        if (foldStyle !== "markbeginend")\n
-            return;\n
-\n
-        var match = line.match(this.foldingStopMarker);\n
-        if (match) {\n
-            var i = match.index + match[0].length;\n
-\n
-            if (match[1])\n
-                return this.closingBracketBlock(session, match[1], row, i);\n
-\n
-            return session.getCommentFoldRange(row, i, -1);\n
+        if (endRow > startRow) {\n
+            var endColumn = session.getLine(endRow).length;\n
+            return new Range(startRow, startColumn, endRow, endColumn);\n
         }\n
     };\n
 \n
 }).call(FoldMode.prototype);\n
 \n
 });\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -208,7 +208,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5886</int> </value>
+            <value> <int>5521</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

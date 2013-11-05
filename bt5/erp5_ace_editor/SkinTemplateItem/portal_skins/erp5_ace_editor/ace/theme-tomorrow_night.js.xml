@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155569.41</string> </value>
+            <value> <string>ts83646620.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #1D1F21;\\\n
 color: #C5C8C6\\\n
 }\\\n
 .ace-tomorrow-night .ace_cursor {\\\n
-border-left: 2px solid #AEAFAD\\\n
-}\\\n
-.ace-tomorrow-night .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #AEAFAD\\\n
+color: #AEAFAD\\\n
 }\\\n
 .ace-tomorrow-night .ace_marker-layer .ace_selection {\\\n
 background: #373B41\\\n
@@ -141,7 +137,7 @@ color: #81A2BE\\\n
 .ace-tomorrow-night .ace_support.ace_type {\\\n
 color: #F0C674\\\n
 }\\\n
-.ace-tomorrow-night .ace_markup.ace_heading,\\\n
+.ace-tomorrow-night .ace_heading,\\\n
 .ace-tomorrow-night .ace_string {\\\n
 color: #B5BD68\\\n
 }\\\n
@@ -154,9 +150,6 @@ color: #CC6666\\\n
 }\\\n
 .ace-tomorrow-night .ace_comment {\\\n
 color: #969896\\\n
-}\\\n
-.ace-tomorrow-night .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
 }\\\n
 .ace-tomorrow-night .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y;\\\n
@@ -173,7 +166,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4976</int> </value>
+            <value> <int>4755</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155553.56</string> </value>
+            <value> <string>ts83646622.64</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -39,8 +39,9 @@ exports.contextMenuHandler = function(e){\n
     var PLACEHOLDER = "\\x01\\x01";\n
     var value = w + " " + PLACEHOLDER;\n
     text.value = value;\n
-    text.setSelectionRange(w.length + 1, w.length + 1);\n
+    text.setSelectionRange(w.length, w.length + 1);\n
     text.setSelectionRange(0, 0);\n
+    text.setSelectionRange(0, w.length);\n
 \n
     var afterKeydown = false;\n
     event.addListener(text, "keydown", function onKeydown() {\n
@@ -95,7 +96,7 @@ require("../config").defineOptions(Editor.prototype, "editor", {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2227</int> </value>
+            <value> <int>2264</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

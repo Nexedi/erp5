@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.71</string> </value>
+            <value> <string>ts83646620.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: black;\\\n
 color: #DEDEDE\\\n
 }\\\n
 .ace-terminal-theme .ace_cursor {\\\n
-border-left: 2px solid springgreen\\\n
-}\\\n
-.ace-terminal-theme .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #9F9F9F\\\n
+color: #9F9F9F\\\n
 }\\\n
 .ace-terminal-theme .ace_marker-layer .ace_selection {\\\n
 background: #424242\\\n
@@ -147,7 +143,7 @@ color: #7AA6DA\\\n
 .ace-terminal-theme .ace_support.ace_type {\\\n
 color: #E7C547\\\n
 }\\\n
-.ace-terminal-theme .ace_markup.ace_heading,\\\n
+.ace-terminal-theme .ace_heading,\\\n
 .ace-terminal-theme .ace_string {\\\n
 color: #B9CA4A\\\n
 }\\\n
@@ -160,9 +156,6 @@ color: #D54E53\\\n
 }\\\n
 .ace-terminal-theme .ace_comment {\\\n
 color: orangered\\\n
-}\\\n
-.ace-terminal-theme .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
 }\\\n
 .ace-terminal-theme .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYLBWV/8PAAK4AYnhiq+xAAAAAElFTkSuQmCC) right repeat-y;\\\n
@@ -180,7 +173,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5130</int> </value>
+            <value> <int>4905</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

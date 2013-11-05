@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155557.85</string> </value>
+            <value> <string>ts83646622.1</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,10 +67,8 @@ var HamlHighlightRules = require("./haml_highlight_rules").HamlHighlightRules;\n
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new HamlHighlightRules();\n
-    this.foldingRules = new FoldMode();    \n
-    \n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
+    this.HighlightRules = HamlHighlightRules;\n
+    this.foldingRules = new FoldMode();\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -519,7 +517,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>17975</int> </value>
+            <value> <int>17903</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155553.29</string> </value>
+            <value> <string>ts83646622.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -222,7 +222,7 @@ var html = \'<div class="ace_search right">\\\n
     </div>\\\n
     <div class="ace_replace_form">\\\n
         <input class="ace_search_field" placeholder="Replace with" spellcheck="false"></input>\\\n
-        <button type="button" action="replace" class="ace_replacebtn">Replace</button>\\\n
+        <button type="button" action="replaceAndFindNext" class="ace_replacebtn">Replace</button>\\\n
         <button type="button" action="replaceAll" class="ace_replacebtn">All</button>\\\n
     </div>\\\n
     <div class="ace_search_options">\\\n
@@ -248,9 +248,7 @@ var SearchBox = function(editor, range, showReplaceForm) {\n
         this.editor = editor;\n
     };\n
 \n
-    this.$init = function() {\n
-        var sb = this.element;\n
-\n
+    this.$initElements = function(sb) {\n
         this.searchBox = sb.querySelector(".ace_search_form");\n
         this.replaceBox = sb.querySelector(".ace_replace_form");\n
         this.searchOptions = sb.querySelector(".ace_search_options");\n
@@ -259,7 +257,13 @@ var SearchBox = function(editor, range, showReplaceForm) {\n
         this.wholeWordOption = sb.querySelector("[action=toggleWholeWords]");\n
         this.searchInput = this.searchBox.querySelector(".ace_search_field");\n
         this.replaceInput = this.replaceBox.querySelector(".ace_search_field");\n
-\n
+    };\n
+    \n
+    this.$init = function() {\n
+        var sb = this.element;\n
+        \n
+        this.$initElements(sb);\n
+        \n
         var _this = this;\n
         event.addListener(sb, "mousedown", function(e) {\n
             setTimeout(function(){\n
@@ -268,7 +272,7 @@ var SearchBox = function(editor, range, showReplaceForm) {\n
             event.stopPropagation(e);\n
         });\n
         event.addListener(sb, "click", function(e) {\n
-            var t = e.target;\n
+            var t = e.target || e.srcElement;\n
             var action = t.getAttribute("action");\n
             if (action && _this[action])\n
                 _this[action]();\n
@@ -383,7 +387,9 @@ var SearchBox = function(editor, range, showReplaceForm) {\n
             caseSensitive: this.caseSensitiveOption.checked,\n
             wholeWord: this.wholeWordOption.checked\n
         });\n
-        dom.setCssClass(this.searchBox, "ace_nomatch", !range && this.searchInput.value);\n
+        var noMatch = !range && this.searchInput.value;\n
+        dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);\n
+        this.editor._emit("findSearchBox", { match: !noMatch });\n
         this.highlight();\n
     };\n
     this.findNext = function() {\n
@@ -393,10 +399,18 @@ var SearchBox = function(editor, range, showReplaceForm) {\n
         this.find(true, true);\n
     };\n
     this.replace = function() {\n
-        this.editor.replace(this.replaceInput.value);\n
+        if (!this.editor.getReadOnly())\n
+            this.editor.replace(this.replaceInput.value);\n
+    };    \n
+    this.replaceAndFindNext = function() {\n
+        if (!this.editor.getReadOnly()) {\n
+            this.editor.replace(this.replaceInput.value);\n
+            this.findNext()\n
+        }\n
     };\n
     this.replaceAll = function() {\n
-        this.editor.replaceAll(this.replaceInput.value);\n
+        if (!this.editor.getReadOnly())\n
+            this.editor.replaceAll(this.replaceInput.value);\n
     };\n
 \n
     this.hide = function() {\n
@@ -427,47 +441,6 @@ exports.Search = function(editor, isReplace) {\n
     sb.show(editor.session.getTextRange(), isReplace);\n
 };\n
 \n
-\n
-exports.ISearch = function(session, options) {\n
-    this.$changeListener = this.$changeListener.bind(this);\n
-    this.startRange = session.selection.toOrientedRange();\n
-    this.options = options || {};\n
-};\n
-\n
-(function(){\n
-    this.setSession = function(session) {\n
-        if (this.session) {\n
-            this.session.removeListener(this.$changeListener);\n
-        }\n
-        this.session = session;\n
-        this.session.addListener(this.$changeListener);\n
-    };\n
-    this.setSearchString = function() {\n
-\n
-    };\n
-    this.getValue = function() {\n
-        if (this.value == null)\n
-            this.value = this.session.getValue();\n
-        return this.value;\n
-    };\n
-    this.$changeListener = function() {\n
-        this.value = null;\n
-    };\n
-    this.find = function() {\n
-\n
-    };\n
-    this.$edgeBefore = function() {\n
-        this.cursor = this.startRange[this.options.backwards ? "start" : "end"];\n
-    };\n
-    this.$edgeAfter = function() {\n
-\n
-    };\n
-    this.next = function(dir) {\n
-\n
-    };\n
-}).call(exports.ISearch.prototype);\n
-\n
-\n
 });\n
 
 
@@ -479,7 +452,7 @@ exports.ISearch = function(session, options) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14773</int> </value>
+            <value> <int>14267</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

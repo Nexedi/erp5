@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.24</string> </value>
+            <value> <string>ts83646620.69</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #272822;\\\n
 color: #F8F8F2\\\n
 }\\\n
 .ace-monokai .ace_cursor {\\\n
-border-left: 2px solid #F8F8F0\\\n
-}\\\n
-.ace-monokai .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #F8F8F0\\\n
+color: #F8F8F0\\\n
 }\\\n
 .ace-monokai .ace_marker-layer .ace_selection {\\\n
 background: #49483E\\\n
@@ -104,6 +100,10 @@ color: #52524d\\\n
 .ace-monokai .ace_meta.ace_tag,\\\n
 .ace-monokai .ace_storage {\\\n
 color: #F92672\\\n
+}\\\n
+.ace-monokai .ace_punctuation,\\\n
+.ace-monokai .ace_punctuation.ace_tag {\\\n
+color: #fff\\\n
 }\\\n
 .ace-monokai .ace_constant.ace_character,\\\n
 .ace-monokai .ace_constant.ace_language,\\\n
@@ -149,9 +149,6 @@ color: #E6DB74\\\n
 .ace-monokai .ace_comment {\\\n
 color: #75715E\\\n
 }\\\n
-.ace-monokai .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-monokai .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0FD0ZXBzd/wPAAjVAoxeSgNeAAAAAElFTkSuQmCC) right repeat-y;\\\n
 }";\n
@@ -167,7 +164,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4456</int> </value>
+            <value> <int>4349</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

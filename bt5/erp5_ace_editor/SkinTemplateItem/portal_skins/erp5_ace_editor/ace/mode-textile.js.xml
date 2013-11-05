@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155564.77</string> </value>
+            <value> <string>ts83646621.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -60,7 +60,7 @@ var TextileHighlightRules = require("./textile_highlight_rules").TextileHighligh
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new TextileHighlightRules().getRules());\n
+    this.HighlightRules = TextileHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
 };\n
 oop.inherits(Mode, TextMode);\n
@@ -198,7 +198,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5601</int> </value>
+            <value> <int>5573</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155563.4</string> </value>
+            <value> <string>ts83646621.32</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var SassHighlightRules = require("./sass_highlight_rules").SassHighlightRules;\n
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new SassHighlightRules().getRules());\n
+    this.HighlightRules = SassHighlightRules;\n
     this.foldingRules = new FoldMode();\n
 };\n
 oop.inherits(Mode, TextMode);\n
@@ -474,7 +474,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18814</int> </value>
+            <value> <int>18786</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

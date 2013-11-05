@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155563.81</string> </value>
+            <value> <string>ts83646621.26</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -64,7 +64,7 @@ var CssBehaviour = require("./behaviour/css").CssBehaviour;\n
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new ScssHighlightRules().getRules());\n
+    this.HighlightRules = ScssHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CssBehaviour();\n
     this.foldingRules = new CStyleFoldMode();\n
@@ -78,7 +78,7 @@ oop.inherits(Mode, TextMode);\n
 \n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
-        var tokens = this.$tokenizer.getLineTokens(line, state).tokens;\n
+        var tokens = this.getTokenizer().getLineTokens(line, state).tokens;\n
         if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
             return indent;\n
         }\n
@@ -864,7 +864,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>34813</int> </value>
+            <value> <int>34789</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

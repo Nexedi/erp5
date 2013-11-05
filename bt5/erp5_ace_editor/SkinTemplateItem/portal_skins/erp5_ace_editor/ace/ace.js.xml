@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155552.54</string> </value>
+            <value> <string>ts83646622.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>545508</int> </value>
+            <value> <int>580350</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -246,7 +246,7 @@ exports.edit = function(el) {\n
         var _id = el;\n
         var el = document.getElementById(_id);\n
         if (!el)\n
-            throw "ace.edit can\'t find div #" + _id;\n
+            throw new Error("ace.edit can\'t find div #" + _id);\n
     }\n
 \n
     if (el.env && el.env.editor instanceof Editor)\n
@@ -1303,7 +1303,7 @@ exports.addListener = function(elem, type, callback) {\n
     }\n
     if (elem.attachEvent) {\n
         var wrapper = function() {\n
-            callback(window.event);\n
+            callback.call(elem, window.event);\n
         };\n
         callback._wrapper = wrapper;\n
         elem.attachEvent("on" + type, wrapper);\n
@@ -1350,51 +1350,25 @@ exports.getButton = function(e) {\n
     }\n
 };\n
 \n
-if (document.documentElement.setCapture) {\n
-    exports.capture = function(el, eventHandler, releaseCaptureHandler) {\n
-        var called = false;\n
-        function onReleaseCapture(e) {\n
-            eventHandler(e);\n
+exports.capture = function(el, eventHandler, releaseCaptureHandler) {\n
+    function onMouseUp(e) {\n
+        eventHandler && eventHandler(e);\n
+        releaseCaptureHandler && releaseCaptureHandler(e);\n
 \n
-            if (!called) {\n
-                called = true;\n
-                releaseCaptureHandler(e);\n
-            }\n
+        exports.removeListener(document, "mousemove", eventHandler, true);\n
+        exports.removeListener(document, "mouseup", onMouseUp, true);\n
+        exports.removeListener(document, "dragstart", onMouseUp, true);\n
+    }\n
 \n
-            exports.removeListener(el, "mousemove", eventHandler);\n
-            exports.removeListener(el, "mouseup", onReleaseCapture);\n
-            exports.removeListener(el, "losecapture", onReleaseCapture);\n
-\n
-            el.releaseCapture();\n
-        }\n
-\n
-        exports.addListener(el, "mousemove", eventHandler);\n
-        exports.addListener(el, "mouseup", onReleaseCapture);\n
-        exports.addListener(el, "losecapture", onReleaseCapture);\n
-        el.setCapture();\n
-    };\n
-}\n
-else {\n
-    exports.capture = function(el, eventHandler, releaseCaptureHandler) {\n
-        function onMouseUp(e) {\n
-            eventHandler && eventHandler(e);\n
-            releaseCaptureHandler && releaseCaptureHandler(e);\n
-\n
-            document.removeEventListener("mousemove", eventHandler, true);\n
-            document.removeEventListener("mouseup", onMouseUp, true);\n
-\n
-            e.stopPropagation();\n
-        }\n
-\n
-        document.addEventListener("mousemove", eventHandler, true);\n
-        document.addEventListener("mouseup", onMouseUp, true);\n
-    };\n
-}\n
+    exports.addListener(document, "mousemove", eventHandler, true);\n
+    exports.addListener(document, "mouseup", onMouseUp, true);\n
+    exports.addListener(document, "dragstart", onMouseUp, true);\n
+};\n
 \n
 exports.addMouseWheelListener = function(el, callback) {\n
-    var factor = 8;\n
-    var listener = function(e) {\n
-        if (e.wheelDelta !== undefined) {\n
+    if ("onmousewheel" in el) {\n
+        var factor = 8;\n
+        exports.addListener(el, "mousewheel", function(e) {\n
             if (e.wheelDeltaX !== undefined) {\n
                 e.wheelX = -e.wheelDeltaX / factor;\n
                 e.wheelY = -e.wheelDeltaY / factor;\n
@@ -1402,8 +1376,16 @@ exports.addMouseWheelListener = function(el, callback) {\n
                 e.wheelX = 0;\n
                 e.wheelY = -e.wheelDelta / factor;\n
             }\n
-        }\n
-        else {\n
+            callback(e);\n
+        });\n
+    } else if ("onwheel" in el) {\n
+        exports.addListener(el, "wheel",  function(e) {\n
+            e.wheelX = (e.deltaX || 0) * 5;\n
+            e.wheelY = (e.deltaY || 0) * 5;\n
+            callback(e);\n
+        });\n
+    } else {\n
+        exports.addListener(el, "DOMMouseScroll", function(e) {\n
             if (e.axis && e.axis == e.HORIZONTAL_AXIS) {\n
                 e.wheelX = (e.detail || 0) * 5;\n
                 e.wheelY = 0;\n
@@ -1411,11 +1393,9 @@ exports.addMouseWheelListener = function(el, callback) {\n
                 e.wheelX = 0;\n
                 e.wheelY = (e.detail || 0) * 5;\n
             }\n
-        }\n
-        callback(e);\n
-    };\n
-    exports.addListener(el, "DOMMouseScroll", listener);\n
-    exports.addListener(el, "mousewheel", listener);\n
+            callback(e);\n
+        });\n
+    }\n
 };\n
 \n
 exports.addMultiMouseDownListener = function(el, timeouts, eventHandler, callbackName) {\n
@@ -1430,21 +1410,22 @@ exports.addMultiMouseDownListener = function(el, timeouts, eventHandler, callbac
     exports.addListener(el, "mousedown", function(e) {\n
         if (exports.getButton(e) != 0) {\n
             clicks = 0;\n
+        } else if (e.detail > 1) {\n
+            clicks++;\n
+            if (clicks > 4)\n
+                clicks = 1;\n
         } else {\n
-            var isNewClick = Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5;\n
-\n
-            if (!timer || isNewClick)\n
-                clicks = 0;\n
-\n
-            clicks += 1;\n
-\n
-            if (timer)\n
-                clearTimeout(timer)\n
-            timer = setTimeout(function() {timer = null}, timeouts[clicks - 1] || 600);\n
+            clicks = 1;\n
         }\n
-        if (clicks == 1) {\n
-            startX = e.clientX;\n
-            startY = e.clientY;\n
+        if (useragent.isIE) {\n
+            var isNewClick = Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5;\n
+            if (isNewClick) {\n
+                clicks = 1;\n
+            }\n
+            if (clicks == 1) {\n
+                startX = e.clientX;\n
+                startY = e.clientY;\n
+            }\n
         }\n
 \n
         eventHandler[callbackName]("mousedown", e);\n
@@ -1477,6 +1458,29 @@ function normalizeCommandKeys(callback, e, keyCode) {\n
             | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);\n
     }\n
 \n
+    if (!useragent.isMac && pressedKeys) {\n
+        if (pressedKeys[91] || pressedKeys[92])\n
+            hashId |= 8;\n
+        if (pressedKeys.altGr) {\n
+            if ((3 & hashId) != 3)\n
+                pressedKeys.altGr = 0\n
+            else\n
+                return;\n
+        }\n
+        if (keyCode === 18 || keyCode === 17) {\n
+            var location = e.location || e.keyLocation;\n
+            if (keyCode === 17 && location === 1) {\n
+                ts = e.timeStamp;\n
+            } else if (keyCode === 18 && hashId === 3 && location === 2) {\n
+                var dt = -ts;\n
+                ts = e.timeStamp;\n
+                dt += ts;\n
+                if (dt < 3)\n
+                    pressedKeys.altGr = true;\n
+            }\n
+        }\n
+    }\n
+    \n
     if (keyCode in keys.MODIFIER_KEYS) {\n
         switch (keys.MODIFIER_KEYS[keyCode]) {\n
             case "Alt":\n
@@ -1495,19 +1499,28 @@ function normalizeCommandKeys(callback, e, keyCode) {\n
         keyCode = 0;\n
     }\n
 \n
-    if (!useragent.isMac && pressedKeys[91] || pressedKeys[92])\n
-        hashId |= 8;\n
-\n
-    if (hashId & 8 && (keyCode == 91 || keyCode == 93)) {\n
+    if (hashId & 8 && (keyCode === 91 || keyCode === 93)) {\n
         keyCode = 0;\n
+    }\n
+    \n
+    if (!hashId && keyCode === 13) {\n
+        if (e.location || e.keyLocation === 3) {\n
+            callback(e, hashId, -keyCode)\n
+            if (e.defaultPrevented)\n
+                return;\n
+        }\n
     }\n
     if (!hashId && !(keyCode in keys.FUNCTION_KEYS) && !(keyCode in keys.PRINTABLE_KEYS)) {\n
         return false;\n
     }\n
+    \n
+    \n
+    \n
     return callback(e, hashId, keyCode);\n
 }\n
 \n
-var pressedKeys = Object.create(null);\n
+var pressedKeys = null;\n
+var ts = 0;\n
 exports.addCommandKeyListener = function(el, callback) {\n
     var addListener = exports.addListener;\n
     if (useragent.isOldGecko || (useragent.isOpera && !("KeyboardEvent" in window))) {\n
@@ -1539,9 +1552,12 @@ exports.addCommandKeyListener = function(el, callback) {\n
             pressedKeys[e.keyCode] = null;\n
         });\n
 \n
-        addListener(el, "focus", function(e) {\n
+        if (!pressedKeys) {\n
             pressedKeys = Object.create(null);\n
-        });\n
+            addListener(window, "focus", function(e) {\n
+                pressedKeys = Object.create(null);\n
+            });\n
+        }\n
     }\n
 };\n
 \n
@@ -1619,6 +1635,7 @@ var Keys = (function() {\n
             103: "Numpad7",\n
             104: "Numpad8",\n
             105: "Numpad9",\n
+            \'-13\': "NumpadEnter",\n
             112: "F1",\n
             113: "F2",\n
             114: "F3",\n
@@ -1774,6 +1791,20 @@ var Editor = function(renderer, session) {\n
         wrap: true\n
     });\n
 \n
+    this.$historyTracker = this.$historyTracker.bind(this);\n
+    this.commands.on("exec", this.$historyTracker);\n
+\n
+    this.$initOperationListeners();\n
+    \n
+    this._$emitInputEvent = lang.delayedCall(function() {\n
+        this._signal("input", {});\n
+        this.session.bgTokenizer && this.session.bgTokenizer.scheduleStart();\n
+    }.bind(this));\n
+    \n
+    this.on("change", function(_, _self) {\n
+        _self._$emitInputEvent.schedule(31);\n
+    });\n
+\n
     this.setSession(session || new EditSession(""));\n
     config.resetOptions(this);\n
     config._emit("editor", this);\n
@@ -1782,6 +1813,114 @@ var Editor = function(renderer, session) {\n
 (function(){\n
 \n
     oop.implement(this, EventEmitter);\n
+\n
+    this.$initOperationListeners = function() {\n
+        function last(a) {return a[a.length - 1]};\n
+\n
+        this.selections = [];\n
+        this.commands.on("exec", function(e) {\n
+            this.startOperation(e);\n
+\n
+            var command = e.command;\n
+            if (command.group == "fileJump") {\n
+                var prev = this.prevOp;\n
+                if (!prev || prev.command.group != "fileJump") {\n
+                    this.lastFileJumpPos = last(this.selections)\n
+                }\n
+            } else {\n
+                this.lastFileJumpPos = null;\n
+            }\n
+        }.bind(this), true);\n
+\n
+        this.commands.on("afterExec", function(e) {\n
+            var command = e.command;\n
+\n
+            if (command.group == "fileJump") {\n
+                if (this.lastFileJumpPos && !this.curOp.selectionChanged) {\n
+                    this.selection.fromJSON(this.lastFileJumpPos);\n
+                    return\n
+                }\n
+            }\n
+            this.endOperation(e);\n
+        }.bind(this), true);\n
+\n
+        this.$opResetTimer = lang.delayedCall(this.endOperation.bind(this));\n
+\n
+        this.on("change", function() {\n
+            this.curOp || this.startOperation();\n
+            this.curOp.docChanged = true;\n
+        }.bind(this), true);\n
+\n
+        this.on("changeSelection", function() {\n
+            this.curOp || this.startOperation();\n
+            this.curOp.selectionChanged = true;\n
+        }.bind(this), true);\n
+    }\n
+\n
+    this.curOp = null;\n
+    this.prevOp = {};\n
+    this.startOperation = function(commadEvent) {\n
+        if (this.curOp) {\n
+            if (!commadEvent || this.curOp.command)\n
+                return;\n
+            this.prevOp = this.curOp;\n
+        }\n
+        if (!commadEvent) {\n
+            this.previousCommand = null;\n
+            commadEvent = {};\n
+        }\n
+\n
+        this.$opResetTimer.schedule();\n
+        this.curOp = {\n
+            command: commadEvent.command || {},\n
+            args: commadEvent.args\n
+        };\n
+\n
+        this.selections.push(this.selection.toJSON());\n
+    };\n
+\n
+    this.endOperation = function() {\n
+        if (this.curOp) {\n
+            this.prevOp = this.curOp;\n
+            this.curOp = null;\n
+        }\n
+    };\n
+\n
+    this.$historyTracker = function(e) {\n
+        if (!this.$mergeUndoDeltas)\n
+            return;\n
+\n
+\n
+        var prev = this.prevOp;\n
+        var mergeableCommands = ["backspace", "del", "insertstring"];\n
+        var shouldMerge = prev.command && (e.command.name == prev.command.name);\n
+        if (e.command.name == "insertstring") {\n
+            var text = e.args;\n
+            if (this.mergeNextCommand === undefined)\n
+                this.mergeNextCommand = true;\n
+\n
+            shouldMerge = shouldMerge\n
+                && this.mergeNextCommand // previous command allows to coalesce with\n
+                && (!/\\s/.test(text) || /\\s/.test(prev.args)) // previous insertion was of same type\n
+\n
+            this.mergeNextCommand = true;\n
+        } else {\n
+            shouldMerge = shouldMerge\n
+                && mergeableCommands.indexOf(e.command.name) !== -1// the command is mergeable\n
+        }\n
+\n
+        if (\n
+            this.$mergeUndoDeltas != "always"\n
+            && Date.now() - this.sequenceStartTime > 2000\n
+        ) {\n
+            shouldMerge = false; // the sequence is too long\n
+        }\n
+\n
+        if (shouldMerge)\n
+            this.session.mergeUndoDeltas = true;\n
+        else if (mergeableCommands.indexOf(e.command.name) !== -1)\n
+            this.sequenceStartTime = Date.now();\n
+    };\n
     this.setKeyboardHandler = function(keyboardHandler) {\n
         if (!keyboardHandler) {\n
             this.keyBinding.setKeyboardHandler(null);\n
@@ -1793,7 +1932,7 @@ var Editor = function(renderer, session) {\n
                     _self.keyBinding.setKeyboardHandler(module && module.handler);\n
             });\n
         } else {\n
-            delete this.$keybindingId;\n
+            this.$keybindingId = null;\n
             this.keyBinding.setKeyboardHandler(keyboardHandler);\n
         }\n
     };\n
@@ -2046,6 +2185,8 @@ var Editor = function(renderer, session) {\n
         if (this.$highlightActiveLine) {\n
             if ((this.$selectionStyle != "line" || !this.selection.isMultiLine()))\n
                 highlight = this.getCursorPosition();\n
+            if (this.renderer.$maxLines && this.session.getLength() === 1)\n
+                highlight = false;\n
         }\n
 \n
         if (session.$highlightLineMarker && !highlight) {\n
@@ -2153,13 +2294,12 @@ var Editor = function(renderer, session) {\n
         this.$updateHighlightActiveLine();\n
         this.renderer.updateFull();\n
     };\n
-\n
+    this.getSelectedText = function() {\n
+        return this.session.getTextRange(this.getSelectionRange());\n
+    };\n
     this.getCopyText = function() {\n
-        var text = "";\n
-        if (!this.selection.isEmpty())\n
-            text = this.session.getTextRange(this.getSelectionRange());\n
-\n
-        this._emit("copy", text);\n
+        var text = this.getSelectedText();\n
+        this._signal("copy", text);\n
         return text;\n
     };\n
     this.onCopy = function() {\n
@@ -2186,13 +2326,21 @@ var Editor = function(renderer, session) {\n
 \n
         if (this.getBehavioursEnabled()) {\n
             var transform = mode.transformAction(session.getState(cursor.row), \'insertion\', this, session, text);\n
-            if (transform)\n
+            if (transform) {\n
+                if (text !== transform.text) {\n
+                    this.session.mergeUndoDeltas = false;\n
+                    this.$mergeNextCommand = false;\n
+                }\n
                 text = transform.text;\n
-        }\n
 \n
-        text = text.replace("\\t", this.session.getTabString());\n
+            }\n
+        }\n
+        \n
+        if (text == "\\t")\n
+            text = this.session.getTabString();\n
         if (!this.selection.isEmpty()) {\n
-            cursor = this.session.remove(this.getSelectionRange());\n
+            var range = this.getSelectionRange();\n
+            cursor = this.session.remove(range);\n
             this.clearSelection();\n
         }\n
         else if (this.session.getOverwrite()) {\n
@@ -2201,6 +2349,13 @@ var Editor = function(renderer, session) {\n
             this.session.remove(range);\n
         }\n
 \n
+        if (text == "\\n" || text == "\\r\\n") {\n
+            var line = session.getLine(cursor.row)\n
+            if (cursor.column > line.search(/\\S|$/)) {\n
+                var d = line.substr(cursor.column).search(/\\S|$/);\n
+                session.doc.removeInLine(cursor.row, cursor.column, cursor.column + d);\n
+            }\n
+        }\n
         this.clearSelection();\n
 \n
         var start = cursor.column;\n
@@ -2222,41 +2377,11 @@ var Editor = function(renderer, session) {\n
                               transform.selection[3]));\n
             }\n
         }\n
+\n
         if (session.getDocument().isNewLine(text)) {\n
             var lineIndent = mode.getNextLineIndent(lineState, line.slice(0, cursor.column), session.getTabString());\n
 \n
-            this.moveCursorTo(cursor.row+1, 0);\n
-\n
-            var size = session.getTabSize();\n
-            var minIndent = Number.MAX_VALUE;\n
-\n
-            for (var row = cursor.row + 1; row <= end.row; ++row) {\n
-                var indent = 0;\n
-\n
-                line = session.getLine(row);\n
-                for (var i = 0; i < line.length; ++i)\n
-                    if (line.charAt(i) == \'\\t\')\n
-                        indent += size;\n
-                    else if (line.charAt(i) == \' \')\n
-                        indent += 1;\n
-                    else\n
-                        break;\n
-                if (/[^\\s]/.test(line))\n
-                    minIndent = Math.min(indent, minIndent);\n
-            }\n
-\n
-            for (var row = cursor.row + 1; row <= end.row; ++row) {\n
-                var outdent = minIndent;\n
-\n
-                line = session.getLine(row);\n
-                for (var i = 0; i < line.length && outdent > 0; ++i)\n
-                    if (line.charAt(i) == \'\\t\')\n
-                        outdent -= size;\n
-                    else if (line.charAt(i) == \' \')\n
-                        outdent -= 1;\n
-                session.remove(new Range(row, 0, row, i));\n
-            }\n
-            session.indentRows(cursor.row + 1, end.row, lineIndent);\n
+            session.insert({row: cursor.row+1, column: 0}, lineIndent);\n
         }\n
         if (shouldOutdent)\n
             mode.autoOutdent(lineState, session, cursor.row);\n
@@ -2395,6 +2520,16 @@ var Editor = function(renderer, session) {\n
             var session = this.session;\n
             var state = session.getState(range.start.row);\n
             var new_range = session.getMode().transformAction(state, \'deletion\', this, session, range);\n
+\n
+            if (range.end.column == 0) {\n
+                var text = session.getTextRange(range);\n
+                if (text[text.length - 1] == "\\n") {\n
+                    var line = session.getLine(range.end.row)\n
+                    if (/^\\s+$/.test(line)) {\n
+                        range.end.column = line.length\n
+                    }\n
+                }\n
+            }\n
             if (new_range)\n
                 range = new_range;\n
         }\n
@@ -2494,23 +2629,37 @@ var Editor = function(renderer, session) {\n
         var session = this.session;\n
         var range = this.getSelectionRange();\n
 \n
-        if (range.start.row < range.end.row || range.start.column < range.end.column) {\n
+        if (range.start.row < range.end.row) {\n
             var rows = this.$getSelectedRows();\n
             session.indentRows(rows.first, rows.last, "\\t");\n
-        } else {\n
-            var indentString;\n
-\n
-            if (this.session.getUseSoftTabs()) {\n
-                var size        = session.getTabSize(),\n
-                    position    = this.getCursorPosition(),\n
-                    column      = session.documentToScreenColumn(position.row, position.column),\n
-                    count       = (size - column % size);\n
-\n
-                indentString = lang.stringRepeat(" ", count);\n
-            } else\n
-                indentString = "\\t";\n
-            return this.insert(indentString);\n
+            return;\n
+        } else if (range.start.column < range.end.column) {\n
+            var text = session.getTextRange(range)\n
+            if (!/^\\s+$/.test(text)) {\n
+                var rows = this.$getSelectedRows();\n
+                session.indentRows(rows.first, rows.last, "\\t");\n
+                return;\n
+            }\n
         }\n
+        \n
+        var line = session.getLine(range.start.row)\n
+        var position = range.start;\n
+        var size = session.getTabSize();\n
+        var column = session.documentToScreenColumn(position.row, position.column);\n
+\n
+        if (this.session.getUseSoftTabs()) {\n
+            var count = (size - column % size);\n
+            var indentString = lang.stringRepeat(" ", count);\n
+        } else {\n
+            var count = column % size;\n
+            while (line[range.start.column] == " " && count) {\n
+                range.start.column--;\n
+                count--;\n
+            }\n
+            this.selection.setSelectionRange(range);\n
+            indentString = "\\t";\n
+        }\n
+        return this.insert(indentString);\n
     };\n
     this.blockIndent = function() {\n
         var rows = this.$getSelectedRows();\n
@@ -2646,8 +2795,8 @@ var Editor = function(renderer, session) {\n
             return this.session.moveLinesUp(firstRow, lastRow);\n
         });\n
     };\n
-    this.moveText = function(range, toPosition) {\n
-        return this.session.moveText(range, toPosition);\n
+    this.moveText = function(range, toPosition, copy) {\n
+        return this.session.moveText(range, toPosition, copy);\n
     };\n
     this.copyLinesUp = function() {\n
         this.$moveLines(function(firstRow, lastRow) {\n
@@ -2710,30 +2859,7 @@ var Editor = function(renderer, session) {\n
     };\n
 \n
     this.onCompositionUpdate = function(text) {\n
-        this.renderer.setCompositionText(tex
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-t);\n
+        this.renderer.setCompositionText(text);\n
     };\n
 \n
     this.onCompositionEnd = function() {\n
@@ -3165,7 +3291,10 @@ config.defineOptions(Editor.prototype, "editor", {\n
         initialValue: true\n
     },\n
     readOnly: {\n
-        set: function(readOnly) { this.$resetCursorStyle(); },\n
+        set: function(readOnly) {\n
+            this.textInput.setReadOnly(readOnly); \n
+            this.$resetCursorStyle(); \n
+        },\n
         initialValue: false\n
     },\n
     cursorStyle: {\n
@@ -3173,10 +3302,15 @@ config.defineOptions(Editor.prototype, "editor", {\n
         values: ["ace", "slim", "smooth", "wide"],\n
         initialValue: "ace"\n
     },\n
+    mergeUndoDeltas: {\n
+        values: [false, true, "always"],\n
+        initialValue: true\n
+    },\n
     behavioursEnabled: {initialValue: true},\n
     wrapBehavioursEnabled: {initialValue: true},\n
 \n
     hScrollBarAlwaysVisible: "renderer",\n
+    vScrollBarAlwaysVisible: "renderer",\n
     highlightGutterLine: "renderer",\n
     animatedScroll: "renderer",\n
     showInvisibles: "renderer",\n
@@ -3189,9 +3323,14 @@ config.defineOptions(Editor.prototype, "editor", {\n
     displayIndentGuides: "renderer",\n
     fontSize: "renderer",\n
     fontFamily: "renderer",\n
+    maxLines: "renderer",\n
+    minLines: "renderer",\n
+    scrollPastEnd: "renderer",\n
+    fixedWidthGutter: "renderer",\n
 \n
     scrollSpeed: "$mouseHandler",\n
     dragDelay: "$mouseHandler",\n
+    dragEnabled: "$mouseHandler",\n
     focusTimout: "$mouseHandler",\n
 \n
     firstLineNumber: "session",\n
@@ -3396,6 +3535,7 @@ var BROKEN_SETDATA = useragent.isChrome < 18;\n
 var TextInput = function(parentNode, host) {\n
     var text = dom.createElement("textarea");\n
     text.className = "ace_text-input";\n
+\n
     if (useragent.isTouchPad)\n
         text.setAttribute("x-palm-disable-auto-cap", true);\n
 \n
@@ -3404,7 +3544,7 @@ var TextInput = function(parentNode, host) {\n
     text.autocapitalize = "off";\n
     text.spellcheck = false;\n
 \n
-    text.style.bottom = "2000em";\n
+    text.style.opacity = "0";\n
     parentNode.insertBefore(text, parentNode.firstChild);\n
 \n
     var PLACEHOLDER = "\\x01\\x01";\n
@@ -3519,9 +3659,12 @@ var TextInput = function(parentNode, host) {\n
             if (inComposition && (!text.value || keytable[e.keyCode]))\n
                 setTimeout(onCompositionEnd, 0);\n
             if ((text.value.charCodeAt(0)||0) < 129) {\n
-                return;\n
+                return syncProperty.call();\n
             }\n
             inComposition ? onCompositionUpdate() : onCompositionStart();\n
+        });\n
+        event.addListener(text, "keydown", function (e) {\n
+            syncProperty.schedule(50);\n
         });\n
     }\n
 \n
@@ -3553,17 +3696,17 @@ var TextInput = function(parentNode, host) {\n
             if (data)\n
                 host.onPaste(data);\n
             pasted = false;\n
-        } else if (data == PLACEHOLDER[0]) {\n
+        } else if (data == PLACEHOLDER.charAt(0)) {\n
             if (afterContextMenu)\n
                 host.execCommand("del", {source: "ace"});\n
         } else {\n
             if (data.substring(0, 2) == PLACEHOLDER)\n
                 data = data.substr(2);\n
-            else if (data[0] == PLACEHOLDER[0])\n
+            else if (data.charAt(0) == PLACEHOLDER.charAt(0))\n
                 data = data.substr(1);\n
-            else if (data[data.length - 1] == PLACEHOLDER[0])\n
+            else if (data.charAt(data.length - 1) == PLACEHOLDER.charAt(0))\n
                 data = data.slice(0, -1);\n
-            if (data[data.length - 1] == PLACEHOLDER[0])\n
+            if (data.charAt(data.length - 1) == PLACEHOLDER.charAt(0))\n
                 data = data.slice(0, -1);\n
             \n
             if (data)\n
@@ -3698,11 +3841,37 @@ var TextInput = function(parentNode, host) {\n
 \n
     var onCompositionUpdate = function() {\n
         if (!inComposition) return;\n
-        host.onCompositionUpdate(text.value);\n
+        var val = text.value.replace(/\\x01/g, "");\n
+        if (inComposition.lastValue === val) return;\n
+        \n
+        host.onCompositionUpdate(val);\n
         if (inComposition.lastValue)\n
             host.undo();\n
-        inComposition.lastValue = text.value.replace(/\\x01/g, "")\n
-        if (inComposition.lastValue) {\n
+        inComposition.lastValue = val;\n
+        if (inComposi
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+tion.lastValue) {\n
             var r = host.selection.getRange();\n
             host.insert(inComposition.lastValue);\n
             host.session.markUndoGroup();\n
@@ -3716,6 +3885,7 @@ var TextInput = function(parentNode, host) {\n
         var c = inComposition;\n
         inComposition = false;\n
         var timer = setTimeout(function() {\n
+            timer = null;\n
             var str = text.value.replace(/\\x01/g, "");\n
             if (inComposition)\n
                 return\n
@@ -3727,14 +3897,15 @@ var TextInput = function(parentNode, host) {\n
             }\n
         });\n
         inputHandler = function compositionInputHandler(str) {\n
-            clearTimeout(timer);\n
+            if (timer)\n
+                clearTimeout(timer);\n
             str = str.replace(/\\x01/g, "");\n
             if (str == c.lastValue)\n
                 return "";\n
-            if (c.lastValue)\n
+            if (c.lastValue && timer)\n
                 host.undo();\n
             return str;\n
-        }        \n
+        };\n
         host.onCompositionEnd();\n
         host.removeListener("mousedown", onCompositionEnd);\n
         if (e.type == "compositionend" && c.range) {\n
@@ -3747,7 +3918,12 @@ var TextInput = function(parentNode, host) {\n
     var syncComposition = lang.delayedCall(onCompositionUpdate, 50);\n
 \n
     event.addListener(text, "compositionstart", onCompositionStart);\n
-    event.addListener(text, useragent.isGecko ? "text" : "keyup", function(){syncComposition.schedule()});\n
+    if (useragent.isGecko) {\n
+        event.addListener(text, "text", function(){syncComposition.schedule()});\n
+    } else {\n
+        event.addListener(text, "keyup", function(){syncComposition.schedule()});\n
+        event.addListener(text, "keydown", function(){syncComposition.schedule()});\n
+    }\n
     event.addListener(text, "compositionend", onCompositionEnd);\n
 \n
     this.getElement = function() {\n
@@ -3766,7 +3942,7 @@ var TextInput = function(parentNode, host) {\n
         text.style.cssText = "z-index:100000;" + (useragent.isIE ? "opacity:0.1;" : "");\n
 \n
         resetSelection(host.selection.isEmpty());\n
-        host._emit("nativecontextmenu", {target: host});\n
+        host._emit("nativecontextmenu", {target: host, domEvent: e});\n
         var rect = host.container.getBoundingClientRect();\n
         var style = dom.computedStyle(host.container);\n
         var top = rect.top + (parseInt(style.borderTopWidth) || 0);\n
@@ -3800,18 +3976,20 @@ var TextInput = function(parentNode, host) {\n
             }\n
         }, 0);\n
     }\n
-    if (!useragent.isGecko) {\n
-        event.addListener(text, "contextmenu", function(e) {\n
+    if (!useragent.isGecko || useragent.isMac) {\n
+        var onContextMenu = function(e) {\n
             host.textInput.onContextMenu(e);\n
             onContextMenuClose();\n
-        });\n
+        };\n
+        event.addListener(host.renderer.scroller, "contextmenu", onContextMenu);\n
+        event.addListener(text, "contextmenu", onContextMenu);\n
     }\n
 };\n
 \n
 exports.TextInput = TextInput;\n
 });\n
 \n
-define(\'ace/mouse/mouse_handler\', [\'require\', \'exports\', \'module\' , \'ace/lib/event\', \'ace/lib/useragent\', \'ace/mouse/default_handlers\', \'ace/mouse/default_gutter_handler\', \'ace/mouse/mouse_event\', \'ace/mouse/dragdrop\', \'ace/config\'], function(require, exports, module) {\n
+define(\'ace/mouse/mouse_handler\', [\'require\', \'exports\', \'module\' , \'ace/lib/event\', \'ace/lib/useragent\', \'ace/mouse/default_handlers\', \'ace/mouse/default_gutter_handler\', \'ace/mouse/mouse_event\', \'ace/mouse/dragdrop_handler\', \'ace/config\'], function(require, exports, module) {\n
 \n
 \n
 var event = require("../lib/event");\n
@@ -3819,7 +3997,7 @@ var useragent = require("../lib/useragent");\n
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;\n
 var DefaultGutterHandler = require("./default_gutter_handler").GutterHandler;\n
 var MouseEvent = require("./mouse_event").MouseEvent;\n
-var DragdropHandler = require("./dragdrop").DragdropHandler;\n
+var DragdropHandler = require("./dragdrop_handler").DragdropHandler;\n
 var config = require("../config");\n
 \n
 var MouseHandler = function(editor) {\n
@@ -3829,15 +4007,14 @@ var MouseHandler = function(editor) {\n
     new DefaultGutterHandler(this);\n
     new DragdropHandler(this);\n
 \n
-    event.addListener(editor.container, "mousedown", function(e) {\n
-        editor.focus();\n
-        return event.preventDefault(e);\n
-    });\n
-\n
     var mouseTarget = editor.renderer.getMouseEventTarget();\n
     event.addListener(mouseTarget, "click", this.onMouseEvent.bind(this, "click"));\n
     event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this, "mousemove"));\n
     event.addMultiMouseDownListener(mouseTarget, [300, 300, 250], this, "onMouseEvent");\n
+    if (editor.renderer.scrollBarV) {\n
+        event.addMultiMouseDownListener(editor.renderer.scrollBarV.inner, [300, 300, 250], this, "onMouseEvent");\n
+        event.addMultiMouseDownListener(editor.renderer.scrollBarH.inner, [300, 300, 250], this, "onMouseEvent");\n
+    }\n
     event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this, "mousewheel"));\n
 \n
     var gutterEl = editor.renderer.$gutter;\n
@@ -3845,6 +4022,15 @@ var MouseHandler = function(editor) {\n
     event.addListener(gutterEl, "click", this.onMouseEvent.bind(this, "gutterclick"));\n
     event.addListener(gutterEl, "dblclick", this.onMouseEvent.bind(this, "gutterdblclick"));\n
     event.addListener(gutterEl, "mousemove", this.onMouseEvent.bind(this, "guttermousemove"));\n
+\n
+    event.addListener(mouseTarget, "mousedown", function(e) {\n
+        editor.focus();\n
+    });\n
+\n
+    event.addListener(gutterEl, "mousedown", function(e) {\n
+        editor.focus();\n
+        return event.preventDefault(e);\n
+    });\n
 };\n
 \n
 (function() {\n
@@ -3873,13 +4059,10 @@ var MouseHandler = function(editor) {\n
         this.state = state;\n
     };\n
 \n
-    this.captureMouse = function(ev, state) {\n
-        if (state)\n
-            this.setState(state);\n
-\n
+    this.captureMouse = function(ev, mouseMoveHandler) {\n
         this.x = ev.x;\n
         this.y = ev.y;\n
-        \n
+\n
         this.isMousePressed = true;\n
         var renderer = this.editor.renderer;\n
         if (renderer.$keepTextAreaAtCursor)\n
@@ -3889,6 +4072,7 @@ var MouseHandler = function(editor) {\n
         var onMouseMove = function(e) {\n
             self.x = e.clientX;\n
             self.y = e.clientY;\n
+            mouseMoveHandler && mouseMoveHandler(e);\n
         };\n
 \n
         var onCaptureEnd = function(e) {\n
@@ -3901,15 +4085,15 @@ var MouseHandler = function(editor) {\n
                 renderer.$moveTextAreaToCursor();\n
             }\n
             self.isMousePressed = false;\n
-            self.onMouseEvent("mouseup", e)\n
+            self.onMouseEvent("mouseup", e);\n
         };\n
 \n
         var onCaptureInterval = function() {\n
             self[self.state] && self[self.state]();\n
         };\n
-        \n
+\n
         if (useragent.isOldIE && ev.domEvent.type == "dblclick") {\n
-            return setTimeout(function() {onCaptureEnd(ev.domEvent);});\n
+            return setTimeout(function() {onCaptureEnd(ev);});\n
         }\n
 \n
         event.capture(this.editor.container, onMouseMove, onCaptureEnd);\n
@@ -3920,6 +4104,7 @@ var MouseHandler = function(editor) {\n
 config.defineOptions(MouseHandler.prototype, "mouseHandler", {\n
     scrollSpeed: {initialValue: 2},\n
     dragDelay: {initialValue: 150},\n
+    dragEnabled: {initialValue: true},\n
     focusTimout: {initialValue: 0}\n
 });\n
 \n
@@ -3927,10 +4112,11 @@ config.defineOptions(MouseHandler.prototype, "mouseHandler", {\n
 exports.MouseHandler = MouseHandler;\n
 });\n
 \n
-define(\'ace/mouse/default_handlers\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\', \'ace/lib/useragent\'], function(require, exports, module) {\n
+define(\'ace/mouse/default_handlers\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\', \'ace/lib/event\', \'ace/lib/useragent\'], function(require, exports, module) {\n
 \n
 \n
 var dom = require("../lib/dom");\n
+var event = require("../lib/event");\n
 var useragent = require("../lib/useragent");\n
 \n
 var DRAG_OFFSET = 0; // pixels\n
@@ -3945,8 +4131,8 @@ function DefaultHandlers(mouseHandler) {\n
     editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));\n
     editor.setDefaultHandler("mousewheel", this.onMouseWheel.bind(mouseHandler));\n
 \n
-    var exports = ["select", "startSelect", "drag", "dragEnd", "dragWait",\n
-        "dragWaitEnd", "startDrag", "focusWait"];\n
+    var exports = ["select", "startSelect", "selectEnd", "selectAllEnd", "selectByWordsEnd",\n
+        "selectByLinesEnd", "dragWait", "dragWaitEnd", "focusWait"];\n
 \n
     exports.forEach(function(x) {\n
         mouseHandler[x] = this[x];\n
@@ -3979,9 +4165,10 @@ function DefaultHandlers(mouseHandler) {\n
         if (inSelection && !editor.isFocused()) {\n
             editor.focus();\n
             if (this.$focusTimout && !this.$clickSelection && !editor.inMultiSelectMode) {\n
+                this.mousedownEvent.time = (new Date()).getTime();\n
                 this.setState("focusWait");\n
                 this.captureMouse(ev);\n
-                return ev.preventDefault();\n
+                return;\n
             }\n
         }\n
 \n
@@ -3989,22 +4176,28 @@ function DefaultHandlers(mouseHandler) {\n
             this.startSelect(pos);\n
         } else if (inSelection) {\n
             this.mousedownEvent.time = (new Date()).getTime();\n
-            this.setState("dragWait");\n
+            this.startSelect(pos);\n
         }\n
-\n
         this.captureMouse(ev);\n
         return ev.preventDefault();\n
     };\n
 \n
     this.startSelect = function(pos) {\n
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);\n
-        if (this.mousedownEvent.getShiftKey()) {\n
-            this.editor.selection.selectToPosition(pos);\n
+        var editor = this.editor;\n
+        setTimeout(function(){\n
+            if (this.mousedownEvent.getShiftKey()) {\n
+                editor.selection.selectToPosition(pos);\n
+            }\n
+            else if (!this.$clickSelection) {\n
+                editor.moveCursorToPosition(pos);\n
+                editor.selection.clearSelection();\n
+            }\n
+        }.bind(this), 0);\n
+        if (editor.renderer.scroller.setCapture) {\n
+            editor.renderer.scroller.setCapture();\n
         }\n
-        else if (!this.$clickSelection) {\n
-            this.editor.moveCursorToPosition(pos);\n
-            this.editor.selection.clearSelection();\n
-        }\n
+        editor.setStyle("ace_selecting");\n
         this.setState("select");\n
     };\n
 \n
@@ -4063,32 +4256,14 @@ function DefaultHandlers(mouseHandler) {\n
         editor.renderer.scrollCursorIntoView();\n
     };\n
 \n
-    this.startDrag = function() {\n
-        var editor = this.editor;\n
-        this.setState("drag");\n
-        this.dragRange = editor.getSelectionRange();\n
-        var style = editor.getSelectionStyle();\n
-        this.dragSelectionMarker = editor.session.addMarker(this.dragRange, "ace_selection", style);\n
-        editor.clearSelection();\n
-        dom.addCssClass(editor.container, "ace_dragging");\n
-        if (!this.$dragKeybinding) {\n
-            this.$dragKeybinding = {\n
-                handleKeyboard: function(data, hashId, keyString, keyCode) {\n
-                    if (keyString == "esc")\n
-                        return {command: this.command};\n
-                },\n
-                command: {\n
-                    exec: function(editor) {\n
-                        var self = editor.$mouseHandler;\n
-                        self.dragCursor = null;\n
-                        self.dragEnd();\n
-                        self.startSelect();\n
-                    }\n
-                }\n
-            }\n
+    this.selectEnd =\n
+    this.selectAllEnd =\n
+    this.selectByWordsEnd =\n
+    this.selectByLinesEnd = function() {\n
+        this.editor.unsetStyle("ace_selecting");\n
+        if (this.editor.renderer.scroller.releaseCapture) {\n
+            this.editor.renderer.scroller.releaseCapture();\n
         }\n
-\n
-        editor.keyBinding.addKeyboardHandler(this.$dragKeybinding);\n
     };\n
 \n
     this.focusWait = function() {\n
@@ -4097,59 +4272,6 @@ function DefaultHandlers(mouseHandler) {\n
 \n
         if (distance > DRAG_OFFSET || time - this.mousedownEvent.time > this.$focusTimout)\n
             this.startSelect(this.mousedownEvent.getDocumentPosition());\n
-    };\n
-\n
-    this.dragWait = function(e) {\n
-        var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);\n
-        var time = (new Date()).getTime();\n
-        var editor = this.editor;\n
-\n
-        if (distance > DRAG_OFFSET) {\n
-            this.startSelect(this.mousedownEvent.getDocumentPosition());\n
-        } else if (time - this.mousedownEvent.time > editor.$mouseHandler.$dragDelay) {\n
-            this.startDrag();\n
-        }\n
-    };\n
-\n
-    this.dragWaitEnd = function(e) {\n
-        this.mousedownEvent.domEvent = e;\n
-        this.startSelect();\n
-    };\n
-\n
-    this.drag = function() {\n
-        var editor = this.editor;\n
-        this.dragCursor = editor.renderer.screenToTextCoordinates(this.x, this.y);\n
-        editor.moveCursorToPosition(this.dragCursor);\n
-        editor.renderer.scrollCursorIntoView();\n
-    };\n
-\n
-    this.dragEnd = function(e) {\n
-        var editor = this.editor;\n
-        var dragCursor = this.dragCursor;\n
-        var dragRange = this.dragRange;\n
-        dom.removeCssClass(editor.container, "ace_dragging");\n
-        editor.session.removeMarker(this.dragSelectionMarker);\n
-        editor.keyBinding.removeKeyboardHandler(this.$dragKeybinding);\n
-\n
-        if (!dragCursor)\n
-            return;\n
-\n
-        editor.clearSelection();\n
-        if (e && (e.ctrlKey || e.altKey)) {\n
-            var session = editor.session;\n
-            var newRange = dragRange;\n
-            newRange.end = session.insert(dragCursor, session.getTextRange(dragRange));\n
-            newRange.start = dragCursor;\n
-        } else if (dragRange.contains(dragCursor.row, dragCursor.column)) {\n
-            return;\n
-        } else {\n
-            var newRange = editor.moveText(dragRange, dragCursor);\n
-        }\n
-\n
-        if (!newRange)\n
-            return;\n
-\n
-        editor.selection.setSelectionRange(newRange);\n
     };\n
 \n
     this.onDoubleClick = function(ev) {\n
@@ -4185,7 +4307,7 @@ function DefaultHandlers(mouseHandler) {\n
 \n
         editor.selectAll();\n
         this.$clickSelection = editor.getSelectionRange();\n
-        this.setState("null");\n
+        this.setState("selectAll");\n
     };\n
 \n
     this.onMouseWheel = function(ev) {\n
@@ -4237,7 +4359,7 @@ function GutterHandler(mouseHandler) {\n
     var gutter = editor.renderer.$gutterLayer;\n
 \n
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {\n
-        if (!editor.isFocused())\n
+        if (!editor.isFocused() || e.getButton() != 0)\n
             return;\n
         var gutterRegion = gutter.getRegion(e);\n
 \n
@@ -4256,7 +4378,8 @@ function GutterHandler(mouseHandler) {\n
             }\n
             mouseHandler.$clickSelection = editor.selection.getLineRange(row);\n
         }\n
-        mouseHandler.captureMouse(e, "selectByLines");\n
+        mouseHandler.setState("selectByLines");\n
+        mouseHandler.captureMouse(e);\n
         return e.preventDefault();\n
     });\n
 \n
@@ -4311,11 +4434,12 @@ function GutterHandler(mouseHandler) {\n
         var rect = editor.renderer.$gutter.getBoundingClientRect();\n
         tooltip.style.left = e.x + 15 + "px";\n
         if (e.y + 3 * editor.renderer.lineHeight + 15 < rect.bottom) {\n
-            tooltip.style.bottom =  "";\n
+            tooltip.style.bottom = "";\n
             tooltip.style.top =  e.y + 15 + "px";\n
         } else {\n
-            tooltip.style.top =  "";\n
-            tooltip.style.bottom = rect.bottom - e.y + 5 + "px";\n
+            tooltip.style.top = "";\n
+            var innerHeight = window.innerHeight || document.documentElement.clientHeight;\n
+            tooltip.style.bottom = innerHeight - e.y + 5 + "px";\n
         }\n
     }\n
 \n
@@ -4349,7 +4473,8 @@ function GutterHandler(mouseHandler) {\n
             hideTooltip();\n
         }, 50);\n
     });\n
-\n
+    \n
+    editor.on("changeSession", hideTooltip);\n
 }\n
 \n
 exports.GutterHandler = GutterHandler;\n
@@ -4404,18 +4529,15 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {\n
             \n
         var editor = this.editor;\n
         \n
-        if (editor.getReadOnly()) {\n
+\n
+        var selectionRange = editor.getSelectionRange();\n
+        if (selectionRange.isEmpty())\n
             this.$inSelection = false;\n
-        }\n
         else {\n
-            var selectionRange = editor.getSelectionRange();\n
-            if (selectionRange.isEmpty())\n
-                this.$inSelection = false;\n
-            else {\n
-                var pos = this.getDocumentPosition();\n
-                this.$inSelection = selectionRange.contains(pos.row, pos.column);\n
-            }\n
+            var pos = this.getDocumentPosition();\n
+            this.$inSelection = selectionRange.contains(pos.row, pos.column);\n
         }\n
+\n
         return this.$inSelection;\n
     };\n
     this.getButton = function() {\n
@@ -4433,82 +4555,250 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {\n
 \n
 });\n
 \n
-define(\'ace/mouse/dragdrop\', [\'require\', \'exports\', \'module\' , \'ace/lib/event\'], function(require, exports, module) {\n
+define(\'ace/mouse/dragdrop_handler\', [\'require\', \'exports\', \'module\' , \'ace/lib/dom\', \'ace/lib/event\', \'ace/lib/useragent\'], function(require, exports, module) {\n
 \n
 \n
+var dom = require("../lib/dom");\n
 var event = require("../lib/event");\n
+var useragent = require("../lib/useragent");\n
 \n
-var DragdropHandler = function(mouseHandler) {\n
+var AUTOSCROLL_DELAY = 200;\n
+var SCROLL_CURSOR_DELAY = 200;\n
+var SCROLL_CURSOR_HYSTERESIS = 5;\n
+\n
+function DragdropHandler(mouseHandler) {\n
+\n
     var editor = mouseHandler.editor;\n
+\n
+    var blankImage = dom.createElement("img");\n
+    blankImage.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";\n
+    if (useragent.isOpera)\n
+        blankImage.style.cssText = "width:1px;height:1px;position:fixed;top:0;left:0;z-index:2147483647;opacity:0;";\n
+\n
+    var exports = ["dragWait", "dragWaitEnd", "startDrag", "dragReadyEnd", "onMouseDrag"];\n
+\n
+     exports.forEach(function(x) {\n
+         mouseHandler[x] = this[x];\n
+    }, this);\n
+    editor.addEventListener("mousedown", this.onMouseDown.bind(mouseHandler));\n
+\n
+\n
+    var mouseTarget = editor.container;\n
     var dragSelectionMarker, x, y;\n
     var timerId, range;\n
     var dragCursor, counter = 0;\n
+    var dragOperation;\n
+    var isInternal;\n
+    var autoScrollStartTime;\n
+    var cursorMovedTime;\n
+    var cursorPointOnCaretMoved;\n
 \n
-    var mouseTarget = editor.container;\n
-    event.addListener(mouseTarget, "dragenter", function(e) {\n
-        if (editor.getReadOnly())\n
-            return;\n
-        var types = e.dataTransfer.types;\n
-        if (types && Array.prototype.indexOf.call(types, "text/plain") === -1)\n
+    this.onDragStart = function(e) {\n
+        if (this.cancelDrag || !mouseTarget.draggable) {\n
+            var self = this;\n
+            setTimeout(function(){\n
+                self.startSelect();\n
+                self.captureMouse(e);\n
+            }, 0);\n
+            return e.preventDefault();\n
+        }\n
+        range = editor.getSelectionRange();\n
+\n
+        var dataTransfer = e.dataTransfer;\n
+        dataTransfer.effectAllowed = editor.getReadOnly() ? "copy" : "copyMove";\n
+        if (useragent.isOpera) {\n
+            editor.container.appendChild(blankImage);\n
+            blankImage._top = blankImage.offsetTop;\n
+        }\n
+        dataTransfer.setDragImage && dataTransfer.setDragImage(blankImage, 0, 0);\n
+        if (useragent.isOpera) {\n
+            editor.container.removeChild(blankImage);\n
+        }\n
+        dataTransfer.clearData();\n
+        dataTransfer.setData("Text", editor.session.getTextRange());\n
+\n
+        isInternal = true;\n
+        this.setState("drag");\n
+    };\n
+\n
+    this.onDragEnd = function(e) {\n
+        mouseTarget.draggable = false;\n
+        isInternal = false;\n
+        this.setState(null);\n
+        if (!editor.getReadOnly()) {\n
+            var dropEffect = e.dataTransfer.dropEffect;\n
+            if (!dragOperation && dropEffect == "move")\n
+                editor.session.remove(editor.getSelectionRange());\n
+            editor.renderer.$cursorLayer.setBlinking(true);\n
+        }\n
+        this.editor.unsetStyle("ace_dragging");\n
+    };\n
+\n
+    this.onDragEnter = function(e) {\n
+        if (editor.getReadOnly() || !canAccept(e.dataTransfer))\n
             return;\n
         if (!dragSelectionMarker)\n
             addDragMarker();\n
         counter++;\n
+        e.dataTransfer.dropEffect = dragOperation = getDropEffect(e);\n
         return event.preventDefault(e);\n
-    });\n
+    };\n
 \n
-    event.addListener(mouseTarget, "dragover", function(e) {\n
-        if (editor.getReadOnly())\n
+    this.onDragOver = function(e) {\n
+        if (editor.getReadOnly() || !canAccept(e.dataTransfer))\n
             return;\n
-        var types = e.dataTransfer.types;\n
-        if (types && Array.prototype.indexOf.call(types, "text/plain") === -1)\n
-            return;\n
+        if (!dragSelectionMarker) {\n
+            addDragMarker();\n
+            counter++;\n
+        }\n
         if (onMouseMoveTimer !== null)\n
             onMouseMoveTimer = null;\n
         x = e.clientX;\n
         y = e.clientY;\n
-        return event.preventDefault(e);\n
-    });\n
 \n
-    var onDragInterval =  function() {\n
-        dragCursor = editor.renderer.screenToTextCoordinates(x, y);\n
-        editor.moveCursorToPosition(dragCursor);\n
-        editor.renderer.scrollCursorIntoView();\n
+        e.dataTransfer.dropEffect = dragOperation = getDropEffect(e);\n
+        return event.preventDefault(e);\n
     };\n
 \n
-    event.addListener(mouseTarget, "dragleave", function(e) {\n
+    this.onDragLeave = function(e) {\n
         counter--;\n
         if (counter <= 0 && dragSelectionMarker) {\n
             clearDragMarker();\n
+            dragOperation = null;\n
             return event.preventDefault(e);\n
         }\n
-    });\n
+    };\n
 \n
-    event.addListener(mouseTarget, "drop", function(e) {\n
+    this.onDrop = function(e) {\n
         if (!dragSelectionMarker)\n
             return;\n
-        range.end = editor.session.insert(dragCursor, e.dataTransfer.getData(\'Text\'));\n
-        range.start = dragCursor;\n
+        var dataTransfer = e.dataTransfer;\n
+        if (isInternal) {\n
+            switch (dragOperation) {\n
+                case "move":\n
+                    if (range.contains(dragCursor.row, dragCursor.column)) {\n
+                        range = {\n
+                            start: dragCursor,\n
+                            end: dragCursor\n
+                        };\n
+                    } else {\n
+                        range = editor.moveText(range, dragCursor);\n
+                    }\n
+                    break;\n
+                case "copy":\n
+                    range = editor.moveText(range, dragCursor, true);\n
+                    break;\n
+            }\n
+        } else {\n
+            var dropData = dataTransfer.getData(\'Text\');\n
+            range = {\n
+                start: dragCursor,\n
+                end: editor.session.insert(dragCursor, dropData)\n
+            };\n
+            editor.focus();\n
+            dragOperation = null;\n
+        }\n
         clearDragMarker();\n
-        editor.focus();\n
         return event.preventDefault(e);\n
-    });\n
+    };\n
+\n
+    event.addListener(mouseTarget, "dragstart", this.onDragStart.bind(mouseHandler));\n
+    event.addListener(mouseTarget, "dragend", this.onDragEnd.bind(mouseHandler));\n
+    event.addListener(mouseTarget, "dragenter", this.onDragEnter.bind(mouseHandler));\n
+    event.addListener(mouseTarget, "dragover", this.onDragOver.bind(mouseHandler));\n
+    event.addListener(mouseTarget, "dragleave", this.onDragLeave.bind(mouseHandler));\n
+    event.addListener(mouseTarget, "drop", this.onDrop.bind(mouseHandler));\n
+\n
+    function scrollCursorIntoView(cursor, prevCursor) {\n
+        var now = new Date().getTime();\n
+        var vMovement = !prevCursor || cursor.row != prevCursor.row;\n
+        var hMovement = !prevCursor || cursor.column != prevCursor.column;\n
+        if (!cursorMovedTime || vMovement || hMovement) {\n
+            editor.$blockScrolling += 1;\n
+            editor.moveCursorToPosition(cursor);\n
+            editor.$blockScrolling -= 1;\n
+            cursorMovedTime = now;\n
+            cursorPointOnCaretMoved = {x: x, y: y};\n
+        } else {\n
+            var distance = calcDistance(cursorPointOnCaretMoved.x, cursorPointOnCaretMoved.y, x, y);\n
+            if (distance > SCROLL_CURSOR_HYSTERESIS) {\n
+                cursorMovedTime = null;\n
+            } else if (now - cursorMovedTime >= SCROLL_CURSOR_DELAY) {\n
+                editor.renderer.scrollCursorIntoView();\n
+                cursorMovedTime = null;\n
+            }\n
+        }\n
+    }\n
+\n
+    function autoScroll(cursor, prevCursor) {\n
+        var now = new Date().getTime();\n
+        var lineHeight = editor.renderer.layerConfig.lineHeight;\n
+        var characterWidth = editor.renderer.layerConfig.characterWidth;\n
+        var editorRect = editor.renderer.scroller.getBoundingClientRect();\n
+        var offsets = {\n
+           x: {\n
+               left: x - editorRect.left,\n
+               right: editorRect.right - x\n
+           },\n
+           y: {\n
+               top: y - editorRect.top,\n
+               bottom: editorRect.bottom - y\n
+           }\n
+        };\n
+        var nearestXOffset = Math.min(offsets.x.left, offsets.x.right);\n
+        var nearestYOffset = Math.min(offsets.y.top, offsets.y.bottom);\n
+        var scrollCursor = {row: cursor.row, column: cursor.column};\n
+        if (nearestXOffset / characterWidth <= 2) {\n
+            scrollCursor.column += (offsets.x.left < offsets.x.right ? -3 : +2);\n
+        }\n
+        if (nearestYOffset / lineHeight <= 1) {\n
+            scrollCursor.row += (offsets.y.top < offsets.y.bottom ? -1 : +1);\n
+        }\n
+        var vScroll = cursor.row != scrollCursor.row;\n
+        var hScroll = cursor.column != scrollCursor.column;\n
+        var vMovement = !prevCursor || cursor.row != prevCursor.row;\n
+        if (vScroll || (hScroll && !vMovement)) {\n
+            if (!autoScrollStartTime)\n
+                autoScrollStartTime = now;\n
+            else if (now - autoScrollStartTime >= AUTOSCROLL_DELAY)\n
+                editor.renderer.scrollCursorIntoView(scrollCursor);\n
+        } else {\n
+            autoScrollStartTime = null;\n
+        }\n
+    }\n
+\n
+    function onDragInterval() {\n
+        var prevCursor = dragCursor;\n
+        dragCursor = editor.renderer.screenToTextCoordinates(x, y);\n
+        scrollCursorIntoView(dragCursor, prevCursor);\n
+        autoScroll(dragCursor, prevCursor);\n
+    }\n
 \n
     function addDragMarker() {\n
         range = editor.selection.toOrientedRange();\n
         dragSelectionMarker = editor.session.addMarker(range, "ace_selection", editor.getSelectionStyle());\n
         editor.clearSelection();\n
+        if (editor.isFocused())\n
+            editor.renderer.$cursorLayer.setBlinking(false);\n
         clearInterval(timerId);\n
         timerId = setInterval(onDragInterval, 20);\n
         counter = 0;\n
         event.addListener(document, "mousemove", onMouseMove);\n
     }\n
+\n
     function clearDragMarker() {\n
         clearInterval(timerId);\n
         editor.session.removeMarker(dragSelectionMarker);\n
         dragSelectionMarker = null;\n
+        editor.$blockScrolling += 1;\n
         editor.selection.fromOrientedRange(range);\n
+        editor.$blockScrolling -= 1;\n
+        if (editor.isFocused() && !isInternal)\n
+            editor.renderer.$cursorLayer.setBlinking(!editor.getReadOnly());\n
+        range = null;\n
         counter = 0;\n
+        autoScrollStartTime = null;\n
+        cursorMovedTime = null;\n
         event.removeListener(document, "mousemove", onMouseMove);\n
     }\n
     var onMouseMoveTimer = null;\n
@@ -4520,9 +4810,120 @@ var DragdropHandler = function(mouseHandler) {\n
             }, 20);\n
         }\n
     }\n
-};\n
+\n
+    function canAccept(dataTransfer) {\n
+        var types = dataTransfer.types;\n
+        return !types || Array.prototype.some.call(types, function(type) {\n
+            return type == \'text/plain\' || type == \'Text\';\n
+        });\n
+    }\n
+\n
+    function getDropEffect(e) {\n
+        var copyAllowed = [\'copy\', \'copymove\', \'all\', \'uninitialized\'];\n
+        var moveAllowed = [\'move\', \'copymove\', \'linkmove\', \'all\', \'uninitialized\'];\n
+\n
+        var copyModifierState = useragent.isMac ? e.altKey : e.ctrlKey;\n
+        var effectAllowed = "uninitialized";\n
+        try {\n
+            effectAllowed = e.dataTransfer.effectAllowed.toLowerCase();\n
+        } catch (e) {}\n
+        var dropEffect = "none";\n
+\n
+        if (copyModifierState && copyAllowed.indexOf(effectAllowed) >= 0)\n
+            dropEffect = "copy";\n
+        else if (moveAllowed.indexOf(effectAllowed) >= 0)\n
+            dropEffect = "move";\n
+        else if (copyAllowed.indexOf(effectAllowed) >= 0)\n
+            dropEffect = "copy";\n
+\n
+        return dropEffect;\n
+    }\n
+}\n
+\n
+(function() {\n
+\n
+    this.dragWait = function() {\n
+        var interval = (new Date()).getTime() - this.mousedownEvent.time;\n
+        if (interval > this.editor.getDragDelay())\n
+            this.startDrag();\n
+    };\n
+\n
+    this.dragWaitEnd = function() {\n
+        var target = this.editor.container;\n
+        target.draggable = false;\n
+        this.startSelect(this.mousedownEvent.getDocumentPosition());\n
+        this.selectEnd();\n
+    };\n
+\n
+    this.dragReadyEnd = function(e) {\n
+        this.editor.renderer.$cursorLayer.setBlinking(!this.editor.getReadOnly());\n
+        this.editor.unsetStyle("ace_dragging");\n
+        this.dragWaitEnd();\n
+    };\n
+\n
+    this.startDrag = function(){\n
+        this.cancelDrag = false;\n
+        var target = this.editor.container;\n
+        target.draggable = true;\n
+        this.editor.renderer.$cursorLayer.setBlinking(false);\n
+        this.editor.setStyle("ace_dragging");\n
+        this.setState("dragReady");\n
+    };\n
+\n
+    this.onMouseDrag = function(e) {\n
+        var target = this.editor.container;\n
+        if (useragent.isIE && this.state == "dragReady") {\n
+            var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);\n
+            if (distance > 3)\n
+                target.dragDrop();\n
+        }\n
+        if (this.state === "dragWait") {\n
+            var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);\n
+            if (distance > 0) {\n
+                target.draggable = false;\n
+                this.startSelect(this.mousedownEvent.getDocumentPosition());\n
+            }\n
+        }\n
+    };\n
+\n
+    this.onMouseDown = function(e) {\n
+        if (!this.$dragEnabled)\n
+            return;\n
+        this.mousedownEvent = e;\n
+        var editor = this.editor;\n
+\n
+        var inSelection = e.inSelection();\n
+        var button = e.getButton();\n
+        var clickCount = e.domEvent.detail || 1;\n
+        if (clickCount === 1 && button === 0 && inSelection) {\n
+            this.mousedownEvent.time = (new Date()).getTime();\n
+            var eventTarget = e.domEvent.target || e.domEvent.srcElement;\n
+            if ("unselectable" in eventTarget)\n
+                eventTarget.unselectable = "on";\n
+            if (editor.getDragDelay()) {\n
+                if (useragent.isWebKit) {\n
+                    self.cancelDrag = true;\n
+                    var mouseTarget = editor.container;\n
+                    mouseTarget.draggable = true;\n
+                }\n
+                this.setState("dragWait");\n
+            } else {\n
+                this.startDrag();\n
+            }\n
+            this.captureMouse(e, this.onMouseDrag.bind(this));\n
+            e.defaultPrevented = true;\n
+        }\n
+    };\n
+\n
+}).call(DragdropHandler.prototype);\n
+\n
+\n
+function calcDistance(ax, ay, bx, by) {\n
+    return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));\n
+}\n
 \n
 exports.DragdropHandler = DragdropHandler;\n
+\n
 });\n
 \n
 define(\'ace/config\', [\'require\', \'exports\', \'module\' , \'ace/lib/lang\', \'ace/lib/oop\', \'ace/lib/net\', \'ace/lib/event_emitter\'], function(require, exports, module) {\n
@@ -4572,16 +4973,24 @@ exports.moduleUrl = function(name, component) {\n
 \n
     var parts = name.split("/");\n
     component = component || parts[parts.length - 2] || "";\n
-    var base = parts[parts.length - 1].replace(component, "").replace(/(^[\\-_])|([\\-_]$)/, "");\n
+    var sep = component == "snippets" ? "/" : "-";\n
+    var base = parts[parts.length - 1];    \n
+    if (sep == "-") {\n
+        var re = new RegExp("^" + component + "[\\\\-_]|[\\\\-_]" + component + "$", "g");\n
+        base = base.replace(re, "");\n
+    }\n
 \n
-    if (!base && parts.length > 1)\n
+    if ((!base || base == component) && parts.length > 1)\n
         base = parts[parts.length - 2];\n
     var path = options[component + "Path"];\n
-    if (path == null)\n
+    if (path == null) {\n
         path = options.basePath;\n
+    } else if (sep == "/") {\n
+        component = sep = "";\n
+    }\n
     if (path && path.slice(-1) != "/")\n
         path += "/";\n
-    return path + component + "-" + base + this.get("suffix");\n
+    return path + component + sep + base + this.get("suffix");\n
 };\n
 \n
 exports.setModuleUrl = function(name, subst) {\n
@@ -4598,7 +5007,7 @@ exports.loadModule = function(moduleName, onLoad) {\n
 \n
     try {\n
         module = require(moduleName);\n
-    } catch (e) {};\n
+    } catch (e) {}\n
     if (module && !exports.$loading[moduleName])\n
         return onLoad && onLoad(module);\n
 \n
@@ -4698,8 +5107,11 @@ var optionsProvider = {\n
         if (this["$" + name] === value)\n
             return;\n
         var opt = this.$options[name];\n
-        if (!opt)\n
+        if (!opt) {\n
+            if (typeof console != "undefined" && console.warn)\n
+                console.warn(\'misspelled option "\' + name + \'"\');\n
             return undefined;\n
+        }\n
         if (opt.forwardTo)\n
             return this[opt.forwardTo] && this[opt.forwardTo].setOption(name, value);\n
 \n
@@ -4710,8 +5122,11 @@ var optionsProvider = {\n
     },\n
     getOption: function(name) {\n
         var opt = this.$options[name];\n
-        if (!opt)\n
+        if (!opt) {\n
+            if (typeof console != "undefined" && console.warn)\n
+                console.warn(\'misspelled option "\' + name + \'"\');\n
             return undefined;\n
+        }\n
         if (opt.forwardTo)\n
             return this[opt.forwardTo] && this[opt.forwardTo].getOption(name);\n
         return opt && opt.get ? opt.get.call(this) : this["$" + name];\n
@@ -4750,7 +5165,7 @@ exports.setDefaultValue = function(path, name, value) {\n
     var opts = defaultOptions[path] || (defaultOptions[path] = {});\n
     if (opts[name]) {\n
         if (opts.forwardTo)\n
-            exports.setDefaultValue(opts.forwardTo, name, value)\n
+            exports.setDefaultValue(opts.forwardTo, name, value);\n
         else\n
             opts[name].value = value;\n
     }\n
@@ -4809,30 +5224,7 @@ EventEmitter._dispatchEvent = function(eventName, e) {\n
     this._defaultHandlers || (this._defaultHandlers = {});\n
 \n
     var listeners = this._eventRegistry[eventName] || [];\n
-    var defaultHand
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-ler = this._defaultHandlers[eventName];\n
+    var defaultHandler = this._defaultHandlers[eventName];\n
     if (!listeners.length && !defaultHandler)\n
         return;\n
 \n
@@ -4846,6 +5238,7 @@ ler = this._defaultHandlers[eventName];\n
     if (!e.preventDefault)\n
         e.preventDefault = preventDefault;\n
 \n
+    listeners = listeners.slice();\n
     for (var i=0; i<listeners.length; i++) {\n
         listeners[i](e, this);\n
         if (e.propagationStopped)\n
@@ -4861,7 +5254,7 @@ EventEmitter._signal = function(eventName, e) {\n
     var listeners = (this._eventRegistry || {})[eventName];\n
     if (!listeners)\n
         return;\n
-\n
+    listeners = listeners.slice();\n
     for (var i=0; i<listeners.length; i++)\n
         listeners[i](e, this);\n
 };\n
@@ -5083,8 +5476,11 @@ var KeyBinding = function(editor) {\n
             } else {\n
                 success = commands.exec(toExecute.command, this.$editor, toExecute.args, e);                \n
             }\n
-            if (success && e && hashId != -1 && toExecute.passEvent != true)\n
+            if (success && e && hashId != -1 && \n
+                toExecute.passEvent != true && toExecute.command.passEvent != true\n
+            ) {\n
                 event.stopEvent(e);\n
+            }\n
             if (success)\n
                 break;\n
         }\n
@@ -5313,10 +5709,11 @@ var EditSession = function(text, mode) {\n
                 if (self.$deltas.length > 0) {\n
                     undoManager.execute({\n
                         action: "aceupdate",\n
-                        args: [self.$deltas, self]\n
+                        args: [self.$deltas, self],\n
+                        merge: self.mergeUndoDeltas\n
                     });\n
                 }\n
-\n
+                self.mergeUndoDeltas = false;\n
                 self.$deltas = [];\n
             }\n
             this.$informUndoManager = lang.delayedCall(this.$syncInformUndoManager);\n
@@ -5346,7 +5743,7 @@ var EditSession = function(text, mode) {\n
         this.setOption("useSoftTabs", val);\n
     };\n
     this.getUseSoftTabs = function() {\n
-         return this.$useSoftTabs;\n
+        return this.$useSoftTabs && !this.$mode.$indentWithTabs;\n
     };\n
     this.setTabSize = function(tabSize) {\n
         this.setOption("tabSize", tabSize)\n
@@ -5487,7 +5884,30 @@ var EditSession = function(text, mode) {\n
     };\n
     this.clearAnnotations = function() {\n
         this.setAnnotations([]);\n
-    };\n
+  
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+  };\n
     this.$detectNewLine = function(text) {\n
         var match = text.match(/^.*?(\\r?\\n)/m);\n
         if (match) {\n
@@ -5555,7 +5975,7 @@ var EditSession = function(text, mode) {\n
     this.$modes = {};\n
     this.$mode = null;\n
     this.$modeId = null;\n
-    this.setMode = function(mode) {\n
+    this.setMode = function(mode, cb) {\n
         if (mode && typeof mode === "object") {\n
             if (mode.getTokenizer)\n
                 return this.$onChangeMode(mode);\n
@@ -5567,12 +5987,15 @@ var EditSession = function(text, mode) {\n
         if (!this.$modes["ace/mode/text"])\n
             this.$modes["ace/mode/text"] = new TextMode();\n
 \n
-        if (this.$modes[path] && !options)\n
-            return this.$onChangeMode(this.$modes[path]);\n
+        if (this.$modes[path] && !options) {\n
+            this.$onChangeMode(this.$modes[path]);\n
+            cb && cb();\n
+            return;\n
+        }\n
         this.$modeId = path;\n
         config.loadModule(["mode", path], function(m) {\n
             if (this.$modeId !== path)\n
-                return;\n
+                return cb && cb();\n
             if (this.$modes[path] && !options)\n
                 return this.$onChangeMode(this.$modes[path]);\n
             if (m && m.Mode) {\n
@@ -5581,7 +6004,8 @@ var EditSession = function(text, mode) {\n
                     this.$modes[path] = m;\n
                     m.$id = path;\n
                 }\n
-                this.$onChangeMode(m)\n
+                this.$onChangeMode(m);\n
+                cb && cb();\n
             }\n
         }.bind(this));\n
         if (!this.$mode)\n
@@ -5589,7 +6013,11 @@ var EditSession = function(text, mode) {\n
     };\n
 \n
     this.$onChangeMode = function(mode, $isPlaceholder) {\n
-        if (this.$mode === mode) return;\n
+        if (!$isPlaceholder)\n
+            this.$modeId = mode.$id;\n
+        if (this.$mode === mode) \n
+            return;\n
+\n
         this.$mode = mode;\n
 \n
         this.$stopWorker();\n
@@ -5619,9 +6047,9 @@ var EditSession = function(text, mode) {\n
         this.tokenRe = mode.tokenRe;\n
         this.nonTokenRe = mode.nonTokenRe;\n
 \n
-\n
+        this.$options.wrapMethod.set.call(this, this.$wrapMethod);\n
+        \n
         if (!$isPlaceholder) {\n
-            this.$modeId = mode.$id;\n
             this.$setFolding(mode.foldingRules);\n
             this._emit("changeMode");\n
             this.bgTokenizer.start(0);\n
@@ -5655,7 +6083,6 @@ var EditSession = function(text, mode) {\n
 \n
     this.$scrollTop = 0;\n
     this.setScrollTop = function(scrollTop) {\n
-        scrollTop = Math.round(Math.max(0, scrollTop));\n
         if (this.$scrollTop === scrollTop || isNaN(scrollTop))\n
             return;\n
 \n
@@ -5668,7 +6095,6 @@ var EditSession = function(text, mode) {\n
 \n
     this.$scrollLeft = 0;\n
     this.setScrollLeft = function(scrollLeft) {\n
-        scrollLeft = Math.round(Math.max(0, scrollLeft));\n
         if (this.$scrollLeft === scrollLeft || isNaN(scrollLeft))\n
             return;\n
 \n
@@ -5795,7 +6221,7 @@ var EditSession = function(text, mode) {\n
         var range, point;\n
         var lastDeltaIsInsert = false;\n
         if (isInsert(delta)) {\n
-            range = delta.range.clone();\n
+            range = Range.fromPoints(delta.range.start, delta.range.end);\n
             lastDeltaIsInsert = true;\n
         } else {\n
             range = Range.fromPoints(delta.range.start, delta.range.start);\n
@@ -5824,6 +6250,11 @@ var EditSession = function(text, mode) {\n
             }\n
         }\n
         if (lastUndoRange != null) {\n
+            if (Range.comparePoints(lastUndoRange.start, range.start) == 0) {\n
+                lastUndoRange.start.column += range.end.column - range.start.column;\n
+                lastUndoRange.end.column += range.end.column - range.start.column;\n
+            }\n
+\n
             var cmp = lastUndoRange.compareRange(range);\n
             if (cmp == 1) {\n
                 range.setStart(lastUndoRange.start);\n
@@ -5858,7 +6289,7 @@ var EditSession = function(text, mode) {\n
             }\n
         }\n
 \n
-        this.insert(toRange.start, text);\n
+        toRange.end = this.insert(toRange.start, text);\n
         if (folds.length) {\n
             var oldStart = fromRange.start;\n
             var newStart = toRange.start;\n
@@ -6034,8 +6465,10 @@ var EditSession = function(text, mode) {\n
     };\n
     this.setWrapLimitRange = function(min, max) {\n
         if (this.$wrapLimitRange.min !== min || this.$wrapLimitRange.max !== max) {\n
-            this.$wrapLimitRange.min = min;\n
-            this.$wrapLimitRange.max = max;\n
+            this.$wrapLimitRange = {\n
+                min: min,\n
+                max: max\n
+            };\n
             this.$modified = true;\n
             this._emit("changeWrapMode");\n
         }\n
@@ -6213,7 +6646,7 @@ var EditSession = function(text, mode) {\n
         while (row <= lastRow) {\n
             foldLine = this.getFoldLine(row, foldLine);\n
             if (!foldLine) {\n
-                tokens = this.$getDisplayTokens(lang.stringTrimRight(lines[row]));\n
+                tokens = this.$getDisplayTokens(lines[row]);\n
                 wrapData[row] = this.$computeWrapSplits(tokens, wrapLimit, tabSize);\n
                 row ++;\n
             } else {\n
@@ -6237,8 +6670,6 @@ var EditSession = function(text, mode) {\n
                     foldLine.end.row,\n
                     lines[foldLine.end.row].length + 1\n
                 );\n
-                while (tokens.length != 0 && tokens[tokens.length - 1] >= SPACE)\n
-                    tokens.pop();\n
 \n
                 wrapData[foldLine.start.row]\n
                     = this.$computeWrapSplits(tokens, wrapLimit, tabSize);\n
@@ -6265,6 +6696,8 @@ var EditSession = function(text, mode) {\n
         var displayLength = tokens.length;\n
         var lastSplit = 0, lastDocSplit = 0;\n
 \n
+        var isCode = this.$wrapAsCode;\n
+\n
         function addSplit(screenPos) {\n
             var displayed = tokens.slice(lastSplit, screenPos);\n
             var len = displayed.length;\n
@@ -6283,16 +6716,11 @@ var EditSession = function(text, mode) {\n
 \n
         while (displayLength - lastSplit > wrapLimit) {\n
             var split = lastSplit + wrapLimit;\n
-            if (tokens[split] >= SPACE) {\n
-                while (tokens[split] >= SPACE) {\n
-                    split ++;\n
-                }\n
+            if (tokens[split - 1] >= SPACE && tokens[split] >= SPACE) {\n
                 addSplit(split);\n
                 continue;\n
             }\n
-            if (tokens[split] == PLACEHOLDER_START\n
-                || tokens[split] == PLACEHOLDER_BODY)\n
-            {\n
+            if (tokens[split] == PLACEHOLDER_START || tokens[split] == PLACEHOLDER_BODY) {\n
                 for (split; split != lastSplit - 1; split--) {\n
                     if (tokens[split] == PLACEHOLDER_START) {\n
                         break;\n
@@ -6304,8 +6732,7 @@ var EditSession = function(text, mode) {\n
                 }\n
                 split = lastSplit + wrapLimit;\n
                 for (split; split < tokens.length; split++) {\n
-                    if (tokens[split] != PLACEHOLDER_BODY)\n
-                    {\n
+                    if (tokens[split] != PLACEHOLDER_BODY) {\n
                         break;\n
                     }\n
                 }\n
@@ -6315,12 +6742,21 @@ var EditSession = function(text, mode) {\n
                 addSplit(split);\n
                 continue;\n
             }\n
-            var minSplit = Math.max(split - 10, lastSplit - 1);\n
+            var minSplit = Math.max(split - (isCode ? 10 : wrapLimit-(wrapLimit>>2)), lastSplit - 1);\n
             while (split > minSplit && tokens[split] < PLACEHOLDER_START) {\n
                 split --;\n
             }\n
-            while (split > minSplit && tokens[split] == PUNCTUATION) {\n
-                split --;\n
+            if (isCode) {\n
+                while (split > minSplit && tokens[split] < PLACEHOLDER_START) {\n
+                    split --;\n
+                }\n
+                while (split > minSplit && tokens[split] == PUNCTUATION) {\n
+                    split --;\n
+                }\n
+            } else {\n
+                while (split > minSplit && tokens[split] < SPACE) {\n
+                    split --;\n
+                }\n
             }\n
             if (split > minSplit) {\n
                 addSplit(++split);\n
@@ -6686,6 +7122,15 @@ config.defineOptions(EditSession.prototype, "session", {\n
             return this.getUseWrapMode() ? this.getWrapLimitRange().min || "free" : "off";\n
         },\n
         handlesSet: true\n
+    },    \n
+    wrapMethod: {\n
+        set: function(val) {\n
+            if (val == "auto")\n
+                this.$wrapAsCode = this.$mode.type != "text";\n
+            else\n
+                this.$wrapAsCode = val != "text";\n
+        },\n
+        initialValue: "auto"\n
     },\n
     firstLineNumber: {\n
         set: function() {this._emit("changeBreakpoint");},\n
@@ -6853,36 +7298,15 @@ var Selection = function(session) {\n
             this.setSelectionAnchor(range.start.row, range.start.column);\n
             this.selectTo(range.end.row, range.end.column);\n
         }\n
+        if (this.getRange().isEmpty())\n
+            this.$isEmpty = true;\n
         this.$desiredColumn = null;\n
     };\n
 \n
     this.$moveSelection = function(mover) {\n
         var lead = this.lead;\n
         if (this.$isEmpty)\n
-            this.setSelectionAnchor(lead.r
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-ow, lead.column);\n
+            this.setSelectionAnchor(lead.row, lead.column);\n
 \n
         mover.call(this);\n
     };\n
@@ -6954,7 +7378,7 @@ ow, lead.column);\n
         } else {\n
             rowEnd = rowStart;\n
         }\n
-        if (excludeLastChar)\n
+        if (excludeLastChar === true)\n
             return new Range(rowStart, 0, rowEnd, this.session.getLine(rowEnd).length);\n
         else\n
             return new Range(rowStart, 0, rowEnd + 1, 0);\n
@@ -7127,7 +7551,7 @@ ow, lead.column);\n
             while ((ch = rightOfCursor[index]) && whitespaceRe.test(ch))\n
                 index ++;\n
 \n
-            if (index <= 1) {\n
+            if (index < 1) {\n
                 tokenRe.lastIndex = 0;\n
                  while ((ch = rightOfCursor[index]) && !tokenRe.test(ch)) {\n
                     tokenRe.lastIndex = 0;\n
@@ -7163,11 +7587,11 @@ ow, lead.column);\n
 \n
         if (column == line.length) {\n
             var l = this.doc.getLength();\n
-            do {    \n
+            do {\n
                 row++;\n
                 rightOfCursor = this.doc.getLine(row)\n
             } while (row < l && /^\\s*$/.test(rightOfCursor))\n
-            \n
+\n
             if (!/^\\s+/.test(rightOfCursor))\n
                 rightOfCursor = ""\n
             column = 0;\n
@@ -7188,11 +7612,11 @@ ow, lead.column);\n
 \n
         var line = this.session.getLine(row).substring(0, column);\n
         if (column == 0) {\n
-            do {    \n
+            do {\n
                 row--;\n
                 line = this.doc.getLine(row);\n
             } while (row > 0 && /^\\s*$/.test(line))\n
-            \n
+\n
             column = line.length;\n
             if (!/\\s+$/.test(line))\n
                 line = ""\n
@@ -7279,6 +7703,52 @@ ow, lead.column);\n
         range.cursor = this.isBackwards() ? range.start : range.end;\n
         range.desiredColumn = this.$desiredColumn;\n
         return range;\n
+    }\n
+\n
+    this.toJSON = function() {\n
+        if (this.rangeCount) {\n
+            var data = this.ranges.map(function(r) {\n
+                var r1 = r.clone();\n
+                r1.isBackwards = r.cursor == r.start;\n
+                return r1;\n
+            });\n
+        } else {\n
+            var data = this.getRange();\n
+            data.isBackwards = this.isBackwards();\n
+        }\n
+        return data;\n
+    };\n
+\n
+    this.fromJSON = function(data) {\n
+        if (data.start == undefined) {\n
+            if (this.rangeList) {\n
+                this.toSingleRange(data[0]);\n
+                for (var i = data.length; i--; ) {\n
+                    var r = Range.fromPoints(data[i].start, data[i].end);\n
+                    if (data.isBackwards)\n
+                        r.cursor = r.start;\n
+                    this.addRange(r, true);\n
+                }\n
+                return;\n
+            } else\n
+                data = data[0];\n
+        }\n
+        if (this.rangeList)\n
+            this.toSingleRange(data);\n
+        this.setSelectionRange(data, data.isBackwards);\n
+    };\n
+\n
+    this.isEqual = function(data) {\n
+        if ((data.length || this.rangeCount) && data.length != this.rangeCount)\n
+            return false;\n
+        if (!data.length || !this.ranges)\n
+            return this.getRange().isEqual(data);\n
+\n
+        for (var i = this.ranges.length; i--; ) {\n
+            if (!this.ranges[i].isEqual(data[i]))\n
+                return false\n
+        }\n
+        return true;\n
     }\n
 \n
 }).call(Selection.prototype);\n
@@ -7402,7 +7872,30 @@ var Range = function(startRow, startColumn, endRow, endColumn) {\n
     };\n
     this.insideEnd = function(row, column) {\n
         if (this.compare(row, column) == 0) {\n
-            if (this.isStart(row, column)) {\n
+            if (this.isStart(
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+row, column)) {\n
                 return false;\n
             } else {\n
                 return true;\n
@@ -7537,7 +8030,7 @@ var TokenIterator = require("../token_iterator").TokenIterator;\n
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new TextHighlightRules().getRules());\n
+    this.HighlightRules = TextHighlightRules;\n
     this.$behaviour = new Behaviour();\n
 };\n
 \n
@@ -7558,6 +8051,10 @@ var Mode = function() {\n
     );\n
 \n
     this.getTokenizer = function() {\n
+        if (!this.$tokenizer) {\n
+            this.$highlightRules = new this.HighlightRules();\n
+            this.$tokenizer = new Tokenizer(this.$highlightRules.getRules());\n
+        }\n
         return this.$tokenizer;\n
     };\n
 \n
@@ -7767,17 +8264,16 @@ var Mode = function() {\n
     };\n
 \n
     this.createModeDelegates = function (mapping) {\n
-        if (!this.$embeds) {\n
-            return;\n
-        }\n
+        this.$embeds = [];\n
         this.$modes = {};\n
-        for (var i = 0; i < this.$embeds.length; i++) {\n
-            if (mapping[this.$embeds[i]]) {\n
-                this.$modes[this.$embeds[i]] = new mapping[this.$embeds[i]]();\n
+        for (var i in mapping) {\n
+            if (mapping[i]) {\n
+                this.$embeds.push(i);\n
+                this.$modes[i] = new mapping[i]();\n
             }\n
         }\n
 \n
-        var delegations = [\'toggleCommentLines\', \'getNextLineIndent\', \'checkOutdent\', \'autoOutdent\', \'transformAction\'];\n
+        var delegations = [\'toggleCommentLines\', \'getNextLineIndent\', \'checkOutdent\', \'autoOutdent\', \'transformAction\', \'getCompletions\'];\n
 \n
         for (var i = 0; i < delegations.length; i++) {\n
             (function(scope) {\n
@@ -7820,6 +8316,52 @@ var Mode = function() {\n
                 }\n
             }\n
         }\n
+    };\n
+    \n
+    this.getKeywords = function(append) {\n
+        if (!this.completionKeywords) {\n
+            var rules = this.$tokenizer.rules;\n
+            var completionKeywords = [];\n
+            for (var rule in rules) {\n
+                var ruleItr = rules[rule];\n
+                for (var r = 0, l = ruleItr.length; r < l; r++) {\n
+                    if (typeof ruleItr[r].token === "string") {\n
+                        if (/keyword|support|storage/.test(ruleItr[r].token))\n
+                            completionKeywords.push(ruleItr[r].regex);\n
+                    }\n
+                    else if (typeof ruleItr[r].token === "object") {\n
+                        for (var a = 0, aLength = ruleItr[r].token.length; a < aLength; a++) {    \n
+                            if (/keyword|support|storage/.test(ruleItr[r].token[a])) {\n
+                                var rule = ruleItr[r].regex.match(/\\(.+?\\)/g)[a];\n
+                                completionKeywords.push(rule.substr(1, rule.length - 2));\n
+                            }\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+            this.completionKeywords = completionKeywords;\n
+        }\n
+        if (!append)\n
+            return this.$keywordList;\n
+        return completionKeywords.concat(this.$keywordList || []);\n
+    };\n
+    \n
+    this.$createKeywordList = function() {\n
+        if (!this.$highlightRules)\n
+            this.getTokenizer();\n
+        return this.$keywordList = this.$highlightRules.$keywordList || [];\n
+    }\n
+\n
+    this.getCompletions = function(state, session, pos, prefix) {\n
+        var keywords = this.$keywordList || this.$createKeywordList();\n
+        return keywords.map(function(word) {\n
+            return {\n
+                name: word,\n
+                value: word,\n
+                score: 0,\n
+                meta: "keyword"\n
+            };\n
+        });\n
     };\n
 \n
 }).call(Mode.prototype);\n
@@ -7905,6 +8447,10 @@ var Tokenizer = function(rules) {\n
 };\n
 \n
 (function() {\n
+    this.$setMaxTokenCount = function(m) {\n
+        MAX_TOKEN_COUNT = m | 0;\n
+    };\n
+    \n
     this.$applyToken = function(str) {\n
         var values = this.splitRegex.exec(str).slice(1);\n
         var types = this.token.apply(this, values);\n
@@ -8119,15 +8665,23 @@ var TextHighlightRules = function() {\n
 (function() {\n
 \n
     this.addRules = function(rules, prefix) {\n
+        if (!prefix) {\n
+            for (var key in rules)\n
+                this.$rules[key] = rules[key];\n
+            return;\n
+        }\n
         for (var key in rules) {\n
             var state = rules[key];\n
             for (var i = 0; i < state.length; i++) {\n
                 var rule = state[i];\n
                 if (rule.next) {\n
-                    if (typeof rule.next != "string")\n
-                        rule.nextState = prefix + rule.nextState;\n
-                    else\n
-                        rule.next = prefix + rule.next;\n
+                    if (typeof rule.next != "string") {\n
+                        if (rule.nextState && rule.nextState.indexOf(prefix) !== 0)\n
+                            rule.nextState = prefix + rule.nextState;\n
+                    } else {\n
+                        if (rule.next.indexOf(prefix) !== 0)\n
+                            rule.next = prefix + rule.next;\n
+                    }\n
 \n
                 }\n
             }\n
@@ -8161,7 +8715,7 @@ var TextHighlightRules = function() {\n
         if (!this.$embeds)\n
             this.$embeds = [];\n
         this.$embeds.push(prefix);\n
-    }\n
+    };\n
 \n
     this.getEmbeds = function() {\n
         return this.$embeds;\n
@@ -8270,6 +8824,10 @@ var TextHighlightRules = function() {\n
             for (var i = list.length; i--; )\n
                 keywords[list[i]] = className;\n
         });\n
+        if (Object.getPrototypeOf(keywords)) {\n
+            keywords.__proto__ = null;\n
+        }\n
+        this.$keywordList = Object.keys(keywords);\n
         map = null;\n
         return ignoreCase\n
             ? function(value) {return keywords[value.toLowerCase()] || defaultToken }\n
@@ -8366,30 +8924,7 @@ addUnicodePackage({\n
     P:  "0021-00230025-002A002C-002F003A003B003F0040005B-005D005F007B007D00A100AB00B700BB00BF037E0387055A-055F0589058A05BE05C005C305C605F305F40609060A060C060D061B061E061F066A-066D06D40700-070D07F7-07F90830-083E0964096509700DF40E4F0E5A0E5B0F04-0F120F3A-0F3D0F850FD0-0FD4104A-104F10FB1361-13681400166D166E169B169C16EB-16ED1735173617D4-17D617D8-17DA1800-180A1944194519DE19DF1A1E1A1F1AA0-1AA61AA8-1AAD1B5A-1B601C3B-1C3F1C7E1C7F1CD32010-20272030-20432045-20512053-205E207D207E208D208E2329232A2768-277527C527C627E6-27EF2983-299829D8-29DB29FC29FD2CF9-2CFC2CFE2CFF2E00-2E2E2E302E313001-30033008-30113014-301F3030303D30A030FBA4FEA4FFA60D-A60FA673A67EA6F2-A6F7A874-A877A8CEA8CFA8F8-A8FAA92EA92FA95FA9C1-A9CDA9DEA9DFAA5C-AA5FAADEAADFABEBFD3EFD3FFE10-FE19FE30-FE52FE54-FE61FE63FE68FE6AFE6BFF01-FF03FF05-FF0AFF0C-FF0FFF1AFF1BFF1FFF20FF3B-FF3DFF3FFF5BFF5DFF5F-FF65",\n
     Pd: "002D058A05BE140018062010-20152E172E1A301C303030A0FE31FE32FE58FE63FF0D",\n
     Ps: "0028005B007B0F3A0F3C169B201A201E2045207D208D23292768276A276C276E27702772277427C527E627E827EA27EC27EE2983298529872989298B298D298F299129932995299729D829DA29FC2E222E242E262E283008300A300C300E3010301430163018301A301DFD3EFE17FE35FE37FE39FE3BFE3DFE3FFE41FE43FE47FE59FE5BFE5DFF08FF3BFF5BFF5FFF62",\n
-   
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
- Pe: "0029005D007D0F3B0F3D169C2046207E208E232A2769276B276D276F27712773277527C627E727E927EB27ED27EF298429862988298A298C298E2990299229942996299829D929DB29FD2E232E252E272E293009300B300D300F3011301530173019301B301E301FFD3FFE18FE36FE38FE3AFE3CFE3EFE40FE42FE44FE48FE5AFE5CFE5EFF09FF3DFF5DFF60FF63",\n
+    Pe: "0029005D007D0F3B0F3D169C2046207E208E232A2769276B276D276F27712773277527C627E727E927EB27ED27EF298429862988298A298C298E2990299229942996299829D929DB29FD2E232E252E272E293009300B300D300F3011301530173019301B301E301FFD3FFE18FE36FE38FE3AFE3CFE3EFE40FE42FE44FE48FE5AFE5CFE5EFF09FF3DFF5DFF60FF63",\n
     Pi: "00AB2018201B201C201F20392E022E042E092E0C2E1C2E20",\n
     Pf: "00BB2019201D203A2E032E052E0A2E0D2E1D2E21",\n
     Pc: "005F203F20402054FE33FE34FE4D-FE4FFF3F",\n
@@ -8577,14 +9112,37 @@ var Document = function(text) {\n
     };\n
     this.getTextRange = function(range) {\n
         if (range.start.row == range.end.row) {\n
-            return this.$lines[range.start.row]\n
+            return this.getLine(range.start.row)\n
                 .substring(range.start.column, range.end.column);\n
         }\n
         var lines = this.getLines(range.start.row, range.end.row);\n
         lines[0] = (lines[0] || "").substring(range.start.column);\n
         var l = lines.length - 1;\n
         if (range.end.row - range.start.row == l)\n
-            lines[l] = lines[l].substring(0, range.end.column);\n
+            lines[l] 
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+= lines[l].substring(0, range.end.column);\n
         return lines.join(this.getNewLineCharacter());\n
     };\n
 \n
@@ -8688,6 +9246,8 @@ var Document = function(text) {\n
         return end;\n
     };\n
     this.remove = function(range) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         range.start = this.$clipPosition(range.start);\n
         range.end = this.$clipPosition(range.end);\n
 \n
@@ -8771,6 +9331,8 @@ var Document = function(text) {\n
         this._emit("change", { data: delta });\n
     };\n
     this.replace = function(range, text) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         if (text.length == 0 && range.isEmpty())\n
             return range.start;\n
         if (text == this.getTextRange(range))\n
@@ -8850,29 +9412,25 @@ var oop = require("./lib/oop");\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
 \n
 var Anchor = exports.Anchor = function(doc, row, column) {\n
-    this.document = doc;\n
-\n
+    this.$onChange = this.onChange.bind(this);\n
+    this.attach(doc);\n
+    \n
     if (typeof column == "undefined")\n
         this.setPosition(row.row, row.column);\n
     else\n
         this.setPosition(row, column);\n
-\n
-    this.$onChange = this.onChange.bind(this);\n
-    doc.on("change", this.$onChange);\n
 };\n
 \n
 (function() {\n
 \n
     oop.implement(this, EventEmitter);\n
-\n
     this.getPosition = function() {\n
         return this.$clipPositionToDocument(this.row, this.column);\n
     };\n
-\n
     this.getDocument = function() {\n
         return this.document;\n
     };\n
-\n
+    this.$insertRight = false;\n
     this.onChange = function(e) {\n
         var delta = e.data;\n
         var range = delta.range;\n
@@ -8893,7 +9451,8 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         if (delta.action === "insertText") {\n
             if (start.row === row && start.column <= column) {\n
-                if (start.row === end.row) {\n
+                if (start.column === column && this.$insertRight) {\n
+                } else if (start.row === end.row) {\n
                     column += end.column - start.column;\n
                 } else {\n
                     column -= start.column;\n
@@ -8934,7 +9493,6 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         this.setPosition(row, column, true);\n
     };\n
-\n
     this.setPosition = function(row, column, noClip) {\n
         var pos;\n
         if (noClip) {\n
@@ -8961,9 +9519,12 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
             value: pos\n
         });\n
     };\n
-\n
     this.detach = function() {\n
         this.document.removeEventListener("change", this.$onChange);\n
+    };\n
+    this.attach = function(doc) {\n
+        this.document = doc || this.document;\n
+        this.document.on("change", this.$onChange);\n
     };\n
     this.$clipPositionToDocument = function(row, column) {\n
         var pos = {};\n
@@ -9010,27 +9571,35 @@ var BackgroundTokenizer = function(tokenizer, editor) {\n
         if (!self.running) { return; }\n
 \n
         var workerStart = new Date();\n
-        var startLine = self.currentLine;\n
+        var currentLine = self.currentLine;\n
+        var endLine = -1;\n
         var doc = self.doc;\n
 \n
-        var processedLines = 0;\n
+        while (self.lines[currentLine])\n
+            currentLine++;\n
+\n
+        var startLine = currentLine;\n
 \n
         var len = doc.getLength();\n
-        while (self.currentLine < len) {\n
-            self.$tokenizeRow(self.currentLine);\n
-            while (self.lines[self.currentLine])\n
-                self.currentLine++;\n
+        var processedLines = 0;\n
+        self.running = false;\n
+        while (currentLine < len) {\n
+            self.$tokenizeRow(currentLine);\n
+            endLine = currentLine;\n
+            do {\n
+                currentLine++;\n
+            } while (self.lines[currentLine]);\n
             processedLines ++;\n
-            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {\n
-                self.fireUpdateEvent(startLine, self.currentLine-1);\n
+            if ((processedLines % 5 == 0) && (new Date() - workerStart) > 20) {                \n
                 self.running = setTimeout(self.$worker, 20);\n
+                self.currentLine = currentLine;\n
                 return;\n
             }\n
         }\n
-\n
-        self.running = false;\n
-\n
-        self.fireUpdateEvent(startLine, len - 1);\n
+        self.currentLine = currentLine;\n
+        \n
+        if (startLine <= endLine)\n
+            self.fireUpdateEvent(startLine, endLine);\n
     };\n
 };\n
 \n
@@ -9066,6 +9635,11 @@ var BackgroundTokenizer = function(tokenizer, editor) {\n
         this.stop();\n
         this.running = setTimeout(this.$worker, 700);\n
     };\n
+    \n
+    this.scheduleStart = function() {\n
+        if (!this.running)\n
+            this.running = setTimeout(this.$worker, 700);\n
+    }\n
 \n
     this.$updateOnChange = function(delta) {\n
         var range = delta.range;\n
@@ -9087,7 +9661,6 @@ var BackgroundTokenizer = function(tokenizer, editor) {\n
         this.currentLine = Math.min(startRow, this.currentLine, this.doc.getLength());\n
 \n
         this.stop();\n
-        this.running = setTimeout(this.$worker, 700);\n
     };\n
     this.stop = function() {\n
         if (this.running)\n
@@ -9372,8 +9945,9 @@ function Folding() {\n
         var startColumn = fold.start.column;\n
         var endRow = fold.end.row;\n
         var endColumn = fold.end.column;\n
-        if (startRow == endRow && endColumn - startColumn < 2)\n
-            throw "The range has to be at least 2 characters width";\n
+        if (!(startRow < endRow || \n
+            startRow == endRow && startColumn <= endColumn - 2))\n
+            throw new Error("The range has to be at least 2 characters width");\n
 \n
         var startFold = this.getFoldAt(startRow, startColumn, 1);\n
         var endFold = this.getFoldAt(endRow, endColumn, -1);\n
@@ -9384,7 +9958,7 @@ function Folding() {\n
             (startFold && !startFold.range.isStart(startRow, startColumn))\n
             || (endFold && !endFold.range.isEnd(endRow, endColumn))\n
         ) {\n
-            throw "A fold can\'t intersect already existing fold" + fold.range + startFold.range;\n
+            throw new Error("A fold can\'t intersect already existing fold" + fold.range + startFold.range);\n
         }\n
         var folds = this.getFoldsInRange(fold.range);\n
         if (folds.length > 0) {\n
@@ -9695,18 +10269,23 @@ function Folding() {\n
             depth = 100000; // JSON.stringify doesn\'t hanle Infinity\n
         var foldWidgets = this.foldWidgets;\n
         endRow = endRow || this.getLength();\n
-        for (var row = startRow || 0; row < endRow; row++) {\n
+        startRow = startRow || 0;\n
+        for (var row = startRow; row < endRow; row++) {\n
             if (foldWidgets[row] == null)\n
                 foldWidgets[row] = this.getFoldWidget(row);\n
             if (foldWidgets[row] != "start")\n
                 continue;\n
 \n
             var range = this.getFoldWidgetRange(row);\n
-            if (range && range.end.row <= endRow) try {\n
+            var rangeEndRow = range.end.row;\n
+            if (range && range.isMultiLine()\n
+                && rangeEndRow <= endRow\n
+                && range.start.row >= startRow\n
+            ) try {\n
                 var fold = this.addFold("...", range);\n
                 fold.collapseChildren = depth;\n
+                row = rangeEndRow;\n
             } catch(e) {}\n
-            row = range.end.row;\n
         }\n
     };\n
     this.$foldStyles = {\n
@@ -9888,7 +10467,7 @@ function FoldLine(foldData, folds) {\n
     this.addFold = function(fold) {\n
         if (fold.sameRow) {\n
             if (fold.start.row < this.startRow || fold.endRow > this.endRow) {\n
-                throw "Can\'t add a fold to this FoldLine as it has no connection";\n
+                throw new Error("Can\'t add a fold to this FoldLine as it has no connection");\n
             }\n
             this.folds.push(fold);\n
             this.folds.sort(function(a, b) {\n
@@ -9910,7 +10489,7 @@ function FoldLine(foldData, folds) {\n
             this.start.row = fold.start.row;\n
             this.start.column = fold.start.column;\n
         } else {\n
-            throw "Trying to add fold to FoldRow that doesn\'t have a matching row";\n
+            throw new Error("Trying to add fold to FoldRow that doesn\'t have a matching row");\n
         }\n
         fold.foldLine = this;\n
     }\n
@@ -10117,7 +10696,7 @@ oop.inherits(Fold, RangeList);\n
             return;\n
 \n
         if (!this.range.containsRange(fold))\n
-            throw "A fold can\'t intersect already existing fold" + fold.range + this.range;\n
+            throw new Error("A fold can\'t intersect already existing fold" + fold.range + this.range);\n
         consumeRange(fold, this.start);\n
 \n
         var row = fold.start.row, column = fold.start.column;\n
@@ -10139,7 +10718,7 @@ oop.inherits(Fold, RangeList);\n
         var afterEnd = this.subFolds[j];\n
 \n
         if (cmp == 0)\n
-            throw "A fold can\'t intersect already existing fold" + fold.range + this.range;\n
+            throw new Error("A fold can\'t intersect already existing fold" + fold.range + this.range);\n
 \n
         var consumedFolds = this.subFolds.splice(i, j - i, fold);\n
         fold.setFoldLine(this.foldLine);\n
@@ -10179,30 +10758,7 @@ define(\'ace/range_list\', [\'require\', \'exports\', \'module\' , \'ace/range\'
 var Range = require("./range").Range;\n
 var comparePoints = Range.comparePoints;\n
 \n
-var RangeList = functio
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-n() {\n
+var RangeList = function() {\n
     this.ranges = [];\n
 };\n
 \n
@@ -10371,11 +10927,16 @@ n() {\n
                 break;\n
 \n
             if (r.start.row == startRow && r.start.column >= start.column ) {\n
-                \n
-                r.start.column += colDiff;\n
-                r.start.row += lineDif;\n
+                if (r.start.column == start.column && this.$insertRight) {\n
+                } else {\n
+                    r.start.column += colDiff;\n
+                    r.start.row += lineDif;\n
+                }\n
             }\n
             if (r.end.row == startRow && r.end.column >= start.column) {\n
+                if (r.end.column == start.column && this.$insertRight) {\n
+                    continue;\n
+                }\n
                 if (r.end.column == start.column && colDiff > 0 && i < n - 1) {                \n
                     if (r.end.column > r.start.column && r.end.column == ranges[i+1].start.column)\n
                         r.end.column -= colDiff;\n
@@ -10657,7 +11218,30 @@ var Search = function() {\n
                     var match = matches[j];\n
                     ranges.push(new Range(i, match.offset, i, match.offset + match.length));\n
                 }\n
-            }\n
+  
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+          }\n
         }\n
 \n
         if (range) {\n
@@ -10876,12 +11460,8 @@ var HashHandler = require("../keyboard/hash_handler").HashHandler;\n
 var EventEmitter = require("../lib/event_emitter").EventEmitter;\n
 \n
 var CommandManager = function(platform, commands) {\n
-    this.platform = platform;\n
-    this.commands = this.byName = {};\n
-    this.commmandKeyBinding = {};\n
-\n
-    this.addCommands(commands);\n
-\n
+    HashHandler.call(this, commands, platform);\n
+    this.byName = this.commands;\n
     this.setDefaultHandler("exec", function(e) {\n
         return e.command.exec(e.editor, e.args || {});\n
     });\n
@@ -10981,7 +11561,26 @@ var useragent = require("../lib/useragent");\n
 function HashHandler(config, platform) {\n
     this.platform = platform || (useragent.isMac ? "mac" : "win");\n
     this.commands = {};\n
-    this.commmandKeyBinding = {};\n
+    this.commandKeyBinding = {};\n
+    if (this.__defineGetter__ && this.__defineSetter__ && typeof console != "undefined" && console.error) {\n
+        var warned = false;\n
+        var warn = function() {\n
+            if (!warned) {\n
+                warned = true;\n
+                console.error("commmandKeyBinding has too many m\'s. use commandKeyBinding");\n
+            }\n
+        };\n
+        this.__defineGetter__("commmandKeyBinding", function() {\n
+            warn();\n
+            return this.commandKeyBinding;\n
+        });\n
+        this.__defineSetter__("commmandKeyBinding", function(val) {\n
+            warn();\n
+            return this.commandKeyBinding = val;\n
+        });\n
+    } else {\n
+        this.commmandKeyBinding = this.commandKeyBinding;\n
+    }\n
 \n
     this.addCommands(config);\n
 };\n
@@ -11002,7 +11601,7 @@ function HashHandler(config, platform) {\n
         var name = (typeof command === \'string\' ? command : command.name);\n
         command = this.commands[name];\n
         delete this.commands[name];\n
-        var ckb = this.commmandKeyBinding;\n
+        var ckb = this.commandKeyBinding;\n
         for (var hashId in ckb) {\n
             for (var key in ckb[hashId]) {\n
                 if (ckb[hashId][key] == command)\n
@@ -11019,7 +11618,7 @@ function HashHandler(config, platform) {\n
             return;\n
         }\n
 \n
-        var ckb = this.commmandKeyBinding;\n
+        var ckb = this.commandKeyBinding;\n
         key.split("|").forEach(function(keyPart) {\n
             var binding = this.parseKeys(keyPart, command);\n
             var hashId = binding.hashId;\n
@@ -11030,6 +11629,9 @@ function HashHandler(config, platform) {\n
     this.addCommands = function(commands) {\n
         commands && Object.keys(commands).forEach(function(name) {\n
             var command = commands[name];\n
+            if (!command)\n
+                return;\n
+            \n
             if (typeof command === "string")\n
                 return this.bindKey(command, name);\n
 \n
@@ -11092,7 +11694,7 @@ function HashHandler(config, platform) {\n
     };\n
 \n
     this.findKeyCommand = function findKeyCommand(hashId, keyString) {\n
-        var ckbr = this.commmandKeyBinding;\n
+        var ckbr = this.commandKeyBinding;\n
         return ckbr[hashId] && ckbr[hashId][keyString];\n
     };\n
 \n
@@ -11197,13 +11799,15 @@ exports.commands = [{\n
     bindKey: bindKey("Ctrl-Shift-Home", "Command-Shift-Up"),\n
     exec: function(editor) { editor.getSelection().selectFileStart(); },\n
     multiSelectAction: "forEach",\n
-    readOnly: true\n
+    readOnly: true,\n
+    group: "fileJump"\n
 }, {\n
     name: "gotostart",\n
     bindKey: bindKey("Ctrl-Home", "Command-Home|Command-Up"),\n
     exec: function(editor) { editor.navigateFileStart(); },\n
     multiSelectAction: "forEach",\n
-    readOnly: true\n
+    readOnly: true,\n
+    group: "fileJump"\n
 }, {\n
     name: "selectup",\n
     bindKey: bindKey("Shift-Up", "Shift-Up"),\n
@@ -11221,13 +11825,15 @@ exports.commands = [{\n
     bindKey: bindKey("Ctrl-Shift-End", "Command-Shift-Down"),\n
     exec: function(editor) { editor.getSelection().selectFileEnd(); },\n
     multiSelectAction: "forEach",\n
-    readOnly: true\n
+    readOnly: true,\n
+    group: "fileJump"\n
 }, {\n
     name: "gotoend",\n
     bindKey: bindKey("Ctrl-End", "Command-End|Command-Down"),\n
     exec: function(editor) { editor.navigateFileEnd(); },\n
     multiSelectAction: "forEach",\n
-    readOnly: true\n
+    readOnly: true,\n
+    group: "fileJump"\n
 }, {\n
     name: "selectdown",\n
     bindKey: bindKey("Shift-Down", "Shift-Down"),\n
@@ -11466,16 +12072,27 @@ exports.commands = [{\n
     exec: function(editor) { editor.moveLinesDown(); }\n
 }, {\n
     name: "del",\n
-    bindKey: bindKey("Delete", "Delete|Ctrl-D"),\n
+    bindKey: bindKey("Delete", "Delete|Ctrl-D|Shift-Delete"),\n
     exec: function(editor) { editor.remove("right"); },\n
     multiSelectAction: "forEach"\n
 }, {\n
     name: "backspace",\n
     bindKey: bindKey(\n
-        "Command-Backspace|Option-Backspace|Shift-Backspace|Backspace",\n
-        "Ctrl-Backspace|Command-Backspace|Shift-Backspace|Backspace|Ctrl-H"\n
+        "Shift-Backspace|Backspace",\n
+        "Ctrl-Backspace|Shift-Backspace|Backspace|Ctrl-H"\n
     ),\n
     exec: function(editor) { editor.remove("left"); },\n
+    multiSelectAction: "forEach"\n
+}, {\n
+    name: "cut_or_delete",\n
+    bindKey: bindKey("Shift-Delete", null),\n
+    exec: function(editor) { \n
+        if (editor.selection.isEmpty()) {\n
+            editor.remove("left");\n
+        } else {\n
+            return false;\n
+        }\n
+    },\n
     multiSelectAction: "forEach"\n
 }, {\n
     name: "removetolinestart",\n
@@ -11560,6 +12177,9 @@ var UndoManager = function() {\n
     this.execute = function(options) {\n
         var deltas = options.args[0];\n
         this.$doc  = options.args[1];\n
+        if (options.merge && this.hasUndo()){\n
+            deltas = this.$undoStack.pop().concat(deltas);\n
+        }\n
         this.$undoStack.push(deltas);\n
         this.$redoStack = [];\n
 \n
@@ -11615,19 +12235,19 @@ var UndoManager = function() {\n
 exports.UndoManager = UndoManager;\n
 });\n
 \n
-define(\'ace/virtual_renderer\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/dom\', \'ace/lib/event\', \'ace/lib/useragent\', \'ace/config\', \'ace/layer/gutter\', \'ace/layer/marker\', \'ace/layer/text\', \'ace/layer/cursor\', \'ace/scrollbar\', \'ace/renderloop\', \'ace/lib/event_emitter\'], function(require, exports, module) {\n
+define(\'ace/virtual_renderer\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/dom\', \'ace/lib/useragent\', \'ace/config\', \'ace/layer/gutter\', \'ace/layer/marker\', \'ace/layer/text\', \'ace/layer/cursor\', \'ace/scrollbar\', \'ace/renderloop\', \'ace/lib/event_emitter\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("./lib/oop");\n
 var dom = require("./lib/dom");\n
-var event = require("./lib/event");\n
 var useragent = require("./lib/useragent");\n
 var config = require("./config");\n
 var GutterLayer = require("./layer/gutter").Gutter;\n
 var MarkerLayer = require("./layer/marker").Marker;\n
 var TextLayer = require("./layer/text").Text;\n
 var CursorLayer = require("./layer/cursor").Cursor;\n
-var ScrollBar = require("./scrollbar").ScrollBar;\n
+var ScrollBarH = require("./scrollbar").ScrollBarH;\n
+var ScrollBarV = require("./scrollbar").ScrollBarV;\n
 var RenderLoop = require("./renderloop").RenderLoop;\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
 var editorCss = ".ace_editor {\\\n
@@ -11637,6 +12257,10 @@ font-family: \'Monaco\', \'Menlo\', \'Ubuntu Mono\', \'Consolas\', \'source-code
 font-size: 12px;\\\n
 line-height: normal;\\\n
 color: black;\\\n
+-ms-user-select: none;\\\n
+-moz-user-select: none;\\\n
+-webkit-user-select: none;\\\n
+user-select: none;\\\n
 }\\\n
 .ace_scroller {\\\n
 position: absolute;\\\n
@@ -11651,6 +12275,25 @@ position: absolute;\\\n
 -webkit-box-sizing: border-box;\\\n
 box-sizing: border-box;\\\n
 cursor: text;\\\n
+}\\\n
+.ace_dragging, .ace_dragging * {\\\n
+cursor: move !important;\\\n
+}\\\n
+.ace_dragging .ace_scroller:before{\\\n
+position: absolute;\\\n
+top: 0;\\\n
+left: 0;\\\n
+right: 0;\\\n
+bottom: 0;\\\n
+content: \'\';\\\n
+background: rgba(250, 250, 250, 0.01);\\\n
+z-index: 1000;\\\n
+}\\\n
+.ace_dragging.ace_dark .ace_scroller:before{\\\n
+background: rgba(0, 0, 0, 0.01);\\\n
+}\\\n
+.ace_selecting, .ace_selecting * {\\\n
+cursor: text !important;\\\n
 }\\\n
 .ace_gutter {\\\n
 position: absolute;\\\n
@@ -11694,15 +12337,26 @@ background-image: url(\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC
 .ace_scrollbar {\\\n
 position: absolute;\\\n
 overflow-x: hidden;\\\n
-overflow-y: scroll;\\\n
+overflow-y: auto;\\\n
 right: 0;\\\n
 top: 0;\\\n
 bottom: 0;\\\n
+z-index: 6;\\\n
 }\\\n
 .ace_scrollbar-inner {\\\n
 position: absolute;\\\n
-width: 1px;\\\n
+cursor: text;\\\n
 left: 0;\\\n
+top: 0;\\\n
+}\\\n
+.ace_scrollbar-h {\\\n
+position: absolute;\\\n
+overflow-x: auto;\\\n
+overflow-y: hidden;\\\n
+right: 0;\\\n
+left: 0;\\\n
+bottom: 0;\\\n
+z-index: 6;\\\n
 }\\\n
 .ace_print-margin {\\\n
 position: absolute;\\\n
@@ -11724,12 +12378,14 @@ overflow: hidden;\\\n
 font: inherit;\\\n
 padding: 0 1px;\\\n
 margin: 0 -1px;\\\n
+text-indent: -1em;\\\n
 }\\\n
 .ace_text-input.ace_composition {\\\n
 background: #f8f8f8;\\\n
 color: #111;\\\n
 z-index: 1000;\\\n
 opacity: 1;\\\n
+text-indent: 0;\\\n
 }\\\n
 .ace_layer {\\\n
 z-index: 1;\\\n
@@ -11767,6 +12423,14 @@ position: absolute;\\\n
 -moz-box-sizing: border-box;\\\n
 -webkit-box-sizing: border-box;\\\n
 box-sizing: border-box;\\\n
+border-left: 2px solid\\\n
+}\\\n
+.ace_slim-cursors .ace_cursor {\\\n
+border-left-width: 1px;\\\n
+}\\\n
+.ace_overwrite-cursors .ace_cursor {\\\n
+border-left-width: 0px;\\\n
+border-bottom: 1px solid;\\\n
 }\\\n
 .ace_hidden-cursors .ace_cursor {\\\n
 opacity: 0.2;\\\n
@@ -11787,7 +12451,7 @@ border-left-width: 1px;\\\n
 .ace_line {\\\n
 white-space: nowrap;\\\n
 }\\\n
-.ace_marker-layer .ace_step {\\\n
+.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {\\\n
 position: absolute;\\\n
 z-index: 3;\\\n
 }\\\n
@@ -11840,9 +12504,6 @@ url(\\"data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%007%0
 background-repeat: no-repeat, repeat-x;\\\n
 background-position: center center, top left;\\\n
 }\\\n
-.ace_editor.ace_dragging .ace_content {\\\n
-cursor: move;\\\n
-}\\\n
 .ace_gutter-tooltip {\\\n
 background-color: #FFF;\\\n
 background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));\\\n
@@ -11855,7 +12516,7 @@ display: inline-block;\\\n
 max-width: 500px;\\\n
 padding: 4px;\\\n
 position: fixed;\\\n
-z-index: 300;\\\n
+z-index: 999999;\\\n
 -moz-box-sizing: border-box;\\\n
 -webkit-box-sizing: border-box;\\\n
 box-sizing: border-box;\\\n
@@ -11885,30 +12546,7 @@ border-radius: 3px;\\\n
 border: 1px solid transparent;\\\n
 cursor: pointer;\\\n
 }\\\n
-.ace_foldin
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-g-enabled .ace_fold-widget {\\\n
+.ace_folding-enabled .ace_fold-widget {\\\n
 display: inline-block;   \\\n
 }\\\n
 .ace_fold-widget.ace_end {\\\n
@@ -11984,6 +12622,16 @@ font-weight: normal;\\\n
 .ace_italic {\\\n
 font-style: italic;\\\n
 }\\\n
+.ace_error-marker {\\\n
+background-color: rgba(255, 0, 0,0.2);\\\n
+position: absolute;\\\n
+z-index: 9;\\\n
+}\\\n
+.ace_highlight-marker {\\\n
+background-color: rgba(255, 255, 0,0.2);\\\n
+position: absolute;\\\n
+z-index: 8;\\\n
+}\\\n
 ";\n
 \n
 dom.importCssString(editorCss, "ace_editor");\n
@@ -11992,7 +12640,7 @@ var VirtualRenderer = function(container, theme) {\n
     var _self = this;\n
 \n
     this.container = container || dom.createElement("div");\n
-    this.$keepTextAreaAtCursor = !useragent.isIE;\n
+    this.$keepTextAreaAtCursor = true;\n
 \n
     dom.addCssClass(this.container, "ace_editor");\n
 \n
@@ -12022,21 +12670,22 @@ var VirtualRenderer = function(container, theme) {\n
 \n
     this.$cursorLayer = new CursorLayer(this.content);\n
     this.$horizScroll = false;\n
+    this.$vScroll = false;\n
 \n
-    this.scrollBar = new ScrollBar(this.container);\n
-    this.scrollBar.addEventListener("scroll", function(e) {\n
+    this.scrollBar = \n
+    this.scrollBarV = new ScrollBarV(this.container, this);\n
+    this.scrollBarH = new ScrollBarH(this.container, this);\n
+    this.scrollBarV.addEventListener("scroll", function(e) {\n
         if (!_self.$scrollAnimation)\n
-            _self.session.setScrollTop(e.data);\n
+            _self.session.setScrollTop(e.data - _self.scrollMargin.top);\n
+    });\n
+    this.scrollBarH.addEventListener("scroll", function(e) {\n
+        if (!_self.$scrollAnimation)\n
+            _self.session.setScrollLeft(e.data - _self.scrollMargin.left);\n
     });\n
 \n
     this.scrollTop = 0;\n
     this.scrollLeft = 0;\n
-\n
-    event.addListener(this.scroller, "scroll", function() {\n
-        var scrollLeft = _self.scroller.scrollLeft;\n
-        _self.scrollLeft = scrollLeft;\n
-        _self.session.setScrollLeft(scrollLeft);\n
-    });\n
 \n
     this.cursorPos = {\n
         row : 0,\n
@@ -12046,6 +12695,7 @@ var VirtualRenderer = function(container, theme) {\n
     this.$textLayer.addEventListener("changeCharacterSize", function() {\n
         _self.updateCharacterSize();\n
         _self.onResize(true);\n
+        _self._signal("changeCharacterSize");\n
     });\n
 \n
     this.$size = {\n
@@ -12061,12 +12711,21 @@ var VirtualRenderer = function(container, theme) {\n
         firstRow : 0,\n
         firstRowScreen: 0,\n
         lastRow : 0,\n
-        lineHeight : 1,\n
-        characterWidth : 1,\n
+        lineHeight : 0,\n
+        characterWidth : 0,\n
         minHeight : 1,\n
         maxHeight : 1,\n
         offset : 0,\n
         height : 1\n
+    };\n
+    \n
+    this.scrollMargin = {\n
+        left: 0,\n
+        right: 0,\n
+        top: 0,\n
+        bottom: 0,\n
+        v: 0,\n
+        h: 0\n
     };\n
 \n
     this.$loop = new RenderLoop(\n
@@ -12103,7 +12762,9 @@ var VirtualRenderer = function(container, theme) {\n
             this.setStyle("ace_nobold", !this.$allowBoldFonts);\n
         }\n
 \n
+        this.layerConfig.characterWidth =\n
         this.characterWidth = this.$textLayer.getCharacterWidth();\n
+        this.layerConfig.lineHeight =\n
         this.lineHeight = this.$textLayer.getLineHeight();\n
         this.$updatePrintMargin();\n
     };\n
@@ -12160,78 +12821,123 @@ var VirtualRenderer = function(container, theme) {\n
     this.updateFontSize = function() {\n
         this.$textLayer.checkForSizeChanges();\n
     };\n
-    this.onResize = function(force, gutterWidth, width, height) {\n
-        var changes = 0;\n
-        var size = this.$size;\n
 \n
+    this.$changes = 0;\n
+    this.onResize = function(force, gutterWidth, width, height) {\n
         if (this.resizing > 2)\n
             return;\n
-        else if (this.resizing > 1)\n
+        else if (this.resizing > 0)\n
             this.resizing++;\n
         else\n
             this.resizing = force ? 1 : 0;\n
+        var el = this.container;\n
         if (!height)\n
-            height = dom.getInnerHeight(this.container);\n
-\n
-        if (height && (force || size.height != height)) {\n
-            size.height = height;\n
-            changes = this.CHANGE_SIZE;\n
-\n
-            size.scrollerHeight = this.scroller.clientHeight;\n
-            if (force || !size.scrollerHeight) {\n
-                size.scrollerHeight = size.height;\n
-                if (this.$horizScroll)\n
-                    size.scrollerHeight -= this.scrollBar.getWidth();\n
-            }\n
-            this.scrollBar.setHeight(size.scrollerHeight);\n
-\n
-            if (this.session) {\n
-                this.session.setScrollTop(this.getScrollTop());\n
-                changes = changes | this.CHANGE_FULL;\n
-            }\n
-        }\n
-\n
+            height = el.clientHeight || el.scrollHeight;\n
         if (!width)\n
-            width = dom.getInnerWidth(this.container);\n
+            width = el.clientWidth || el.scrollWidth;\n
 \n
-        if (width && (force || this.resizing > 1 || size.width != width)) {\n
-            changes = this.CHANGE_SIZE;\n
-            size.width = width;\n
-\n
-            var gutterWidth = this.$showGutter ? this.$gutter.offsetWidth : 0;\n
-            this.scroller.style.left = gutterWidth + "px";\n
-            size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBar.getWidth());\n
-            this.scroller.style.right = this.scrollBar.getWidth() + "px";\n
-\n
-            if (this.session && this.session.getUseWrapMode() && this.adjustWrapLimit() || force)\n
-                changes = changes | this.CHANGE_FULL;\n
-        }\n
-\n
-        if (!this.$size.scrollerHeight)\n
-            return;\n
-\n
-        if (force)\n
-            this.$renderChanges(changes, true);\n
-        else\n
-            this.$loop.schedule(changes);\n
+        var changes = this.$updateCachedSize(force, gutterWidth, width, height);\n
+        \n
+        if (!this.$size.scrollerHeight || (!width && !height))\n
+            return this.resizing = 0;\n
 \n
         if (force)\n
             this.$gutterLayer.$padding = null;\n
 \n
         if (force)\n
-            delete this.resizing;\n
+            this.$renderChanges(changes, true);\n
+        else\n
+            this.$loop.schedule(changes | this.$changes);\n
+\n
+        if (this.resizing)\n
+            this.resizing = 0;\n
+    };\n
+    \n
+    this.$updateCachedSize = function(force, gutterWidth, width, height) {\n
+        var changes = 0;\n
+        var size = this.$size;\n
+        var oldSize = {\n
+            width: size.width,\n
+            height: size.height,\n
+            scrollerHeight: size.scrollerHeight,\n
+            scrollerWidth: size.scrollerWidth\n
+        };\n
+        if (height && (force || size.height != height)) {\n
+            size.height = height;\n
+            changes = this.CHANGE_SIZE;\n
+\n
+            size.scrollerHeight = size.height;\n
+            if (this.$horizScroll)\n
+                size.scrollerHeight -= this.scrollBarH.getHeight();\n
+            this.scrollBarV.element.style.bottom = this.scrollBarH.getHeight() + "px";\n
+\n
+            if (this.session) {\n
+                this.session.setScrollTop(this.getScrollTop());\n
+                changes = changes | this.CHANGE_SCROLL;\n
+            }\n
+        }\n
+\n
+        if (width && (force || size.width != width)) {\n
+            changes = this.CHANGE_SIZE;\n
+            size.width = width;\n
+            \n
+            if (gutterWidth == null)\n
+                gutterWidth = this.$showGutter ? this.$gutter.offsetWidth : 0;\n
+            \n
+            this.gutterWidth = gutterWidth;\n
+            \n
+            this.scrollBarH.element.style.left = \n
+            this.scroller.style.left = gutterWidth + "px";\n
+            size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBarV.getWidth());           \n
+            \n
+            this.scrollBarH.element.style.right = \n
+            this.scroller.style.right = this.scrollBarV.getWidth() + "px";\n
+            this.scroller.style.bottom = this.scrollBarH.getHeight() + "px";\n
+\n
+            if (this.session && this.session.getUseWrapMode() && this.adjustWrapLimit() || force)\n
+                changes = changes | this.CHANGE_FULL;\n
+        }\n
+        \n
+        if (changes)\n
+            this._signal("resize", oldSize);\n
+\n
+        return changes;\n
     };\n
 \n
     this.onGutterResize = function() {\n
-        var width = this.$size.width;\n
-        var gutterWidth = this.$showGutter ? this.$gutter.offsetWidth : 0;\n
-        this.scroller.style.left = gutterWidth + "px";\n
-        this.$size.scrollerWidth = Math.max(0, width - gutterWidth - this.scrollBar.getWidth());\n
+        var gutterWidth = this.$showGutter ? this.$gutter.offsetWidt
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+h : 0;\n
+        if (gutterWidth != this.gutterWidth)\n
+            this.$changes |= this.$updateCachedSize(true, gutterWidth, this.$size.width, this.$size.height);\n
 \n
         if (this.session.getUseWrapMode() && this.adjustWrapLimit())\n
             this.$loop.schedule(this.CHANGE_FULL);\n
-        else\n
+        else {\n
+            this.$computeLayerConfig();\n
             this.$loop.schedule(this.CHANGE_MARKER);\n
+        }\n
     };\n
     this.adjustWrapLimit = function() {\n
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;\n
@@ -12388,41 +13094,73 @@ var VirtualRenderer = function(container, theme) {\n
         this.$loop.schedule(this.CHANGE_FULL);\n
         this.$updatePrintMargin();\n
     };\n
+    \n
+    this.setScrollMargin = function(top, bottom, left, right) {\n
+        var sm = this.scrollMargin;\n
+        sm.top = top|0;\n
+        sm.bottom = bottom|0;\n
+        sm.right = right|0;\n
+        sm.left = left|0;\n
+        sm.v = sm.top + sm.bottom;\n
+        sm.h = sm.left + sm.right;\n
+        this.updateFull();\n
+    };\n
     this.getHScrollBarAlwaysVisible = function() {\n
         return this.$hScrollBarAlwaysVisible;\n
     };\n
     this.setHScrollBarAlwaysVisible = function(alwaysVisible) {\n
         this.setOption("hScrollBarAlwaysVisible", alwaysVisible);\n
     };\n
+    this.getVScrollBarAlwaysVisible = function() {\n
+        return this.$hScrollBarAlwaysVisible;\n
+    };\n
+    this.setVScrollBarAlwaysVisible = function(alwaysVisible) {\n
+        this.setOption("vScrollBarAlwaysVisible", alwaysVisible);\n
+    };\n
 \n
-    this.$updateScrollBar = function() {\n
-        this.scrollBar.setInnerHeight(this.layerConfig.maxHeight);\n
-        this.scrollBar.setScrollTop(this.scrollTop);\n
+    this.$updateScrollBarV = function() {\n
+        this.scrollBarV.setInnerHeight(this.layerConfig.maxHeight + this.scrollMargin.v);\n
+        this.scrollBarV.setScrollTop(this.scrollTop + this.scrollMargin.top);\n
+    };\n
+    this.$updateScrollBarH = function() {\n
+        this.scrollBarH.setInnerWidth(this.layerConfig.width + 2 * this.$padding + this.scrollMargin.h);\n
+        this.scrollBarH.setScrollLeft(this.scrollLeft + this.scrollMargin.left);\n
     };\n
 \n
     this.$renderChanges = function(changes, force) {\n
-        if (!force && (!changes || !this.session || !this.container.offsetWidth))\n
-            return;\n
-\n
+        if (this.$changes) {\n
+            changes |= this.$changes;\n
+            this.$changes = 0;\n
+        }\n
+        if ((!this.session || !this.container.offsetWidth) || (!changes && !force)) {\n
+            this.$changes |= changes;\n
+            return; \n
+        } \n
+        if (!this.$size.width) {\n
+            this.$changes |= changes;\n
+            return this.onResize(true);\n
+        }\n
+        if (!this.lineHeight) {\n
+            this.$textLayer.checkForSizeChanges();\n
+        }\n
+        \n
         this._signal("beforeRender");\n
         if (changes & this.CHANGE_FULL ||\n
             changes & this.CHANGE_SIZE ||\n
             changes & this.CHANGE_TEXT ||\n
             changes & this.CHANGE_LINES ||\n
-            changes & this.CHANGE_SCROLL\n
+            changes & this.CHANGE_SCROLL ||\n
+            changes & this.CHANGE_H_SCROLL\n
         )\n
-            this.$computeLayerConfig();\n
+            changes |= this.$computeLayerConfig();\n
         if (changes & this.CHANGE_H_SCROLL) {\n
-            this.scroller.scrollLeft = this.scrollLeft;\n
-            var scrollLeft = this.scroller.scrollLeft;\n
-            this.scrollLeft = scrollLeft;\n
-            this.session.setScrollLeft(scrollLeft);\n
-\n
-            this.scroller.className = this.scrollLeft == 0 ? "ace_scroller" : "ace_scroller ace_scroll-left";\n
+            this.$updateScrollBarH();\n
+            this.content.style.marginLeft = -this.scrollLeft + "px";\n
+            this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left";\n
         }\n
         if (changes & this.CHANGE_FULL) {\n
-            this.$textLayer.checkForSizeChanges();\n
-            this.$updateScrollBar();\n
+            this.$updateScrollBarV();\n
+            this.$updateScrollBarH();\n
             this.$textLayer.update(this.layerConfig);\n
             if (this.$showGutter)\n
                 this.$gutterLayer.update(this.layerConfig);\n
@@ -12435,6 +13173,7 @@ var VirtualRenderer = function(container, theme) {\n
             return;\n
         }\n
         if (changes & this.CHANGE_SCROLL) {\n
+            this.$updateScrollBarV();\n
             if (changes & this.CHANGE_TEXT || changes & this.CHANGE_LINES)\n
                 this.$textLayer.update(this.layerConfig);\n
             else\n
@@ -12447,7 +13186,6 @@ var VirtualRenderer = function(container, theme) {\n
             this.$cursorLayer.update(this.layerConfig);\n
             this.$highlightGutterLine && this.$updateGutterLineHighlight();\n
             this.$moveTextAreaToCursor();\n
-            this.$updateScrollBar();\n
             this._signal("afterRender");\n
             return;\n
         }\n
@@ -12480,33 +13218,83 @@ var VirtualRenderer = function(container, theme) {\n
             this.$markerBack.update(this.layerConfig);\n
         }\n
 \n
-        if (changes & this.CHANGE_SIZE)\n
-            this.$updateScrollBar();\n
+        if (changes & this.CHANGE_SIZE || changes & this.CHANGE_LINES) {\n
+            this.$updateScrollBarV();\n
+            this.$updateScrollBarH();\n
+        }\n
 \n
         this._signal("afterRender");\n
     };\n
 \n
+    \n
+    this.$autosize = function(height, width) {\n
+        var height = this.session.getScreenLength() * this.lineHeight;\n
+        var maxHeight = this.$maxLines * this.lineHeight;\n
+        var desiredHeight = Math.max(\n
+            (this.$minLines||1) * this.lineHeight,\n
+            Math.min(maxHeight, height)\n
+        );\n
+        var vScroll = height > maxHeight;\n
+        \n
+        if (desiredHeight != this.desiredHeight ||\n
+            this.$size.height != this.desiredHeight || vScroll != this.$vScroll) {\n
+            if (vScroll != this.$vScroll) {\n
+                this.$vScroll = vScroll;\n
+                this.scrollBarV.setVisible(vScroll);\n
+            }\n
+            \n
+            var w = this.container.clientWidth;\n
+            this.container.style.height = desiredHeight + "px";\n
+            this.$updateCachedSize(true, this.$gutterWidth, w, desiredHeight);\n
+            this.desiredHeight = desiredHeight;\n
+        }\n
+    };\n
+    \n
     this.$computeLayerConfig = function() {\n
-        if (!this.$size.scrollerHeight)\n
-            return this.onResize(true);\n
+        if (this.$maxLines && this.lineHeight > 1)\n
+            this.$autosize();\n
 \n
         var session = this.session;\n
+        \n
+        var hideScrollbars = this.$size.height <= 2 * this.lineHeight;\n
+        var screenLines = this.session.getScreenLength()\n
+        var maxHeight = screenLines * this.lineHeight;\n
 \n
         var offset = this.scrollTop % this.lineHeight;\n
         var minHeight = this.$size.scrollerHeight + this.lineHeight;\n
 \n
         var longestLine = this.$getLongestLine();\n
+        \n
+        var horizScroll = !hideScrollbars && (this.$hScrollBarAlwaysVisible ||\n
+            this.$size.scrollerWidth - longestLine - 2 * this.$padding < 0);\n
 \n
-        var horizScroll = this.$hScrollBarAlwaysVisible || this.$size.scrollerWidth - longestLine < 0;\n
-        var horizScrollChanged = this.$horizScroll !== horizScroll;\n
-        this.$horizScroll = horizScroll;\n
-        if (horizScrollChanged) {\n
-            this.scroller.style.overflowX = horizScroll ? "scroll" : "hidden";\n
-            if (!horizScroll)\n
-                this.session.setScrollLeft(0);\n
+        var hScrollChanged = this.$horizScroll !== horizScroll;\n
+        if (hScrollChanged) {\n
+            this.$horizScroll = horizScroll;\n
+            this.scrollBarH.setVisible(horizScroll);\n
         }\n
-        var maxHeight = this.session.getScreenLength() * this.lineHeight;\n
-        this.session.setScrollTop(Math.max(0, Math.min(this.scrollTop, maxHeight - this.$size.scrollerHeight)));\n
+        \n
+        if (!this.$maxLines && this.$scrollPastEnd) {\n
+            if (this.scrollTop > maxHeight - this.$size.scrollerHeight)\n
+                maxHeight += Math.min(\n
+                    (this.$size.scrollerHeight - this.lineHeight) * this.$scrollPastEnd,\n
+                    this.scrollTop - maxHeight + this.$size.scrollerHeight\n
+                );\n
+        }\n
+        \n
+        var vScroll = !hideScrollbars && (this.$vScrollBarAlwaysVisible ||\n
+            this.$size.scrollerHeight - maxHeight < 0);\n
+        var vScrollChanged = this.$vScroll !== vScroll;\n
+        if (vScrollChanged) {\n
+            this.$vScroll = vScroll;\n
+            this.scrollBarV.setVisible(vScroll);\n
+        }\n
+        \n
+        this.session.setScrollTop(Math.max(-this.scrollMargin.top,\n
+            Math.min(this.scrollTop, maxHeight - this.$size.scrollerHeight + this.scrollMargin.v)));\n
+\n
+        this.session.setScrollLeft(Math.max(-this.scrollMargin.left, Math.min(this.scrollLeft, \n
+            longestLine + 2 * this.$padding - this.$size.scrollerWidth + this.scrollMargin.h)));\n
 \n
         var lineCount = Math.ceil(minHeight / this.lineHeight) - 1;\n
         var firstRow = Math.max(0, Math.round((this.scrollTop - offset) / this.lineHeight));\n
@@ -12528,6 +13316,14 @@ var VirtualRenderer = function(container, theme) {\n
 \n
         offset = this.scrollTop - firstRowScreen * lineHeight;\n
 \n
+        var changes = 0;\n
+        if (hScrollChanged || vScrollChanged) {\n
+            changes = this.$updateCachedSize(true, this.gutterWidth, this.$size.width, this.$size.height);\n
+            this._signal("scrollbarVisibilityChanged");\n
+            if (vScrollChanged)\n
+                longestLine = this.$getLongestLine();\n
+        }\n
+        \n
         this.layerConfig = {\n
             width : longestLine,\n
             padding : this.$padding,\n
@@ -12546,8 +13342,8 @@ var VirtualRenderer = function(container, theme) {\n
         this.content.style.marginTop = (-offset) + "px";\n
         this.content.style.width = longestLine + 2 * this.$padding + "px";\n
         this.content.style.height = minHeight + "px";\n
-        if (horizScrollChanged)\n
-            this.onResize(true);\n
+\n
+        return changes;\n
     };\n
 \n
     this.$updateLines = function() {\n
@@ -12571,7 +13367,7 @@ var VirtualRenderer = function(container, theme) {\n
 \n
     this.$getLongestLine = function() {\n
         var charCount = this.session.getScreenWidth();\n
-        if (this.$textLayer.showInvisibles)\n
+        if (this.showInvisibles && !this.session.$useWrapMode)\n
             charCount += 1;\n
 \n
         return Math.max(this.$size.scrollerWidth - 2 * this.$padding, Math.round(charCount * this.characterWidth));\n
@@ -12619,12 +13415,18 @@ var VirtualRenderer = function(container, theme) {\n
 \n
         var left = pos.left;\n
         var top = pos.top;\n
+        \n
+        var scrollTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;\n
 \n
-        if (this.scrollTop > top) {\n
+        if (scrollTop > top) {\n
             if (offset)\n
                 top -= offset * this.$size.scrollerHeight;\n
+            if (top == 0)\n
+                top = - this.scrollMargin.top;\n
+            else if (top == 0)\n
+                top = + this.scrollMargin.bottom;\n
             this.session.setScrollTop(top);\n
-        } else if (this.scrollTop + this.$size.scrollerHeight < top + this.lineHeight) {\n
+        } else if (scrollTop + this.$size.scrollerHeight < top + this.lineHeight) {\n
             if (offset)\n
                 top += offset * this.$size.scrollerHeight;\n
             this.session.setScrollTop(top + this.lineHeight - this.$size.scrollerHeight);\n
@@ -12634,10 +13436,12 @@ var VirtualRenderer = function(container, theme) {\n
 \n
         if (scrollLeft > left) {\n
             if (left < this.$padding + 2 * this.layerConfig.characterWidth)\n
-                left = 0;\n
+                left = -this.scrollMargin.left;\n
             this.session.setScrollLeft(left);\n
         } else if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {\n
             this.session.setScrollLeft(Math.round(left + this.characterWidth - this.$size.scrollerWidth));\n
+        } else if (scrollLeft <= this.$padding && left - scrollLeft < this.characterWidth) {\n
+            this.session.setScrollLeft(0);\n
         }\n
     };\n
     this.getScrollTop = function() {\n
@@ -12697,29 +13501,42 @@ var VirtualRenderer = function(container, theme) {\n
 \n
     this.animateScrolling = function(fromValue, callback) {\n
         var toValue = this.scrollTop;\n
-        if (this.$animatedScroll) {\n
-            var _self = this;\n
-            var steps = _self.$calcSteps(fromValue, toValue);\n
-            this.$scrollAnimation = {from: fromValue, to: toValue};\n
-\n
-            clearInterval(this.$timer);\n
-\n
-            _self.session.setScrollTop(steps.shift());\n
-            this.$timer = setInterval(function() {\n
-                if (steps.length) {\n
-                    _self.session.setScrollTop(steps.shift());\n
-                    _self.session.$scrollTop = toValue;\n
-                } else if (toValue != null) {\n
-                    _self.session.$scrollTop = -1;\n
-                    _self.session.setScrollTop(toValue);\n
-                    toValue = null;\n
-                } else {\n
-                    _self.$timer = clearInterval(_self.$timer);\n
-                    _self.$scrollAnimation = null;\n
-                    callback && callback();\n
-                }\n
-            }, 10);\n
+        if (!this.$animatedScroll)\n
+            return;\n
+        var _self = this;\n
+        \n
+        if (fromValue == toValue)\n
+            return;\n
+        \n
+        if (this.$scrollAnimation) {\n
+            var oldSteps = this.$scrollAnimation.steps;\n
+            if (oldSteps.length) {\n
+                fromValue = oldSteps[0];\n
+                if (fromValue == toValue)\n
+                    return;\n
+            }\n
         }\n
+        \n
+        var steps = _self.$calcSteps(fromValue, toValue);\n
+        this.$scrollAnimation = {from: fromValue, to: toValue, steps: steps};\n
+\n
+        clearInterval(this.$timer);\n
+\n
+        _self.session.setScrollTop(steps.shift());\n
+        this.$timer = setInterval(function() {\n
+            if (steps.length) {\n
+                _self.session.setScrollTop(steps.shift());\n
+                _self.session.$scrollTop = toValue;\n
+            } else if (toValue != null) {\n
+                _self.session.$scrollTop = -1;\n
+                _self.session.setScrollTop(toValue);\n
+                toValue = null;\n
+            } else {\n
+                _self.$timer = clearInterval(_self.$timer);\n
+                _self.$scrollAnimation = null;\n
+                callback && callback();\n
+            }\n
+        }, 10);\n
     };\n
     this.scrollToY = function(scrollTop) {\n
         if (this.scrollTop !== scrollTop) {\n
@@ -12728,21 +13545,29 @@ var VirtualRenderer = function(container, theme) {\n
         }\n
     };\n
     this.scrollToX = function(scrollLeft) {\n
-        if (scrollLeft < 0)\n
-            scrollLeft = 0;\n
-\n
         if (this.scrollLeft !== scrollLeft)\n
             this.scrollLeft = scrollLeft;\n
         this.$loop.schedule(this.CHANGE_H_SCROLL);\n
+    };\n
+    this.scrollTo = function(x, y) {\n
+        this.session.setScrollTop(y);\n
+        this.session.setScrollLeft(y);\n
     };\n
     this.scrollBy = function(deltaX, deltaY) {\n
         deltaY && this.session.setScrollTop(this.session.getScrollTop() + deltaY);\n
         deltaX && this.session.setScrollLeft(this.session.getScrollLeft() + deltaX);\n
     };\n
     this.isScrollableBy = function(deltaX, deltaY) {\n
-        if (deltaY < 0 && this.session.getScrollTop() >= 1)\n
+        if (deltaY < 0 && this.session.getScrollTop() >= 1 - this.scrollMargin.top)\n
            return true;\n
-        if (deltaY > 0 && this.session.getScrollTop() + this.$size.scrollerHeight - this.layerConfig.maxHeight < -1)\n
+        if (deltaY > 0 && this.session.getScrollTop() + this.$size.scrollerHeight\n
+            - this.layerConfig.maxHeight - (this.$size.scrollerHeight - this.lineHeight) * this.$scrollPastEnd\n
+            < -1 + this.scrollMargin.bottom)\n
+           return true;\n
+        if (deltaX < 0 && this.session.getScrollLeft() >= 1 - this.scrollMargin.left)\n
+            return true;\n
+        if (deltaX > 0 && this.session.getScrollLeft() + this.$size.scrollerWidth\n
+            - this.layerConfig.width < -1 + this.scrollMargin.right)\n
            return true;\n
     };\n
 \n
@@ -12810,7 +13635,7 @@ var VirtualRenderer = function(container, theme) {\n
         this.textarea.style.cssText = this.$composition.cssText;\n
         this.$composition = null;\n
     };\n
-    this.setTheme = function(theme) {\n
+    this.setTheme = function(theme, cb) {\n
         var _self = this;\n
         this.$themeValue = theme;\n
         _self._dispatchEvent(\'themeChange\',{theme:theme});\n
@@ -12824,7 +13649,7 @@ var VirtualRenderer = function(container, theme) {\n
 \n
         function afterLoad(module) {\n
             if (_self.$themeValue != theme)\n
-                return;\n
+                return cb && cb();\n
             if (!module.cssClass)\n
                 return;\n
             dom.importCssString(\n
@@ -12841,7 +13666,7 @@ var VirtualRenderer = function(container, theme) {\n
             dom.addCssClass(_self.container, module.cssClass);\n
             dom.setCssClass(_self.container, "ace_dark", module.isDark);\n
 \n
-            var padding = module.padding || 4;\n
+            var padding = "padding" in module ? module.padding : 4;\n
             if (_self.$padding && padding != _self.$padding)\n
                 _self.setPadding(padding);\n
             if (_self.$size) {\n
@@ -12849,17 +13674,21 @@ var VirtualRenderer = function(container, theme) {\n
                 _self.onResize();\n
             }\n
 \n
-            _self._dispatchEvent(\'themeLoaded\',{theme:module});\n
+            _self._dispatchEvent(\'themeLoaded\', {theme:module});\n
+            cb && cb();\n
         }\n
     };\n
     this.getTheme = function() {\n
         return this.$themeValue;\n
     };\n
-    this.setStyle = function setStyle(style, include) {\n
+    this.setStyle = function(style, include) {\n
         dom.setCssClass(this.container, style, include != false);\n
     };\n
-    this.unsetStyle = function unsetStyle(style) {\n
+    this.unsetStyle = function(style) {\n
         dom.removeCssClass(this.container, style);\n
+    };\n
+    this.setMouseCursor = function(cursorStyle) {\n
+        this.content.style.cursor = cursorStyle;\n
     };\n
     this.destroy = function() {\n
         this.$textLayer.destroy();\n
@@ -12938,9 +13767,15 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {\n
         value: true\n
     },\n
     hScrollBarAlwaysVisible: {\n
-        set: function(alwaysVisible) {\n
-            this.$hScrollBarAlwaysVisible = alwaysVisible;\n
+        set: function(val) {\n
             if (!this.$hScrollBarAlwaysVisible || !this.$horizScroll)\n
+                this.$loop.schedule(this.CHANGE_SCROLL);\n
+        },\n
+        initialValue: false\n
+    },\n
+    vScrollBarAlwaysVisible: {\n
+        set: function(val) {\n
+            if (!this.$vScrollBarAlwaysVisible || !this.$vScroll)\n
                 this.$loop.schedule(this.CHANGE_SCROLL);\n
         },\n
         initialValue: false\n
@@ -12958,6 +13793,33 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {\n
         set: function(name) {\n
             this.container.style.fontFamily = name;\n
             this.updateFontSize();\n
+        }\n
+    },\n
+    maxLines: {\n
+        set: function(val) {\n
+            this.updateFull();\n
+        }\n
+    },\n
+    minLines: {\n
+        set: function(val) {\n
+            this.updateFull();\n
+        }\n
+    },\n
+    scrollPastEnd: {\n
+        set: function(val) {\n
+            val = +val || 0;\n
+            if (this.$scrollPastEnd == val)\n
+                return;\n
+            this.$scrollPastEnd = val;\n
+            this.$loop.schedule(this.CHANGE_SCROLL);\n
+        },\n
+        initialValue: 0,\n
+        handlesSet: true\n
+    },\n
+    fixedWidthGutter: {\n
+        set: function(val) {\n
+            this.$gutterLayer.$fixedWidth = !!val;\n
+            this.$loop.schedule(this.CHANGE_GUTTER);\n
         }\n
     }\n
 });\n
@@ -12983,6 +13845,8 @@ var Gutter = function(parentEl) {\n
 \n
     this.$annotations = [];\n
     this.$updateAnnotations = this.$updateAnnotations.bind(this);\n
+\n
+    this.$cells = [];\n
 };\n
 \n
 (function() {\n
@@ -13052,11 +13916,9 @@ var Gutter = function(parentEl) {\n
     };\n
 \n
     this.update = function(config) {\n
-        var emptyAnno = {className: ""};\n
-        var html = [];\n
-        var i = config.firstRow;\n
+        var firstRow = config.firstRow;\n
         var lastRow = config.lastRow;\n
-        var fold = this.session.getNextFoldLine(i);\n
+        var fold = this.session.getNextFoldLine(firstRow);\n
         var foldStart = fold ? fold.start.row : Infinity;\n
         var foldWidgets = this.$showFoldWidgets && this.session.foldWidgets;\n
         var breakpoints = this.session.$breakpoints;\n
@@ -13064,57 +13926,100 @@ var Gutter = function(parentEl) {\n
         var firstLineNumber = this.session.$firstLineNumber;\n
         var lastLineNumber = 0;\n
 \n
+        var cell = null;\n
+        var index = -1;\n
+        var row = firstRow;\n
         while (true) {\n
-            if(i > foldStart) {\n
-                i = fold.end.row + 1;\n
-                fold = this.session.getNextFoldLine(i, fold);\n
-                foldStart = fold ?fold.start.row :Infinity;\n
+            if (row > foldStart) {\n
+                row = fold.end.row + 1;\n
+                fold = this.session.getNextFoldLine(row, fold);\n
+                foldStart = fold ? fold.start.row : Infinity;\n
             }\n
-            if(i > lastRow)\n
+            if (row > lastRow) {\n
+                while (this.$cells.length > index + 1) {\n
+                    cell = this.$cells.pop();\n
+                    this.element.removeChild(cell.element);\n
+                }\n
                 break;\n
+            }\n
 \n
-            var annotation = this.$annotations[i] || emptyAnno;\n
-            html.push(\n
-                "<div class=\'ace_gutter-cell ",\n
-                breakpoints[i] || "", decorations[i] || "", annotation.className,\n
-                "\' style=\'height:", this.session.getRowLength(i) * config.lineHeight, "px;\'>", \n
-                lastLineNumber = i + firstLineNumber\n
-            );\n
+            cell = this.$cells[++index];\n
+            if (!cell) {\n
+                cell = {element: null, textNode: null, foldWidget: null};\n
+                cell.element = dom.createElement("div");\n
+                cell.textNode = document.createTextNode(\'\');\n
+                cell.element.appendChild(cell.textNode);\n
+                this.element.appendChild(cell.element);\n
+                this.$cells[index] = cell;\n
+            }\n
+\n
+            var className = "ace_gutter-cell ";\n
+            if (breakpoints[row])\n
+                className += breakpoints[row];\n
+            if (decorations[row])\n
+                className += decorations[row];\n
+            if (this.$annotations[row])\n
+                className += this.$annotations[row].className;\n
+            if (cell.element.className != className)\n
+                cell.element.className = className;\n
+\n
+            var height = this.session.getRowLength(row) * config.lineHeight + "px";\n
+            if (height != cell.element.style.height)\n
+                cell.element.style.height = height;\n
+\n
+            var text = lastLineNumber = row + firstLineNumber;\n
+            if (text != cell.textNode.data)\n
+                cell.textNode.data  = text;\n
 \n
             if (foldWidgets) {\n
-                var c = foldWidgets[i];\n
+                var c = foldWidgets[row];\n
                 if (c == null)\n
-                    c = foldWidgets[i] = this.session.getFoldWidget(i);\n
-                if (c)\n
-                    html.push(\n
-                        "<span class=\'ace_fold-widget ace_", c,\n
-                        c == "start" && i == foldStart && i < fold.end.row ? " ace_closed" : " ace_open",\n
-                        "\' style=\'height:", config.lineHeight, "px",\n
-                        "\'></span>"\n
-                    );\n
+                    c = foldWidgets[row] = this.session.getFoldWidget(row);\n
             }\n
 \n
-            html.push("</div>");\n
+            if (c) {\n
+                if (!cell.foldWidget) {\n
+                    cell.foldWidget = dom.createElement("span");\n
+                    cell.element.appendChild(cell.foldWidget);\n
+                }\n
+                var className = "ace_fold-widget ace_" + c;\n
+                if (c == "start" && row == foldStart && row < fold.end.row)\n
+                    className += " ace_closed";\n
+                else\n
+                    className += " ace_open";\n
+                if (cell.foldWidget.className != className)\n
+                    cell.foldWidget.className = className;\n
 \n
-            i++;\n
+                var height = config.lineHeight + "px";\n
+                if (cell.foldWidget.style.height != height)\n
+                    cell.foldWidget.style.height = height;\n
+            } else {\n
+                if (cell.foldWidget != null) {\n
+                    cell.element.removeChild(cell.foldWidget);\n
+                    cell.foldWidget = null;\n
+                }\n
+            }\n
+\n
+            row++;\n
         }\n
 \n
-        this.element = dom.setInnerHtml(this.element, html.join(""));\n
         this.element.style.height = config.minHeight + "px";\n
-        \n
-        if (this.session.$useWrapMode)\n
+\n
+        if (this.$fixedWidth || this.session.$useWrapMode)\n
             lastLineNumber = this.session.getLength();\n
-        \n
-        var gutterWidth = ("" + lastLineNumber).length * config.characterWidth;\n
+\n
+        var gutterWidth = lastLineNumber.toString().length * config.characterWidth;\n
         var padding = this.$padding || this.$computePadding();\n
         gutterWidth += padding.left + padding.right;\n
-        if (gutterWidth !== this.gutterWidth) {\n
+        if (gutterWidth !== this.gutterWidth && !isNaN(gutterWidth)) {\n
             this.gutterWidth = gutterWidth;\n
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";\n
             this._emit("changeGutterWidth", gutterWidth);\n
         }\n
     };\n
 \n
+    this.$fixedWidth = false;\n
+    \n
     this.$showFoldWidgets = true;\n
     this.setShowFoldWidgets = function(show) {\n
         if (show)\n
@@ -13134,9 +14039,9 @@ var Gutter = function(parentEl) {\n
         if (!this.element.firstChild)\n
             return {left: 0, right: 0};\n
         var style = dom.computedStyle(this.element.firstChild);\n
-        this.$padding = {}\n
-        this.$padding.left = parseInt(style.paddingLeft) + 1;\n
-        this.$padding.right = parseInt(style.paddingRight);  \n
+        this.$padding = {};\n
+        this.$padding.left = parseInt(style.paddingLeft) + 1 || 0;\n
+        this.$padding.right = parseInt(style.paddingRight) || 0;\n
         return this.$padding;\n
     };\n
 \n
@@ -13365,11 +14270,11 @@ var Text = function(parentEl) {\n
     };\n
 \n
     this.getLineHeight = function() {\n
-        return this.$characterSize.height || 1;\n
+        return this.$characterSize.height || 0;\n
     };\n
 \n
     this.getCharacterWidth = function() {\n
-        return this.$characterSize.width || 1;\n
+        return this.$characterSize.width || 0;\n
     };\n
 \n
     this.checkForSizeChanges = function() {\n
@@ -13452,8 +14357,7 @@ var Text = function(parentEl) {\n
             style.position = "fixed";\n
             style.overflow = "visible";\n
             style.whiteSpace = "nowrap";\n
-\n
-            measureNode.innerHTML = "X";\n
+            measureNode.innerHTML = lang.stringRepeat("X", 100);\n
 \n
             var container = this.element.parentNode;\n
             while (container && !dom.hasCssClass(container, "ace_editor"))\n
@@ -13469,7 +14373,7 @@ var Text = function(parentEl) {\n
 \n
         var size = {\n
             height: rect.height,\n
-            width: rect.width\n
+            width: rect.width / 100\n
         };\n
         if (size.width == 0 || size.height == 0)\n
             return null;\n
@@ -13739,39 +14643,16 @@ var Text = function(parentEl) {\n
         return screenColumn + value.length;\n
     };\n
 \n
-    this.renderIndentGuide = function(stringBuilder, value) {\n
+    this.renderIndentGuide = function(stringBuilder, value, max) {\n
         var cols = value.search(this.$indentGuideRe);\n
-        if (cols <= 0)\n
+        if (cols <= 0 || cols >= max)\n
             return value;\n
         if (value[0] == " ") {\n
             cols -= cols % this.tabSize;\n
             stringBuilder.push(lang.stringRepeat(this.$tabStrings[" "], cols/this.tabSize));\n
             return value.substr(cols);\n
         } else if (value[0] == "\\t") {\n
-            stringBuilde
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>next</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="9" aka="AAAAAAAAAAk=">
-    <pickle>
-      <global name="Pdata" module="OFS.Image"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-r.push(lang.stringRepeat(this.$tabStrings["\\t"], cols));\n
+            stringBuilder.push(lang.stringRepeat(this.$tabStrings["\\t"], cols));\n
             return value.substr(cols);\n
         }\n
         return value;\n
@@ -13788,7 +14669,7 @@ r.push(lang.stringRepeat(this.$tabStrings["\\t"], cols));\n
             var value = token.value;\n
             if (i == 0 && this.displayIndentGuides) {\n
                 chars = value.length;\n
-                value = this.renderIndentGuide(stringBuilder, value);\n
+                value = this.renderIndentGuide(stringBuilder, value, splitChars);\n
                 if (!value)\n
                     continue;\n
                 chars -= value.length;\n
@@ -13846,7 +14727,30 @@ r.push(lang.stringRepeat(this.$tabStrings["\\t"], cols));\n
             foldLine = this.session.getFoldLine(row);\n
 \n
         if (foldLine)\n
-            var tokens = this.$getFoldLineTokens(row, foldLine);\n
+            var tokens = this.$getFoldLineTokens(row, f
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+oldLine);\n
         else\n
             var tokens = this.session.getTokens(row);\n
 \n
@@ -14149,7 +15053,7 @@ var oop = require("./lib/oop");\n
 var dom = require("./lib/dom");\n
 var event = require("./lib/event");\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
-var ScrollBar = function(parent) {\n
+var ScrollBarV = function(parent, renderer) {\n
     this.element = dom.createElement("div");\n
     this.element.className = "ace_scrollbar";\n
 \n
@@ -14158,29 +15062,89 @@ var ScrollBar = function(parent) {\n
     this.element.appendChild(this.inner);\n
 \n
     parent.appendChild(this.element);\n
+    renderer.$scrollbarWidth = \n
     this.width = dom.scrollbarWidth(parent.ownerDocument);\n
+    renderer.$scrollbarWidth = \n
+    this.width = dom.scrollbarWidth(parent.ownerDocument);\n
+    this.fullWidth = this.width;\n
+    this.inner.style.width =\n
     this.element.style.width = (this.width || 15) + 5 + "px";\n
+    this.setVisible(false);\n
+    this.element.style.overflowY = "scroll";\n
+    \n
+    event.addListener(this.element, "scroll", this.onScrollV.bind(this));\n
+    event.addListener(this.element, "mousedown", event.preventDefault);\n
+};\n
 \n
-    event.addListener(this.element, "scroll", this.onScroll.bind(this));\n
+var ScrollBarH = function(parent, renderer) {\n
+    this.element = dom.createElement("div");\n
+    this.element.className = "ace_scrollbar-h";\n
+\n
+    this.inner = dom.createElement("div");\n
+    this.inner.className = "ace_scrollbar-inner";\n
+    this.element.appendChild(this.inner);\n
+\n
+    parent.appendChild(this.element);\n
+    this.height = renderer.$scrollbarWidth;\n
+    this.fullHeight = this.height;\n
+    this.inner.style.height =\n
+    this.element.style.height = (this.height || 15) + 5 + "px";\n
+    this.setVisible(false);\n
+    this.element.style.overflowX = "scroll";\n
+\n
+    event.addListener(this.element, "scroll", this.onScrollH.bind(this));\n
+    event.addListener(this.element, "mousedown", event.preventDefault);\n
 };\n
 \n
 (function() {\n
     oop.implement(this, EventEmitter);\n
-    this.onScroll = function() {\n
+\n
+    this.setVisible = function(show) {\n
+        if (show) {\n
+            this.element.style.display = "";\n
+            if (this.fullWidth)\n
+                this.width = this.fullWidth;\n
+            if (this.fullHeight)\n
+                this.height = this.fullHeight;\n
+        } else {\n
+            this.element.style.display = "none";\n
+            this.height = this.width = 0;\n
+        }\n
+    };\n
+    this.onScrollV = function() {\n
         if (!this.skipEvent) {\n
             this.scrollTop = this.element.scrollTop;\n
             this._emit("scroll", {data: this.scrollTop});\n
         }\n
         this.skipEvent = false;\n
     };\n
+    this.onScrollH = function() {\n
+        if (!this.skipEvent) {\n
+            this.scrollLeft = this.element.scrollLeft;\n
+            this._emit("scroll", {data: this.scrollLeft});\n
+        }\n
+        this.skipEvent = false;\n
+    };\n
     this.getWidth = function() {\n
         return this.width;\n
+    };\n
+\n
+    this.getHeight = function() {\n
+        return this.height;\n
     };\n
     this.setHeight = function(height) {\n
         this.element.style.height = height + "px";\n
     };\n
+    \n
+    this.setWidth = function(width) {\n
+        this.element.style.width = width + "px";\n
+    };\n
     this.setInnerHeight = function(height) {\n
         this.inner.style.height = height + "px";\n
+    };\n
+    \n
+    this.setInnerWidth = function(width) {\n
+        this.inner.style.width = width + "px";\n
     };\n
     this.setScrollTop = function(scrollTop) {\n
         if (this.scrollTop != scrollTop) {\n
@@ -14188,10 +15152,21 @@ var ScrollBar = function(parent) {\n
             this.scrollTop = this.element.scrollTop = scrollTop;\n
         }\n
     };\n
+    this.setScrollLeft = function(scrollLeft) {\n
+        if (this.scrollLeft != scrollLeft) {\n
+            this.skipEvent = true;\n
+            this.scrollLeft = this.element.scrollLeft = scrollLeft;\n
+        }\n
+    };\n
 \n
-}).call(ScrollBar.prototype);\n
+}).call(ScrollBarV.prototype);\n
+ScrollBarH.prototype = ScrollBarV.prototype;\n
 \n
-exports.ScrollBar = ScrollBar;\n
+\n
+\n
+exports.ScrollBar = ScrollBarV; // backward compatibility\n
+exports.ScrollBarV = ScrollBarV;\n
+exports.ScrollBarH = ScrollBarH;\n
 });\n
 \n
 define(\'ace/renderloop\', [\'require\', \'exports\', \'module\' , \'ace/lib/event\'], function(require, exports, module) {\n
@@ -14231,7 +15206,7 @@ var RenderLoop = function(onRender, win) {\n
 exports.RenderLoop = RenderLoop;\n
 });\n
 \n
-define(\'ace/multi_select\', [\'require\', \'exports\', \'module\' , \'ace/range_list\', \'ace/range\', \'ace/selection\', \'ace/mouse/multi_select_handler\', \'ace/lib/event\', \'ace/lib/lang\', \'ace/commands/multi_select_commands\', \'ace/search\', \'ace/edit_session\', \'ace/editor\'], function(require, exports, module) {\n
+define(\'ace/multi_select\', [\'require\', \'exports\', \'module\' , \'ace/range_list\', \'ace/range\', \'ace/selection\', \'ace/mouse/multi_select_handler\', \'ace/lib/event\', \'ace/lib/lang\', \'ace/commands/multi_select_commands\', \'ace/search\', \'ace/edit_session\', \'ace/editor\', \'ace/config\'], function(require, exports, module) {\n
 \n
 var RangeList = require("./range_list").RangeList;\n
 var Range = require("./range").Range;\n
@@ -14360,7 +15335,7 @@ var EditSession = require("./edit_session").EditSession;\n
         this.rangeCount = 0;\n
     };\n
     this.getAllRanges = function() {\n
-        return this.rangeList.ranges.concat();\n
+        return this.rangeCount ? this.rangeList.ranges.concat() : [this.getRange()];\n
     };\n
 \n
     this.splitIntoLines = function () {\n
@@ -14629,7 +15604,7 @@ var Editor = require("./editor").Editor;\n
         this.multiSelect.toSingleRange();\n
     };\n
 \n
-    this.getCopyText = function() {\n
+    this.getSelectedText = function() {\n
         var text = "";\n
         if (this.inMultiSelectMode && !this.inVirtualSelectionMode) {\n
             var ranges = this.multiSelect.rangeList.ranges;\n
@@ -14644,7 +15619,6 @@ var Editor = require("./editor").Editor;\n
         } else if (!this.selection.isEmpty()) {\n
             text = this.session.getTextRange(this.getSelectionRange());\n
         }\n
-        this._signal("copy", text);\n
         return text;\n
     };\n
     this.onPaste = function(text) {\n
@@ -14771,8 +15745,9 @@ var Editor = require("./editor").Editor;\n
         var range = sel.toOrientedRange();\n
         if (range.isEmpty()) {\n
             var range = session.getWordRange(range.start.row, range.start.column);\n
-            range.cursor = range.end;\n
+            range.cursor = dir == -1 ? range.start : range.end;\n
             this.multiSelect.addRange(range);\n
+            return;\n
         }\n
         var needle = session.getTextRange(range);\n
 \n
@@ -14928,13 +15903,16 @@ exports.onSessionChange = function(e) {\n
     }\n
 };\n
 function MultiSelect(editor) {\n
+    if (editor.$multiselectOnSessionChange)\n
+        return;\n
     editor.$onAddRange = editor.$onAddRange.bind(editor);\n
     editor.$onRemoveRange = editor.$onRemoveRange.bind(editor);\n
     editor.$onMultiSelect = editor.$onMultiSelect.bind(editor);\n
     editor.$onSingleSelect = editor.$onSingleSelect.bind(editor);\n
+    editor.$multiselectOnSessionChange = exports.onSessionChange.bind(editor);\n
 \n
-    exports.onSessionChange.call(editor, editor);\n
-    editor.on("changeSession", exports.onSessionChange.bind(editor));\n
+    editor.$multiselectOnSessionChange(editor);\n
+    editor.on("changeSession", editor.$multiselectOnSessionChange);\n
 \n
     editor.on("mousedown", onMouseDown);\n
     editor.commands.addCommands(commands.defaultCommands);\n
@@ -14945,29 +15923,47 @@ function MultiSelect(editor) {\n
 function addAltCursorListeners(editor){\n
     var el = editor.textInput.getElement();\n
     var altCursor = false;\n
-    var contentEl = editor.renderer.content;\n
     event.addListener(el, "keydown", function(e) {\n
         if (e.keyCode == 18 && !(e.ctrlKey || e.shiftKey || e.metaKey)) {\n
             if (!altCursor) {\n
-                contentEl.style.cursor = "crosshair";\n
+                editor.renderer.setMouseCursor("crosshair");\n
                 altCursor = true;\n
             }\n
         } else if (altCursor) {\n
-            contentEl.style.cursor = "";\n
+            reset();\n
         }\n
     });\n
 \n
     event.addListener(el, "keyup", reset);\n
     event.addListener(el, "blur", reset);\n
-    function reset() {\n
+    function reset(e) {\n
         if (altCursor) {\n
-            contentEl.style.cursor = "";\n
+            editor.renderer.setMouseCursor("");\n
             altCursor = false;\n
         }\n
     }\n
 }\n
 \n
 exports.MultiSelect = MultiSelect;\n
+\n
+\n
+require("./config").defineOptions(Editor.prototype, "editor", {\n
+    enableMultiselect: {\n
+        set: function(val) {\n
+            MultiSelect(this);\n
+            if (val) {\n
+                this.on("changeSession", this.$multiselectOnSessionChange);\n
+                this.on("mousedown", onMouseDown);\n
+            } else {\n
+                this.off("changeSession", this.$multiselectOnSessionChange);\n
+                this.off("mousedown", onMouseDown);\n
+            }\n
+        },\n
+        value: true\n
+    }\n
+})\n
+\n
+\n
 \n
 });\n
 \n
@@ -15248,6 +16244,7 @@ var WorkerClient = function(topLevelNamespaces, mod, classname) {\n
 \n
     this.terminate = function() {\n
         this._emit("terminate", {});\n
+        this.deltaQueue = null;\n
         this.$worker.terminate();\n
         this.$worker = null;\n
         this.$doc.removeEventListener("change", this.changeListener);\n
@@ -15634,11 +16631,7 @@ background-color: #6B72E6;\\\n
 background-color: #FFFFFF;\\\n
 }\\\n
 .ace-tm .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
-}\\\n
-.ace-tm .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-tm .ace_invisible {\\\n
 color: rgb(191, 191, 191);\\\n
@@ -15700,10 +16693,10 @@ color: rgb(104, 104, 91);\\\n
 .ace-tm .ace_entity.ace_name.ace_function {\\\n
 color: #0000A2;\\\n
 }\\\n
-.ace-tm .ace_markup.ace_heading {\\\n
+.ace-tm .ace_heading {\\\n
 color: rgb(12, 7, 255);\\\n
 }\\\n
-.ace-tm .ace_markup.ace_list {\\\n
+.ace-tm .ace_list {\\\n
 color:rgb(185, 6, 144);\\\n
 }\\\n
 .ace-tm .ace_meta.ace_tag {\\\n

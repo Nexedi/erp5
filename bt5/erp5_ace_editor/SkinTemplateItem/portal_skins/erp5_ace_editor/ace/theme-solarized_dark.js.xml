@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.46</string> </value>
+            <value> <string>ts83646620.66</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,16 +67,11 @@ background-color: #002B36;\\\n
 color: #93A1A1\\\n
 }\\\n
 .ace-solarized-dark .ace_entity.ace_other.ace_attribute-name,\\\n
-.ace-solarized-dark .ace_storage,\\\n
-.ace-solarized-dark .ace_text-layer {\\\n
+.ace-solarized-dark .ace_storage {\\\n
 color: #93A1A1\\\n
 }\\\n
 .ace-solarized-dark .ace_cursor {\\\n
-border-left: 2px solid #D30102\\\n
-}\\\n
-.ace-solarized-dark .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #D30102\\\n
+color: #D30102\\\n
 }\\\n
 .ace-solarized-dark .ace_marker-layer .ace_active-line,\\\n
 .ace-solarized-dark .ace_marker-layer .ace_selection {\\\n
@@ -139,9 +134,6 @@ color: #D30102\\\n
 font-style: italic;\\\n
 color: #657B83\\\n
 }\\\n
-.ace-solarized-dark .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-solarized-dark .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNg0Db1ZVCxc/sPAAd4AlUHlLenAAAAAElFTkSuQmCC) right repeat-y;\\\n
 }";\n
@@ -157,7 +149,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4520</int> </value>
+            <value> <int>4272</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

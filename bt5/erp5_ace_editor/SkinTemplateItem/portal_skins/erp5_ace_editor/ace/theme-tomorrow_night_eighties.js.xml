@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155569.27</string> </value>
+            <value> <string>ts83646620.1</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,11 +70,7 @@ color: #CCCCCC\\\n
 color: #CCCCCC\\\n
 }\\\n
 .ace-tomorrow-night-eighties .ace_cursor {\\\n
-border-left: 2px solid #CCCCCC\\\n
-}\\\n
-.ace-tomorrow-night-eighties .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #CCCCCC\\\n
+color: #CCCCCC\\\n
 }\\\n
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_selection {\\\n
 background: #515151\\\n
@@ -89,6 +85,9 @@ background: rgb(102, 82, 0)\\\n
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_bracket {\\\n
 margin: -1px 0 0 -1px;\\\n
 border: 1px solid #6A6A6A\\\n
+}\\\n
+.ace-tomorrow-night-bright .ace_stack {\\\n
+background: rgb(66, 90, 44)\\\n
 }\\\n
 .ace-tomorrow-night-eighties .ace_marker-layer .ace_active-line {\\\n
 background: #393939\\\n
@@ -141,7 +140,7 @@ color: #6699CC\\\n
 .ace-tomorrow-night-eighties .ace_support.ace_type {\\\n
 color: #FFCC66\\\n
 }\\\n
-.ace-tomorrow-night-eighties .ace_markup.ace_heading,\\\n
+.ace-tomorrow-night-eighties .ace_heading,\\\n
 .ace-tomorrow-night-eighties .ace_string {\\\n
 color: #99CC99\\\n
 }\\\n
@@ -153,9 +152,6 @@ color: #999999\\\n
 .ace-tomorrow-night-eighties .ace_meta.ace_tag,\\\n
 .ace-tomorrow-night-eighties .ace_variable {\\\n
 color: #F2777A\\\n
-}\\\n
-.ace-tomorrow-night-eighties .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
 }\\\n
 .ace-tomorrow-night-eighties .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ09NrYAgMjP4PAAtGAwchHMyAAAAAAElFTkSuQmCC) right repeat-y\\\n
@@ -172,7 +168,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5331</int> </value>
+            <value> <int>5165</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

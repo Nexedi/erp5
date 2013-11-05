@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155560.28</string> </value>
+            <value> <string>ts83646621.78</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -66,9 +66,8 @@ var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
 \n
 var Mode = function() {\n
-    var highlighter = new LogiQLHighlightRules();\n
+    this.HighlightRules = LogiQLHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
 };\n
@@ -81,7 +80,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
         var endState = tokenizedLine.state;\n
         if (/comment|string/.test(endState))  \n
@@ -182,7 +181,7 @@ var LogiQLHighlightRules = function() {\n
            regex: \'//.*\',\n
             },\n
          { token: \'constant.numeric\',\n
-           regex: \'\\\\d+(?:\\\\.\\\\d+)?(?:[eE][+-]?\\\\d+)?\',\n
+           regex: \'\\\\d+(?:\\\\.\\\\d+)?(?:[eE][+-]?\\\\d+)?[fd]?\',\n
             },\n
          { token: \'string\',\n
            regex: \'"\',\n
@@ -696,7 +695,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25957</int> </value>
+            <value> <int>25903</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

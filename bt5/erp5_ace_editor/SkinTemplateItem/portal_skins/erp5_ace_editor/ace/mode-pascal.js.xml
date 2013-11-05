@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155561.6</string> </value>
+            <value> <string>ts83646621.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,9 +67,8 @@ var PascalHighlightRules = require("./pascal_highlight_rules").PascalHighlightRu
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new PascalHighlightRules();\n
+    this.HighlightRules = PascalHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -265,7 +264,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9336</int> </value>
+            <value> <int>9273</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

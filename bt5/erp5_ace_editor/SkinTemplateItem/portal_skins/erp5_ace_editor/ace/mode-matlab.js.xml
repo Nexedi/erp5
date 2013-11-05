@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155561.01</string> </value>
+            <value> <string>ts83646621.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var MatlabHighlightRules = require("./matlab_highlight_rules").MatlabHighlightRu
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new MatlabHighlightRules().getRules());\n
+    this.HighlightRules = MatlabHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -260,7 +260,7 @@ exports.MatlabHighlightRules = MatlabHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>23383</int> </value>
+            <value> <int>23355</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

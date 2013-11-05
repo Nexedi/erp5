@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155553.66</string> </value>
+            <value> <string>ts83646622.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -52,34 +52,37 @@
  *\n
  * ***** END LICENSE BLOCK ***** */\n
 \n
-define(\'ace/ext/static_highlight\', [\'require\', \'exports\', \'module\' , \'ace/edit_session\', \'ace/layer/text\', \'ace/config\'], function(require, exports, module) {\n
+define(\'ace/ext/static_highlight\', [\'require\', \'exports\', \'module\' , \'ace/edit_session\', \'ace/layer/text\', \'ace/config\', \'ace/lib/dom\'], function(require, exports, module) {\n
 \n
 \n
 var EditSession = require("../edit_session").EditSession;\n
 var TextLayer = require("../layer/text").Text;\n
-var baseStyles = ".ace_editor {\\\n
-font-family: \'Monaco\', \'Menlo\', \'Droid Sans Mono\', \'Courier New\', monospace;\\\n
+var baseStyles = ".ace_static_highlight {\\\n
+font-family: \'Monaco\', \'Menlo\', \'Ubuntu Mono\', \'Consolas\', \'source-code-pro\', \'Droid Sans Mono\', monospace;\\\n
 font-size: 12px;\\\n
 }\\\n
-.ace_editor .ace_gutter {\\\n
+.ace_static_highlight .ace_gutter {\\\n
 width: 25px !important;\\\n
 display: block;\\\n
 float: left;\\\n
 text-align: right;\\\n
 padding: 0 3px 0 0;\\\n
 margin-right: 3px;\\\n
+position: static !important;\\\n
 }\\\n
-.ace_line { clear: both; }\\\n
-*.ace_gutter-cell {\\\n
+.ace_static_highlight .ace_line { clear: both; }\\\n
+.ace_static_highlight .ace_gutter-cell {\\\n
 -moz-user-select: -moz-none;\\\n
 -khtml-user-select: none;\\\n
 -webkit-user-select: none;\\\n
 user-select: none;\\\n
 }";\n
 var config = require("../config");\n
+var dom = require("../lib/dom");\n
 \n
 exports.render = function(input, mode, theme, lineStart, disableGutter, callback) {\n
-    var waiting = 0\n
+    var waiting = 0;\n
+    var modeCache = EditSession.prototype.$modes;\n
     if (typeof theme == "string") {\n
         waiting++;\n
         config.loadModule([\'theme\', theme], function(m) {\n
@@ -91,7 +94,8 @@ exports.render = function(input, mode, theme, lineStart, disableGutter, callback
     if (typeof mode == "string") {\n
         waiting++;\n
         config.loadModule([\'mode\', mode], function(m) {\n
-            mode = new m.Mode()\n
+            if (!modeCache[mode]) modeCache[mode] = new m.Mode();\n
+            mode = modeCache[mode];\n
             --waiting || done();\n
         });\n
     }\n
@@ -128,11 +132,11 @@ exports.renderSync = function(input, mode, theme, lineStart, disableGutter) {\n
         textLayer.$renderLine(stringBuilder, ix, true, false);\n
         stringBuilder.push("</div>");\n
     }\n
-    var html = "<div class=\':cssClass\'>\\\n
-        <div class=\'ace_editor ace_scroller ace_text-layer\'>\\\n
-            :code\\\n
-        </div>\\\n
-    </div>".replace(/:cssClass/, theme.cssClass).replace(/:code/, stringBuilder.join(""));\n
+    var html = "<div class=\'" + theme.cssClass + "\'>" +\n
+        "<div class=\'ace_static_highlight\'>" +\n
+            stringBuilder.join("") +\n
+        "</div>" +\n
+    "</div>";\n
 \n
     textLayer.destroy();\n
 \n
@@ -142,6 +146,46 @@ exports.renderSync = function(input, mode, theme, lineStart, disableGutter) {\n
     };\n
 };\n
 \n
+\n
+\n
+exports.highlight = function(el, opts, callback) {\n
+    var m = el.className.match(/lang-(\\w+)/);\n
+    var mode = opts.mode || m && ("ace/mode/" + m[1]);\n
+    if (!mode)\n
+        return false;\n
+    var theme = opts.theme || "ace/theme/textmate";\n
+    \n
+    var data = "";\n
+    var nodes = [];\n
+\n
+    if (el.firstElementChild) {\n
+        var textLen = 0;\n
+        for (var i = 0; i < el.childNodes.length; i++) {\n
+            var ch = el.childNodes[i];\n
+            if (ch.nodeType == 3) {\n
+                textLen += ch.data.length;\n
+                data += ch.data;\n
+            } else {\n
+                nodes.push(textLen, ch);\n
+            }\n
+        }\n
+    } else {\n
+        data = dom.getInnerText(el);\n
+    }\n
+    \n
+    exports.render(data, mode, theme, 1, true, function (highlighted) {\n
+        dom.importCssString(highlighted.css, "ace_highlight");\n
+        el.innerHTML = highlighted.html;\n
+        var container = el.firstChild.firstChild\n
+        for (var i = 0; i < nodes.length; i += 2) {\n
+            var pos = highlighted.session.doc.indexToPosition(nodes[i])\n
+            var node = nodes[i + 1];\n
+            var lineEl = container.children[pos.row];\n
+            lineEl && lineEl.appendChild(nodes[i+1]);\n
+        }\n
+        callback && callback();\n
+    });\n
+};\n
 });\n
 
 
@@ -153,7 +197,7 @@ exports.renderSync = function(input, mode, theme, lineStart, disableGutter) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4310</int> </value>
+            <value> <int>5794</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155557.15</string> </value>
+            <value> <string>ts83646622.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -50,11 +50,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
  *\n
- *\n
- * Contributor(s):\n
- *\n
- *\n
- *\n
  * ***** END LICENSE BLOCK ***** */\n
 \n
 define(\'ace/mode/erlang\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/erlang_highlight_rules\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
@@ -67,9 +62,8 @@ var ErlangHighlightRules = require("./erlang_highlight_rules").ErlangHighlightRu
 var FoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new ErlangHighlightRules();\n
+    this.HighlightRules = ErlangHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -983,7 +977,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>45205</int> </value>
+            <value> <int>45111</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

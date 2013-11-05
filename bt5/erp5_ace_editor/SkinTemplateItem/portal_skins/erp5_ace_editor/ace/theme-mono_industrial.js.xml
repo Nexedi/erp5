@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.12</string> </value>
+            <value> <string>ts83646620.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #222C28;\\\n
 color: #FFFFFF\\\n
 }\\\n
 .ace-mono-industrial .ace_cursor {\\\n
-border-left: 2px solid #FFFFFF\\\n
-}\\\n
-.ace-mono-industrial .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #FFFFFF\\\n
+color: #FFFFFF\\\n
 }\\\n
 .ace-mono-industrial .ace_marker-layer .ace_selection {\\\n
 background: rgba(145, 153, 148, 0.40)\\\n
@@ -152,9 +148,6 @@ background-color: #151C19\\\n
 .ace-mono-industrial .ace_entity.ace_other.ace_attribute-name {\\\n
 color: #909993\\\n
 }\\\n
-.ace-mono-industrial .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-mono-industrial .ace_entity.ace_name.ace_tag {\\\n
 color: #A65EFF\\\n
 }\\\n
@@ -173,7 +166,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4981</int> </value>
+            <value> <int>4769</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155559.13</string> </value>
+            <value> <string>ts83646621.96</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -65,7 +65,7 @@ var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
 var WorkerClient = require("../worker/worker_client").WorkerClient;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new HighlightRules().getRules());\n
+    this.HighlightRules = HighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
     this.foldingRules = new CStyleFoldMode();\n
@@ -610,7 +610,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>22267</int> </value>
+            <value> <int>22239</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

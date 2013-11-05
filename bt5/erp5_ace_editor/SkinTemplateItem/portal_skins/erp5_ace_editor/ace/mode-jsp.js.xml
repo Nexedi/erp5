@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155559.23</string> </value>
+            <value> <string>ts83646621.91</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -64,8 +64,7 @@ var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new JspHighlightRules();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
+    this.HighlightRules = JspHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
     this.foldingRules = new CStyleFoldMode();\n
@@ -88,45 +87,52 @@ var JavaHighlightRules = require("./java_highlight_rules").JavaHighlightRules;\n
 \n
 var JspHighlightRules = function() {\n
     HtmlHighlightRules.call(this);\n
-    for (var i in this.$rules) {\n
-        this.$rules[i].unshift({\n
-            token : "meta.tag", // jsp open tag\n
-            regex : "<%@?|<%=?|<jsp:[^>]+>",\n
-            next  : "jsp-start"\n
-        });\n
-    }\n
 \n
     var builtinVariables = \'request|response|out|session|\' +\n
             \'application|config|pageContext|page|Exception\';\n
 \n
     var keywords = \'page|include|taglib\';\n
 \n
-    this.embedRules(JavaHighlightRules, "jsp-");\n
+    var startRules = [\n
+        {\n
+            token : "comment",\n
+            regex : "<%--",\n
+            push : "jsp-dcomment"\n
+        }, {\n
+            token : "meta.tag", // jsp open tag\n
+            regex : "<%@?|<%=?|<jsp:[^>]+>",\n
+            push  : "jsp-start"\n
+        }\n
+    ];\n
 \n
-    this.$rules["start"].unshift({\n
-        token : "comment",\n
-        regex : "<%--",\n
-        next : "comment"\n
+    var endRules = [\n
+        {\n
+            token : "meta.tag", // jsp close tag\n
+            regex : "%>|<\\\\/jsp:[^>]+>",\n
+            next  : "pop"\n
+        }, {\n
+            token: "variable.language",\n
+            regex : builtinVariables\n
+        }, {\n
+            token: "keyword",\n
+            regex : keywords\n
+        }\n
+    ];\n
+\n
+    for (var key in this.$rules)\n
+        this.$rules[key].unshift.apply(this.$rules[key], startRules);\n
+\n
+    this.embedRules(JavaHighlightRules, "jsp-", endRules, ["start"]);\n
+\n
+    this.addRules({\n
+        "jsp-dcomment" : [{\n
+            token : "comment",\n
+            regex : ".*?--%>",\n
+            next : "pop"\n
+        }]\n
     });\n
 \n
-    this.$rules["jsp-start"].unshift({\n
-        token : "meta.tag", // jsp close tag\n
-        regex : "%>|<\\\\/jsp:[^>]+>",\n
-        next  : "start"\n
-    },\n
-    {\n
-        token: "variable.language",\n
-        regex : builtinVariables\n
-    }, {\n
-        token: "keyword",\n
-        regex : keywords\n
-    });\n
-\n
-    this.$rules.comment.unshift({\n
-        token : "comment",\n
-        regex : ".*?--%>",\n
-        next : "start"\n
-    });\n
+    this.normalizeRules();\n
 };\n
 \n
 oop.inherits(JspHighlightRules, HtmlHighlightRules);\n
@@ -134,15 +140,14 @@ oop.inherits(JspHighlightRules, HtmlHighlightRules);\n
 exports.JspHighlightRules = JspHighlightRules;\n
 });\n
 \n
-define(\'ace/mode/html_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/css_highlight_rules\', \'ace/mode/javascript_highlight_rules\', \'ace/mode/xml_util\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+define(\'ace/mode/html_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/css_highlight_rules\', \'ace/mode/javascript_highlight_rules\', \'ace/mode/xml_highlight_rules\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../lib/oop");\n
 var lang = require("../lib/lang");\n
 var CssHighlightRules = require("./css_highlight_rules").CssHighlightRules;\n
 var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;\n
-var xmlUtil = require("./xml_util");\n
-var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+var XmlHighlightRules = require("./xml_highlight_rules").XmlHighlightRules;\n
 \n
 var tagMap = lang.createMap({\n
     a           : \'anchor\',\n
@@ -151,6 +156,7 @@ var tagMap = lang.createMap({\n
     img         : \'image\',\n
     input       : \'form\',\n
     label       : \'form\',\n
+    option      : \'form\',\n
     script      : \'script\',\n
     select      : \'form\',\n
     textarea    : \'form\',\n
@@ -164,78 +170,66 @@ var tagMap = lang.createMap({\n
 });\n
 \n
 var HtmlHighlightRules = function() {\n
-    this.$rules = {\n
-        start : [{\n
-            token : "text",\n
-            regex : "<\\\\!\\\\[CDATA\\\\[",\n
-            next : "cdata"\n
-        }, {\n
-            token : "xml-pe",\n
-            regex : "<\\\\?.*?\\\\?>"\n
-        }, {\n
-            token : "comment",\n
-            regex : "<\\\\!--",\n
-            next : "comment"\n
-        }, {\n
-            token : "xml-pe",\n
-            regex : "<\\\\!.*?>"\n
-        }, {\n
-            token : "meta.tag",\n
-            regex : "<(?=script\\\\b)",\n
-            next : "script"\n
-        }, {\n
-            token : "meta.tag",\n
-            regex : "<(?=style\\\\b)",\n
-            next : "style"\n
-        }, {\n
-            token : "meta.tag", // opening tag\n
-            regex : "<\\\\/?(?=\\\\S)",\n
-            next : "tag"\n
-        }, {\n
-            token : "text",\n
-            regex : "\\\\s+"\n
-        }, {\n
-            token : "constant.character.entity",\n
-            regex : "(?:&#[0-9]+;)|(?:&#x[0-9a-fA-F]+;)|(?:&[a-zA-Z0-9_:\\\\.-]+;)"\n
-        }],\n
-    \n
-        cdata : [ {\n
-            token : "text",\n
-            regex : "\\\\]\\\\]>",\n
-            next : "start"\n
-        } ],\n
+    XmlHighlightRules.call(this);\n
 \n
-        comment : [ {\n
-            token : "comment",\n
-            regex : ".*?-->",\n
-            next : "start"\n
+    this.addRules({\n
+        attributes: [{\n
+            include : "space"\n
         }, {\n
-            defaultToken : "comment"\n
-        } ]\n
-    };\n
-    \n
-    xmlUtil.tag(this.$rules, "tag", "start", tagMap);\n
-    xmlUtil.tag(this.$rules, "style", "css-start", tagMap);\n
-    xmlUtil.tag(this.$rules, "script", "js-start", tagMap);\n
-    \n
-    this.embedRules(JavaScriptHighlightRules, "js-", [{\n
-        token: "comment",\n
-        regex: "\\\\/\\\\/.*(?=<\\\\/script>)",\n
-        next: "tag"\n
-    }, {\n
-        token: "meta.tag",\n
-        regex: "<\\\\/(?=script)",\n
-        next: "tag"\n
-    }]);\n
-    \n
-    this.embedRules(CssHighlightRules, "css-", [{\n
-        token: "meta.tag",\n
-        regex: "<\\\\/(?=style)",\n
-        next: "tag"\n
-    }]);\n
+            token : "entity.other.attribute-name",\n
+            regex : "[-_a-zA-Z0-9:]+"\n
+        }, {\n
+            token : "keyword.operator.separator",\n
+            regex : "=",\n
+            push : [{\n
+                include: "space"\n
+            }, {\n
+                token : "string",\n
+                regex : "[^<>=\'\\"`\\\\s]+",\n
+                next : "pop"\n
+            }, {\n
+                token : "empty",\n
+                regex : "",\n
+                next : "pop"\n
+            }]\n
+        }, {\n
+            include : "string"\n
+        }],\n
+        tag: [{\n
+            token : function(start, tag) {\n
+                var group = tagMap[tag];\n
+                return ["meta.tag.punctuation.begin",\n
+                    "meta.tag.name" + (group ? "." + group : "")];\n
+            },\n
+            regex : "(<)([-_a-zA-Z0-9:]+)",\n
+            next: "start_tag_stuff"\n
+        }, {\n
+            token : function(start, tag) {\n
+                var group = tagMap[tag];\n
+                return ["meta.tag.punctuation.begin",\n
+                    "meta.tag.name" + (group ? "." + group : "")];\n
+            },\n
+            regex : "(</)([-_a-zA-Z0-9:]+)",\n
+            next: "end_tag_stuff"\n
+        }],\n
+        start_tag_stuff: [\n
+            {include : "attributes"},\n
+            {token : "meta.tag.punctuation.end", regex : "/?>", next : "start"}\n
+        ],\n
+        end_tag_stuff: [\n
+            {include : "space"},\n
+            {token : "meta.tag.punctuation.end", regex : ">", next : "start"}\n
+        ]\n
+    });\n
+\n
+    this.embedTagRules(CssHighlightRules, "css-", "style");\n
+    this.embedTagRules(JavaScriptHighlightRules, "js-", "script");\n
+\n
+    if (this.constructor === HtmlHighlightRules)\n
+        this.normalizeRules();\n
 };\n
 \n
-oop.inherits(HtmlHighlightRules, TextHighlightRules);\n
+oop.inherits(HtmlHighlightRules, XmlHighlightRules);\n
 \n
 exports.HtmlHighlightRules = HtmlHighlightRules;\n
 });\n
@@ -266,11 +260,80 @@ var CssHighlightRules = function() {\n
         "support.constant.fonts": supportConstantFonts\n
     }, "text", true);\n
 \n
-    var base_ruleset = [\n
-        {\n
+    this.$rules = {\n
+        "start" : [{\n
             token : "comment", // multi line comment\n
             regex : "\\\\/\\\\*",\n
-            next : "ruleset_comment"\n
+            push : "comment"\n
+        }, {\n
+            token: "paren.lparen",\n
+            regex: "\\\\{",\n
+            push:  "ruleset"\n
+        }, {\n
+            token: "string",\n
+            regex: "@.*?{",\n
+            push:  "media"\n
+        }, {\n
+            token: "keyword",\n
+            regex: "#[a-z0-9-_]+"\n
+        }, {\n
+            token: "variable",\n
+            regex: "\\\\.[a-z0-9-_]+"\n
+        }, {\n
+            token: "string",\n
+            regex: ":[a-z0-9-_]+"\n
+        }, {\n
+            token: "constant",\n
+            regex: "[a-z0-9-_]+"\n
+        }, {\n
+            caseInsensitive: true\n
+        }],\n
+\n
+        "media" : [{\n
+            token : "comment", // multi line comment\n
+            regex : "\\\\/\\\\*",\n
+            push : "comment"\n
+        }, {\n
+            token: "paren.lparen",\n
+            regex: "\\\\{",\n
+            push:  "ruleset"\n
+        }, {\n
+            token: "string",\n
+            regex: "\\\\}",\n
+            next:  "pop"\n
+        }, {\n
+            token: "keyword",\n
+            regex: "#[a-z0-9-_]+"\n
+        }, {\n
+            token: "variable",\n
+            regex: "\\\\.[a-z0-9-_]+"\n
+        }, {\n
+            token: "string",\n
+            regex: ":[a-z0-9-_]+"\n
+        }, {\n
+            token: "constant",\n
+            regex: "[a-z0-9-_]+"\n
+        }, {\n
+            caseInsensitive: true\n
+        }],\n
+\n
+        "comment" : [{\n
+            token : "comment",\n
+            regex : "\\\\*\\\\/",\n
+            next : "pop"\n
+        }, {\n
+            defaultToken : "comment"\n
+        }],\n
+\n
+        "ruleset" : [\n
+        {\n
+            token : "paren.rparen",\n
+            regex : "\\\\}",\n
+            next:   "pop"\n
+        }, {\n
+            token : "comment", // multi line comment\n
+            regex : "\\\\/\\\\*",\n
+            push : "comment"\n
         }, {\n
             token : "string", // single line\n
             regex : \'["](?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?["]\'\n
@@ -303,114 +366,10 @@ var CssHighlightRules = function() {\n
             regex : "\\\\-?[a-zA-Z_][a-zA-Z0-9_\\\\-]*"\n
         }, {\n
             caseInsensitive: true\n
-        }\n
-      ];\n
-\n
-    var ruleset = lang.copyArray(base_ruleset);\n
-    ruleset.unshift({\n
-        token : "paren.rparen",\n
-        regex : "\\\\}",\n
-        next:   "start"\n
-    });\n
-\n
-    var media_ruleset = lang.copyArray( base_ruleset );\n
-    media_ruleset.unshift({\n
-        token : "paren.rparen",\n
-        regex : "\\\\}",\n
-        next:   "media"\n
-    });\n
-\n
-    var base_comment = [{\n
-          token : "comment", // comment spanning whole line\n
-          regex : ".+"\n
-    }];\n
-\n
-    var comment = lang.copyArray(base_comment);\n
-    comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "start"\n
-    });\n
-\n
-    var media_comment = lang.copyArray(base_comment);\n
-    media_comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "media"\n
-    });\n
-\n
-    var ruleset_comment = lang.copyArray(base_comment);\n
-    ruleset_comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "ruleset"\n
-    });\n
-\n
-    this.$rules = {\n
-        "start" : [{\n
-            token : "comment", // multi line comment\n
-            regex : "\\\\/\\\\*",\n
-            next : "comment"\n
-        }, {\n
-            token: "paren.lparen",\n
-            regex: "\\\\{",\n
-            next:  "ruleset"\n
-        }, {\n
-            token: "string",\n
-            regex: "@.*?{",\n
-            next:  "media"\n
-        },{\n
-            token: "keyword",\n
-            regex: "#[a-z0-9-_]+"\n
-        },{\n
-            token: "variable",\n
-            regex: "\\\\.[a-z0-9-_]+"\n
-        },{\n
-            token: "string",\n
-            regex: ":[a-z0-9-_]+"\n
-        },{\n
-            token: "constant",\n
-            regex: "[a-z0-9-_]+"\n
-        },{\n
-            caseInsensitive: true\n
-        }],\n
-\n
-        "media" : [ {\n
-            token : "comment", // multi line comment\n
-            regex : "\\\\/\\\\*",\n
-            next : "media_comment"\n
-        }, {\n
-            token: "paren.lparen",\n
-            regex: "\\\\{",\n
-            next:  "media_ruleset"\n
-        },{\n
-            token: "string",\n
-            regex: "\\\\}",\n
-            next:  "start"\n
-        },{\n
-            token: "keyword",\n
-            regex: "#[a-z0-9-_]+"\n
-        },{\n
-            token: "variable",\n
-            regex: "\\\\.[a-z0-9-_]+"\n
-        },{\n
-            token: "string",\n
-            regex: ":[a-z0-9-_]+"\n
-        },{\n
-            token: "constant",\n
-            regex: "[a-z0-9-_]+"\n
-        },{\n
-            caseInsensitive: true\n
-        }],\n
-\n
-        "comment" : comment,\n
-\n
-        "ruleset" : ruleset,\n
-        "ruleset_comment" : ruleset_comment,\n
-\n
-        "media_ruleset" : media_ruleset,\n
-        "media_comment" : media_comment\n
+        }]\n
     };\n
+\n
+    this.normalizeRules();\n
 };\n
 \n
 oop.inherits(CssHighlightRules, TextHighlightRules);\n
@@ -468,7 +427,8 @@ var JavaScriptHighlightRules = function() {\n
         "no_regex" : [\n
             {\n
                 token : "comment",\n
-                regex : /\\/\\/.*$/\n
+                regex : "\\\\/\\\\/",\n
+                next : "line_comment"\n
             },\n
             DocCommentHighlightRules.getStartRule("doc-start"),\n
             {\n
@@ -543,7 +503,7 @@ var JavaScriptHighlightRules = function() {\n
                 next : "start"\n
             }, {\n
                 token : ["punctuation.operator", "support.function"],\n
-                regex : /(\\.)(s(?:h(?:ift|ow(?:Mod(?:elessDialog|alDialog)|Help))|croll(?:X|By(?:Pages|Lines)?|Y|To)?|t(?:opzzzz|rike)|i(?:n|zeToContent|debar|gnText)|ort|u(?:p|b(?:str(?:ing)?)?)|pli(?:ce|t)|e(?:nd|t(?:Re(?:sizable|questHeader)|M(?:i(?:nutes|lliseconds)|onth)|Seconds|Ho(?:tKeys|urs)|Year|Cursor|Time(?:out)?|Interval|ZOptions|Date|UTC(?:M(?:i(?:nutes|lliseconds)|onth)|Seconds|Hours|Date|FullYear)|FullYear|Active)|arch)|qrt|lice|avePreferences|mall)|h(?:ome|andleEvent)|navigate|c(?:har(?:CodeAt|At)|o(?:s|n(?:cat|textual|firm)|mpile)|eil|lear(?:Timeout|Interval)?|a(?:ptureEvents|ll)|reate(?:StyleSheet|Popup|EventObject))|t(?:o(?:GMTString|S(?:tring|ource)|U(?:TCString|pperCase)|Lo(?:caleString|werCase))|est|a(?:n|int(?:Enabled)?))|i(?:s(?:NaN|Finite)|ndexOf|talics)|d(?:isableExternalCapture|ump|etachEvent)|u(?:n(?:shift|taint|escape|watch)|pdateCommands)|j(?:oin|avaEnabled)|p(?:o(?:p|w)|ush|lugins.refresh|a(?:ddings|rse(?:Int|Float)?)|r(?:int|ompt|eference))|e(?:scape|nableExternalCapture|val|lementFromPoint|x(?:p|ec(?:Script|Command)?))|valueOf|UTC|queryCommand(?:State|Indeterm|Enabled|Value)|f(?:i(?:nd|le(?:ModifiedDate|Size|CreatedDate|UpdatedDate)|xed)|o(?:nt(?:size|color)|rward)|loor|romCharCode)|watch|l(?:ink|o(?:ad|g)|astIndexOf)|a(?:sin|nchor|cos|t(?:tachEvent|ob|an(?:2)?)|pply|lert|b(?:s|ort))|r(?:ou(?:nd|teEvents)|e(?:size(?:By|To)|calc|turnValue|place|verse|l(?:oad|ease(?:Capture|Events)))|andom)|g(?:o|et(?:ResponseHeader|M(?:i(?:nutes|lliseconds)|onth)|Se(?:conds|lection)|Hours|Year|Time(?:zoneOffset)?|Da(?:y|te)|UTC(?:M(?:i(?:nutes|lliseconds)|onth)|Seconds|Hours|Da(?:y|te)|FullYear)|FullYear|A(?:ttention|llResponseHeaders)))|m(?:in|ove(?:B(?:y|elow)|To(?:Absolute)?|Above)|ergeAttributes|a(?:tch|rgins|x))|b(?:toa|ig|o(?:ld|rderWidths)|link|ack))\\b(?=\\()/\n
+                regex : /(\\.)(s(?:h(?:ift|ow(?:Mod(?:elessDialog|alDialog)|Help))|croll(?:X|By(?:Pages|Lines)?|Y|To)?|t(?:op|rike)|i(?:n|zeToContent|debar|gnText)|ort|u(?:p|b(?:str(?:ing)?)?)|pli(?:ce|t)|e(?:nd|t(?:Re(?:sizable|questHeader)|M(?:i(?:nutes|lliseconds)|onth)|Seconds|Ho(?:tKeys|urs)|Year|Cursor|Time(?:out)?|Interval|ZOptions|Date|UTC(?:M(?:i(?:nutes|lliseconds)|onth)|Seconds|Hours|Date|FullYear)|FullYear|Active)|arch)|qrt|lice|avePreferences|mall)|h(?:ome|andleEvent)|navigate|c(?:har(?:CodeAt|At)|o(?:s|n(?:cat|textual|firm)|mpile)|eil|lear(?:Timeout|Interval)?|a(?:ptureEvents|ll)|reate(?:StyleSheet|Popup|EventObject))|t(?:o(?:GMTString|S(?:tring|ource)|U(?:TCString|pperCase)|Lo(?:caleString|werCase))|est|a(?:n|int(?:Enabled)?))|i(?:s(?:NaN|Finite)|ndexOf|talics)|d(?:isableExternalCapture|ump|etachEvent)|u(?:n(?:shift|taint|escape|watch)|pdateCommands)|j(?:oin|avaEnabled)|p(?:o(?:p|w)|ush|lugins.refresh|a(?:ddings|rse(?:Int|Float)?)|r(?:int|ompt|eference))|e(?:scape|nableExternalCapture|val|lementFromPoint|x(?:p|ec(?:Script|Command)?))|valueOf|UTC|queryCommand(?:State|Indeterm|Enabled|Value)|f(?:i(?:nd|le(?:ModifiedDate|Size|CreatedDate|UpdatedDate)|xed)|o(?:nt(?:size|color)|rward)|loor|romCharCode)|watch|l(?:ink|o(?:ad|g)|astIndexOf)|a(?:sin|nchor|cos|t(?:tachEvent|ob|an(?:2)?)|pply|lert|b(?:s|ort))|r(?:ou(?:nd|teEvents)|e(?:size(?:By|To)|calc|turnValue|place|verse|l(?:oad|ease(?:Capture|Events)))|andom)|g(?:o|et(?:ResponseHeader|M(?:i(?:nutes|lliseconds)|onth)|Se(?:conds|lection)|Hours|Year|Time(?:zoneOffset)?|Da(?:y|te)|UTC(?:M(?:i(?:nutes|lliseconds)|onth)|Seconds|Hours|Da(?:y|te)|FullYear)|FullYear|A(?:ttention|llResponseHeaders)))|m(?:in|ove(?:B(?:y|elow)|To(?:Absolute)?|Above)|ergeAttributes|a(?:tch|rgins|x))|b(?:toa|ig|o(?:ld|rderWidths)|link|ack))\\b(?=\\()/\n
             }, {\n
                 token : ["punctuation.operator", "support.function.dom"],\n
                 regex : /(\\.)(s(?:ub(?:stringData|mit)|plitText|e(?:t(?:NamedItem|Attribute(?:Node)?)|lect))|has(?:ChildNodes|Feature)|namedItem|c(?:l(?:ick|o(?:se|neNode))|reate(?:C(?:omment|DATASection|aption)|T(?:Head|extNode|Foot)|DocumentFragment|ProcessingInstruction|E(?:ntityReference|lement)|Attribute))|tabIndex|i(?:nsert(?:Row|Before|Cell|Data)|tem)|open|delete(?:Row|C(?:ell|aption)|T(?:Head|Foot)|Data)|focus|write(?:ln)?|a(?:dd|ppend(?:Child|Data))|re(?:set|place(?:Child|Data)|move(?:NamedItem|Child|Attribute(?:Node)?)?)|get(?:NamedItem|Element(?:sBy(?:Name|TagName)|ById)|Attribute(?:Node)?)|blur)\\b(?=\\()/\n
@@ -588,8 +548,8 @@ var JavaScriptHighlightRules = function() {\n
                 next : "comment_regex_allowed"\n
             }, {\n
                 token : "comment",\n
-                regex : "\\\\/\\\\/.*$",\n
-                next : "start"\n
+                regex : "\\\\/\\\\/",\n
+                next : "line_comment_regex_allowed"\n
             }, {\n
                 token: "string.regexp",\n
                 regex: "\\\\/",\n
@@ -674,6 +634,14 @@ var JavaScriptHighlightRules = function() {\n
         ],\n
         "comment" : [\n
             {token : "comment", regex : "\\\\*\\\\/", next : "no_regex"},\n
+            {defaultToken : "comment"}\n
+        ],\n
+        "line_comment_regex_allowed" : [\n
+            {token : "comment", regex : "$|^", next : "start"},\n
+            {defaultToken : "comment"}\n
+        ],\n
+        "line_comment" : [\n
+            {token : "comment", regex : "$|^", next : "no_regex"},\n
             {defaultToken : "comment"}\n
         ],\n
         "qqstring" : [\n
@@ -761,6 +729,193 @@ DocCommentHighlightRules.getEndRule = function (start) {\n
 \n
 exports.DocCommentHighlightRules = DocCommentHighlightRules;\n
 \n
+});\n
+\n
+define(\'ace/mode/xml_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/xml_util\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../lib/oop");\n
+var xmlUtil = require("./xml_util");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var XmlHighlightRules = function(normalize) {\n
+    this.$rules = {\n
+        start : [\n
+            {token : "punctuation.string.begin", regex : "<\\\\!\\\\[CDATA\\\\[", next : "cdata"},\n
+            {\n
+                token : ["punctuation.instruction.begin", "keyword.instruction"],\n
+                regex : "(<\\\\?)(xml)(?=[\\\\s])", next : "xml_declaration"\n
+            },\n
+            {\n
+                token : ["punctuation.instruction.begin", "keyword.instruction"],\n
+                regex : "(<\\\\?)([-_a-zA-Z0-9]+)", next : "instruction"\n
+            },\n
+            {token : "comment", regex : "<\\\\!--", next : "comment"},\n
+            {\n
+                token : ["punctuation.doctype.begin", "meta.tag.doctype"],\n
+                regex : "(<\\\\!)(DOCTYPE)(?=[\\\\s])", next : "doctype"\n
+            },\n
+            {include : "tag"},\n
+            {include : "reference"}\n
+        ],\n
+\n
+        xml_declaration : [\n
+            {include : "attributes"},\n
+            {include : "instruction"}\n
+        ],\n
+\n
+        instruction : [\n
+            {token : "punctuation.instruction.end", regex : "\\\\?>", next : "start"}\n
+        ],\n
+\n
+        doctype : [\n
+            {include : "space"},\n
+            {include : "string"},\n
+            {token : "punctuation.doctype.end", regex : ">", next : "start"},\n
+            {token : "xml-pe", regex : "[-_a-zA-Z0-9:]+"},\n
+            {token : "punctuation.begin", regex : "\\\\[", push : "declarations"}\n
+        ],\n
+\n
+        declarations : [{\n
+            token : "text",\n
+            regex : "\\\\s+"\n
+        }, {\n
+            token: "punctuation.end",\n
+            regex: "]",\n
+            next: "pop"\n
+        }, {\n
+            token : ["punctuation.begin", "keyword"],\n
+            regex : "(<\\\\!)([-_a-zA-Z0-9]+)",\n
+            push : [{\n
+                token : "text",\n
+                regex : "\\\\s+"\n
+            },\n
+            {\n
+                token : "punctuation.end",\n
+                regex : ">",\n
+                next : "pop"\n
+            },\n
+            {include : "string"}]\n
+        }],\n
+\n
+        cdata : [\n
+            {token : "string.end", regex : "\\\\]\\\\]>", next : "start"},\n
+            {token : "text", regex : "\\\\s+"},\n
+            {token : "text", regex : "(?:[^\\\\]]|\\\\](?!\\\\]>))+"}\n
+        ],\n
+\n
+        comment : [\n
+            {token : "comment", regex : "-->", next : "start"},\n
+            {defaultToken : "comment"}\n
+        ],\n
+\n
+        tag : [{\n
+            token : ["meta.tag.punctuation.begin", "meta.tag.name"],\n
+            regex : "(<)((?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+)",\n
+            next: [\n
+                {include : "attributes"},\n
+                {token : "meta.tag.punctuation.end", regex : "/?>", next : "start"}\n
+            ]\n
+        }, {\n
+            token : ["meta.tag.punctuation.begin", "meta.tag.name"],\n
+            regex : "(</)((?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+)",\n
+            next: [\n
+                {include : "space"},\n
+                {token : "meta.tag.punctuation.end", regex : ">", next : "start"}\n
+            ]\n
+        }],\n
+\n
+        space : [\n
+            {token : "text", regex : "\\\\s+"}\n
+        ],\n
+\n
+        reference : [{\n
+            token : "constant.language.escape",\n
+            regex : "(?:&#[0-9]+;)|(?:&#x[0-9a-fA-F]+;)|(?:&[a-zA-Z0-9_:\\\\.-]+;)"\n
+        }, {\n
+            token : "invalid.illegal", regex : "&"\n
+        }],\n
+\n
+        string: [{\n
+            token : "string",\n
+            regex : "\'",\n
+            push : "qstring_inner"\n
+        }, {\n
+            token : "string",\n
+            regex : \'"\',\n
+            push : "qqstring_inner"\n
+        }],\n
+\n
+        qstring_inner: [\n
+            {token : "string", regex: "\'", next: "pop"},\n
+            {include : "reference"},\n
+            {defaultToken : "string"}\n
+        ],\n
+\n
+        qqstring_inner: [\n
+            {token : "string", regex: \'"\', next: "pop"},\n
+            {include : "reference"},\n
+            {defaultToken : "string"}\n
+        ],\n
+\n
+        attributes: [{\n
+            token : "entity.other.attribute-name",\n
+            regex : "(?:[-_a-zA-Z0-9]+:)?[-_a-zA-Z0-9]+"\n
+        }, {\n
+            token : "keyword.operator.separator",\n
+            regex : "="\n
+        }, {\n
+            include : "space"\n
+        }, {\n
+            include : "string"\n
+        }]\n
+    };\n
+\n
+    if (this.constructor === XmlHighlightRules)\n
+        this.normalizeRules();\n
+};\n
+\n
+\n
+(function() {\n
+\n
+    this.embedTagRules = function(HighlightRules, prefix, tag){\n
+        this.$rules.tag.unshift({\n
+            token : ["meta.tag.punctuation.begin", "meta.tag.name." + tag],\n
+            regex : "(<)(" + tag + ")",\n
+            next: [\n
+                {include : "space"},\n
+                {include : "attributes"},\n
+                {token : "meta.tag.punctuation.end", regex : "/?>", next : prefix + "start"}\n
+            ]\n
+        });\n
+\n
+        this.$rules[tag + "-end"] = [\n
+            {include : "space"},\n
+            {token : "meta.tag.punctuation.end", regex : ">",  next: "start",\n
+                onMatch : function(value, currentState, stack) {\n
+                    stack.splice(0);\n
+                    return this.token;\n
+            }}\n
+        ]\n
+\n
+        this.embedRules(HighlightRules, prefix, [{\n
+            token: ["meta.tag.punctuation.begin", "meta.tag.name." + tag],\n
+            regex : "(</)(" + tag + ")",\n
+            next: tag + "-end"\n
+        }, {\n
+            token: "string.begin",\n
+            regex : "<\\\\!\\\\[CDATA\\\\["\n
+        }, {\n
+            token: "string.end",\n
+            regex : "\\\\]\\\\]>"\n
+        }]);\n
+    };\n
+\n
+}).call(TextHighlightRules.prototype);\n
+\n
+oop.inherits(XmlHighlightRules, TextHighlightRules);\n
+\n
+exports.XmlHighlightRules = XmlHighlightRules;\n
 });\n
 \n
 define(\'ace/mode/xml_util\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
@@ -1383,7 +1538,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>59568</int> </value>
+            <value> <int>64897</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155561.31</string> </value>
+            <value> <string>ts83646622.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -61,7 +61,7 @@ var MysqlHighlightRules = require("./mysql_highlight_rules").MysqlHighlightRules
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new MysqlHighlightRules().getRules());\n
+    this.HighlightRules = MysqlHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -151,7 +151,7 @@ var MysqlHighlightRules = function() {\n
         "comment" : [\n
             {token : "comment", regex : "\\\\*\\\\/", next : "start"},\n
             {defaultToken : "comment"}\n
-        ],\n
+        ]\n
     };\n
 \n
     this.embedRules(DocCommentHighlightRules, "doc-", [ DocCommentHighlightRules.getEndRule("start") ]);\n
@@ -216,7 +216,7 @@ exports.DocCommentHighlightRules = DocCommentHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10182</int> </value>
+            <value> <int>10153</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

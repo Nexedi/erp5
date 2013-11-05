@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155565.71</string> </value>
+            <value> <string>ts83646621.01</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var VerilogHighlightRules = require("./verilog_highlight_rules").VerilogHighligh
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new VerilogHighlightRules().getRules());\n
+    this.HighlightRules = VerilogHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -158,7 +158,7 @@ exports.VerilogHighlightRules = VerilogHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5364</int> </value>
+            <value> <int>5336</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

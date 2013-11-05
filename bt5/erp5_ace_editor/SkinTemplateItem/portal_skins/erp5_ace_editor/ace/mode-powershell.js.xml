@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155562.21</string> </value>
+            <value> <string>ts83646621.46</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,7 @@ var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new PowershellHighlightRules().getRules());\n
+    this.HighlightRules = PowershellHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
     this.foldingRules = new CStyleFoldMode({start: "^\\\\s*(<#)", end: "^[#\\\\s]>\\\\s*$"});\n
@@ -49,7 +49,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
 \n
         if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
@@ -650,7 +650,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25803</int> </value>
+            <value> <int>25779</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

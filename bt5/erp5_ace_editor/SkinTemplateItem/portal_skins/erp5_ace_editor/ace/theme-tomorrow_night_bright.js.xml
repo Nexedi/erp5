@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155569.12</string> </value>
+            <value> <string>ts83646620.12</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #000000;\\\n
 color: #DEDEDE\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_cursor {\\\n
-border-left: 2px solid #9F9F9F\\\n
-}\\\n
-.ace-tomorrow-night-bright .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #9F9F9F\\\n
+color: #9F9F9F\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_marker-layer .ace_selection {\\\n
 background: #424242\\\n
@@ -92,6 +88,9 @@ background: #2A2A2A\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_gutter-active-line {\\\n
 background-color: #2A2A2A\\\n
+}\\\n
+.ace-tomorrow-night-bright .ace_stack {\\\n
+background-color: rgb(66, 90, 44);\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_marker-layer .ace_selected-word {\\\n
 border: 1px solid #424242\\\n
@@ -141,7 +140,7 @@ color: #7AA6DA\\\n
 .ace-tomorrow-night-bright .ace_support.ace_type {\\\n
 color: #E7C547\\\n
 }\\\n
-.ace-tomorrow-night-bright .ace_markup.ace_heading,\\\n
+.ace-tomorrow-night-bright .ace_heading,\\\n
 .ace-tomorrow-night-bright .ace_string {\\\n
 color: #B9CA4A\\\n
 }\\\n
@@ -154,9 +153,6 @@ color: #D54E53\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_comment {\\\n
 color: #969896\\\n
-}\\\n
-.ace-tomorrow-night-bright .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
 }\\\n
 .ace-tomorrow-night-bright .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYFBXV/8PAAJoAXX4kT2EAAAAAElFTkSuQmCC) right repeat-y;\\\n
@@ -173,7 +169,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5297</int> </value>
+            <value> <int>5142</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

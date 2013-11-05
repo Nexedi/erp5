@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155566.12</string> </value>
+            <value> <string>ts83646620.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -63,7 +63,7 @@ var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutd
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new YamlHighlightRules().getRules());\n
+    this.HighlightRules = YamlHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.foldingRules = new FoldMode();\n
 };\n
@@ -142,7 +142,7 @@ var YamlHighlightRules = function() {\n
                 regex : \'["](?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?["]\'\n
             }, {\n
                 token : "string", // multi line string start\n
-                regex : \'[\\\\|>]\\\\w*\',\n
+                regex : \'[|>][-+\\\\d\\\\s]*$\',\n
                 next : "qqstring"\n
             }, {\n
                 token : "string", // single quoted string\n
@@ -321,7 +321,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9699</int> </value>
+            <value> <int>9677</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

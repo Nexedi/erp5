@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155567.38</string> </value>
+            <value> <string>ts83646620.79</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,7 +70,7 @@ background-color: #FFFFFF;\\\n
 background-color: rgb(60, 76, 114);\\\n
 }\\\n
 .ace-eclipse .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-eclipse .ace_storage,\\\n
 .ace-eclipse .ace_keyword,\\\n
@@ -152,7 +152,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4000</int> </value>
+            <value> <int>3984</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

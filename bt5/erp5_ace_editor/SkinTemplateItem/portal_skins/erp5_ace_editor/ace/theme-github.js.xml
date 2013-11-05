@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155567.48</string> </value>
+            <value> <string>ts83646620.77</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -108,11 +108,7 @@ color: teal;\\\n
 font-weight: bold;\\\n
 }\\\n
 .ace-github .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
-}\\\n
-.ace-github .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-github .ace_marker-layer .ace_active-line {\\\n
 background: rgb(255, 255, 204);\\\n
@@ -167,7 +163,7 @@ background: url(\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAAC
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4390</int> </value>
+            <value> <int>4269</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

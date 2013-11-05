@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155564.53</string> </value>
+            <value> <string>ts83646621.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -64,7 +64,7 @@ var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutd
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new TclHighlightRules().getRules());\n
+    this.HighlightRules = TclHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.foldingRules = new CStyleFoldMode();\n
 };\n
@@ -77,7 +77,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
 \n
         if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
@@ -351,7 +351,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10853</int> </value>
+            <value> <int>10829</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

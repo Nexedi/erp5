@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155555.23</string> </value>
+            <value> <string>ts83646622.44</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,9 +67,8 @@ var BatchFileHighlightRules = require("./batchfile_highlight_rules").BatchFileHi
 var FoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new BatchFileHighlightRules();\n
+    this.HighlightRules = BatchFileHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -123,7 +122,8 @@ var BatchFileHighlightRules = function() {\n
          { token: \'keyword.operator.redirect.shell\',\n
            regex: \'&>|\\\\d*>&\\\\d*|\\\\d*(?:>>|>|<)|\\\\d*<&|\\\\d*<>\' } ],\n
         variable: [\n
-         { token: \'constant.numeric\', regex: \'%%\\\\w+\'},\n
+         { token: \'constant.numeric\', regex: \'%%\\\\w+|%[*\\\\d]|%\\\\w+%\'},\n
+         { token: \'constant.numeric\', regex: \'%~\\\\d+\'},\n
          { token: [\'markup.list\', \'constant.other\', \'markup.list\'],\n
             regex: \'(%)(\\\\w+)(%?)\' }]}\n
     \n
@@ -203,7 +203,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6952</int> </value>
+            <value> <int>6960</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

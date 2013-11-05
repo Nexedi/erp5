@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155570.58</string> </value>
+            <value> <string>ts83646621.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>95258</int> </value>
+            <value> <int>100225</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -55,31 +55,30 @@ if (typeof window.window != "undefined" && window.document) {\n
     return;\n
 }\n
 \n
-window.console = {\n
-    log: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    },\n
-    error: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    }\n
+window.console = function() {\n
+    var msgs = Array.prototype.slice.call(arguments, 0);\n
+    postMessage({type: "log", data: msgs});\n
 };\n
+window.console.error =\n
+window.console.warn = \n
+window.console.log =\n
+window.console.trace = window.console;\n
+\n
 window.window = window;\n
 window.ace = window;\n
 \n
 window.normalizeModule = function(parentId, moduleName) {\n
     if (moduleName.indexOf("!") !== -1) {\n
         var chunks = moduleName.split("!");\n
-        return normalizeModule(parentId, chunks[0]) + "!" + normalizeModule(parentId, chunks[1]);\n
+        return window.normalizeModule(parentId, chunks[0]) + "!" + window.normalizeModule(parentId, chunks[1]);\n
     }\n
     if (moduleName.charAt(0) == ".") {\n
         var base = parentId.split("/").slice(0, -1).join("/");\n
-        moduleName = base + "/" + moduleName;\n
+        moduleName = (base ? base + "/" : "") + moduleName;\n
         \n
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {\n
             var previous = moduleName;\n
-            moduleName = moduleName.replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
+            moduleName = moduleName.replace(/^\\.\\//, "").replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
         }\n
     }\n
     \n
@@ -94,9 +93,9 @@ window.require = function(parentId, id) {\n
     if (!id.charAt)\n
         throw new Error("worker.js require() accepts only (parentId, id) as arguments");\n
 \n
-    id = normalizeModule(parentId, id);\n
+    id = window.normalizeModule(parentId, id);\n
 \n
-    var module = require.modules[id];\n
+    var module = window.require.modules[id];\n
     if (module) {\n
         if (!module.initialized) {\n
             module.initialized = true;\n
@@ -106,48 +105,60 @@ window.require = function(parentId, id) {\n
     }\n
     \n
     var chunks = id.split("/");\n
-    chunks[0] = require.tlns[chunks[0]] || chunks[0];\n
+    if (!window.require.tlns)\n
+        return console.log("unable to load " + id);\n
+    chunks[0] = window.require.tlns[chunks[0]] || chunks[0];\n
     var path = chunks.join("/") + ".js";\n
     \n
-    require.id = id;\n
+    window.require.id = id;\n
     importScripts(path);\n
-    return require(parentId, id);\n
+    return window.require(parentId, id);\n
 };\n
-\n
-require.modules = {};\n
-require.tlns = {};\n
+window.require.modules = {};\n
+window.require.tlns = {};\n
 \n
 window.define = function(id, deps, factory) {\n
     if (arguments.length == 2) {\n
         factory = deps;\n
         if (typeof id != "string") {\n
             deps = id;\n
-            id = require.id;\n
+            id = window.require.id;\n
         }\n
     } else if (arguments.length == 1) {\n
         factory = id;\n
-        id = require.id;\n
+        deps = []\n
+        id = window.require.id;\n
     }\n
+\n
+    if (!deps.length)\n
+        deps = [\'require\', \'exports\', \'module\']\n
 \n
     if (id.indexOf("text!") === 0) \n
         return;\n
     \n
-    var req = function(deps, factory) {\n
-        return require(id, deps, factory);\n
+    var req = function(childId) {\n
+        return window.require(id, childId);\n
     };\n
 \n
-    require.modules[id] = {\n
+    window.require.modules[id] = {\n
+        exports: {},\n
         factory: function() {\n
-            var module = {\n
-                exports: {}\n
-            };\n
-            var returnExports = factory(req, module.exports, module);\n
+            var module = this;\n
+            var returnExports = factory.apply(this, deps.map(function(dep) {\n
+              switch(dep) {\n
+                  case \'require\': return req\n
+                  case \'exports\': return module.exports\n
+                  case \'module\':  return module\n
+                  default:        return req(dep)\n
+              }\n
+            }));\n
             if (returnExports)\n
                 module.exports = returnExports;\n
             return module;\n
         }\n
     };\n
 };\n
+window.define.amd = {}\n
 \n
 window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
     require.tlns = topLevelNamespaces;\n
@@ -155,8 +166,8 @@ window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
 \n
 window.initSender = function initSender() {\n
 \n
-    var EventEmitter = require("ace/lib/event_emitter").EventEmitter;\n
-    var oop = require("ace/lib/oop");\n
+    var EventEmitter = window.require("ace/lib/event_emitter").EventEmitter;\n
+    var oop = window.require("ace/lib/oop");\n
     \n
     var Sender = function() {};\n
     \n
@@ -207,158 +218,7 @@ window.onmessage = function(e) {\n
         sender._emit(msg.event, msg.data);\n
     }\n
 };\n
-})(this);\n
-\n
-define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-var EventEmitter = {};\n
-var stopPropagation = function() { this.propagationStopped = true; };\n
-var preventDefault = function() { this.defaultPrevented = true; };\n
-\n
-EventEmitter._emit =\n
-EventEmitter._dispatchEvent = function(eventName, e) {\n
-    this._eventRegistry || (this._eventRegistry = {});\n
-    this._defaultHandlers || (this._defaultHandlers = {});\n
-\n
-    var listeners = this._eventRegistry[eventName] || [];\n
-    var defaultHandler = this._defaultHandlers[eventName];\n
-    if (!listeners.length && !defaultHandler)\n
-        return;\n
-\n
-    if (typeof e != "object" || !e)\n
-        e = {};\n
-\n
-    if (!e.type)\n
-        e.type = eventName;\n
-    if (!e.stopPropagation)\n
-        e.stopPropagation = stopPropagation;\n
-    if (!e.preventDefault)\n
-        e.preventDefault = preventDefault;\n
-\n
-    for (var i=0; i<listeners.length; i++) {\n
-        listeners[i](e, this);\n
-        if (e.propagationStopped)\n
-            break;\n
-    }\n
-    \n
-    if (defaultHandler && !e.defaultPrevented)\n
-        return defaultHandler(e, this);\n
-};\n
-\n
-\n
-EventEmitter._signal = function(eventName, e) {\n
-    var listeners = (this._eventRegistry || {})[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    for (var i=0; i<listeners.length; i++)\n
-        listeners[i](e, this);\n
-};\n
-\n
-EventEmitter.once = function(eventName, callback) {\n
-    var _self = this;\n
-    callback && this.addEventListener(eventName, function newCallback() {\n
-        _self.removeEventListener(eventName, newCallback);\n
-        callback.apply(null, arguments);\n
-    });\n
-};\n
-\n
-\n
-EventEmitter.setDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        handlers = this._defaultHandlers = {_disabled_: {}};\n
-    \n
-    if (handlers[eventName]) {\n
-        var old = handlers[eventName];\n
-        var disabled = handlers._disabled_[eventName];\n
-        if (!disabled)\n
-            handlers._disabled_[eventName] = disabled = [];\n
-        disabled.push(old);\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1) \n
-            disabled.splice(i, 1);\n
-    }\n
-    handlers[eventName] = callback;\n
-};\n
-EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        return;\n
-    var disabled = handlers._disabled_[eventName];\n
-    \n
-    if (handlers[eventName] == callback) {\n
-        var old = handlers[eventName];\n
-        if (disabled)\n
-            this.setDefaultHandler(eventName, disabled.pop());\n
-    } else if (disabled) {\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1)\n
-            disabled.splice(i, 1);\n
-    }\n
-};\n
-\n
-EventEmitter.on =\n
-EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        listeners = this._eventRegistry[eventName] = [];\n
-\n
-    if (listeners.indexOf(callback) == -1)\n
-        listeners[capturing ? "unshift" : "push"](callback);\n
-    return callback;\n
-};\n
-\n
-EventEmitter.off =\n
-EventEmitter.removeListener =\n
-EventEmitter.removeEventListener = function(eventName, callback) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    var index = listeners.indexOf(callback);\n
-    if (index !== -1)\n
-        listeners.splice(index, 1);\n
-};\n
-\n
-EventEmitter.removeAllListeners = function(eventName) {\n
-    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
-};\n
-\n
-exports.EventEmitter = EventEmitter;\n
-\n
-});\n
-\n
-define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-exports.inherits = (function() {\n
-    var tempCtor = function() {};\n
-    return function(ctor, superCtor) {\n
-        tempCtor.prototype = superCtor.prototype;\n
-        ctor.super_ = superCtor.prototype;\n
-        ctor.prototype = new tempCtor();\n
-        ctor.prototype.constructor = ctor;\n
-    };\n
-}());\n
-\n
-exports.mixin = function(obj, mixin) {\n
-    for (var key in mixin) {\n
-        obj[key] = mixin[key];\n
-    }\n
-    return obj;\n
-};\n
-\n
-exports.implement = function(proto, mixin) {\n
-    exports.mixin(proto, mixin);\n
-};\n
-\n
-});\n
+})(this);// https://github.com/kriskowal/es5-shim\n
 \n
 define(\'ace/lib/es5-shim\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
 \n
@@ -1094,6 +954,32 @@ oop.inherits(Worker, Mirror);\n
 }).call(Worker.prototype);\n
 \n
 });\n
+\n
+define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+exports.inherits = (function() {\n
+    var tempCtor = function() {};\n
+    return function(ctor, superCtor) {\n
+        tempCtor.prototype = superCtor.prototype;\n
+        ctor.super_ = superCtor.prototype;\n
+        ctor.prototype = new tempCtor();\n
+        ctor.prototype.constructor = ctor;\n
+    };\n
+}());\n
+\n
+exports.mixin = function(obj, mixin) {\n
+    for (var key in mixin) {\n
+        obj[key] = mixin[key];\n
+    }\n
+    return obj;\n
+};\n
+\n
+exports.implement = function(proto, mixin) {\n
+    exports.mixin(proto, mixin);\n
+};\n
+\n
+});\n
 define(\'ace/worker/mirror\', [\'require\', \'exports\', \'module\' , \'ace/document\', \'ace/lib/lang\'], function(require, exports, module) {\n
 \n
 \n
@@ -1223,7 +1109,7 @@ var Document = function(text) {\n
     };\n
     this.getTextRange = function(range) {\n
         if (range.start.row == range.end.row) {\n
-            return this.$lines[range.start.row]\n
+            return this.getLine(range.start.row)\n
                 .substring(range.start.column, range.end.column);\n
         }\n
         var lines = this.getLines(range.start.row, range.end.row);\n
@@ -1334,6 +1220,8 @@ var Document = function(text) {\n
         return end;\n
     };\n
     this.remove = function(range) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         range.start = this.$clipPosition(range.start);\n
         range.end = this.$clipPosition(range.end);\n
 \n
@@ -1417,6 +1305,8 @@ var Document = function(text) {\n
         this._emit("change", { data: delta });\n
     };\n
     this.replace = function(range, text) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         if (text.length == 0 && range.isEmpty())\n
             return range.start;\n
         if (text == this.getTextRange(range))\n
@@ -1487,6 +1377,132 @@ var Document = function(text) {\n
 }).call(Document.prototype);\n
 \n
 exports.Document = Document;\n
+});\n
+\n
+define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+var EventEmitter = {};\n
+var stopPropagation = function() { this.propagationStopped = true; };\n
+var preventDefault = function() { this.defaultPrevented = true; };\n
+\n
+EventEmitter._emit =\n
+EventEmitter._dispatchEvent = function(eventName, e) {\n
+    this._eventRegistry || (this._eventRegistry = {});\n
+    this._defaultHandlers || (this._defaultHandlers = {});\n
+\n
+    var listeners = this._eventRegistry[eventName] || [];\n
+    var defaultHandler = this._defaultHandlers[eventName];\n
+    if (!listeners.length && !defaultHandler)\n
+        return;\n
+\n
+    if (typeof e != "object" || !e)\n
+        e = {};\n
+\n
+    if (!e.type)\n
+        e.type = eventName;\n
+    if (!e.stopPropagation)\n
+        e.stopPropagation = stopPropagation;\n
+    if (!e.preventDefault)\n
+        e.preventDefault = preventDefault;\n
+\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++) {\n
+        listeners[i](e, this);\n
+        if (e.propagationStopped)\n
+            break;\n
+    }\n
+    \n
+    if (defaultHandler && !e.defaultPrevented)\n
+        return defaultHandler(e, this);\n
+};\n
+\n
+\n
+EventEmitter._signal = function(eventName, e) {\n
+    var listeners = (this._eventRegistry || {})[eventName];\n
+    if (!listeners)\n
+        return;\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++)\n
+        listeners[i](e, this);\n
+};\n
+\n
+EventEmitter.once = function(eventName, callback) {\n
+    var _self = this;\n
+    callback && this.addEventListener(eventName, function newCallback() {\n
+        _self.removeEventListener(eventName, newCallback);\n
+        callback.apply(null, arguments);\n
+    });\n
+};\n
+\n
+\n
+EventEmitter.setDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        handlers = this._defaultHandlers = {_disabled_: {}};\n
+    \n
+    if (handlers[eventName]) {\n
+        var old = handlers[eventName];\n
+        var disabled = handlers._disabled_[eventName];\n
+        if (!disabled)\n
+            handlers._disabled_[eventName] = disabled = [];\n
+        disabled.push(old);\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1) \n
+            disabled.splice(i, 1);\n
+    }\n
+    handlers[eventName] = callback;\n
+};\n
+EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        return;\n
+    var disabled = handlers._disabled_[eventName];\n
+    \n
+    if (handlers[eventName] == callback) {\n
+        var old = handlers[eventName];\n
+        if (disabled)\n
+            this.setDefaultHandler(eventName, disabled.pop());\n
+    } else if (disabled) {\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1)\n
+            disabled.splice(i, 1);\n
+    }\n
+};\n
+\n
+EventEmitter.on =\n
+EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        listeners = this._eventRegistry[eventName] = [];\n
+\n
+    if (listeners.indexOf(callback) == -1)\n
+        listeners[capturing ? "unshift" : "push"](callback);\n
+    return callback;\n
+};\n
+\n
+EventEmitter.off =\n
+EventEmitter.removeListener =\n
+EventEmitter.removeEventListener = function(eventName, callback) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        return;\n
+\n
+    var index = listeners.indexOf(callback);\n
+    if (index !== -1)\n
+        listeners.splice(index, 1);\n
+};\n
+\n
+EventEmitter.removeAllListeners = function(eventName) {\n
+    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
+};\n
+\n
+exports.EventEmitter = EventEmitter;\n
+\n
 });\n
 \n
 define(\'ace/range\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
@@ -1735,29 +1751,25 @@ var oop = require("./lib/oop");\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
 \n
 var Anchor = exports.Anchor = function(doc, row, column) {\n
-    this.document = doc;\n
-\n
+    this.$onChange = this.onChange.bind(this);\n
+    this.attach(doc);\n
+    \n
     if (typeof column == "undefined")\n
         this.setPosition(row.row, row.column);\n
     else\n
         this.setPosition(row, column);\n
-\n
-    this.$onChange = this.onChange.bind(this);\n
-    doc.on("change", this.$onChange);\n
 };\n
 \n
 (function() {\n
 \n
     oop.implement(this, EventEmitter);\n
-\n
     this.getPosition = function() {\n
         return this.$clipPositionToDocument(this.row, this.column);\n
     };\n
-\n
     this.getDocument = function() {\n
         return this.document;\n
     };\n
-\n
+    this.$insertRight = false;\n
     this.onChange = function(e) {\n
         var delta = e.data;\n
         var range = delta.range;\n
@@ -1778,7 +1790,8 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         if (delta.action === "insertText") {\n
             if (start.row === row && start.column <= column) {\n
-                if (start.row === end.row) {\n
+                if (start.column === column && this.$insertRight) {\n
+                } else if (start.row === end.row) {\n
                     column += end.column - start.column;\n
                 } else {\n
                     column -= start.column;\n
@@ -1819,7 +1832,6 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         this.setPosition(row, column, true);\n
     };\n
-\n
     this.setPosition = function(row, column, noClip) {\n
         var pos;\n
         if (noClip) {\n
@@ -1846,9 +1858,12 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
             value: pos\n
         });\n
     };\n
-\n
     this.detach = function() {\n
         this.document.removeEventListener("change", this.$onChange);\n
+    };\n
+    this.attach = function(doc) {\n
+        this.document = doc || this.document;\n
+        this.document.on("change", this.$onChange);\n
     };\n
     this.$clipPositionToDocument = function(row, column) {\n
         var pos = {};\n
@@ -2052,33 +2067,33 @@ exports.delayedCall = function(fcn, defaultTimeout) {\n
     return _self;\n
 };\n
 });\n
-define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'exports\'], function(require, exports, module) {\n
+define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
 \n
 (function (root, name, factory) {\n
-  \n
-\n
-  if (typeof exports !== \'undefined\') {\n
-    factory(exports);\n
-  } else if (typeof define === \'function\' && define.amd) {\n
-    define([\'exports\'], factory);\n
-  } else {\n
-    factory((root[name] = {}));\n
-  }\n
+   factory(exports)\n
 }(this, \'luaparse\', function (exports) {\n
   \n
 \n
-  exports.version = \'0.0.11\';\n
+  exports.version = \'0.1.4\';\n
 \n
   var input, options, length;\n
   var defaultOptions = exports.defaultOptions = {\n
       wait: false\n
     , comments: true\n
     , scope: false\n
+    , locations: false\n
+    , ranges: false\n
   };\n
 \n
   var EOF = 1, StringLiteral = 2, Keyword = 4, Identifier = 8\n
     , NumericLiteral = 16, Punctuator = 32, BooleanLiteral = 64\n
     , NilLiteral = 128, VarargLiteral = 256;\n
+\n
+  exports.tokenTypes = { EOF: EOF, StringLiteral: StringLiteral\n
+    , Keyword: Keyword, Identifier: Identifier, NumericLiteral: NumericLiteral\n
+    , Punctuator: Punctuator, BooleanLiteral: BooleanLiteral\n
+    , NilLiteral: NilLiteral, VarargLiteral: VarargLiteral\n
+  };\n
 \n
   var errors = exports.errors = {\n
       unexpected: \'Unexpected %1 \\\'%2\\\' near \\\'%3\\\'\'\n
@@ -2334,16 +2349,41 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
         , argument: argument\n
       };\n
     }\n
+\n
+    , comment: function(value, raw) {\n
+      return {\n
+          type: \'Comment\'\n
+        , value: value\n
+        , raw: raw\n
+      };\n
+    }\n
   };\n
+\n
+  function finishNode(node) {\n
+    if (trackLocations) {\n
+      var location = locations.pop();\n
+      location.complete();\n
+      if (options.locations) node.loc = location.loc;\n
+      if (options.ranges) node.range = location.range;\n
+    }\n
+    return node;\n
+  }\n
 \n
   var slice = Array.prototype.slice\n
     , toString = Object.prototype.toString\n
-    , indexOf = Array.prototype.indexOf || function indexOf(element) {\n
-      for (var i = 0, length = this.length; i < length; i++) {\n
-        if (this[i] === element) return i;\n
+    , indexOf = function indexOf(array, element) {\n
+      for (var i = 0, length = array.length; i < length; i++) {\n
+        if (array[i] === element) return i;\n
       }\n
       return -1;\n
     };\n
+\n
+  function indexOfObject(array, property, element) {\n
+    for (var i = 0, length = array.length; i < length; i++) {\n
+      if (array[i][property] === element) return i;\n
+    }\n
+    return -1;\n
+  }\n
 \n
   function sprintf(format) {\n
     var args = slice.call(arguments, 1);\n
@@ -2358,7 +2398,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       , dest = {}\n
       , src, prop;\n
 \n
-    for (var i = 0, l = args.length; i < l; i++) {\n
+    for (var i = 0, length = args.length; i < length; i++) {\n
       src = args[i];\n
       for (prop in src) if (src.hasOwnProperty(prop)) {\n
         dest[prop] = src[prop];\n
@@ -2412,13 +2452,16 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
 \n
   var index\n
     , token\n
+    , previousToken\n
     , lookahead\n
     , comments\n
     , tokenStart\n
     , line\n
     , lineStart;\n
 \n
-  function readToken() {\n
+  exports.lex = lex;\n
+\n
+  function lex() {\n
     skipWhiteSpace();\n
     while (45 === input.charCodeAt(index) &&\n
            45 === input.charCodeAt(index + 1)) {\n
@@ -2433,12 +2476,12 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       , range: [index, index]\n
     };\n
 \n
-    var character = input.charCodeAt(index)\n
+    var charCode = input.charCodeAt(index)\n
       , next = input.charCodeAt(index + 1);\n
     tokenStart = index;\n
-    if (isIdentifierStart(character)) return scanIdentifierOrKeyword();\n
+    if (isIdentifierStart(charCode)) return scanIdentifierOrKeyword();\n
 \n
-    switch (character) {\n
+    switch (charCode) {\n
       case 39: case 34: // \'"\n
         return scanStringLiteral();\n
       case 48: case 49: case 50: case 51: case 52: case 53:\n
@@ -2486,10 +2529,10 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
 \n
   function skipWhiteSpace() {\n
     while (index < length) {\n
-      var character = input.charCodeAt(index);\n
-      if (isWhiteSpace(character)) {\n
+      var charCode = input.charCodeAt(index);\n
+      if (isWhiteSpace(charCode)) {\n
         index++;\n
-      } else if (isLineTerminator(character)) {\n
+      } else if (isLineTerminator(charCode)) {\n
         line++;\n
         lineStart = ++index;\n
       } else {\n
@@ -2549,18 +2592,18 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     var delimiter = input.charCodeAt(index++)\n
       , stringStart = index\n
       , string = \'\'\n
-      , character;\n
+      , charCode;\n
 \n
     while (index < length) {\n
-      character = input.charCodeAt(index++);\n
-      if (delimiter === character) break;\n
-      if (92 === character) { // \\\n
+      charCode = input.charCodeAt(index++);\n
+      if (delimiter === charCode) break;\n
+      if (92 === charCode) { // \\\n
         string += input.slice(stringStart, index - 1) + readEscapeSequence();\n
         stringStart = index;\n
       }\n
-      else if (index >= length || isLineTerminator(character)) {\n
+      else if (index >= length || isLineTerminator(charCode)) {\n
         string += input.slice(stringStart, index - 1);\n
-        raise({}, errors.unfinishedString, string + String.fromCharCode(character));\n
+        raise({}, errors.unfinishedString, string + String.fromCharCode(charCode));\n
       }\n
     }\n
     string += input.slice(stringStart, index - 1);\n
@@ -2691,7 +2734,9 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     var character = input.charAt(index)\n
       , content = \'\'\n
       , isLong = false\n
-      , commentStart = index;\n
+      , commentStart = index\n
+      , lineStartComment = lineStart\n
+      , lineComment = line;\n
 \n
     if (\'[\' === character) {\n
       content = readLongString();\n
@@ -2703,15 +2748,21 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
         if (isLineTerminator(input.charCodeAt(index))) break;\n
         index++;\n
       }\n
-      content = input.slice(commentStart, index);\n
+      if (options.comments) content = input.slice(commentStart, index);\n
     }\n
 \n
     if (options.comments) {\n
-      comments.push({\n
-          type: \'Comment\'\n
-        , value: content\n
-        , raw: input.slice(tokenStart, index)\n
-      });\n
+      var node = ast.comment(content, input.slice(tokenStart, index));\n
+      if (options.locations) {\n
+        node.loc = {\n
+            start: { line: lineComment, column: tokenStart - lineStartComment }\n
+          , end: { line: line, column: index - lineStart }\n
+        };\n
+      }\n
+      if (options.ranges) {\n
+        node.range = [tokenStart, index];\n
+      }\n
+      comments.push(node);\n
     }\n
   }\n
 \n
@@ -2738,7 +2789,6 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
         line++;\n
         lineStart = index;\n
       }\n
-\n
       if (\']\' === character) {\n
         terminator = true;\n
         for (var i = 0; i < level; i++) {\n
@@ -2755,8 +2805,9 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
   }\n
 \n
   function next() {\n
+    previousToken = token;\n
     token = lookahead;\n
-    lookahead = readToken();\n
+    lookahead = lex();\n
   }\n
 \n
   function consume(value) {\n
@@ -2772,28 +2823,28 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     else raise(token, errors.expected, value, token.value);\n
   }\n
 \n
-  function isWhiteSpace(character) {\n
-    return 9 === character || 32 === character || 0xB === character || 0xC === character;\n
+  function isWhiteSpace(charCode) {\n
+    return 9 === charCode || 32 === charCode || 0xB === charCode || 0xC === charCode;\n
   }\n
 \n
-  function isLineTerminator(character) {\n
-    return 10 === character || 13 === character;\n
+  function isLineTerminator(charCode) {\n
+    return 10 === charCode || 13 === charCode;\n
   }\n
 \n
-  function isDecDigit(character) {\n
-    return character >= 48 && character <= 57;\n
+  function isDecDigit(charCode) {\n
+    return charCode >= 48 && charCode <= 57;\n
   }\n
 \n
-  function isHexDigit(character) {\n
-    return (character >= 48 && character <= 57) || (character >= 97 && character <= 102) || (character >= 65 && character <= 70);\n
+  function isHexDigit(charCode) {\n
+    return (charCode >= 48 && charCode <= 57) || (charCode >= 97 && charCode <= 102) || (charCode >= 65 && charCode <= 70);\n
   }\n
 \n
-  function isIdentifierStart(character) {\n
-    return (character >= 65 && character <= 90) || (character >= 97 && character <= 122) || 95 === character;\n
+  function isIdentifierStart(charCode) {\n
+    return (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || 95 === charCode;\n
   }\n
 \n
-  function isIdentifierPart(character) {\n
-    return (character >= 65 && character <= 90) || (character >= 97 && character <= 122) || 95 === character || (character >= 48 && character <= 57);\n
+  function isIdentifierPart(charCode) {\n
+    return (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || 95 === charCode || (charCode >= 48 && charCode <= 57);\n
   }\n
 \n
   function isKeyword(id) {\n
@@ -2842,8 +2893,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
   }\n
   var scopes\n
     , scopeDepth\n
-    , globals\n
-    , globalNames;\n
+    , globals;\n
   function createScope() {\n
     scopes.push(Array.apply(null, scopes[scopeDepth++]));\n
   }\n
@@ -2852,7 +2902,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     scopeDepth--;\n
   }\n
   function scopeIdentifierName(name) {\n
-    if (-1 !== indexOf.call(scopes[scopeDepth], name)) return;\n
+    if (-1 !== indexOf(scopes[scopeDepth], name)) return;\n
     scopes[scopeDepth].push(name);\n
   }\n
   function scopeIdentifier(node) {\n
@@ -2860,22 +2910,60 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     attachScope(node, true);\n
   }\n
   function attachScope(node, isLocal) {\n
-    if (!isLocal && -1 === indexOf.call(globalNames, node.name)) {\n
-      globalNames.push(node.name);\n
+    if (!isLocal && -1 === indexOfObject(globals, \'name\', node.name))\n
       globals.push(node);\n
-    }\n
 \n
     node.isLocal = isLocal;\n
   }\n
   function scopeHasName(name) {\n
-    return (-1 !== indexOf.call(scopes[scopeDepth], name));\n
+    return (-1 !== indexOf(scopes[scopeDepth], name));\n
+  }\n
+\n
+  var locations = []\n
+    , trackLocations;\n
+\n
+  function createLocationMarker() {\n
+    return new Marker(token);\n
+  }\n
+\n
+  function Marker(token) {\n
+    if (options.locations) {\n
+      this.loc = {\n
+          start: {\n
+            line: token.line\n
+          , column: token.range[0] - token.lineStart\n
+        }\n
+        , end: {\n
+            line: 0\n
+          , column: 0\n
+        }\n
+      };\n
+    }\n
+    if (options.ranges) this.range = [token.range[0], 0];\n
+  }\n
+  Marker.prototype.complete = function() {\n
+    if (options.locations) {\n
+      this.loc.end.line = previousToken.line;\n
+      this.loc.end.column = previousToken.range[1] - previousToken.lineStart;\n
+    }\n
+    if (options.ranges) {\n
+      this.range[1] = previousToken.range[1];\n
+    }\n
+  };\n
+  function markLocation() {\n
+    if (trackLocations) locations.push(createLocationMarker());\n
+  }\n
+  function pushLocation(marker) {\n
+    if (trackLocations) locations.push(marker);\n
   }\n
 \n
   function parseChunk() {\n
     next();\n
+    markLocation();\n
     var body = parseBlock();\n
     if (EOF !== token.type) unexpected(token);\n
-    return ast.chunk(body);\n
+    if (trackLocations && !body.length) previousToken = token;\n
+    return finishNode(ast.chunk(body));\n
   }\n
 \n
   function parseBlock(terminator) {\n
@@ -2897,6 +2985,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
   }\n
 \n
   function parseStatement() {\n
+    markLocation();\n
     if (Keyword === token.type) {\n
       switch (token.value) {\n
         case \'local\':    next(); return parseLocalStatement();\n
@@ -2917,6 +3006,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     if (Punctuator === token.type) {\n
       if (consume(\'::\')) return parseLabelStatement();\n
     }\n
+    if (trackLocations) locations.pop();\n
     if (consume(\';\')) return;\n
 \n
     return parseAssignmentOrCallStatement();\n
@@ -2932,11 +3022,11 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     }\n
 \n
     expect(\'::\');\n
-    return ast.labelStatement(label);\n
+    return finishNode(ast.labelStatement(label));\n
   }\n
 \n
   function parseBreakStatement() {\n
-    return ast.breakStatement();\n
+    return finishNode(ast.breakStatement());\n
   }\n
 \n
   function parseGotoStatement() {\n
@@ -2944,13 +3034,13 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       , label = parseIdentifier();\n
 \n
     if (options.scope) label.isLabel = scopeHasName(\'::\' + name + \'::\');\n
-    return ast.gotoStatement(label);\n
+    return finishNode(ast.gotoStatement(label));\n
   }\n
 \n
   function parseDoStatement() {\n
     var body = parseBlock();\n
     expect(\'end\');\n
-    return ast.doStatement(body);\n
+    return finishNode(ast.doStatement(body));\n
   }\n
 \n
   function parseWhileStatement() {\n
@@ -2958,14 +3048,14 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     expect(\'do\');\n
     var body = parseBlock();\n
     expect(\'end\');\n
-    return ast.whileStatement(condition, body);\n
+    return finishNode(ast.whileStatement(condition, body));\n
   }\n
 \n
   function parseRepeatStatement() {\n
     var body = parseBlock();\n
     expect(\'until\');\n
     var condition = parseExpectedExpression();\n
-    return ast.repeatStatement(condition, body);\n
+    return finishNode(ast.repeatStatement(condition, body));\n
   }\n
 \n
   function parseReturnStatement() {\n
@@ -2980,33 +3070,44 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       }\n
       consume(\';\'); // grammar tells us ; is optional here.\n
     }\n
-    return ast.returnStatement(expressions);\n
+    return finishNode(ast.returnStatement(expressions));\n
   }\n
 \n
   function parseIfStatement() {\n
     var clauses = []\n
       , condition\n
-      , body;\n
-\n
+      , body\n
+      , marker;\n
+    if (trackLocations) {\n
+      marker = locations[locations.length - 1];\n
+      locations.push(marker);\n
+    }\n
     condition = parseExpectedExpression();\n
     expect(\'then\');\n
     body = parseBlock();\n
-    clauses.push(ast.ifClause(condition, body));\n
+    clauses.push(finishNode(ast.ifClause(condition, body)));\n
 \n
+    if (trackLocations) marker = createLocationMarker();\n
     while (consume(\'elseif\')) {\n
+      pushLocation(marker);\n
       condition = parseExpectedExpression();\n
       expect(\'then\');\n
       body = parseBlock();\n
-      clauses.push(ast.elseifClause(condition, body));\n
+      clauses.push(finishNode(ast.elseifClause(condition, body)));\n
+      if (trackLocations) marker = createLocationMarker();\n
     }\n
 \n
     if (consume(\'else\')) {\n
+      if (trackLocations) {\n
+        marker = new Marker(previousToken);\n
+        locations.push(marker);\n
+      }\n
       body = parseBlock();\n
-      clauses.push(ast.elseClause(body));\n
+      clauses.push(finishNode(ast.elseClause(body)));\n
     }\n
 \n
     expect(\'end\');\n
-    return ast.ifStatement(clauses);\n
+    return finishNode(ast.ifStatement(clauses));\n
   }\n
 \n
   function parseForStatement() {\n
@@ -3023,8 +3124,9 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       body = parseBlock();\n
       expect(\'end\');\n
 \n
-      return ast.forNumericStatement(variable, start, end, step, body);\n
-    } else {\n
+      return finishNode(ast.forNumericStatement(variable, start, end, step, body));\n
+    }\n
+    else {\n
       var variables = [variable];\n
       while (consume(\',\')) {\n
         variable = parseIdentifier();\n
@@ -3042,7 +3144,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       body = parseBlock();\n
       expect(\'end\');\n
 \n
-      return ast.forGenericStatement(variables, iterators, body);\n
+      return finishNode(ast.forGenericStatement(variables, iterators, body));\n
     }\n
   }\n
 \n
@@ -3071,7 +3173,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
         }\n
       }\n
 \n
-      return ast.localStatement(variables, init);\n
+      return finishNode(ast.localStatement(variables, init));\n
     }\n
     if (consume(\'function\')) {\n
       name = parseIdentifier();\n
@@ -3084,7 +3186,10 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
 \n
   function parseAssignmentOrCallStatement() {\n
     var previous = token\n
-      , expression = parsePrefixExpression();\n
+      , expression, marker;\n
+\n
+    if (trackLocations) marker = createLocationMarker();\n
+    expression = parsePrefixExpression();\n
 \n
     if (null == expression) return unexpected(token);\n
     if (\',=\'.indexOf(token.value) >= 0) {\n
@@ -3102,19 +3207,23 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
         exp = parseExpectedExpression();\n
         init.push(exp);\n
       } while (consume(\',\'));\n
-      return ast.assignmentStatement(variables, init);\n
+\n
+      pushLocation(marker);\n
+      return finishNode(ast.assignmentStatement(variables, init));\n
     }\n
     if (isCallExpression(expression)) {\n
-      return ast.callStatement(expression);\n
+      pushLocation(marker);\n
+      return finishNode(ast.callStatement(expression));\n
     }\n
     return unexpected(previous);\n
   }\n
 \n
   function parseIdentifier() {\n
+    markLocation();\n
     var identifier = token.value;\n
     if (Identifier !== token.type) raiseUnexpectedToken(\'<name>\', token);\n
     next();\n
-    return ast.identifier(identifier);\n
+    return finishNode(ast.identifier(identifier));\n
   }\n
 \n
   function parseFunctionDeclaration(name, isLocal) {\n
@@ -3130,7 +3239,8 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
 \n
           if (consume(\',\')) continue;\n
           else if (consume(\')\')) break;\n
-        } else if (VarargLiteral === token.type) {\n
+        }\n
+        else if (VarargLiteral === token.type) {\n
           parameters.push(parsePrimaryExpression());\n
           expect(\')\');\n
           break;\n
@@ -3144,24 +3254,29 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     expect(\'end\');\n
 \n
     isLocal = isLocal || false;\n
-    return ast.functionStatement(name, parameters, isLocal, body);\n
+    return finishNode(ast.functionStatement(name, parameters, isLocal, body));\n
   }\n
 \n
   function parseFunctionName() {\n
-    var base = parseIdentifier()\n
-      , name;\n
+    var base, name, marker;\n
+\n
+    if (trackLocations) marker = createLocationMarker();\n
+    base = parseIdentifier();\n
+\n
     if (options.scope) attachScope(base, false);\n
 \n
     while (consume(\'.\')) {\n
+      pushLocation(marker);\n
       name = parseIdentifier();\n
       if (options.scope) attachScope(name, false);\n
-      base = ast.memberExpression(base, \'.\', name);\n
+      base = finishNode(ast.memberExpression(base, \'.\', name));\n
     }\n
 \n
     if (consume(\':\')) {\n
+      pushLocation(marker);\n
       name = parseIdentifier();\n
       if (options.scope) attachScope(name, false);\n
-      base = ast.memberExpression(base, \':\', name);\n
+      base = finishNode(ast.memberExpression(base, \':\', name));\n
     }\n
 \n
     return base;\n
@@ -3172,23 +3287,27 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       , key, value;\n
 \n
     while (true) {\n
+      markLocation();\n
       if (Punctuator === token.type && consume(\'[\')) {\n
         key = parseExpectedExpression();\n
         expect(\']\');\n
         expect(\'=\');\n
         value = parseExpectedExpression();\n
-        fields.push(ast.tableKey(key, value));\n
+        fields.push(finishNode(ast.tableKey(key, value)));\n
       } else if (Identifier === token.type) {\n
         key = parseExpectedExpression();\n
         if (consume(\'=\')) {\n
           value = parseExpectedExpression();\n
-          fields.push(ast.tableKeyString(key, value));\n
+          fields.push(finishNode(ast.tableKeyString(key, value)));\n
         } else {\n
-          fields.push(ast.tableValue(key));\n
+          fields.push(finishNode(ast.tableValue(key)));\n
         }\n
       } else {\n
-        if (null == (value = parseExpression())) break;\n
-        fields.push(ast.tableValue(value));\n
+        if (null == (value = parseExpression())) {\n
+          locations.pop();\n
+          break;\n
+        }\n
+        fields.push(finishNode(ast.tableValue(value)));\n
       }\n
       if (\',;\'.indexOf(token.value) >= 0) {\n
         next();\n
@@ -3197,7 +3316,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       if (\'}\' === token.value) break;\n
     }\n
     expect(\'}\');\n
-    return ast.tableConstructorExpression(fields);\n
+    return finishNode(ast.tableConstructorExpression(fields));\n
   }\n
 \n
   function parseExpression() {\n
@@ -3212,34 +3331,37 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
   }\n
 \n
   function binaryPrecedence(operator) {\n
-    var character = operator.charCodeAt(0)\n
+    var charCode = operator.charCodeAt(0)\n
       , length = operator.length;\n
 \n
     if (1 === length) {\n
-      switch (character) {\n
+      switch (charCode) {\n
         case 94: return 10; // ^\n
         case 42: case 47: case 37: return 7; // * / %\n
         case 43: case 45: return 6; // + -\n
         case 60: case 62: return 3; // < >\n
       }\n
     } else if (2 === length) {\n
-      switch (character) {\n
+      switch (charCode) {\n
         case 46: return 5; // ..\n
         case 60: case 62: case 61: case 126: return 3; // <= >= == ~=\n
         case 111: return 1; // or\n
       }\n
-    } else if (97 === character && \'and\' === operator) return 2;\n
+    } else if (97 === charCode && \'and\' === operator) return 2;\n
     return 0;\n
   }\n
 \n
   function parseSubExpression(minPrecedence) {\n
-    var operator = token.value;\n
-    var expression;\n
+    var operator = token.value\n
+      , expression, marker;\n
+\n
+    if (trackLocations) marker = createLocationMarker();\n
     if (isUnary(token)) {\n
+      markLocation();\n
       next();\n
       var argument = parseSubExpression(8);\n
       if (argument == null) raiseUnexpectedToken(\'<expression>\', token);\n
-      expression = ast.unaryExpression(operator, argument);\n
+      expression = finishNode(ast.unaryExpression(operator, argument));\n
     }\n
     if (null == expression) {\n
       expression = parsePrimaryExpression();\n
@@ -3261,14 +3383,18 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       next();\n
       var right = parseSubExpression(precedence);\n
       if (null == right) raiseUnexpectedToken(\'<expression>\', token);\n
-      expression = ast.binaryExpression(operator, expression, right);\n
+      if (trackLocations) locations.push(marker);\n
+      expression = finishNode(ast.binaryExpression(operator, expression, right));\n
+\n
     }\n
     return expression;\n
   }\n
 \n
   function parsePrefixExpression() {\n
-    var base, name\n
+    var base, name, marker\n
       , isLocal;\n
+\n
+    if (trackLocations) marker = createLocationMarker();\n
     if (Identifier === token.type) {\n
       name = token.value;\n
       base = parseIdentifier();\n
@@ -3285,31 +3411,37 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
       if (Punctuator === token.type) {\n
         switch (token.value) {\n
           case \'[\':\n
+            pushLocation(marker);\n
             next();\n
             expression = parseExpectedExpression();\n
-            base = ast.indexExpression(base, expression);\n
+            base = finishNode(ast.indexExpression(base, expression));\n
             expect(\']\');\n
             break;\n
           case \'.\':\n
+            pushLocation(marker);\n
             next();\n
             identifier = parseIdentifier();\n
             if (options.scope) attachScope(identifier, isLocal);\n
-            base = ast.memberExpression(base, \'.\', identifier);\n
+            base = finishNode(ast.memberExpression(base, \'.\', identifier));\n
             break;\n
           case \':\':\n
+            pushLocation(marker);\n
             next();\n
             identifier = parseIdentifier();\n
             if (options.scope) attachScope(identifier, isLocal);\n
-            base = ast.memberExpression(base, \':\', identifier);\n
+            base = finishNode(ast.memberExpression(base, \':\', identifier));\n
+            pushLocation(marker);\n
             base = parseCallExpression(base);\n
             break;\n
           case \'(\': case \'{\': // args\n
+            pushLocation(marker);\n
             base = parseCallExpression(base);\n
             break;\n
           default:\n
             return base;\n
         }\n
       } else if (StringLiteral === token.type) {\n
+        pushLocation(marker);\n
         base = parseCallExpression(base);\n
       } else {\n
         break;\n
@@ -3333,16 +3465,16 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
           }\n
 \n
           expect(\')\');\n
-          return ast.callExpression(base, expressions);\n
+          return finishNode(ast.callExpression(base, expressions));\n
 \n
         case \'{\':\n
+          markLocation();\n
           next();\n
           var table = parseTableConstructor();\n
-          return ast.tableCallExpression(base, table);\n
+          return finishNode(ast.tableCallExpression(base, table));\n
       }\n
-\n
     } else if (StringLiteral === token.type) {\n
-      return ast.stringCallExpression(base, parsePrimaryExpression());\n
+      return finishNode(ast.stringCallExpression(base, parsePrimaryExpression()));\n
     }\n
 \n
     raiseUnexpectedToken(\'function arguments\', token);\n
@@ -3351,17 +3483,24 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
   function parsePrimaryExpression() {\n
     var literals = StringLiteral | NumericLiteral | BooleanLiteral | NilLiteral | VarargLiteral\n
       , value = token.value\n
-      , type = token.type;\n
+      , type = token.type\n
+      , marker;\n
+\n
+    if (trackLocations) marker = createLocationMarker();\n
 \n
     if (type & literals) {\n
+      pushLocation(marker);\n
       var raw = input.slice(token.range[0], token.range[1]);\n
       next();\n
-      return ast.literal(type, value, raw);\n
+      return finishNode(ast.literal(type, value, raw));\n
     } else if (Keyword === type && \'function\' === value) {\n
+      pushLocation(marker);\n
       next();\n
       return parseFunctionDeclaration(null);\n
-    } else if (consume(\'{\'))\n
+    } else if (consume(\'{\')) {\n
+      pushLocation(marker);\n
       return parseTableConstructor();\n
+    }\n
   }\n
 \n
   exports.parse = parse;\n
@@ -3382,7 +3521,7 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     scopes = [[]];\n
     scopeDepth = 0;\n
     globals = [];\n
-    globalNames = [];\n
+    locations = [];\n
 \n
     if (options.comments) comments = [];\n
     if (!options.wait) return end();\n
@@ -3401,14 +3540,18 @@ define(\'ace/mode/lua/luaparse\', [\'require\', \'exports\', \'module\' , \'expo
     if (\'undefined\' !== typeof _input) write(_input);\n
 \n
     length = input.length;\n
-    lookahead = readToken();\n
+    trackLocations = options.locations || options.ranges;\n
+    lookahead = lex();\n
 \n
     var chunk = parseChunk();\n
     if (options.comments) chunk.comments = comments;\n
     if (options.scope) chunk.globals = globals;\n
+\n
+    if (locations.length > 0)\n
+      throw new Error(\'Location tracking failed. This is most likely a bug in luaparse\');\n
+\n
     return chunk;\n
   }\n
-  exports.lex = readToken;\n
 \n
 }));\n
 \n

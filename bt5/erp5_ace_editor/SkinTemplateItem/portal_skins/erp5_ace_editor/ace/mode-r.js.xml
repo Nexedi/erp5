@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155562.99</string> </value>
+            <value> <string>ts83646621.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -32,11 +32,31 @@
  * Portions created by the Initial Developer are Copyright (C) 2010\n
  * the Initial Developer. All Rights Reserved.\n
  *\n
- * This program is licensed to you under the terms of version 3 of the\n
- * GNU Affero General Public License. This program is distributed WITHOUT\n
- * ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING THOSE OF NON-INFRINGEMENT,\n
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Please refer to the\n
- * AGPL (http://www.gnu.org/licenses/agpl-3.0.txt) for more details.\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ *\n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ *\n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF\n
  *\n
  */\n
 define(\'ace/mode/r\', [\'require\', \'exports\', \'module\' , \'ace/range\', \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/text_highlight_rules\', \'ace/mode/r_highlight_rules\', \'ace/mode/matching_brace_outdent\', \'ace/unicode\'], function(require, exports, module) {\n
@@ -53,7 +73,7 @@ define(\'ace/mode/r\', [\'require\', \'exports\', \'module\' , \'ace/range\', \'
 \n
    var Mode = function()\n
    {\n
-      this.$tokenizer = new Tokenizer(new RHighlightRules().getRules());\n
+      this.HighlightRules = RHighlightRules;\n
       this.$outdent = new MatchingBraceOutdent();\n
    };\n
    oop.inherits(Mode, TextMode);\n
@@ -348,7 +368,7 @@ exports.MatchingBraceOutdent = MatchingBraceOutdent;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>10236</int> </value>
+            <value> <int>11377</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

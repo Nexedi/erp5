@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155566.58</string> </value>
+            <value> <string>ts83646620.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #FFFFFF;\\\n
 color: #000000\\\n
 }\\\n
 .ace-clouds .ace_cursor {\\\n
-border-left: 2px solid #000000\\\n
-}\\\n
-.ace-clouds .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #000000\\\n
+color: #000000\\\n
 }\\\n
 .ace-clouds .ace_marker-layer .ace_selection {\\\n
 background: #BDD5FC\\\n
@@ -143,9 +139,6 @@ color: #BCC8BA\\\n
 .ace-clouds .ace_entity.ace_other.ace_attribute-name {\\\n
 color: #606060\\\n
 }\\\n
-.ace-clouds .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-clouds .ace_indent-guide {\\\n
 background: url(\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==\\") right repeat-y\\\n
 }";\n
@@ -161,7 +154,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4231</int> </value>
+            <value> <int>4037</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

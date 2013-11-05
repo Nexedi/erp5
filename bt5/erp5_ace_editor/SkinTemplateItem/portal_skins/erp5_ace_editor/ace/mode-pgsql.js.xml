@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155561.89</string> </value>
+            <value> <string>ts83646621.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -61,11 +61,11 @@ var PgsqlHighlightRules = require("./pgsql_highlight_rules").PgsqlHighlightRules
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new PgsqlHighlightRules().getRules());\n
+    this.HighlightRules = PgsqlHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
-(function() {       \n
+(function() {\n
     this.lineCommentStart = "--";\n
     this.blockComment = {start: "/*", end: "*/"};\n
 \n
@@ -712,9 +712,6 @@ var PerlHighlightRules = function() {\n
     this.$rules = {\n
         "start" : [\n
             {\n
-                token : "comment",\n
-                regex : "#.*$"\n
-            }, {\n
                 token : "comment.doc",\n
                 regex : "^=(?:begin|item)\\\\b",\n
                 next : "block_comment"\n
@@ -746,7 +743,10 @@ var PerlHighlightRules = function() {\n
                 regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"\n
             }, {\n
                 token : "keyword.operator",\n
-                regex : "\\\\.\\\\.\\\\.|\\\\|\\\\|=|>>=|<<=|<=>|&&=|=>|!~|\\\\^=|&=|\\\\|=|\\\\.=|x=|%=|\\\\/=|\\\\*=|\\\\-=|\\\\+=|=~|\\\\*\\\\*|\\\\-\\\\-|\\\\.\\\\.|\\\\|\\\\||&&|\\\\+\\\\+|\\\\->|!=|==|>=|<=|>>|<<|,|=|\\\\?\\\\:|\\\\^|\\\\||x|%|\\\\/|\\\\*|<|&|\\\\\\\\|~|!|>|\\\\.|\\\\-|\\\\+|\\\\-C|\\\\-b|\\\\-S|\\\\-u|\\\\-t|\\\\-p|\\\\-l|\\\\-d|\\\\-f|\\\\-g|\\\\-s|\\\\-z|\\\\-k|\\\\-e|\\\\-O|\\\\-T|\\\\-B|\\\\-M|\\\\-A|\\\\-X|\\\\-W|\\\\-c|\\\\-R|\\\\-o|\\\\-x|\\\\-w|\\\\-r|\\\\b(?:and|cmp|eq|ge|gt|le|lt|ne|not|or|xor)"\n
+                regex : "%#|\\\\$#|\\\\.\\\\.\\\\.|\\\\|\\\\|=|>>=|<<=|<=>|&&=|=>|!~|\\\\^=|&=|\\\\|=|\\\\.=|x=|%=|\\\\/=|\\\\*=|\\\\-=|\\\\+=|=~|\\\\*\\\\*|\\\\-\\\\-|\\\\.\\\\.|\\\\|\\\\||&&|\\\\+\\\\+|\\\\->|!=|==|>=|<=|>>|<<|,|=|\\\\?\\\\:|\\\\^|\\\\||x|%|\\\\/|\\\\*|<|&|\\\\\\\\|~|!|>|\\\\.|\\\\-|\\\\+|\\\\-C|\\\\-b|\\\\-S|\\\\-u|\\\\-t|\\\\-p|\\\\-l|\\\\-d|\\\\-f|\\\\-g|\\\\-s|\\\\-z|\\\\-k|\\\\-e|\\\\-O|\\\\-T|\\\\-B|\\\\-M|\\\\-A|\\\\-X|\\\\-W|\\\\-c|\\\\-R|\\\\-o|\\\\-x|\\\\-w|\\\\-r|\\\\b(?:and|cmp|eq|ge|gt|le|lt|ne|not|or|xor)"\n
+            }, {\n
+                token : "comment",\n
+                regex : "#.*$"\n
             }, {\n
                 token : "lparen",\n
                 regex : "[[({]"\n
@@ -961,7 +961,7 @@ exports.PythonHighlightRules = PythonHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>53780</int> </value>
+            <value> <int>53753</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

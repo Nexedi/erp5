@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155562.45</string> </value>
+            <value> <string>ts83646621.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -59,8 +59,7 @@ var Tokenizer = require("../tokenizer").Tokenizer;\n
 var PropertiesHighlightRules = require("./properties_highlight_rules").PropertiesHighlightRules;\n
 \n
 var Mode = function() {\n
-    var highlighter = new PropertiesHighlightRules();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
+    this.HighlightRules = PropertiesHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -91,7 +90,7 @@ var PropertiesHighlightRules = function() {\n
                 next  : "value"\n
             }, {\n
                 token : "constant.language.escape",\n
-                regex : escapeRe,\n
+                regex : escapeRe\n
             }, {\n
                 defaultToken: "variable"\n
             }\n
@@ -129,7 +128,7 @@ exports.PropertiesHighlightRules = PropertiesHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3731</int> </value>
+            <value> <int>3667</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

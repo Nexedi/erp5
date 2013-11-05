@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155555.33</string> </value>
+            <value> <string>ts83646622.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -63,7 +63,7 @@ var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutd
 var C9StyleFoldMode = require("./folding/c9search").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new C9SearchHighlightRules().getRules());\n
+    this.HighlightRules = C9SearchHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.foldingRules = new C9StyleFoldMode();\n
 };\n
@@ -214,7 +214,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6223</int> </value>
+            <value> <int>6195</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155566.72</string> </value>
+            <value> <string>ts83646620.86</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #191919;\\\n
 color: #929292\\\n
 }\\\n
 .ace-clouds-midnight .ace_cursor {\\\n
-border-left: 2px solid #7DA5DC\\\n
-}\\\n
-.ace-clouds-midnight .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #7DA5DC\\\n
+color: #7DA5DC\\\n
 }\\\n
 .ace-clouds-midnight .ace_marker-layer .ace_selection {\\\n
 background: #000000\\\n
@@ -144,9 +140,6 @@ color: #3C403B\\\n
 .ace-clouds-midnight .ace_entity.ace_other.ace_attribute-name {\\\n
 color: #606060\\\n
 }\\\n
-.ace-clouds-midnight .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
 .ace-clouds-midnight .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y;\\\n
 }";\n
@@ -162,7 +155,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4602</int> </value>
+            <value> <int>4390</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

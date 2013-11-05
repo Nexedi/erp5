@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155554.39</string> </value>
+            <value> <string>ts83646622.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -99,6 +99,38 @@ exports.handler = {\n
             data.lastEvent = "keypress";\n
         }\n
     },\n
+    updateMacCompositionHandlers: function(editor, enable) {\n
+        var onCompositionUpdateOverride = function(text) {\n
+            if (util.currentMode !== "insert") {\n
+                var el = this.textInput.getElement();\n
+                el.blur();\n
+                el.focus();\n
+                el.value = text;\n
+            } else {\n
+                this.onCompositionUpdateOrig(text);\n
+            }\n
+        };\n
+        var onCompositionStartOverride = function(text) {\n
+            if (util.currentMode === "insert") {            \n
+                this.onCompositionStartOrig(text);\n
+            }\n
+        }\n
+        if (enable) {\n
+            if (!editor.onCompositionUpdateOrig) {\n
+                editor.onCompositionUpdateOrig = editor.onCompositionUpdate;\n
+                editor.onCompositionUpdate = onCompositionUpdateOverride;\n
+                editor.onCompositionStartOrig = editor.onCompositionStart;\n
+                editor.onCompositionStart = onCompositionStartOverride;\n
+            }\n
+        } else {\n
+            if (editor.onCompositionUpdateOrig) {\n
+                editor.onCompositionUpdate = editor.onCompositionUpdateOrig;\n
+                editor.onCompositionUpdateOrig = null;\n
+                editor.onCompositionStart = editor.onCompositionStartOrig;\n
+                editor.onCompositionStartOrig = null;\n
+            }\n
+        }\n
+    },\n
 \n
     handleKeyboard: function(data, hashId, key, keyCode, e) {\n
         if (hashId != 0 && (key == "" || key == "\\x00"))\n
@@ -150,12 +182,15 @@ exports.handler = {\n
         if (util.currentMode !== "insert")\n
             cmds.coreCommands.stop.exec(editor);\n
         editor.$vimModeHandler = this;\n
+        \n
+        this.updateMacCompositionHandlers(editor, true);\n
     },\n
 \n
     detach: function(editor) {\n
         editor.removeListener("click", exports.onCursorMove);\n
         util.noMode(editor);\n
         util.currentMode = "normal";\n
+        this.updateMacCompositionHandlers(editor, false);\n
     },\n
 \n
     actions: cmds.actions,\n
@@ -230,6 +265,18 @@ var actions = exports.actions = {\n
                     break;\n
                 case "b":\n
                     editor.renderer.alignCursor(null, 1);\n
+                    break;\n
+                case "c":\n
+                    editor.session.onFoldWidgetClick(range.start.row, {domEvent:{target :{}}});\n
+                    break;\n
+                case "o":\n
+                    editor.session.onFoldWidgetClick(range.start.row, {domEvent:{target :{}}});\n
+                    break;\n
+                case "C":\n
+                    editor.session.foldAll();\n
+                    break;\n
+                case "O":\n
+                    editor.session.unfold();\n
                     break;\n
             }\n
         }\n
@@ -1744,7 +1791,7 @@ module.exports = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>55892</int> </value>
+            <value> <int>57858</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

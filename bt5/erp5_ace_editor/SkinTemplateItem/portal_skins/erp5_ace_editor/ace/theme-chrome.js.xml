@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155566.48</string> </value>
+            <value> <string>ts83646620.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background: #e8e8e8;\\\n
 background-color: #FFFFFF;\\\n
 }\\\n
 .ace-chrome .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
-}\\\n
-.ace-chrome .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-chrome .ace_invisible {\\\n
 color: rgb(191, 191, 191);\\\n
@@ -130,10 +126,10 @@ color: rgb(104, 104, 91);\\\n
 .ace-chrome .ace_entity.ace_name.ace_function {\\\n
 color: #0000A2;\\\n
 }\\\n
-.ace-chrome .ace_markup.ace_heading {\\\n
+.ace-chrome .ace_heading {\\\n
 color: rgb(12, 7, 255);\\\n
 }\\\n
-.ace-chrome .ace_markup.ace_list {\\\n
+.ace-chrome .ace_list {\\\n
 color:rgb(185, 6, 144);\\\n
 }\\\n
 .ace-chrome .ace_marker-layer .ace_selection {\\\n
@@ -189,7 +185,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4843</int> </value>
+            <value> <int>4700</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

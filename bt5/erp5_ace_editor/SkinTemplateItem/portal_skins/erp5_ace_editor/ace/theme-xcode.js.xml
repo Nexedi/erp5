@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155569.82</string> </value>
+            <value> <string>ts83646620.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -68,11 +68,7 @@ background-color: #FFFFFF;\\\n
 color: #000000\\\n
 }\\\n
 .ace-xcode .ace_cursor {\\\n
-border-left: 2px solid #000000\\\n
-}\\\n
-.ace-xcode .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #000000\\\n
+color: #000000\\\n
 }\\\n
 .ace-xcode .ace_marker-layer .ace_selection {\\\n
 background: #B5D5FF\\\n
@@ -151,7 +147,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4076</int> </value>
+            <value> <int>3955</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

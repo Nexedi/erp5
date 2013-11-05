@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155552.86</string> </value>
+            <value> <string>ts83646622.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -198,7 +198,7 @@ module.exports.getEditorKeybordShortcuts = function(editor) {\n
     var keybindings = [];\n
     var commandMap = {};\n
     editor.keyBinding.$handlers.forEach(function(handler) {\n
-        var ckb = handler.commmandKeyBinding;\n
+        var ckb = handler.commandKeyBinding;\n
         for (var i in ckb) {\n
             var modifier = parseInt(i);\n
             if (modifier == -1) {\n
@@ -238,7 +238,7 @@ module.exports.getEditorKeybordShortcuts = function(editor) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7803</int> </value>
+            <value> <int>7802</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

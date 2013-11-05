@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155568.92</string> </value>
+            <value> <string>ts83646620.17</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,17 +62,12 @@ color: #4D4D4C\\\n
 width: 1px;\\\n
 background: #f6f6f6\\\n
 }\\\n
-.ace-tomorrow,\\\n
-.ace-tomorrow .ace_scroller {\\\n
+.ace-tomorrow {\\\n
 background-color: #FFFFFF;\\\n
 color: #4D4D4C\\\n
 }\\\n
 .ace-tomorrow .ace_cursor {\\\n
-border-left: 2px solid #AEAFAD\\\n
-}\\\n
-.ace-tomorrow .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #AEAFAD\\\n
+color: #AEAFAD\\\n
 }\\\n
 .ace-tomorrow .ace_marker-layer .ace_selection {\\\n
 background: #D6D6D6\\\n
@@ -142,7 +137,7 @@ color: #4271AE\\\n
 .ace-tomorrow .ace_support.ace_type {\\\n
 color: #C99E00\\\n
 }\\\n
-.ace-tomorrow .ace_markup.ace_heading,\\\n
+.ace-tomorrow .ace_heading,\\\n
 .ace-tomorrow .ace_string {\\\n
 color: #718C00\\\n
 }\\\n
@@ -155,9 +150,6 @@ color: #C82829\\\n
 }\\\n
 .ace-tomorrow .ace_comment {\\\n
 color: #8E908C\\\n
-}\\\n
-.ace-tomorrow .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
 }\\\n
 .ace-tomorrow .ace_indent-guide {\\\n
 background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bdu3f/BwAlfgctduB85QAAAABJRU5ErkJggg==) right repeat-y\\\n
@@ -174,7 +166,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4735</int> </value>
+            <value> <int>4496</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

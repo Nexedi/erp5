@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155555.47</string> </value>
+            <value> <string>ts83646622.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -65,9 +65,11 @@ var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new c_cppHighlightRules().getRules());\n
+    this.HighlightRules = c_cppHighlightRules;\n
+\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
+\n
     this.foldingRules = new CStyleFoldMode();\n
 };\n
 oop.inherits(Mode, TextMode);\n
@@ -80,7 +82,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
         var endState = tokenizedLine.state;\n
 \n
@@ -769,7 +771,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>30249</int> </value>
+            <value> <int>30227</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

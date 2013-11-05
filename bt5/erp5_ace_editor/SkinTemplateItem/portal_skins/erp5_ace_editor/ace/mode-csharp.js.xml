@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155556.06</string> </value>
+            <value> <string>ts83646622.33</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,7 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-define(\'ace/mode/csharp\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/csharp_highlight_rules\', \'ace/mode/matching_brace_outdent\', \'ace/mode/behaviour/cstyle\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
+define(\'ace/mode/csharp\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/csharp_highlight_rules\', \'ace/mode/matching_brace_outdent\', \'ace/mode/behaviour/cstyle\', \'ace/mode/folding/csharp\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../lib/oop");\n
@@ -31,10 +31,10 @@ var Tokenizer = require("../tokenizer").Tokenizer;\n
 var CSharpHighlightRules = require("./csharp_highlight_rules").CSharpHighlightRules;\n
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;\n
 var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;\n
-var CStyleFoldMode = require("./folding/cstyle").FoldMode;\n
+var CStyleFoldMode = require("./folding/csharp").FoldMode;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new CSharpHighlightRules().getRules());\n
+    this.HighlightRules = CSharpHighlightRules;\n
     this.$outdent = new MatchingBraceOutdent();\n
     this.$behaviour = new CstyleBehaviour();\n
     this.foldingRules = new CStyleFoldMode();\n
@@ -49,7 +49,7 @@ oop.inherits(Mode, TextMode);\n
     this.getNextLineIndent = function(state, line, tab) {\n
         var indent = this.$getIndent(line);\n
   \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
   \n
         if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
@@ -138,6 +138,9 @@ var CSharpHighlightRules = function() {\n
             }, {\n
                 token : "keyword.operator",\n
                 regex : "!|\\\\$|%|&|\\\\*|\\\\-\\\\-|\\\\-|\\\\+\\\\+|\\\\+|~|===|==|=|!=|!==|<=|>=|<<=|>>=|>>>=|<>|<|>|!|&&|\\\\|\\\\||\\\\?\\\\:|\\\\*=|%=|\\\\+=|\\\\-=|&=|\\\\^=|\\\\b(?:in|instanceof|new|delete|typeof|void)"\n
+            }, {\n
+                token : "keyword",\n
+                regex : "^\\\\s*#(if|else|elif|endif|define|undef|warning|error|line|region|endregion|pragma)"\n
             }, {\n
                 token : "punctuation.operator",\n
                 regex : "\\\\?|\\\\:|\\\\,|\\\\;|\\\\."\n
@@ -581,6 +584,115 @@ oop.inherits(CstyleBehaviour, Behaviour);\n
 exports.CstyleBehaviour = CstyleBehaviour;\n
 });\n
 \n
+define(\'ace/mode/folding/csharp\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
+\n
+\n
+var oop = require("../../lib/oop");\n
+var Range = require("../../range").Range;\n
+var CFoldMode = require("./cstyle").FoldMode;\n
+\n
+var FoldMode = exports.FoldMode = function(commentRegex) {\n
+    if (commentRegex) {\n
+        this.foldingStartMarker = new RegExp(\n
+            this.foldingStartMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.start)\n
+        );\n
+        this.foldingStopMarker = new RegExp(\n
+            this.foldingStopMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.end)\n
+        );\n
+    }\n
+};\n
+oop.inherits(FoldMode, CFoldMode);\n
+\n
+(function() {\n
+    this.usingRe = /^\\s*using \\S/;\n
+\n
+    this.getFoldWidgetRangeBase = this.getFoldWidgetRange;\n
+    this.getFoldWidgetBase = this.getFoldWidget;\n
+    \n
+    this.getFoldWidget = function(session, foldStyle, row) {\n
+        var fw = this.getFoldWidgetBase(session, foldStyle, row);\n
+        if (!fw) {\n
+            var line = session.getLine(row);\n
+            if (/^\\s*#region\\b/.test(line)) \n
+                return "start";\n
+            var usingRe = this.usingRe;\n
+            if (usingRe.test(line)) {\n
+                var prev = session.getLine(row - 1);\n
+                var next = session.getLine(row + 1);\n
+                if (!usingRe.test(prev) && usingRe.test(next))\n
+                    return "start"\n
+            }\n
+        }\n
+        return fw;\n
+    };\n
+    \n
+    this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var range = this.getFoldWidgetRangeBase(session, foldStyle, row);\n
+        if (range)\n
+            return range;\n
+\n
+        var line = session.getLine(row);\n
+        if (this.usingRe.test(line))\n
+            return this.getUsingStatementBlock(session, line, row);\n
+            \n
+        if (/^\\s*#region\\b/.test(line))\n
+            return this.getRegionBlock(session, line, row);\n
+    };\n
+    \n
+    this.getUsingStatementBlock = function(session, line, row) {\n
+        var startColumn = line.match(this.usingRe)[0].length - 1;\n
+        var maxRow = session.getLength();\n
+        var startRow = row;\n
+        var endRow = row;\n
+\n
+        while (++row < maxRow) {\n
+            line = session.getLine(row);\n
+            if (/^\\s*$/.test(line))\n
+                continue;\n
+            if (!this.usingRe.test(line))\n
+                break;\n
+\n
+            endRow = row;\n
+        }\n
+\n
+        if (endRow > startRow) {\n
+            var endColumn = session.getLine(endRow).length;\n
+            return new Range(startRow, startColumn, endRow, endColumn);\n
+        }\n
+    };\n
+    \n
+    this.getRegionBlock = function(session, line, row) {\n
+        var startColumn = line.search(/\\s*$/);\n
+        var maxRow = session.getLength();\n
+        var startRow = row;\n
+        \n
+        var re = /^\\s*#(end)?region\\b/\n
+        var depth = 1\n
+        while (++row < maxRow) {\n
+            line = session.getLine(row);\n
+            var m = re.exec(line);\n
+            if (!m)\n
+                continue;\n
+            if (m[1])\n
+                depth--;\n
+            else\n
+                depth++;\n
+\n
+            if (!depth)\n
+                break;\n
+        }\n
+\n
+        var endRow = row;\n
+        if (endRow > startRow) {\n
+            var endColumn = line.search(/\\S/);\n
+            return new Range(startRow, startColumn, endRow, endColumn);\n
+        }\n
+    };\n
+\n
+}).call(FoldMode.prototype);\n
+\n
+});\n
+\n
 define(\'ace/mode/folding/cstyle\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
 \n
 \n
@@ -644,7 +756,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>23371</int> </value>
+            <value> <int>26871</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

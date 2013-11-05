@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155558.48</string> </value>
+            <value> <string>ts83646622.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>/* ***** BEGIN LICENSE BLOCK *****\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
  * Distributed under the BSD license:\n
  *\n
  * Copyright (c) 2012, Ajax.org B.V.\n
@@ -48,26 +50,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
  *\n
- *\n
- * Contributor(s):\n
- *\n
- *\n
- *\n
  * ***** END LICENSE BLOCK ***** */\n
 \n
-define(\'ace/mode/ini\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/ini_highlight_rules\', \'ace/mode/folding/cstyle\'], function(require, exports, module) {\n
+define(\'ace/mode/ini\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/ini_highlight_rules\', \'ace/mode/folding/ini\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../lib/oop");\n
 var TextMode = require("./text").Mode;\n
 var Tokenizer = require("../tokenizer").Tokenizer;\n
 var IniHighlightRules = require("./ini_highlight_rules").IniHighlightRules;\n
-var FoldMode = require("./folding/cstyle").FoldMode;\n
+var FoldMode = require("./folding/ini").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new IniHighlightRules();\n
+    this.HighlightRules = IniHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -85,54 +81,74 @@ define(\'ace/mode/ini_highlight_rules\', [\'require\', \'exports\', \'module\' ,
 var oop = require("../lib/oop");\n
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
 \n
-var IniHighlightRules = function() {\n
+var escapeRe = "\\\\\\\\(?:[\\\\\\\\0abtrn;#=:]|x[a-fA-F\\\\d]{4})";\n
 \n
-    this.$rules = { start: \n
-       [ { token: \'punctuation.definition.comment.ini\',\n
-           regex: \'#.*\',\n
-           push_: \n
-            [ { token: \'comment.line.number-sign.ini\',\n
-                regex: \'$\',\n
-                next: \'pop\' },\n
-              { defaultToken: \'comment.line.number-sign.ini\' } ] },\n
-         { token: \'punctuation.definition.comment.ini\',\n
-           regex: \';.*\',\n
-           push_: \n
-            [ { token: \'comment.line.semicolon.ini\', regex: \'$\', next: \'pop\' },\n
-              { defaultToken: \'comment.line.semicolon.ini\' } ] },\n
-         { token: \n
-            [ \'keyword.other.definition.ini\',\n
-              \'text\',\n
-              \'punctuation.separator.key-value.ini\' ],\n
-           regex: \'\\\\b([a-zA-Z0-9_.-]+)\\\\b(\\\\s*)(=)\' },\n
-         { token: \n
-            [ \'punctuation.definition.entity.ini\',\n
-              \'constant.section.group-title.ini\',\n
-              \'punctuation.definition.entity.ini\' ],\n
-           regex: \'^(\\\\[)(.*?)(\\\\])\' },\n
-         { token: \'punctuation.definition.string.begin.ini\',\n
-           regex: \'\\\'\',\n
-           push: \n
-            [ { token: \'punctuation.definition.string.end.ini\',\n
-                regex: \'\\\'\',\n
-                next: \'pop\' },\n
-              { token: \'constant.character.escape.ini\', regex: \'\\\\\\\\.\' },\n
-              { defaultToken: \'string.quoted.single.ini\' } ] },\n
-         { token: \'punctuation.definition.string.begin.ini\',\n
-           regex: \'"\',\n
-           push: \n
-            [ { token: \'punctuation.definition.string.end.ini\',\n
+var IniHighlightRules = function() {\n
+    this.$rules = {\n
+        start: [{\n
+            token: \'punctuation.definition.comment.ini\',\n
+            regex: \'#.*\',\n
+            push_: [{\n
+                token: \'comment.line.number-sign.ini\',\n
+                regex: \'$|^\',\n
+                next: \'pop\'\n
+            }, {\n
+                defaultToken: \'comment.line.number-sign.ini\'\n
+            }]\n
+        }, {\n
+            token: \'punctuation.definition.comment.ini\',\n
+            regex: \';.*\',\n
+            push_: [{\n
+                token: \'comment.line.semicolon.ini\',\n
+                regex: \'$|^\',\n
+                next: \'pop\'\n
+            }, {\n
+                defaultToken: \'comment.line.semicolon.ini\'\n
+            }]\n
+        }, {\n
+            token: [\'keyword.other.definition.ini\', \'text\', \'punctuation.separator.key-value.ini\'],\n
+            regex: \'\\\\b([a-zA-Z0-9_.-]+)\\\\b(\\\\s*)(=)\'\n
+        }, {\n
+            token: [\'punctuation.definition.entity.ini\', \'constant.section.group-title.ini\', \'punctuation.definition.entity.ini\'],\n
+            regex: \'^(\\\\[)(.*?)(\\\\])\'\n
+        }, {\n
+            token: \'punctuation.definition.string.begin.ini\',\n
+            regex: "\'",\n
+            push: [{\n
+                token: \'punctuation.definition.string.end.ini\',\n
+                regex: "\'",\n
+                next: \'pop\'\n
+            }, {\n
+                token: "constant.language.escape",\n
+                regex: escapeRe\n
+            }, {\n
+                defaultToken: \'string.quoted.single.ini\'\n
+            }]\n
+        }, {\n
+            token: \'punctuation.definition.string.begin.ini\',\n
+            regex: \'"\',\n
+            push: [{\n
+                token: "constant.language.escape",\n
+                regex: escapeRe\n
+            }, {\n
+                token: \'punctuation.definition.string.end.ini\',\n
                 regex: \'"\',\n
-                next: \'pop\' },\n
-              { defaultToken: \'string.quoted.double.ini\' } ] } ] }\n
-    \n
+                next: \'pop\'\n
+            }, {\n
+                defaultToken: \'string.quoted.double.ini\'\n
+            }]\n
+        }]\n
+    };\n
+\n
     this.normalizeRules();\n
 };\n
 \n
-IniHighlightRules.metaData = { fileTypes: [ \'ini\', \'conf\' ],\n
-      keyEquivalent: \'^~I\',\n
-      name: \'Ini\',\n
-      scopeName: \'source.ini\' }\n
+IniHighlightRules.metaData = {\n
+    fileTypes: [\'ini\', \'conf\'],\n
+    keyEquivalent: \'^~I\',\n
+    name: \'Ini\',\n
+    scopeName: \'source.ini\'\n
+};\n
 \n
 \n
 oop.inherits(IniHighlightRules, TextHighlightRules);\n
@@ -140,60 +156,59 @@ oop.inherits(IniHighlightRules, TextHighlightRules);\n
 exports.IniHighlightRules = IniHighlightRules;\n
 });\n
 \n
-define(\'ace/mode/folding/cstyle\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
+define(\'ace/mode/folding/ini\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/range\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
 \n
 \n
 var oop = require("../../lib/oop");\n
 var Range = require("../../range").Range;\n
 var BaseFoldMode = require("./fold_mode").FoldMode;\n
 \n
-var FoldMode = exports.FoldMode = function(commentRegex) {\n
-    if (commentRegex) {\n
-        this.foldingStartMarker = new RegExp(\n
-            this.foldingStartMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.start)\n
-        );\n
-        this.foldingStopMarker = new RegExp(\n
-            this.foldingStopMarker.source.replace(/\\|[^|]*?$/, "|" + commentRegex.end)\n
-        );\n
-    }\n
+var FoldMode = exports.FoldMode = function() {\n
 };\n
 oop.inherits(FoldMode, BaseFoldMode);\n
 \n
 (function() {\n
 \n
-    this.foldingStartMarker = /(\\{|\\[)[^\\}\\]]*$|^\\s*(\\/\\*)/;\n
-    this.foldingStopMarker = /^[^\\[\\{]*(\\}|\\])|^[\\s\\*]*(\\*\\/)/;\n
+    this.foldingStartMarker = /^\\s*\\[([^\\])]*)]\\s*(?:$|[;#])/;\n
 \n
     this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var re = this.foldingStartMarker;\n
         var line = session.getLine(row);\n
-        var match = line.match(this.foldingStartMarker);\n
-        if (match) {\n
-            var i = match.index;\n
+        \n
+        var m = line.match(re);\n
+        \n
+        if (!m) return;\n
+        \n
+        var startName = m[1] + ".";\n
+        \n
+        var startColumn = line.length;\n
+        var maxRow = session.getLength();\n
+        var startRow = row;\n
+        var endRow = row;\n
 \n
-            if (match[1])\n
-                return this.openingBracketBlock(session, match[1], row, i);\n
+        while (++row < maxRow) {\n
+            line = session.getLine(row);\n
+            if (/^\\s*$/.test(line))\n
+                continue;\n
+            m = line.match(re);\n
+            if (m && m[1].lastIndexOf(startName, 0) !== 0)\n
+                break;\n
 \n
-            return session.getCommentFoldRange(row, i + match[0].length, 1);\n
+            endRow = row;\n
         }\n
 \n
-        if (foldStyle !== "markbeginend")\n
-            return;\n
-\n
-        var match = line.match(this.foldingStopMarker);\n
-        if (match) {\n
-            var i = match.index + match[0].length;\n
-\n
-            if (match[1])\n
-                return this.closingBracketBlock(session, match[1], row, i);\n
-\n
-            return session.getCommentFoldRange(row, i, -1);\n
+        if (endRow > startRow) {\n
+            var endColumn = session.getLine(endRow).length;\n
+            return new Range(startRow, startColumn, endRow, endColumn);\n
         }\n
     };\n
 \n
 }).call(FoldMode.prototype);\n
 \n
 });\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -201,7 +216,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6416</int> </value>
+            <value> <int>6342</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

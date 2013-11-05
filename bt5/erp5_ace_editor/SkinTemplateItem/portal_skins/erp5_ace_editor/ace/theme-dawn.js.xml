@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155567.14</string> </value>
+            <value> <string>ts83646620.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,11 +67,7 @@ background-color: #F9F9F9;\\\n
 color: #080808\\\n
 }\\\n
 .ace-dawn .ace_cursor {\\\n
-border-left: 2px solid #000000\\\n
-}\\\n
-.ace-dawn .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid #000000\\\n
+color: #000000\\\n
 }\\\n
 .ace-dawn .ace_marker-layer .ace_selection {\\\n
 background: rgba(39, 95, 255, 0.30)\\\n
@@ -130,7 +126,7 @@ color: #B4371F\\\n
 background-color: #794938;\\\n
 border-color: #080808\\\n
 }\\\n
-.ace-dawn .ace_markup.ace_list,\\\n
+.ace-dawn .ace_list,\\\n
 .ace-dawn .ace_support.ace_function {\\\n
 color: #693A17\\\n
 }\\\n
@@ -151,10 +147,7 @@ color: #5A525F\\\n
 .ace-dawn .ace_variable {\\\n
 color: #234A97\\\n
 }\\\n
-.ace-dawn .ace_markup.ace_underline {\\\n
-text-decoration: underline\\\n
-}\\\n
-.ace-dawn .ace_markup.ace_heading {\\\n
+.ace-dawn .ace_heading {\\\n
 color: #19356D\\\n
 }\\\n
 .ace-dawn .ace_indent-guide {\\\n
@@ -172,7 +165,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4364</int> </value>
+            <value> <int>4152</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

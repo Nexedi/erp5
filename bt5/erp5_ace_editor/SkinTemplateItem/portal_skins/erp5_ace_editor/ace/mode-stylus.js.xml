@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155564.32</string> </value>
+            <value> <string>ts83646621.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -67,14 +67,12 @@ var StylusHighlightRules = require("./stylus_highlight_rules").StylusHighlightRu
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new StylusHighlightRules();\n
+    this.HighlightRules = StylusHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    \n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
-(function() {\n
+(function() { \n
 }).call(Mode.prototype);\n
 \n
 exports.Mode = Mode;\n
@@ -266,11 +264,80 @@ var CssHighlightRules = function() {\n
         "support.constant.fonts": supportConstantFonts\n
     }, "text", true);\n
 \n
-    var base_ruleset = [\n
-        {\n
+    this.$rules = {\n
+        "start" : [{\n
             token : "comment", // multi line comment\n
             regex : "\\\\/\\\\*",\n
-            next : "ruleset_comment"\n
+            push : "comment"\n
+        }, {\n
+            token: "paren.lparen",\n
+            regex: "\\\\{",\n
+            push:  "ruleset"\n
+        }, {\n
+            token: "string",\n
+            regex: "@.*?{",\n
+            push:  "media"\n
+        }, {\n
+            token: "keyword",\n
+            regex: "#[a-z0-9-_]+"\n
+        }, {\n
+            token: "variable",\n
+            regex: "\\\\.[a-z0-9-_]+"\n
+        }, {\n
+            token: "string",\n
+            regex: ":[a-z0-9-_]+"\n
+        }, {\n
+            token: "constant",\n
+            regex: "[a-z0-9-_]+"\n
+        }, {\n
+            caseInsensitive: true\n
+        }],\n
+\n
+        "media" : [{\n
+            token : "comment", // multi line comment\n
+            regex : "\\\\/\\\\*",\n
+            push : "comment"\n
+        }, {\n
+            token: "paren.lparen",\n
+            regex: "\\\\{",\n
+            push:  "ruleset"\n
+        }, {\n
+            token: "string",\n
+            regex: "\\\\}",\n
+            next:  "pop"\n
+        }, {\n
+            token: "keyword",\n
+            regex: "#[a-z0-9-_]+"\n
+        }, {\n
+            token: "variable",\n
+            regex: "\\\\.[a-z0-9-_]+"\n
+        }, {\n
+            token: "string",\n
+            regex: ":[a-z0-9-_]+"\n
+        }, {\n
+            token: "constant",\n
+            regex: "[a-z0-9-_]+"\n
+        }, {\n
+            caseInsensitive: true\n
+        }],\n
+\n
+        "comment" : [{\n
+            token : "comment",\n
+            regex : "\\\\*\\\\/",\n
+            next : "pop"\n
+        }, {\n
+            defaultToken : "comment"\n
+        }],\n
+\n
+        "ruleset" : [\n
+        {\n
+            token : "paren.rparen",\n
+            regex : "\\\\}",\n
+            next:   "pop"\n
+        }, {\n
+            token : "comment", // multi line comment\n
+            regex : "\\\\/\\\\*",\n
+            push : "comment"\n
         }, {\n
             token : "string", // single line\n
             regex : \'["](?:(?:\\\\\\\\.)|(?:[^"\\\\\\\\]))*?["]\'\n
@@ -303,114 +370,10 @@ var CssHighlightRules = function() {\n
             regex : "\\\\-?[a-zA-Z_][a-zA-Z0-9_\\\\-]*"\n
         }, {\n
             caseInsensitive: true\n
-        }\n
-      ];\n
-\n
-    var ruleset = lang.copyArray(base_ruleset);\n
-    ruleset.unshift({\n
-        token : "paren.rparen",\n
-        regex : "\\\\}",\n
-        next:   "start"\n
-    });\n
-\n
-    var media_ruleset = lang.copyArray( base_ruleset );\n
-    media_ruleset.unshift({\n
-        token : "paren.rparen",\n
-        regex : "\\\\}",\n
-        next:   "media"\n
-    });\n
-\n
-    var base_comment = [{\n
-          token : "comment", // comment spanning whole line\n
-          regex : ".+"\n
-    }];\n
-\n
-    var comment = lang.copyArray(base_comment);\n
-    comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "start"\n
-    });\n
-\n
-    var media_comment = lang.copyArray(base_comment);\n
-    media_comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "media"\n
-    });\n
-\n
-    var ruleset_comment = lang.copyArray(base_comment);\n
-    ruleset_comment.unshift({\n
-          token : "comment", // closing comment\n
-          regex : ".*?\\\\*\\\\/",\n
-          next : "ruleset"\n
-    });\n
-\n
-    this.$rules = {\n
-        "start" : [{\n
-            token : "comment", // multi line comment\n
-            regex : "\\\\/\\\\*",\n
-            next : "comment"\n
-        }, {\n
-            token: "paren.lparen",\n
-            regex: "\\\\{",\n
-            next:  "ruleset"\n
-        }, {\n
-            token: "string",\n
-            regex: "@.*?{",\n
-            next:  "media"\n
-        },{\n
-            token: "keyword",\n
-            regex: "#[a-z0-9-_]+"\n
-        },{\n
-            token: "variable",\n
-            regex: "\\\\.[a-z0-9-_]+"\n
-        },{\n
-            token: "string",\n
-            regex: ":[a-z0-9-_]+"\n
-        },{\n
-            token: "constant",\n
-            regex: "[a-z0-9-_]+"\n
-        },{\n
-            caseInsensitive: true\n
-        }],\n
-\n
-        "media" : [ {\n
-            token : "comment", // multi line comment\n
-            regex : "\\\\/\\\\*",\n
-            next : "media_comment"\n
-        }, {\n
-            token: "paren.lparen",\n
-            regex: "\\\\{",\n
-            next:  "media_ruleset"\n
-        },{\n
-            token: "string",\n
-            regex: "\\\\}",\n
-            next:  "start"\n
-        },{\n
-            token: "keyword",\n
-            regex: "#[a-z0-9-_]+"\n
-        },{\n
-            token: "variable",\n
-            regex: "\\\\.[a-z0-9-_]+"\n
-        },{\n
-            token: "string",\n
-            regex: ":[a-z0-9-_]+"\n
-        },{\n
-            token: "constant",\n
-            regex: "[a-z0-9-_]+"\n
-        },{\n
-            caseInsensitive: true\n
-        }],\n
-\n
-        "comment" : comment,\n
-\n
-        "ruleset" : ruleset,\n
-        "ruleset_comment" : ruleset_comment,\n
-\n
-        "media_ruleset" : media_ruleset,\n
-        "media_comment" : media_comment\n
+        }]\n
     };\n
+\n
+    this.normalizeRules();\n
 };\n
 \n
 oop.inherits(CssHighlightRules, TextHighlightRules);\n
@@ -515,7 +478,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>22102</int> </value>
+            <value> <int>21100</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

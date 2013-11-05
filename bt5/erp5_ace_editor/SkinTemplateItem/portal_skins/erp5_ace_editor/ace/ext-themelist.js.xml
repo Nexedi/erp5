@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155554.04</string> </value>
+            <value> <string>ts83646622.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -92,8 +92,8 @@ module.exports.themes = [\n
     "kr_theme",\n
     "merbivore",\n
     "merbivore_soft",\n
-    "monokai",\n
     "mono_industrial",\n
+    "monokai",\n
     "pastel_on_dark",\n
     "solarized_dark",\n
     "solarized_light",\n

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155570.73</string> </value>
+            <value> <string>ts83646620.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>224350</int> </value>
+            <value> <int>229384</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -55,31 +55,30 @@ if (typeof window.window != "undefined" && window.document) {\n
     return;\n
 }\n
 \n
-window.console = {\n
-    log: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    },\n
-    error: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    }\n
+window.console = function() {\n
+    var msgs = Array.prototype.slice.call(arguments, 0);\n
+    postMessage({type: "log", data: msgs});\n
 };\n
+window.console.error =\n
+window.console.warn = \n
+window.console.log =\n
+window.console.trace = window.console;\n
+\n
 window.window = window;\n
 window.ace = window;\n
 \n
 window.normalizeModule = function(parentId, moduleName) {\n
     if (moduleName.indexOf("!") !== -1) {\n
         var chunks = moduleName.split("!");\n
-        return normalizeModule(parentId, chunks[0]) + "!" + normalizeModule(parentId, chunks[1]);\n
+        return window.normalizeModule(parentId, chunks[0]) + "!" + window.normalizeModule(parentId, chunks[1]);\n
     }\n
     if (moduleName.charAt(0) == ".") {\n
         var base = parentId.split("/").slice(0, -1).join("/");\n
-        moduleName = base + "/" + moduleName;\n
+        moduleName = (base ? base + "/" : "") + moduleName;\n
         \n
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {\n
             var previous = moduleName;\n
-            moduleName = moduleName.replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
+            moduleName = moduleName.replace(/^\\.\\//, "").replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
         }\n
     }\n
     \n
@@ -94,9 +93,9 @@ window.require = function(parentId, id) {\n
     if (!id.charAt)\n
         throw new Error("worker.js require() accepts only (parentId, id) as arguments");\n
 \n
-    id = normalizeModule(parentId, id);\n
+    id = window.normalizeModule(parentId, id);\n
 \n
-    var module = require.modules[id];\n
+    var module = window.require.modules[id];\n
     if (module) {\n
         if (!module.initialized) {\n
             module.initialized = true;\n
@@ -106,48 +105,60 @@ window.require = function(parentId, id) {\n
     }\n
     \n
     var chunks = id.split("/");\n
-    chunks[0] = require.tlns[chunks[0]] || chunks[0];\n
+    if (!window.require.tlns)\n
+        return console.log("unable to load " + id);\n
+    chunks[0] = window.require.tlns[chunks[0]] || chunks[0];\n
     var path = chunks.join("/") + ".js";\n
     \n
-    require.id = id;\n
+    window.require.id = id;\n
     importScripts(path);\n
-    return require(parentId, id);\n
+    return window.require(parentId, id);\n
 };\n
-\n
-require.modules = {};\n
-require.tlns = {};\n
+window.require.modules = {};\n
+window.require.tlns = {};\n
 \n
 window.define = function(id, deps, factory) {\n
     if (arguments.length == 2) {\n
         factory = deps;\n
         if (typeof id != "string") {\n
             deps = id;\n
-            id = require.id;\n
+            id = window.require.id;\n
         }\n
     } else if (arguments.length == 1) {\n
         factory = id;\n
-        id = require.id;\n
+        deps = []\n
+        id = window.require.id;\n
     }\n
+\n
+    if (!deps.length)\n
+        deps = [\'require\', \'exports\', \'module\']\n
 \n
     if (id.indexOf("text!") === 0) \n
         return;\n
     \n
-    var req = function(deps, factory) {\n
-        return require(id, deps, factory);\n
+    var req = function(childId) {\n
+        return window.require(id, childId);\n
     };\n
 \n
-    require.modules[id] = {\n
+    window.require.modules[id] = {\n
+        exports: {},\n
         factory: function() {\n
-            var module = {\n
-                exports: {}\n
-            };\n
-            var returnExports = factory(req, module.exports, module);\n
+            var module = this;\n
+            var returnExports = factory.apply(this, deps.map(function(dep) {\n
+              switch(dep) {\n
+                  case \'require\': return req\n
+                  case \'exports\': return module.exports\n
+                  case \'module\':  return module\n
+                  default:        return req(dep)\n
+              }\n
+            }));\n
             if (returnExports)\n
                 module.exports = returnExports;\n
             return module;\n
         }\n
     };\n
 };\n
+window.define.amd = {}\n
 \n
 window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
     require.tlns = topLevelNamespaces;\n
@@ -155,8 +166,8 @@ window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
 \n
 window.initSender = function initSender() {\n
 \n
-    var EventEmitter = require("ace/lib/event_emitter").EventEmitter;\n
-    var oop = require("ace/lib/oop");\n
+    var EventEmitter = window.require("ace/lib/event_emitter").EventEmitter;\n
+    var oop = window.require("ace/lib/oop");\n
     \n
     var Sender = function() {};\n
     \n
@@ -207,158 +218,7 @@ window.onmessage = function(e) {\n
         sender._emit(msg.event, msg.data);\n
     }\n
 };\n
-})(this);\n
-\n
-define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-var EventEmitter = {};\n
-var stopPropagation = function() { this.propagationStopped = true; };\n
-var preventDefault = function() { this.defaultPrevented = true; };\n
-\n
-EventEmitter._emit =\n
-EventEmitter._dispatchEvent = function(eventName, e) {\n
-    this._eventRegistry || (this._eventRegistry = {});\n
-    this._defaultHandlers || (this._defaultHandlers = {});\n
-\n
-    var listeners = this._eventRegistry[eventName] || [];\n
-    var defaultHandler = this._defaultHandlers[eventName];\n
-    if (!listeners.length && !defaultHandler)\n
-        return;\n
-\n
-    if (typeof e != "object" || !e)\n
-        e = {};\n
-\n
-    if (!e.type)\n
-        e.type = eventName;\n
-    if (!e.stopPropagation)\n
-        e.stopPropagation = stopPropagation;\n
-    if (!e.preventDefault)\n
-        e.preventDefault = preventDefault;\n
-\n
-    for (var i=0; i<listeners.length; i++) {\n
-        listeners[i](e, this);\n
-        if (e.propagationStopped)\n
-            break;\n
-    }\n
-    \n
-    if (defaultHandler && !e.defaultPrevented)\n
-        return defaultHandler(e, this);\n
-};\n
-\n
-\n
-EventEmitter._signal = function(eventName, e) {\n
-    var listeners = (this._eventRegistry || {})[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    for (var i=0; i<listeners.length; i++)\n
-        listeners[i](e, this);\n
-};\n
-\n
-EventEmitter.once = function(eventName, callback) {\n
-    var _self = this;\n
-    callback && this.addEventListener(eventName, function newCallback() {\n
-        _self.removeEventListener(eventName, newCallback);\n
-        callback.apply(null, arguments);\n
-    });\n
-};\n
-\n
-\n
-EventEmitter.setDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        handlers = this._defaultHandlers = {_disabled_: {}};\n
-    \n
-    if (handlers[eventName]) {\n
-        var old = handlers[eventName];\n
-        var disabled = handlers._disabled_[eventName];\n
-        if (!disabled)\n
-            handlers._disabled_[eventName] = disabled = [];\n
-        disabled.push(old);\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1) \n
-            disabled.splice(i, 1);\n
-    }\n
-    handlers[eventName] = callback;\n
-};\n
-EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        return;\n
-    var disabled = handlers._disabled_[eventName];\n
-    \n
-    if (handlers[eventName] == callback) {\n
-        var old = handlers[eventName];\n
-        if (disabled)\n
-            this.setDefaultHandler(eventName, disabled.pop());\n
-    } else if (disabled) {\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1)\n
-            disabled.splice(i, 1);\n
-    }\n
-};\n
-\n
-EventEmitter.on =\n
-EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        listeners = this._eventRegistry[eventName] = [];\n
-\n
-    if (listeners.indexOf(callback) == -1)\n
-        listeners[capturing ? "unshift" : "push"](callback);\n
-    return callback;\n
-};\n
-\n
-EventEmitter.off =\n
-EventEmitter.removeListener =\n
-EventEmitter.removeEventListener = function(eventName, callback) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    var index = listeners.indexOf(callback);\n
-    if (index !== -1)\n
-        listeners.splice(index, 1);\n
-};\n
-\n
-EventEmitter.removeAllListeners = function(eventName) {\n
-    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
-};\n
-\n
-exports.EventEmitter = EventEmitter;\n
-\n
-});\n
-\n
-define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-exports.inherits = (function() {\n
-    var tempCtor = function() {};\n
-    return function(ctor, superCtor) {\n
-        tempCtor.prototype = superCtor.prototype;\n
-        ctor.super_ = superCtor.prototype;\n
-        ctor.prototype = new tempCtor();\n
-        ctor.prototype.constructor = ctor;\n
-    };\n
-}());\n
-\n
-exports.mixin = function(obj, mixin) {\n
-    for (var key in mixin) {\n
-        obj[key] = mixin[key];\n
-    }\n
-    return obj;\n
-};\n
-\n
-exports.implement = function(proto, mixin) {\n
-    exports.mixin(proto, mixin);\n
-};\n
-\n
-});\n
+})(this);// https://github.com/kriskowal/es5-shim\n
 \n
 define(\'ace/lib/es5-shim\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
 \n
@@ -1099,6 +959,32 @@ oop.inherits(PhpWorker, Mirror);\n
 }).call(PhpWorker.prototype);\n
 \n
 });\n
+\n
+define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+exports.inherits = (function() {\n
+    var tempCtor = function() {};\n
+    return function(ctor, superCtor) {\n
+        tempCtor.prototype = superCtor.prototype;\n
+        ctor.super_ = superCtor.prototype;\n
+        ctor.prototype = new tempCtor();\n
+        ctor.prototype.constructor = ctor;\n
+    };\n
+}());\n
+\n
+exports.mixin = function(obj, mixin) {\n
+    for (var key in mixin) {\n
+        obj[key] = mixin[key];\n
+    }\n
+    return obj;\n
+};\n
+\n
+exports.implement = function(proto, mixin) {\n
+    exports.mixin(proto, mixin);\n
+};\n
+\n
+});\n
 define(\'ace/worker/mirror\', [\'require\', \'exports\', \'module\' , \'ace/document\', \'ace/lib/lang\'], function(require, exports, module) {\n
 \n
 \n
@@ -1228,7 +1114,7 @@ var Document = function(text) {\n
     };\n
     this.getTextRange = function(range) {\n
         if (range.start.row == range.end.row) {\n
-            return this.$lines[range.start.row]\n
+            return this.getLine(range.start.row)\n
                 .substring(range.start.column, range.end.column);\n
         }\n
         var lines = this.getLines(range.start.row, range.end.row);\n
@@ -1339,6 +1225,8 @@ var Document = function(text) {\n
         return end;\n
     };\n
     this.remove = function(range) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         range.start = this.$clipPosition(range.start);\n
         range.end = this.$clipPosition(range.end);\n
 \n
@@ -1422,6 +1310,8 @@ var Document = function(text) {\n
         this._emit("change", { data: delta });\n
     };\n
     this.replace = function(range, text) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         if (text.length == 0 && range.isEmpty())\n
             return range.start;\n
         if (text == this.getTextRange(range))\n
@@ -1492,6 +1382,132 @@ var Document = function(text) {\n
 }).call(Document.prototype);\n
 \n
 exports.Document = Document;\n
+});\n
+\n
+define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+var EventEmitter = {};\n
+var stopPropagation = function() { this.propagationStopped = true; };\n
+var preventDefault = function() { this.defaultPrevented = true; };\n
+\n
+EventEmitter._emit =\n
+EventEmitter._dispatchEvent = function(eventName, e) {\n
+    this._eventRegistry || (this._eventRegistry = {});\n
+    this._defaultHandlers || (this._defaultHandlers = {});\n
+\n
+    var listeners = this._eventRegistry[eventName] || [];\n
+    var defaultHandler = this._defaultHandlers[eventName];\n
+    if (!listeners.length && !defaultHandler)\n
+        return;\n
+\n
+    if (typeof e != "object" || !e)\n
+        e = {};\n
+\n
+    if (!e.type)\n
+        e.type = eventName;\n
+    if (!e.stopPropagation)\n
+        e.stopPropagation = stopPropagation;\n
+    if (!e.preventDefault)\n
+        e.preventDefault = preventDefault;\n
+\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++) {\n
+        listeners[i](e, this);\n
+        if (e.propagationStopped)\n
+            break;\n
+    }\n
+    \n
+    if (defaultHandler && !e.defaultPrevented)\n
+        return defaultHandler(e, this);\n
+};\n
+\n
+\n
+EventEmitter._signal = function(eventName, e) {\n
+    var listeners = (this._eventRegistry || {})[eventName];\n
+    if (!listeners)\n
+        return;\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++)\n
+        listeners[i](e, this);\n
+};\n
+\n
+EventEmitter.once = function(eventName, callback) {\n
+    var _self = this;\n
+    callback && this.addEventListener(eventName, function newCallback() {\n
+        _self.removeEventListener(eventName, newCallback);\n
+        callback.apply(null, arguments);\n
+    });\n
+};\n
+\n
+\n
+EventEmitter.setDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        handlers = this._defaultHandlers = {_disabled_: {}};\n
+    \n
+    if (handlers[eventName]) {\n
+        var old = handlers[eventName];\n
+        var disabled = handlers._disabled_[eventName];\n
+        if (!disabled)\n
+            handlers._disabled_[eventName] = disabled = [];\n
+        disabled.push(old);\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1) \n
+            disabled.splice(i, 1);\n
+    }\n
+    handlers[eventName] = callback;\n
+};\n
+EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        return;\n
+    var disabled = handlers._disabled_[eventName];\n
+    \n
+    if (handlers[eventName] == callback) {\n
+        var old = handlers[eventName];\n
+        if (disabled)\n
+            this.setDefaultHandler(eventName, disabled.pop());\n
+    } else if (disabled) {\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1)\n
+            disabled.splice(i, 1);\n
+    }\n
+};\n
+\n
+EventEmitter.on =\n
+EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        listeners = this._eventRegistry[eventName] = [];\n
+\n
+    if (listeners.indexOf(callback) == -1)\n
+        listeners[capturing ? "unshift" : "push"](callback);\n
+    return callback;\n
+};\n
+\n
+EventEmitter.off =\n
+EventEmitter.removeListener =\n
+EventEmitter.removeEventListener = function(eventName, callback) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        return;\n
+\n
+    var index = listeners.indexOf(callback);\n
+    if (index !== -1)\n
+        listeners.splice(index, 1);\n
+};\n
+\n
+EventEmitter.removeAllListeners = function(eventName) {\n
+    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
+};\n
+\n
+exports.EventEmitter = EventEmitter;\n
+\n
 });\n
 \n
 define(\'ace/range\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
@@ -1740,29 +1756,25 @@ var oop = require("./lib/oop");\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
 \n
 var Anchor = exports.Anchor = function(doc, row, column) {\n
-    this.document = doc;\n
-\n
+    this.$onChange = this.onChange.bind(this);\n
+    this.attach(doc);\n
+    \n
     if (typeof column == "undefined")\n
         this.setPosition(row.row, row.column);\n
     else\n
         this.setPosition(row, column);\n
-\n
-    this.$onChange = this.onChange.bind(this);\n
-    doc.on("change", this.$onChange);\n
 };\n
 \n
 (function() {\n
 \n
     oop.implement(this, EventEmitter);\n
-\n
     this.getPosition = function() {\n
         return this.$clipPositionToDocument(this.row, this.column);\n
     };\n
-\n
     this.getDocument = function() {\n
         return this.document;\n
     };\n
-\n
+    this.$insertRight = false;\n
     this.onChange = function(e) {\n
         var delta = e.data;\n
         var range = delta.range;\n
@@ -1783,7 +1795,8 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         if (delta.action === "insertText") {\n
             if (start.row === row && start.column <= column) {\n
-                if (start.row === end.row) {\n
+                if (start.column === column && this.$insertRight) {\n
+                } else if (start.row === end.row) {\n
                     column += end.column - start.column;\n
                 } else {\n
                     column -= start.column;\n
@@ -1824,7 +1837,6 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         this.setPosition(row, column, true);\n
     };\n
-\n
     this.setPosition = function(row, column, noClip) {\n
         var pos;\n
         if (noClip) {\n
@@ -1851,9 +1863,12 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
             value: pos\n
         });\n
     };\n
-\n
     this.detach = function() {\n
         this.document.removeEventListener("change", this.$onChange);\n
+    };\n
+    this.attach = function(doc) {\n
+        this.document = doc || this.document;\n
+        this.document.on("change", this.$onChange);\n
     };\n
     this.$clipPositionToDocument = function(row, column) {\n
         var pos = {};\n
@@ -2067,8 +2082,6 @@ var PHP = {Constants:{}};\n
 \n
 \n
 \n
-\n
-\n
 PHP.Constants.T_INCLUDE = 262;\n
 PHP.Constants.T_INCLUDE_ONCE = 261;\n
 PHP.Constants.T_EVAL = 260;\n
@@ -2165,6 +2178,7 @@ PHP.Constants.T_ISSET = 350;\n
 PHP.Constants.T_EMPTY = 351;\n
 PHP.Constants.T_HALT_COMPILER = 352;\n
 PHP.Constants.T_CLASS = 353;\n
+PHP.Constants.T_TRAIT = 382;\n
 PHP.Constants.T_INTERFACE = 354;\n
 PHP.Constants.T_EXTENDS = 355;\n
 PHP.Constants.T_IMPLEMENTS = 356;\n
@@ -2212,6 +2226,10 @@ PHP.Lexer = function( src, ini ) {\n
     openTag = (ini === undefined || (/^(on|true|1)$/i.test(ini.short_open_tag) ) ? /(\\<\\?php\\s|\\<\\?|\\<\\%|\\<script language\\=(\'|")?php(\'|")?\\>)/i : /(\\<\\?php\\s|<\\?=|\\<script language\\=(\'|")?php(\'|")?\\>)/i),\n
         openTagStart = (ini === undefined || (/^(on|true|1)$/i.test(ini.short_open_tag)) ? /^(\\<\\?php\\s|\\<\\?|\\<\\%|\\<script language\\=(\'|")?php(\'|")?\\>)/i : /^(\\<\\?php\\s|<\\?=|\\<script language\\=(\'|")?php(\'|")?\\>)/i),\n
             tokens = [\n
+            {\n
+                value: PHP.Constants.T_NAMESPACE,\n
+                re: /^namespace(?=\\s)/i\n
+            },\n
             {\n
                 value: PHP.Constants.T_USE,\n
                 re: /^use(?=\\s)/i\n
@@ -2506,6 +2524,10 @@ PHP.Lexer = function( src, ini ) {\n
                 afterWhitespace: true\n
             },\n
             {\n
+                value: PHP.Constants.T_TRAIT,\n
+                re: /^trait(?=[\\s]+[A-Za-z])/i,\n
+            },\n
+            {\n
                 value: PHP.Constants.T_PUBLIC,\n
                 re: /^public(?=[\\s])/i\n
             },\n
@@ -2716,7 +2738,7 @@ PHP.Lexer = function( src, ini ) {\n
 \n
                                 result = result.substring( match[ 0 ].length );\n
 \n
-                                match = result.match(/^(\\-\\>)([a-zA-Z0-9_\\x7f-\\xff]*)/);\n
+                                match = result.match(/^(\\-\\>)\\s*([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)\\s*(\\()/);\n
 \n
                                 if ( match !== null ) {\n
 \n
@@ -2730,6 +2752,9 @@ PHP.Lexer = function( src, ini ) {\n
                                         match[ 2 ],\n
                                         line\n
                                         ]);\n
+                                    if (match[3]) {\n
+                                        results.push(match[3]);\n
+                                    }\n
                                     result = result.substring( match[ 0 ].length );\n
                                 }\n
 \n
@@ -2741,9 +2766,9 @@ PHP.Lexer = function( src, ini ) {\n
 \n
                             var re;\n
                             if ( curlyOpen > 0) {\n
-                                re = /^([^\\\\\\$"{}\\]]|\\\\.)+/g;\n
+                                re = /^([^\\\\\\$"{}\\]\\)]|\\\\.)+/g;\n
                             } else {\n
-                                re = /^([^\\\\\\$"{]|\\\\.|{[^\\$])+/g;\n
+                                re = /^([^\\\\\\$"{]|\\\\.|{[^\\$]|\\$(?=[^a-zA-Z_\\x7f-\\xff]))+/g;;\n
                             }\n
 \n
                             while(( match = result.match( re )) !== null ) {\n
@@ -2757,7 +2782,7 @@ PHP.Lexer = function( src, ini ) {\n
 \n
                                 results.push([\n
                                     parseInt(( curlyOpen > 0 ) ? PHP.Constants.T_CONSTANT_ENCAPSED_STRING : PHP.Constants.T_ENCAPSED_AND_WHITESPACE, 10),\n
-                                    match[ 0 ],\n
+                                    match[ 0 ].replace(/\\n/g,"\\\\n").replace(/\\r/g,""),\n
                                     line\n
                                     ]);\n
 \n
@@ -2788,9 +2813,15 @@ PHP.Lexer = function( src, ini ) {\n
 \n
                         return undefined;\n
 \n
+                    } else {\n
+                        result = result.replace(/\\r/g,"");\n
                     }\n
                     return result;\n
                 }\n
+            },\n
+            {\n
+                value: PHP.Constants.T_NS_SEPARATOR,\n
+                re: /^\\\\(?=[a-zA-Z_])/\n
             },\n
             {\n
                 value: PHP.Constants.T_STRING,\n
@@ -2826,7 +2857,7 @@ PHP.Lexer = function( src, ini ) {\n
 \n
                     if ( heredoc !== undefined ) {\n
 \n
-                        var regexp = new RegExp(\'([\\\\S\\\\s]*)(\\\\r\\\\n|\\\\n|\\\\r)(\' + heredoc + \')(;|\\\\r\\\\n|\\\\n)\',"i");\n
+                        var regexp = new RegExp(\'([\\\\S\\\\s]*?)(\\\\r\\\\n|\\\\n|\\\\r)(\' + heredoc + \')(;|\\\\r\\\\n|\\\\n)\',"i");\n
 \n
 \n
 \n
@@ -3134,9 +3165,13 @@ PHP.Parser.prototype.getNextToken = function( ) {\n
         if (typeof token === "string") {\n
             this.startAttributes[\'startLine\'] = this.line;\n
             this.endAttributes[\'endLine\'] = this.line;\n
-\n
-            this.tokenValue = token;\n
-            return token.charCodeAt(0);\n
+            if (\'b"\' === token) {\n
+                this.tokenValue = \'b"\';\n
+                return \'"\'.charCodeAt(0);\n
+            } else {\n
+                this.tokenValue = token;\n
+                return token.charCodeAt(0);\n
+            }\n
         } else {\n
 \n
 \n
@@ -3175,7 +3210,30 @@ PHP.Parser.prototype.tokenName = function( token ) {\n
     var constants = ["T_INCLUDE","T_INCLUDE_ONCE","T_EVAL","T_REQUIRE","T_REQUIRE_ONCE","T_LOGICAL_OR","T_LOGICAL_XOR","T_LOGICAL_AND","T_PRINT","T_PLUS_EQUAL","T_MINUS_EQUAL","T_MUL_EQUAL","T_DIV_EQUAL","T_CONCAT_EQUAL","T_MOD_EQUAL","T_AND_EQUAL","T_OR_EQUAL","T_XOR_EQUAL","T_SL_EQUAL","T_SR_EQUAL","T_BOOLEAN_OR","T_BOOLEAN_AND","T_IS_EQUAL","T_IS_NOT_EQUAL","T_IS_IDENTICAL","T_IS_NOT_IDENTICAL","T_IS_SMALLER_OR_EQUAL","T_IS_GREATER_OR_EQUAL","T_SL","T_SR","T_INSTANCEOF","T_INC","T_DEC","T_INT_CAST","T_DOUBLE_CAST","T_STRING_CAST","T_ARRAY_CAST","T_OBJECT_CAST","T_BOOL_CAST","T_UNSET_CAST","T_NEW","T_CLONE","T_EXIT","T_IF","T_ELSEIF","T_ELSE","T_ENDIF","T_LNUMBER","T_DNUMBER","T_STRING","T_STRING_VARNAME","T_VARIABLE","T_NUM_STRING","T_INLINE_HTML","T_CHARACTER","T_BAD_CHARACTER","T_ENCAPSED_AND_WHITESPACE","T_CONSTANT_ENCAPSED_STRING","T_ECHO","T_DO","T_WHILE","T_ENDWHILE","T_FOR","T_ENDFOR","T_FOREACH","T_ENDFOREACH","T_DECLARE","T_ENDDECLARE","T_AS","T_SWITCH","T_ENDSWITCH","T_CASE","T_DEFAULT","T_BREAK","T_CONTINUE","T_GOTO","T_FUNCTION","T_CONST","T_RETURN","T_TRY","T_CATCH","T_THROW","T_USE","T_INSTEADOF","T_GLOBAL","T_STATIC","T_ABSTRACT","T_FINAL","T_PRIVATE","T_PROTECTED","T_PUBLIC","T_VAR","T_UNSET","T_ISSET","T_EMPTY","T_HALT_COMPILER","T_CLASS","T_TRAIT","T_INTERFACE","T_EXTENDS","T_IMPLEMENTS","T_OBJECT_OPERATOR","T_DOUBLE_ARROW","T_LIST","T_ARRAY","T_CALLABLE","T_CLASS_C","T_TRAIT_C","T_METHOD_C","T_FUNC_C","T_LINE","T_FILE","T_COMMENT","T_DOC_COMMENT","T_OPEN_TAG","T_OPEN_TAG_WITH_ECHO","T_CLOSE_TAG","T_WHITESPACE","T_START_HEREDOC","T_END_HEREDOC","T_DOLLAR_OPEN_CURLY_BRACES","T_CURLY_OPEN","T_PAAMAYIM_NEKUDOTAYIM","T_DOUBLE_COLON","T_NAMESPACE","T_NS_C","T_DIR","T_NS_SEPARATOR"];\n
     var current = "UNKNOWN";\n
     constants.some(function( constant ) {\n
-        if (PHP.Constants[ constant ] === token) {\n
+        if (PHP.Constants[ constan
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+t ] === token) {\n
             current = constant;\n
             return true;\n
         } else {\n
@@ -3198,12 +3256,77 @@ PHP.Parser.prototype.createTokenMap = function() {\n
             tokenMap[ i ] = PHP.Constants.T_ECHO;\n
         } else if( PHP.Constants.T_CLOSE_TAG === i ) {\n
             tokenMap[ i ] = 59;\n
-        } else if ( \'UNKNOWN\' !== (name = this.tokenName( i ) ) ) {\n
-\n
+        } else if ( \'UNKNOWN\' !== (name = this.tokenName( i ) ) ) { \n
             tokenMap[ i ] =  this[name];\n
         }\n
     }\n
     return tokenMap;\n
+};\n
+\n
+var yynStandard = function () {\n
+    this.yyval =  this.yyastk[ this.stackPos-(1-1) ];\n
+};\n
+\n
+PHP.Parser.prototype.MakeArray = function( arr ) {\n
+    return Array.isArray( arr ) ? arr : [ arr ];\n
+}\n
+\n
+\n
+PHP.Parser.prototype.parseString = function( str ) {\n
+    var bLength = 0;\n
+    if (\'b\' === str[0]) {\n
+        bLength = 1;\n
+    }\n
+\n
+    if (\'\\\'\' === str[ bLength ]) {\n
+        str = str.replace(\n
+            [\'\\\\\\\\\', \'\\\\\\\'\'],\n
+            [  \'\\\\\',   \'\\\'\']);\n
+    } else {\n
+\n
+        str = this.parseEscapeSequences( str, \'"\');\n
+\n
+    }\n
+\n
+    return str;\n
+\n
+};\n
+\n
+PHP.Parser.prototype.parseEscapeSequences = function( str, quote ) {\n
+\n
+\n
+\n
+    if (undefined !== quote) {\n
+        str = str.replace(new RegExp(\'\\\\\' + quote, "g"), quote);\n
+    }\n
+\n
+    var replacements = {\n
+        \'\\\\\': \'\\\\\',\n
+        \'$\':  \'$\',\n
+        \'n\': "\\n",\n
+        \'r\': "\\r",\n
+        \'t\': "\\t",\n
+        \'f\': "\\f",\n
+        \'v\': "\\v",\n
+        \'e\': "\\x1B"\n
+    };\n
+\n
+    return str.replace(\n
+        /~\\\\\\\\([\\\\\\\\$nrtfve]|[xX][0-9a-fA-F]{1,2}|[0-7]{1,3})~/g,\n
+        function ( matches ){\n
+            var str = matches[1];\n
+\n
+            if ( replacements[ str ] !== undefined ) {\n
+                return replacements[ str ];\n
+            } else if (\'x\' === str[ 0 ] || \'X\' === str[ 0 ]) {\n
+                return chr(hexdec(str));\n
+            } else {\n
+                return chr(octdec(str));\n
+            }\n
+        }\n
+        );\n
+\n
+    return str;\n
 };\n
 \n
 PHP.Parser.prototype.TOKEN_NONE    = -1;\n
@@ -4574,7 +4697,28 @@ PHP.Parser.prototype.yyn121 = function ( attributes ) {\n
 \n
 PHP.Parser.prototype.yyn122 = function ( attributes ) {\n
      this.yyval = []; \n
-};\n
+};
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
 \n
 PHP.Parser.prototype.yyn123 = function ( attributes ) {\n
      this.yyval = [this.yyastk[ this.stackPos-(1-1) ]]; \n
@@ -5677,6 +5821,63 @@ PHP.Parser.prototype.Stmt_Class_verifyModifier = function() {\n
 \n
 };\n
 \n
+PHP.Parser.prototype.Node_Stmt_Namespace = function() {\n
+    return {\n
+        type: "Node_Stmt_Namespace",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_Use = function() {\n
+    return {\n
+        type: "Node_Stmt_Use",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_UseUse = function() {\n
+    return {\n
+        type: "Node_Stmt_UseUse",\n
+        name: arguments[ 0 ],\n
+        as: arguments[1],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_TraitUseAdaptation_Precedence = function() {\n
+    return {\n
+        type: "Node_Stmt_TraitUseAdaptation_Precedence",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_TraitUseAdaptation_Alias = function() {\n
+    return {\n
+        type: "Node_Stmt_TraitUseAdaptation_Alias",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_Trait = function() {\n
+    return {\n
+        type: "Node_Stmt_Trait",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Stmt_TraitUse = function() {\n
+    return {\n
+        type: "Node_Stmt_TraitUse",\n
+        name: arguments[ 0 ],\n
+        attributes: arguments[ 2 ]\n
+    };  \n
+};\n
+\n
 PHP.Parser.prototype.Node_Stmt_Class = function() {\n
     return {\n
         type: "Node_Stmt_Class",\n
@@ -6704,6 +6905,26 @@ PHP.Parser.prototype.Node_Name = function() {\n
   \n
 };\n
 \n
+PHP.Parser.prototype.Node_Name_FullyQualified = function() {\n
+   \n
+    return {\n
+        type: "Node_Name_FullyQualified",\n
+        parts: arguments[ 0 ],\n
+        attributes: arguments[ 1 ]\n
+    };  \n
+  \n
+};\n
+\n
+PHP.Parser.prototype.Node_Name_Relative = function() {\n
+   \n
+    return {\n
+        type: "Node_Name_Relative",\n
+        parts: arguments[ 0 ],\n
+        attributes: arguments[ 1 ]\n
+    };  \n
+  \n
+};\n
+\n
 PHP.Parser.prototype.Node_Param = function() {\n
    \n
     return {\n
@@ -6728,7 +6949,6 @@ PHP.Parser.prototype.Node_Arg = function() {\n
   \n
 };\n
 \n
-\n
 PHP.Parser.prototype.Node_Const = function() {\n
    \n
     return {\n
@@ -6743,9 +6963,13 @@ PHP.Parser.prototype.Node_Const = function() {\n
 \n
 exports.PHP = PHP;\n
 });\n
-
-
-]]></string> </value>
+</string> </value>
+        </item>
+        <item>
+            <key> <string>next</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>

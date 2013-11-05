@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155553.0</string> </value>
+            <value> <string>ts83646622.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -59,17 +59,17 @@ Mode.prototype.supportsFile = function(filename) {\n
 };\n
 var supportedModes = {\n
     ABAP:        ["abap"],\n
-    ADA:         ["ada|adb"],\n
     ActionScript:["as"],\n
+    ADA:         ["ada|adb"],\n
     AsciiDoc:    ["asciidoc"],\n
     Assembly_x86:["asm"],\n
     AutoHotKey:  ["ahk"],\n
     BatchFile:   ["bat|cmd"],\n
     C9Search:    ["c9search_results"],\n
-    C_Cpp:       ["c|cc|cpp|cxx|h|hh|hpp"],\n
+    C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp"],\n
     Clojure:     ["clj"],\n
-    Cobol:       ["^CBL|COB"],\n
-    coffee:      ["^Cakefile|coffee|cf|cson"],\n
+    Cobol:       ["CBL|COB"],\n
+    coffee:      ["coffee|cf|cson|^Cakefile"],\n
     ColdFusion:  ["cfm"],\n
     CSharp:      ["cs"],\n
     CSS:         ["css"],\n
@@ -81,25 +81,27 @@ var supportedModes = {\n
     Erlang:      ["erl|hrl"],\n
     EJS:         ["ejs"],\n
     Forth:       ["frt|fs|ldr"],\n
-    FreeMarker:  ["ftl"],\n
+    FTL:         ["ftl"],\n
     Glsl:        ["glsl|frag|vert"],\n
     golang:      ["go"],\n
     Groovy:      ["groovy"],\n
     HAML:        ["haml"],\n
+    Handlebars:  ["hbs|handlebars|tpl|mustache"],\n
     Haskell:     ["hs"],\n
     haXe:        ["hx"],\n
-    HTML:        ["htm|html|xhtml"],\n
+    HTML:        ["html|htm|xhtml"],\n
     HTML_Ruby:   ["erb|rhtml|html.erb"],\n
-    Ini:         ["Ini|conf"],\n
+    INI:         ["ini|conf|cfg|prefs"],\n
+    Jack:        ["jack"],\n
     Jade:        ["jade"],\n
     Java:        ["java"],\n
-    JavaScript:  ["js"],\n
+    JavaScript:  ["js|jsm"],\n
     JSON:        ["json"],\n
     JSONiq:      ["jq"],\n
     JSP:         ["jsp"],\n
     JSX:         ["jsx"],\n
     Julia:       ["jl"],\n
-    LaTeX:       ["latex|tex|ltx|bib"],\n
+    LaTeX:       ["tex|latex|ltx|bib"],\n
     LESS:        ["less"],\n
     Liquid:      ["liquid"],\n
     Lisp:        ["lisp"],\n
@@ -109,11 +111,12 @@ var supportedModes = {\n
     Lua:         ["lua"],\n
     LuaPage:     ["lp"],\n
     Lucene:      ["lucene"],\n
-    Makefile:    ["^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],\n
+    Makefile:    ["^Makefile|^GNUmakefile|^makefile|^OCamlMakefile|make"],\n
     MATLAB:      ["matlab"],\n
     Markdown:    ["md|markdown"],\n
     MySQL:       ["mysql"],\n
     MUSHCode:    ["mc|mush"],\n
+    Nix:         ["nix"],\n
     ObjectiveC:  ["m|mm"],\n
     OCaml:       ["ml|mli"],\n
     Pascal:      ["pas|p"],\n
@@ -123,19 +126,23 @@ var supportedModes = {\n
     Powershell:  ["ps1"],\n
     Prolog:      ["plg|prolog"],\n
     Properties:  ["properties"],\n
+    Protobuf:    ["proto"],\n
     Python:      ["py"],\n
     R:           ["r"],\n
     RDoc:        ["Rd"],\n
     RHTML:       ["Rhtml"],\n
-    Ruby:        ["ru|gemspec|rake|rb"],\n
+    Ruby:        ["rb|ru|gemspec|rake|^Guardfile|^Rakefile|^Gemfile"],\n
     Rust:        ["rs"],\n
     SASS:        ["sass"],\n
     SCAD:        ["scad"],\n
     Scala:       ["scala"],\n
     Scheme:      ["scm|rkt"],\n
     SCSS:        ["scss"],\n
-    SH:          ["sh|bash"],\n
+    SH:          ["sh|bash|^.bashrc"],\n
+    SJS:         ["sjs"],\n
+    Space:       ["space"],\n
     snippets:    ["snippets"],\n
+    Soy_Template:["soy"],\n
     SQL:         ["sql"],\n
     Stylus:      ["styl|stylus"],\n
     SVG:         ["svg"],\n
@@ -145,12 +152,13 @@ var supportedModes = {\n
     Textile:     ["textile"],\n
     Toml:        ["toml"],\n
     Twig:        ["twig"],\n
-    Typescript:  ["typescript|ts|str"],\n
+    Typescript:  ["ts|typescript|str"],\n
     VBScript:    ["vbs"],\n
     Velocity:    ["vm"],\n
+    Verilog:     ["v|vh|sv|svh"],\n
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],\n
     XQuery:      ["xq"],\n
-    YAML:        ["yaml"]\n
+    YAML:        ["yaml|yml"]\n
 };\n
 \n
 var nameOverrides = {\n
@@ -159,7 +167,8 @@ var nameOverrides = {\n
     golang: "Go",\n
     C_Cpp: "C/C++",\n
     coffee: "CoffeeScript",\n
-    HTML_Ruby: "HTML (Ruby)"\n
+    HTML_Ruby: "HTML (Ruby)",\n
+    FTL: "FreeMarker"\n
 };\n
 var modesByName = {};\n
 for (var name in supportedModes) {\n
@@ -189,7 +198,7 @@ module.exports = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4320</int> </value>
+            <value> <int>4644</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

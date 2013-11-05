@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155566.99</string> </value>
+            <value> <string>ts83646620.83</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,11 +70,7 @@ background-color: #FFFFFF;\\\n
 color: rgb(64, 64, 64);\\\n
 }\\\n
 .ace-crimson-editor .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
-}\\\n
-.ace-crimson-editor .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-crimson-editor .ace_invisible {\\\n
 color: rgb(191, 191, 191);\\\n
@@ -180,7 +176,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4924</int> </value>
+            <value> <int>4795</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

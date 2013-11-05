@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155564.21</string> </value>
+            <value> <string>ts83646621.21</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var SqlHighlightRules = require("./sql_highlight_rules").SqlHighlightRules;\n
 var Range = require("../range").Range;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new SqlHighlightRules().getRules());\n
+    this.HighlightRules = SqlHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -150,7 +150,7 @@ exports.SqlHighlightRules = SqlHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4202</int> </value>
+            <value> <int>4174</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

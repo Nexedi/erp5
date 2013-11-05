@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155564.07</string> </value>
+            <value> <string>ts83646621.22</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -108,7 +108,7 @@ var SnippetGroupHighlightRules = function() {\n
 \t\t{onMatch: function(value, state, stack) {\n
 \t\t\tstack.splice(stack.length);\n
 \t\t\treturn this.tokenName;\n
-\t\t}, tokenName: "text", regex: "^(?!\\t)", next: "start"},\n
+\t\t}, tokenName: "text", regex: "^(?!\\t)", next: "start"}\n
 \t])\n
 \t\n
 };\n
@@ -120,16 +120,13 @@ exports.SnippetGroupHighlightRules = SnippetGroupHighlightRules;\n
 var FoldMode = require("./folding/coffee").FoldMode;\n
 \n
 var Mode = function() {\n
-    var highlighter = new SnippetGroupHighlightRules();\n
+    this.HighlightRules = SnippetGroupHighlightRules;\n
     this.foldingRules = new FoldMode();\n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
 (function() {\n
-    this.getNextLineIndent = function(state, line, tab) {\n
-        return this.$getIndent(line);\n
-    };\n
+    this.$indentWithTabs = true;\n
 }).call(Mode.prototype);\n
 exports.Mode = Mode;\n
 \n
@@ -232,7 +229,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6849</int> </value>
+            <value> <int>6715</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

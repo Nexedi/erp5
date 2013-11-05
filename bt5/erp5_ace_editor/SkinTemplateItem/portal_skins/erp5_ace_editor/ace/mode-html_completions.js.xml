@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts83646620.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mode-html_completions.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Distributed under the BSD license:\n
+ *\n
+ * Copyright (c) 2010, Ajax.org B.V.\n
+ * All rights reserved.\n
+ * \n
+ * Redistribution and use in source and binary forms, with or without\n
+ * modification, are permitted provided that the following conditions are met:\n
+ *     * Redistributions of source code must retain the above copyright\n
+ *       notice, this list of conditions and the following disclaimer.\n
+ *     * Redistributions in binary form must reproduce the above copyright\n
+ *       notice, this list of conditions and the following disclaimer in the\n
+ *       documentation and/or other materials provided with the distribution.\n
+ *     * Neither the name of Ajax.org B.V. nor the\n
+ *       names of its contributors may be used to endorse or promote products\n
+ *       derived from this software without specific prior written permission.\n
+ * \n
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND\n
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY\n
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/html_completions\', [\'require\', \'exports\', \'module\' , \'ace/token_iterator\'], function(require, exports, module) {\n
+\n
+\n
+var TokenIterator = require("../token_iterator").TokenIterator;\n
+\n
+var commonAttributes = [\n
+    "accesskey",\n
+    "class",\n
+    "contenteditable",\n
+    "contextmenu",\n
+    "dir",\n
+    "draggable",\n
+    "dropzone",\n
+    "hidden",\n
+    "id",\n
+    "lang",\n
+    "spellcheck",\n
+    "style",\n
+    "tabindex",\n
+    "title",\n
+    "translate"\n
+];\n
+\n
+var eventAttributes = [\n
+    "onabort",\n
+    "onblur",\n
+    "oncancel",\n
+    "oncanplay",\n
+    "oncanplaythrough",\n
+    "onchange",\n
+    "onclick",\n
+    "onclose",\n
+    "oncontextmenu",\n
+    "oncuechange",\n
+    "ondblclick",\n
+    "ondrag",\n
+    "ondragend",\n
+    "ondragenter",\n
+    "ondragleave",\n
+    "ondragover",\n
+    "ondragstart",\n
+    "ondrop",\n
+    "ondurationchange",\n
+    "onemptied",\n
+    "onended",\n
+    "onerror",\n
+    "onfocus",\n
+    "oninput",\n
+    "oninvalid",\n
+    "onkeydown",\n
+    "onkeypress",\n
+    "onkeyup",\n
+    "onload",\n
+    "onloadeddata",\n
+    "onloadedmetadata",\n
+    "onloadstart",\n
+    "onmousedown",\n
+    "onmousemove",\n
+    "onmouseout",\n
+    "onmouseover",\n
+    "onmouseup",\n
+    "onmousewheel",\n
+    "onpause",\n
+    "onplay",\n
+    "onplaying",\n
+    "onprogress",\n
+    "onratechange",\n
+    "onreset",\n
+    "onscroll",\n
+    "onseeked",\n
+    "onseeking",\n
+    "onselect",\n
+    "onshow",\n
+    "onstalled",\n
+    "onsubmit",\n
+    "onsuspend",\n
+    "ontimeupdate",\n
+    "onvolumechange",\n
+    "onwaiting"\n
+];\n
+\n
+var globalAttributes = commonAttributes.concat(eventAttributes);\n
+\n
+var attributeMap = {\n
+    "html": ["manifest"],\n
+    "head": [],\n
+    "title": [],\n
+    "base": ["href", "target"],\n
+    "link": ["href", "hreflang", "rel", "media", "type", "sizes"],\n
+    "meta": ["http-equiv", "name", "content", "charset"],\n
+    "style": ["type", "media", "scoped"],\n
+    "script": ["charset", "type", "src", "defer", "async"],\n
+    "noscript": ["href"],\n
+    "body": ["onafterprint", "onbeforeprint", "onbeforeunload", "onhashchange", "onmessage", "onoffline", "onpopstate", "onredo", "onresize", "onstorage", "onundo", "onunload"],\n
+    "section": [],\n
+    "nav": [],\n
+    "article": ["pubdate"],\n
+    "aside": [],\n
+    "h1": [],\n
+    "h2": [],\n
+    "h3": [],\n
+    "h4": [],\n
+    "h5": [],\n
+    "h6": [],\n
+    "header": [],\n
+    "footer": [],\n
+    "address": [],\n
+    "main": [],\n
+    "p": [],\n
+    "hr": [],\n
+    "pre": [],\n
+    "blockquote": ["cite"],\n
+    "ol": ["start", "reversed"],\n
+    "ul": [],\n
+    "li": ["value"],\n
+    "dl": [],\n
+    "dt": [],\n
+    "dd": [],\n
+    "figure": [],\n
+    "figcaption": [],\n
+    "div": [],\n
+    "a": ["href", "target", "ping", "rel", "media", "hreflang", "type"],\n
+    "em": [],\n
+    "strong": [],\n
+    "small": [],\n
+    "s": [],\n
+    "cite": [],\n
+    "q": ["cite"],\n
+    "dfn": [],\n
+    "abbr": [],\n
+    "data": [],\n
+    "time": ["datetime"],\n
+    "code": [],\n
+    "var": [],\n
+    "samp": [],\n
+    "kbd": [],\n
+    "sub": [],\n
+    "sup": [],\n
+    "i": [],\n
+    "b": [],\n
+    "u": [],\n
+    "mark": [],\n
+    "ruby": [],\n
+    "rt": [],\n
+    "rp": [],\n
+    "bdi": [],\n
+    "bdo": [],\n
+    "span": [],\n
+    "br": [],\n
+    "wbr": [],\n
+    "ins": ["cite", "datetime"],\n
+    "del": ["cite", "datetime"],\n
+    "img": ["alt", "src", "height", "width", "usemap", "ismap"],\n
+    "iframe": ["name", "src", "height", "width", "sandbox", "seamless"],\n
+    "embed": ["src", "height", "width", "type"],\n
+    "object": ["param", "data", "type", "height" , "width", "usemap", "name", "form", "classid"],\n
+    "param": ["name", "value"],\n
+    "video": ["src", "autobuffer", "autoplay", "loop", "controls", "width", "height", "poster"],\n
+    "audio": ["src", "autobuffer", "autoplay", "loop", "controls"],\n
+    "source": ["src", "type", "media"],\n
+    "track": ["kind", "src", "srclang", "label", "default"],\n
+    "canvas": ["width", "height"],\n
+    "map": ["name"],\n
+    "area": ["shape", "coords", "href", "hreflang", "alt", "target", "media", "rel", "ping", "type"],\n
+    "svg": [],\n
+    "math": [],\n
+    "table": ["summary"],\n
+    "caption": [],\n
+    "colgroup": ["span"],\n
+    "col": ["span"],\n
+    "tbody": [],\n
+    "thead": [],\n
+    "tfoot": [],\n
+    "tr": [],\n
+    "td": ["headers", "rowspan", "colspan"],\n
+    "th": ["headers", "rowspan", "colspan", "scope"],\n
+    "form": ["accept-charset", "action", "autocomplete", "enctype", "method", "name", "novalidate", "target"],\n
+    "fieldset": ["disabled", "form", "name"],\n
+    "legend": [],\n
+    "label": ["form", "for"],\n
+    "input": ["type", "accept", "alt", "autocomplete", "checked", "disabled", "form", "formaction", "formenctype", "formmethod", "formnovalidate", "formtarget", "height", "list", "max", "maxlength", "min", "multiple", "pattern", "placeholder", "readonly", "required", "size", "src", "step", "width", "files", "value"],\n
+    "button": ["autofocus", "disabled", "form", "formaction", "formenctype", "formmethod", "formnovalidate", "formtarget", "name", "value", "type"],\n
+    "select": ["autofocus", "disabled", "form", "multiple", "name", "size"],\n
+    "datalist": [],\n
+    "optgroup": ["disabled", "label"],\n
+    "option": ["disabled", "selected", "label", "value"],\n
+    "textarea": ["autofocus", "disabled", "form", "maxlength", "name", "placeholder", "readonly", "required", "rows", "cols", "wrap"],\n
+    "keygen": ["autofocus", "challenge", "disabled", "form", "keytype", "name"],\n
+    "output": ["for", "form", "name"],\n
+    "progress": ["value", "max"],\n
+    "meter": ["value", "min", "max", "low", "high", "optimum"],\n
+    "details": ["open"],\n
+    "summary": [],\n
+    "command": ["type", "label", "icon", "disabled", "checked", "radiogroup", "command"],\n
+    "menu": ["type", "label"],\n
+    "dialog": ["open"]\n
+};\n
+\n
+var allElements = Object.keys(attributeMap);\n
+\n
+function hasType(token, type) {\n
+    var tokenTypes = token.type.split(\'.\');\n
+    return type.split(\'.\').every(function(type){\n
+        return (tokenTypes.indexOf(type) !== -1);\n
+    });\n
+}\n
+\n
+function findTagName(session, pos) {\n
+    var iterator = new TokenIterator(session, pos.row, pos.column);\n
+    var token = iterator.getCurrentToken();\n
+    if (!token || !hasType(token, \'tag\') && !(hasType(token, \'text\') && token.value.match(\'/\'))){\n
+        do {\n
+            token = iterator.stepBackward();\n
+        } while (token && (hasType(token, \'string\') || hasType(token, \'operator\') || hasType(token, \'attribute-name\') || hasType(token, \'text\')));\n
+    }\n
+    if (token && hasType(token, \'tag-name\') && !iterator.stepBackward().value.match(\'/\'))\n
+        return token.value;\n
+}\n
+\n
+var HtmlCompletions = function() {\n
+\n
+};\n
+\n
+(function() {\n
+\n
+    this.getCompletions = function(state, session, pos, prefix) {\n
+        var token = session.getTokenAt(pos.row, pos.column);\n
+\n
+        if (!token)\n
+            return [];\n
+        if (hasType(token, "tag-name") || (token.value == \'<\' && hasType(token, "text")))\n
+            return this.getTagCompletions(state, session, pos, prefix);\n
+        if (hasType(token, \'text\') || hasType(token, \'attribute-name\'))\n
+            return this.getAttributeCompetions(state, session, pos, prefix);\n
+\n
+        return [];\n
+    };\n
+\n
+    this.getTagCompletions = function(state, session, pos, prefix) {\n
+        var elements = allElements;\n
+        if (prefix) {\n
+            elements = elements.filter(function(element){\n
+                return element.indexOf(prefix) === 0;\n
+            });\n
+        }\n
+        return elements.map(function(element){\n
+            return {\n
+                value: element,\n
+                meta: "tag"\n
+            };\n
+        });\n
+    };\n
+\n
+    this.getAttributeCompetions = function(state, session, pos, prefix) {\n
+        var tagName = findTagName(session, pos);\n
+        if (!tagName)\n
+            return [];\n
+        var attributes = globalAttributes;\n
+        if (tagName in attributeMap) {\n
+            attributes = attributes.concat(attributeMap[tagName]);\n
+        }\n
+        if (prefix) {\n
+            attributes = attributes.filter(function(attribute){\n
+                return attribute.indexOf(prefix) === 0;\n
+            });\n
+        }\n
+        return attributes.map(function(attribute){\n
+            return {\n
+                caption: attribute,\n
+                snippet: attribute + \'="$0"\',\n
+                meta: "attribute"\n
+            };\n
+        });\n
+    };\n
+\n
+}).call(HtmlCompletions.prototype);\n
+\n
+exports.HtmlCompletions = HtmlCompletions;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9812</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

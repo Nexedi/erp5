@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155554.14</string> </value>
+            <value> <string>ts83646622.56</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -82,7 +82,7 @@ exports.$detectIndentation = function(lines, fallback) {\n
         prevSpaces = spaces;\n
         while (line[line.length - 1] == "\\\\")\n
             line = lines[i++];\n
-    };\n
+    }\n
 \n
     function getScore(indent) {\n
         var score = 0;\n
@@ -132,15 +132,17 @@ exports.detectIndentation = function(session) {\n
     return indent;\n
 };\n
 \n
-exports.trimTrailingSpace = function(session) {\n
+exports.trimTrailingSpace = function(session, trimEmpty) {\n
     var doc = session.getDocument();\n
     var lines = doc.getAllLines();\n
+    \n
+    var min = trimEmpty ? -1 : 0;\n
 \n
     for (var i = 0, l=lines.length; i < l; i++) {\n
         var line = lines[i];\n
         var index = line.search(/\\s+$/);\n
 \n
-        if (index !== -1)\n
+        if (index > min)\n
             doc.removeInLine(i, index, line.length);\n
     }\n
 };\n
@@ -179,14 +181,14 @@ exports.convertIndentation = function(session, ch, len) {\n
 };\n
 \n
 exports.$parseStringArg = function(text) {\n
-    var indent = {}\n
+    var indent = {};\n
     if (/t/.test(text))\n
         indent.ch = "\\t";\n
     else if (/s/.test(text))\n
         indent.ch = " ";\n
     var m = text.match(/\\d+/);\n
     if (m)\n
-        indent.length = parseInt(m[0]);\n
+        indent.length = parseInt(m[0], 10);\n
     return indent;\n
 };\n
 \n
@@ -198,7 +200,7 @@ exports.$parseArg = function(arg) {\n
     if (typeof arg.text == "string")\n
         return exports.$parseStringArg(arg.text);\n
     return arg;\n
-}\n
+};\n
 \n
 exports.commands = [{\n
     name: "detectIndentation",\n
@@ -214,7 +216,7 @@ exports.commands = [{\n
     name: "convertIndentation",\n
     exec: function(editor, arg) {\n
         var indent = exports.$parseArg(arg);\n
-        exports.convertIndentation(editor.session, arg.ch, arg.length);\n
+        exports.convertIndentation(editor.session, indent.ch, indent.length);\n
     }\n
 }, {\n
     name: "setIndentation",\n
@@ -223,7 +225,7 @@ exports.commands = [{\n
         indent.length && editor.session.setTabSize(indent.length);\n
         indent.ch && editor.session.setUseSoftTabs(indent.ch == " ");\n
     }\n
-}]\n
+}];\n
 \n
 });\n
 
@@ -236,7 +238,7 @@ exports.commands = [{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6632</int> </value>
+            <value> <int>6693</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155556.61</string> </value>
+            <value> <string>ts83646622.26</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -62,7 +62,7 @@ var HighlightRules = require("./diff_highlight_rules").DiffHighlightRules;\r\n
 var FoldMode = require("./folding/diff").FoldMode;\r\n
 \r\n
 var Mode = function() {\r\n
-    this.$tokenizer = new Tokenizer(new HighlightRules().getRules());\r\n
+    this.HighlightRules = HighlightRules;\r\n
     this.foldingRules = new FoldMode(["diff", "index", "\\\\+{3}", "@@|\\\\*{5}"], "i");\n
 };\r\n
 oop.inherits(Mode, TextMode);\r\n
@@ -134,6 +134,9 @@ var DiffHighlightRules = function() {\r\r\r\n
                 regex: "^Index.+$",\r\n
                 token: "variable"\r\n
             }, {\r\n
+                regex: "^\\\\s+$",\n
+                token: "text"\n
+            }, {\r\n
                 regex: "\\\\s*$",\n
                 token: "invalid"\n
             }, {\n
@@ -198,7 +201,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6189</int> </value>
+            <value> <int>6242</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

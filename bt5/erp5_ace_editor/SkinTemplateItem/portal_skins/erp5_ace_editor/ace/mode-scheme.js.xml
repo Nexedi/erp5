@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155563.72</string> </value>
+            <value> <string>ts83646621.27</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -64,9 +64,7 @@ var Tokenizer = require("../tokenizer").Tokenizer;\n
 var SchemeHighlightRules = require("./scheme_highlight_rules").SchemeHighlightRules;\n
 \n
 var Mode = function() {\n
-    var highlighter = new SchemeHighlightRules();\n
-    \n
-    this.$tokenizer = new Tokenizer(highlighter.getRules());\n
+    this.HighlightRules = SchemeHighlightRules;\n
 };\n
 oop.inherits(Mode, TextMode);\n
 \n
@@ -172,7 +170,7 @@ exports.SchemeHighlightRules = SchemeHighlightRules;\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5085</int> </value>
+            <value> <int>5017</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

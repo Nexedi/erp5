@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155560.45</string> </value>
+            <value> <string>ts83646621.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -64,7 +64,8 @@ var Range = require("../range").Range;\n
 var WorkerClient = require("../worker/worker_client").WorkerClient;\n
 \n
 var Mode = function() {\n
-    this.$tokenizer = new Tokenizer(new LuaHighlightRules().getRules());\n
+    this.HighlightRules = LuaHighlightRules;\n
+    \n
     this.foldingRules = new LuaFoldMode();\n
 };\n
 oop.inherits(Mode, TextMode);\n
@@ -118,7 +119,7 @@ oop.inherits(Mode, TextMode);\n
         var indent = this.$getIndent(line);\n
         var level = 0;\n
 \n
-        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokenizedLine = this.getTokenizer().getLineTokens(line, state);\n
         var tokens = tokenizedLine.tokens;\n
 \n
         if (state == "start") {\n
@@ -141,7 +142,7 @@ oop.inherits(Mode, TextMode);\n
         if (line.match(/^\\s*[\\)\\}\\]]$/))\n
             return true;\n
 \n
-        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;\n
+        var tokens = this.getTokenizer().getLineTokens(line.trim(), state).tokens;\n
 \n
         if (!tokens || !tokens.length)\n
             return false;\n
@@ -152,7 +153,7 @@ oop.inherits(Mode, TextMode);\n
     this.autoOutdent = function(state, session, row) {\n
         var prevLine = session.getLine(row - 1);\n
         var prevIndent = this.$getIndent(prevLine).length;\n
-        var prevTokens = this.$tokenizer.getLineTokens(prevLine, "start").tokens;\n
+        var prevTokens = this.getTokenizer().getLineTokens(prevLine, "start").tokens;\n
         var tabLength = session.getTabString().length;\n
         var expectedIndent = prevIndent + tabLength * getNetIndentLevel(prevTokens);\n
         var curIndent = this.$getIndent(session.getLine(row)).length;\n
@@ -251,7 +252,7 @@ var LuaHighlightRules = function() {\n
         "start" : [{\n
             stateName: "bracketedComment",\n
             onMatch : function(value, currentState, stack){\n
-                stack.unshift(this.next, value.length, currentState);\n
+                stack.unshift(this.next, value.length - 2, currentState);\n
                 return "comment";\n
             },\n
             regex : /\\-\\-\\[=*\\[/,\n
@@ -267,7 +268,7 @@ var LuaHighlightRules = function() {\n
                         }\n
                         return "comment";\n
                     },\n
-                    regex : /(?:[^\\\\]|\\\\.)*?\\]=*\\]/,\n
+                    regex : /\\]=*\\]/,\n
                     next  : "start"\n
                 }, {\n
                     defaultToken : "comment"\n
@@ -299,7 +300,7 @@ var LuaHighlightRules = function() {\n
                         return "comment";\n
                     },\n
                     \n
-                    regex : /(?:[^\\\\]|\\\\.)*?\\]=*\\]/,\n
+                    regex : /\\]=*\\]/,\n
                     next  : "start"\n
                 }, {\n
                     defaultToken : "comment"\n
@@ -487,7 +488,7 @@ oop.inherits(FoldMode, BaseFoldMode);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>16186</int> </value>
+            <value> <int>16149</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

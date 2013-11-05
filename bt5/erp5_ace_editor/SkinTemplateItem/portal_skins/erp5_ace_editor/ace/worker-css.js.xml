@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155570.13</string> </value>
+            <value> <string>ts83646621.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>285838</int> </value>
+            <value> <int>286897</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -55,31 +55,30 @@ if (typeof window.window != "undefined" && window.document) {\n
     return;\n
 }\n
 \n
-window.console = {\n
-    log: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    },\n
-    error: function() {\n
-        var msgs = Array.prototype.slice.call(arguments, 0);\n
-        postMessage({type: "log", data: msgs});\n
-    }\n
+window.console = function() {\n
+    var msgs = Array.prototype.slice.call(arguments, 0);\n
+    postMessage({type: "log", data: msgs});\n
 };\n
+window.console.error =\n
+window.console.warn = \n
+window.console.log =\n
+window.console.trace = window.console;\n
+\n
 window.window = window;\n
 window.ace = window;\n
 \n
 window.normalizeModule = function(parentId, moduleName) {\n
     if (moduleName.indexOf("!") !== -1) {\n
         var chunks = moduleName.split("!");\n
-        return normalizeModule(parentId, chunks[0]) + "!" + normalizeModule(parentId, chunks[1]);\n
+        return window.normalizeModule(parentId, chunks[0]) + "!" + window.normalizeModule(parentId, chunks[1]);\n
     }\n
     if (moduleName.charAt(0) == ".") {\n
         var base = parentId.split("/").slice(0, -1).join("/");\n
-        moduleName = base + "/" + moduleName;\n
+        moduleName = (base ? base + "/" : "") + moduleName;\n
         \n
         while(moduleName.indexOf(".") !== -1 && previous != moduleName) {\n
             var previous = moduleName;\n
-            moduleName = moduleName.replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
+            moduleName = moduleName.replace(/^\\.\\//, "").replace(/\\/\\.\\//, "/").replace(/[^\\/]+\\/\\.\\.\\//, "");\n
         }\n
     }\n
     \n
@@ -94,9 +93,9 @@ window.require = function(parentId, id) {\n
     if (!id.charAt)\n
         throw new Error("worker.js require() accepts only (parentId, id) as arguments");\n
 \n
-    id = normalizeModule(parentId, id);\n
+    id = window.normalizeModule(parentId, id);\n
 \n
-    var module = require.modules[id];\n
+    var module = window.require.modules[id];\n
     if (module) {\n
         if (!module.initialized) {\n
             module.initialized = true;\n
@@ -106,48 +105,60 @@ window.require = function(parentId, id) {\n
     }\n
     \n
     var chunks = id.split("/");\n
-    chunks[0] = require.tlns[chunks[0]] || chunks[0];\n
+    if (!window.require.tlns)\n
+        return console.log("unable to load " + id);\n
+    chunks[0] = window.require.tlns[chunks[0]] || chunks[0];\n
     var path = chunks.join("/") + ".js";\n
     \n
-    require.id = id;\n
+    window.require.id = id;\n
     importScripts(path);\n
-    return require(parentId, id);\n
+    return window.require(parentId, id);\n
 };\n
-\n
-require.modules = {};\n
-require.tlns = {};\n
+window.require.modules = {};\n
+window.require.tlns = {};\n
 \n
 window.define = function(id, deps, factory) {\n
     if (arguments.length == 2) {\n
         factory = deps;\n
         if (typeof id != "string") {\n
             deps = id;\n
-            id = require.id;\n
+            id = window.require.id;\n
         }\n
     } else if (arguments.length == 1) {\n
         factory = id;\n
-        id = require.id;\n
+        deps = []\n
+        id = window.require.id;\n
     }\n
+\n
+    if (!deps.length)\n
+        deps = [\'require\', \'exports\', \'module\']\n
 \n
     if (id.indexOf("text!") === 0) \n
         return;\n
     \n
-    var req = function(deps, factory) {\n
-        return require(id, deps, factory);\n
+    var req = function(childId) {\n
+        return window.require(id, childId);\n
     };\n
 \n
-    require.modules[id] = {\n
+    window.require.modules[id] = {\n
+        exports: {},\n
         factory: function() {\n
-            var module = {\n
-                exports: {}\n
-            };\n
-            var returnExports = factory(req, module.exports, module);\n
+            var module = this;\n
+            var returnExports = factory.apply(this, deps.map(function(dep) {\n
+              switch(dep) {\n
+                  case \'require\': return req\n
+                  case \'exports\': return module.exports\n
+                  case \'module\':  return module\n
+                  default:        return req(dep)\n
+              }\n
+            }));\n
             if (returnExports)\n
                 module.exports = returnExports;\n
             return module;\n
         }\n
     };\n
 };\n
+window.define.amd = {}\n
 \n
 window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
     require.tlns = topLevelNamespaces;\n
@@ -155,8 +166,8 @@ window.initBaseUrls  = function initBaseUrls(topLevelNamespaces) {\n
 \n
 window.initSender = function initSender() {\n
 \n
-    var EventEmitter = require("ace/lib/event_emitter").EventEmitter;\n
-    var oop = require("ace/lib/oop");\n
+    var EventEmitter = window.require("ace/lib/event_emitter").EventEmitter;\n
+    var oop = window.require("ace/lib/oop");\n
     \n
     var Sender = function() {};\n
     \n
@@ -207,158 +218,7 @@ window.onmessage = function(e) {\n
         sender._emit(msg.event, msg.data);\n
     }\n
 };\n
-})(this);\n
-\n
-define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-var EventEmitter = {};\n
-var stopPropagation = function() { this.propagationStopped = true; };\n
-var preventDefault = function() { this.defaultPrevented = true; };\n
-\n
-EventEmitter._emit =\n
-EventEmitter._dispatchEvent = function(eventName, e) {\n
-    this._eventRegistry || (this._eventRegistry = {});\n
-    this._defaultHandlers || (this._defaultHandlers = {});\n
-\n
-    var listeners = this._eventRegistry[eventName] || [];\n
-    var defaultHandler = this._defaultHandlers[eventName];\n
-    if (!listeners.length && !defaultHandler)\n
-        return;\n
-\n
-    if (typeof e != "object" || !e)\n
-        e = {};\n
-\n
-    if (!e.type)\n
-        e.type = eventName;\n
-    if (!e.stopPropagation)\n
-        e.stopPropagation = stopPropagation;\n
-    if (!e.preventDefault)\n
-        e.preventDefault = preventDefault;\n
-\n
-    for (var i=0; i<listeners.length; i++) {\n
-        listeners[i](e, this);\n
-        if (e.propagationStopped)\n
-            break;\n
-    }\n
-    \n
-    if (defaultHandler && !e.defaultPrevented)\n
-        return defaultHandler(e, this);\n
-};\n
-\n
-\n
-EventEmitter._signal = function(eventName, e) {\n
-    var listeners = (this._eventRegistry || {})[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    for (var i=0; i<listeners.length; i++)\n
-        listeners[i](e, this);\n
-};\n
-\n
-EventEmitter.once = function(eventName, callback) {\n
-    var _self = this;\n
-    callback && this.addEventListener(eventName, function newCallback() {\n
-        _self.removeEventListener(eventName, newCallback);\n
-        callback.apply(null, arguments);\n
-    });\n
-};\n
-\n
-\n
-EventEmitter.setDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        handlers = this._defaultHandlers = {_disabled_: {}};\n
-    \n
-    if (handlers[eventName]) {\n
-        var old = handlers[eventName];\n
-        var disabled = handlers._disabled_[eventName];\n
-        if (!disabled)\n
-            handlers._disabled_[eventName] = disabled = [];\n
-        disabled.push(old);\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1) \n
-            disabled.splice(i, 1);\n
-    }\n
-    handlers[eventName] = callback;\n
-};\n
-EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
-    var handlers = this._defaultHandlers\n
-    if (!handlers)\n
-        return;\n
-    var disabled = handlers._disabled_[eventName];\n
-    \n
-    if (handlers[eventName] == callback) {\n
-        var old = handlers[eventName];\n
-        if (disabled)\n
-            this.setDefaultHandler(eventName, disabled.pop());\n
-    } else if (disabled) {\n
-        var i = disabled.indexOf(callback);\n
-        if (i != -1)\n
-            disabled.splice(i, 1);\n
-    }\n
-};\n
-\n
-EventEmitter.on =\n
-EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        listeners = this._eventRegistry[eventName] = [];\n
-\n
-    if (listeners.indexOf(callback) == -1)\n
-        listeners[capturing ? "unshift" : "push"](callback);\n
-    return callback;\n
-};\n
-\n
-EventEmitter.off =\n
-EventEmitter.removeListener =\n
-EventEmitter.removeEventListener = function(eventName, callback) {\n
-    this._eventRegistry = this._eventRegistry || {};\n
-\n
-    var listeners = this._eventRegistry[eventName];\n
-    if (!listeners)\n
-        return;\n
-\n
-    var index = listeners.indexOf(callback);\n
-    if (index !== -1)\n
-        listeners.splice(index, 1);\n
-};\n
-\n
-EventEmitter.removeAllListeners = function(eventName) {\n
-    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
-};\n
-\n
-exports.EventEmitter = EventEmitter;\n
-\n
-});\n
-\n
-define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
-\n
-\n
-exports.inherits = (function() {\n
-    var tempCtor = function() {};\n
-    return function(ctor, superCtor) {\n
-        tempCtor.prototype = superCtor.prototype;\n
-        ctor.super_ = superCtor.prototype;\n
-        ctor.prototype = new tempCtor();\n
-        ctor.prototype.constructor = ctor;\n
-    };\n
-}());\n
-\n
-exports.mixin = function(obj, mixin) {\n
-    for (var key in mixin) {\n
-        obj[key] = mixin[key];\n
-    }\n
-    return obj;\n
-};\n
-\n
-exports.implement = function(proto, mixin) {\n
-    exports.mixin(proto, mixin);\n
-};\n
-\n
-});\n
+})(this);// https://github.com/kriskowal/es5-shim\n
 \n
 define(\'ace/lib/es5-shim\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
 \n
@@ -1113,12 +973,39 @@ oop.inherits(Worker, Mirror);\n
                 row: msg.line - 1,\n
                 column: msg.col - 1,\n
                 text: msg.message,\n
-                type: infoRules[msg.rule.id] ? "info" : msg.type\n
+                type: infoRules[msg.rule.id] ? "info" : msg.type,\n
+                rule: msg.rule.name\n
             }\n
         }));\n
     };\n
 \n
 }).call(Worker.prototype);\n
+\n
+});\n
+\n
+define(\'ace/lib/oop\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+exports.inherits = (function() {\n
+    var tempCtor = function() {};\n
+    return function(ctor, superCtor) {\n
+        tempCtor.prototype = superCtor.prototype;\n
+        ctor.super_ = superCtor.prototype;\n
+        ctor.prototype = new tempCtor();\n
+        ctor.prototype.constructor = ctor;\n
+    };\n
+}());\n
+\n
+exports.mixin = function(obj, mixin) {\n
+    for (var key in mixin) {\n
+        obj[key] = mixin[key];\n
+    }\n
+    return obj;\n
+};\n
+\n
+exports.implement = function(proto, mixin) {\n
+    exports.mixin(proto, mixin);\n
+};\n
 \n
 });\n
 \n
@@ -1427,7 +1314,7 @@ var Document = function(text) {\n
     };\n
     this.getTextRange = function(range) {\n
         if (range.start.row == range.end.row) {\n
-            return this.$lines[range.start.row]\n
+            return this.getLine(range.start.row)\n
                 .substring(range.start.column, range.end.column);\n
         }\n
         var lines = this.getLines(range.start.row, range.end.row);\n
@@ -1538,6 +1425,8 @@ var Document = function(text) {\n
         return end;\n
     };\n
     this.remove = function(range) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         range.start = this.$clipPosition(range.start);\n
         range.end = this.$clipPosition(range.end);\n
 \n
@@ -1621,6 +1510,8 @@ var Document = function(text) {\n
         this._emit("change", { data: delta });\n
     };\n
     this.replace = function(range, text) {\n
+        if (!range instanceof Range)\n
+            range = Range.fromPoints(range.start, range.end);\n
         if (text.length == 0 && range.isEmpty())\n
             return range.start;\n
         if (text == this.getTextRange(range))\n
@@ -1691,6 +1582,132 @@ var Document = function(text) {\n
 }).call(Document.prototype);\n
 \n
 exports.Document = Document;\n
+});\n
+\n
+define(\'ace/lib/event_emitter\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
+\n
+\n
+var EventEmitter = {};\n
+var stopPropagation = function() { this.propagationStopped = true; };\n
+var preventDefault = function() { this.defaultPrevented = true; };\n
+\n
+EventEmitter._emit =\n
+EventEmitter._dispatchEvent = function(eventName, e) {\n
+    this._eventRegistry || (this._eventRegistry = {});\n
+    this._defaultHandlers || (this._defaultHandlers = {});\n
+\n
+    var listeners = this._eventRegistry[eventName] || [];\n
+    var defaultHandler = this._defaultHandlers[eventName];\n
+    if (!listeners.length && !defaultHandler)\n
+        return;\n
+\n
+    if (typeof e != "object" || !e)\n
+        e = {};\n
+\n
+    if (!e.type)\n
+        e.type = eventName;\n
+    if (!e.stopPropagation)\n
+        e.stopPropagation = stopPropagation;\n
+    if (!e.preventDefault)\n
+        e.preventDefault = preventDefault;\n
+\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++) {\n
+        listeners[i](e, this);\n
+        if (e.propagationStopped)\n
+            break;\n
+    }\n
+    \n
+    if (defaultHandler && !e.defaultPrevented)\n
+        return defaultHandler(e, this);\n
+};\n
+\n
+\n
+EventEmitter._signal = function(eventName, e) {\n
+    var listeners = (this._eventRegistry || {})[eventName];\n
+    if (!listeners)\n
+        return;\n
+    listeners = listeners.slice();\n
+    for (var i=0; i<listeners.length; i++)\n
+        listeners[i](e, this);\n
+};\n
+\n
+EventEmitter.once = function(eventName, callback) {\n
+    var _self = this;\n
+    callback && this.addEventListener(eventName, function newCallback() {\n
+        _self.removeEventListener(eventName, newCallback);\n
+        callback.apply(null, arguments);\n
+    });\n
+};\n
+\n
+\n
+EventEmitter.setDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        handlers = this._defaultHandlers = {_disabled_: {}};\n
+    \n
+    if (handlers[eventName]) {\n
+        var old = handlers[eventName];\n
+        var disabled = handlers._disabled_[eventName];\n
+        if (!disabled)\n
+            handlers._disabled_[eventName] = disabled = [];\n
+        disabled.push(old);\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1) \n
+            disabled.splice(i, 1);\n
+    }\n
+    handlers[eventName] = callback;\n
+};\n
+EventEmitter.removeDefaultHandler = function(eventName, callback) {\n
+    var handlers = this._defaultHandlers\n
+    if (!handlers)\n
+        return;\n
+    var disabled = handlers._disabled_[eventName];\n
+    \n
+    if (handlers[eventName] == callback) {\n
+        var old = handlers[eventName];\n
+        if (disabled)\n
+            this.setDefaultHandler(eventName, disabled.pop());\n
+    } else if (disabled) {\n
+        var i = disabled.indexOf(callback);\n
+        if (i != -1)\n
+            disabled.splice(i, 1);\n
+    }\n
+};\n
+\n
+EventEmitter.on =\n
+EventEmitter.addEventListener = function(eventName, callback, capturing) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        listeners = this._eventRegistry[eventName] = [];\n
+\n
+    if (listeners.indexOf(callback) == -1)\n
+        listeners[capturing ? "unshift" : "push"](callback);\n
+    return callback;\n
+};\n
+\n
+EventEmitter.off =\n
+EventEmitter.removeListener =\n
+EventEmitter.removeEventListener = function(eventName, callback) {\n
+    this._eventRegistry = this._eventRegistry || {};\n
+\n
+    var listeners = this._eventRegistry[eventName];\n
+    if (!listeners)\n
+        return;\n
+\n
+    var index = listeners.indexOf(callback);\n
+    if (index !== -1)\n
+        listeners.splice(index, 1);\n
+};\n
+\n
+EventEmitter.removeAllListeners = function(eventName) {\n
+    if (this._eventRegistry) this._eventRegistry[eventName] = [];\n
+};\n
+\n
+exports.EventEmitter = EventEmitter;\n
+\n
 });\n
 \n
 define(\'ace/range\', [\'require\', \'exports\', \'module\' ], function(require, exports, module) {\n
@@ -1939,29 +1956,25 @@ var oop = require("./lib/oop");\n
 var EventEmitter = require("./lib/event_emitter").EventEmitter;\n
 \n
 var Anchor = exports.Anchor = function(doc, row, column) {\n
-    this.document = doc;\n
-\n
+    this.$onChange = this.onChange.bind(this);\n
+    this.attach(doc);\n
+    \n
     if (typeof column == "undefined")\n
         this.setPosition(row.row, row.column);\n
     else\n
         this.setPosition(row, column);\n
-\n
-    this.$onChange = this.onChange.bind(this);\n
-    doc.on("change", this.$onChange);\n
 };\n
 \n
 (function() {\n
 \n
     oop.implement(this, EventEmitter);\n
-\n
     this.getPosition = function() {\n
         return this.$clipPositionToDocument(this.row, this.column);\n
     };\n
-\n
     this.getDocument = function() {\n
         return this.document;\n
     };\n
-\n
+    this.$insertRight = false;\n
     this.onChange = function(e) {\n
         var delta = e.data;\n
         var range = delta.range;\n
@@ -1982,7 +1995,8 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         if (delta.action === "insertText") {\n
             if (start.row === row && start.column <= column) {\n
-                if (start.row === end.row) {\n
+                if (start.column === column && this.$insertRight) {\n
+                } else if (start.row === end.row) {\n
                     column += end.column - start.column;\n
                 } else {\n
                     column -= start.column;\n
@@ -2023,7 +2037,6 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
 \n
         this.setPosition(row, column, true);\n
     };\n
-\n
     this.setPosition = function(row, column, noClip) {\n
         var pos;\n
         if (noClip) {\n
@@ -2050,9 +2063,12 @@ var Anchor = exports.Anchor = function(doc, row, column) {\n
             value: pos\n
         });\n
     };\n
-\n
     this.detach = function() {\n
         this.document.removeEventListener("change", this.$onChange);\n
+    };\n
+    this.attach = function(doc) {\n
+        this.document = doc || this.document;\n
+        this.document.on("change", this.$onChange);\n
     };\n
     this.$clipPositionToDocument = function(row, column) {\n
         var pos = {};\n

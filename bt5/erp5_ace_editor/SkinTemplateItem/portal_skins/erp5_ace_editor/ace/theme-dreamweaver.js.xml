@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77155567.27</string> </value>
+            <value> <string>ts83646620.8</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -68,11 +68,7 @@ background-color: #FFFFFF;\\\n
 background-color: #757AD8;\\\n
 }\\\n
 .ace-dreamweaver .ace_cursor {\\\n
-border-left: 2px solid black;\\\n
-}\\\n
-.ace-dreamweaver .ace_overwrite-cursors .ace_cursor {\\\n
-border-left: 0px;\\\n
-border-bottom: 1px solid black;\\\n
+color: black;\\\n
 }\\\n
 .ace-dreamweaver .ace_invisible {\\\n
 color: rgb(191, 191, 191);\\\n
@@ -134,10 +130,10 @@ color: rgb(104, 104, 91);\\\n
 .ace-dreamweaver .ace_entity.ace_name.ace_function {\\\n
 color: #00F;\\\n
 }\\\n
-.ace-dreamweaver .ace_markup.ace_heading {\\\n
+.ace-dreamweaver .ace_heading {\\\n
 color: rgb(12, 7, 255);\\\n
 }\\\n
-.ace-dreamweaver .ace_markup.ace_list {\\\n
+.ace-dreamweaver .ace_list {\\\n
 color:rgb(185, 6, 144);\\\n
 }\\\n
 .ace-dreamweaver .ace_marker-layer .ace_selection {\\\n
@@ -199,7 +195,7 @@ dom.importCssString(exports.cssText, exports.cssClass);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5225</int> </value>
+            <value> <int>5077</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
