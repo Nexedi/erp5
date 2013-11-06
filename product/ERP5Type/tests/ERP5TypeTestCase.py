@@ -1392,9 +1392,11 @@ def fortify():
     rng = random.Random(seed)
     from Products.CMFActivity.ActivityTool import Message
     Message__init__ = Message.__init__
-    def __init__(self, obj, active_process, activity_kw, *args, **kw):
+    def __init__(self, url, oid, active_process, active_process_uid,
+                 activity_kw, *args, **kw):
       activity_kw['priority'] = rng.randint(-128, 127)
-      Message__init__(self, obj, active_process, activity_kw, *args, **kw)
+      Message__init__(self, url, oid, active_process, active_process_uid,
+                      activity_kw, *args, **kw)
     Message.__init__ = __init__
 
 
