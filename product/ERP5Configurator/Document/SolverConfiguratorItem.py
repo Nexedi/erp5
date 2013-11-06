@@ -54,28 +54,32 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    if fixit:
+      portal = self.getPortalObject()
+      business_configuration = self.getBusinessConfigurationValue()
 
-    solver = getattr(portal.portal_solvers, self.getId(), None)
-    if solver is None:
-      solver_property_dict = \
-          business_configuration.BusinessConfiguration_getSolverPropertyDict()
-      property_dict = solver_property_dict.get(self.getId())
-      argument_dict = {}
+      solver = getattr(portal.portal_solvers, self.getId(), None)
+      if solver is None:
+        solver_property_dict = \
+            business_configuration.BusinessConfiguration_getSolverPropertyDict()
+        property_dict = solver_property_dict.get(self.getId())
+        argument_dict = {}
 
-      for k, v in property_dict.iteritems():
-        if k not in ("content_list",) and k in self.showDict():
-            argument_dict[k] = v
-  
-      solver = portal.portal_solvers.newContent(portal_type="Solver Type",
-                                                id=argument_dict.pop('id'))
-      solver.edit(**argument_dict)
+        for k, v in property_dict.iteritems():
+          if k not in ("content_list",) and k in self.showDict():
+              argument_dict[k] = v
 
-      for information_dict in self.content_list:
-        portal_type = information_dict.pop('portal_type')
-        id = information_dict.pop('id')
-        action = solver.newContent(portal_type=portal_type, id=id)
-        action.edit(**information_dict)
+        solver = portal.portal_solvers.newContent(portal_type="Solver Type",
+                                                  id=argument_dict.pop('id'))
+        solver.edit(**argument_dict)
 
-    self.install(solver, business_configuration)
+        for information_dict in self.content_list:
+          portal_type = information_dict.pop('portal_type')
+          id = information_dict.pop('id')
+          action = solver.newContent(portal_type=portal_type, id=id)
+          action.edit(**information_dict)
+
+      self.install(solver, business_configuration)
+
+    return ['Solvers should be created',]

@@ -54,7 +54,7 @@ class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
 
     # Support adding new property sheet to portal type information.
@@ -67,17 +67,21 @@ class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         new_property_sheet_list = list(type_information.property_sheet_list)
         new_property_sheet_list.append(name)
         type_information.property_sheet_list = tuple(new_property_sheet_list)
+
+    business_configuration = self.getBusinessConfigurationValue()
     bt5_obj = business_configuration.getSpecialiseValue()
 
     old_property_sheet_list = bt5_obj.getTemplatePortalTypePropertySheetList()
     new_property_sheet_list = (list(old_property_sheet_list) +
-                               ['%s | %s' % (self.target_portal_type, name)
+                              ['%s | %s' % (self.target_portal_type, name)
                                 for name in self.add_propertysheet_list]
-                               )
-
-    bt5_obj.edit(
-      template_portal_type_property_sheet_list=new_property_sheet_list)
-
+                              )
+    if fixit:
+      bt5_obj.edit(
+        template_portal_type_property_sheet_list=new_property_sheet_list)
     #
     # TODO:This class must support many other features we can use in ZMI.
     #
+
+    return ['Property Sheets configuration should be added in %s' % \
+        bt5_obj.getTitle(),]

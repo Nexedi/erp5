@@ -58,22 +58,29 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Resource
                     , PropertySheet.Reference )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     currency_module = self.getPortalObject().currency_module
-
+    error_list = []
     title = self.getTitle()
     reference = self.getReference()
-    base_unit_quantity = self.getBaseUnitQuantity()
     # XXX FIXME This is not exactly desired behaviour
     currency = self.portal_catalog.getResultValue(id=reference,
                                                   portal_type="Currency")
     if currency is None:
-      currency = currency_module.newContent(portal_type = "Currency",
-                                          id = reference,
-                                          title = title,
-                                          reference = reference,
-                                          base_unit_quantity = base_unit_quantity)
-      currency.validate(comment=translateString("Validated by Configurator"))
-    business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
-    ## add to customer template
-    self.install(currency, business_configuration)
+      error_list.append(self._createConstraintMessage(
+        "Currency %s should be created" % reference))
+      if fixit:
+        currency = currency_module.newContent(portal_type = "Currency",
+                                            id = reference,
+                                            title = title,
+                                            reference = reference,
+                                            base_unit_quantity=self.getBaseUnitQuantity())
+        currency.validate(comment=translateString("Validated by Configurator"))
+
+    if currency:
+      business_configuration = self.getBusinessConfigurationValue()
+      business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
+      ## add to customer template
+      self.install(currency, business_configuration)
+
+    return error_list

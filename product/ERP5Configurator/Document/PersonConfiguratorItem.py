@@ -57,44 +57,49 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Reference
-                    , PropertySheet.Person 
+                    , PropertySheet.Person
                     , PropertySheet.Login)
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    person = portal.person_module.newContent(portal_type="Person")
-    group_id = getattr(aq_base(self), 'group_id', None)
-    site_id = getattr(aq_base(self), 'site_id', None)
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = ["Person %s should be created" % self.getReference(),]
+    if fixit:
+      person_module = self.getPortalObject().person_module
+      person = person_module.newContent(portal_type="Person")
+      group_id = getattr(aq_base(self), 'group_id', None)
+      site_id = getattr(aq_base(self), 'site_id', None)
 
-    if getattr(aq_base(self), 'organisation_id', None) is not None:
-      person.setCareerSubordination('organisation_module/%s' % \
-                                     self.organisation_id)
+      if getattr(aq_base(self), 'organisation_id', None) is not None:
+        person.setCareerSubordination('organisation_module/%s' % \
+                                      self.organisation_id)
 
-    # save
-    person.edit(**{'default_email_text': self.getDefaultEmailText(),
-                   'default_telephone_text': self.getDefaultTelephoneText(),
-                   'first_name': self.getFirstName(),
-                   'career_function': self.getFunction(),
-                   'last_name': self.getLastName(),
-                   'reference': self.getReference(),
-                   'password': self.getPassword(),
-                    })
+      # save
+      person.edit(**{'default_email_text': self.getDefaultEmailText(),
+                    'default_telephone_text': self.getDefaultTelephoneText(),
+                    'first_name': self.getFirstName(),
+                    'career_function': self.getFunction(),
+                    'last_name': self.getLastName(),
+                    'reference': self.getReference(),
+                    'password': self.getPassword(),
+                      })
 
-    assignment = person.newContent(portal_type="Assignment",
-                                   function = self.getFunction(),
-                                   group = group_id,
-                                   site = site_id)
+      assignment = person.newContent(portal_type="Assignment",
+                                    function = self.getFunction(),
+                                    group = group_id,
+                                    site = site_id)
 
-    # Set dates are required to create valid assigments.
-    now = DateTime()
-    assignment.setStartDate(now)
-    # XXX Is it required to set stop date?
-    # Define valid for 10 years.
-    assignment.setStopDate(now + (365*10))
+      # Set dates are required to create valid assigments.
+      now = DateTime()
+      assignment.setStartDate(now)
+      # XXX Is it required to set stop date?
+      # Define valid for 10 years.
+      assignment.setStopDate(now + (365*10))
 
-    # Validate the Person and Assigment
-    person.validate(comment=translateString("Validated by Configurator"))
-    assignment.open(comment=translateString("Open by Configuration"))
-    
-    ## add to customer template
-    self.install(person, business_configuration)
+      # Validate the Person and Assigment
+      person.validate(comment=translateString("Validated by Configurator"))
+      assignment.open(comment=translateString("Open by Configuration"))
+
+      ## add to customer template
+      business_configuration = self.getBusinessConfigurationValue()
+      self.install(person, business_configuration)
+
+    return error_list

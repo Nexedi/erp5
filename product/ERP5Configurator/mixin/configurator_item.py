@@ -28,11 +28,24 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+from Products.ERP5Type.Base import Base
 from zLOG import LOG, INFO
 import time
 
 class ConfiguratorItemMixin:
   """ This is the base class for all configurator item. """
+
+  def getBusinessConfigurationValue(self):
+    item = self
+    while item.getPortalType() != 'Business Configuration':
+      item = item.getParentValue()
+    return item
+
+  def _createConstraintMessage(self, message):
+    return ConsistencyMessage(self,
+        object_relative_url=self.getRelativeUrl(),
+        message=message)
 
   def install(self, document, business_configuration, prefix=''):
     """ Add object to customer customization template. """
@@ -52,25 +65,6 @@ class ConfiguratorItemMixin:
     current_template_path_list.extend(template_path_list)
     bt5_obj.edit(template_path_list=current_template_path_list)
 
-  def addToCustomerBT5ByRelativeUrl(self, business_configuration,
-                                          relative_url_list):
-    """ Add object to customer customization template object by
-       its relative url. """
-    bt5_obj = business_configuration.getSpecialiseValue()
-    current_template_path_list = list(bt5_obj.getTemplatePathList())
-    current_template_path_list.extend(relative_url_list)
-    bt5_obj.edit(template_path_list=current_template_path_list)
-
-  def build(self, business_configuration_relative_url):
-    """ Invoke build process """
-    business_configuration = self.getPortalObject().restrictedTraverse(\
-       business_configuration_relative_url)
-    LOG('CONFIGURATOR', INFO, 'Building --> %s' % self)
-    start_build = time.time()
-    result = self._build(business_configuration)
-    LOG('CONFIGURATOR', INFO, 'Built    --> %s (%.02fs)' % (self,
-                                     time.time()-start_build))
-    return result
 
 class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
   """ Mixin which allows to create python scripts and/or skin

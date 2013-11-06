@@ -54,9 +54,11 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     template_module_id_list = []
+    error_list = []
     module_permissions_map = {}
+    business_configuration = self.getBusinessConfigurationValue()
     sheets_dict = business_configuration.ConfigurationTemplate_readOOCalcFile(\
                            self.filename)
     for module_id, permissions in sheets_dict.items():
@@ -79,9 +81,14 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         for permission_name, roles in permissions_map.items():
           # we must alway include additionally 'Manager' and 'Owner'
           roles.extend(['Manager', 'Owner'])
-          module.manage_permission(permission_name, tuple(roles), 0)
+          if fixit:
+            module.manage_permission(permission_name, tuple(roles), 0)
+          error_list.append(self._createConstraintMessage(
+            '%s should be set to %s' % (','.join(roles), module.getId())))
 
     # add customized module to customer's bt5
-    if len(template_module_id_list):
+    if len(template_module_id_list) and fixit:
       bt5_obj = business_configuration.getSpecialiseValue()
       bt5_obj.setTemplateModuleIdList(template_module_id_list)
+
+    return error_list

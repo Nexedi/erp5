@@ -57,8 +57,9 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
+    error_list = []
     for service_id, service_dict in iter(self.getConfigurationListList()):
       if isinstance(service_dict, basestring):
         warn(DeprecationWarning,
@@ -67,9 +68,16 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
       document = getattr(portal.service_module, service_id, None)
       if document is None:
-        document = portal.service_module.newContent(portal_type='Service',
-                                   id=service_id, **service_dict)
-        document.validate(comment=translateString("Validated by Configurator"))
+        error_list.append(self._createConstraintMessage(
+          "Service %s should be created"))
+        if fixit:
+          document = portal.service_module.newContent(portal_type='Service',
+                                    id=service_id, **service_dict)
+          document.validate(comment=translateString("Validated by Configurator"))
 
-      ## add to customer template
-      self.install(document, business_configuration)
+      if document:
+        ## add to customer template
+        business_configuration = self.getBusinessConfigurationValue()
+        self.install(document, business_configuration)
+
+    return error_list

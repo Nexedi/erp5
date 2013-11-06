@@ -64,37 +64,49 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.ConfiguratorItem
                     )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
     ctool = portal.portal_categories
 
     self._readSpreadSheet()
     cache = self._category_cache
+    object_id_list = ctool.objectIds()
+    error_list = []
     for bc_id, category_list in cache.items():
-      if bc_id in ctool.objectIds():
+      if bc_id in object_id_list:
         bc = ctool._getOb(bc_id)
       else:
         # TODO: test bc creation
         # the bc should be added as base category in bt5 ?
-        bc = ctool.newContent(id=bc_id)
+        error_list.append(self._createConstraintMessage(
+          "Base Category %s should be created" % bc_id))
+        if fixit:
+          bc = ctool.newContent(id=bc_id)
 
-      for category_info in category_list:
-        path = bc
-        for cat in category_info['path'].split("/")[1:]:
-          if not cat in path.objectIds():
-            path = path.newContent(
-              portal_type='Category',
-              id=cat,)
-          else:
-            path = path[cat]
-        edit_dict = category_info.copy()
-        edit_dict.pop('path')
-        if 'id' in edit_dict.keys():
-          edit_dict.pop('id')
+      if fixit:
+        for category_info in category_list:
+          path = bc
+          for cat in category_info['path'].split("/")[1:]:
+            if not cat in path.objectIds():
+              path = path.newContent(
+                portal_type='Category',
+                id=cat,)
+            else:
+              path = path[cat]
+          edit_dict = category_info.copy()
+          edit_dict.pop('path')
+          if 'id' in edit_dict.keys():
+            edit_dict.pop('id')
 
-        path.edit(**edit_dict)
-        ## add to customer template
-        self.install(path, business_configuration)
+          path.edit(**edit_dict)
+          ## add to customer template
+          business_configuration = self.getBusinessConfigurationValue()
+          self.install(path, business_configuration)
+      else:
+        error_list.extend(["%s should be created" % category['path'] \
+            for category in category_list])
+
+    return error_list
 
   def _readSpreadSheet(self):
     """Read the spreadsheet and prepare internal category cache.

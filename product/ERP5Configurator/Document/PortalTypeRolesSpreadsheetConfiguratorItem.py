@@ -59,16 +59,16 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem
                     )
-
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
     portal_type_role_dict = self._getPortalTypeRoleDict()
+    error_list = []
     for type_name, role_list in portal_type_role_dict.items():
       portal_type = portal.portal_types.getTypeInfo(type_name)
       if portal_type is None:
         LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
         continue
- 
+
       for role in role_list:
         # rebuild a category from Group / Site & Function
         category_list = []
@@ -76,21 +76,29 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
           if role.get(bc):
             category_list.append(role[bc])
         #category = '\n'.join(category_list)
-        role_dict = {
-                     'title': role.get('Name', 'Default'),
-                     'description': role.get('Description', 'Configured by ERP5 Configurator'),
-                     'role_name_list': [x.strip() for x in role.get('Role', '').split(';')],
-                     'role_category_list': category_list,
-                     'role_base_category_list': role.get('Base_Category', ''),
-                     'role_base_category_script_id': role.get('Base_Category_Script',
-                                           role.get('Script', ''))}
-        portal_type.newContent(portal_type='Role Information', \
-                               **role_dict)
+        role_name_list = [x.strip() for x in role.get('Role', '').split(';')]
+        error_list.append(self._createConstraintMessage(
+          "Add roles(%s) to %s are required" %  (role_name_list, portal_type)))
+        if fixit:
+          role_dict = {
+                      'title': role.get('Name', 'Default'),
+                      'description': role.get('Description', 'Configured by ERP5 Configurator'),
+                      'role_name_list': role_name_list,
+                      'role_category_list': category_list,
+                      'role_base_category_list': role.get('Base_Category', ''),
+                      'role_base_category_script_id': role.get('Base_Category_Script',
+                                            role.get('Script', ''))}
+          portal_type.newContent(portal_type='Role Information', \
+                                **role_dict)
 
-    ## Update BT5
-    bt5_obj = business_configuration.getSpecialiseValue()
-    if bt5_obj is not None:
-      bt5_obj.edit(template_portal_type_role_list=portal_type_role_dict.keys())
+    if fixit:
+      ## Update BT5
+      business_configuration = self.getBusinessConfigurationValue()
+      bt5_obj = business_configuration.getSpecialiseValue()
+      if bt5_obj is not None:
+        bt5_obj.edit(template_portal_type_role_list=portal_type_role_dict.keys())
+
+    return error_list
 
   def checkSpreadSheetConsistency(self):
     """Check that the spread sheet is consistent with categories spreadsheet.

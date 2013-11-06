@@ -71,16 +71,22 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           property_id_list.append('%s%s' % (prop.getReference(), list_prefix))
     return property_id_list
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = []
     portal = self.getPortalObject()
     preference = portal.portal_preferences._getOb(self.object_id, None)
     if preference is None:
-      preference = portal.portal_preferences.newContent(
-                              portal_type = 'Preference',
-                              id = self.object_id,
-                              title = self.title,
-                              description = self.description,
-                              priority = 1)
+      error_list.append(self._createConstraintMessage(
+        "Preference %s should be created" % self.object_id))
+      if fixit:
+        preference = portal.portal_preferences.newContent(
+                                portal_type = 'Preference',
+                                id = self.object_id,
+                                title = self.title,
+                                description = self.description,
+                                priority = 1)
+      else:
+        return error_list
 
     preference_dict = {}
 
@@ -94,6 +100,7 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     if self.portal_workflow.isTransitionPossible(preference, 'enable'):
       preference.enable()
 
+    business_configuration = self.getBusinessConfigurationValue()
     organisation_id = business_configuration.\
                                  getGlobalConfigurationAttr('organisation_id')
     organisation_path = 'organisation_module/%s' % organisation_id
@@ -107,3 +114,4 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       current_template_preference_list.append(preference.getId())
       bt5_obj.edit(template_preference_list=current_template_preference_list,)
 
+    return error_list

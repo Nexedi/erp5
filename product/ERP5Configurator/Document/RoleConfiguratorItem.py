@@ -56,49 +56,55 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
-    object_list = business_configuration.ConfigurationTemplate_readOOCalcFile(self.filename)
-    portal = self.getPortalObject()
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = ['Roles should imported and created',]
+    if fixit:
+      business_configuration = self.getBusinessConfigurationValue()
+      object_list = business_configuration.ConfigurationTemplate_readOOCalcFile(self.filename)
+      portal = self.getPortalObject()
 
-    portal_type_dict = {}
-    # we may pass some override dynamic values from outside
-    # Example:we post 'group_id' and in column we have it then 
-    # it will be replaced with value if not configuration file matters
-    dynamic_values = dict(group_id = getattr(aq_base(self), 'group_id', None),
-                          function_id = getattr(aq_base(self), 'function_id', None),
-                          site_id = getattr(aq_base(self), 'site_id', None),)
-    for oo_module_dict in object_list:
-      mod_conf_list = []
-      portal_type = oo_module_dict.pop('portal_type')
-      for category, role_list_string in oo_module_dict.items():
-        # passed from outside (it has higher priority than configuration file)
-        category = dynamic_values.get(category, category)
-        title = category.replace('/', '_')
-        role_name_list = [x.strip() for x in role_list_string.split(';')]
-        role_category_list = [category]
-        conf_dict =  {'title': title,
-                      'description': 'Configured by ERP5 Configurator',
-                      'role_name_list': role_name_list,
-                      'role_category_list': role_category_list}
+      portal_type_dict = {}
+      # we may pass some override dynamic values from outside
+      # Example:we post 'group_id' and in column we have it then 
+      # it will be replaced with value if not configuration file matters
+      dynamic_values = dict(group_id = getattr(aq_base(self), 'group_id', None),
+                            function_id = getattr(aq_base(self), 'function_id', None),
+                            site_id = getattr(aq_base(self), 'site_id', None),)
+      for oo_module_dict in object_list:
+        mod_conf_list = []
+        portal_type = oo_module_dict.pop('portal_type')
+        for category, role_list_string in oo_module_dict.items():
+          # passed from outside (it has higher priority than configuration file)
+          category = dynamic_values.get(category, category)
+          title = category.replace('/', '_')
+          role_name_list = [x.strip() for x in role_list_string.split(';')]
+          role_category_list = [category]
+          conf_dict =  {'title': title,
+                        'description': 'Configured by ERP5 Configurator',
+                        'role_name_list': role_name_list,
+                        'role_category_list': role_category_list}
 
-        mod_conf_list.append(conf_dict)
-      portal_type_dict[portal_type] = mod_conf_list
-    ## Update fake site
-    # XXX rafael: improve this, the ignore list is quite ugly.
-    ignore_list = []
-    portal_type_id_list = portal.portal_types.objectIds()
-    for portal_type, role_list in portal_type_dict.items():
-      for role_dict in role_list:
-       if portal_type in portal_type_id_list:
-         portal.portal_types[portal_type].newContent(portal_type='Role Information', \
-                                                       **role_dict)
-       else:
-         ignore_list.append(portal_type)
-         LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
+          mod_conf_list.append(conf_dict)
+        portal_type_dict[portal_type] = mod_conf_list
+      ## Update fake site
+      # XXX rafael: improve this, the ignore list is quite ugly.
+      ignore_list = []
+      portal_type_id_list = portal.portal_types.objectIds()
+      for portal_type, role_list in portal_type_dict.items():
+        for role_dict in role_list:
+          if portal_type in portal_type_id_list:
+            portal.portal_types[portal_type].newContent(portal_type='Role Information', \
+                                                        **role_dict)
+          else:
+            ignore_list.append(portal_type)
+            LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
 
-    ## Update BT5
-    bt5_obj = business_configuration.getSpecialiseValue()
-    # keep existing roles definition (from previous configuration saves)
-    for existing_type in bt5_obj.getTemplatePortalTypeRoleList():
-      portal_type_dict[existing_type] = 1
-    bt5_obj.edit(template_portal_type_role_list=[i for i in portal_type_dict.keys() if i not in ignore_list])
+      ## Update BT5
+
+      bt5_obj = business_configuration.getSpecialiseValue()
+      # keep existing roles definition (from previous configuration saves)
+      for existing_type in bt5_obj.getTemplatePortalTypeRoleList():
+        portal_type_dict[existing_type] = 1
+      bt5_obj.edit(template_portal_type_role_list=[i for i in portal_type_dict.keys() if i not in ignore_list])
+
+    return error_list

@@ -55,14 +55,19 @@ class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
     id_list = []
     for id, value, prop_type in self.getConfigurationList():
-      if portal.hasProperty(id):
-        portal._delProperty(id)
-      portal._setProperty(id, value, type=prop_type)
+      if fixit:
+        if portal.hasProperty(id):
+          portal._delProperty(id)
+        portal._setProperty(id, value, type=prop_type)
       id_list.append(id)
-    bt = business_configuration.getSpecialiseValue()
-    bt.edit(template_site_property_id_list=id_list)
 
+    if fixit:
+      business_configuration = self.getBusinessConfigurationValue()
+      bt = business_configuration.getSpecialiseValue()
+      bt.edit(template_site_property_id_list=id_list)
+
+    return ["The property %s should set on portal" % id for id in id_list]

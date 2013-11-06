@@ -54,14 +54,17 @@ class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore)
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    category_root = portal.portal_categories[self.category_root]
-    object_id = self.object_id
-    if object_id in category_root.objectIds():
-      category_root.manage_delObjects(object_id)
-    category = category_root.newContent(portal_type='Category',
-                                        id = object_id,
-                                        title = self.getTitle())
-    ## add to customer template
-    self.install(category, business_configuration)
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    if fixit:
+      portal = self.getPortalObject()
+      category_root = portal.portal_categories[self.category_root]
+      object_id = self.object_id
+      if object_id in category_root.objectIds():
+        category_root.manage_delObjects(object_id)
+      category = category_root.newContent(portal_type='Category',
+                                          id = object_id,
+                                          title = self.getTitle())
+      ## add to customer template
+      business_configuration = self.getBusinessConfigurationValue()
+      self.install(category, business_configuration)
+    return ['Category %s should be created' % self.getTitle(),]

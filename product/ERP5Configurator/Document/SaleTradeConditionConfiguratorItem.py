@@ -58,29 +58,35 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Reference
                     )
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    business_process_id = \
-      business_configuration.getGlobalConfigurationAttr('business_process_id')
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    if fixit:
+      portal = self.getPortalObject()
 
-    organisation_id = \
-      business_configuration.getGlobalConfigurationAttr('organisation_id')
+      business_configuration = self.getBusinessConfigurationValue()
+      business_process_id = \
+        business_configuration.getGlobalConfigurationAttr('business_process_id')
 
-    currency_id = \
-      business_configuration.getGlobalConfigurationAttr('currency_id')
+      organisation_id = \
+        business_configuration.getGlobalConfigurationAttr('organisation_id')
 
-    trade_condition = portal.sale_trade_condition_module.newContent(
-                                           portal_type="Sale Trade Condition",
-                                           reference=self.getReference(),
-                                           title=self.getTitle())
+      currency_id = \
+        business_configuration.getGlobalConfigurationAttr('currency_id')
 
-    trade_condition.setSpecialise("business_process_module/%s" %\
-                      business_process_id)
+      trade_condition = portal.sale_trade_condition_module.newContent(
+                                            portal_type="Sale Trade Condition",
+                                            reference=self.getReference(),
+                                            title=self.getTitle())
 
-    trade_condition.setSource("organisation_module/%s" % organisation_id)
-    trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
-    trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
+      trade_condition.setSpecialise("business_process_module/%s" %\
+                        business_process_id)
 
-    trade_condition.validate(comment=translateString("Validated by Configurator"))
+      trade_condition.setSource("organisation_module/%s" % organisation_id)
+      trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
+      trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
-    self.install(trade_condition, business_configuration)
+      trade_condition.validate(comment=translateString("Validated by Configurator"))
+
+      self.install(trade_condition, business_configuration)
+
+    return ['Sale Trade Condition with reference %s should be created' % \
+        self.getReference(),]

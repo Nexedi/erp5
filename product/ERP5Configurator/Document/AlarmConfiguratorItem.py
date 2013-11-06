@@ -58,8 +58,9 @@ class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Periodicity
                     )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal_alarms = self.getPortalObject().portal_alarms
+    error_list = []
     property_dict = {
       "active_sense_method_id" : self.getActiveSenseMethodId(),
       "periodicity_hour_list" : self.getPeriodicityHourList(),
@@ -72,14 +73,22 @@ class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       "periodicity_week_list": self.getPeriodicityWeekList(),
                         }
 
-    alarm = getattr(portal_alarms, self.getId(), None)
+    alarm_id = self.getId()
+    alarm = getattr(portal_alarms, alarm_id, None)
     if alarm is None:
-      alarm = portal_alarms.newContent(id=self.getId(),
-                                       title=self.getTitle())
-    alarm.edit(**property_dict)
+      error_list.append(self._createConstraintMessage(
+        "Alarm %s should be created" % alarm_id))
+      if fixit:
+        alarm = portal_alarms.newContent(id=alarm_id,
+                                        title=self.getTitle())
+        alarm.edit(**property_dict)
 
-    # Always enabled
-    alarm.setEnabled(True)
+        # Always enabled
+        alarm.setEnabled(True)
 
-    ## add to customer template
-    self.install(alarm, business_configuration)
+    if alarm and fixit:
+      ## add to customer template
+      business_configuration = self.getBusinessConfigurationValue()
+      self.install(alarm, business_configuration)
+
+    return error_list

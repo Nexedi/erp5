@@ -89,7 +89,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       group=group_id, site='main', **kw)
 
     self.tic()
-    item._build(configuration_save.getParentValue())
+    item.fixConsistency()
     self.tic()
 
     organisation = self.portal.portal_catalog.getResultValue(
@@ -139,7 +139,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         title="title_%s" % category_id_1)
 
     self.tic()
-    item0._build(bc)
+    item0.fixConsistency()
     self.tic()
 
     category_0 = getattr(self.portal.portal_categories.group, category_id_0, None)
@@ -149,7 +149,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
     self.assertEqual(category_1, None)
 
-    item1._build(bc)
+    item1.fixConsistency()
     self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
@@ -164,7 +164,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         object_id=category_id_1,
                                         title="new_title_%s" % category_id_1)
 
-    item2._build(bc)
+    item2.fixConsistency()
     self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, 
@@ -195,7 +195,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     self.tic()
 
-    item_eur._build(bc)
+    item_eur.fixConsistency()
     self.tic()
 
     eur = getattr(self.portal.currency_module, eur_currency_id , None)
@@ -205,7 +205,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
     self.assertEqual(brl, None)
 
-    item_brl._build(bc)
+    item_brl.fixConsistency()
     self.tic()
 
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
@@ -214,9 +214,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     # Build several times to not break portal.
 
-    item_brl._build(bc)
+    item_brl.fixConsistency()
     self.tic()
-    item_brl._build(bc)
+    item_brl.fixConsistency()
     self.tic()
 
   def testSecurityCategoryMappingConfiguratorItem(self):
@@ -240,7 +240,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                   "Security Category Mapping Configurator Item")
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     # XXX Skin folder should be part of configuration and not always custom
@@ -267,7 +267,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                   "Account Configurator Item", **account_dict)
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     account = getattr(account_module, account_dict['account_id'], None)
@@ -289,7 +289,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                   "Account Configurator Item", **account_dict)
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     same_account = getattr(account_module, account_dict['account_id'], None)
@@ -327,7 +327,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                     property_map["active_sense_method_id"],
                                     "", "context.setEnabled(0)")
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
@@ -394,7 +394,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       person_module_type.manage_delObjects([i.id for i in role_list])
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     role_list = [i for i in person_type.objectValues(
@@ -449,7 +449,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       configuration_spreadsheet_data = data)
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     base_category_list = ["group", "site", "business_application", 
@@ -499,7 +499,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       id = "rule_do_not_exist")
 
     self.tic()
-    self.assertRaises(ValueError, item._build, bc)
+    self.assertRaises(ValueError, item.fixConsistency)
 
     rule_reference = "testing_configurator_rule_%s" % self.newUniqueUID()
     item = configuration_save.addConfigurationItem(
@@ -509,7 +509,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       trade_phase_list = ['testing/order'])
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     template_id = item.getId()
@@ -541,7 +541,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       reference = reference)
 
     self.tic()
-    item._build(bc)
+    item.fixConsistency()
     self.tic()
 
     business_process = self.portal.portal_catalog.getResultValue(

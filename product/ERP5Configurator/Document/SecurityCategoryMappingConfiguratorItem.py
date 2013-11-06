@@ -57,21 +57,26 @@ class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    script_id = 'ERP5Type_getSecurityCategoryMapping'
+    error_list = ['%s should be created' % script_id,]
+    if fixit:
+      portal_alarms = self.getPortalObject().portal_alarms
+      script_content = """return (
+  ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
+  ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),
+  ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function', 'follow_up']),
+  ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['group']),
+  ('ERP5Type_getSecurityCategoryRoot', ['group']),
+  )"""
 
-  def _build(self, business_configuration):
-    portal_alarms = self.getPortalObject().portal_alarms
-    script_content = """return (
-('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
-('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),
-('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function', 'follow_up']),
-('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['group']),
-('ERP5Type_getSecurityCategoryRoot', ['group']),
-)"""
+      folder = self._createSkinFolder()
+      self._createZODBPythonScript(folder,
+                                   script_id,
+                                    '', script_content)
 
-    folder = self._createSkinFolder()
-    self._createZODBPythonScript(folder,
-                                  'ERP5Type_getSecurityCategoryMapping',
-                                  '', script_content)
+      ## add to customer template
+      business_configuration = self.getBusinessConfigurationValue()
+      self.install(folder, business_configuration)
 
-    ## add to customer template
-    self.install(folder, business_configuration)
+    return error_list

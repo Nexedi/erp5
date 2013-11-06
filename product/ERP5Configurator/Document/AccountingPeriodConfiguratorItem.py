@@ -55,20 +55,23 @@ class AccountingPeriodConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Task )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     portal = self.getPortalObject()
+    business_configuration = self.getBusinessConfigurationValue()
     organisation_id = business_configuration.\
                                  getGlobalConfigurationAttr('organisation_id')
     organisation = portal.organisation_module._getOb(organisation_id)
-    period = organisation.newContent(
-                            portal_type='Accounting Period',
-                            start_date=self.getStartDate(),
-                            stop_date=self.getStopDate(),
-                            short_title=self.getShortTitle(),
-                            title=self.getTitle())
+    if fixit:
+      period = organisation.newContent(
+                              portal_type='Accounting Period',
+                              start_date=self.getStartDate(),
+                              stop_date=self.getStopDate(),
+                              short_title=self.getShortTitle(),
+                              title=self.getTitle())
 
-    if self.portal_workflow.isTransitionPossible(period, 'start'):
-      period.start(comment="Started by Configurator")
+      if self.portal_workflow.isTransitionPossible(period, 'start'):
+        period.start(comment="Started by Configurator")
 
     # no need to 'install' in the business template, because it's contain as
     # subobject of an organisation we already added.
+    return ['Accounting Period %s should be created' % self.getTitle()]

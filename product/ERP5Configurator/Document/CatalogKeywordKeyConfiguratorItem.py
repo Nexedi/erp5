@@ -55,15 +55,21 @@ class CatalogKeywordKeyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = []
     portal = self.getPortalObject()
     catalog = portal.portal_catalog.getSQLCatalog()
     key_list = list(catalog.getProperty('sql_catalog_keyword_search_keys', ()))
     for k in self.key_list:
       if k not in key_list:
+        error_list.append(self._createConstraintMessage(
+          "%s should be in sql_catalog_keyword_search_keys" % k))
         key_list.append(k)
     key_list = tuple(key_list)
-    catalog._setPropValue('sql_catalog_keyword_search_keys', key_list)
-    bt = business_configuration.getSpecialiseValue()
-    bt.edit(template_catalog_keyword_key_list=key_list)
+    if fixit:
+      catalog._setPropValue('sql_catalog_keyword_search_keys', key_list)
+      business_configuration = self.getBusinessConfigurationValue()
+      bt = business_configuration.getSpecialiseValue()
+      bt.edit(template_catalog_keyword_key_list=key_list)
 
+    return error_list

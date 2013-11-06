@@ -57,9 +57,17 @@ class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _build(self, business_configuration):
-    bt5 = self.getPortalObject().portal_templates.newContent(
-            portal_type="Business Template", title=self.bt5_title)
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    template_tool = self.getPortalObject().portal_templates
+    error_list = []
+    if self.bt5_title not in template_tool.getBuiltBusinessTemplateList():
+      error_list.append(self._createConstraintMessage(
+        '%s should be created' % self.bt5_title))
 
-    ## ..and set it as current
-    business_configuration.setSpecialise(bt5.getRelativeUrl())
+    if fixit:
+      bt5 = template_tool.newContent(portal_type="Business Template",
+          title=self.bt5_title)
+      business_configuration = self.getBusinessConfigurationValue()
+      business_configuration.setSpecialise(bt5.getRelativeUrl())
+
+    return error_list

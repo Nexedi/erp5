@@ -58,57 +58,61 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Reference
                     )
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    business_process = portal.business_process_module.newContent(
-                                           portal_type="Business Process",
-                                           reference=self.getReference(),
-                                           title=self.getTitle())
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = ["Business Process %s should be created" % self.getReference(),]
+    if fixit:
+      portal = self.getPortalObject()
+      business_process = portal.business_process_module.newContent(
+                                            portal_type="Business Process",
+                                            reference=self.getReference(),
+                                            title=self.getTitle())
+      business_configuration = self.getBusinessConfigurationValue()
+      business_configuration.setGlobalConfigurationAttr(\
+                    business_process_id=business_process.getId())
 
-    business_configuration.setGlobalConfigurationAttr(\
-                  business_process_id=business_process.getId())
 
+      business_process_dict = self._getBusinessProcessDict()
+      int_index = 0
+      for path_dict in business_process_dict["Trade Model Path"]:
+        int_index += 1
+        path_dict.setdefault("int_index", int_index)
+        title = path_dict.pop('title')
+        trade_phase = path_dict.pop('trade_phase')
+        trade_date = path_dict.pop('trade_date')
+        for key in path_dict:
+          if path_dict[key] is None:
+            path_dict.pop(key)
+        self._addTradeModelPath(business_process=business_process,
+                                title=title,
+                                trade_phase=trade_phase,
+                                trade_date=trade_date,
+                                **path_dict)
 
-    business_process_dict = self._getBusinessProcessDict()
-    int_index = 0
-    for path_dict in business_process_dict["Trade Model Path"]:
-      int_index += 1
-      path_dict.setdefault("int_index", int_index)
-      title = path_dict.pop('title')
-      trade_phase = path_dict.pop('trade_phase')
-      trade_date = path_dict.pop('trade_date')
-      for key in path_dict:
-        if path_dict[key] is None:
-          path_dict.pop(key)
-      self._addTradeModelPath(business_process=business_process,
+      int_index = 0
+      for link_dict in business_process_dict["Business Link"]:
+        int_index += 1
+        link_dict.setdefault("int_index", int_index)
+        title = link_dict.pop('title')
+        trade_phase = link_dict.pop('trade_phase')
+        delivery_builder = link_dict.pop('delivery_builder', None)
+        predecessor = link_dict.pop('predecessor', None)
+        successor = link_dict.pop('successor', None)
+        for key in path_dict:
+          if path_dict[key] is None:
+            path_dict.pop(key)
+
+        self._addBusinessLink(business_process=business_process,
                               title=title,
-                              trade_phase=trade_phase,
-                              trade_date=trade_date,
-                              **path_dict)
+                              trade_phase = trade_phase,
+                              predecessor = predecessor,
+                              successor = successor,
+                              delivery_builder = delivery_builder,
+                              **link_dict)
 
-    int_index = 0
-    for link_dict in business_process_dict["Business Link"]:
-      int_index += 1
-      link_dict.setdefault("int_index", int_index)
-      title = link_dict.pop('title')
-      trade_phase = link_dict.pop('trade_phase')
-      delivery_builder = link_dict.pop('delivery_builder', None)
-      predecessor = link_dict.pop('predecessor', None)
-      successor = link_dict.pop('successor', None)
-      for key in path_dict:
-        if path_dict[key] is None:
-          path_dict.pop(key)
+      business_process.validate(comment=translateString('Validated by configurator'))
+      self.install(business_process, business_configuration)
 
-      self._addBusinessLink(business_process=business_process,
-                            title=title,
-                            trade_phase = trade_phase,
-                            predecessor = predecessor,
-                            successor = successor,
-                            delivery_builder = delivery_builder,
-                            **link_dict)
-
-    business_process.validate(comment=translateString('Validated by configurator'))
-    self.install(business_process, business_configuration)
+    return error_list
 
   def _getBusinessProcessDict(self):
     """ Read the spreadsheet and return the configuration for

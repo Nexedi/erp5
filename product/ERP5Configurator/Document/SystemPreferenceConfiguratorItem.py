@@ -72,16 +72,22 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           property_id_list.append('%s%s' % (prop.getReference(), list_prefix))
     return property_id_list
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    error_list = []
     portal = self.getPortalObject()
     preference = portal.portal_preferences._getOb(self.object_id, None)
     if preference is None:
-      preference = portal.portal_preferences.newContent(
-                              portal_type = 'System Preference',
-                              id = self.object_id,
-                              title = self.title,
-                              description = self.description,
-                              priority = 1)
+      error_list.append(self._createConstraintMessage(
+        "System Preference %s should be created" % self.object_id))
+      if fixit:
+        preference = portal.portal_preferences.newContent(
+                                portal_type = 'System Preference',
+                                id = self.object_id,
+                                title = self.title,
+                                description = self.description,
+                                priority = 1)
+      else:
+        return error_list
 
     preference_dict = {}
 
@@ -96,9 +102,11 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       preference.enable()
 
     preference.edit(**preference_dict)
+    business_configuration = self.getBusinessConfigurationValue()
     bt5_obj = business_configuration.getSpecialiseValue()
     current_template_preference_list = list(bt5_obj.getTemplatePreferenceList())
     if preference.getId() not in current_template_preference_list:
       current_template_preference_list.append(preference.getId())
       bt5_obj.edit(template_preference_list=current_template_preference_list,)
 
+    return error_list

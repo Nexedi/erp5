@@ -42,7 +42,7 @@ END_STATE_TITLE = 'End'
 
 class BusinessConfiguration(Item):
   """
-    BusinessConfiguration store the values enter by the wizard. 
+    BusinessConfiguration store the values enter by the wizard.
   """
 
   meta_type = 'ERP5 Business Configuration'
@@ -79,7 +79,7 @@ class BusinessConfiguration(Item):
   def isDownloadConfigurationState(self):
     """ Check if the Business Configuration is on Download State
     """
-    return self.getCurrentStateTitle() == DOWNLOAD_STATE_TITLE 
+    return self.getCurrentStateTitle() == DOWNLOAD_STATE_TITLE
 
   security.declareProtected(Permissions.View, 'isEndConfigurationState')
   def isEndConfigurationState(self):
@@ -126,12 +126,12 @@ class BusinessConfiguration(Item):
       form_kw = {}
     current_state = self.getCurrentStateValue()
     transition = self.getNextTransition()
-    ## it's possible that we have already saved a configuration save object 
+    ## it's possible that we have already saved a configuration save object
     ## in workflow_history for this state so we use it
     configuration_save = self._getConfSaveForStateFromWorkflowHistory()
     if configuration_save is None:
       ## we haven't saved any configuration save for this state so create new one
-      configuration_save = self.newContent(portal_type='Configuration Save', 
+      configuration_save = self.newContent(portal_type='Configuration Save',
                                            title=current_state.getTitle())
     else:
       ## we have already created configuration save for this state
@@ -145,7 +145,7 @@ class BusinessConfiguration(Item):
     for k in form_kw.keys():
       if form_kw[k].__class__.__name__ != 'FileUpload':
         modified_form_kw[k] = form_kw[k]
-    configuration_save.edit(**modified_form_kw) 
+    configuration_save.edit(**modified_form_kw)
     ## Add some variables so we can get use them in workflow after scripts
     form_kw['configuration_save_url'] = configuration_save.getRelativeUrl()
     form_kw['transition'] = transition.getRelativeUrl()
@@ -162,7 +162,7 @@ class BusinessConfiguration(Item):
     while transition is not None:
       form_id = transition.getTransitionFormId()
       if self.isDownloadConfigurationState():
-        ## exec next transition for this business configuration 
+        ## exec next transition for this business configuration
         self._executeTransition()
         transition = self.getNextTransition()
         return None, None, None, None
@@ -172,7 +172,7 @@ class BusinessConfiguration(Item):
         transition = self.getNextTransition()
       else:
         if context is None:
-          ## examine workflow_history for already saved 
+          ## examine workflow_history for already saved
           ## 'Configuration Save' objects for this state
           context = self._getConfSaveForStateFromWorkflowHistory()
         ## get form object in a proper context
@@ -203,7 +203,7 @@ class BusinessConfiguration(Item):
           form_html = self.Base_mainConfiguratorFormTemplate(
                                   current_form_number=form_counter + 1,
                                   max_form_numbers=forms_number,
-                                  form_title=form.title,                               
+                                  form_title=form.title,
                                   form_html=template_html)
           html_forms.append(form_html)
     else:
@@ -233,14 +233,14 @@ class BusinessConfiguration(Item):
           html_forms.append(form_html)
     if html_forms != []:
       html = "\n".join(html_forms)
-    title = form.title  
+    title = form.title
     return html, title
 
   security.declarePrivate('_displayPreviousForm')
   def _displayPreviousForm(self):
     """ Render previous form using workflow history. """
     workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
-    workflow_history.reverse()   
+    workflow_history.reverse()
     for wh in workflow_history:
       ## go one step back
       current_state = self.getCurrentStateValue()
@@ -303,7 +303,7 @@ class BusinessConfiguration(Item):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setMultiEntryTransition')
   def setMultiEntryTransition(self, transition_url, max_entry_number):
-    """ Set a transition as multiple - i.e max_entry_number of forms 
+    """ Set a transition as multiple - i.e max_entry_number of forms
         which will be rendered. This method is called in after scripts
         and usually this number is set by user in a web form. """
     if getattr(aq_base(self), '_multi_entry_transitions', None) is None:
@@ -327,13 +327,13 @@ class BusinessConfiguration(Item):
   ############# Instance and Business Configuration ########################
   security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')
   def buildConfiguration(self):
-    """ 
-      Build list of business templates according to already saved 
+    """
+      Build list of business templates according to already saved
       Configuration Saves (i.e. user input).
-      This is the actual implementation which can be used from workflow 
+      This is the actual implementation which can be used from workflow
       actions and Configurator requets
     """
-    kw = dict(tag="start_configuration_%s" % self.getId(), 
+    kw = dict(tag="start_configuration_%s" % self.getId(),
               after_method_id=["updateBusinessTemplateFromUrl",
                                "recursiveImmediateReindexObject",
                                "immediateReindexObject"])
@@ -346,13 +346,14 @@ class BusinessConfiguration(Item):
       configuration_item_list = configuration_save.contentValues()
       configuration_item_list.sort(lambda x, y: cmp(x.getIntId(), y.getIntId()))
       for configurator_item in configuration_item_list:
-        configurator_item.activate(**kw).build(self.getRelativeUrl())
+        configurator_item.activate(**kw).fixConsistency(
+            filter={"constraint_type":"configuration"})
         kw["after_tag"] = kw["tag"]
         kw["tag"] = "configurator_item_%s_%s" % (configurator_item.getId(),
                                                  configurator_item.getUid())
 
     kw["tag"] = "final_configuration_step_%s" % self.getId()
-    kw["after_method_id"] = ["build", 'immediateReindexObject', \
+    kw["after_method_id"] = ["fixConsistency", 'immediateReindexObject', \
                              "recursiveImmediateReindexObject"]
 
     self.activate(**kw).ERP5Site_afterConfigurationSetup()

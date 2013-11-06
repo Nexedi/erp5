@@ -59,14 +59,14 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.StandardBT5ConfiguratorItem
                     )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     template_tool = self.getPortalObject().portal_templates
     bt5_id = self.getBt5Id().split('.')[0]
 
     if bt5_id in template_tool.getInstalledBusinessTemplateTitleList():
       LOG("StandardBT5ConfiguratorItem", INFO,
         "Business Template already Installed: %s for %s" % (bt5_id, self.getRelativeUrl()))
-      return
+      return []
 
     def _getRepositoryBusinessTemplateTitleList():
       return [bt.getTitle() for bt in \
@@ -77,15 +77,13 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                          cache_factory='erp5_content_long')()
 
     if bt5_id in repository_bt_title_list:
-      template_tool.installBusinessTemplateListFromRepository([bt5_id],
-                                 update_catalog=self.getUpdateCatalog(0), 
-                                 install_dependency=self.getInstallDependency(1),
-                                 activate=True)
+      if fixit:
+        template_tool.installBusinessTemplateListFromRepository([bt5_id],
+                                  update_catalog=self.getUpdateCatalog(0),
+                                  install_dependency=self.getInstallDependency(1),
+                                  activate=True)
 
-      LOG("StandardBT5ConfiguratorItem", INFO,
-        "Install %s for %s" % (bt5_id, self.getRelativeUrl()))
-      return
+      return [self._createConstraintMessage('%s should be installed' % bt5_id),]
 
     raise ValueError("The business template %s was not found on available \
                          sources." % bt5_id)
-

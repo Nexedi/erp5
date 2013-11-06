@@ -56,30 +56,33 @@ class OrganisationConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Organisation )
 
-  def _build(self, business_configuration):
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
     """ Setup organisation. """
-    portal = self.getPortalObject()
-    organisation = portal.organisation_module.newContent(portal_type="Organisation")
+    if fixit:
+      portal = self.getPortalObject()
+      organisation = portal.organisation_module.newContent(portal_type="Organisation")
 
-    org_dict = {'price_currency': 'currency_module/%s' % self.getPriceCurrency(),
-                'group': self.getGroup(),
-                'title': self.getTitle(),
-                'corporate_name': self.getCorporateName(), 
-                'default_address_city': self.getDefaultAddressCity(),
-                'default_email_text': self.getDefaultEmailText(), 
-                'default_telephone_text': self.getDefaultTelephoneText(), 
-                'default_address_zip_code': self.getDefaultAddressZipCode(), 
-                'default_address_region': self.getDefaultAddressRegion(),
-                'default_address_street_address': self.getDefaultAddressStreetAddress(),
-                'site':'main', # First customer's organisation is always main site.
-                }
-    organisation.edit(**org_dict)
-    
-    # store globally organization_id 
-    business_configuration.setGlobalConfigurationAttr(organisation_id=organisation.getId())
+      org_dict = {'price_currency': 'currency_module/%s' % self.getPriceCurrency(),
+                  'group': self.getGroup(),
+                  'title': self.getTitle(),
+                  'corporate_name': self.getCorporateName(),
+                  'default_address_city': self.getDefaultAddressCity(),
+                  'default_email_text': self.getDefaultEmailText(),
+                  'default_telephone_text': self.getDefaultTelephoneText(),
+                  'default_address_zip_code': self.getDefaultAddressZipCode(),
+                  'default_address_region': self.getDefaultAddressRegion(),
+                  'default_address_street_address': self.getDefaultAddressStreetAddress(),
+                  'site':'main', # First customer's organisation is always main site.
+                  }
+      organisation.edit(**org_dict)
 
-    if self.portal_workflow.isTransitionPossible(organisation, 'validate'):
-      organisation.validate(comment=translateString("Validated by Configurator"))
+      business_configuration = self.getBusinessConfigurationValue()
+      # store globally organization_id 
+      business_configuration.setGlobalConfigurationAttr(organisation_id=organisation.getId())
 
-    ## add to customer template
-    self.install(organisation, business_configuration)
+      if self.portal_workflow.isTransitionPossible(organisation, 'validate'):
+        organisation.validate(comment=translateString("Validated by Configurator"))
+
+      ## add to customer template
+      self.install(organisation, business_configuration)
+    return ['Organisation should be created',]

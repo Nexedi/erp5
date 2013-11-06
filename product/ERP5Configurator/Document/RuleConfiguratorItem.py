@@ -56,21 +56,24 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Reference )
 
-  def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    template_id = self.getId()
+  def _checkConsistency(self, fixit=False, filter=None, **kw):
+    if fixit:
+      portal = self.getPortalObject()
+      template_id = self.getId()
 
-    if getattr(portal.portal_rules, template_id, None) is not None:
-      cb_data = portal.portal_rules.manage_copyObjects([template_id])
-      copied, = portal.portal_rules.manage_pasteObjects(cb_data)
-      rule = portal.portal_rules[copied["new_id"]]
-      if self.getReference() is not None:
-        rule.edit(reference=self.getReference())
-      rule.setVersion(str(int(rule.getVersion(0)) + 1))
-      if len(self.getTradePhaseList()) > 0:
-        rule.setTradePhaseList(self.getTradePhaseList())
-      rule.validate()
-    else:
-      raise ValueError("Unable to find rule template with id %s" % template_id)
+      if getattr(portal.portal_rules, template_id, None) is not None:
+        cb_data = portal.portal_rules.manage_copyObjects([template_id])
+        copied, = portal.portal_rules.manage_pasteObjects(cb_data)
+        rule = portal.portal_rules[copied["new_id"]]
+        if self.getReference() is not None:
+          rule.edit(reference=self.getReference())
+        rule.setVersion(str(int(rule.getVersion(0)) + 1))
+        if len(self.getTradePhaseList()) > 0:
+          rule.setTradePhaseList(self.getTradePhaseList())
+        rule.validate()
+      else:
+        raise ValueError("Unable to find rule template with id %s" % template_id)
 
-    self.install(rule, business_configuration)
+      business_configuration = self.getBusinessConfigurationValue()
+      self.install(rule, business_configuration)
+    return ['Rule should be defined',]
