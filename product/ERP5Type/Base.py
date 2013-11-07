@@ -1567,7 +1567,7 @@ class Base( CopyContainer,
     return list(result)
 
   # Catalog Related
-  security.declareProtected( Permissions.View, 'getObject' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'getObject' )
   def getObject(self, relative_url = None, REQUEST=None):
     """
       Returns self - useful for ListBox when we do not know
