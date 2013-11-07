@@ -1464,7 +1464,7 @@ class TestIngestion(ERP5TypeTestCase):
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
     document.discoverMetadata(document.getSourceReference(), 'contributor1') 
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
     self.assertEquals('function/musician/wind/saxophone', document.getFunction())
     self.assertEquals('anybody', document.getGroup())
