@@ -386,6 +386,71 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
   def testDeleteGlobalSelection(self):
     pass
 
+  def testChangeSelectionToolContainer(self):
+    """
+    After changing SelectionTool container, the new one should be used
+    straightaway, and more specifically volatile variables should have
+    been reset
+    """
+    from Products.ERP5Form.Tool.SelectionTool import (MemcachedContainer,
+                                                      PersistentMappingContainer)
+
+    # testGetSelectionFor() already checked if the Selection can be retrieved
+    # from the container set in afterSetUp(), so no need to check again here
+    self.portal_selections.setStorage('selection_data')
+    transaction.commit()
+
+    self.assertEqual(getattr(self.portal_selections, '_v_selection_container',
+                             None), None)
+
+    self.assertEqual(self.portal_selections.getSelectionFor('test_selection'),
+                     None)
+
+    self.assertTrue(isinstance(getattr(self.portal_selections,
+                                       '_v_selection_container', None),
+                                PersistentMappingContainer))
+
+
+    self.portal_selections.setStorage('portal_memcached/default_memcached_plugin')
+    transaction.commit()
+
+    self.assertEqual(getattr(self.portal_selections, '_v_selection_container',
+                             None), None)
+
+    self.assertNotEqual(self.portal_selections.getSelectionFor('test_selection'),
+                        None)
+
+    self.assertTrue(isinstance(getattr(self.portal_selections,
+                                       '_v_selection_container', None),
+                               MemcachedContainer))
+
+  def testChangeMemcached(self):
+    """
+    After Memcached has been changed, the new setting should be used and more
+    specifically container volative variables should have been reset
+    """
+    self.assertNotEqual(self.portal_selections.getSelectionFor('test_selection'),
+                        None)
+
+    memcached_plugin = self.portal.portal_memcached.default_memcached_plugin
+    url_string_before = memcached_plugin.getUrlString()
+
+    memcached_plugin.setUrlString('127.0.0.1:4242')
+    transaction.commit()
+
+    try:
+      self.assertEqual(getattr(self.portal_selections, '_v_selection_container',
+                               None), None)
+
+      self.assertEqual(self.portal_selections.getSelectionFor('test_selection'),
+                       None)
+
+      self.assertNotEqual(getattr(self.portal_selections, '_v_selection_container',
+                                  None), None)
+    finally:
+      memcached_plugin.setUrlString(url_string_before)
+      transaction.commit()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSelectionTool))

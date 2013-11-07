@@ -1,3 +1,6 @@
+2013-11-07 arnaud.fontaine
+* SelectionTool: Changing storage or memcached settings were not taken into effect until restart.
+
 2013-10-04 arnaud.fontaine
 * ZODB Components: Rename common view to ComponentMixin_view (naming conventions and clash with erp5_pdm).
 

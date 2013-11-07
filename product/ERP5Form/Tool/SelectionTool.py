@@ -140,6 +140,20 @@ class SelectionTool( BaseTool, SimpleItem ):
       storage_item_list.extend([['/'.join((mp.getParentValue().getTitle(), mp.getTitle(),)), mp.getRelativeUrl()] for mp in memcached_plugin_list])
       return storage_item_list
 
+    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'updateCache')
+    def clearCachedContainer(self, is_anonymous=False):
+      """
+      Clear Container currently being used for Selection Tool because either the
+      storage has changed or the its settings
+      """
+      if is_anonymous:
+        container_id = '_v_anonymous_selection_container'
+      else:
+        container_id = '_v_selection_container'
+
+      if getattr(aq_base(self), container_id, None):
+        delattr(self, container_id)
+
     security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
     def setStorage(self, storage, anonymous_storage=None, RESPONSE=None):
       """
@@ -147,11 +161,13 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if storage in [item[1] for item in self.getStorageItemList()]:
         self.storage = storage
+        self.clearCachedContainer()
       else:
         raise ValueError, 'Given storage type (%s) is now supported.' % (storage,)
       anonymous_storage = anonymous_storage or None
       if anonymous_storage in [item[1] for item in self.getStorageItemList()] + [None]:
         self.anonymous_storage = anonymous_storage
+        self.clearCachedContainer(is_anonymous=True)
       else:
         raise ValueError, 'Given storage type (%s) is now supported.' % (anonymous_storage,)
       if RESPONSE is not None:

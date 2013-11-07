@@ -57,6 +57,12 @@ if cache_plugin_list:\n
   cache_tool = getToolByName(document.getPortalObject(), \'portal_caches\')\n
   if cache_tool is not None:\n
     cache_tool.updateCache()\n
+\n
+selection_tool = document.getPortalObject()\n
+if selection_tool.getStorage() == document.getRelativeUrl():\n
+  selection_tool.clearCachedContainer()\n
+if selection_tool.getAnonymousStorage() == document.getRelativeUrl():\n
+  selection_tool.clearCachedContainer(is_anonymous=True)\n
 </string> </value>
         </item>
         <item>
