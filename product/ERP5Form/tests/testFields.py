@@ -936,7 +936,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def _getCacheSize(self, cache_id):
     count = 0
-    for cache_key in field_value_cache.viewkeys():
+    for cache_key in field_value_cache.iterkeys():
       if cache_key[0] == cache_id:
         count += 1
 
