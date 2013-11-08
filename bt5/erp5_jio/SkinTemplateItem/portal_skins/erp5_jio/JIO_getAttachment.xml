@@ -75,7 +75,7 @@ jio.setMode(mode)\n
 try:\n
   attachment_data = jio.getDocumentAttachment(doc)\n
 except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot get attachment", str(e)))\n
+  return jio.sendError(jio.createConflictDict("Cannot get attachment", str(e)))\n
 except LookupError as e:\n
   return jio.sendError(jio.createNotFoundDict("Cannot get attachment", str(e)))\n
 \n

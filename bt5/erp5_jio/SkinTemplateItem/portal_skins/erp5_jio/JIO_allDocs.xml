@@ -51,24 +51,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>import json\n
-from Products.ERP5Type.Log import log\n
+#from Products.ERP5Type.Log import log\n
 # use JSON.parse as json.loads and JSON.stringify as json.dumps\n
 \n
 context.REQUEST.response.setHeader("Access-Control-Allow-Origin", "*")\n
 \n
-try: option = json.loads(context.REQUEST.form["option"])\n
+jio = context.JIO_class()\n
+\n
+try: option = jio.jsonUtf8Loads(context.REQUEST.form["option"])\n
 except KeyError:\n
   option = {}\n
-try:\n
-  mode = str(context.REQUEST.form["mode"])\n
-except KeyError:\n
-  mode = "normal"\n
 \n
-jio = context.JIO_class(mode=mode)\n
+try: mode = str(context.REQUEST.form["mode"])\n
+except KeyError: mode = "generic"\n
+jio.setMode(mode)\n
 \n
-document_list = context.portal_catalog(portal_type="Web Page")\n
+metadata_json = jio.getAllDocuments(option)\n
 \n
-return jio.sendSuccess(jio.getAllDocsFromDocumentList(document_list, include_docs=option.get("include_docs")))\n
+return jio.sendSuccess(metadata_json)\n
+\n
+# document_list = context.portal_catalog(portal_type="Web Page")\n
+\n
+# return jio.sendSuccess(jio.getAllDocsFromDocumentList(document_list, include_docs=option.get("include_docs")))\n
 </string> </value>
         </item>
         <item>

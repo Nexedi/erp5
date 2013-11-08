@@ -75,7 +75,7 @@ jio.setMode(mode)\n
 try:\n
   metadata_json = jio.getDocumentMetadata(doc)\n
 except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot get document", str(e)))\n
+  return jio.sendError(jio.createConflictDict("Cannot get document", str(e)))\n
 except LookupError as e:\n
   return jio.sendError(jio.createNotFoundDict("Cannot get document", str(e)))\n
 \n

@@ -67,11 +67,11 @@ except KeyError: mode = "generic"\n
 jio.setMode(mode)\n
 \n
 try:\n
-  response_json = jio.putDocumentMetadata(doc)\n
-except ValueError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot put document", str(e)))\n
-except TypeError as e:\n
-  return jio.sendError(jio.createBadRequestDict("Cannot put document", str(e)))\n
+  response_json = jio.putDocumentMetadata(doc, need_id=True)\n
+except (ValueError, TypeError, KeyError) as e:\n
+  return jio.sendError(jio.createConflictDict("Cannot put document", str(e)))\n
+# except KeyError as e:\n
+#   return jio.sendError(jio.createForbiddenDict("Cannot put document", str(e)))\n
 \n
 return jio.sendSuccess(response_json)\n
 </string> </value>
