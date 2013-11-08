@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Alarm" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>Alarm_senseFullUpgradeNeed</string> </value>
+        </item>
+        <item>
+            <key> <string>alarm_notification_mode</string> </key>
+            <value>
+              <tuple>
+                <string>always</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This alarm checks that the upgrader is required. If yes, the upgrader have three steps:\n
+\n
+1. Pre-upgrade\n
+This step will run all constraints that have contraint_type equal pre_upgrade.\n
+\n
+2. Upgrader\n
+This step will run all constraints that have contraint_type equal upgrade. In this step is supposed to install/upgrade all Business Template required.\n
+\n
+3. Post-Upgrade\n
+This step will run all constraints that have contraint_type equal post_upgrade.</string> </value>
+        </item>
+        <item>
+            <key> <string>enabled</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>promise_check_upgrade</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month_day</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1384423200.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Alarm</string> </value>
+        </item>
+        <item>
+            <key> <string>sense_method_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>solve_method_id</string> </key>
+            <value> <string>Alarm_runFullUpgrader</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Run Full Upgrade</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

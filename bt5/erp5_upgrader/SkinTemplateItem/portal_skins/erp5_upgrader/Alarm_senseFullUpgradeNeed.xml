@@ -50,14 +50,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Check if upgrader is required\n
+            <value> <string encoding="cdata"><![CDATA[
+
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
-</string> </value>
+  Run upgrader\n
+"""\n
+portal = context.getPortalObject()\n
+portal_alarms = portal.portal_alarms\n
+\n
+after_method_id = \'callMethodOnObjectList\'\n
+def launchSenseAlarm(alarm_id, after_tag=[]):\n
+  """ Get the alarm and use sense"""\n
+  upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
+  if upgrader_alarm is not None:\n
+    # call solve method\n
+    kw = {"tag": alarm_id,\n
+      "after_method_id": after_method_id}\n
+    if len(after_tag) > 0:\n
+      kw["after_tag"] = after_tag\n
+    method_id = upgrader_alarm.getActiveSenseMethodId()\n
+    if method_id not in (None, \'\'):\n
+      method = getattr(upgrader_alarm.activate(**kw), method_id)\n
+      method()\n
+    return [alarm_id,]\n
+  return after_tag\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_pre_upgrade\')\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_upgrader\',\n
+                                   after_tag=previous_tag)\n
+\n
+previous_tag = launchSenseAlarm(\'upgrader_check_post_upgrade\',\n
+                 after_tag=previous_tag)\n
+\n
+active_process = context.newActiveProcess()\n
+context.activate(after_tag=previous_tag,\n
+  after_method_id=after_method_id).Alarm_postFullUpgradeNeed(\n
+  active_process=active_process.getRelativeUrl())\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -65,7 +97,7 @@ context.Alarm_checkUpgraderConsistency(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Alarm_senseFullUpgradeNeed</string> </value>
         </item>
       </dictionary>
     </pickle>

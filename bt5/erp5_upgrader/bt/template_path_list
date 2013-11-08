@@ -1,3 +1,4 @@
-portal_alarms/bt5_upgrader
-portal_alarms/finalize_upgrader
-portal_alarms/upgrader_controller
+portal_alarms/promise_check_upgrade
+portal_alarms/upgrader_check_post_upgrade
+portal_alarms/upgrader_check_pre_upgrade
+portal_alarms/upgrader_check_upgrader

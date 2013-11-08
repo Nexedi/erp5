@@ -50,22 +50,56 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Check if upgrader is required\n
+            <value> <string encoding="cdata"><![CDATA[
+
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
-</string> </value>
+  Run upgrader\n
+"""\n
+portal = context.getPortalObject()\n
+portal_alarms = portal.portal_alarms\n
+\n
+def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
+  """ Get the alarm and use sense and solve """\n
+  upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
+  if upgrader_alarm is not None and upgrader_alarm.sense():\n
+    # call solve method\n
+    kw = dict(tag=alarm_id)\n
+    if len(after_method_id) > 0:\n
+      kw["after_method_id"] = after_method_id\n
+    method_id = upgrader_alarm.getSolveMethodId()\n
+    if method_id not in (None, \'\'):\n
+      method = getattr(upgrader_alarm.activate(**kw), method_id)\n
+      method()\n
+    return [method_id] + after_method_id\n
+  return after_method_id\n
+\n
+previous_method_id = launchUpgraderAlarm(\'upgrader_check_pre_upgrade\')\n
+\n
+previous_method_id.extend([\'recursiveImmediateReindexObject\',\n
+                           \'immediateReindexObject\',\n
+                           \'callMethodOnObjectList\'])\n
+\n
+previous_method_id = launchUpgraderAlarm(\'upgrader_check_upgrader\',\n
+                                   after_method_id=previous_method_id)\n
+\n
+previous_method_id.append(\'updateBusinessTemplateFromUrl\')\n
+previous_method_id = launchUpgraderAlarm(\'upgrader_check_post_upgrade\',\n
+                                   after_method_id=previous_method_id)\n
+\n
+# Nothing else to do, so we can disable.\n
+context.setEnabled(False)\n
+return\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Alarm_runFullUpgrader</string> </value>
         </item>
       </dictionary>
     </pickle>

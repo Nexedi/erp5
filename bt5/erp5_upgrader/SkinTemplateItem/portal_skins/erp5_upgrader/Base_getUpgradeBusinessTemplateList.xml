@@ -51,21 +51,22 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Check if upgrader is required\n
+  This script should returns always two list of Business Template.\n
+   - The first list is to resolve dependencies and upgrade.\n
+   - The second list is what you want to keep. This is useful if we want to keep \n
+   a old business template without updating it and without removing it\n
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
+\n
+return (\'erp5_base\',), []\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>fixit=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Base_getUpgradeBusinessTemplateList</string> </value>
         </item>
       </dictionary>
     </pickle>

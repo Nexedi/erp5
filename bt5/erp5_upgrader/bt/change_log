@@ -1,3 +1,7 @@
+2013-11-18 Gabriel Monnerat
+* The alarms were renamed to cover each step of upgrader and give the possibility to call each step manually one-by-one.
+* Also, all Scripts that the logic can be done by installing Business Template was removed.
+
 2013-09-03 arnaud.fontaine
 * ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
 
@@ -5,7 +9,7 @@
 * ZODB Components: Migrate Documents, Extensions and Tests.
 
 2012-10-05 arnaud.fontaine
-* Allow to specify bt5 which are not going to be upgraded (meaningful for master data for example). 
+* Allow to specify bt5 which are not going to be upgraded (meaningful for master data for example).
 
 2011-03-10 Kazuhiko
 * by default, all installed business templates will be upgraded, not all existing business templates in the repository.

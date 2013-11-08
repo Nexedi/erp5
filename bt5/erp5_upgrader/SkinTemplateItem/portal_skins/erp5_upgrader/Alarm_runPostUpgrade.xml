@@ -51,21 +51,35 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Check if upgrader is required\n
+  Run Post upgrade\n
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
+portal_alarms = context.getPortalObject().portal_alarms\n
+active_process = context.newActiveProcess()\n
+\n
+# We should not run post upgrade if upgrader was not solved or never executed\n
+alarm = getattr(portal_alarms, \'upgrader_check_upgrader\')\n
+if alarm.sense() in (None, True):\n
+  active_process.postActiveResult(summary=context.getTitle(),\n
+      severity=1,\n
+      detail="Is required run upgrade before solve it. " +\\\n
+        "You need run active sense once at least on this alarm")\n
+  return\n
+\n
+context.Alarm_checkUpgraderConsistency(fixit=True,\n
+  active_process=active_process,\n
+  filter_dict={"constraint_type": ["post_upgrade",]})\n
+\n
+context.setEnabled(False)\n
+return\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Alarm_runPostUpgrade</string> </value>
         </item>
       </dictionary>
     </pickle>

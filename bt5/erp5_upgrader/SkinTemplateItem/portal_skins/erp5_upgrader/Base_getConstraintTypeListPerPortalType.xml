@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+constraint_type_list = portal.getPortalConstraintTypeList()\n
+\n
+property_sheet_by_type_dict = {}\n
+for portal_type in portal.portal_types.objectValues():\n
+  property_sheet_list = portal_type.getTypePropertySheetList()\n
+  if not property_sheet_list:\n
+    continue\n
+  for property_sheet in property_sheet_list:\n
+    property_sheet_by_type_dict.setdefault(\n
+      property_sheet, []).append(portal_type.getId())\n
+\n
+type_per_constraint_type = {}\n
+constraint_type_per_id = {}\n
+for property_sheet in portal.portal_property_sheets.objectValues():\n
+  constraint_list = property_sheet.objectValues(\n
+    portal_type=constraint_type_list)\n
+  if not constraint_list:\n
+    continue\n
+  type_list = []\n
+  type_list_append = type_list.append\n
+  property_sheet_id = property_sheet.getId()\n
+  for constraint in constraint_list:\n
+    method = getattr(constraint, \'getConstraintType\', None)\n
+    if not method:\n
+      continue\n
+    constraint_type = method()\n
+    if constraint_type:\n
+      if property_sheet_id in property_sheet_by_type_dict:\n
+        type_per_constraint_type.setdefault(\n
+          constraint_type, []).extend(\n
+            property_sheet_by_type_dict[property_sheet_id])\n
+      type_list_append(constraint_type)\n
+  if type_list:\n
+    constraint_type_per_id.setdefault(property_sheet_id, []).extend(type_list)\n
+\n
+constraint_type_per_type = {}\n
+for property_sheet_id, category_list in constraint_type_per_id.iteritems():\n
+  for portal_type in property_sheet_by_type_dict.get(property_sheet_id, []):\n
+    constraint_type_per_type.setdefault(portal_type, []).extend(category_list)\n
+\n
+portal_type_tool = portal.portal_types\n
+portal_type_list = constraint_type_per_type.keys()\n
+\n
+for portal_type in portal_type_list:\n
+  allowed_content_type_list = \\\n
+    portal_type_tool[portal_type].getTypeAllowedContentTypeList()\n
+  for allowed_content_type in allowed_content_type_list:\n
+    if allowed_content_type in portal_type_list:\n
+      type_list = constraint_type_per_type.pop(allowed_content_type)\n
+      for constraint_type in type_list:\n
+        type_per_constraint_type[constraint_type].remove(allowed_content_type)\n
+\n
+return constraint_type_per_type, type_per_constraint_type\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getConstraintTypeListPerPortalType</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

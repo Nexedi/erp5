@@ -50,22 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Check if upgrader is required\n
-"""\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
+            <value> <string>bt5_list, keep_bt5_id_set = context.Base_getUpgradeBusinessTemplateList()\n
+\n
+template_tool = context.getPortalObject().portal_templates\n
+return template_tool.upgradeSite(bt5_list,\n
+  keep_bt5_id_set=keep_bt5_id_set,\n
+  dry_run=(not fixit))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>TemplateTool_checkUpgradeConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

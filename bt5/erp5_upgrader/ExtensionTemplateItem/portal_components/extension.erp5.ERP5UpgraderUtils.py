@@ -32,9 +32,8 @@
 from App.config import getConfiguration
 from Products.ERP5Type.Log import log
 from Products.CMFActivity.ActiveResult import ActiveResult
-from time import sleep
 import os
-from Acquisition import aq_base
+
 
 def ERP5Site_editERP5SiteProperty(self, prop, value):
   """
@@ -46,28 +45,6 @@ def ERP5Site_editERP5SiteProperty(self, prop, value):
     method = portal._updateProperty
   method(prop, value)
   return True
-
-def ERP5Site_restartZopeInstance(self):
-  """
-    Zope must be restart after update the Products or Software
-    But the restart into one activity, will make the activity always
-    fail and with the server will be restart many times.
-
-    This method use a flag to define if the server was already restarted.
-    If yes, the flag is removed and the restart will be ignored.
-
-    This method should be run into a single activity to prevent rollback
-    other parts.
-  """
-  import Lifetime
-  Lifetime.shutdown(1,fast=1)
-  log("Zope Restart was launched.")
-
-  active_result = ActiveResult()
-  active_result.edit(summary="Zope Restart",
-                     severity=0,
-                     detail="Zope was restart Sucessfully.")
-  return active_result
 
 def ERP5Site_clearActivities(self):
   """
@@ -119,42 +96,26 @@ def ERP5Site_runVerificationScript(self, method_id):
   if len(integrity_result) > 0:
     return '%s : \n - %s ' % (method_id, '\n - '.join(integrity_result))
 
-def ERP5Site_changeAuthoredDocumentListOwnership(self, old_owner, new_owner):
-  """
-    Change owneship for all documents in the system belonging to 
-    an user (i.e. represented by user_name/reference).
-  """
-  # Move import to here prevents the raise error when this External 
-  # Be imported during the upgrade.
-  from Products.ERP5Type.Utils import _setSuperSecurityManager
-  from AccessControl.SecurityManagement import setSecurityManager
-  from Products.ERP5Security.ERP5UserManager import SUPER_USER
-
-  result = []
-  orginal_security_manager = _setSuperSecurityManager(self, SUPER_USER)
-  portal = self.getPortalObject()
-  user_folder = portal.acl_users
-
-  new_owner_as_user = user_folder.getUserById(new_owner).__of__(user_folder)
-  document_list = portal.portal_catalog.unrestrictedSearchResults(owner = old_owner)
-  for document in document_list:
-    document = document.getObject()
-    #  change document ownership
-    document.changeOwnership(new_owner_as_user)
-    # fix local roles
-    for item in document.get_local_roles():
-      user = item[0]
-      role_list = item[1]
-      if user == old_owner:
-        # replace old Owner with new One
-        document.manage_delLocalRoles((old_owner,))
-        document.manage_setLocalRoles(new_owner, role_list)
-    result.append(document.getRelativeUrl())
-    # finally reindex document
-    document.reindexObject()
-
-  # restore security
-  setSecurityManager(orginal_security_manager)
-  return dict(old_owner = old_owner, \
-              new_owner = new_owner, \
-              changed_document_list = result)
+def ERP5Site_dumpWorkflowChainByPortalType(self, REQUEST=None):
+  # This method outputs the workflow chain by portal type
+  # ---
+  # {"Account": ['account_workflow', "edit_workflow"]}
+  # ---
+  #
+  if REQUEST:
+    raise RuntimeError("You can not call this script from the url")
+  workflow_tool = self.getPortalObject().portal_workflow
+  cbt = workflow_tool._chains_by_type
+  ti = workflow_tool._listTypeInfo()
+  chain_by_type_dict = {}
+  for t in ti:
+    id = t.getId()
+    title = t.Title()
+    if title == id:
+      title = None
+    if cbt is not None and cbt.has_key(id):
+      chain = sorted(cbt[id])
+    else:
+      chain = ['(Default)']
+    chain_by_type_dict.setdefault(id, []).extend(chain)
+  return chain_by_type_dict

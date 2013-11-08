@@ -1,7 +1,7 @@
 erp5_upgrader can be used to upgrade any site:
 
- * create Business Template which overrides upgrader scripts in its own skin (XXX_erp5_upgrader)
- * set extremely high business_template_skin_layer_priority (like 10000.0)
- * develop this Business Template
- * to upgrade site install first XXX_erp5_upgrader, then erp5_upgrader
- * voilà - site upgraded
+ * Create Business Template and override TemplateTool_checkUpgradeConsistency script to set the Business Template list related to your project
+ * Set extremely high business_template_skin_layer_priority (like 10000.0)
+ * Develop constraints and set Constraint Type following upgrader steps
+ * To upgrade site install first XXX_erp5_upgrader, then erp5_upgrader
+ * Solve the alarm portal_alarms/upgrader_launch_full_upgrade

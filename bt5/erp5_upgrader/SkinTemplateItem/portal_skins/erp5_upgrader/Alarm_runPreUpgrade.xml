@@ -51,21 +51,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Check if upgrader is required\n
+  Run Pre upgrade\n
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
+context.Alarm_checkUpgraderConsistency(fixit=True,\n
+  active_process=context.newActiveProcess(),\n
+  filter_dict={"constraint_type": ["pre_upgrade"]})\n
+\n
+context.setEnabled(False)\n
+return\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Alarm_runPreUpgrade</string> </value>
         </item>
       </dictionary>
     </pickle>

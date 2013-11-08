@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import re\n
+template_tool = context\n
+\n
+bt5_per_title_dict = {}\n
+bt5_list = [i.getTitle() for i in \\\n
+  context.portal_templates.getRepositoryBusinessTemplateList()]\n
+\n
+installed_bt5_list = template_tool.getInstalledBusinessTemplateList()\n
+for bt5 in installed_bt5_list:\n
+  bt5_title = bt5.title\n
+  if bt5_title not in bt5_list:\n
+    continue\n
+  bt5_per_title_dict[bt5_title] = bt5\n
+\n
+resolved_list = template_tool.resolveBusinessTemplateListDependency(bt5_per_title_dict.iterkeys())\n
+\n
+pattern = re.compile(r"(?P<portal_type>.*)[| ]\\|[| ](?P<workflow_id>.*)")\n
+portal_type_dict = {}\n
+for _, bt5_id in resolved_list:\n
+  if bt5_id not in bt5_per_title_dict:\n
+    continue\n
+  workflow_chain_list = bt5_per_title_dict[bt5_id].getTemplatePortalTypeWorkflowChainList()\n
+  if not workflow_chain_list:\n
+    continue\n
+  for workflow_chain in workflow_chain_list:\n
+    group_dict = pattern.match(workflow_chain).groupdict()\n
+    portal_type = group_dict[\'portal_type\']\n
+    workflow_id = group_dict[\'workflow_id\']\n
+    workflow_id_list = portal_type_dict.setdefault("%s" % portal_type, [])\n
+    if workflow_id.startswith(\'-\'):\n
+      workflow_id_list.remove(workflow_id.replace(\'-\', \'\'))\n
+      continue\n
+    elif workflow_id in workflow_id_list:\n
+      continue\n
+    workflow_id_list.append(workflow_id)\n
+\n
+error_list = []\n
+workflow_chain_by_portal_type_dict = context.ERP5Site_dumpWorkflowChainByPortalType()\n
+new_workflow_chain_dict = {\'chain_%s\' % portal_type : \',\'.join(chain) \\\n
+  for portal_type, chain in workflow_chain_by_portal_type_dict.iteritems()}\n
+\n
+for portal_type, workflow_chain in portal_type_dict.iteritems():\n
+  try:\n
+    workflow_chain_list = list(workflow_chain_by_portal_type_dict[portal_type])\n
+  except:\n
+    return workflow_chain_by_portal_type_dict[portal_type]\n
+  expected_workflow_chain = sorted(workflow_chain)\n
+  if sorted(workflow_chain_list) != expected_workflow_chain:\n
+    error_list.append("%s - Expected: %s <> Found: %s" % (portal_type, \', \'.join(workflow_chain), \', \'.join(workflow_chain_list)))\n
+    if fixit:\n
+      new_workflow_chain_dict["chain_%s" % portal_type] = \',\'.join(expected_workflow_chain)\n
+\n
+if fixit and new_workflow_chain_dict:\n
+  portal_workflow = context.getPortalObject().portal_workflow\n
+  portal_workflow.manage_changeWorkflows(default_chain="", props=new_workflow_chain_dict)\n
+\n
+return error_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>fixit=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TemplateTool_checkPostUpgradeWorkflowChainConsistency</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

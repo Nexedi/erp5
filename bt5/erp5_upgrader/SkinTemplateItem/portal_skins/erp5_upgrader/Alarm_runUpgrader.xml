@@ -50,22 +50,65 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Check if upgrader is required\n
+            <value> <string encoding="cdata"><![CDATA[
+
 """\n
-constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
-    active_process=context.newActiveProcess(),\n
-    filter_dict={"constraint_type": constraint_type})\n
-</string> </value>
+  Run Upgrader\n
+\n
+  IMPORTANT: Don\'t use the constraint_type upgrader to data migration or big amount of objects,\n
+  because this step is suppose to run all constraints in the same transaction. \n
+  To not kill the instance, searchAndActivate will be used if countResults() > REINDEX_SPLIT_COUNT\n
+"""\n
+\n
+REINDEX_SPLIT_COUNT = 100\n
+portal = context.getPortalObject()\n
+portal_alarms = portal.portal_alarms\n
+active_process = context.newActiveProcess()\n
+\n
+# We should not run upgrader if pre upgrade was not solved or never executed \n
+alarm = getattr(portal_alarms, \'upgrader_check_pre_upgrade\')\n
+if alarm.sense() in (None, True):\n
+  active_process.postActiveResult(summary=context.getTitle(),\n
+      severity=1,\n
+      detail="Is required solve Pre Upgrade first. " +\\\n
+        "You need run active sense once at least on this alarm")\n
+  return\n
+\n
+_, type_per_constraint_type = context.Base_getConstraintTypeListPerPortalType()\n
+portal_type_list = type_per_constraint_type.get(\'upgrader\', [])\n
+\n
+tool_portal_type = \'Template Tool\' \n
+if tool_portal_type in portal_type_list:\n
+  portal_type_list.remove(tool_portal_type)\n
+\n
+method_kw = {\'fixit\': True,\n
+  \'filter\': {"constraint_type": \'upgrader\'},\n
+  \'active_process\': active_process.getRelativeUrl()}\n
+\n
+portal.portal_templates.Base_postCheckConsistencyResult(**method_kw)\n
+for portal_type in portal_type_list:\n
+  if portal.portal_catalog.countResults(\n
+      portal_type=portal_type_list)[0][0] > REINDEX_SPLIT_COUNT:\n
+    portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
+      portal_type=portal_type,\n
+      method_kw=method_kw)\n
+  else:\n
+    for result in portal.portal_catalog(portal_type=portal_type):\n
+      result.Base_postCheckConsistencyResult(**method_kw)\n
+\n
+context.setEnabled(False)\n
+return\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+            <value> <string>Alarm_runUpgrader</string> </value>
         </item>
       </dictionary>
     </pickle>
