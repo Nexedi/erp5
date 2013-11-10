@@ -33,7 +33,7 @@ from Products.ERP5Type.Base import Base
 from zLOG import LOG, INFO
 import time
 
-class ConfiguratorItemMixin:
+class ConfiguratorItemMixin(Base):
   """ This is the base class for all configurator item. """
 
   def getBusinessConfigurationValue(self):
