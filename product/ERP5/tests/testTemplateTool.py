@@ -627,6 +627,21 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertNotEquals(bt, None)
     transaction.abort()
 
+  def test_installBusinessTemplateListFromRepository_ignore_when_installed(self):
+    """Check that install one business template, this method does not download
+    many business templates that are already installed
+    """
+    template_tool = self.portal.portal_templates
+    # Delete not installed bt5 to check easily if more not installed was
+    # created
+    for bt5 in template_tool.getBuiltBusinessTemplateList():
+      bt5.delete()
+    bt5_name_list = ['erp5_calendar']
+    template_tool.installBusinessTemplateListFromRepository(bt5_name_list,
+        install_dependency=True)
+    self.tic()
+    self.assertEquals(template_tool.getBuiltBusinessTemplateList(), [])
+
   def test_sortBusinessTemplateList(self):
     """Check sorting of a list of business template by their dependencies
     """
