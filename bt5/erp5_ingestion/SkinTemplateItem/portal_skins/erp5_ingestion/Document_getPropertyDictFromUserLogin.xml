@@ -59,6 +59,7 @@ assignment_dict = context.ERP5Site_getPersonAssignmentDict(user_name=user_name)\
 \n
 # XXX: make list of properties configurable through preferences\n
 return {\'group_list\': assignment_dict[\'group_list\'],\n
+        \'site_list\': assignment_dict[\'site_list\'],\n
         \'function_list\': assignment_dict[\'function_list\']}\n
 </string> </value>
         </item>
