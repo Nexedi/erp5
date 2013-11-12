@@ -781,10 +781,10 @@ class SimulationTool(BaseTool):
       # We'll apply a 'node_uid is not NULL' criterion if node is not filtered,
       # to preserve compatibility with the time where movements without source
       # or destination where not in stock table.
-      if not column_value_dict.get('node_uid') and\
-          not related_key_dict.get('node_category_uid') and\
-          not related_key_dict.get('node_category_strict_membership_uid'):
-        new_kw['no_node_filter'] = True
+      #if not column_value_dict.get('node_uid') and\
+      #    not related_key_dict.get('node_category_uid') and\
+      #    not related_key_dict.get('node_category_strict_membership_uid'):
+      #  new_kw['no_node_filter'] = True
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
