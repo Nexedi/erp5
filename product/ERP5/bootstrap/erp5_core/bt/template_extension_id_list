@@ -1,2 +1,3 @@
 extension.erp5.StandardSecurity
 extension.erp5.DocumentExtraction
+extension.erp5.InventoryBrain

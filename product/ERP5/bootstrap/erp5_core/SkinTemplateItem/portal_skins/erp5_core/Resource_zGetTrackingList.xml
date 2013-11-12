@@ -212,7 +212,7 @@ simulation_state_list:list</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string>ERP5.InventoryBrain</string> </value>
+            <value> <string>InventoryBrain</string> </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
