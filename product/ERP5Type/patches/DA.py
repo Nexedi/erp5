@@ -340,3 +340,32 @@ DA.fromText = DA_fromText
 DA.manage_FTPget = DA_manage_FTPget
 DA.PUT = DA_PUT
 DA._upgradeSchema = DA_upgradeSchema
+
+
+# Patch to allow using ZODB components for brains
+def getObjectMeta(original_function):
+  def getObject(module, name, reload=0):
+    # Modified version that ignore errors as long as the module can be be
+    # imported, which is enough to use a ZODB Extension as a brain.
+    try:
+      m = __import__('erp5.component.extension.%s' % module, globals(),
+                     {}, 'erp5.component.extension')
+
+      o = getattr(m, name, None)
+      if o is None:
+        raise ImportError(
+          "Cannot get %s from erp5.component.extension.%s" % (name, module))
+
+      return o
+    except ImportError:
+      return original_function(module, name, reload=reload)
+
+  return getObject
+  
+# This get Object exists both in DA.getObject and App.Extensions.getObject, so
+# we'll patch both
+import Shared.DC.ZRDB.DA
+Shared.DC.ZRDB.DA.getObject = getObjectMeta(Shared.DC.ZRDB.DA.getObject)
+
+import App.Extensions
+App.Extensions.getObject = getObjectMeta(App.Extensions.getObject)
