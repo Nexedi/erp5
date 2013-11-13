@@ -74,7 +74,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -93,26 +95,19 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_view_mode_module_listbox</string>
-                        <string>my_view_mode_title</string>
-                        <string>my_view_mode_translated_validation_state_title</string>
-                        <string>my_dialog_mode_at_date</string>
-                        <string>my_dialog_mode_from_date</string>
-                        <string>my_dialog_mode_simulation_state_list</string>
-                        <string>my_dialog_mode_journal</string>
-                        <string>my_report_mode_at_date</string>
-                        <string>my_report_mode_from_date</string>
-                        <string>my_report_mode_journal</string>
-                        <string>my_report_mode_simulation_state_list</string>
-                        <string>my_dialog_mode_multiplier</string>
-                        <string>my_report_mode_multiplier</string>
+                        <string>my_from_date</string>
+                        <string>my_at_date</string>
+                        <string>my_multiplier</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_journal</string>
+                        <string>my_simulation_state_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -120,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewResearchItemFieldLibrary</string> </value>
+            <value> <string>ResearchItemModule_viewResearchSummaryReportData</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,11 +123,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ResearchItemModule_viewResearchSummaryReportData</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_report</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -144,7 +139,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Research Item Field Library</string> </value>
+            <value> <string>Research Summary</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
