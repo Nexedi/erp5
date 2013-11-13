@@ -1307,11 +1307,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT resource_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
     self.assertEquals(self.section.getUid(), q(
-      "SELECT section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[1][0])
+      "SELECT section_uid FROM stock WHERE section_uid is not null and portal_type="
+      "'Balance Transaction Line'")[0][0])
     self.assertEquals(None, q(
-      "SELECT mirror_section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[1][0])
+      "SELECT mirror_section_uid FROM stock WHERE section_uid is not null and portal_type="
+      "'Balance Transaction Line'")[0][0])
     self.assertEquals(pl.getUid(), q(
       "SELECT node_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
@@ -1443,11 +1443,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT resource_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
     self.assertEquals(self.section.getUid(), q(
-      "SELECT section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[1][0])
+      "SELECT section_uid FROM stock WHERE section_uid is not null and portal_type="
+      "'Balance Transaction Line'")[0][0])
     self.assertEquals(None, q(
-      "SELECT mirror_section_uid FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[1][0])
+      "SELECT mirror_section_uid FROM stock WHERE section_uid is not null and portal_type="
+      "'Balance Transaction Line'")[0][0])
     self.assertEquals(pl.getUid(), q(
       "SELECT node_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
