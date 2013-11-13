@@ -91,8 +91,8 @@ web_page_list = portal_catalog(reference=name,\n
                                portal_type=valid_portal_type_list,\n
                                validation_state=validation_state,\n
                                language=(language, \'\'),\n
-                               sort_on=[(\'language\', \'descending\'), (\'version\', \'descending\')],\n
-                               group_by=(\'reference\',),\n
+                               sort_on=[(\'language\', \'descending\'), ],\n
+                               limit=1,\n
                                **kw)\n
 \n
 if len(web_page_list) == 0 and language != \'en\':\n
@@ -101,8 +101,7 @@ if len(web_page_list) == 0 and language != \'en\':\n
                                  portal_type=valid_portal_type_list,\n
                                  validation_state=validation_state,\n
                                  language=\'en\',\n
-                                 sort_on=[(\'version\', \'descending\')],\n
-                                 group_by=(\'reference\',),\n
+                                 limit=1,\n
                                  **kw)\n
 \n
 if len(web_page_list) == 0:\n
@@ -110,8 +109,7 @@ if len(web_page_list) == 0:\n
   web_page_list = portal_catalog(reference=name,\n
                                  portal_type=valid_portal_type_list,\n
                                  validation_state=validation_state,\n
-                                 sort_on=[(\'version\', \'descending\')],\n
-                                 group_by=(\'reference\',),\n
+                                 limit=1,\n
                                  **kw)\n
 \n
 if len(web_page_list) == 0:\n
