@@ -32,6 +32,7 @@ import re
 import unittest
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
+from DateTime import DateTime
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
@@ -1361,6 +1362,76 @@ Hé Hé Hé!""", page.asText().strip())
                        [x['translated_title'] for x in site_map])
     self.assertEqual(None, site_map[0]['subsection'])
 
+  def test_future_publication_date_not_visible(self):
+    portal = self.portal
+    reference = 'test_future_publication_date_not_visible'
+    newContent = portal.web_page_module.newContent
+    date1 = DateTime()
+    date2 = date1 + 1
+    date3 = date2 + 1
+    date4 = date3 + 1
+
+    def new(**kw):
+      result = newContent(
+        portal_type='Web Page',
+        reference=reference,
+        **kw
+      )
+      self.tic()
+      result.publish()
+      self.tic()
+      return result
+    document1 = new(version=1)
+    document2 = new(version=2, effective_date=date2)
+    # Some more documents which should never be visible.
+    # Bind them to local variables for quicker debugging, if needed.
+    # Later than document2.
+    document3 = new(version=3, effective_date=date4)
+    # Like document1, but not published
+    document4 = newContent(
+      portal_type='Web Page',
+      reference=reference,
+    )
+    # Like document2, but not published
+    document5 = newContent(
+      portal_type='Web Page',
+      reference=reference,
+      effective_date=date2,
+    )
+    self.tic()
+    site = portal.web_site_module.newContent(
+      portal_type='Web Site',
+    )
+    site.publish()
+    section = site.newContent(
+      portal_type='Web Section',
+    )
+    section.setCriterionProperty('reference')
+    section.setCriterion(
+      'reference',
+      max='',
+      identity=[reference],
+      min='',
+    )
+    self.tic()
+
+    self.assertEqual(document1.getValidationState(), 'published')
+    self.assertEqual(document2.getValidationState(), 'published')
+    self.assertEqual(document3.getValidationState(), 'published')
+    self.assertEqual(document4.getValidationState(), 'draft')
+    self.assertEqual(document5.getValidationState(), 'draft')
+    def check(expected_document, date):
+      document = section.WebSection_getDocumentValue(reference, now=date)
+      self.assertNotEqual(document, None)
+      self.assertEqual(document.getPath(), expected_document.getPath())
+      document_list = section.WebSection_getDocumentValueList(now=date)
+      self.assertEqual(len(document_list), 1)
+      self.assertEqual(document_list[0].getPath(), expected_document.getPath())
+    # document1 is visible & listed before date2
+    check(document1, date1)
+    # document2 is visible & listed at and above date2
+    check(document2, date2)
+    check(document2, date3)
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """

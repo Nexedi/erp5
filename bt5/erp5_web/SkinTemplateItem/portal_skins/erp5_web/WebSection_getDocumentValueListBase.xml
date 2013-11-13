@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script is part of ERP5 Web\n
 \n
  ERP5 Web is a business template of ERP5 which provides a way\n
@@ -97,6 +99,7 @@
 \n
  - Display only the latest version and the appropriate language.\n
 """\n
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
 from zExceptions import Unauthorized\n
 \n
 try:\n
@@ -126,6 +129,16 @@ try:\n
     # XXX Do not sort by default, as it increases query time\n
     kw[\'sort_on\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
 \n
+  if effective_date is None:\n
+    if now is None:\n
+      now = DateTime()\n
+    effective_date = ComplexQuery(\n
+      SimpleQuery(effective_date=None),\n
+      SimpleQuery(effective_date=now, comparison_operator=\'<=\'),\n
+      logical_operator=\'or\',\n
+    )\n
+  kw[\'effective_date\'] = effective_date\n
+\n
   if not all_versions:\n
     return current_section.WebSection_zGetDocumentValueList(language=language,\n
                                                             all_languages=all_languages,\n
@@ -138,11 +151,13 @@ try:\n
 \n
 except Unauthorized:\n
   return []\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, src__=0, **kw</string> </value>
+            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, effective_date=None, now=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
