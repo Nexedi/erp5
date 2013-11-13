@@ -2410,7 +2410,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       if url_method is not None:
         try:
           url = url_method(brain = brain, selection = selection,
-                           selection_name = selection.getName())
+                           selection_name = selection.getName(),
+                           column_id=sql)
         except (ConflictError, RuntimeError):
           raise
         except:
