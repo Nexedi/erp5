@@ -284,17 +284,14 @@ class TrackingListBrain(InventoryListBrain):
 class MovementHistoryListBrain(InventoryListBrain):
   """Brain for getMovementHistoryList
   """
-  def __init__(self):
-    InventoryListBrain.__init__(self)
-    if not self.date:
-      return
-    # convert the date in the movement's original timezone.
-    # This is a somehow heavy operation, but fortunatly it's only called when
-    # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
+  def _date(self):
+    # Convert the date in the movement's original timezone.
+    # ZSQL method selects date as date_, and here we find the object to get the
+    # timezone and convert the date to this timezone
     obj = self.getObject()
     if obj is not None:
       timezone = None
-      if self.node_uid == obj.getSourceUid():
+      if self.node_uid == obj.getSourceUid(): # XXX we could expose an "are we source" property on brain
         start_date = obj.getStartDate()
         if start_date is not None:
           timezone = start_date.timezone()
@@ -303,7 +300,9 @@ class MovementHistoryListBrain(InventoryListBrain):
         if stop_date is not None:
           timezone = stop_date.timezone()
       if timezone is not None:
-        self.date = self.date.toZone(timezone)
+        return self.date_utc.toZone(timezone)
+    return self.date_utc
+  date = ComputedAttribute(_date, 1)
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
@@ -316,27 +315,26 @@ class MovementHistoryListBrain(InventoryListBrain):
         return explanation.absolute_url()
     return ''
 
-
   def _debit(self):
-    if self.getObject().isCancellationAmount():
+    if self.is_cancellation:
       return min(self.total_quantity, 0)
     return max(self.total_quantity, 0)
   debit = ComputedAttribute(_debit, 1)
 
   def _credit(self):
-    if self.getObject().isCancellationAmount():
+    if self.is_cancellation:
       return min(-(self.total_quantity or 0), 0)
     return max(-(self.total_quantity or 0), 0)
   credit = ComputedAttribute(_credit, 1)
 
   def _debit_price(self):
-    if self.getObject().isCancellationAmount():
+    if self.is_cancellation:
       return min(self.total_price, 0)
     return max(self.total_price, 0)
   debit_price = ComputedAttribute(_debit_price, 1)
 
   def _credit_price(self):
-    if self.getObject().isCancellationAmount():
+    if self.is_cancellation:
       return min(-(self.total_price or 0), 0)
     return max(-(self.total_price or 0), 0)
   credit_price = ComputedAttribute(_credit_price, 1)

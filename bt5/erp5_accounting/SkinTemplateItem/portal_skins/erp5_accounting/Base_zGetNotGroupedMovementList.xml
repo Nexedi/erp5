@@ -42,9 +42,7 @@ at_date</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -77,6 +75,8 @@ Here, a group of movement means:\n
  grouping_reference is the same\n
 \n
 XXX now that grouping_date exists, this script will become useless.\n
+Please consider using grouping date query with getMovementHistoryList instead of\n
+using this obsolete script.\n
 \n
 </dtml-comment>\n
 \n
@@ -84,7 +84,7 @@ XXX now that grouping_date exists, this script will become useless.\n
          catalog.uid as uid,\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
-         stock.date as date,\n
+         stock.date as date_utc,\n
          stock.node_uid as node_uid,\n
          IFNULL(stock.total_price, 0) as total_price,\n
          IFNULL(stock.quantity, 0) as total_quantity\n
@@ -115,7 +115,7 @@ XXX now that grouping_date exists, this script will become useless.\n
       catalog.uid as uid,\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
-      stock.date as date,\n
+      stock.date as date_utc,\n
       stock.node_uid as node_uid,\n
       IFNULL(stock.total_price, 0) as total_price,\n
       IFNULL(stock.quantity, 0) as total_quantity\n
@@ -156,13 +156,13 @@ XXX now that grouping_date exists, this script will become useless.\n
   HAVING max(stock_2.date) > <dtml-sqlvar "at_date" type="datetime">\n
 )\n
 \n
-ORDER BY mirror_section_title, date
+ORDER BY mirror_section_title, date_utc
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Obsolete.</string> </value>
         </item>
       </dictionary>
     </pickle>
