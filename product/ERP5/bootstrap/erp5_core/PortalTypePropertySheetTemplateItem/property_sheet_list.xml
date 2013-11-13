@@ -5,6 +5,13 @@
  <portal_type id="Extension Component">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Script Constraint">
+  <item>ConstraintType</item>
+  <item>Predicate</item>
+  <item>Reference</item>
+  <item>ScriptConstraint</item>
+  <item>SimpleItem</item>
+ </portal_type>
  <portal_type id="Test Component">
   <item>SortIndex</item>
  </portal_type>

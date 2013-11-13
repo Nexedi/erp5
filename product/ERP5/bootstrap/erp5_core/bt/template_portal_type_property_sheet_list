@@ -1,5 +1,12 @@
 Document Component | SortIndex
 Extension Component | SortIndex
+Script Constraint | ConstraintType
+Script Constraint | Predicate
+Script Constraint | Reference
+Script Constraint | ScriptConstraint
+Script Constraint | SimpleItem
+String Attribute Match Constraint | ConstraintType
+TALES Constraint | ConstraintType
 Test Component | SortIndex
 Trash Bin | Base
 Trash Bin | SimpleItem
