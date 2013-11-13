@@ -108,26 +108,31 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
   total_price = brain.total_price\n
   if account_type == \'account_type/liability/payable\':\n
     total_price = - total_price\n
-\n
+  \n
   line = Object(uid=\'new_\',\n
                 mirror_section_title=getSectionTitle(brain.mirror_section_uid),\n
                 mirror_section_uid=brain.mirror_section_uid,\n
-                explanation_title=movement.hasTitle() and movement.getTitle()\n
-                                  or transaction.getTitle(),\n
-                reference=transaction.getReference(),\n
-                portal_type=transaction.getTranslatedPortalType(),\n
-                date=brain.date,\n
                 total_price=total_price,)\n
 \n
-  if brain.mirror_section_uid == movement.getSourceSectionUid():\n
-    line[\'specific_reference\'] = transaction.getDestinationReference()\n
-    line[\'gap_id\'] = getAccountNumber(movement.getDestination())\n
-  else:\n
-    line[\'specific_reference\'] = transaction.getSourceReference()\n
-    line[\'gap_id\'] = getAccountNumber(movement.getSource())\n
-    assert brain.mirror_section_uid == movement.getDestinationSectionUid()\n
+  if detail:\n
+    # Detailed version of the aged balance report needs to get properties from\n
+    # the movement or transactions, but summary does not. This conditional is\n
+    # here so that we do not load objects when running in summary mode.\n
+    line[\'explanation_title\'] = movement.hasTitle() and movement.getTitle() or transaction.getTitle()\n
+    line[\'reference\'] = transaction.getReference()\n
+    line[\'portal_type\'] = transaction.getTranslatedPortalType()\n
+    line[\'date\'] = brain.date\n
+    if brain.mirror_section_uid == movement.getSourceSectionUid():\n
+      line[\'specific_reference\'] = transaction.getDestinationReference()\n
+      line[\'gap_id\'] = getAccountNumber(movement.getDestination())\n
+    else:\n
+      line[\'specific_reference\'] = transaction.getSourceReference()\n
+      line[\'gap_id\'] = getAccountNumber(movement.getSource())\n
+      assert brain.mirror_section_uid == movement.getDestinationSectionUid()\n
 \n
-  age = int(at_date - brain.date)\n
+  # Note that we use date_utc because date would load the object and we are just\n
+  # interested in the difference of days.\n
+  age = int(at_date - brain.date_utc)\n
   line[\'age\'] = age\n
   if age < 0:\n
     line[\'period_future\'] = total_price\n
@@ -150,7 +155,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date, section_category, section_category_strict, simulation_state, period_list, account_type, **kw</string> </value>
+            <value> <string>at_date, section_category, section_category_strict, simulation_state, period_list, account_type, detail=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

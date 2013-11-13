@@ -57,7 +57,7 @@ line_list = []\n
 detail_line_list = portal\\\n
     .AccountingTransactionModule_getDetailedAgedBalanceLineList(\n
                at_date, section_category, section_category_strict,\n
-               simulation_state, period_list, account_type, **kw)\n
+               simulation_state, period_list, account_type, detail=False, **kw)\n
 \n
 period_id_list = [\'period_future\']\n
 for idx, period in enumerate(period_list):\n
