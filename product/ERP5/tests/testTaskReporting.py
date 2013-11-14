@@ -31,14 +31,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 
-class TestTaskReporting(ERP5ReportTestCase):
-  """Test Task Reporting
-  """
+class TestTaskReportingMixin(ERP5ReportTestCase):
+
   business_process = \
       'business_process_module/erp5_default_task_business_process'
-
-  def getTitle(self):
-    return "Task Reporting"
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
@@ -84,13 +80,13 @@ class TestTaskReporting(ERP5ReportTestCase):
                               id='Organisation_2')
 
     # create persons
-    if not self.portal.organisation_module.has_key('Person_1'):
+    if not self.portal.person_module.has_key('Person_1'):
       org = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
-    if not self.portal.organisation_module.has_key('Person_2'):
+    if not self.portal.person_module.has_key('Person_2'):
       org = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
@@ -112,7 +108,7 @@ class TestTaskReporting(ERP5ReportTestCase):
       project.newContent(portal_type='Project Line',
                          id='Line_2',
                          title='Line_2')
-    if not self.portal.organisation_module.has_key('Project_2'):
+    if not self.portal.project_module.has_key('Project_2'):
       project = self.portal.project_module.newContent(
                               portal_type='Project',
                               reference='Project_2',
@@ -152,18 +148,28 @@ class TestTaskReporting(ERP5ReportTestCase):
     # and all this available to catalog
     self.tic()
 
+    # Patch getInventoryList to only take movement created in the test
+    self.simulation_class = self.portal.portal_simulation.__class__
+
+    self.initial_getInventoryList = initial_getInventoryList = \
+           self.simulation_class.getInventoryList
+    now = DateTime()
+    def getInventoryList(self, **kw):
+      return initial_getInventoryList(self,
+              modification_date={"query":now, "range":"min"}, **kw)
+    self.simulation_class.getInventoryList = getInventoryList
+
   def beforeTearDown(self):
-    """Remove all documents.
     """
-    self.abort()
-    portal = self.portal
-    portal.task_module.manage_delObjects(
-                      list(portal.task_module.objectIds()))
-    portal.task_report_module.manage_delObjects(
-                      list(portal.task_report_module.objectIds()))
-    portal.portal_simulation.manage_delObjects(
-                      list(portal.portal_simulation.objectIds()))
-    self.tic()
+    remove patches
+    """
+    self.simulation_class.getInventoryList = self.initial_getInventoryList
+
+class TestTaskReporting(TestTaskReportingMixin):
+  """Test Task Reporting
+  """
+  def getTitle(self):
+    return "Task Reporting"
 
   def testProjectMontlyReport(self):
     """
