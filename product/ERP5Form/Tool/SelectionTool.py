@@ -140,7 +140,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       storage_item_list.extend([['/'.join((mp.getParentValue().getTitle(), mp.getTitle(),)), mp.getRelativeUrl()] for mp in memcached_plugin_list])
       return storage_item_list
 
-    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'updateCache')
+    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'clearCachedContainer')
     def clearCachedContainer(self, is_anonymous=False):
       """
       Clear Container currently being used for Selection Tool because either the
