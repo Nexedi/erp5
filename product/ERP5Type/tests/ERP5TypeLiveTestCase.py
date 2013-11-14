@@ -197,7 +197,8 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         If the module is not a ZODB Component, then reload it to consider
         modifications on the filesystem
         """
-        if not isinstance(module, ComponentDynamicPackage):
+        if not isinstance(getattr(module, '__loader__', None),
+                          ComponentDynamicPackage):
             reload(module)
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
@@ -206,7 +207,8 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         # Do not reload ERP5TypeTestCase because we patch it nor ZODB Test
         # Component as it is reset upon modification anyway
         if (testCaseClass is not ERP5TypeTestCase and
-            not isinstance(testModule, ComponentDynamicPackage)):
+            not isinstance(getattr(testModule, '__loader__', None),
+                           ComponentDynamicPackage)):
           testModule = reload(testModule)
         testCaseClass = getattr(testModule, testCaseClass.__name__)
         return ERP5TypeTestLoader.loadTestsFromTestCase(self, testCaseClass)
