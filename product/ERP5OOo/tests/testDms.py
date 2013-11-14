@@ -75,6 +75,7 @@ import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from DateTime import DateTime
 
 QUIET = 0
 
@@ -2750,7 +2751,8 @@ return 1
 
   def test_document_publication_workflow_archiveVersion(self):
     """ Test "visible" instances of a doc are auto archived when a new
-    instance is made "visible" """
+    instance is made "visible" except when they have a future effective date.
+    """
     portal = self.portal
     
     upload_file = makeFileUpload('TEST-en-002.doc')
@@ -2760,19 +2762,35 @@ return 1
     self.tic()
 
     document_003 = document_002.Base_createCloneDocument(batch_mode=1) 
+    document_003.setEffectiveDate(DateTime() - 1)
     document_003.publish()
+    document_future_003 = document_002.Base_createCloneDocument(batch_mode=1)
+    document_future_003.setEffectiveDate(DateTime() + 10)
+    document_future_003.publish()
     self.tic()
     self.assertEqual('published', document_003.getValidationState())
     self.assertEqual('archived', document_002.getValidationState())
+    self.assertEqual('published', document_future_003.getValidationState())
 
     # check if in any case document doesn't archive itself 
     # (i.e. shared_alive -> published or any other similar chain)
-    document_004 = document_003.Base_createCloneDocument(batch_mode=1)
+    document_004 = document_002.Base_createCloneDocument(batch_mode=1)
     document_004.shareAlive()
     self.tic()
 
     document_004.publish()
     self.tic()
+    self.assertEqual('published', document_004.getValidationState())
+    # document_future_003 must not have been archived, as its effective date is
+    # in the future.
+    self.assertEqual('published', document_future_003.getValidationState())
+
+    document_005 = document_004.Base_createCloneDocument(batch_mode=1)
+    document_005.setEffectiveDate(DateTime() + 5)
+    document_005.publish()
+    self.tic()
+    # Also, document_004 must not have been archived, as document_005's
+    # effective_date is in the future.
     self.assertEqual('published', document_004.getValidationState())
 
     # check case when no language is used
