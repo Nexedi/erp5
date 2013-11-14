@@ -2749,7 +2749,8 @@ return 1
         'share_alive_action')
 
   def test_document_publication_workflow_archiveVersion(self):
-    """ Test old versions of a doc are auto archived. """
+    """ Test "visible" instances of a doc are auto archived when a new
+    instance is made "visible" """
     portal = self.portal
     
     upload_file = makeFileUpload('TEST-en-002.doc')
@@ -2759,7 +2760,6 @@ return 1
     self.tic()
 
     document_003 = document_002.Base_createCloneDocument(batch_mode=1) 
-    document_003.setVersion('003')
     document_003.publish()
     self.tic()
     self.assertEqual('published', document_003.getValidationState())
@@ -2768,7 +2768,6 @@ return 1
     # check if in any case document doesn't archive itself 
     # (i.e. shared_alive -> published or any other similar chain)
     document_004 = document_003.Base_createCloneDocument(batch_mode=1)
-    document_004.setVersion('004')
     document_004.shareAlive()
     self.tic()
 
@@ -2778,15 +2777,12 @@ return 1
 
     # check case when no language is used
     document_nolang_005 = document_004.Base_createCloneDocument(batch_mode=1)
-    document_nolang_005.setVersion('TEST-no-lang')
-    document_nolang_005.setVersion('005')
     document_nolang_005.setLanguage(None)
     document_nolang_005.publish()
     self.tic()
     self.assertEqual('published', document_nolang_005.getValidationState())
 
     document_nolang_006 = document_nolang_005.Base_createCloneDocument(batch_mode=1)
-    document_nolang_006.setVersion('006')
     document_nolang_006.shareAlive()
     self.tic()
     
