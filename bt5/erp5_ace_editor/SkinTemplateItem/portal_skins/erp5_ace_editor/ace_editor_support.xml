@@ -177,6 +177,8 @@
   <script type="text/javascript"\n
           tal:attributes="src string:${portal_url}/ace/ext-settings_menu.js"></script>\n
   <script type="text/javascript"\n
+          tal:attributes="src string:${portal_url}/ace/ext-language_tools.js"></script>\n
+  <script type="text/javascript"\n
           tal:define=\'fullscreen_button string:<input type="button" value="Fullscreen" onclick="switchToFullScreen()" class="ace_editor_action_button" />;\n
                       save_button string:<button class="ace_editor_save_button" onclick="saveDocument(event)"><img src="images/save2.png" width="30" height="30" border="0" /></button>;\'\n
 \n
@@ -399,8 +401,13 @@
         bindKey: {win: \'Alt-p\', mac: \'Alt-p\'},\n
         exec: function(editor) { editor.showSettingsMenu(); },\n
         readOnly: true\n
+    }, {name: \'save\',\n
+        bindKey: {win: \'Ctrl-S\', mac: \'Command-S\'},\n
+        exec: function() {\n
+          saveDocument($.Event(\'click\'));\n
+        }\n
     }]);\n
-\n
+    \n
     ace_editor.resize(true);\n
 \n
     var PythonMode = require(\'ace/mode/python\').Mode;\n
@@ -410,9 +417,12 @@
 \n
     var textarea = $(\'#${id}\');\n
     ace_editor.getSession().on(\'change\', function() {\n
+      changed = true; // This is the dirty flag for onbeforeunload warning in erp5.js\n
       textarea.val(ace_editor.getSession().getValue());\n
     });\n
-\n
+    ace.require(\'ace/ext/language_tools\');\n
+    ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });\n
+    \n
     /* Only display the source code saving button if the main save button is\n
      * displayed. This specific save button allows to save without reloading the\n
      * page (and thus keep the cursor position and mode (maximize/fullscreen)\n
