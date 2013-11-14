@@ -58,7 +58,7 @@ if cache_plugin_list:\n
   if cache_tool is not None:\n
     cache_tool.activate().updateCache()\n
 \n
-selection_tool = document.getPortalObject()\n
+selection_tool = document.getPortalObject().portal_selections\n
 if selection_tool.getStorage() == document.getRelativeUrl():\n
   selection_tool.activate().clearCachedContainer()\n
 if selection_tool.getAnonymousStorage() == document.getRelativeUrl():\n
