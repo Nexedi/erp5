@@ -25,7 +25,7 @@ def generateBarcodeImage(self, barcode_type, data, REQUEST=None):
     from cStringIO import StringIO
     fp = StringIO()
     img = qrcode.make(data)
-    img.save(fp, format='png')
+    img.save(fp, 'png')
     fp.seek(0)
     output = fp.read()
   else:
