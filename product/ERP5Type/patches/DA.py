@@ -361,11 +361,13 @@ def getObjectMeta(original_function):
       return original_function(module, name, reload=reload)
 
   return getObject
-  
-# This get Object exists both in DA.getObject and App.Extensions.getObject, so
-# we'll patch both
+
+# This get Object exists both in App.Extensions.getObject and Shared.DC.ZRDB.DA
+# for some versions of Zope/Products.ZSQLMethods, so we try to patch both if
+# they exist
 import Shared.DC.ZRDB.DA
-Shared.DC.ZRDB.DA.getObject = getObjectMeta(Shared.DC.ZRDB.DA.getObject)
+if hasattr(Shared.DC.ZRDB.DA, 'getObject'):
+  Shared.DC.ZRDB.DA.getObject = getObjectMeta(Shared.DC.ZRDB.DA.getObject)
 
 import App.Extensions
 App.Extensions.getObject = getObjectMeta(App.Extensions.getObject)
