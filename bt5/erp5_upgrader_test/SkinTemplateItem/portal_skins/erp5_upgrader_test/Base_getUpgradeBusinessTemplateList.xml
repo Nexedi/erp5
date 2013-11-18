@@ -50,24 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Run Pre upgrade\n
-"""\n
-context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
-  active_process=context.newActiveProcess(),\n
-  filter_dict={"constraint_type": ["pre_upgrade"]})\n
-\n
-context.setEnabled(False)\n
-return\n
+            <value> <string>return (\'erp5_web\',), []\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_runPreUpgrade</string> </value>
+            <value> <string>Base_getUpgradeBusinessTemplateList</string> </value>
         </item>
       </dictionary>
     </pickle>

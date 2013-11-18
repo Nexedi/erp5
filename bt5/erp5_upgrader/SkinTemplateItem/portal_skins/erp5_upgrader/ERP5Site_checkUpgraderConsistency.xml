@@ -50,24 +50,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Run Pre upgrade\n
-"""\n
-context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
-  active_process=context.newActiveProcess(),\n
-  filter_dict={"constraint_type": ["pre_upgrade"]})\n
+            <value> <string>portal = context.getPortalObject()\n
+constraint_type_per_type, _ = context.Base_getConstraintTypeListPerPortalType()\n
+constraint_type = filter_dict.get("constraint_type")\n
 \n
-context.setEnabled(False)\n
-return\n
+for portal_type, constraint_type_list in constraint_type_per_type.iteritems():\n
+  if not constraint_type and constraint_type not in constraint_type_list:\n
+    continue\n
+  method_kw = {\'fixit\': fixit,\n
+               \'filter\': filter_dict,\n
+               \'active_process\': active_process.getRelativeUrl()}\n
+  portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
+    portal_type=portal_type,\n
+    method_kw=method_kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>active_process, fixit=False, filter_dict={}</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_runPreUpgrade</string> </value>
+            <value> <string>ERP5Site_checkUpgraderConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

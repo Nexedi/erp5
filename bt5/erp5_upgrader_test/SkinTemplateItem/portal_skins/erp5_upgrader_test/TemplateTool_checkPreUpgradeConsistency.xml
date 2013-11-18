@@ -50,24 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Run Pre upgrade\n
-"""\n
-context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
-  active_process=context.newActiveProcess(),\n
-  filter_dict={"constraint_type": ["pre_upgrade"]})\n
+            <value> <string>template_tool = context\n
 \n
-context.setEnabled(False)\n
-return\n
+return template_tool.upgradeSite((\'erp5_full_text_myisam_catalog\',),\n
+  dry_run=(not fixit))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_runPreUpgrade</string> </value>
+            <value> <string>TemplateTool_checkPreUpgradeConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -54,7 +54,7 @@
   Check if upgrader is required\n
 """\n
 constraint_type = context.getId().replace("upgrader_check_", "")\n
-context.Alarm_checkUpgraderConsistency(\n
+context.ERP5Site_checkUpgraderConsistency(\n
     active_process=context.newActiveProcess(),\n
     filter_dict={"constraint_type": constraint_type})\n
 </string> </value>

@@ -51,27 +51,27 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-constraint_type_per_type, _ = context.Base_getConstraintTypeListPerPortalType()\n
-constraint_type = filter_dict.get("constraint_type")\n
 \n
-for portal_type, constraint_type_list in constraint_type_per_type.iteritems():\n
-  if not constraint_type and constraint_type not in constraint_type_list:\n
-    continue\n
-  method_kw = {\'fixit\': fixit,\n
-               \'filter\': filter_dict,\n
-               \'active_process\': active_process.getRelativeUrl()}\n
-  portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
-    portal_type=portal_type,\n
-    method_kw=method_kw)\n
+person_list = portal.portal_catalog(portal_type="Person",\n
+  select_list=[\'relative_url\'],\n
+  validation_state="validated")\n
+\n
+message_list = ["%s should be invalidated" % person.relative_url for person in person_list]\n
+\n
+if message_list and fixit:\n
+  portal.portal_catalog.searchAndActivate(method_id="invalidate",\n
+    portal_type="Person", validation_state="validated")\n
+\n
+return message_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process, fixit=False, filter_dict={}</string> </value>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_checkUpgraderConsistency</string> </value>
+            <value> <string>PersonModule_checkPostUpgradePersonValidated</string> </value>
         </item>
       </dictionary>
     </pickle>

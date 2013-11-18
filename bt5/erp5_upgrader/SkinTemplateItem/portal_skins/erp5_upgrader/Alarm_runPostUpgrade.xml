@@ -65,7 +65,7 @@ if alarm.sense() in (None, True):\n
         "You need run active sense once at least on this alarm")\n
   return\n
 \n
-context.Alarm_checkUpgraderConsistency(fixit=True,\n
+context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
   active_process=active_process,\n
   filter_dict={"constraint_type": ["post_upgrade",]})\n
 \n
