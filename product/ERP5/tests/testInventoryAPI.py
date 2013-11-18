@@ -516,13 +516,15 @@ class TestInventory(InventoryAPITestCase):
     self.resource.setProductLine('level1/level2')
     self._makeMovement(quantity=100, source_value=None)
 
-    self.assertInventoryEquals(100, resource_category='product_line/level1')
-    self.assertInventoryEquals(100, resource_category='product_line/level1/level2')
-    self.assertInventoryEquals(0,
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(), 
+                                  resource_category='product_line/level1')
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(),
+                                   resource_category='product_line/level1/level2')
+    self.assertInventoryEquals(0, section_uid=self.section.getUid(),
                 resource_category_strict_membership=['product_line/level1'])
     self.resource.setProductLine('level1')
     self.tic()
-    self.assertInventoryEquals(100,
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(),
                 resource_category_strict_membership=['product_line/level1'])
 
   def test_ResourcePortalType(self):
@@ -532,9 +534,9 @@ class TestInventory(InventoryAPITestCase):
       source_value=None,
       resource_value=self.portal.portal_categories.product_line.level1)
     assert self.resource.portal_type != 'Category'
-    self.assertInventoryEquals(2,
+    self.assertInventoryEquals(2, section_uid=self.section.getUid(),
       resource_portal_type=self.resource.portal_type)
-    self.assertInventoryEquals(3,
+    self.assertInventoryEquals(3, section_uid=self.section.getUid(),
       resource_portal_type='Category')
     # FIXME: resource_portal_type is an automatically generated related key,
     # but as movements categories are not cataloged with acquisition, it does
@@ -598,10 +600,10 @@ class TestInventory(InventoryAPITestCase):
                        simulation_state='confirmed',
                        source_value=None)
 
-    self.assertInventoryEquals(100)
-    self.assertInventoryEquals(100, simulation_state='confirmed')
-    self.assertInventoryEquals(0, simulation_state='planned')
-    self.assertInventoryEquals(100, simulation_state=['planned', 'confirmed'])
+    self.assertInventoryEquals(100, section_uid=self.section.getUid())
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(), simulation_state='confirmed')
+    self.assertInventoryEquals(0, section_uid=self.section.getUid(), simulation_state='planned')
+    self.assertInventoryEquals(100, section_uid=self.section.getUid(), simulation_state=['planned', 'confirmed'])
 
   def test_MultipleNodes(self):
     """Test section category with many nodes. """
@@ -831,9 +833,9 @@ class TestInventoryList(InventoryAPITestCase):
   def test_GroupByNode(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=100)
-    self._makeMovement(destination_value=self.other_node, quantity=100)
-    self._makeMovement(destination_value=None, quantity=100)
-    inventory_list = getInventoryList(group_by_node=1)
+    self._makeMovement(destination_value=self.other_node, source_value=self.mirror_node, quantity=100)
+    self._makeMovement(destination_value=None, source_value=self.mirror_node, quantity=100)
+    inventory_list = getInventoryList(section_uid=self.section.getUid(), group_by_node=1)
     self.assertEquals(3, len(inventory_list))
     self.assertEquals([r for r in inventory_list if r.node_relative_url ==
                   self.node.getRelativeUrl()][0].inventory, 100)
