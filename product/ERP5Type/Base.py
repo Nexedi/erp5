@@ -2590,7 +2590,7 @@ class Base( CopyContainer,
     """
     Returns a list of constraints filtered by filt argument.
     """
-    # currently only 'id' and 'reference' are supported.
+    # currently only 'id' and 'reference', 'constraint_type' are supported.
     constraints = self.constraints
     if filt is not None:
       if 'id' in filt:
@@ -2603,7 +2603,15 @@ class Base( CopyContainer,
         reference_list = filt.get('reference', None)
         if not isinstance(reference_list, (list, tuple)):
           reference_list = [reference_list]
-        constraints = filter(lambda x:x.getProperty('reference') in reference_list, constraints)
+        constraints = filter(lambda x:x.getProperty('reference') in \
+            reference_list, constraints)
+      if 'constraint_type' in filt:
+        constraint_type_list = filt.get('constraint_type', None)
+        if not isinstance(constraint_type_list, (list, tuple)):
+          constraint_type_list = [constraint_type_list]
+        constraints = filter(lambda x:x.__of__(self).getProperty('constraint_type') in \
+                constraint_type_list, constraints)
+
     return constraints
 
   # Context related methods
