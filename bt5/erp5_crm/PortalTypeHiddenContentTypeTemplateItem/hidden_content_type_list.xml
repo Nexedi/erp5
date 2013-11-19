@@ -6,4 +6,7 @@
  <portal_type id="Event Module">
   <item>Acknowledgement</item>
  </portal_type>
+ <portal_type id="Preference">
+  <item>Support Request</item>
+ </portal_type>
 </hidden_content_type_list>
