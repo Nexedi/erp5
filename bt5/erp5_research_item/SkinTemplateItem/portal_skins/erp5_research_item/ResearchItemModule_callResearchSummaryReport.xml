@@ -91,6 +91,8 @@ for x in result_list:\n
   if aggregate_url:\n
     if aggregate_url.startswith("aggregate"):\n
       item_url = aggregate_url.split("aggregate/")[1]\n
+  if item_url is None:\n
+    item_url = "None"\n
   item_url_set.add(item_url)\n
   person_uid = x.node_uid\n
   person_dict = summary_dict.setdefault(person_uid, {})\n
@@ -116,9 +118,14 @@ if len(summary_dict):\n
     person_kw["source_title"] = person_title_dict[person_uid]\n
     person = portal.person_module.newContent(temp_object=1, **person_kw)\n
     for item_url in summary_dict[person_uid].keys():\n
-      person.edit(**{"%s_column_url" % item_url: \\\n
-                     "%s/task_report_module/view?reset:int=1&default_source_uid=%s&child_aggregate_relative_url=%s&journal_relative_url=journal/%s" % \\\n
-                     (absolute_url, person_uid, item_url, journal)})\n
+      task_report_module_url = "%s/task_report_module/view?reset:int=1&default_source_uid=%s" % (absolute_url, person_uid)\n
+      if item_url == "None":\n
+        task_report_module_url += "&child_aggregate_relative_url=%%3dNULL&left_join_list=child_aggregate_relative_url&journal_relative_url=journal/%s" % \\\n
+                     (journal, )\n
+      else:\n
+        task_report_module_url += "&child_aggregate_relative_url=%s&journal_relative_url=journal/%s" % \\\n
+                     (item_url, journal)\n
+      person.edit(**{"%s_column_url" % item_url: task_report_module_url})\n
     person.setProperty("getColumnUrl", getColumnUrl)\n
     listbox_line_list.append(person)\n
 \n
@@ -130,6 +137,7 @@ item_title_dict = {}\n
 if item_url_set:\n
   for item in portal.portal_catalog(portal_type="Research Item", relative_url=list(item_url_set), select_list=["title","relative_url"]):\n
     item_title_dict[item.relative_url] = item.title\n
+  item_title_dict["None"] = "undefined"\n
 \n
 # define which property to display in columns\n
 column_list = [("source_title", "Worker")]\n
