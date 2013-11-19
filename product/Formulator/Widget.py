@@ -1119,6 +1119,9 @@ class ListWidget(SingleItemsWidget):
       return "\n".join([list_widget, input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
+        if value is None:
+          return render_element('option', contents=text, disabled=None,
+                                extra=extra_item)
         return render_element('option', contents=text, value=value, 
                               extra=extra_item)
 
@@ -1158,6 +1161,9 @@ class MultiListWidget(MultiItemsWidget):
       return "\n".join([multi_list,input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
+        if value is None:
+          return render_element('option', contents=text, disabled=None,
+                                extra=extra_item)
         return render_element('option', contents=text, value=value, 
                               extra=extra_item)
 
