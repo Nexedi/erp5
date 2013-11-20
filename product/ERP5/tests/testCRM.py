@@ -437,8 +437,12 @@ class TestCRM(BaseTestCRM):
     # Then create One event and play with it
     portal_type = 'Visit'
     module = self.portal.getDefaultModule(portal_type)
-    event = module.newContent(portal_type=portal_type,
-                              resource='0')
+    event = module.newContent(portal_type=portal_type)
+    # Check that existing valid resource relations which should not be normaly
+    # found by Event_getResourceItemList are present.
+    self.assertTrue(event.getResource() not in\
+                       [item[1] for item in event.Event_getResourceItemList()])
+    event.setResource('0')
     self.assertTrue(event.getResourceValue() is not None)
     self.assertTrue(event.getResource() in\
                        [item[1] for item in event.Event_getResourceItemList()])

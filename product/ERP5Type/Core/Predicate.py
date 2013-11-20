@@ -235,34 +235,41 @@ class Predicate(XMLObject):
     # Build the identity criterion
     catalog_kw = {}
     catalog_kw.update(kw) # query_table, REQUEST, ignore_empty_string, **kw
-    for criterion in self.getCriterionList():
-      if criterion.min and criterion.max:
-        catalog_kw[criterion.property] = { 'query' : (criterion.min, criterion.max),
-                                           'range' : 'minmax'
-                                         }
-      elif criterion.min:
-        catalog_kw[criterion.property] = { 'query' : criterion.min,
-                                           'range' : 'min'
-                                         }
-      elif criterion.max:
-        catalog_kw[criterion.property] = { 'query' : criterion.max,
-                                           'range' : 'max'
-                                         }
-      else:
-        # if a filter was passed as argument
-        if catalog_kw.has_key(criterion.property):
-          if isinstance(catalog_kw[criterion.property], (tuple, list)):
-            catalog_filter_set = set(catalog_kw[criterion.property])
-          else:
-            catalog_filter_set = set([catalog_kw[criterion.property]])
-          if isinstance(criterion.identity, (tuple, list)):
-            parameter_filter_set = set(criterion.identity)
-          else:
-            parameter_filter_set = set([criterion.identity])
-          catalog_kw[criterion.property] = \
-              list(catalog_filter_set.intersection(parameter_filter_set))
+    criterion_list = self.getCriterionList()
+    # BBB: accessor is not present on old Predicate property sheet.
+    if criterion_list or getattr(self, 'isEmptyPredicateValid', lambda: True)():
+      for criterion in criterion_list:
+        if criterion.min and criterion.max:
+          catalog_kw[criterion.property] = { 'query' : (criterion.min, criterion.max),
+                                             'range' : 'minmax'
+                                           }
+        elif criterion.min:
+          catalog_kw[criterion.property] = { 'query' : criterion.min,
+                                             'range' : 'min'
+                                           }
+        elif criterion.max:
+          catalog_kw[criterion.property] = { 'query' : criterion.max,
+                                             'range' : 'max'
+                                           }
         else:
-          catalog_kw[criterion.property] = criterion.identity
+          # if a filter was passed as argument
+          if catalog_kw.has_key(criterion.property):
+            if isinstance(catalog_kw[criterion.property], (tuple, list)):
+              catalog_filter_set = set(catalog_kw[criterion.property])
+            else:
+              catalog_filter_set = set([catalog_kw[criterion.property]])
+            if isinstance(criterion.identity, (tuple, list)):
+              parameter_filter_set = set(criterion.identity)
+            else:
+              parameter_filter_set = set([criterion.identity])
+            catalog_kw[criterion.property] = \
+                list(catalog_filter_set.intersection(parameter_filter_set))
+          else:
+            catalog_kw[criterion.property] = criterion.identity
+    else:
+      # By catalog definition, no object has uid 0, so this condition forces an
+      # empty result.
+      catalog_kw['uid'] = 0
 
     portal_catalog = getToolByName(self, 'portal_catalog')
 

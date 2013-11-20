@@ -51,44 +51,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-if depth:\n
-  category_relative_url = parent.getMembershipCriterionCategory()\n
-else:\n
-  category_relative_url = portal.portal_preferences.getPreference(\n
-    \'preferred_\' + context.REQUEST[\'here\'].getPortalType().replace(\' Module\', \'\').lower().replace(\' \', \'_\') + \'_use\',\n
-  )\n
-  if not category_relative_url:\n
-    return ()\n
-child_list, resource_list = portal.portal_categories.use.restrictedTraverse(category_relative_url).Category_getUseCategoryListAndResourceList()\n
-domain_list = []\n
-for child in child_list:\n
-  domain = parent.generateTempDomain(id=child.getId())\n
-  domain.edit(\n
-    title=child.getTranslatedTitle(),\n
-    membership_criterion_category=(child.getRelativeUrl(), ),\n
-    domain_generator_method_id=script.id,\n
-  )\n
-  domain.setCriterionPropertyList([\'related_resource_from_use_category_uid\'])\n
-  domain.setCriterion(\'related_resource_from_use_category_uid\', identity=child.getUid())\n
-  domain_list.append(domain)\n
-for resource in resource_list:\n
-  domain = parent.generateTempDomain(id=resource.getId())\n
-  domain.edit(\n
-    title=resource.getTranslatedTitle(),\n
-    membership_criterion_base_category=(\'resource\', ),\n
-    membership_criterion_category=(\'resource/\' + resource.getRelativeUrl(), ),\n
-  )\n
-  domain_list.append(domain)\n
-return sorted(domain_list, key=lambda x: x.getTitle())\n
+return context.objectValues(), portal.portal_catalog(\n
+  portal_type=portal.getPortalResourceTypeList(),\n
+  strict_use_uid=context.getUid(),\n
+  validation_state=\'validated\',\n
+)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>depth, parent</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_generateTicketUseDomain</string> </value>
+            <value> <string>Category_getUseCategoryListAndResourceList</string> </value>
         </item>
       </dictionary>
     </pickle>

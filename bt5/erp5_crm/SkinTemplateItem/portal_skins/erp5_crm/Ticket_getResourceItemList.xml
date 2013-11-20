@@ -51,52 +51,132 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This script returns the list of items based on the preferred\n
-resources for tickets. It is intended to be used\n
-by ListField instances.\n
+portal_type (None, string)\n
+  Used to determine "use" category to start recursing from, using preference\n
+  settings for this portal type.\n
+  When None, context\'s portal_type is used.\n
+empty_item (bool)\n
+  Controls presence of [\'\', \'\'] element in result.\n
+indent_category (bool)\n
+  When true, category captions are indented.\n
+  When false, categories captions are paths, relative to topmost category (not\n
+  necessarily a Base Category !).\n
+indent_resource (bool)\n
+  When true, resource captions are indented.\n
+  When false, resource captions are not indented.\n
+compact (bool)\n
+  When true, getCompactTranslatedTitle is used to generate captions.\n
+  When false, getTranslatedTitle is used to generate captions.\n
+empty_category (bool)\n
+  When true, categories with no resource children (at any depth) are present\n
+  in result.\n
+  When false, categories with no resource children (at any depth) are pruned\n
+  from result.\n
+\n
+When indent_category, indent_resource and compact are simultaneously not\n
+provided (or None), a default is built from\n
+getPreferredCategoryChildItemListMethodId.\n
 """\n
-from zExceptions import Unauthorized\n
+# Note: a possible improvement would be to merge consecutive disabled entries.\n
+# This is difficult though, because it requires splitting work a lot,\n
+# increasing complexity significantly for such little improvement:\n
+# - non-child categories must not be concatenated (empty /1/12/ must not be\n
+#   merged with a following /2/)\n
+# - all resource child must be properly indented\n
+# It is much simpler if only "empty_category=False" case is handled.\n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+category_id = portal_preferences.getPreference(\n
+  \'preferred_\' + (portal_type or context.getPortalType()).lower().replace(\' \', \'_\') + \'_use\',\n
+)\n
+if indent_category == indent_resource == compact == None:\n
+  indent_category, indent_resource, compact = {\n
+    \'getCategoryChildTranslatedCompactLogicalPathItemList\': (False, False, True),\n
+    \'getCategoryChildTranslatedLogicalPathItemList\': (False, True, False),\n
+    \'getCategoryChildTranslatedIndentedCompactTitleItemList\': (True, False, True),\n
+    \'getCategoryChildTranslatedIndentedTitleItemList\': (True, True, False),\n
+  }.get(portal_preferences.getPreferredCategoryChildItemListMethodId(), (True, True, False))\n
 \n
-if not portal_type:\n
-  portal_type = context.getPortalType()\n
+accessor_id = \'getCompactTranslatedTitle\' if compact else \'getTranslatedTitle\'\n
 \n
-def getResourceItemList(portal_type):\n
-  preference_id = \'preferred_%s_use\' % \'_\'.join(token.lower() for token in portal_type.split(\' \'))\n
-  sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
-            \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreference(preference_id), base_category=\'use\'),\n
-            \'validation_state\': \'validated\',\n
-            \'sort_on\': \'title\'}\n
-  return [(\'\', \'\')] + [(result.getTranslatedTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]\n
+def getResourceItemList():\n
+  INDENT = \'\\xc2\\xa0\' * 2 # UTF-8 Non-breaking space\n
+  RESOURCE_INDENT = INDENT if indent_resource else \'\'\n
+  getResourceTitle = lambda resource, category, depth: RESOURCE_INDENT * depth + getattr(resource, accessor_id)()\n
+  if indent_category:\n
+    def getCategoryTitle(category, depth):\n
+      return INDENT * depth + getattr(category, accessor_id)()\n
+  else:\n
+    def getCategoryTitle_(category, depth):\n
+      result = []\n
+      append = result.append\n
+      for _ in xrange(depth + 1):\n
+        append(getattr(category, accessor_id)())\n
+        category = category.getParentValue()\n
+      return \'/\'.join(result[::-1])\n
+    if indent_resource:\n
+      getCategoryTitle = getCategoryTitle_\n
+    else:\n
+      getCategoryTitle = lambda category, depth: None\n
+      def getResourceTitle(resource, category, depth):\n
+        resource_title = getattr(resource, accessor_id)()\n
+        # depth - 1 because we are at category\'s child level\n
+        category_path = getCategoryTitle_(category, depth - 1)\n
+        if category_path:\n
+          return category_path + \'/\' + resource_title\n
+        return resource_title\n
+  def recurse(category, depth):\n
+    child_list, resource_list = category.Category_getUseCategoryListAndResourceList()\n
+    # Resources before child categories, to avoid ambiguity when resources are not indented\n
+    result = sorted(\n
+      [(getResourceTitle(x, category, depth), x.getRelativeUrl()) for x in resource_list],\n
+      key=lambda x: x[0],\n
+    )\n
+    append = result.append\n
+    extend = result.extend\n
+    for _, caption, grand_child_list in sorted(\n
+          [(x.getIntIndex(), getCategoryTitle(x, depth), recurse(x, depth + 1)) for x in child_list],\n
+          key=lambda x: x[:2],\n
+        ):\n
+      if grand_child_list or empty_category:\n
+        if caption is not None:\n
+          append((caption, None))\n
+        extend(grand_child_list)\n
+    return result\n
+  category = portal.portal_categories.getCategoryValue(category_id, base_category=\'use\')\n
+  if category is None:\n
+    return []\n
+  return recurse(category, 0)\n
 \n
-getResourceItemList = CachingMethod(getResourceItemList, \n
-      id=(script.id, portal_type, context.Localizer.get_selected_language()), \n
-      cache_factory=\'erp5_ui_long\')\n
-\n
-result_list = getResourceItemList(portal_type)[:]\n
-\n
-# BBB returns actual value in list field\n
-if include_context and context.getResource() and context.getResource() not in [result[1] for result in result_list]:\n
-  try:\n
-    resource_value = portal.portal_categories.getCategoryValue(context.getResource(), base_category=\'resource\')\n
-    if resource_value is not None:\n
-      if resource_value.getPortalType() == \'Category\':\n
-        category_relative_url = resource_value.getCategoryRelativeUrl()\n
-        category_title = resource_value.getTranslatedTitle()\n
-      else:\n
-        category_relative_url = resource_value.getRelativeUrl()\n
-        category_title = resource_value.getTitle()\n
-      result_list.append((category_title, category_relative_url))\n
-  except Unauthorized:\n
-    pass\n
-\n
-return result_list\n
+result = CachingMethod(\n
+  getResourceItemList,\n
+  id=(\n
+    script.id,\n
+    context.Localizer.get_selected_language(),\n
+    bool(indent_resource),\n
+    bool(indent_category),\n
+    accessor_id,\n
+    bool(empty_category),\n
+    category_id,\n
+  ),\n
+  cache_factory=\'erp5_ui_long\',\n
+)()\n
+if empty_item:\n
+  prefix = [(\'\', \'\')]\n
+else:\n
+  prefix = []\n
+if include_context:\n
+  context_resource_value = context.getResourceValue()\n
+  context_resource = context.getResource()\n
+  if context_resource_value is not None and context_resource not in [x for _, x in result]:\n
+    prefix.append((getattr(context_resource_value, accessor_id)(), context_resource))\n
+return prefix + result\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=None, include_context=True</string> </value>
+            <value> <string>portal_type=None, include_context=True, empty_item=True, indent_category=None, indent_resource=None, compact=None, empty_category=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
