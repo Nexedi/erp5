@@ -835,7 +835,9 @@ class TestInventoryList(InventoryAPITestCase):
     self._makeMovement(quantity=100)
     self._makeMovement(destination_value=self.other_node, source_value=self.mirror_node, quantity=100)
     self._makeMovement(destination_value=None, source_value=self.mirror_node, quantity=100)
-    inventory_list = getInventoryList(section_uid=self.section.getUid(), group_by_node=1)
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),self.other_node.getUid(),
+                                                self.mirror_node.getUid()), 
+                                                group_by_node=1)
     self.assertEquals(3, len(inventory_list))
     self.assertEquals([r for r in inventory_list if r.node_relative_url ==
                   self.node.getRelativeUrl()][0].inventory, 100)
