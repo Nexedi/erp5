@@ -128,6 +128,7 @@
                     <value>
                       <list>
                         <string>my_criterion_property_list</string>
+                        <string>my_empty_criterion_valid</string>
                       </list>
                     </value>
                 </item>
