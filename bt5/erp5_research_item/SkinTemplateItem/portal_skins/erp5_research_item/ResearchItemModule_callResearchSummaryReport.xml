@@ -63,7 +63,6 @@ if multiplier is None:\n
 \n
 portal = context.getPortalObject()\n
 \n
-portal = context.getPortalObject()\n
 simulation_state_set = set(simulation_state_list)\n
 # We will use inventory API in order to find all quantities\n
 before_confirmed_task_state_set = set(portal.getPortalPlannedOrderStateList() + \\\n
@@ -150,14 +149,18 @@ column_url_script_list = []\n
 for item_url in item_title_dict.keys():\n
   column_url_script_list.append((item_url, "getColumnUrl"))\n
 \n
-context = context.asContext(column_list=column_list,\n
-                            at_date=at_date,\n
-                            from_date=from_date,\n
-                            simulation_state_list=simulation_state_list,\n
-                            column_url_script_list=column_url_script_list,\n
-                            journal=journal,\n
-                            multiplier=multiplier,\n
-                            listbox_line_list=listbox_line_list)\n
+context_kw = {}\n
+context_kw.update(column_list=column_list,\n
+                  at_date=at_date,\n
+                  from_date=from_date,\n
+                  simulation_state_list=simulation_state_list,\n
+                  column_url_script_list=column_url_script_list,\n
+                  journal=journal,\n
+                  multiplier=multiplier,\n
+                  listbox_line_list=listbox_line_list)\n
+context = context.getObject().asContext(**context_kw)\n
+if batch_mode:\n
+  return context\n
 return context.ResearchItemModule_viewResearchSummaryReportData()\n
 
 
@@ -165,7 +168,7 @@ return context.ResearchItemModule_viewResearchSummaryReportData()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, from_date=None, simulation_state_list=None, journal=None, multiplier=None, **kw</string> </value>
+            <value> <string>at_date=None, from_date=None, simulation_state_list=None, journal=None, multiplier=None, batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

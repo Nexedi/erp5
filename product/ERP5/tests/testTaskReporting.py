@@ -44,15 +44,21 @@ class TestTaskReportingMixin(ERP5ReportTestCase):
             'erp5_project', 'erp5_simulation_test')
 
   @reindex
-  def _makeOneTask(self, simulation_state='planned', **kw):
+  def _makeOneTask(self, simulation_state='planned',
+                   line_aggregate_relative_url=None, **kw):
     """Create a task, support many options"""
     task = self.portal.task_module.newContent(portal_type='Task',
                                               specialise=self.business_process)
     task._edit(**kw)
+    if line_aggregate_relative_url:
+      task_line, = task.objectValues(portal_type="Task Line")
+      task_line.setAggregate(line_aggregate_relative_url)
+
     if simulation_state == 'planned':
       task.plan()
     if simulation_state == 'confirmed':
       task.confirm()
+    return task
 
   def afterSetUp(self):
     """Setup the fixture.
