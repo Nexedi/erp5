@@ -91,6 +91,10 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     self.createCategories()
     self.fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity',
       "return lambda *args, **kw: 1")
+    default_pref = self.portal.portal_preferences.default_site_preference
+    if default_pref.getPreferenceState() == 'disabled':
+      default_pref.enable()
+    default_pref.setPreferredAccountingTransactionSectionCategory('group/demo_group')
     self.setPayrollBaseAmountQuantityMethod("base_amount/payroll/base/contribution",
                                             """\
   def getBaseAmountQuantity(delivery_amount, base_application,

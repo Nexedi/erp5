@@ -57,7 +57,7 @@ getobject = portal.portal_catalog.getobject\n
 for x in portal.portal_simulation.getInventoryList(\n
                               portal_type=(\'Pay Sheet Cell\',\n
                                            \'Pay Sheet Line\'),\n
-                              section_category=\'group/demo_group\',\n
+                              section_category=portal.portal_preferences.getPreferredAccountingTransactionSectionCategory(),\n
                               group_by_resource=0,\n
                               group_by_section=0,\n
                               group_by_mirror_section=1):\n
