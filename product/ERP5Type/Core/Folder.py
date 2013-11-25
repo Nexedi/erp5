@@ -1414,19 +1414,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     # in case we erased some data
     if fixit:
       transaction.savepoint(optimistic=True)
-    # Then check the consistency on all sub objects
-    for obj in self.contentValues():
-      if obj.providesIConstraint():
-        # it is not possible to checkConsistency of Constraint itself, as method
-        # of this name implement consistency checking on object
-        continue
-      if fixit:
-        extra_errors = obj.fixConsistency(filter=filter, **kw)
-      else:
-        extra_errors = obj.checkConsistency(filter=filter, **kw)
-      if len(extra_errors) > 0:
-        error_list += extra_errors
-    # We should also return an error if any
+
     return error_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asXML')
