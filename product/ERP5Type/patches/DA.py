@@ -235,11 +235,8 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
         brain = getBrain(class_file_, class_name_)
         # XXX remove this logging for performance
         LOG(__name__, INFO, "Using special brain: %r\n" % (brain,))
-    elif hasattr(self, '_v_brain'):
-    # end patch:
-        brain=self._v_brain
     else:
-        brain=self._v_brain=getBrain(self.class_file_, self.class_name_)
+        brain = getBrain(self.class_file_, self.class_name_)
 
     if type(result) is type(''):
         f=StringIO()
