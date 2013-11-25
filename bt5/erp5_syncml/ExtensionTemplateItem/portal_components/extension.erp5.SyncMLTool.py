@@ -24,11 +24,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+import base64
 from lxml import etree
 from difflib import unified_diff
 from Products.ERP5Type.DiffUtils import DiffFile
 
-def diffXML(xml_plugin="", xml_erp5="", html=True):
+def diffXML(xml_plugin="", xml_erp5="", gid="", html=True):
   if isinstance(xml_erp5, unicode):
     xml_erp5 = xml_erp5.encode('utf-8')
   if xml_plugin == "":
@@ -50,11 +51,12 @@ def diffXML(xml_plugin="", xml_erp5="", html=True):
     pass
 
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))
-  if len(diff_list) != 0:
+  if diff_list:
     diff_msg = '\n\nXML Diff :\n'
+    if gid:
+      diff_msg = '\n\nXML Diff for %s:\n' % base64.b16decode(gid)
     diff_msg += '\n'.join(diff_list)
     if html:
       return DiffFile(diff_msg).toHTML()
     return diff_msg
-  else:
-    return 'No diff'
+  return 'No diff'
