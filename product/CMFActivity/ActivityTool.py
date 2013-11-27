@@ -241,7 +241,9 @@ class Message(BaseMessage):
           % (self.object_path,), error=sys.exc_info())
       self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
     else:
-      if self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None):
+      if (self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None) and
+          # XXX: BusinessTemplate must be fixed to preserve OID
+          'portal_workflow' not in self.object_path):
         raise ValueError("OID mismatch for %r" % obj)
       return obj
 
