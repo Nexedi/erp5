@@ -36,7 +36,7 @@ from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
-  ActivityRuntimeEnvironment, getTransactionalVariable)
+  DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment, getTransactionalVariable)
 from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
 from Products.CMFActivity.Errors import ActivityFlushError
 
@@ -460,7 +460,7 @@ class SQLBase(Queue):
             continue
           # In case of infinite retry, notify the user
           # when the default limit is reached.
-          if max_retry is None and retry == m.__class__.max_retry:
+          if max_retry is None and retry == DEFAULT_MAX_RETRY:
             notify_user_list.append((m, True))
           delay = m.delay
           if delay is None:
