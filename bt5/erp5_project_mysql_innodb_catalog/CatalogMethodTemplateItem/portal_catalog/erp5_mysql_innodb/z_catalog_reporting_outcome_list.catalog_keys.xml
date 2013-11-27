@@ -6,6 +6,6 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: getattr(here, 'getOutcomeDescription', None) is not None</value>
+  <value>python: getattr(context, 'getOutcomeDescription', None) is not None</value>
  </item>
 </catalog_method>

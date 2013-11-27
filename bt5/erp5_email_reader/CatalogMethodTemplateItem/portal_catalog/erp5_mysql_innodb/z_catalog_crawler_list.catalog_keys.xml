@@ -6,7 +6,7 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python:(here.isDocument and here.isExternalDocument) or here.getPortalType() == 'Email Reader'</value>
+  <value>python:(context.isDocument and context.isExternalDocument) or context.getPortalType() == 'Email Reader'</value>
  </item>
  <item key="_filter_expression_cache_key_archive" type="str">
   <value></value>
