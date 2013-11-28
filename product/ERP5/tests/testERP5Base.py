@@ -1386,6 +1386,33 @@ class TestERP5Base(ERP5TypeTestCase):
     # edit content_type on document which has no content_type property configured
     person.edit(content_type='text/xml')
 
+  def test_BankAccount_validateIBAN(self):
+    self.assertTrue(
+        self.portal.BankAccount_validateIBAN(
+        'GR1601101250000000012300695', request=None))
+    # spaces are allowed
+    self.assertTrue(
+        self.portal.BankAccount_validateIBAN(
+        'GR16 0110 1250 0000 0001 2300 695', request=None))
+    self.assertFalse(
+        self.portal.BankAccount_validateIBAN(
+        'GR16 0110 1250 0000 0001 2300 696', request=None))
+    self.assertFalse(
+        self.portal.BankAccount_validateIBAN(
+        '12345', request=None))
+
+  def test_BankAccount_validateBIC(self):
+    self.assertTrue(
+        self.portal.BankAccount_validateBIC(
+        'DEUTDEFF', request=None))
+    self.assertTrue(
+        self.portal.BankAccount_validateBIC(
+        'NEDSZAJJ', request=None))
+    self.assertFalse(
+        self.portal.BankAccount_validateBIC(
+        'X', request=None))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Base))
