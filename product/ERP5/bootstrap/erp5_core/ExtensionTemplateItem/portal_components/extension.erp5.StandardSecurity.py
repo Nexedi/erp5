@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Security.ERP5GroupManager import ConsistencyError
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 
 def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type,
                                       child_category_list=[]):
@@ -53,7 +54,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
   category_list = []
   
   person_object_list = self.portal_catalog.unrestrictedSearchResults(
-                                portal_type='Person', reference=user_name)
+    query=SimpleQuery(reference=user_name), portal_type='Person')
   
   if len(person_object_list) != 1:
     if len(person_object_list) > 1:
