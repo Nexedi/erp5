@@ -27,6 +27,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from ZODB.POSException import ConflictError
 
@@ -120,7 +121,7 @@ class ERP5GroupManager(BasePlugin):
 
         # get the person from its reference - no security check needed
         catalog_result = self.portal_catalog.unrestrictedSearchResults(
-            portal_type="Person", reference=user_name)
+            portal_type="Person", query=SimpleQuery(reference=user_name))
         if len(catalog_result) != 1: # we won't proceed with groups
           if len(catalog_result) > 1: # configuration is screwed
             raise ConsistencyError, 'There is more than one Person whose \
