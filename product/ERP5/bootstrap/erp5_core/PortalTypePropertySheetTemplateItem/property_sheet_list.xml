@@ -1,9 +1,45 @@
 <property_sheet_list>
+ <portal_type id="Attribute Blacklisted Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Attribute Equality Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Attribute Unicity Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Acquired Membership State Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Existence Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Membership Arity Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Membership State Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Related Membership Arity Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Category Related Membership State Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Content Existence Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
  <portal_type id="Document Component">
   <item>SortIndex</item>
  </portal_type>
  <portal_type id="Extension Component">
   <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Property Existence Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="Property Type Validity Constraint">
+  <item>ConstraintType</item>
  </portal_type>
  <portal_type id="Script Constraint">
   <item>ConstraintType</item>
@@ -11,6 +47,12 @@
   <item>Reference</item>
   <item>ScriptConstraint</item>
   <item>SimpleItem</item>
+ </portal_type>
+ <portal_type id="String Attribute Match Constraint">
+  <item>ConstraintType</item>
+ </portal_type>
+ <portal_type id="TALES Constraint">
+  <item>ConstraintType</item>
  </portal_type>
  <portal_type id="Test Component">
   <item>SortIndex</item>

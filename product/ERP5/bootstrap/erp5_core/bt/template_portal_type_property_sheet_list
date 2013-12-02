@@ -1,5 +1,18 @@
+Attribute Blacklisted Constraint | ConstraintType
+Attribute Equality Constraint | ConstraintType
+Attribute Unicity Constraint | ConstraintType
+Category Acquired Membership State Constraint | ConstraintType
+Category Existence Constraint | ConstraintType
+Category Membership Arity Constraint | ConstraintType
+Category Membership State Constraint | ConstraintType
+Category Related Membership Arity Constraint | ConstraintType
+Category Related Membership State Constraint | ConstraintType
+Content Existence Constraint | ConstraintType
 Document Component | SortIndex
 Extension Component | SortIndex
+Property Existence Constraint | ConstraintType
+Property Type Validity Constraint | ConstraintType
+Script Constraint | ConstraintType
 Script Constraint | ConstraintType
 Script Constraint | Predicate
 Script Constraint | Reference
