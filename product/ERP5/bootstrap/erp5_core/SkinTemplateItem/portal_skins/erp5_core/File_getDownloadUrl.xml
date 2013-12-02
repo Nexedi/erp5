@@ -57,7 +57,7 @@ return \'%s/Base_download\' % brain.absolute_url()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, selection_name=None</string> </value>
+            <value> <string>brain=None, selection=None, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
