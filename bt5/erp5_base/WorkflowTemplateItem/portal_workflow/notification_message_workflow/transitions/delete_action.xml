@@ -57,7 +57,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+      <tuple>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>

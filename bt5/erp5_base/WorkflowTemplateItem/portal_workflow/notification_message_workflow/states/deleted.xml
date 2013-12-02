@@ -41,7 +41,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>

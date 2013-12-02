@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Default state of the document</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>invalidated</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,19 +22,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Invalidated</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>submit</string>
-                <string>submit_action</string>
-                <string>validate</string>
-                <string>validate_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -48,10 +41,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,42 +56,27 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -111,8 +86,8 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
