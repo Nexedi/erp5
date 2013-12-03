@@ -2549,7 +2549,7 @@ class Base( CopyContainer,
     error_list = UnrestrictedMethod(self._checkConsistency)(fixit=fixit)
     if len(error_list) > 0:
       try:
-        self._checkConsistency(fixit=fixit)
+        self._checkConsistency()
       except Unauthorized:
         error_list = [getUnauthorizedErrorMessage(self)]
 
@@ -2565,8 +2565,8 @@ class Base( CopyContainer,
           constraint_instance.checkConsistency)(self, **kw)
       if len(error_list2) > 0:
         try:
-          if fixit:
-            constraint_instance.fixConsistency(self, **kw)
+          if not fixit:
+            extra_error_list = constraint_instance.checkConsistency(self, **kw)
           else:
             constraint_instance.checkConsistency(self, **kw)
         except Unauthorized:
