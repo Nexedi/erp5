@@ -57,11 +57,13 @@ item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
 sub_field_dict = {}\n
 split_depth = 1\n
 \n
-# build a dict of title to display, based on the titles of corresponding\n
-# budget variations, and a dict of indexes for sorting\n
+# Build a dict of title to display, based on the titles of corresponding\n
+# budget variations, and a dict of indexes for sorting.\n
+# Also build a list of line level variations, for which we only choose one value.\n
 base_category_title_dict = dict()\n
 base_category_int_index_dict = dict()\n
 budget_line = container.REQUEST.get(\'here\')\n
+line_level_variation_list = []\n
 if budget_line is not None:\n
   budget_model =budget_line.getParentValue().getSpecialiseValue()\n
   if budget_model is not None:\n
@@ -73,7 +75,8 @@ if budget_line is not None:\n
       base_category_int_index_dict[\n
           budget_variation.getProperty(\'variation_base_category\')\n
           ] =  budget_variation.getIntIndex()\n
-\n
+      if budget_variation.isMemberOf(\'budget_variation/budget_line\'):\n
+        line_level_variation_list.append(budget_variation.getProperty(\'variation_base_category\'))\n
 \n
 resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
 \n
@@ -85,24 +88,31 @@ for item in item_list:\n
   item_split = string.split(item_value, \'/\')\n
   item_key = string.join(item_split[:split_depth] , \'/\' )\n
   base_category = item_split[0]\n
-\n
+  multi = True\n
+  \n
+  if item_key in line_level_variation_list:\n
+    multi = False\n
+    \n
   if not sub_field_dict.has_key(item_key):\n
     # Create property dict\n
     sub_field_property_dict = default_sub_field_property_dict.copy()\n
     sub_field_property_dict[\'key\'] = item_key\n
     sub_field_property_dict[\'required\'] = 0\n
-    sub_field_property_dict[\'field_type\'] = \'MultiListField\'\n
-    sub_field_property_dict[\'size\'] = 5\n
+    sub_field_property_dict[\'field_type\'] = multi and \'MultiListField\' or \'ListField\'\n
+    sub_field_property_dict[\'size\'] = multi and 10 or 1\n
     sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
     sub_field_property_dict[\'value\'] = []\n
     sub_field_dict[item_key] = sub_field_property_dict\n
 \n
   sub_field_dict[item_key][\'item_list\'] =\\\n
      sub_field_dict[item_key][\'item_list\'] + [item]\n
+  \n
   if item_value in value_list:\n
-    sub_field_dict[item_key][\'value\'] =\\\n
-      sub_field_dict[item_key][\'value\'] + [item_value]\n
-\n
+    if multi:\n
+      sub_field_dict[item_key][\'value\'] =\\\n
+        sub_field_dict[item_key][\'value\'] + [item_value]\n
+    else:\n
+      sub_field_dict[item_key][\'value\'] = item_value\n
 \n
   sub_field_dict[item_key][\'int_index\'] = base_category_int_index_dict.get(\n
                                                     base_category, -1)\n
