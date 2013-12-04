@@ -16,13 +16,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Messages to Validate (%(count)s)</string> </value>
+            <value> <string>Notification Messages to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-noftification_message_module?validation_state=submitted&local_roles=%(local_roles)s&portal_type=%(portal_type)s&reset=1
+notification_message_module?validation_state=submitted&local_roles=%(local_roles)s&portal_type=%(portal_type)s&reset=1
 
 ]]></string> </value>
         </item>
