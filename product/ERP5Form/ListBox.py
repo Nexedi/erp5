@@ -1453,7 +1453,8 @@ class ListBoxRenderer:
   getStatSelectExpression = lazyMethod(getStatSelectExpression)
 
   def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
-                         unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),)):
+                         unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),),
+                         checked_permission='View'):
     """Return a list of report trees.
     """
     if isinstance(report_path, str):
@@ -1517,7 +1518,8 @@ class ListBoxRenderer:
     if getChildDomainValueList is not None and base_category != 'parent':
       obj_list = root.getChildDomainValueList(root, depth = depth)
     elif contentValues is not None:
-      obj_list = root.contentValues(sort_on = sort_on)
+      obj_list = root.contentValues(sort_on=sort_on,
+          checked_permission=checked_permission)
     else:
       obj_list = ()
 
@@ -1540,7 +1542,8 @@ class ListBoxRenderer:
         # which can be used as a part of the report tree. Otherwise,
         # sub-objects are displayed twice unnecessarily.
         if base_category == 'parent':
-          for sub_obj in obj.contentValues(sort_on = sort_on):
+          for sub_obj in obj.contentValues(sort_on=sort_on,
+                checked_permission=checked_permission):
             if getattr(aq_base(sub_obj), 'objectValues', None) is not None:
               exception_uid_list.append(sub_obj.getUid())
 
