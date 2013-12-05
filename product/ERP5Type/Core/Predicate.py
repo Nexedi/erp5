@@ -147,44 +147,23 @@ class Predicate(XMLObject):
 #        (multimembership_criterion_base_category_list,
 #        membership_criterion_base_category_list,
 #        self.getMembershipCriterionCategoryList()))
-    membership_criterion_category_list = \
-                            self.getMembershipCriterionCategoryList()
-    if tested_base_category_list is not None:
-      membership_criterion_category_list = [x for x in \
-          membership_criterion_category_list if x.split('/', 1)[0] in \
-          tested_base_category_list]
-
     # Test category memberships. Enable the read-only transaction cache
     # because this part is strictly read-only, and context.isMemberOf
     # is very expensive when the category list has many items.
     with readOnlyTransactionCache():
-      for c in membership_criterion_category_list:
+      for c in self.getMembershipCriterionCategoryList():
         bc = c.split('/', 1)[0]
-        if (bc not in tested_base_category) and \
-           (bc in multimembership_criterion_base_category_list):
-          tested_base_category[bc] = 1
-        elif (bc not in tested_base_category) and \
-             (bc in membership_criterion_base_category_list):
-          tested_base_category[bc] = 0
-        if (bc in multimembership_criterion_base_category_list):
-          tested_base_category[bc] = tested_base_category[bc] and \
-                                     context.isMemberOf(c, 
-                                         strict_membership=strict_membership)
-#        LOG('predicate test', 0,
-#            '%s after multi membership to %s' % \
-#            (tested_base_category[bc], c))
-        elif (bc in membership_criterion_base_category_list):
-          tested_base_category[bc] = tested_base_category[bc] or \
-                                     context.isMemberOf(c,
-                                         strict_membership=strict_membership)
-#        LOG('predicate test', 0,
-#            '%s after single membership to %s' % \
-#            (tested_base_category[bc], c))
-    result = 0 not in tested_base_category.values()
-#    LOG('predicate test', 0,
-#        '%s after category %s ' % (result, tested_base_category.items()))
-    if not result:
-      return result
+        if tested_base_category_list is None or bc in tested_base_category_list:
+          if bc in multimembership_criterion_base_category_list:
+            if not context.isMemberOf(c, strict_membership=strict_membership):
+              return 0
+          elif bc in membership_criterion_base_category_list and \
+               not tested_base_category.get(bc):
+            tested_base_category[bc] = \
+              context.isMemberOf(c, strict_membership=strict_membership)
+    if 0 in tested_base_category.itervalues():
+      return 0
+
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
     if test_method_id_list is not None :
