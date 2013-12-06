@@ -242,18 +242,26 @@ class DomainTool(BaseTool):
       if kw.get('src__'):
         return sql_result_list
       result_list = []
-      for predicate in sql_result_list:
-        predicate = predicate.getObject()
-        if (not test) or predicate.test(
-                       context,
-                       tested_base_category_list=tested_base_category_list):
-          result_list.append(predicate)
-      if filter_method is not None:
-        result_list = filter_method(result_list)
-      if sort_key_method is not None:
-        result_list.sort(key=sort_key_method)
-      elif sort_method is not None:
-        result_list.sort(cmp=sort_method)
+      if sql_result_list:
+        if test:
+          cache = {}
+          def isMemberOf(context, c, strict_membership):
+            if c in cache:
+              return cache[c]
+            cache[c] = result = portal_categories.isMemberOf(
+              context, c, strict_membership=strict_membership)
+            return result
+        for predicate in sql_result_list:
+          predicate = predicate.getObject()
+          if not test or predicate.test(context, tested_base_category_list,
+                                        isMemberOf=isMemberOf):
+            result_list.append(predicate)
+        if filter_method is not None:
+          result_list = filter_method(result_list)
+        if sort_key_method is not None:
+          result_list.sort(key=sort_key_method)
+        elif sort_method is not None:
+          result_list.sort(cmp=sort_method)
       return result_list
 
     # XXX FIXME method should not be public 

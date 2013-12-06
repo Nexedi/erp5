@@ -87,7 +87,7 @@ class Predicate(XMLObject):
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None, 
-           strict_membership=0, **kw):
+           strict_membership=0, isMemberOf=None, **kw):
     """
       A Predicate can be tested on a given context.
       Parameters can passed in order to ignore some conditions.
@@ -97,6 +97,9 @@ class Predicate(XMLObject):
         destination or the source of a predicate.
       - if strict_membership is specified, we should make sure that we
         are strictly a member of tested categories
+      - isMemberOf can be a function caching results for
+        CategoryTool.isMemberOf: it is always called with given 'context' and
+        'strict_membership' values, and different categories.
     """
     self = self.asPredicate()
     if self is None:
@@ -150,17 +153,19 @@ class Predicate(XMLObject):
     # Test category memberships. Enable the read-only transaction cache
     # because this part is strictly read-only, and context.isMemberOf
     # is very expensive when the category list has many items.
+    if isMemberOf is None:
+      isMemberOf = context._getCategoryTool().isMemberOf
     with readOnlyTransactionCache():
       for c in self.getMembershipCriterionCategoryList():
         bc = c.split('/', 1)[0]
         if tested_base_category_list is None or bc in tested_base_category_list:
           if bc in multimembership_criterion_base_category_list:
-            if not context.isMemberOf(c, strict_membership=strict_membership):
+            if not isMemberOf(context, c, strict_membership=strict_membership):
               return 0
           elif bc in membership_criterion_base_category_list and \
                not tested_base_category.get(bc):
             tested_base_category[bc] = \
-              context.isMemberOf(c, strict_membership=strict_membership)
+              isMemberOf(context, c, strict_membership=strict_membership)
     if 0 in tested_base_category.itervalues():
       return 0
 
