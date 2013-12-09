@@ -41,6 +41,7 @@ from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import readOnlyTransactionCache
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -579,21 +580,25 @@ class Predicate(XMLObject):
 
     return new_self
 
-  # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asPredicate')
   def asPredicate(self, script_id=None):
     """
       This method tries to convert the current Document into a predicate
-      looking up methods named ${PortalType}_asPredicate,
-      ${MetaType}_asPredicate, ${Class}_asPredicate     
+      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
     """
-    if script_id is not None:
-      script = getattr(self, script_id, None)
+    cache = getTransactionalVariable()
+    key = id(self), script_id
+    if 'asPredicate' in cache:
+      cache = cache['asPredicate']
+      if key in cache:
+        return cache[key]
     else:
-      script = self._getTypeBasedMethod('asPredicate')
+      cache = cache['asPredicate'] = {}
+    script = self._getTypeBasedMethod('asPredicate', script_id)
     if script is not None:
-      return script()
+      self = script()
+    cache[key] = self
     return self
 
   def searchPredicate(self, **kw):

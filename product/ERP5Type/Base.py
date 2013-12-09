@@ -2957,18 +2957,6 @@ class Base( CopyContainer,
           return object.__of__(self)
     raise AttributeError(id)
 
-  # Predicate handling
-  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
-  def asPredicate(self, script_id=None):
-    """
-      This method tries to convert the current Document into a predicate
-      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
-    """
-    script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
-    if script is not None:
-      return script()
-    return None
-
   def _getAcquireLocalRoles(self):
     """This method returns the value of acquire_local_roles of the object's
     portal_type.

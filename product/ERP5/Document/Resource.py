@@ -630,20 +630,6 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       # Default value is None
       return None
 
-    # Predicate handling
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'asPredicate')
-    def asPredicate(self):
-      """
-      Returns a temporary Predicate based on the Resource properties
-      """
-      from Products.ERP5 import newTempPredicateGroup as newTempPredicate
-      p = newTempPredicate(self.getId(), uid = self.getUid())
-      p.setMembershipCriterionBaseCategoryList(('resource',))
-      p.setMembershipCriterionCategoryList(('resource/%s'
-          % self.getRelativeUrl(),))
-      return p
-
     def _pricingSortMethod(self, a, b):
       # Simple method : the one that defines a destination section wins
       if a.getDestinationSection():
