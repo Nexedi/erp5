@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
@@ -332,44 +333,29 @@ class DomainTool(BaseTool):
       # First get the list of predicates
       if predicate_list is None:
         predicate_list = self.searchPredicateList(context, test=test, **kw)
-      if len(predicate_list)==0:
-        # No predicate, return None
-        mapped_value = None
-      else:
-        # Generate tempDeliveryCell
+      if predicate_list:
         from Products.ERP5Type.Document import newTempSupplyCell
-        mapped_value = newTempSupplyCell(self.getPortalObject(),
-                                           'new_mapped_value')
-        mapped_value_property_dict = {}
-        processed_dict = {}
-        explanation_dict = {}
+        mapped_value_property_dict = defaultdict(list)
+        explanation_dict = defaultdict(dict)
         # Look for each property the first predicate with unique criterion
         # categories which defines the property
         for predicate in predicate_list:
-          predicate_category_list = \
-              tuple(predicate.getMembershipCriterionCategoryList())
-
+          full_prop_dict = explanation_dict[
+            tuple(predicate.getMembershipCriterionCategoryList())]
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            prop_list = processed_dict.setdefault(predicate_category_list, [])
-            full_prop_dict = explanation_dict.setdefault(
-                predicate_category_list, {})
-            if mapped_value_property in prop_list:
+            if mapped_value_property in full_prop_dict:
               # we already have one value for this (categories, property)
               continue
-
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
-              prop_list.append(mapped_value_property)
               full_prop_dict[mapped_value_property] = value
-              mv_prop_list = \
-                  mapped_value_property_dict.setdefault(
-                  mapped_value_property, [])
-              mv_prop_list.append(value)
+              mapped_value_property_dict[mapped_value_property].append(value)
         if explanation_only:
-          return explanation_dict
-        # Update mapped value
-        mapped_value = mapped_value.asContext(**mapped_value_property_dict)
-      return mapped_value
+          return dict(explanation_dict)
+        mapped_value = newTempSupplyCell(self.getPortalObject(),
+                                           'new_mapped_value')
+        mapped_value.__dict__.update(mapped_value_property_dict)
+        return mapped_value
 
 
     def getChildDomainValueList(self, parent, **kw):
