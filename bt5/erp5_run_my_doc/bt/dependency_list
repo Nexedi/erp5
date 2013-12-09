@@ -1,4 +1,3 @@
-erp5_ui_test_core
 erp5_dms
 erp5_core (>= 5.4.3)
 erp5_xhtml_style (>= 5.4.7)
