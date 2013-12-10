@@ -59,12 +59,12 @@ def _getEffectiveModel(self, start_date, stop_date):
   if start_date is not None:
     query_list.append(ComplexQuery(Query(effective_date=None),
                                    Query(effective_date=start_date,
-                                         range='ngt'),
+                                         range='<='),
                                    logical_operator='OR'))
   if stop_date is not None:
     query_list.append(ComplexQuery(Query(expiration_date=None),
                                    Query(expiration_date=stop_date,
-                                         range='min'),
+                                         range='>'),
                                    logical_operator='OR'))
 
   # XXX What to do the catalog returns nothing (either because 'self' was just
