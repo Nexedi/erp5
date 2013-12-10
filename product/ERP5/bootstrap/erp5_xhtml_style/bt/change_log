@@ -1,3 +1,6 @@
+2013-12-10 arnaud.fontaine
+* Support properly HTML5 implicit form submission.
+
 2012-10-16 yusei
 * Improve error handling on Workflow_statusModify. If divergence is solved by other user, then show a nice message.
 
