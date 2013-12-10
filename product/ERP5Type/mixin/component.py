@@ -237,7 +237,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
       if (component_id is not None and component_uid is not None and
           not reference_has_error and
-          component_uid != self.getUid() and component_id != self.getId()):
+          component_uid != self._p_oid and component_id != self.getId()):
         error_list.append(
           ConsistencyMessage(self,
                              object_relative_url,

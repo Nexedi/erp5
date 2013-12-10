@@ -126,7 +126,7 @@ class ComponentDynamicPackage(ModuleType):
               reference = component.getReference(validated_only=True)
               self.__registry_dict.setdefault(reference, {})[version] = (
                 component.getId(),
-                component.getUid())
+                component._p_oid)
 
     return self.__registry_dict
 
