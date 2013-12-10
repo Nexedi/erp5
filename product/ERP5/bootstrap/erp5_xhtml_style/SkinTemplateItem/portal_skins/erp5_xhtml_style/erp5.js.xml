@@ -187,6 +187,8 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
       changed = false;\n
     }\n
     form.submit();\n
+    event.preventDefault();\n
+    return false;\n
   }\n
 }\n
 \n

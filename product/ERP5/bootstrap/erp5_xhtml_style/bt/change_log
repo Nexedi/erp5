@@ -1,3 +1,6 @@
+2013-12-10 arnaud.fontaine
+* Support properly HTML5 implicit form submission.
+
 2013-6-20 yusei
 * Fix erp5.js to keep it compatible with jquery 1.4. .prop() is available after jquery 1.6.
 
