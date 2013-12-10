@@ -32,6 +32,7 @@ from __future__ import absolute_import
 
 import sys
 import imp
+import collections
 
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type.Globals import get_request
@@ -74,7 +75,7 @@ class ComponentDynamicPackage(ModuleType):
     self._namespace_prefix = namespace + '.'
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
-    self.__registry_dict = {}
+    self.__registry_dict = collections.defaultdict(dict)
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -124,9 +125,8 @@ class ComponentDynamicPackage(ModuleType):
             # beforehand
             if version in version_priority_set:
               reference = component.getReference(validated_only=True)
-              self.__registry_dict.setdefault(reference, {})[version] = (
-                component.getId(),
-                component._p_oid)
+              self.__registry_dict[reference][version] = (component.getId(),
+                                                          component._p_oid)
 
     return self.__registry_dict
 
