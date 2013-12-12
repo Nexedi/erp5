@@ -307,42 +307,41 @@ class TemplateTool (BaseTool):
         file.seek(0)
         magic = file.read(5)
 
-      if 1:
-        # XXX: should really check for a magic and offer a falback if it
-        # doens't correspond to anything handled.
-        tar = tarfile.open(path, 'r:gz')
-        dir_name = tar.members[0].name.split(posixpath.sep, 1)[0]
-        try:
-          # create bt object
-          bt = self.newContent(portal_type='Business Template', id=id)
-          prop_dict = {}
-          for prop in bt.propertyMap():
-            prop_type = prop['type']
-            pid = prop['id']
-            prop_path = posixpath.join(dir_name, 'bt', pid)
-            try:
-              info = tar.getmember(prop_path)
-              value = tar.extractfile(info).read()
-            except KeyError:
-              value = None
-            if value is 'None':
-              # At export time, we used to export non-existent properties:
-              #   str(obj.getProperty('non-existing')) == 'None'
-              # Discard them
-              continue
-            if prop_type in ('text', 'string'):
-              prop_dict[pid] = value or ''
-            elif prop_type in ('int', 'boolean'):
-              prop_dict[pid] = value or 0
-            elif prop_type in ('lines', 'tokens'):
-              prop_dict[pid[:-5]] = (value or '').splitlines()
-          prop_dict.pop('id', '')
-          bt.edit(**prop_dict)
-          # import all other files from bt
-          with open(path, 'rb') as fobj:
-            bt.importFile(file=fobj)
-        finally:
-          tar.close()
+      # XXX: should really check for a magic and offer a falback if it
+      # doens't correspond to anything handled.
+      tar = tarfile.open(path, 'r:gz')
+      dir_name = tar.members[0].name.split(posixpath.sep, 1)[0]
+      try:
+        # create bt object
+        bt = self.newContent(portal_type='Business Template', id=id)
+        prop_dict = {}
+        for prop in bt.propertyMap():
+          prop_type = prop['type']
+          pid = prop['id']
+          prop_path = posixpath.join(dir_name, 'bt', pid)
+          try:
+            info = tar.getmember(prop_path)
+            value = tar.extractfile(info).read()
+          except KeyError:
+            value = None
+          if value is 'None':
+            # At export time, we used to export non-existent properties:
+            #   str(obj.getProperty('non-existing')) == 'None'
+            # Discard them
+            continue
+          if prop_type in ('text', 'string'):
+            prop_dict[pid] = value or ''
+          elif prop_type in ('int', 'boolean'):
+            prop_dict[pid] = value or 0
+          elif prop_type in ('lines', 'tokens'):
+            prop_dict[pid[:-5]] = (value or '').splitlines()
+        prop_dict.pop('id', '')
+        bt.edit(**prop_dict)
+        # import all other files from bt
+        with open(path, 'rb') as fobj:
+          bt.importFile(file=fobj)
+      finally:
+        tar.close()
       return bt
 
     security.declareProtected( Permissions.ManagePortal, 'manage_download' )
