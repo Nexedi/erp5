@@ -15,6 +15,7 @@
                 <string>external_validator</string>
                 <string>list_method</string>
                 <string>selection_name</string>
+                <string>sort_columns</string>
                 <string>title</string>
               </list>
             </value>
@@ -169,6 +170,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>folder_workflow_action_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>none</string>
+                          <string>none</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
