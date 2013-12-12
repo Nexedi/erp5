@@ -293,7 +293,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       from pylint.lint import Run
       from pylint.reporters.text import TextReporter
     except ImportError, error:
-      return ['F: Cannot check Source Code: Pylint is not available (%s)' % error], []
+      try:
+        compile(source_code, '<string>', 'exec')
+        return [], []
+      except BaseException, error:
+        return ['F: %s' % error], []
 
     import cStringIO
     import tempfile
