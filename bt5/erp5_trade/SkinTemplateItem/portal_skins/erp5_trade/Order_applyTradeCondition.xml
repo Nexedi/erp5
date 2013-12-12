@@ -146,8 +146,40 @@ order.edit(**new_category_dict)\n
             <value> <string>trade_condition, force=0, reverse_arrow_category=0</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Auditor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Order_applyTradeCondition</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Modify portal content</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>
