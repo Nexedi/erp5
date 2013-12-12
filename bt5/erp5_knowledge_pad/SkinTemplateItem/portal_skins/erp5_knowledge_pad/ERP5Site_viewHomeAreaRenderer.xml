@@ -44,7 +44,7 @@
                                     not waitForActivitiesOnServer and\n
                                     active_knowledge_pad is not None">\n
 \n
-    <tal:block tal:condition="not: isAnon"> \n
+    <tal:block tal:condition="python:not (isAnon or isAnonymousKnowledgePadUsed)"> \n
       <div id="pad-navigation-wrapper">\n
         <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"/>\n
       </div>\n
