@@ -1,3 +1,6 @@
+2013-12-12 arnaud.fontaine
+* Get rid of Business Template format version 0 as it's been deprecated for a while.
+
 2013-11-07 arnaud.fontaine
 * SelectionTool: Changing storage or memcached settings were not taken into effect until restart.
 

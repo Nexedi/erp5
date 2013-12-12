@@ -307,12 +307,7 @@ class TemplateTool (BaseTool):
         file.seek(0)
         magic = file.read(5)
 
-      if magic == '<?xml': # old version
-        self._importObjectFromFile(path, id=id)
-        bt = self[id]
-        bt.id = id # Make sure id is consistent
-        bt.setProperty('template_format_version', 0, type='int')
-      else: # new version
+      if 1:
         # XXX: should really check for a magic and offer a falback if it
         # doens't correspond to anything handled.
         tar = tarfile.open(path, 'r:gz')
