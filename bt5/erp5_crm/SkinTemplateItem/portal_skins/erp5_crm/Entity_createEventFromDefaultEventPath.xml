@@ -60,6 +60,8 @@ resource_reference = event_path.getResourceReference()\n
 source = event_path.getSource()\n
 \n
 language = context.getLanguage()\n
+if not language:\n
+  language = portal.portal_preferences.getPreferredCustomerRelationLanguage()\n
 notification_message = portal.notification_message_module.NotificationTool_getDocumentValue(\n
   resource_reference,\n
   language=language)\n
@@ -73,6 +75,7 @@ event = context.Base_addEvent(title=\'\',\n
   keep_draft=keep_draft,\n
   follow_up=follow_up,\n
   source=source,\n
+  language=language,\n
   batch_mode=True)\n
 </string> </value>
         </item>

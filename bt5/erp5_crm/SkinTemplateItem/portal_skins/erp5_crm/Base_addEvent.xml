@@ -120,7 +120,7 @@ event = module.newContent(**event_kw)\n
 \n
 if notification_message:\n
   event.Event_setTextContentFromNotificationMessage(\n
-     reference=notification_message)\n
+     reference=notification_message, language=language)\n
 \n
 if not keep_draft:\n
   if direction == \'incoming\':\n
@@ -142,7 +142,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, source=None, destination=None, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, notification_message=None, batch_mode=False, keep_draft=False, follow_up=None, source=None, destination=None, language=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
