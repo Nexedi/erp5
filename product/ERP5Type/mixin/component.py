@@ -271,19 +271,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     reference, version and text_content
     """
     if not self.checkConsistency():
-      text_content = self.getTextContent()
-      # Even if pylint should report all errors, make sure that there is no
-      # error when executing the source code pylint before validating
-      try:
-        exec text_content in {}
-      except BaseException, e:
-        self.setErrorMessageList(self.getTextContentErrorMessageList() +
-                                 [str(e)])
-      else:
-        for property_name in self._recorded_property_name_tuple:
-          self.clearRecordedProperty(property_name)
+      for property_name in self._recorded_property_name_tuple:
+        self.clearRecordedProperty(property_name)
 
-        self.validate()
+      self.validate()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkSourceCode')
   def checkSourceCode(self):
