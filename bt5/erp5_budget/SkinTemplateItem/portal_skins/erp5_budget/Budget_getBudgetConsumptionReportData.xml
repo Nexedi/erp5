@@ -183,9 +183,10 @@ for budget in budget_list:\n
       consumed_budget_dict = budget_line.getConsumedBudgetDict()\n
       engaged_budget_dict = budget_line.getEngagedBudgetDict()\n
 \n
-    budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
+    # We use \'engaged\' cell_id because we are supposed to have more engagements than consumptions\n
+    budget_line_cell_range = budget_line.BudgetLine_asCellRange(\'engaged\')\n
     budget_line_as_cell_range_matrixbox =\\\n
-          budget_line.BudgetLine_asCellRange(matrixbox=1)\n
+          budget_line.BudgetLine_asCellRange(\'engaged\', matrixbox=1)\n
     \n
     dependant_dimension_dict = budget_line.BudgetLine_getSummaryDimensionKeyDict()\n
 \n

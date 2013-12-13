@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.mixin.variated import VariatedMixin
-
+from Products.ERP5Type.Cache import transactional_cached
 
 class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
   """ A Line of budget, variated in budget cells.
@@ -103,6 +103,8 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
 
     return budget_dict
 
+  @transactional_cached(key_method=lambda self, **kw:
+    (self.getRelativeUrl(), tuple(kw.items())))
   def _getBudgetDict(self, simulation_period='Current', **kw):
     """Use getCurrentInventoryList to compute all budget cell consumptions at
     once, and returns them in a dict.

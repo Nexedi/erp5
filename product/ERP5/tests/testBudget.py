@@ -891,6 +891,304 @@ class TestBudget(ERP5TypeTestCase):
        ('source_project/budget_special_node/none',): -120.0
        }, budget_line.getEngagedBudgetDict())
 
+  def test_full_consumption_detail_node_variation(self):
+    # tests consumptions, by using "full consumption detail" on a node budget
+    # variation
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget',
+                    inventory_axis='section_category_strict_membership',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ),
+                    full_consumption_detail=True)
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=3,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category_strict_membership',
+                    variation_base_category='account_type',)
+
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget.edit(variation_category_list=['group/demo_group/sub1'])
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    # set the range, this will adjust the matrix
+    budget_line.edit(
+        variation_category_list=(
+          'source/account_module/goods_purchase',
+            # Fixed assets is in the cell range, but is not selected
+          'account_type/expense',
+          'account_type/asset', ))
+
+    # simuate a request and call Base_edit, which does all the work of creating
+    # cell and setting cell properties.
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[],
+             field_matrixbox_quantity_cell_0_1_0="1",
+             field_matrixbox_membership_criterion_category_list_cell_0_1_0=[
+               'source/account_module/goods_purchase',
+               'account_type/expense'],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    # At this time there are no consumption, so consumption and definition cell
+    # ranges are all the same.
+    default_cell_range = [['source/account_module/goods_purchase'],
+                           ['account_type/asset', 'account_type/expense']]
+
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('cell'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('consumed'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('engaged'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('available'))
+
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             node_category_strict_membership=['account_type/expense',
+                                              'account_type/asset'],
+             section_category_strict_membership=['group/demo_group/sub1'],
+             group_by_node_category_strict_membership=True,
+             group_by_node=True,
+             node_uid=[self.portal.account_module.goods_purchase.getUid(),
+                       self.portal.account_module.fixed_assets.getUid()],
+             group_by_section_category_strict_membership=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  resource_value=self.portal.currency_module.euro,
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_debit=100)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.fixed_assets,
+                  source_credit=100)
+    atransaction.stop()
+
+    self.tic()
+
+    # Now that we have consumptions, consumption cell ranges are updated
+    consumption_cell_range = [['source/account_module/goods_purchase',
+                               'source/account_module/fixed_assets'],
+                           ['account_type/asset', 'account_type/expense']]
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('cell'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('consumed'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('engaged'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('available'))
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
+
+    cell = budget_line.getCell('source/account_module/goods_purchase',
+        'account_type/expense')
+    self.assertEquals(100, cell.getConsumedBudget())
+    self.assertEquals(100, cell.getEngagedBudget())
+
+  def test_full_consumption_detail_category_variation(self):
+    # tests consumptions, by using "full consumption detail" on a category
+    # budget variation
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget',
+                    inventory_axis='section_category_strict_membership',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=3,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category_strict_membership',
+                    variation_base_category='account_type',
+                    full_consumption_detail=True)
+
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget.edit(variation_category_list=['group/demo_group/sub1'])
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    # set the range, this will adjust the matrix
+    budget_line.edit(
+        variation_category_list=(
+          'source/account_module/goods_purchase',
+          'source/account_module/fixed_assets',
+          'account_type/expense',
+            # account type asset is in the cell range, but is not selected
+          ))
+
+    # simuate a request and call Base_edit, which does all the work of creating
+    # cell and setting cell properties.
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="1",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'source/account_module/goods_purchase',
+               'account_type/expense'],
+             field_matrixbox_quantity_cell_1_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_0=[],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    # At this time there are no consumption, so consumption and definition cell
+    # ranges are all the same.
+    default_cell_range = [['source/account_module/goods_purchase',
+                            'source/account_module/fixed_assets'],
+                           ['account_type/expense']]
+
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('cell'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('consumed'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('engaged'))
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('available'))
+
+    if 0 :self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             #node_category_strict_membership=['account_type/expense',
+             #                                 'account_type/asset'],
+             node_category_strict_membership='account_type',
+
+             section_category_strict_membership=['group/demo_group/sub1'],
+             group_by_node_category_strict_membership=True,
+             group_by_node=True,
+             node_uid=[self.portal.account_module.goods_purchase.getUid(),
+                       self.portal.account_module.fixed_assets.getUid()],
+             group_by_section_category_strict_membership=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  resource_value=self.portal.currency_module.euro,
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_debit=100)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.fixed_assets,
+                  source_credit=100)
+    atransaction.stop()
+
+    self.tic()
+
+    # Now that we have consumptions, consumption cell ranges are updated
+    consumption_cell_range = [['source/account_module/goods_purchase',
+                               'source/account_module/fixed_assets'],
+                           ['account_type/asset', 'account_type/expense']]
+    self.assertEquals(default_cell_range,
+        budget_line.BudgetLine_asCellRange('cell'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('consumed'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('engaged'))
+    self.assertEquals(consumption_cell_range,
+        budget_line.BudgetLine_asCellRange('available'))
+
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
+
+    cell = budget_line.getCell('source/account_module/goods_purchase',
+        'account_type/expense')
+    self.assertEquals(100, cell.getConsumedBudget())
+    self.assertEquals(100, cell.getEngagedBudget())
 
   def test_consumption_movement_category(self):
     # test for budget consumption using movement category

@@ -99,6 +99,7 @@
                         <string>my_budget_variation</string>
                         <string>my_variation_base_category</string>
                         <string>my_inventory_axis</string>
+                        <string>my_full_consumption_detail</string>
                       </list>
                     </value>
                 </item>

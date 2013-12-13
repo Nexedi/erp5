@@ -74,6 +74,26 @@ class BudgetModel(Predicate):
         cell_range.extend(variation_cell_range)
     return cell_range
 
+  def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
+    """Return the cell range to use for the budget consumption.
+
+    It can be different from the cell range for definition when using full
+    consumption detail on budget variations.
+    """
+    cell_range = []
+    for budget_variation in sorted(self.contentValues(
+              portal_type=self.getPortalBudgetVariationTypeList(),),
+              key=lambda x:x.getIntIndex()):
+      if not budget_variation.isMemberOf('budget_variation/budget_cell'):
+        continue
+      variation_cell_range = budget_variation.getConsumptionCellRangeForBudgetLine(
+               budget_line, matrixbox=matrixbox, engaged_budget=engaged_budget)
+      if variation_cell_range \
+          and variation_cell_range != [[]] \
+          and variation_cell_range not in cell_range:
+        cell_range.extend(variation_cell_range)
+    return cell_range
+
   def getInventoryQueryDict(self, budget_cell):
     """Returns the query dict to pass to simulation query for a budget cell
     """

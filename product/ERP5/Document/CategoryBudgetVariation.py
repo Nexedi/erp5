@@ -69,6 +69,38 @@ class CategoryBudgetVariation(BudgetVariation):
       return [[(i[1], i[0]) for i in item_list if i[1] in variation_category_list]]
     return [[i[1] for i in item_list if i[1] in variation_category_list]]
 
+  def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
+    """The cell range added by this variation for consumption
+    """
+    cell_range = self.getCellRangeForBudgetLine(budget_line, matrixbox)
+    if not self.getProperty('full_consumption_detail'):
+      return cell_range
+
+    base_category = self.getProperty('variation_base_category')
+    prefix = ''
+    if base_category:
+      prefix = '%s/' % base_category
+
+    item_list = self.getBudgetLineVariationRangeCategoryList(budget_line)
+
+    if matrixbox:
+      used_node_item_set = set([item[0] for item in cell_range[0]])
+    else:
+      used_node_item_set = set([item for item in cell_range[0]])
+
+    if engaged_budget:
+      consumption_dict = budget_line.getConsumedBudgetDict()
+    else:
+      consumption_dict = budget_line.getEngagedBudgetDict()
+    for consumed_budget_key in consumption_dict.keys():
+      for item in consumed_budget_key:
+        if item.startswith(prefix):
+          used_node_item_set.add(item)
+
+    if matrixbox:
+      return [[(i[1], i[0]) for i in item_list if i[0] in used_node_item_set]]
+    return [[i[1] for i in item_list if i[1] in used_node_item_set]]
+
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
@@ -141,9 +173,19 @@ class CategoryBudgetVariation(BudgetVariation):
                   'mirror_section', 'mirror_node' ):
         axis = '%s_uid' % axis
 
+    if self.getProperty('full_consumption_detail'):
+      for title, category in self.getBudgetLineVariationRangeCategoryList(context):
+        if not category: continue
+        if axis.endswith('_uid'):
+          # XXX move out getattrs
+          category = self.getPortalObject().portal_categories\
+                                  .getCategoryUid(category)
+        query_dict.setdefault(axis, []).append(category)
+      return query_dict
+
     found = False
     for category in context.getVariationCategoryList(
-                               base_category_list=(base_category,)):
+                  base_category_list=(base_category,)):
       if axis.endswith('_uid'):
         category = self.getPortalObject().portal_categories\
                                 .getCategoryUid(category)

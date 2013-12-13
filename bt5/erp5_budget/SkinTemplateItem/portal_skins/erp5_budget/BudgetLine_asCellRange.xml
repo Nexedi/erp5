@@ -52,14 +52,21 @@
             <key> <string>_body</string> </key>
             <value> <string>budget = context.getParentValue()\n
 budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
-if budget_model is not None:\n
+if budget_model is None:\n
+  return []\n
+  \n
+if base_id == \'cell\':\n
   return budget_model.getCellRangeForBudgetLine(context, matrixbox=matrixbox)\n
-return []\n
+if base_id in (\'engaged\', \'available\'):\n
+  return budget_model.getConsumptionCellRangeForBudgetLine(context, matrixbox=matrixbox, engaged_budget=True)\n
+if base_id == \'consumed\':\n
+  return budget_model.getConsumptionCellRangeForBudgetLine(context, matrixbox=matrixbox, engaged_budget=False)\n
+assert False, "Incorrect base_id %r" % (base_id, )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, **kw</string> </value>
+            <value> <string>base_id, matrixbox=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

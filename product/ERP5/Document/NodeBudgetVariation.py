@@ -103,6 +103,39 @@ class NodeBudgetVariation(BudgetVariation):
       return [[i for i in node_item_list if i[0] in variation_category_list]]
     return [[i[0] for i in node_item_list if i[0] in variation_category_list]]
 
+  def getConsumptionCellRangeForBudgetLine(self, budget_line, matrixbox=0, engaged_budget=False):
+    """The cell range added by this variation for consumption
+    """
+    cell_range = self.getCellRangeForBudgetLine(budget_line, matrixbox)
+    if not self.getProperty('full_consumption_detail'):
+      return cell_range
+
+    base_category = self.getProperty('variation_base_category')
+    prefix = ''
+    if base_category:
+      prefix = '%s/' % base_category
+
+    node_item_list = [('%s%s' % (prefix, node.getRelativeUrl()),
+                       self._getNodeTitle(node))
+                           for node in self._getNodeList(budget_line)]
+    if matrixbox:
+      used_node_item_set = set([item[0] for item in cell_range[0]])
+    else:
+      used_node_item_set = set([item for item in cell_range[0]])
+
+    if engaged_budget:
+      consumption_dict = budget_line.getConsumedBudgetDict()
+    else:
+      consumption_dict = budget_line.getEngagedBudgetDict()
+    for consumed_budget_key in budget_line.getConsumedBudgetDict().keys():
+      for item in consumed_budget_key:
+        if item.startswith(prefix):
+          used_node_item_set.add(item)
+
+    if matrixbox:
+      return [[i for i in node_item_list if i[0] in used_node_item_set]]
+    return [[i[0] for i in node_item_list if i[0] in used_node_item_set]]
+
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
@@ -223,10 +256,20 @@ class NodeBudgetVariation(BudgetVariation):
     # if we have a virtual "all others" node, we don't set a criterion here.
     if self.getProperty('include_virtual_other_node'):
       return query_dict
-    
+
+    if self.getProperty('full_consumption_detail'):
+      if self.isMemberOf('budget_variation/budget'):
+        category_list = [item[1] for item in
+          self.getBudgetVariationRangeCategoryList(context)]
+      else:
+        category_list = [item[1] for item in
+          self.getBudgetLineVariationRangeCategoryList(context)]
+    else:
+      category_list = context.getVariationCategoryList(
+        base_category_list=(base_category,))
+
     found = False
-    for node_url in context.getVariationCategoryList(
-                          base_category_list=(base_category,)):
+    for node_url in category_list:
       if node_url != '%s/budget_special_node/none' % base_category:
         __traceback_info__ = (node_url, )
         if uid_based_axis:
