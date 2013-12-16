@@ -51,21 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>budget = sci[\'object\']\n
-\n
-membership_criterion_category_list = budget.getMembershipCriterionCategoryList()\n
-\n
-# Remove all previous memberships from the same base\n
-cleaned_membership_criterion_category_list = []\n
-for base_category in budget.getMembershipCriterionBaseCategoryList():\n
-  if base_category in budget.getVariationBaseCategoryList():\n
-    for membership_criterion_category in membership_criterion_category_list:\n
-      if not membership_criterion_category.startswith("%s/" % base_category):\n
-        cleaned_membership_criterion_category_list.append(membership_criterion_category)\n
-    # Add the new one\n
-    cleaned_membership_criterion_category_list.extend(\n
-         budget.getVariationCategoryList(base_category_list=base_category))\n
-\n
-budget.setMembershipCriterionCategoryList(cleaned_membership_criterion_category_list)\n
+budget.setMembershipCriterionCategoryList(budget.getVariationCategoryList())\n
 </string> </value>
         </item>
         <item>
