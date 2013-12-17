@@ -465,7 +465,6 @@ class TestCRM(BaseTestCRM):
       Check that configuring the Event Path on Campaign, all events are
       created according to the domain selected
     """
-    skin_folder = self.portal.portal_skins.custom
     mapping_method_id = "NotificationMessage_getSubstitutionMappingDictFromEvent"
     portal = self.portal
     notification_message_reference = 'campaign-Event.Path'
@@ -515,7 +514,8 @@ class TestCRM(BaseTestCRM):
     self.assertEquals(destination_list, [first_user])
     mail_message = event_list[0]
     self.assertEquals(sender.getRelativeUrl(), mail_message.getSource())
-    self.assertEquals(mail_message.getTextContent(), "Hello %s\n" % first_user.getTitle())
+    self.assertEquals(mail_message.getTextFormat(), "text/html")
+    self.assertEquals(mail_message.getTextContent(), "Hello %s" % first_user.getTitle())
     self.assertEquals(mail_message.getResourceValue(), service)
 
     campaign = portal.campaign_module.newContent(portal_type="Campaign",
