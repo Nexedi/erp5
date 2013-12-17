@@ -50,38 +50,43 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-def getSubstitutionMappingDict():\n
-  kw.update(\n
-    destination_title=event_value.getDestinationTitle() or \'\',\n
-    destination_portal_type=event_value.getDestination() and event_value.getDestinationValue().getTranslatedPortalType(),\n
-    destination_social_title=event_value.getDestination() and event_value.getDestinationValue().getProperty(\'social_title_translated_title\') or \'\',\n
-    destination_reference=event_value.getDestination() and event_value.getDestinationValue().getReference() or \'\',\n
-    source_title=event_value.getSourceTitle() or \'\',\n
-    image_parameters = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-    document_parameters = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-  )\n
-  return kw\n
+count = portal.portal_catalog.countResults\n
 \n
-if context.hasLanguage():\n
-  with context.getPortalObject().Localizer.translationContext(context.getLanguage()):\n
-    return getSubstitutionMappingDict()\n
-return getSubstitutionMappingDict()\n
-
-
-]]></string> </value>
+total_events = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", \n
+  simulation_state=("received", "delivered", "started"))[0][0]\n
+total_opened = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", \n
+  simulation_state=("received", "delivered"))[0][0]\n
+total_read = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", simulation_state="delivered")[0][0]\n
+\n
+line = context.newContent(temp_object=1, total_event_sent=total_events, \n
+  total_event_received=total_opened, \n
+  total_event_received_percent=float(total_opened)/float(total_events)*100, \n
+  total_event_delivered=total_read,\n
+  total_event_delivered_percent=float(total_read)/float(total_events)*100)\n
+\n
+return line,\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>event_value, **kw</string> </value>
+            <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>NotificationMessage_getSubstitutionMappingDictFromEvent</string> </value>
+            <value> <string>Campaign_getMassEmailingEventReportLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

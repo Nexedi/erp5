@@ -50,38 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
-hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
-\n
-def getSubstitutionMappingDict():\n
-  kw.update(\n
-    destination_title=event_value.getDestinationTitle() or \'\',\n
-    destination_portal_type=event_value.getDestination() and event_value.getDestinationValue().getTranslatedPortalType(),\n
-    destination_social_title=event_value.getDestination() and event_value.getDestinationValue().getProperty(\'social_title_translated_title\') or \'\',\n
-    destination_reference=event_value.getDestination() and event_value.getDestinationValue().getReference() or \'\',\n
-    source_title=event_value.getSourceTitle() or \'\',\n
-    image_parameters = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-    document_parameters = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
-  )\n
-  return kw\n
-\n
-if context.hasLanguage():\n
-  with context.getPortalObject().Localizer.translationContext(context.getLanguage()):\n
-    return getSubstitutionMappingDict()\n
-return getSubstitutionMappingDict()\n
-
-
-]]></string> </value>
+            <value> <string># This must be implemented depending on the use\n
+return None\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>event_value, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>NotificationMessage_getSubstitutionMappingDictFromEvent</string> </value>
+            <value> <string>Base_getEventHMACKey</string> </value>
         </item>
       </dictionary>
     </pickle>

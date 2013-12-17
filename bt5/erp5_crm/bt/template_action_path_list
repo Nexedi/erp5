@@ -7,6 +7,7 @@ Campaign | create_event_from_event_path
 Campaign | create_new_file
 Campaign | document_list
 Campaign | jump_related_event
+Campaign | mass_emailing_report
 Campaign | new_event
 Campaign | view
 Campaign | view_details
