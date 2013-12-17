@@ -119,7 +119,7 @@
                                         table:style-name=\'report-column-title\'\n
                                         table:number-columns-spanned=\'1\'\n
                                         office:value-type=\'string\'>\n
-                        <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property" tal:condition="python: column_id in untranslatable_columns"/>\n
+                        <text:p tal:content="column_property" tal:condition="python: column_id in untranslatable_columns"/>\n
                         <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property" tal:condition="python: column_id not in untranslatable_columns"/>\n
                       </table:table-cell>\n
                     </tal:block>\n
