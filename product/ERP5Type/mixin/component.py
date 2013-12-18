@@ -321,7 +321,40 @@ class ComponentMixin(PropertyRecordableMixin, Base):
         input_file.seek(0)
 
         Run([input_file.name, '--reports=n', '--indent-string="  "', '--zope=y',
-             '--disable=C'], reporter=TextReporter(output_file), exit=False)
+             # Disable Refactoring and Convention messages which are too verbose
+             # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
+             '--disable=R,C',
+             # 'String statement has no effect': eg docstring at module level
+             '--disable=W0105',
+             # 'Using possibly undefined loop variable %r': Spurious warning
+             # (loop variables used after the loop)
+             '--disable=W0631',
+             # 'fixme': No need to display TODO/FIXME entry in warnings
+             '--disable=W0511',
+             # 'Unused argument %r': Display for readability or when defining abstract methods
+             '--disable=W0613',
+             # 'Catching too general exception %s': Too coarse
+             # TODO-arnau: Should consider raise in except
+             '--disable=W0703',
+             # 'Used * or ** magic': commonly used in ERP5
+             '--disable=W0142',
+             # 'Class has no __init__ method': Spurious warning
+             '--disable=W0232',
+             # 'Attribute %r defined outside __init__': Spurious warning
+             '--disable=W0201',
+             # Dynamic class generation so some attributes may not be found
+             # TODO-arnau: Enable it properly would require inspection API
+             # '%s %r has no %r member'
+             '--disable=E1101,E1103',
+             # 'No name %r in module %r'
+             '--disable=E0611',
+             # map and filter should not be considered bad as in some cases
+             # map is faster than its recommended replacement (list
+             # comprehension)
+             '--bad-functions=apply,input',
+             # string module does not only contain deprecated functions...
+             '--deprecated-modules=regsub,TERMIOS,Bastion,rexec'],
+            reporter=TextReporter(output_file), exit=False)
 
       output_file.reset()
       for line in output_file:
