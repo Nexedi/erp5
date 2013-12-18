@@ -725,6 +725,9 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals(new_event.getDestinationList(), ['person_module/me',
                                                        'person_module/he'])
 
+    # cloned event got a new reference
+    self.assertNotEqual(new_event.getReference(), event.getReference())
+
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and
     # what you defined in preference regexpr.
@@ -1575,6 +1578,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(new_event.getData(), '')
     self.assertEquals(new_event.getTitle(), real_title)
     self.assertEquals(new_event.getTextContent(), real_content)
+    self.assertNotEquals(new_event.getReference(), event.getReference())
 
   def test_cloneTicketAndEventList(self):
     """

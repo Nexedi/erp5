@@ -50,22 +50,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># We must copy these properties as they are retrieved from data\n
-content_dict = context.getPropertyDictFromContent()\n
-content_dict[\'title\'] = context.getTitle()\n
-content_dict[\'text_content\'] = context.getTextContent()\n
-content_dict[\'content_type\'] = context.getContentType()\n
-content_dict[\'data\'] = None\n
-# we may have specified (i.e. user input) source and destination\n
-content_dict[\'destination_list\'] = content_dict.get(\'destination_list\', []) + \\\n
-                                     [x.getRelativeUrl() for x in context.getDestinationValueList() \\\n
-                                       if x.getRelativeUrl() not in content_dict.get(\'destination_list\', [])]\n
-content_dict[\'source_list\'] = content_dict.get(\'source_list\', []) + \\\n
-                                     [x.getRelativeUrl() for x in context.getSourceValueList() \\\n
-                                       if x.getRelativeUrl() not in content_dict.get(\'source_list\', [])]\n
-context.edit(**content_dict)\n
-# reset reference\n
-context.Event_generateReference()\n
+            <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
+through web sites. cf. Event_init\n
+"""\n
+portal = context.getPortalObject()\n
+type_definition = context.getTypeInfo()\n
+\n
+short_portal_type = type_definition.getShortTitle()\n
+if not short_portal_type:\n
+  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
+\n
+new_id = portal.portal_ids.generateNewId(id_group=repr((\'reference\', short_portal_type)), default=1)\n
+reference = \'%s-%s\' % (short_portal_type, new_id)\n
+\n
+context.setReference(reference)\n
 </string> </value>
         </item>
         <item>
@@ -73,8 +71,16 @@ context.Event_generateReference()\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_afterClone</string> </value>
+            <value> <string>Event_generateReference</string> </value>
         </item>
       </dictionary>
     </pickle>
