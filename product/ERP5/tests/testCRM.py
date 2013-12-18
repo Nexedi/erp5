@@ -1028,8 +1028,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setTitle('A Mail')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -1055,8 +1054,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestinationList(['person_module/recipient', 'person_module/me'])
     event.setTitle('A Mail')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
     self.assertNotEquals((), last_message_1)
@@ -1070,19 +1068,20 @@ class TestCRMMailSend(BaseTestCRM):
                       sorted([x[1] for x in (last_message_1, last_message_2)]))
 
   def test_MailFromMailMessageEventNoSendMail(self):
-    # passing start_action transition on event workflow will send an email to the
-    # person as destination, unless you don't check "send_mail" box in the
-    # workflow dialog
+    # for Mail Message, passing start_action transition on event workflow will send an email to the
+    # person as destination. To prevent this, one can use initial_stop_action to mark
+    # the event receieved.
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
     event.setTitle('A Mail')
     event.setTextContent('Mail Content')
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'initial_stop_action')
+    self.assertEquals('stopped', event.getSimulationState())
     self.tic()
     # no mail sent
     last_message = self.portal.MailHost._last_message
+    self.assertEquals((), last_message)
 
   def test_MailFromOtherEvents(self):
     # passing start_action transition on event workflow will not send an email
@@ -1094,29 +1093,11 @@ class TestCRMMailSend(BaseTestCRM):
       event.setSource('person_module/me')
       event.setDestination('person_module/recipient')
       event.setTextContent('Hello !')
-      self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                              send_mail=1)
-
-      self.tic()
-      # this means no message have been set
-      self.assertEquals((), self.portal.MailHost._last_message)
-
-  def test_MailMarkPosted(self):
-    # start_action transition without send_mail variable on event
-    # simulation workflow will not send an email even if the portal
-    # type is a Mail Message
-    for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
-        'Acknowledgement']:
-      event = self.portal.event_module.newContent(portal_type=ptype)
-      event.setSource('person_module/me')
-      event.setDestination('person_module/recipient')
-      event.setTextContent('Hello !')
       self.portal.portal_workflow.doActionFor(event, 'start_action')
 
       self.tic()
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
-
 
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
@@ -1127,8 +1108,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setContentType('text/html')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     # content type is kept
     self.assertEquals(event.getContentType(), 'text/html')
@@ -1159,8 +1139,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setTitle('Héhé')
     event.setTextContent('Hàhà')
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)

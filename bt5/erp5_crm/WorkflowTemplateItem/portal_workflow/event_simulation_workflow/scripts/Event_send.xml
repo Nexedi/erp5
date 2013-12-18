@@ -52,11 +52,15 @@
             <key> <string>_body</string> </key>
             <value> <string>event = state_change[\'object\']\n
 portal = event.getPortalObject()\n
-send_mail = portal.portal_workflow.getInfoFor(event, \'send_mail\')\n
-if send_mail and event.getPortalType() in (\'Mail Message\', ):\n
+\n
+# FIXME: we should always call send here, and the type based method must\n
+# decide what to do.\n
+\n
+if event.getPortalType() in (\'Mail Message\', ):\n
   if event.getSource():\n
     event.send()\n
   else:\n
+    # FIXME: this "email only" logic must be moved to MailMessage_send\n
     sender_email = portal.portal_preferences.getPreferredEventSenderEmail()\n
     if not sender_email:\n
       raise NotImplementedError(\'Preferred Event Sender Email not configured\')\n
