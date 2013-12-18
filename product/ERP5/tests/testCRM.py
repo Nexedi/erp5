@@ -1095,6 +1095,9 @@ class TestCRMMailSend(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
     self.tic()
+    # content type is kept
+    self.assertEquals(event.getContentType(), 'text/html')
+
     # The getTextContent() gets the content from the file data instead the
     # Attribute text_content.
     self.assertEquals(event.text_content, text_content)
@@ -1113,23 +1116,6 @@ class TestCRMMailSend(BaseTestCRM):
         part = i
     self.assertNotEqual(part, None)
     self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
-
-  def test_MailMessageHTMLbis(self):
-    # test sending a mail message edited as HTML (the default with FCKEditor),
-    # then the mail should have HTML
-    text_content = 'Hello<br/>World'
-    event = self.portal.event_module.newContent(portal_type='Mail Message')
-    event.setSource('person_module/me')
-    event.setDestination('person_module/recipient')
-    event.setContentType('text/html')
-    event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
-    self.tic()
-    # This test fails because of known issue for outgoing emails.
-    # there is conflict between properties from data
-    # and properties from document.
-    self.assertEquals(event.getContentType(), 'text/html')
 
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
