@@ -28,6 +28,7 @@
 
 import unittest
 import os
+import textwrap
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
@@ -727,6 +728,40 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     # cloned event got a new reference
     self.assertNotEqual(new_event.getReference(), event.getReference())
+
+  def test_getPropertyDictFromContent_and_defined_arrow(self):
+    # If source/destination are set on event, then getPropertyDictFromContent
+    # should not lookup one based on email address.
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        default_email_coordinate_text='destination@example.com',)
+    organisation = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        default_email_coordinate_text='destination@example.com',)
+    source_person = self.portal.person_module.newContent(
+        portal_type='Person',
+        default_email_coordinate_text='source@example.com',)
+    self.tic()
+    event = self.portal.event_module.newContent(
+        portal_type='Mail Message',
+        destination_value=organisation,
+        data='\r\n'.join(textwrap.dedent('''
+        From: Source <source@example.com>
+        To: destination <destination@example.com>
+        Subject: mail subject
+
+        content
+        ''').splitlines()[1:]))
+
+    property_dict = event.getPropertyDictFromContent()
+    # destination is set on the event. In this case it is kept as is.
+    self.assertEquals([organisation.getRelativeUrl()],
+        property_dict['destination_list'])
+    # source is not set. In this case it is searched in catalog based on email
+    # address
+    self.assertEquals([source_person.getRelativeUrl()],
+        property_dict['source_list'])
+
 
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and

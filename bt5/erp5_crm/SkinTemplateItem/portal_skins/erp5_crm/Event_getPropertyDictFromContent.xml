@@ -71,8 +71,8 @@ def getEntityList(text):\n
           for entity in Base_getEntityListFromFromHeader(text)]\n
 \n
 content_information = context.getContentInformation()\n
-sender_list = getEntityList(content_information.get(\'From\', \'\'))\n
-to_list = getEntityList(content_information.get(\'To\', \'\'))\n
+sender_list = context.getSourceList() or getEntityList(content_information.get(\'From\', \'\'))\n
+to_list = context.getDestinationList() or getEntityList(content_information.get(\'To\', \'\'))\n
 cc_list = getEntityList(content_information.get(\'CC\', \'\'))\n
 \n
 # Build references\n
