@@ -39,7 +39,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   def afterSetUp(self):
     url_list = []
     for x in self.portal.test_page_module.objectValues():
-      url_list.append(x.absolute_url())
+      url_list.append("test_page_module/"+x.getId())
     self.remote_code_url_list = url_list
     ERP5TypeFunctionalTestCase.afterSetUp(self)
 
@@ -65,7 +65,6 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_web', 'erp5_dms', 'erp5_credential',
             'erp5_rss_style', 'erp5_discussion',
             'erp5_l10n_fr', 'erp5_crm',
-            'erp5_accounting_ui_test',
             'erp5_user_tutorial_ui_test',
             'erp5_run_my_doc',
             'erp5_test_page_test_data',
