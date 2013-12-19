@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import PersistentMapping
+from Persistence import PersistentMapping
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
 

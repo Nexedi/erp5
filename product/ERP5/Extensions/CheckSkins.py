@@ -3,7 +3,6 @@ import re
 import os
 import sys
 import csv
-from Products.CMFCore.utils import expandpath
 
 from zLOG import LOG
 from App.config import getConfiguration
@@ -228,7 +227,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
         msg += '%s\n' % line
         if not dry_run:
           if skin.meta_type in fs_skin_spec:
-            with open(expandpath(skin.getObjectFSPath()), 'w') as f:
+            with open(skin.getObjectFSPath(), 'w') as f:
               f.write(text)
           else:
             REQUEST['BODY'] = text
@@ -359,7 +358,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
       try:
         if info.meta_type in fs_skin_spec:
           skin = self.portal_skins[info.folder][info.name]
-          old_path = expandpath(skin.getObjectFSPath())
+          old_path = skin.getObjectFSPath()
           new_path = info.regexp.sub(info.new_name, old_path)
           if info.removed:
             os.remove(old_path)

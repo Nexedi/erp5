@@ -5,7 +5,7 @@ from Persistence import Persistent
 from App.class_init import default__class_init__ as InitializeClass
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
-from AccessControl.Role import RoleManager
+from OFS.role import RoleManager
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.permissions import ManagePortal, ManageProperties

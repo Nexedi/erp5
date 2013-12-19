@@ -9,13 +9,12 @@ except ImportError:
     from Products.CMFCore.FSObject import FSObject
     from Products.CMFCore.DirectoryView import registerFileExtension,\
                                                registerMetaType
-    from Products.CMFCore.utils import expandpath
 else:
     # use FileSystemSite product
     from Products.FileSystemSite.Permissions import View
     from Products.FileSystemSite.FSObject import FSObject
     from Products.FileSystemSite.DirectoryView import registerFileExtension,\
-                                                      registerMetaType, expandpath
+                                                      registerMetaType
 
 from Products.Formulator.Form import ZMIForm
 from Products.Formulator.XMLToForm import XMLToForm
@@ -45,7 +44,7 @@ class FSForm(FSObject, ZMIForm):
         return None
 
     def _readFile(self, reparse):
-        file = open(expandpath(self._filepath), 'rb')
+        file = open(self._filepath, 'rb')
         try:
             data = file.read()
         finally:
@@ -63,7 +62,7 @@ class FSForm(FSObject, ZMIForm):
             zLOG.LOG(
                 'Formulator.FSForm', zLOG.ERROR,
                 'error reading form from file ' +
-                expandpath(self._filepath))
+                self._filepath)
             raise
 
     #### The following is mainly taken from Form.py ACCESSORS section ###

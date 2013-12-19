@@ -1,5 +1,5 @@
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool

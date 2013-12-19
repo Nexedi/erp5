@@ -5,7 +5,6 @@ from Products.CMFCore.permissions import View, ViewManagementScreens
 from Products.CMFCore.FSObject import FSObject
 from Products.CMFCore.DirectoryView import registerFileExtension,\
      registerMetaType
-from Products.CMFCore.utils import expandpath
 
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Form import ERP5Form
@@ -39,7 +38,7 @@ class ERP5FSForm(FSObject, ERP5Form):
         return obj
 
     def _readFile(self, reparse):
-        f = open(expandpath(self._filepath), 'rb')
+        f = open(self._filepath, 'rb')
         # update the form with the xml data
         try:
             XMLToForm(f.read(), self)
@@ -49,7 +48,7 @@ class ERP5FSForm(FSObject, ERP5Form):
             # (except if the LOG raises another one ... should we be more paranoid here?)
             import zLOG
             zLOG.LOG('Formulator.FSForm',zLOG.ERROR,
-                     'error reading form from file '+expandpath(self._filepath))
+                     'error reading form from file '+self._filepath)
             raise
 
         f.close()
