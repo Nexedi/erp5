@@ -56,9 +56,15 @@
 """\n
 test_list = []\n
 count = 0\n
+portal = context.getPortalObject()\n
 for url in url_list:\n
  count += 1\n
- test_list.append((context.Zuite_urlRead(url, safe_return=1), \'%s %s\' % (count, url)),)\n
+ if "http" not in url:\n
+   # local content\n
+   data = portal.restrictedTraverse(url).TestPage_viewSeleniumTest()\n
+ else:\n
+   data = context.Zuite_urlRead(url, safe_return=1)\n
+ test_list.append((data, \'%s %s\' % (count, url)),)\n
 \n
 return context.Zuite_createAndLaunchSeleniumTest(test_list=test_list,\n
                                                  zuite_id=zuite_id)\n
