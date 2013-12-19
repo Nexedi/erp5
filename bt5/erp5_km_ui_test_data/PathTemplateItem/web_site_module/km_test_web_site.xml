@@ -373,7 +373,7 @@
         </item>
         <item>
             <key> <string>layout_force_anonymous_gadget</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>layout_max_breadcrumb_length</string> </key>
