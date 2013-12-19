@@ -1,0 +1,1310 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/20110503-EE9699</string>
+                <string>publication_section/documentation/user</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>50b9f396ede8330ca1d0620c22a8c40a</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>developer-Howto.HTML5.to.Book</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>developer-Howto.HTML5.to.Book</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>How to create a Book from HTML5</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<section class="master"> \n
+    <h1>How to create a PDF Book from HTML5 Presentations</h1> <footer>\n
+          by <a href="mailto:xavier.hardy@tiolive.com">Xavier Hardy</a>.\n
+        </footer> <details open="true"> \n
+      <p> This will teach you how to convert a set of HTML presentations to a PDF Book using Prince (available here: <a href="http://www.princexml.com">http://www.princexml.com</a>) and the Test Page Module.</p> \n
+      <p> This tutorial and book generation works with both <strong>Test Page</strong> and also <strong>Web Page</strong>, you can choose the most appropriate document for your needs.</p> </details> </section><section class="code"> \n
+    <h1>Prince</h1> \n
+    <p> <code>\n
+            prince <em>/PATH/TO/INPUT/FILE.html</em> -o <em>/PATH/TO/OUTPUT/FILE.pdf</em> </code> </p><details open="open"> \n
+      <p>Prince was designed to convert HTML documents to PDF and is very easy to use.</p>\n
+      <p>To convert an HTML just input this line in your favorite terminal (with sufficient rights)</p>\n
+      <p> <code>\n
+              prince <em>/PATH/TO/INPUT/FILE.html</em> -o <em>/PATH/TO/OUTPUT/FILE.pdf</em> </code> </p>\n
+      <p>\n
+            As long as there are no syntax errors, Prince will convert your file to PDF, even if some CSS stylesheets or images are missing. Unfortunately, a single tag without the ending a slash before the end of tag will be considered a syntax error (as if the tag did not have a matching ending tag). For instance, <code>&lt;img src=&quot;...&quot;&gt;</code>\n
+            is a syntax error whereas\n
+            <code>&lt;img src=&quot;...&quot; /&gt;</code>\n
+            is correct.\n
+          </p> </details> </section><section class="screenshot"> \n
+    <h1>Create new chapters</h1> <img width="1220" title="Test Page Creation Wizard" src="Create_new_chapters_Screenshot?format=" alt="Test Page Creation Wizard" type="image/png" /> <details open="open"> \n
+      <p>First create a few Test Pages corresponding to your chapters. Also create a Test Page with the introduction of your book and another one with an appendix for example.</p>\n
+      <p>This pages will be the content of our book. Make sure that you can distinguish them to understand how the converter works.</p>\n
+      <p>\n
+            Also add a few images to make sure that you are able to convert them as well. For each image, you have to fill in <code>title</code>\n
+             attribute of the image so that there will be a caption next to the images and to be careful in the html to match the type attribute of the\n
+            <code>&lt;img&gt;</code>\n
+            tag with the extension of the uploaded image file. Only the images on the slide will get a caption (direct children of the\n
+            <code>&lt;section&gt;</code>\n
+            tag). For example, an PNG image should have a for mimetype\n
+            <em>image/png</em>. The book converter will guess the extension of the image according to the type attribute of the <code>&lt;img&gt;</code>\n
+            tag.\n
+          </p> </details> <test> \n
+      <table cellspacing="1" cellpadding="1" border="1" style="display: none;" class="test"> \n
+        <thead /> \n
+        <tbody> \n
+          <tr> \n
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/ERP5RunMyDocs_initTest/macros/init_test_environment&quot; style=&quot;display:none;&quot;&gt;init&lt;/span&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>selectAndWait</td> \n
+            <td>name=select_module</td> \n
+            <td>label=Test Pages</td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=a.fast_input &gt; span.image</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_title</td> \n
+            <td>Chapter 1</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some chapter&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>captureEntirePageScreenshot</td> \n
+            <td>Create_new_chapters_Screenshot</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_submit_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_chapter_title</td> \n
+            <td>A small paragraph</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some paragraph&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_update_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>storeLocation</td> \n
+            <td>test_page_url</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${base_url}/Zuite_waitForActivities</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Done.</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${test_page_url}</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//div[@id=\'master\']/div/div/ul/li[10]/a/span</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_my_id</td> \n
+            <td>Chapter1</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>css=button[name=&quot;Base_edit:method&quot;]</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>link=Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=a.fast_input &gt; span.image</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_title</td> \n
+            <td>Chapter 2</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some chapter&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_submit_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_chapter_title</td> \n
+            <td>A small paragraph</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some paragraph&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_update_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>storeLocation</td> \n
+            <td>test_page_url</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${base_url}/Zuite_waitForActivities</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Done.</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${test_page_url}</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//div[@id=\'master\']/div/div/ul/li[10]/a/span</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_my_id</td> \n
+            <td>Chapter2</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>css=button[name=&quot;Base_edit:method&quot;]</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>link=Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=a.fast_input &gt; span.image</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_title</td> \n
+            <td>Introduction</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some chapter&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_submit_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_chapter_title</td> \n
+            <td>A small paragraph</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some paragraph&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_update_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>storeLocation</td> \n
+            <td>test_page_url</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${base_url}/Zuite_waitForActivities</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Done.</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${test_page_url}</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//div[@id=\'master\']/div/div/ul/li[10]/a/span</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_my_id</td> \n
+            <td>Introduction</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>css=button[name=&quot;Base_edit:method&quot;]</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>link=Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Test Page</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=a.fast_input &gt; span.image</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_title</td> \n
+            <td>Appendix</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some chapter&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_submit_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_chapter_title</td> \n
+            <td>A small paragraph</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_your_slide_content</td> \n
+            <td>&lt;p&gt;Some paragraph&lt;/p&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>id=dialog_update_button</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>storeLocation</td> \n
+            <td>test_page_url</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${base_url}/Zuite_waitForActivities</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Done.</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>open</td> \n
+            <td>${test_page_url}</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//div[@id=\'master\']/div/div/ul/li[10]/a/span</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>name=field_my_id</td> \n
+            <td>Appendix</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>css=button[name=&quot;Base_edit:method&quot;]</td> \n
+            <td><br /></td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Create your book</h1> <img title="Test Page Edit tab" src="user-Test.Page.Edit.Tab.With.Book.HTML.Screenshot?format=png" alt="Test Page Edit tab" type="image/png" /> <details open="open"> \n
+      <p>Now, we are going to create a new Web Page or Test Page which will contain the table of contents of your book and which will be used to generate the book</p>\n
+      <p>\n
+            Do not use the wizard, an empty Test Page or Web Page is enough for the moment. Edit the html code of your Web Page, using the <strong>Edit</strong> tab and setting up your preference to use the standard text area so that you can see the html code, not a special editor which might generate incorrect html.\n
+          </p>\n
+      <p>In the end, your html code will look like the one in the image above. Let\'s details the steps and the meaning of each tag for the book converter.</p> </details> <test> \n
+      <table cellspacing="1" cellpadding="1" border="1" style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>selectAndWait</td> \n
+            <td>name=select_module</td> \n
+            <td>label=Test Pages</td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Test Pages</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>selectAndWait</td> \n
+            <td>name=select_action</td> \n
+            <td>Add Test Page</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=li.not_selected &gt; a &gt; span</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>type</td> \n
+            <td>name=field_my_text_content</td> \n
+            <td>\n
+                  &lt;h1&gt;&lt;a href=&quot;/test_page_module/12&quot;&gt;Introduction&lt;/a&gt;&lt;/h1&gt;\n
+                  &lt;h1&gt;Part 1&lt;/h1&gt;\n
+                  &lt;ul&gt;\n
+                  &lt;li&gt;&lt;a href=&quot;/test_page_module/12/&quot;&gt;Chapter 1&lt;/a&gt;&lt;/li&gt;\n
+                  &lt;li&gt;&lt;a href=&quot;/test_page_module/12&quot;&gt;Chapter 2&lt;/a&gt;&lt;/li&gt;\n
+                  &lt;/ul&gt;\n
+                  &lt;h1&gt;Part 2&lt;/h1&gt;\n
+                  &lt;ul&gt;\n
+                  &lt;li&gt;&lt;a href=&quot;/test_page_module/12&quot;&gt;Chapter 1&lt;/a&gt;&lt;/li&gt;\n
+                  &lt;li&gt;&lt;a href=&quot;/test_page_module/12&quot;&gt;Chapter 2&lt;/a&gt;&lt;/li&gt;\n
+                  &lt;/ul&gt;\n
+                  &lt;h1&gt;&lt;a href=&quot;/test_page_module/12&quot;&gt;Appendix A&lt;/a&gt;&lt;/h1&gt;\n
+                </td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=button[name=&quot;Base_edit:method&quot;]</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>verifyTextPresent</td> \n
+            <td>Data updated.</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>captureEntirePageScreenshotAndUpload</td> \n
+            <td>user-Test.Page.Edit.Tab.With.Book.HTML.Screenshot</td> \n
+            <td><br /></td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="code"> \n
+    <h1>HTML tags and meanings in the book converter</h1> <code> \n
+      <ul> \n
+        <li>&lt;h1&gt;&lt;a href=&quot;./Introductionquot;&gt;Introduction 1 Title&lt;/a&gt;&lt;/h1&gt;</li> \n
+        <li>...</li> \n
+        <li>&lt;h1&gt;&lt;a href=&quot;./IntroductionN&quot;&gt;Introduction N Title&lt;/a&gt;&lt;/h1&gt;</li> \n
+        <li>&lt;h1&gt;Part 1 Title&lt;/h1&gt;</li> \n
+        <li>&lt;ul&gt;</li> \n
+        <li>&lt;li&gt;&lt;a href=&quot;./Chapter1&quot;&gt;Chapter 1 Title&lt;/a&gt;&lt;/li&gt;</li> \n
+        <li>...</li> \n
+        <li>&lt;li&gt;&lt;a href=&quot;./ChapterM&quot;&gt;Chapter M Title&lt;/a&gt;&lt;/li&gt;</li> \n
+        <li>&lt;/ul&gt;</li> \n
+        <li>...</li> \n
+        <li>&lt;h1&gt;&lt;a href=&quot;./AppendixA&quot;&gt;Appendix A Title&lt;/a&gt;&lt;/h1&gt;</li> \n
+        <li>...</li> \n
+        <li>&lt;h1&gt;&lt;a href=&quot;./AppendixZ&quot;&gt;Appendix Z Title&lt;/a&gt;&lt;/h1&gt;</li> \n
+      </ul> </code> <details open="open"> \n
+      <p>\n
+            To begin with, add a line corresponding to your introduction, the title of your introduction between <code>&lt;h1&gt;</code>\n
+            and\n
+            <code>&lt;a&gt;</code>\n
+            (contained in the\n
+            <code>&lt;h1&gt;</code>\n
+            ) tags. The\n
+            <code>&lt;a&gt;</code>\n
+            tags should link to the Web Page or Test Page containing your introduction. Therefore, the href attribute of this tag should be &quot;../\n
+            <em>INTRODUCTION_ID</em>&quot;. Be careful to always keep the titles you used in the documents you are going to link to this Web Page. This link will be automatically replaced by the contents of the Web Page containing the actual introduction and added to the table of contents. It will work the same way for all the links we will be adding later.\n
+          </p>\n
+      <p>You can add as many introductory parts as you want following the same syntax.</p>\n
+      <p>Then add the name of the first part of your book which will contain several chapters. For that, insert a text with the title of your part just like for the introduction, but without any link</p>\n
+      <p>\n
+            After the name of your part, you have to add the list of chapters in it, using the list tags <code>&lt;ul&gt;</code>\n
+            and then for each chapter\n
+            <code>&lt;li&gt;</code>\n
+            . The name of the part should\n
+            <strong>NOT</strong> be between <code>&lt;ul&gt;</code>\n
+            tags but before the opening\n
+            <code>&lt;ul&gt;</code>\n
+            tag.\n
+          </p>\n
+      <p>\n
+            Just like you did for the introduction, add <code>&lt;li&gt;</code>\n
+            tags for each chapter with\n
+            <code>&lt;a&gt;</code>\n
+            tags inside containing a link to the Web Page or Test Page corresponding to the current chapter. Close the\n
+            <code>&lt;ul&gt;</code>\n
+            tag when you are done with the current part. You can add as many chapters and parts as you wish.\n
+          </p>\n
+      <p>Finally, you can add appendixes at the end, the syntax is exactly the same as the one for introductory chapters.</p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody /> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Exporting your book</h1> <img width="1220" title="Book preview" src="Exporting_your_book_Screenshot?format=" alt="Book preview" type="image/png" /> <details open="open"> \n
+      <p>\n
+            This is the last step, you have to click on the exchange button <img width="22" height="22" type="image/png" src="./1?format=" />\n
+            and then on\n
+            <strong>Export Book</strong> in the <strong>Select Exchange</strong> combo box.\n
+          </p>\n
+      <p>&nbsp;</p>\n
+      <p>\n
+            In the menu <strong>Export Book</strong>, you should see your Web Page or Test Page content in this form. If you want to see it in fullscreen, just click on <strong>See as a Book</strong> </p>\n
+      <p>To export it to PDF, you should first (once the page was completely loaded), click on Clean HTML. This will remove unnecessary tags to be able to use it in Prince. All you have to do now is to copy/paste the content of the text area HTML Content into an html file and to download every image and css style sheets and to put them into the same folder. To download images quicker, just save the page with your web browser and then check the names of the file.</p>\n
+      <p>\n
+            Finally, you will have to download Prince (<a href="http://www.princexml.com/">http://www.princexml.com/</a>). It is a HTML to PDF converter, you can download it a free version on the official website. Once downloaded, open a terminal and use this command line:\n
+          </p>\n
+      <p> <code>\n
+              prince <em>PATH/TO/YOUR/FILE.html</em> -o output.pdf\n
+            </code> </p>\n
+      <p>You should have an output.pdf in the current folder if you have the rights to write in it.</p> </details> <test> \n
+      <table cellspacing="1" cellpadding="1" border="1" style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr style="opacity: 1;"> \n
+            <td>clickAndWait</td> \n
+            <td>css=a.import_export &gt; span.image</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>selectAndWait</td> \n
+            <td>id=dialog_selector</td> \n
+            <td>label=Export Book</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td>pause</td> \n
+            <td>1000</td> \n
+            <td><br /></td> \n
+          </tr> \n
+          <tr> \n
+            <td>captureEntirePageScreenshot</td> \n
+            <td>Exporting_your_book_Screenshot</td> \n
+            <td><br /></td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How to create a Book from HTML5 Presentations</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>002</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.42</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>submit_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115608.57</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>submit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115608.57</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>submitted</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115690.08</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>submitted</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115690.09</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.41</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.43</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.44178.54910.31539</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330118143.72</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.44219.47923.46387</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330118386.04</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="8.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.41</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.41</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330115591.42</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/7</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

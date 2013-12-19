@@ -1,0 +1,1225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/documentation/user</string>
+                <string>classification/collaborative/team</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/796</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/2326</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user-Howto.Create.Organisations</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>In this presentation, you will learn how to create and manage organisations in ERP5.</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>user-Howto.Create.Organisations</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>How to Add Organisations</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+    \n
+      <section class="master">\n
+        <h1>How to Add Organisations</h1>\n
+        <img alt="Photo of the building of Z Company" src="http://www.erp5.com/user-Howto.Add.Organisations.Front.Page.Building.Zcompany?format=png" title="Add organisation: Z Company">\n
+        <footer>\n
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
+        </footer>\n
+        <details open="open">\n
+          <p>Now you know how to create the related organisation of a person when he/she is created. But we can also use the organisation creation function which is independent from the person creation function, but which is quite similar to the person creation process, to create and manage organisations in ERP5.</p><p>As we have seen from the previous tutorial, in ERP5, the creation of organisation is the premise to the creation of person. Organisations are really important because people are linked to them. For example, when you sell a product or a service to a person, you indirectly sell it to his/her organisation. The organisation creation function is also very practical because of the attributes you are going to define the different organisations with: sometimes you might be looking for specific types of organisations, for instance, press agencies when you have an announcement to make. Now this is really easy with ERP5, just search for the organisations you defined as press agencies. You can also go deeper into details: you might be looking for American press agencies if the product you want to communicate about is exclusively targeting the US market: then search for your American press agencies...</p><p>Now, let\'s see how you can create and define an organisation with the help of ERP5.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_setUpOrganisationTest</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Init Ok</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section>\n
+        <h1>Agenda</h1>\n
+        <ul>\n
+          <li>How to create an organisation</li>\n
+          <li>How to validate the organisation</li>\n
+          <li>How to check the creation</li>\n
+        </ul>\n
+        <details open="true"></details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="illustration">\n
+        <h1>Example</h1>\n
+        <img alt="Add organisation in ERP5 example: Z Company" src="http://www.erp5.com/user-Howto.Add.Organisations.Example.Zcompany?format=png" title="Add organisation in ERP5 example: Z Company">\n
+        <details open="open">\n
+          <p>This tutorial continues with the example of the organisation "Z Company", which is our client.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Click on the “New” tab</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.ERP5.Express.Menu.New.Screenshot?format=png" alt="Add organisation: Click on the \'New\' tab" title="Add organisation: Click on the \'New\' tab">\n
+        <details open="open">\n
+          <p>From the ERP5 home page you have reached after login, click on “New” in the tab menu, you will see the base area on the left. The base area gathers the person, organisation and currency creation functions. To create a new organisation, you would just click on the link called "Organisations". But since we already created the Z Company when adding the Person John Doe in the tutorial "How to create Persons", we will go to the "Browse" tab instead to find our existing client "Z Company" and fill the details.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Organisations</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Organisations</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot"> \n
+        <h1>Click on the "Browse" tab</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Screenshot?format=png" alt="Check organisation creation: Browse the \'Organisations\' database" title="Check organisation creation: Browse the \'Organisations\' database">\n
+        <details open="open">\n
+         <p>Click on the Browse Tab and then on "Organisations" to find our client Z Company.</p>\n
+        </details>\n
+      </section><section class="screenshot">    \n
+        <h1>Click on "Z Company"</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.3.Organisationline.Screenshot?format=png" alt="Check organisation creation (3): Check the organisation\'s line" title="Check organisation creation (3): Check the organisation\'s line">\n
+        <details open="open">\n
+          <p>You will find our client Z Company in the Organisation Module. Click on the line to open the organisation.</p>\n
+        </details>\n
+      </section><section class="screenshot">\n
+        <!-- <h1>Click on “Organisations”</h1>\n
+        <img title="Add organisations: Click on \'Organisations\'" src="http://www.erp5.com/user-Howto.Add.Organisations.ERP5.Express.Menu.Organisations.Screenshot?format=png" alt="Add organisations: Click on \'Organisations\'">\n
+        <details open="open">\n
+          <p>Once the "new" tab is open, click on “organisation” to create an organisation. This will create and save a new organisation.</p><p>You will now be led to the details page of the organisation you just created. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5.</p><p>Once the creation tab is open, click on “organisation” to create an organisation. This will create and save a new organisation.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Add Organisation</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="transition_message"]</td>\n
+                <td>Object created.</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//li[@class="selected"]/a/span</td>\n
+                <td>View</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot"> -->\n
+        <h1>Fill the “view” tab and save</h1>\n
+        <img alt="Add organisations: Fill the \'View\' page and save" src="http://www.erp5.com/user-Howto.Add.Organisations.View.Save?format=png" title="Add organisations: Fill the \'View\' page and save">\n
+        <details open="open">\n
+          <p>You will now be led to the details page of the organisation you just created. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5. You just have to enter its detail information and then save it.</p><p>But please note that the organisations can also be created through the person creation module as you have seen in the previous tutorial (cf “How to add people” tutorial). <p>Summary: we had created a person named John Doh, who is the marketing manager of Z Company, one of VIFIB clients. If you remember well, the rganisation Z Company had been created directly through the person creation module (cf “How to add people” tutorial), but had not been taken care of.Now we are going to enter some details in "view" tab about the organisation Z Company: Z Company Ltd is an international electricity supplier, which has been using the services of VIFIB for quite a long time as a client. Here is the address of the Company: 12 Zorro Street, 93210 Beverly Hills.</p><p>After you have filled the “view” tab, save the data by clicking on the disk image on the right of the screen. This is really important to save the data before you browse another tab or document.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_title"]</td>\n
+                <td>Z Company</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_corporate_name"]</td>\n
+                <td>Z Company</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="subfield_field_my_role_list_default:list"]</td>\n
+                <td>Client</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_function"]</td>\n
+                <td>Sales</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_my_default_address_street_address"]</td>\n
+                <td>12 Zorro Street</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_default_address_city"]</td>\n
+                <td>Beverly Hills</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_default_address_zip_code"]</td>\n
+                <td>90210</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_default_address_region"]</td>\n
+                <td>Brazil</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_default_email_coordinate_text"]</td>\n
+                <td>info@zcompany.com</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_default_telephone_my_default_telephone_coordinate_text"]</td>\n
+                <td>+55(0)22 2222 2222</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextNotPresent</td>\n
+                <td>Input data has errors. Please look at the error messages below.</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Fill the "Details" tab</h1>\n
+        <img title="Add organisations: Fill the \'Details\' tab" src="http://www.erp5.com/user-Howto.Add.Organisations.Details.Tab?format=png" alt="Add organisations: Fill the \'Details\' tab">\n
+        <details open="open">\n
+          <p>In "Details" tab, you can fill in the details and save the changes.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=Details</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_social_capital"]</td>\n
+                <td>1000000</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+                <td>2007</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>About the other tabs</h1>\n
+        <img title="Add organisations: Other tabs in the \'Details\' page" alt="Add organisations: Other tabs in the \'Details\' page" src="http://www.erp5.com/user-Howto.Add.Organisations.Details.Page.Other.Tabs.Screenshot?format=png">\n
+        <details open="open">\n
+          <p>Similar to creating people, there are some tabs that will automatically be updated by ERP5, such as “Transactions”, “Financial informations” and “Documents”. The application will update those tabs whenever necessary, for example, to trace a transaction that occurred between VIFIB and the client Z Company.</p><p>When you have entered all information of the created company and saved it, it is time to validate the organisation, which works exactly the same way as person\'s validation.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Validate an Organisation (1)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Validate.1.Action.Screenshot?format=png" title="Validate new organisation (1): Click on the \'Action\' tab" alt="Validate new organisation (1): Click on the \'Action\' tab">\n
+        <details open="open">\n
+          <p>Click on the “Action” item list.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Validate</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Validate an Organisation (2)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Validate.2.Validate.Screenshot?format=png" title="Validate new organisation (2): Click on \'Validate\'" alt="Validate new organisation (2): Click on \'Validate\'">\n
+        <details open="open">\n
+          <p>Click on “Validate”.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//li[@class="selected"]/a/span</td>\n
+                <td>Details</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="transition_message"]</td>\n
+                <td>Status changed.</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Validate an Organisation (3)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Validate.3.Update.Status.Screenshot?format=png" title="Validate new organisation (3): Check the update status" alt="Validate new organisation (3): Check the update status" type="image/svg+xml">\n
+        <details open="open">\n
+          <p>Check the update status.</p><p>When everything has been done correctly (i.e. you have entered the data, saved and validated the organisation you created), it is time to check that Z Company appears in the organisation list of ERP5. Once again, this works the same way as for creating a person.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=View</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@title="The current state of the document."]/div[1]</td>\n
+                <td>Validated</td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Check the Creation (1)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.1.Modules.Screenshot?format=png" alt="Check organisation creation (1): Click on the \'Modules\' tab" title="Check organisation creation (1): Click on the \'Modules\' tab">\n
+        <details open="open">\n
+          <p>To check the new organisation, you will have to navigate to the list of existing organisations.</p><p>Click on the “ERP5 Modules” item list on top of the page and click on “organisations”, this will lead you to the organisations\' list.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/organisation_module/view</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Check the Creation (2)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.2.Organisations.Screenshot?format=png" type="image/svg+xml" alt="Check orgaisation creation (2): Click on \'Organisations\'" title="Check orgaisation creation (2): Click on \'Organisations\'">\n
+        <details open="open">\n
+          <p>Now using the bread crumb circled in black on the picture, check that you are in the organisations\' list. If everything worked fine, the bread crumb should display: ERP5 / Organisations. This means that you are located in the organisation list.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[1]</td>\n
+                <td>ERP5</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Organisations</td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'organisation_howto_organisation_title\']],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to Check the Creation (3)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.3.Organisationline.Screenshot?format=png" alt="Check organisation creation (3): Check the organisation\'s line" title="Check organisation creation (3): Check the organisation\'s line">\n
+        <details open="open">\n
+          <p>The final step is to check that Z Company is on the list. We can see that the creation was successful because Z Company has been added to the list. If you want to see or modify the details of any organisation, just click on its line to open its dedicated page.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[3]</td>\n
+                <td>Z Company</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Use "Browse" tab</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Screenshot?format=png" alt="Check organisation creation: Browse the \'Organisations\' database" title="Check organisation creation: Browse the \'Organisations\' database">\n
+        <details open="open">\n
+          <p>You can also use the "Browse" tab in the home page to check the organisations stored in your ERP5 database. Just click on “Organisations” in the “Base”module, which is the module that gathers “Currencies”, “Organisations” and“Persons”.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_tearDownOrganisationTest</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Clean Ok</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section>\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How to Add Organisations</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>005</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.7</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460064.83</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460064.83</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.67</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.73</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.936.24919.22340</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460047.93</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.937.5434.60228</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460095.83</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.937.39323.52343</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358509807.97</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1766.8930.36778</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358511518.93</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>924.1794.42706.13619</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358513032.47</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.67</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.68</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358460022.69</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/65</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/documentation/user</string>
+                <string>contributor/person_module/796</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/590</string>
+                <string>classification/collaborative/team</string>
+                <string>group/nexedi</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user-Howto.Create.Campaigns</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>In this presentation, you will learn how to create marketing campaigns with ERP5 CRM, how to edit them and how to open them.</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>user-Howto.Create.Campaigns</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Create Campaigns</string> </value>
+        </item>
+        <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple>
+                <string>campaign</string>
+                <string>CRM</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+    \n
+      <section class="master">\n
+        <h1>How to Create a Marketing Campaign</h1>\n
+        <img title="Marketing campaign: Beta Developer Program" alt="Campaign example: Beta Developer Program" src="http://www.erp5.com/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
+        <footer>\n
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
+        </footer>\n
+        <details open="open">\n
+          <p>\n
+            From the previous presentation, you have had a general idea of the four kinds of Tickets in ERP5 CRM and their workflows. In the following tutorials we will use the VIFIB example to explain how to process the Ticket for a marketing campaign, including the management of the related Events.<br>\n
+            In this tutorial you will first learn how to create campaigns with ERP5 CRM, how to edit them and how to open them.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_setUpCampaignTest</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Init Ok</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section>\n
+        <h1>Agenda</h1>\n
+        <ul>\n
+          <li>What is a campaign</li>\n
+          <li>How to create a campaign</li>\n
+          <li>How to edit a campaign</li>\n
+          <li>How to open a campaign</li>\n
+        </ul>\n
+        <details open="open">\n
+          <test>\n
+            <table class="test" style="display: none;">\n
+              <tbody></tbody>\n
+            </table>\n
+          </test>\n
+        </details>\n
+      </section><section class="illustration">\n
+        <h1>Marketing campaign: Example-Beta Developer Program</h1>\n
+        <img title="Campaign example: Beta Developer Program" alt="Campaign example: Beta Developer Program" type="image/svg+xml" src="http://www.erp5.com/user-Tickets.Campaign.Example.Vifib.Beta.Developer.Program?format=png">\n
+        <details open="open">\n
+          <p>\n
+            VIFIB director Mr Smets plans to launch a marketing campaign aims to increasing the product awareness of SlapOS the new operation system of VIFIB, in the way of hiring software developers. The main interactions of this campaign is to send mail messages to contacts (customers) of VIFIB, and these emails would be the <strong>Related Events</strong>\n
+            of this\n
+            <strong>Campaign Ticket</strong>\n
+            . So they would be listed in the detail page of this Ticket.\n
+          </p><p>\n
+            <strong>Description:</strong>\n
+            the\n
+            <strong>Title</strong>\n
+            is "Beta Developer Program", the\n
+            <strong>Ticket Type</strong>\n
+            is Campaign, the\n
+            <strong>Operations Manager</strong>\n
+            is XU Jingjing, the\n
+            <strong>Quantity</strong>\n
+            is 10 Days, the\n
+            <strong>Begin date</strong>\n
+            is 12/01/2011, the\n
+            <strong>End Date</strong>\n
+            is 02/01/2012.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="illustration">\n
+        <h1>What is a campaign</h1>\n
+        <img title="Campaign: a type of Ticket" alt="Campaign: a type of Ticket" type="image/svg+xml" src="http://www.erp5.com/user-Tickets.Beta.Developer.Program?format=png">\n
+        <details open="open">\n
+          <p>From the previous introductories of Events and Tickets, we know that a campaign in ERP5 CRM is a Ticket. The principle of a ticket is to gather one or more events in the same place, offering a good follow up for them.</p><p>\n
+            In our VIFIB example, the operations manager XU Jingjing created the <strong>Campaign Ticket</strong>\n
+            the "Beta Developer Program" (the right side screen shot) for the VIFIB marketing campaign. In the detail page of this ticket we can see it gathers all the\n
+            <strong>Events</strong>\n
+            which "\n
+            <strong>Follow Up"</strong>\n
+            the\n
+            <strong>Campaign</strong>\n
+            , including reply emails (the left side screen shot) from the contacts and other related documents.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Click on the “New” tab</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Click.New.Tab?format=png" alt="Create a marketing campaign: Click on the \'New\' tab" type="image/svg+xml" title="Create a marketing campaign: Click on the \'New\' tab">\n
+        <details open="open">\n
+          <p>In order to create a campaign, click on the "New" tab of your ERP5 instance Home Page and click on “Campaign” in the CRM Area.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Campaigns</td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Add Campaign</td>\n
+              </tr>\n
+              <tr>\n
+                <td>waitForCondition</td>\n
+                <td>selenium.isTextPresent("Title")</td>\n
+                <td>60000</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Reach the campaign document</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Reach.Campaign.Document?format=png" alt="Create a marketing campaign: Reach the campaign document" type="image/svg+xml" title="Create a marketing campaign: Reach the campaign document">\n
+        <details open="open">\n
+          <p>\n
+            A new Campaign ticket has been created, and can now be edited in the campaign creation page. Here are the Three different areas of a campaign ticket:<br>\n
+            The red zone gathers the tabs that will help you access the entire information about the campaign.\n
+            <br>\n
+            The blue zone is the editable zone of the campaign, in which you can enter and modify information.\n
+            <br>\n
+            The yellow zone gathers the related events and documents stored in a campaign.\n
+            <span style="color: rgb(255, 0, 0);">Please note that in order for an event to be stored in a campaign, the "Follow up" of this event must be the title of the Campaign.</span>\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to edit a campaign</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Edit.Campaign?format=png" alt="Edit a marketing campaign" type="image/svg+xml" title="Edit a marketing campaign">\n
+        <details open="open">\n
+          <p>\n
+            Here are the different zones of the editable area of a campaign.<br>\n
+            1.First, the red zone gathers the information about the Client, eg, the company/person who requested the campaign to be done. It can be either yourself or a client.\n
+            <br>\n
+            2.The blue Zone (A) gathers the information about the persons/organisation who will manage the\n
+            campaign, eg, who will be paid for it. We could say that this is the supplier of the campaign. The blue Zone (B) helps you put who will be the operators of the campaign.\n
+            <br>\n
+            3.Finally, the yellow Zone gathers information about the opening and closing dates, the campaign duration and the costs.\n
+          </p><p>In our VIFIB example, we full in the zones with the information needed as you can see in the above screen shot.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_title"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-CAMPAIGN-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_reference"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-CAMPAIGN-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_source_section_title"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-ORGANISATION-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_source_decision_title"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-PERSON-SUPERVISOR</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_source_title"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_destination_title"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-ORGANISATION-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_my_source_trade_title_list"]</td>\n
+                <td>ZUITE-TEST-CAMPAIGN-PERSON-OPERATION-MANAGER</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+                <td>2011</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+                <td>12</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+                <td>2012</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+                <td>02</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_quantity"]</td>\n
+                <td>10.0</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_quantity_unit"]</td>\n
+                <td>Time/Day</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_price"]</td>\n
+                <td>20.00</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_price_currency"]</td>\n
+                <td>EUR</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="transition_message"]</td>\n
+                <td>Data updated.</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to open a Campaign (1)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Action.List?format=png" alt="Open a Campaign: Choose \'Open\' in the Action List" type="image/svg+xml" title="Open a Campaign: Choose \'Open\' in the Action List">\n
+        <details open="open">\n
+          <p>\n
+            In order to open a campaign, open first the “Action” Item List, and Choose “Open”. <span style="color: rgb(255, 0, 0);">Note that this action can only be done by the Campaign Manager, or the creator of the Campaign ticket.</span>\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Open Ticket</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to open a Campaign (2)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.Comments.Open?format=png" alt="Open a Campaign: Add comments and click on \'Open\'" type="image/svg+xml" title="Open a Campaign: Add comments and click on \'Open\'">\n
+        <details open="open">\n
+          <p>In this step, you can add comments. When you are done, validate the Ticket by clicking the “Open” button.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>How to open a Campaign (3)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Create.A.Marketing.Campaign.Open.Campaign.State?format=png" alt="Open a Campaign: Check the state of the campaign" type="image/svg+xml" title="Open a Campaign: Check the state of the campaign">\n
+        <details open="open">\n
+          <p>As you see on the image, the state of the campaign is now Open.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Open</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_tearDownCampaignTest</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Clean Ok</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section>\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How to Create a Marketing Campaign</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>011</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.95</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743748.73</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743748.73</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.94</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.96</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.35295.31705.39987</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743657.19</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.35295.41005.52206</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743728.38</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.35297.9613.59886</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353429998.2</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46734.41849.19848</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1354186657.35</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.59345.40965.32375</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1354186685.13</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.59346.5716.51592</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358496157.04</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.94</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.94</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352743648.95</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/69</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

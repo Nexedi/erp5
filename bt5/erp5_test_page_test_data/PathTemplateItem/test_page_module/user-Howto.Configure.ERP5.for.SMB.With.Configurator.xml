@@ -1,0 +1,2636 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/documentation/user</string>
+                <string>classification/collaborative/project</string>
+                <string>group/nexedi</string>
+                <string>follow_up/project_module/82</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/2326</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user-Howto.Configure.ERP5.for.SMB.With.Configurator</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>user-Howto.Configure.ERP5.for.SMB.With.Configurator</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Configure ERP5 for SMB</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+    \n
+      <section class="master">\n
+        <h1>Using the ERP5 Configurator</h1>\n
+        <h2>Small and Medium Business</h2>\n
+        <footer>\n
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
+        </footer>\n
+        <details open="open">\n
+          <p>In this tutorial you are going to learn how to configure your ERP5 instance for your company using the ERP5 Configurator. By using Configurator, you can have an ERP5 ready to use in few minutes, just by filling a few forms and waiting for the automated setup to do the hard job for you.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="chapter">\n
+        <h1>Standard Configuration</h1>\n
+        <details open="open">\n
+          <p>This configurator tutorial aims to configure one ERP5 instance for Small and Medium Business, and it should cover the most basic configuration that a SMB needs, like, Trade, Accounting, Document Management and others.</p><p>The Standard Configuration contains a pre-defined set of categories, modules, security which focus the most common ERP configuration scope for small and medium company world-wide. This configuration is appropriated to experiment and train yourself to ERP5 or use in production where this ERP configuration fits to the company needs.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <thead></thead>\n
+            <tbody>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>60000</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>deleteCookie</td>\n
+                <td>LOCALIZER_LANGUAGE</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>createCookie</td>\n
+                <td>LOCALIZER_LANGUAGE=en</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>store</td>\n
+                <td>${base_url}/portal_configurator</td>\n
+                <td>configurator_base_url</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_setUpConfigurationTest</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Init Ok</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Configure your Site</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Configure.Your.Site?format=png" type="image/svg+xml" title="&quot;Configure your Site&quot; at Favorite Menu" alt="&quot;Configure your Site&quot; at Favorite Menu">\n
+        <details open="open">\n
+          <p>Use the "My favourites" Menu to select "Configure your Site" and start to configure your ERP5 Site. You will be redirected to the Configurator Tool.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Configurator Welcome</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Configurator.Welcome?format=png" title="Configurator Initial Page" alt="Configurator Initial Page">\n
+        <details open="open">\n
+          <p>\n
+            This is the Initial Page of the configurator, at this stage you can select whatever Configuration that you prefer. For this tutorial we are going to select <b>SMALL AND MEDIUM BUSINESS</b>.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>1200000</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_waitForActivities</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Done.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>120000</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>pause</td>\n
+                <td>4000</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${configurator_base_url}/view</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Welcome to Configurator</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>This tool will help you configure your fresh ERP5</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Language</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@value=\'business_configuration_module/STANDARD_CONFIGURATOR_TEST\']</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Your Organisation</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Organisation?format=png" title="Organisation Configuration Form" alt="Organisation Configuration Form">\n
+        <details open="open">\n
+          <p>You will then have to fill all the information about your Company. It is important for you to enter the correct information as it wont be possible after the configuration to change them by yourself. Once it is done, just click on "Configure Organisation".</p><p>Note: You are configuring the ERP5 instance for your company, so please use the information of your company, such as Name, Email, Address, Country, and Users\' information.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Your organisation</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What is the name of your company?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Email</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Telephone</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Street Address</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Postal Code</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>City</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Country</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure Organisation</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_title"]</td>\n
+                <td>Nexedi SA</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_default_email_text"]</td>\n
+                <td>webproject-report@erp5.org</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_default_telephone_text"]</td>\n
+                <td>+123 234 567 891</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+                <td>59700</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_default_address_region"]</td>\n
+                <td>Europe/Western Europe/France</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Input is required but no input given.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_title"]</td>\n
+                <td>Nexedi SA</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_email_text"]</td>\n
+                <td>webproject-report@erp5.org</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_telephone_text"]</td>\n
+                <td>+123 234 567 891</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+                <td>59700</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//select[@name="field_your_default_address_region"]</td>\n
+                <td>europe/western_europe/france</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_default_address_city"]</td>\n
+                <td>Lille</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Number of user accounts</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Number.User?format=png" title="User Number Configuration Form" alt="User Number Configuration Form">\n
+        <details open="open">\n
+          <p>You will then have to choose how many user accounts you want to create during the configuration. You will be able to create as many users as you want even after the configuration. So you don\'t have to configure all the persons of your organisation that will use ERP5 now. Click on "Configure user accounts number".</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Select the number of user accounts you want to configure</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure user accounts number</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Your organisation</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What is the name of your company?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Email</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Telephone</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Street Address</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Postal Code</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>City</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Country</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure Organisation</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_title"]</td>\n
+                <td>Nexedi SA</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_email_text"]</td>\n
+                <td>webproject-report@erp5.org</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_telephone_text"]</td>\n
+                <td>+123 234 567 891</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//textarea[@name="field_your_default_address_street_address"]</td>\n
+                <td>270 bd Clémenceau, 59700 Marcq-en-Baroeul</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_address_zip_code"]</td>\n
+                <td>59700</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//select[@name="field_your_default_address_region"]</td>\n
+                <td>europe/western_europe/france</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_default_address_city"]</td>\n
+                <td>Lille</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Select the number of user accounts you want to configure</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure user accounts number</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_company_employees_number"]</td>\n
+                <td>1</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>User accounts configuration</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.User?format=png" title="User Configuration Form" alt="User Configuration Form">\n
+        <details open="open">\n
+          <p>\n
+            You will then have to fill in all the information for as many users as you selected before. <strong>ATTENTION: Do NOT use the username "zope".</strong>\n
+             Please notice that in an online environment the useres will receive their login and password by email so be careful to enter the right email address. When it is done you can click on "Configure user accounts".\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Fill in detailled information for each ERP5 user.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Fill in detailled information for each ERP5 user.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>First Name</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Last Name</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User Login</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User Password</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Password Confirmation</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Function</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure user accounts</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_first_name"]</td>\n
+                <td>Ivan</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_last_name"]</td>\n
+                <td>Petrov</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_reference"]</td>\n
+                <td>PERSON_RESERVED_REFERENCE</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_password"]</td>\n
+                <td>secret</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_password_confirm"]</td>\n
+                <td>secret</td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_function"]</td>\n
+                <td>Company/Company Manager</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_default_email_text"]</td>\n
+                <td>webproject-report@erp5.org</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User login is either already used or contains invalid characters</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Please try another one</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_reference"]</td>\n
+                <td>PERSON_USER_REFERENCE</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Accounting</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Accounting?format=png" title="Accounting Configuration Form" alt="Accounting Configuration Form">\n
+        <details open="open">\n
+          <p>You will then have to choose the accounting plan you want to use (If the accounting plan that you want to use is not available, we can teach you how to make your accounting plan available in ERP5). Then you have to enter the accounting period beginning date, the ending date and the name of the accounting period. When it is done you can click on "Configure accounting".</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Configure your accounting.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Which accouting plan do you use?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting Period</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>To start using the system, you have to configure the first accounting period.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What is the begin date of your current accounting period?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What will be the end date of your current accounting period?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What is the name of this period?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure accounting</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_start_date_year"]</td>\n
+                <td>2012</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_start_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_start_date_day"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_stop_date_year"]</td>\n
+                <td>2012</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_stop_date_month"]</td>\n
+                <td>12</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="subfield_field_your_period_stop_date_day"]</td>\n
+                <td>31</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_your_period_title"]</td>\n
+                <td>2012</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Application Preferences</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Preference?format=png" title="Preferences Configuration Form" alt="Preferences Configuration Form">\n
+        <details open="open">\n
+          <p>You will then have to choose the "from" email address of your account. This email address will be used for automatically generated emails. You have to select the default accounting currency and the languages that you want to be available in your instance. English will always be available, other languages have to be installed during the configuration process. When it is done you can click on "Configure ERP5 Preferences".</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Define some global preferences for your ERP5 application.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What email address should be used as From email address for automatically generated emails?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>What is the currency used in your company?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Which date format do you use?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Which translations do you want to use?</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Configure ERP5 Preferences</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_price_currency"]</td>\n
+                <td>Euro</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_preferred_date_order"]</td>\n
+                <td>Day / Month / Year</td>\n
+              </tr>\n
+              <tr>\n
+                <td>addSelection</td>\n
+                <td>//select[@name="field_your_lang"]</td>\n
+                <td>label=French</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Summary</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Summary?format=png" title="Configuration Summary" alt="Configuration Summary">\n
+        <details open="open">\n
+          <p>This step is to say that we have all the information needed for the installation. It is still possible to go back and correct wrong information, but once you will have clicked on \'Install\' it won\'t be possible anymore. When you are sure of the information you filled, you can click on "Install".</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>ERP5 Configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation steps</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Number of user accounts</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>User accounts configuration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Accounting</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Application preferences</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Download</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Installation procedure may begin</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>You are going to install your selected configuration.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Please proceed using Install button below.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>In the next page you will receive automatically updated installation status report.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>Install</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>Previous</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyElementPresent</td>\n
+                <td>//input[@name="previous:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="next:method"]</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Installation</h1>\n
+        <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Installation?format=png" title="Configuration Progression Bar" alt="Configuration Progression Bar">\n
+        <details open="open">\n
+          <p>You can follow the installation progress thanks to the "installation progress bar". Even if you quit the page, you won\'t be able to stop the installation process. Once it is done you will see a link at the end of the progress bar that will invite you to login to your ERP5 Instance. If you are running ERP5 in a virtual machine on a slow computer it could happen that you get a message "Error code 500". Don\'t worry, this only means that it takes a long time to configure ERP. In this case, just wait some more minutes and then return to your ERP5 instance (in the virtual machine you can do this by clicking the home button). Then you have to click "My Favourites" -&gt; "Log out" to log out from the emergency user. Then you can log in again using your user you just created.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" cellpadding="1" cellspacing="1" border="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>waitForCondition</td>\n
+                <td>selenium.isTextPresent("ERP5 configuration process is running.")</td>\n
+                <td>10000</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Please be patient and do not move from current page until you get</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>confirmation that the installation is over.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>It will last approximately 5 to 10 minutes.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>1200000</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_waitForActivities</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Done.</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>30000</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_assertEndConfiguration</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>True</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>${base_user}</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/logout</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/login_form</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="__ac_name"]</td>\n
+                <td>PERSON_USER_REFERENCE</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="__ac_password"]</td>\n
+                <td>secret</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="logged_in:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>PERSON_USER_REFERENCE</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_waitForActivities</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Done.</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>setTimeout</td>\n
+                <td>30000</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/login_form</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="__ac_name"]</td>\n
+                <td>${base_user}</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="__ac_password"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="logged_in:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Start using your new ERP5 system</h1>\n
+        <img alt="Start using your new ERP5 system " title="Start using your new ERP5 system " type="image/svg+xml" src="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator.Start.Using.Your.New.ERP5.System?format=png">\n
+        <details open="open">\n
+          <p>As soon the link is provided, click "Start using your new ERP5 system" to use your configured ERP5.</p>\n
+        </details>\n
+      </section><section class="screenshot">\n
+        <h1>Login</h1>\n
+        <img src="http://www.erp5.com/user-ERP5.Login.Form?format=png" type="image/svg+xml" title="Login Form" alt="Login Form">\n
+        <details open="open">\n
+          <p>Now you can login with the user Login and Password created during the configuration and enjoy your ERP5.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section>\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Configure ERP5 for Small and Medium Business with Configurator</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>006</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.8</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360365.19</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360365.2</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.74</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.81</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64802.38110.28979</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359857.83</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64802.64322.18193</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360021.75</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64805.45956.9898</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360318.52</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64811.27750.13465</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360540.3</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64814.22420.50892</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358360602.61</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64815.25020.15598</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358361459.48</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>923.64829.43395.55688</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358361523.34</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>928.59267.45811.1280</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380548146.26</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>929.48593.20052.8004</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380548192.14</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.75</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.75</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358359834.8</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/85</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

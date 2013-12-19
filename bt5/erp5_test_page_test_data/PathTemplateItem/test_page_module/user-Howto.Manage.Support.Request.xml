@@ -1,0 +1,2071 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/documentation/user</string>
+                <string>classification/collaborative/team</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/1088</string>
+                <string>contributor/person_module/851</string>
+                <string>contributor/person_module/20110829-FF7377</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/20110828-41AAD33</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/20120219-45BE264</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>user-Howto.Manage.Support.Request</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>In this presentation, you will learn how to manage support requests with ERP5 CRM.</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>user-Howto.Manage.Support.Request</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Manage Support Requests</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+    \n
+      <section class="master">\n
+        <h1>How to Manage Support Requests</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Scenario?format=png" type="image/png" title="How to manage support requests" alt="How to manage support requests">\n
+        <footer>\n
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
+        </footer>\n
+        <details open="open">\n
+          <p>From last tutorial we have learned the standard process of managing incoming Events. In this tutorial, we will specially introduce the process of how to manage the Ticket "Support Request", following the standard process of managing incoming Events explained in last tutorial.</p><p>Support Request is a kind of Ticket which the incoming Events (email, phonecall, fax, etc.) of your customers are assigned to, and which is a very important Ticket in ERP5 CRM because it allows you to manage all the interactions between your customer, your company and your supplier effectively, which helps consolidating the customer relations of your company.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_setUpIncomingEventTest</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Init Ok</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section>\n
+        <h1>Agenda</h1>\n
+        <ul>\n
+          <li>Create an incoming Event from the client\'s document</li>\n
+          <li>Define the Recipient - the team member responsible to reply to client</li>\n
+          <li>Create the Follow Up Ticket - a Support Request Ticket</li>\n
+          <li>Deliver the Event</li>\n
+          <li>Reply to the client</li>\n
+        </ul>\n
+        <details open="open"></details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="illustration">\n
+        <h1>The incoming Event workflow</h1>\n
+        <img src="http://www.erp5.com/user-Events.Event.Workflow?format=png" type="image/png" title="The incoming Event workflow" alt="The incoming Event workflow">\n
+        <details open="open">\n
+          <p>\n
+            As you have learned from last tutorial, the second part of this illustration shows the standard process of Incoming Events: <strong>Declare as Received</strong>\n
+            ,\n
+            <strong>Define the Event\'s Recipient</strong>\n
+            ,\n
+            <strong>Create a Follow Up Ticket</strong>\n
+            and\n
+            <strong>Deliver</strong>\n
+          </p><p>Now we will explain in detail how to practice this process in managing Support Requests.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="illustration">\n
+        <h1>Scenario</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Scenario?format=png" title="Scenario: a request for support of ERP5 instance configuration" alt="Scenario: a request for support of ERP5 instance configuration">\n
+        <details open="open">\n
+          <p>This tutorial is based on a scenario that will help you understand how to manage Support Requests and the role of this kind of Ticket.</p><p>Z Company is an electricity supplier, one of VIFIB clients who are using the ERP5 instance. John Scott Doh is the marketing manager of Z Company. From this year, as the other departments of Z Company, he starts to implement the ERP5 to manage his marketing department, and specially the ERP5 CRM for his business with his clients. In the very beginning of using this new instance, he met some difficulties in the configuration of the ERP5 instance, so he wrote to the ERP5 support team asking for help. When the ERP5 support team receives the email from this client, someone in the team will create a new incoming Event in ERP5  in order to ask for someone who is capable to answer to the request of John Doh.</p><p>Now please follow this scenario, combine with the standard incoming Events process you have learned, to see what\'s the steps to take in ERP5 to manage the support requests from your clients.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Find the request sender John Doh in your ERP5</h1>\n
+        <img alt="Browse for John Doh in your ERP5" title="Browse for John Doh in your ERP5" type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Browse.Persons?format=png">\n
+        <details open="open">\n
+          <p>\n
+            In ERP5 CRM, in order to better manage the customer relations, once we receive an incoming email, phonecall or fax from our clients, we will have to <strong>create a new incoming Event from the support request sender\'s document</strong>\n
+            in order to tell our team that we receive a message from our client. In this way, all the support requests from our clients will be recorded immediately, and be assigned to personnel to handle them later.\n
+          </p><p>In our example, we will first create an incoming Event to inform our ERP5 support team that we have received an email from John Doh who is asking for help. As it is John Doh who sent this email, we will create the incoming Event directly from John Doh\'s Person Document, in order for the Event to be linked easily to John Doh in ERP5.</p><p>\n
+            In order to <strong>create an incoming Event from the request sender John Doh\'s document</strong>\n
+            , the\n
+            <strong>first step</strong>\n
+            will be to\n
+            <strong>reach John Doh\'s person document</strong>\n
+            in ERP5. To do so,\n
+            <strong>click on the “Browse” tab</strong>\n
+            of your instance Homepage, and\n
+            <strong>click on “Persons”.</strong>\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Persons</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Click on John\'s line</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Click.Persons.Line?format=png" title="Click on John\'s line" alt="Click on John\'s line">\n
+        <details open="open">\n
+          <p>\n
+            Then we will reach list of Persons stored in your ERP5 instance, <strong>click on John Doh\'s line</strong>\n
+            in order to reach his Person Document.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR\'],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Persons</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[3]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-PERSON-SUPERVISOR</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Open the Events tab</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Open.Events.List?format=png" title="Open the Events tab in the person\'s document" alt="Open the Events tab in the person\'s document">\n
+        <details open="open">\n
+          <p>\n
+            Now that you have reached John Doh\'s Person Document, the <strong>second step</strong>\n
+            in order to create an incoming Event from the support request sender\'s document is to\n
+            <strong>reach the Event list of John Doh</strong>\n
+            by\n
+            <strong>Click on the Event Tab</strong>\n
+            in John Doh\'s document.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=Events</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>The Events list is empty</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Events.List.Empty?format=png" title="The Events list is empty" alt="The Events list is empty">\n
+        <details open="open">\n
+          <p>As you can see, the Events list of John Doh is still empty because until now, there is no Event related to John Doh, i.e., VIFIB hasn\'t had any interaction with him so far.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//span[@class="listbox-current-page-total-number"]</td>\n
+                <td>0 records</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a new Event (1): Action list</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Event.Action.List?format=png" title="Click on \'Create New Event\' on Action list" alt="Click on \'Create New Event\' on Action list">\n
+        <details open="open">\n
+          <p>\n
+            Since we have received the mail message from our client John Doh asking for help, we will now create a new Event related to John Doh to record this message. To do so, <strong>open the “Action” item list and choose “Create New Event”</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Create New Event</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a new Event (2): Set Event title, type and direction</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Event.Title.Type.Direction?format=png" title="Set incoming Event title, type and direction" alt="Set incoming Event title, type and direction">\n
+        <details open="open">\n
+          <p>\n
+            As you have learned in the previous tutorial “How to Prepare Outgoing Events”, when the new Event is created, you can first set the basic information such as <strong>Event title, type and direction</strong>\n
+            , etc. The only difference here is to\n
+            <strong>set the Event Direction to “In”</strong>\n
+            this time, because you want to create an Incoming Event, indicating that you have received an email in this case, and then you will enter this email in your ERP5 for someone of your team to process it.\n
+          </p><p>Now you can copy and paste the email you have received from your client John Doh into "Message" area, or you can also do it later in the Event edit page.</p><p>\n
+            In order to follow this tutorial, check <strong>Keep in draft state</strong>\n
+            option in order to create an Event on "Draft" State. Afterwards, we are going to learn how to learn how to declare it as received manually.\n
+          </p><p>\n
+            When you are done, <strong>click the “Create New Event”</strong>\n
+            button.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_portal_type"]</td>\n
+                <td>Mail Message</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_title"]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_resource"]</td>\n
+                <td>Test Functional Incoming Service</td>\n
+              </tr>\n
+              <tr>\n
+                <td>click</td>\n
+                <td>//input[@name="field_your_direction" and @value="incoming"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>click</td>\n
+                <td>//input[@name="field_your_keep_draft"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>"New Event created"</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Event.Draft.Event?format=png" title="New incoming Event has been created-state Draft" alt="New incoming Event has been created-state Draft">\n
+        <details open="open">\n
+          <p>\n
+            As you can see in the red area of the picture, a new Event has been created, which is on the <strong>“Draft” state</strong>\n
+            . The blue area shows the\n
+            <strong>Sender and Recipient fields</strong>\n
+            which have already been filled automatically, following this\n
+            <strong>rule</strong>\n
+            : The Sender is John Doh, because the incoming Event has been created from his person document. This act tells the ERP5 team that we have received an email from our client John Doh somewhere. The Recipient here is Jingjing XU, because this is the name of the\n
+            <strong>ERP5 user</strong>\n
+            who created this incoming Event. However,\n
+            <strong>this information can be changed later</strong>\n
+            , if we need to assign this incoming Event to someone else in our team to take care of it.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="transition_message"]</td>\n
+                <td>New event created.</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Draft</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a new Event (3): Copy/paste the email you received</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Event.Copy.Message.Into.New.Incoming.Event?format=png" title="Copy/paste the email you received into the new incoming Event" alt="Copy/paste the email you received into the new incoming Event">\n
+        <details open="open">\n
+          <p>\n
+            Now, <strong>copy and paste the email you have received from your client John Doh into the red area: Text Format</strong>\n
+            . This area aims at showing the email you have received to all the persons of your team, which is the content of this new incoming Event. If you have done it in the previous step, you can just review and edit it as you want. And finally, don\'t forget to\n
+            <strong>save</strong>\n
+            your data changes.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_my_text_content"]</td>\n
+                <td>ZUITE-TEST-EVENT-CONTENT this is the content of our event.</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a new Event (4): "Receive" the Event</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Receive.Event?format=png" title="Click on \'Declare as Received\' on Action list" alt="Click on \'Declare as Received\' on Action list">\n
+        <details open="open">\n
+          <p>\n
+            Now that you have <strong>drafted</strong>\n
+            all the necessary fields of this incoming Event, it is time to conform to the ERP5 that you have\n
+            <strong>received</strong>\n
+            this email from your client, the move will lead to the change of the Event\'s state as Received.\n
+          </p><p>\n
+            To do so, <strong>open the Action Item List and choose “Declare as Received”</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Declare as Received</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Event "Received"</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Event.State.Received?format=png" title="Event Received" alt="Event Received">\n
+        <details open="open">\n
+          <p>As you can see on the screenshot, after we declared that the Event is received, the state of the newly created Event is now changed from "Draft" to "Received", which is the first state of an incoming Event, as you can witness on the workflow of incoming Events in ERP5, shown on the left of the picture.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>storeValue</td>\n
+                <td>//textarea[@name="field_my_destination_title_list"]</td>\n
+                <td>user_title</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Received</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Define the "Recipient" - the person responsible to reply to client</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Change.Recipient.Replier?format=png" type="image/png" title="Change the &quot;Recipient&quot; of the Event" alt="Change the &quot;Recipient&quot; of the Event">\n
+        <details open="open">\n
+          <p>Now it is time to define who should process this Event - the person in the ERP5 support team who will have to provide John Doh with an answer .</p><p>\n
+            We will ask our team member“Yingjie XU” to take care of this Event. To do so,\n
+            Firstly,\n
+            <strong>change the person name in the “Recipient” field</strong>\n
+            from "Jingjing XU" (the default Recipient) to "Yingjie XU". Secondly, as usual, don\'t forget to\n
+            <strong>"Save"</strong>\n
+            the action.\n
+          </p><p>This step aims at indicating that “Yingjie XU” did receive this email from the client, and has to take care of it. So after the next step that we "Receive" the Event, this Event will appear on Yingjie\'s worklist as "Received Events to Deliver", which we will show you later. In this way, Yingjie will know that he is responsible to handling a new incoming Event.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Another focus: switch user</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Switch.User.Log.Out?format=png" title="Switch user to reply incoming Event" alt="Switch user to reply incoming Event">\n
+        <details open="open">\n
+          <p>\n
+            Now the incoming Event has been <strong>"Received"</strong>\n
+            , the\n
+            <strong>"Recipient"</strong>\n
+            has been defined, the\n
+            <strong>Follow Up Ticket</strong>\n
+            has been created, so it is time for the "Replier" - the Recipient to offer support to the client. And all the following interactions between the Replier and the Client will be recorded under the Support Request Ticket we just created.\n
+          </p><p>\n
+            In this section, we will switch users in order to understand how users can be aware that they have Events to handle.<br>\n
+            <strong>Log out</strong>\n
+            by opening the “My favourites” item list, and choose\n
+            <strong>Log out</strong>\n
+            . After being logged out, we have\n
+            <strong>logged in user “Yingjie”</strong>\n
+            in order to help you understand how incoming Events are displayed in the\n
+            <strong>worklist</strong>\n
+            of this user.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_another_test_user"&gt;Login As Another Functional Test User&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Events</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Received Events in Worklist</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Worklist.Received.Events.To.Deliver?format=png" title="Received Events to Deliver" alt="Received Events to Deliver">\n
+        <details open="open">\n
+          <p>\n
+            “Yingjie” is now logged in, and while opening his Worklist, we see that <strong>there are 1 "Received Events to Deliver”</strong>\n
+            to be treated. Let\'s\n
+            <strong>click on this line</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Which Event should be processed ?</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.List.Received.Events.To.Deliver.Recipient.Choose?format=png" title="Choose in the &quot;Received Events&quot; List" alt="Choose in the &quot;Received Events&quot; List">\n
+        <details open="open">\n
+          <p>\n
+            This is the <strong>list of "Received Events to Deliver"</strong>\n
+            , reached through the Worklist. All the Events declared as "Received" and have assigned to a "Recipient" will displayed on this list. In order to know who has to take care of them,\n
+            <strong>each user has to search for his person name in the Recipients field</strong>\n
+            , and then he will\n
+            <strong>click now on this Event with the his name as the Recipeint order to process it</strong>\n
+          </p><p>Now we have reached the List through Yingjie\'s Worklist, we can see that there is 1 received Event to deliver (Normally there could be more Events on the list with different Recipients). So user "Yingjie” only has his name in one Event, which means that this is the only Event he is entitled to take care of. So click on this line in order to process it.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Events</td>\n
+              </tr>\n
+              <tr>\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-INCOMING-EVENT-EVENT-001\'],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Assign this Event to a Support Request Ticket</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Follow.Up.Ticket?format=png" title="Assign Event to Ticket" alt="Assign Event to Ticket">\n
+        <details open="open">\n
+          <p>\n
+            According to the standard process of incoming Events, if the Event can be handled in a simple way, we can <strong>Create Response directly</strong>\n
+            from the Received Event\'s Action item list, as the option shown in the blue frame. But if the incoming Event needs to be handled in a complicated way, which needs a Ticket to contain many following Events, as in our case the support request from our client, we will then need to\n
+            <strong>Create Follow Up Ticket</strong>\n
+            from the Received Event\'s Action item list, as the option shown in the red frame.\n
+          </p><p>\n
+            So the next step will be to assign this Event to a Ticket. If you remember correctly, a Ticket can be a campaign, a sale opportunity, a support request, a meeting, etc...In this case, the client has asked for help in his email, so this is clearly a Support Request that has to be created. In order to create this Support Request Ticket, <strong>open the Action Item List and choose the action “Create Follow Up Ticket”</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Create Follow Up Ticket</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a Support Request - Set Ticket title, type and nature</h1>\n
+        <img alt="Set Ticket title, type and nature" title="Set Ticket title, type and nature" type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Follow.Up.Ticket.Title.Type?format=png">\n
+        <details open="open">\n
+          <p>\n
+            Now you will choose the type of Ticket you want to assign this Event to. In the first field, you can enter a <strong>Ticket Title</strong>\n
+            . This title will be displayed in the field Follow-Up of this Event. After this, you can choose the\n
+            <strong>Ticket Type</strong>\n
+            . In our example, we will choose "Support Request" as Ticket type, which means that later we will be able to find this support request Ticket in the Support Request module of ERP5. After created, this Ticket can receive many different Events afterwards, such as the reply from ERP5 support team member, and the further questions from the client John Doh. When you are done,\n
+            <strong>click the “Create Follow Up Ticket” button</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_your_follow_up_ticket_title"]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_follow_up_ticket_type"]</td>\n
+                <td>Support Request</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>"Follow Up Ticket created"</h1>\n
+        <img alt="Follow Up Ticket created" title="Follow Up Ticket created" type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Follow.Up.Ticket.Created?format=png">\n
+        <details open="open">\n
+          <p>\n
+            As you can see stated in the left upside of the screenshot, the Follow Up Ticket of this incoming Event has been created. You can see the Ticket is displayed in the <strong>"Follow Up"</strong>\n
+            field in the Event\'s page.\n
+          </p><p>\n
+            The Follow Up Ticket is created in order to contain all the following Events happened between the client and ERP5 team which are related to the original Event. We can easily access to it by <strong>clicking the plane icon</strong>\n
+            in the right side of this field.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_my_default_follow_up_title"]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="field_my_default_follow_up_title"]/../a</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Support Requests</td>\n
+              </tr>\n
+              <tr>\n
+                <td>storeLocation</td>\n
+                <td>support_request</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Base_clearCache</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>assertTextPresent</td>\n
+                <td>Cleared.</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Edit the Follow Up Ticket - Define the Operators</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Edit.Follow.Up.Ticket?format=png" type="image/png" title="Edit the Follow Up Ticket " alt="Edit the Follow Up Ticket ">\n
+        <details open="open">\n
+          <p>Now we can access to the Follow Up Ticket of the incoming Event - the Support Request Ticket we just created. In the page of the Ticket, as circled in red, you can now define the Manager, the Supervisor and the Operators, so they will know through their worklist that they are responsible to process the Ticket.</p><p>As circled in blue, you can already see the Event from which we created the Support Request Ticket has been contained in the Events List of this Ticket. From now on, every interactions happen later between the operators and the client will be recorded in this Ticket, and clearly listed in the Events List.</p><p>Now we can return to the event and we will now explain how to provide client John Doe with an answer to his question.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${support_request}</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+                <td>2011</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+                <td>12</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+                <td>2012</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+                <td>02</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_quantity"]</td>\n
+                <td>10.0</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_quantity_unit"]</td>\n
+                <td>Time/Day</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_price"]</td>\n
+                <td>20.00</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_price_currency"]</td>\n
+                <td>EUR</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Event "Delivered"</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Event.Delivered?format=png" title="Event &quot;Delivered&quot;" alt="Event &quot;Delivered&quot;">\n
+        <details open="open">\n
+          <p>The state of the Event has then changed from "Received" to "Delivered" which means it is now acknowledged by someone to be taken care of.</p><p>\n
+            <strong>By delivering the Event which is the final step of Process incoming Events, the Recipient who is entitled to take care of the Event says to his team that the Event is taken into account and will be processed by him.</strong>\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Delivered</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_my_title"]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create Response to client</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Create.Response?format=png" type="image/png" title="Create Response to client " alt="Create Response to client ">\n
+        <details open="open">\n
+          <p>Now it is time to reply to the client. If you remember, we have created a Follow Up Ticket for this Event in order to record all the following interactions related to the original Event. But the same as those Events which can be handled in a simple way so not need to be assigned to a Follow Up Ticket, we will use the Action item List in the Event page to create responses to our clients. The only difference is, all the Events of replies or other interactions created from this Event will be related to it by "Event Origin" and be recorded in the Follow Up Ticket we created.</p><p>\n
+            Now we will <strong>click on "Create Response" in the Action item List</strong>\n
+            in the Event page to reply to client John Doh.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>clickAndWait</td>\n
+                <td>link=ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_my_title"]</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Create Response</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Edit and send the response</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Edit.Response?format=png" title="Edit the response" alt="Edit the response">\n
+        <details open="open">\n
+          <p>\n
+            Now we reached the Reponse editing page. We will first edit the reply in the "Message" field, then check the other information in this page such as Title, Date, etd. When you are sure everything is correctly edited, click on "Create Response", then <strong>the response will be sent to the client and be created automatically as an outgoing Event with a state of "Sent"</strong>\n
+            .\n
+          </p><p>\n
+            <strong>You should be very careful before click on "Create Response"</strong>\n
+            , because after this action, your message to clients will be sent to them and cannot be modified any more.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_your_response_event_text_content"]</td>\n
+                <td>Some response</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>"Response Created"</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Response.Created?format=png" title="&quot;Response Created&quot;" alt="&quot;Response Created&quot;">\n
+        <details open="open">\n
+          <p>\n
+            Here we are back to the original Event Mail Message from client John Doh. As you can see on this page, it is stated <strong>"Response Created"</strong>\n
+            , which means this Information Request has been replied.\n
+          </p><p>\n
+            You can still access to the Response Event you have sent to clients to see the details, just have to click on the <strong>"Related Events" tab</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>storeAttribute</td>\n
+                <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+                <td>waitack</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${waitack}</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>The Related Events tab</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Related.Events.Tab?format=png" title="Related Events tab" alt="Related Events tab">\n
+        <details open="open">\n
+          <p>\n
+            Now we are lead to the <strong>Related Events tab</strong>\n
+            of the original incoming Event from John Doh, which we "Declare as Received", "Deliver" and "Create Response".\n
+          </p><p>\n
+            As we just created one response to the original Event from John Doh, there is only one Event listed in the tab which is the Response mail we want to check. <strong>Click on this Event to open it</strong>\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=Related Events</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//span[@class="listbox-current-page-total-number"]</td>\n
+                <td>1 records</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=Re:  ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>The Sent Event - Response to client</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Response.Event.Sent?format=png" title="Sent Event " alt="Sent Event ">\n
+        <details open="open">\n
+          <p>\n
+            Now we have accessed to the <strong>new Event created automatically</strong>\n
+            when we "Create Response" from the original incoming Event. The Event state is now\n
+            <strong>"sent”</strong>\n
+            , this means that the email containing the answer has been sent to the client John\'s email address!\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Sent</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_resource"]</td>\n
+                <td>Test Functional Incoming Service</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_source_title"]</td>\n
+                <td>${user_title}</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_action"]</td>\n
+                <td>Deliver</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@id="dialog_submit_button"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
+                <td>verifyText</td>\n
+                <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+                <td>Delivered</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Where is your processed Events (1)</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Browse.Support.Requests?format=png" title="Browse for Support Requests" alt="Browse for Support Requests">\n
+        <details open="open">\n
+          <p>We will need to find all the related Events after we have communicated with the client, so we will go back to the Follow Up Ticket of the original Event, which we created to recorded all the related Events to the original Event from our clients.</p>You remember the Ticket is a Support  Request. In order to find it, <strong>click on the “Browse” tab</strong>\n
+          of  your  ERP5 instance Home Page, and\n
+          <strong>click on “Support Requests”</strong>\n
+          in order to reach the Support Request module.\n
+          <p>&nbsp;</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Events</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Events</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Where is your processed Events (2)</h1>\n
+        <img src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Browse.For.Support.Requests.Module?format=png" type="image/png" title="Browse for Support Requests module" alt="Browse for Support Requests module">\n
+        <details open="open">\n
+          <p>\n
+            The red line is the line of the Support Request Ticket we created when we assigned the incoming Event.<strong>Click on this line</strong>\n
+            in order to open this support Request Ticket.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Folder_show:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//tr[@class=\'listbox-search-line\']/th[@class="listbox-table-filter-cell"]/input[@name=\'listbox_title\']</td>\n
+                <td>%ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="Base_doSelect:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//span[@class="listbox-current-page-total-number"]</td>\n
+                <td>2 records</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Your processed Events in Follow Up Ticket</h1>\n
+        <img type="image/png" src="http://www.erp5.com/user-Howto.Manage.Support.Requests.Processed.Events.In.Follow.Up.Ticket?format=png" title="Processed Events in the Ticket" alt="Processed Events in the Ticket">\n
+        <details open="open">\n
+          <p>\n
+            We can see first that not much information has been edited, but you can do it now. Indeed, we have just created this ticket but not edited it yet. You can find some help in the tutorial <strong>“How to Create a Marketing Campaign”</strong>\n
+            in order to understand which field is used for what (the Campaign and Support Request Tickets look exactly the same indeed).\n
+          </p><p>\n
+            <strong>The red area displays all the related Events stored in this ticket</strong>\n
+            . As you can see there are three Events listed: the first one is the original Event which is the incoming Event we created to notice our team of John\'s question. This Event is on the Delivered state, because user “Yingjie” acknowledged it. The second and third ones are the answers that we created for John Doh. These Events are on the “Sent” state, because the email was sent to the client!\n
+          </p><p>\n
+            <strong>From now on, this Support Request can be used if in the future, client John Doh sends new emails about configuration problems</strong>\n
+            . The only thing you will have to do in order to add Events to this Support Requests, is to open the “Action” item list and select “Create new Event”. Then the new Event will be created and associated automatically to the Ticket, as described in the\n
+            <strong>“How to Prepare Outgoing Events”</strong>\n
+            tutorial.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Support Requests</td>\n
+              </tr>\n
+              <tr>\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001\'],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//span[@class="listbox-current-page-total-number"]</td>\n
+                <td>2 records</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_tearDownIncomingEventTest</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Clean Ok</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section>\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How to Manage Support Requests</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>006</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.4</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353426531.42</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353426531.42</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.38</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.41</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46630.47593.1587</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423769.83</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46630.54698.8396</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423926.61</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46633.29554.35208</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353424025.56</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46635.6407.51916</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353425440.11</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46658.44187.35020</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353426069.31</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>922.46676.56350.36010</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1358501291.66</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>928.59267.45811.1280</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1382542127.2</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>930.17731.16367.33280</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1386099387.43</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.12922.7126.62651</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1386099487.5</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>931.12923.50736.44714</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1386099567.51</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="8.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.38</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.39</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jingjing</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1353423763.39</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/46</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,936 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>publication_section/documentation/user</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/510</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/428</string>
+                <string>contributor/person_module/2326</string>
+                <string>classification/collaborative/project</string>
+                <string>follow_up/project_module/82</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>howto-Create.New.User</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>In this presentation, you will learn how to create new users for your ERP5 instance.</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>howto-Create.New.User</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>How to create new User</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<section class="screenshot"> \n
+    <h1>How to create new User</h1> <img style="width: 744px;" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.New.User.Image?format=png" alt="How to create new User" title="How to create new User" /> <footer>\n
+          by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.\n
+        </footer> <details open="open"> \n
+      <p>With ERP5 instance, except for Persons, you can also create as many User accounts as you want. The difference between Person and User is, Users have access to your ERP5 instance, while Persons are a kind of data stored in your ERP5 instance, for CRM or sales. The Users\' authorizations are different according to the assignments you give them.</p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot;&gt;init&lt;/span&gt;</td> \n
+          </tr> \n
+          <tr> \n
+            <td>openAndWait</td> \n
+            <td>${base_url}/Zuite_setUpPersonTest</td> \n
+            <td> </td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextPresent</td> \n
+            <td>Init Ok</td> \n
+            <td> </td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/wait_for_activities&quot;&gt; Wait for activities &lt;/span&gt;</td> \n
+          </tr> \n
+          <tr style="opacity: 1;"> \n
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user&quot;&gt;Login As Functional Test User&lt;/span&gt;</td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section> \n
+    <h1>Agenda</h1> \n
+    <ul> \n
+      <li>Create a Person</li> \n
+      <li>Start the Assignment</li> \n
+      <li>Create a new User Account</li> \n
+      <li>New User log in</li> \n
+    </ul> <details open="open"> \n
+      <p>\n
+            The process of creating a new User has three steps: Firstly, create and <strong>validate</strong>\n
+            a Person who is the future User of your ERP5 instance. Secondly,\n
+            <strong>add Assignment</strong>  to this new User by using the Action item list. Finally,\n
+            <strong>create User Account</strong>\n
+            for this Person by using the Action item list.\n
+           Then this new User can access to your ERP5 instance using the login and password you have set during the creation.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Create a Person</h1> <img type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.New.User.Create.Person?format=png" alt="Create a Person" title="Create a Person" /> <details open="open"> \n
+      <p>\n
+            After reading the tutorial <a href="user-Howto.Create.Persons/view">&quot;How to create Persons&quot;</a>, you can now try to create a new Person account for a staff of your company. In our case, we create an account for a VIFIB manager Cédric de Saint Martin, as shown in the screenshot.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Validate the Person</h1> <img title="Validate the Person" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.New.User.Validate.Person?format=png" alt="Validate the Person" /> <details open="open"> \n
+      <p>Validate the Person you just created before going to next step.</p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Action: Add Assignment</h1> <img title="Action: Add Assignment" src="http://www.erp5.com/user-Howto.Create.New.User.Add.Assignment?format=png" type="image/svg+xml" alt="Action: Add Assignment" /> <details open="open"> \n
+      <p>\n
+            Without the assignment, even has a User account, the person still won\'t be able to access your ERP5 instance.To start an assignment, <strong>open the Action item list and click on &quot;Add Assignment&quot;</strong>\n
+            .\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_first_name&quot;]</td> \n
+            <td>John</td> \n
+          </tr> \n
+          <tr style="opacity: 1; z-index: 0;"> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_last_name&quot;]</td> \n
+            <td>Doh</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_career_subordination_title&quot;]</td> \n
+            <td>Z Company</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;field_my_gender&quot;]</td> \n
+            <td>Male</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;subfield_field_my_career_role_list_default:list&quot;]</td> \n
+            <td>Client</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;field_my_career_function&quot;]</td> \n
+            <td>Marketing/Marketing Manager</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;field_my_career_activity&quot;]</td> \n
+            <td>Education</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;field_my_nationality&quot;]</td> \n
+            <td>French</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_default_email_coordinate_text&quot;]</td> \n
+            <td>jdoh@zcompany.com</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_default_telephone_my_default_telephone_coordinate_text&quot;]</td> \n
+            <td>+33(0)6-218765/00</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//button[@name=&quot;Base_edit:method&quot;]</td> \n
+            <td> </td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Edit Assignment</h1> <img title="Edit Assignment" alt="Edit Assignment" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.New.User.Edit.Assignment?format=png" /> <details open="open"> \n
+      <p>Now you are located in the Assignment document. Fill in the fields and save the data.</p> \n
+      <p>\n
+            Note: there two important fields to fill up. First, you must <strong>select the Group for the Assignment, and the Group must be your company, otherwise the User won\'t be able to access your ERP5 instance</strong>\n
+            . Second,\n
+            <strong>fill carefully the Assignment Start Date and Stop Date. The Assignment is only valid in the defined interval</strong>\n
+            , which means the User can only login your ERP5 instance in the defined interval.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>verifyText</td> \n
+            <td>//div[@id=&quot;information_area&quot;]</td> \n
+            <td>Input data has errors. Please look at the error messages below.</td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyText</td> \n
+            <td>//span[@class=&quot;error&quot;]</td> \n
+            <td>No such document was found.</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;subfield_field_my_career_subordination_title_relation&quot;]</td> \n
+            <td>Add Organisation</td> \n
+          </tr> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>//button[@name=&quot;Base_edit:method&quot;]</td> \n
+            <td> </td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyTextNotPresent</td> \n
+            <td>Input data has errors. Please look at the error messages below.</td> \n
+            <td> </td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Action: Start Assignment</h1> <img title="Action: Start Assignment" alt="Action: Start Assignment" src="http://www.erp5.com/user-Howto.Create.New.User.Start.Assignment?format=png" type="image/svg+xml" /> <details open="open"> \n
+      <p>\n
+            After adding an Assignment to the new User, you have to start the Assignment to finalize the User creation process. <strong>Open Action item list and click on &quot;Start Assignment&quot;</strong>\n
+            .\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>clickAndWait</td> \n
+            <td>link=Details</td> \n
+            <td> </td> \n
+          </tr> \n
+          <tr style="opacity: 1; z-index: 0;"> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_middle_name&quot;]</td> \n
+            <td>Scott</td> \n
+          </tr> \n
+          <tr> \n
+            <td>type</td> \n
+            <td>//input[@name=&quot;field_my_child_count&quot;]</td> \n
+            <td>2</td> \n
+          </tr> \n
+          <tr> \n
+            <td>select</td> \n
+            <td>//select[@name=&quot;field_my_marital_status&quot;]</td> \n
+            <td>Married</td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Assignment &quot;Started&quot;</h1> <img type="image/svg+xml" title="Assignment &quot;Started&quot;" alt="Assignment &quot;Started&quot;" src="http://www.erp5.com/user-Howto.Create.New.User.Assignment.Started?format=png" /> <details open="open"> \n
+      <p>\n
+            When the status changed to &quot;Started&quot;, it means the new User is created successfully and he/she can start to use you ERP5 instance. See next page, <strong>after you log out, this new User can access to your ERP5 instance from the login page</strong>\n
+            , using the User Login and Password you have set for him/her during the User creation process.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Action: Create User</h1> <img type="image/svg+xml" title="Action: Create User" alt="Action: Create User" src="http://www.erp5.com/user-Howto.Create.New.User.Create.User?format=png" /> <details open="open"> \n
+      <p>\n
+              To create a User account for this Person, <strong>go back to the Person and open Action item list and click on &quot;Create User&quot;</strong>.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>selectAndWait</td> \n
+            <td>//select[@name=&quot;select_module&quot;]</td> \n
+            <td>Persons</td> \n
+          </tr> \n
+          <tr> \n
+            <td>selectAndWait</td> \n
+            <td>//select[@name=&quot;select_action&quot;]</td> \n
+            <td>Add Person</td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>Set User Login and Password</h1> <img title="Set User Login and Password" type="image/svg+xml" src="http://www.erp5.com/user-Howto.Create.New.User.Set.Login.Password?format=png" alt="Set User Login and Password" /> <details open="open"> \n
+      <p>Fill the dialog box with the User Login and the Password you set for this new User to access to your ERP5 instance. Then click on &quot;Create User&quot;.</p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>verifyText</td> \n
+            <td>//div[@id=&quot;transition_message&quot;]</td> \n
+            <td>Object created.</td> \n
+          </tr> \n
+          <tr> \n
+            <td>verifyText</td> \n
+            <td>//li[@class=&quot;selected&quot;]/a/span</td> \n
+            <td>View</td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section><section class="screenshot"> \n
+    <h1>New User Login</h1> <img type="image/svg+xml" alt="New User Login" title="New User Login" src="http://www.erp5.com/user-Howto.Create.New.User.New.User.Login?format=png" /> <details open="open"> \n
+      <p>Try to log in your ERP5 instance with the new User Login and Password.</p> \n
+      <p>\n
+            Note: It is important to remember the three steps must be performed correctly. Don\'t forget to <strong>Validate</strong>\n
+            the person you created and to\n
+            <strong>Start Assignment</strong>\n
+            . Otherwise it won\'t be possible to connect to ERP5 using the user created.\n
+          </p> </details> <test> \n
+      <table style="display: none;" class="test"> \n
+        <tbody> \n
+          <tr> \n
+            <td>selectAndWait</td> \n
+            <td>//select[@name=&quot;select_action&quot;]</td> \n
+            <td>Validate</td> \n
+          </tr> \n
+        </tbody> \n
+      </table> </test> </section>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How to create new User</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>003</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.62</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633827.21</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633827.21</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.59</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.65</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>929.51459.41744.11707</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633816.53</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="8.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.6</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_uploaded_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>uploaded</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.61</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>klaus.woelfel</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="8.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1380633723.61</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/nexedi/test_page_module/93</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

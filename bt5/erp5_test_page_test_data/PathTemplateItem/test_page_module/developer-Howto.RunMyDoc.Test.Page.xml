@@ -1,0 +1,2115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Page" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/20110503-EE9699</string>
+                <string>publication_section/documentation/developer</string>
+                <string>group/nexedi</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>ae4f023aa553837d12e9cc26249e0373</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>developer-Howto.RunMyDoc.Test.Page</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>(Rafael) This tutorial should be splitted and updated.\n
+(Rafael) Some icons images are still missing.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>developer-Howto.RunMyDoc.Test.Page</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Howto RunMyDoc Test Page</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+    \n
+      <section>\n
+        <h1>How To use RunMyDoc to write your own Tests and Tutorials</h1>\n
+        <footer>\n
+          by <a href="mailto:xavier.hardy@tiolive.com">Xavier Hardy</a>.\n
+        </footer>\n
+        <details open="true"></details>\n
+      </section><section>\n
+        <h1>Introduction</h1>\n
+        <details open="true">\n
+          <p>\n
+            <dfn id="dfn-erp5">ERP5</dfn>\n
+            Test Creator is a business template in ERP5 allowing you create simply your own tutorials and to add tests inside these tutorials. It also provides an interface to launch your\n
+            <dfn id="dfn-selenium">Selenium</dfn>\n
+            Test (User Interface Test), to export the latest test report in PDF format for example. Thanks to the use of the latest version of Selenium core (2.6.0), you can maintain automatically the screenshots contained in your tutorials.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;">\n
+            <tbody></tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Launch the wizard</h1>\n
+        <img type="image/png" alt="" src="Launch_the_wizard_Screenshot?format=" title="ERP5 Front Page">\n
+        <details open="true">\n
+          <p>\n
+            What exactly is a test page? A test page contains both a tutorial, and the test related to this tutorial. A test page can be displayed as slideshow and every chapter, between <code>&lt;section&gt;</code>\n
+            tags represents a slide and divide into several parts. The\n
+            <code>&lt;details&gt;</code>\n
+            are to be displayed in the web page version of the tutorial but not on the slide, just like side notes. The\n
+            <code>&lt;test&gt;</code>\n
+            part is the selenium test related to this chapter and contains a selenium table which won\'t appear in the web page version of the tutorial nor the slideshow. Everything that is not between\n
+            <code>&lt;details&gt;</code>\n
+            or\n
+            <code>&lt;test&gt;</code>\n
+            tags will be displayed in both the web page version of the tutorial and the slideshow.\n
+          </p><p>The creation of a Test Page was made a lot easier for you thanks to the Test Page Creation Wizard. It is now time to see how to use it to create easily a new tutorial in a few minutes. To create a new tutorial, just click on I would like to create a new Test Page.</p>\n
+        </details>\n
+        <test>\n
+          <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <thead>\n
+              <tr>\n
+                <td rowspan="1" colspan="3">How To use ERP5 Test creator to write your own Tests and Tutorials</td>\n
+              </tr>\n
+            </thead>\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>I would like to create a new Test Page.</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Launch.the.wizard.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=I would like to create a new Test Page.</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a Test Page</h1>\n
+        <img type="image/png" alt="" src="Create_a_Test_Page_Screenshot?format=" title="Test Page Creation Wizard">\n
+        <details open="true">\n
+          <p>\n
+            Fill in the following information in your tutorial (only <span class="element">Title</span>\n
+            is mandatory).\n
+          </p><p>\n
+            First, the <span class="element">Title</span>\n
+            corresponds to the name of the Test Page in ERP5. It will be displayed on the first slide and at the beginning of the tutorial.\n
+          </p><p>\n
+            Then, in the <span class="element">Author</span>\n
+            field, you must fill in the name of the author. This will be added right below the title of the Tutorial and on the slide footer as well.\n
+          </p><p>\n
+            If you want people reading your tutorial to be able to contact you, then you should fill in the <span class="element">Author email</span>\n
+            field which will automatically add a\n
+            <dfn>mailto</dfn>\n
+            link to the author\'s name added thanks to the\n
+            <span class="element">Author</span>\n
+            field.\n
+          </p><p>\n
+            The <span class="element">Slide text</span>\n
+            will be displayed in the slide below the title.\n
+          </p><p>\n
+            The <span class="element">Introductionary text</span>\n
+            will appear below the name of the author (or below the title, if the name of the author was not specified) and not in the slide.\n
+          </p><p>\n
+            Once you have filled out this page, click on <span class="element">Create Test Page</span>\n
+            to continue.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Welcome to the Test Creation Wizard</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_title</td>\n
+                <td>My first tutorial</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_author</td>\n
+                <td>Xavier Hardy</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_author_mail</td>\n
+                <td>xavier.hardy@tiolive.com</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_text_content</td>\n
+                <td>Some introductionary text</td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Create.a.Test.Page.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>id=dialog_submit_button</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Create a chapter: Your first chapter</h1>\n
+        <img type="image/png" alt="" src="Create_a_chapter_Your_first_chapter_Screenshot?format=" title="Creation of the first chapter of your Test Page">\n
+        <details open="true">\n
+          <p>Here you can add the first chapter of your tutorial.</p><p>\n
+            Fill in the following information in your chapter (only <span class="element">Chapter Name</span>\n
+            is mandatory). This page is quite similar to the previous one. Note that if you want to finish the creation of your test page, you have to submit the current chapter, thus, the button for that is called\n
+            <span class="element">Add this chapter and finish creation</span>\n
+            . If you want to add more chapters, you just have to click on\n
+            <span class="element">Add one more chapter</span>\n
+          </p><p>\n
+            The <span class="element">Chapter Name</span>\n
+            is the name of the current chapter. This will be automatically placed between\n
+            <code>&lt;h1&gt;</code>\n
+            tags.\n
+          </p><p>\n
+            The <span class="element">Slide type</span>\n
+            indicates the type of your slide. With this combo box, you will be able to choose the CSS class of this section. Let\'s go through the different types of chapters. First, the\n
+            <span class="element">No class</span>\n
+            type corresponds to a slide with text, it won\'t add any image to the chapter nor the slide even if you upload one. The\n
+            <span class="element">Chapter</span>\n
+            class corresponds to the name of a chapter, it will be displayed in the center of the screen. Then, comes the\n
+            <span class="element">Code</span>\n
+            type, use it if you want to display code lines in your tutorial. Just like the\n
+            <span class="element">Master</span>\n
+            , this won\'t add any image to the slide nor to the chapter. The\n
+            <span class="element">Illustration</span>\n
+            corresponds to a slide with an image. The content of the slide appear in the complete version of the tutorial, so this image will appear as well. Finally, the\n
+            <span class="element">Screenshot</span>\n
+            is similar to the\n
+            <span class="element">Illustration</span>\n
+            type. The only difference is that it adds a test with a line to capture a screenshot, even if\n
+            <span class="element">Does it contain a test?</span>\n
+            is not checked. you should write Is this slide a screenshot (a test with a screenshot will be automatically added).\n
+          </p><p>\n
+            Using the <span class="element">Upload an Image</span>\n
+            field, you can upload an image to this chapter. This function is useless for\n
+            <span class="element">Chapter</span>\n
+            and\n
+            <span class="element">Code</span>\n
+            classes. Even if you don\'t upload an image, the ERP5 Image Object will be created and visible in the\n
+            <span class="element">Contents</span>\n
+            view of your Test Page.\n
+          </p><p>\n
+            The <span class="element">Text</span>\n
+            field allows you to add a text to your slide. This text appears on\n
+            <dfn>BOTH</dfn>\n
+            the slide and in the web page version of the tutorial.\n
+          </p><p>\n
+            On the contrary, the <span class="element">Slide text</span>\n
+            allows you to your chapter and not to the slide. This text appears only in the web page version of the tutorial. Note that\n
+            <code>&lt;details&gt;</code>\n
+            tags will be automatically added before and after this text.\n
+          </p><p>\n
+            Checking <span class="element">Does it contain a test?</span>\n
+            will add a few basic Selenium Test lines in this chapter, hidden thanks to\n
+            <code>display: none;</code>\n
+            style argument. You can modify them later on so that the test matches to what is written in this chapter.\n
+          </p><p>\n
+            Once you have filled out this page, click on <span class="element">Add one more chapter</span>\n
+            to continue adding more chapters or on\n
+            <span class="element">Add this chapter and finish creation</span>\n
+            to add this last chapter.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_chapter_title</td>\n
+                <td>My first chapter</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifySelectOptions</td>\n
+                <td>field_your_slide_type</td>\n
+                <td>,Chapter,Screenshot,Illustration,Code</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>name=field_your_slide_type</td>\n
+                <td>Illustration</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_slide_content</td>\n
+                <td>My Slide text</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_text_content</td>\n
+                <td>Some text for my first paragraph.</td>\n
+              </tr>\n
+              <tr>\n
+                <td>click</td>\n
+                <td>name=field_your_tested</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Create.a.chapter.Your.first.chapter.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>id=dialog_submit_button</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_chapter_title</td>\n
+                <td>My second chapter</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>name=field_your_slide_type</td>\n
+                <td>Screenshot</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_slide_content</td>\n
+                <td>My second Slide text</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>name=field_your_text_content</td>\n
+                <td>Some text for my second paragraph.</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>id=dialog_update_button</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Your tutorial in ERP5: View tab</h1>\n
+        <img type="image/png" alt="" src="Your_tutorial_in_ERP5_View_tab_Screenshot?format=" title="Test Page View tab">\n
+        <details open="true">\n
+          <p>\n
+            In view mode, you can see a preview of what the web page version of your tutorial currently looks like. You will notice that the <code>&lt;details&gt;</code>\n
+            and\n
+            <code>&lt;test&gt;</code>\n
+            tags were automatically removed but that there content was kept. For this reason, the tables in which the tests are contained must be hidden. If you uploaded some images, you should see them below. Yet, if you checked\n
+            <span class="element">Is this image a screenshot?</span>\n
+            and did not upload an image, you shouldn\'t see anything right now. Indeed, the screenshots are generated when you launch a Selenium test. Then you must upload them manually.\n
+          </p><p>\n
+            Now click on <span class="element">Edit</span>\n
+            to access the Edit Tab.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Test Pages</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>My first tutorial</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>My first chapter</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>My second chapter</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Your.tutorial.in.ERP5.View.tab.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>storeLocation</td>\n
+                <td>test_page_url</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Your tutorial in ERP5: Edit tab</h1>\n
+        <img type="image/png" alt="" src="Your_tutorial_in_ERP5_Edit_tab_Screenshot?format=" title="Test Page Edit tab">\n
+        <details open="true">\n
+          <p>In edit mode, the actual content of your test page, the HTML source code, is displayed and editable. Make sure that you keep the same structure as before so that the test and slideshow editors as well as the actual selenium tests will work correctly. To save what you edited, you must click on the floppy disk on the top-right corner of the screen.</p><img alt="[image]" src="save_icon?format=" type="image/png" title="Save button" height="48px" width="48px">\n
+          <p>\n
+            After saving, if there were no problems, "Data updated." will be displayed on the top-left corner of the screen. Please, click on <span class="element">Contents</span>\n
+            to access the Contents Tab.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//div[@id=\'master\']/div/div/ul/li[2]/a/span</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Substitution Mapping Method ID</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Your.tutorial.in.ERP5.Edit.tab.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Your tutorial in ERP5: Contents tab</h1>\n
+        <img type="image/png" alt="" src="Your_tutorial_in_ERP5_Contents_tab_Screenshot?format=" title="Test Page Contents tab">\n
+        <details open="true">\n
+          <p>\n
+            In the <span class="element">Contents</span>\n
+            tab, you can see the Image objects created while you were filling in the wizard. You can add new images by clicking on the\n
+            <span class="element">Action...</span>\n
+            list field located on the top and by selecting\n
+            <span class="element">Add Image</span>\n
+            just like with ERP5 Web Pages.\n
+          </p><p>\n
+            If you have already use ERP5 Web Page Module, then you already knew how to use the View, Edit, and Contents tab. Now let\'s move on to the Test Page-specific tabs. Please click on <span class="element">Edit Slideshow</span>\n
+            to proceed to the Slideshow editor.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//div[@id=\'master\']/div/div/ul/li[7]/a/span</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Your.tutorial.in.ERP5.Contents.tab.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Slideshow editor</h1>\n
+        <img type="image/png" src="Slideshow_editor_Screenshot?format=" title="Slideshow editor">\n
+        <details open="true">\n
+          <p>\n
+            In the <span class="element">Edit Slideshow</span>\n
+            tab, you can see all the slides contained in your tutorial. You can change the order of your slides just by drag and dropping them. Click on one of the slides, hold the mouse button, and move it to its new position. To remove a slide, just click on\n
+            <img src="remove_slide_button?format=" style="width: 16px; height: 16px;" type="image/png">\n
+            located on the top-right corner of each slide. You can edit a slide by clicking on\n
+            <img src="edit_slide_button?format=" style="width: 16px; height: 16px;" type="image/png">\n
+            which is on the top-left corner of each slide. You can add new slides just by clicking on the\n
+            <span class="element">Add slide</span>\n
+            . The contents of the dialog box to create or edit a slide is similar to the form used to create a chapter in the wizard. The changes won\'t have any effect as long as you haven\'t clicked on the Save button on the top-right corner of the screen.\n
+          </p><p>The test of each chapter will be moved along with the chapter. Make sure that moving the chapters won\'t ruin the tests.</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//div[@id=\'master\']/div/div/ul/li[4]/a/span</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Slideshow.editor.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Display the slideshow</h1>\n
+        <img type="image/png" src="Display_the_slideshow_Screenshot?format=" title="Slideshow example">\n
+        <details open="true">\n
+          <p>\n
+            To see what the slideshow contained in this Test Page looks like, just click on this button <img src="slideshow_icon?format=" type="image/png">\n
+            located on the top. What you see in this slideshow is the contents of each section except what is located\n
+            <code>&lt;details&gt;</code>\n
+            and\n
+            <code>&lt;test&gt;</code>\n
+            tags.\n
+          </p><p>\n
+            To move between the slide, you can use the left and right keys of your keyboard. If there are contents overflows, use the up and down keys of your keyboard to see the rest of the slide. Go back to your Test Page and click on <span class="element">Edit Test</span>\n
+            to proceed to the test editor.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>css=img[alt="See slideshow"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>pause</td>\n
+                <td>1000</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Display.the.slideshow.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Book chapter generator</h1>\n
+        <img type="image/png" src="Book_chapter_generator_Screenshot?format=" title="Viewing a preview of your chapter in book">\n
+        <details open="true">\n
+          <p>\n
+            You might want to use this interface to create books or simply to create a nice PDF version of your tutorial. It\'s possible to have a preview and to export it by clicking on the exchange button <img src="exchange_button?format=" type="image/png">\n
+          </p><p>In the menu Export Web Page, you should see your Test Page content in this form. If you want to see it in fullscreen, just click on See as a Book Chapter</p><p>To export it to PDF, you should first (once the page was completly loaded), click on Clean HTML. This will remove uncessary tags to be able to use it in Prince. All you have to do now is to copy/paste the content of the text area HTML Content into an html file and to download every image and css style sheets and to put them into the same folder. To download images quicker, just save the page with your web browser and then check the names of the file.</p><p>\n
+            Finally, you will have to download Prince (<a href="http://www.princexml.com/">http://www.princexml.com/</a>). It is a HTML to PDF converter, you can download it a free version on the official website. Once downloaded, open a terminal and use this command line:\n
+          </p><p>\n
+            <code>\n
+              prince <i>PATH/TO/YOUR/FILE.html</i> -o output.pdf\n
+            </code>\n
+          </p><p>You should have an output.pdf in the current folder if you have the rights to write in it.</p><p>Now, back in your web browser, let\'s click on Edit Test and see the test editor</p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>open</td>\n
+                <td>${test_page_url}</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>css=a.import_export &gt; span.image</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>pause</td>\n
+                <td>1000</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Chapter.generator.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Test editor (Web Page Only)</h1>\n
+        <img alt="Test editor" type="image/png" src="Test_editor_Screenshot?format=" title="Test editor">\n
+        <details open="open">\n
+          <p>\n
+            In the <span class="element">Edit Test</span>\n
+            tab, you can see the test tables contained in each chapter of your tutorial. You may want to change the order of the test instructions. In order to do so, you just to drap and drop the test instruction. If you want to add a test instruction, you just have to click on\n
+            <span class="element">Add test instruction</span>\n
+            . Each test instruction corresponds to a selenium test line. The first column is the function, and the two following are the arguments of this function. Please refer to Selenium core reference for more resources on the matter.\n
+          </p><p>\n
+            You can also add a TAL instruction by clicking on <span class="element">Add metal instruction</span>\n
+            . This will be process by the server before the test run. It allows you to make your tests dynamic. See TAL/TALES &amp; METAL Reference Guide for more information.\n
+          </p><p>\n
+            To remove a line, just click on <img src="remove_slide_button?format=" type="image/png">\n
+            . If you just want to edit a line, click on\n
+            <img src="edit_slide_button?format=" type="image/png">\n
+            . Do not forget to validate the changes you made the test lines by clicking\n
+            <img src="save_icon?format=" style="width: 22px; height: 22px;" type="image/png">\n
+            before saving by clicking on the Save button located on the top-right corner of the screen.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table style="display: none;" class="test" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>open</td>\n
+                <td>${test_page_url}</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//div[@id=\'master\']/div/div/ul/li[5]/a/span</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Test.editor.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Selenium Test and reports: Launch a Selenium Test</h1>\n
+        <img type="image/png" alt="" src="Selenium_Test_and_reports_Launch_a_Selenium_Test_Screenshot?format=" title="Selenium Test Environment">\n
+        <details open="true">\n
+          <p>\n
+            To launch the Selenium test contained in this page, just click on this button <img src="launch_icon?format=" type="image/png">\n
+            located on the top. It is better to open this in a new window or in a new tab, in order not to lose the location of your Test Page in ERP5.\n
+          </p><p>Each time you run a test using this button, a new Zuite (a folder containing several selenium test) will be generated using the reference of your Test Page. If a Zuite with the same name already exists, its current contents, including the test reports, will be erased and replaced by a new test.</p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//img[@alt=\'Launch Test\']</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Selenium TestRunner</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Selenium_Test_and_reports_Launch_a_Selenium_Test_Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>waitForElementPresent</td>\n
+                <td>class=title status_passed</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>pause</td>\n
+                <td>5000</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Selenium Test and reports: Updating test report</h1>\n
+        <img type="image/png" alt="" src="Selenium_Test_and_reports_Updating_test_report_Screenshot?format=" title="Uploading a test report">\n
+        <details open="true">\n
+          <p>\n
+            In the <span class="element">Test Report</span>\n
+            tab, you should now be able to see the report of the last test. You may now want to download this report in order to print it for example. Now, click once again on\n
+            <img src="report_icon?format=" type="image/png">\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>open</td>\n
+                <td>${test_page_url}</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Test Pages</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>name=Base_doReport:method</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>This will upload the report of the latest test run.</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Selenium.Test.and.reports.Updating.test.report.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>id=dialog_submit_button</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Selenium Test and reports: Test Report tab</h1>\n
+        <img type="image/png" alt="" src="Selenium_Test_and_reports_Test_Report_tab_Screenshot?format=" title="An example of test report">\n
+        <details open="true">\n
+          <p>\n
+            In the <span class="element">Test Report</span>\n
+            tab, you should now be able to see the report of the last test. You may now want to download this report in order to print it for example. Now, click once again on\n
+            <img src="report_icon?format=" type="image/png">\n
+            .\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Test Pages</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Selenium.Test.and.reports.Test.Report.tab.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section><section class="screenshot">\n
+        <h1>Selenium Test and reports: Downloading reports</h1>\n
+        <img title="" type="image/png" alt="" src="Selenium_Test_and_reports_Downloading_reports_Screenshot?format=">\n
+        <details open="true">\n
+          <p>\n
+            Let\'s imagine you want to upload your test report in PDF format. Choose <span class="element">Download test report</span>\n
+            , choose an\n
+            <span class="element">Export Format</span>\n
+            (in this example,\n
+            <span class="element">PDF - Portable Document Format</span>\n
+            ) and click on\n
+            <span class="element">Export test report</span>\n
+            . You will be prompted to download your test report in the requested format.\n
+          </p>\n
+        </details>\n
+        <test>\n
+          <table class="test" style="display: none;" border="1" cellpadding="1" cellspacing="1">\n
+            <tbody>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>name=Base_doReport:method</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>This will upload the report of the latest test run.</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>id=dialog_selector</td>\n
+                <td>label=Download test report</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Export Format</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>name=field_your_format</td>\n
+                <td>label=PDF - Portable Document Format</td>\n
+              </tr>\n
+              <tr>\n
+                <td>captureEntirePageScreenshot</td>\n
+                <td>Selenium.Test.and.reports.Downloading.reports.Screenshot</td>\n
+                <td></td>\n
+              </tr>\n
+            </tbody>\n
+          </table>\n
+        </test>\n
+      </section>\n
+    
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>How To use RunMyDoc to write your own Tests and Tutorials</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479063.8</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>share_alive_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330007750.69</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>share_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330007750.69</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>shared_alive</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>release_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1352912375.45</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>released_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20164.31593.1553</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="7.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328675020.83</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20167.44866.26077</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328675236.32</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.42381.12235.27409</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1330007871.3</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.42381.56465.9984</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1331669045.15</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>rafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>917.7412.5858.17373</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1331697026.09</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479063.79</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global id="9.1" name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479063.79</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.4413.42939</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479101.29</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.45840.40635</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479114.25</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.59467.55364</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479592.23</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.59467.55364</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479672.48</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.59467.55364</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479805.72</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.235.59467.55364</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479830.46</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.247.55374.921</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327479859.61</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.247.55374.921</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327480850.3</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.247.55374.921</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1327488681.66</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.247.55374.921</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673001.7</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20134.2844.41454</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673025.02</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20134.27975.46643</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673652.03</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20144.57472.58368</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673726.2</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20146.7333.35430</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673869.32</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superrafael</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>916.20148.32264.41710</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="9.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1328673909.28</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
