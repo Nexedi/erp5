@@ -30,7 +30,6 @@
 import os
 import sys
 import time
-import signal
 import re
 import subprocess
 import shutil
