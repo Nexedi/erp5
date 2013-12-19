@@ -1,5 +1,3 @@
-test_page_module/book-BaoBab.Offer
-test_page_module/book-BaoBab.Offer/**
 test_page_module/developer-How.to.Host.Static.Web.Sites.in.SlapOS
 test_page_module/developer-How.to.Host.Static.Web.Sites.in.SlapOS/**
 test_page_module/developer-Howto.HTML5.to.Book
@@ -10,8 +8,6 @@ test_page_module/developer-Howto.Review
 test_page_module/developer-Howto.Review/**
 test_page_module/developer-Howto.RunMyDoc.Test.Page
 test_page_module/developer-Howto.RunMyDoc.Test.Page/**
-test_page_module/developer-Howto.Screenshots.Selenium.Tests
-test_page_module/developer-Howto.Screenshots.Selenium.Tests/**
 test_page_module/developer-Test.Page.Sample
 test_page_module/developer-Test.Page.Sample/**
 test_page_module/howto-Create.New.User
@@ -44,8 +40,6 @@ test_page_module/user-Howto.Create.Trade.Conditions
 test_page_module/user-Howto.Create.Trade.Conditions/**
 test_page_module/user-Howto.Create.and.Manage.Products
 test_page_module/user-Howto.Create.and.Manage.Products/**
-test_page_module/user-Howto.Generate.Report
-test_page_module/user-Howto.Generate.Report/**
 test_page_module/user-Howto.Link.Persons.and.Organisations
 test_page_module/user-Howto.Link.Persons.and.Organisations/**
 test_page_module/user-Howto.Manage.Invoices

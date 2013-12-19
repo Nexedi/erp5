@@ -1,9 +1,5 @@
 test_page_module/developer-Howto.RunMyDoc.Test.Page
 test_page_module/developer-Howto.RunMyDoc.Test.Page/**
-test_page_module/developer-Howto.Screenshots.Selenium.Tests
-test_page_module/developer-Howto.Screenshots.Selenium.Tests/**
-test_page_module/book-BaoBab.Offer
-test_page_module/book-BaoBab.Offer/**
 test_page_module/developer-Howto.Review
 test_page_module/developer-Howto.Review/**
 test_page_module/developer-How.to.Host.Static.Web.Sites.in.SlapOS
@@ -42,8 +38,6 @@ test_page_module/user-Howto.Create.A.Payment
 test_page_module/user-Howto.Create.A.Payment/**
 test_page_module/user-Howto.Create.Purchase.Transactions
 test_page_module/user-Howto.Create.Purchase.Transactions/**
-test_page_module/user-Howto.Generate.Report
-test_page_module/user-Howto.Generate.Report/**
 test_page_module/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator
 test_page_module/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator/**
 test_page_module/user-Howto.Create.Bank.Account
