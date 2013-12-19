@@ -460,7 +460,7 @@
               <tr>\n
                 <td>verifyText</td>\n
                 <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-                <td>Open</td>\n
+                <td>Opened</td>\n
               </tr>\n
               <tr style="opacity: 1;">\n
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager"&gt;Login As Manager&lt;/span&gt;</td>\n
