@@ -1764,28 +1764,34 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
+    self.assertEquals(3, len(relative_url_list))
     mail_message.setDestinationList(relative_url_list)
     mail_message.setSource(relative_url_list[0])
     mail_text_content = "Body Text Content"
     mail_message.setTextContent(mail_text_content)
-    self.portal.portal_workflow.doActionFor(mail_message, "start_action")
-    self.tic()
-    mail_message.Event_send(packet_size=2)
+    # directly call MailMessage_send to pass a packet size of 1, so that we
+    # have one activity per recipient
+    mail_message.MailMessage_send(packet_size=1)
     self.commit()
     portal_activities = self.portal.portal_activities
-    portal_activities.manageInvoke(object_path=mail_message.getPath(), method_id='Event_sendByActivity')
+    portal_activities.manageInvoke(object_path=mail_message.getPath(),
+      method_id='immediateReindexObject')
+    portal_activities.manageInvoke(object_path=mail_message.getPath(),
+      method_id='MailMessage_sendByActivity')
     self.commit()
     message_list = [i for i in portal_activities.getMessageList() \
                     if i.kw.has_key("event_relative_url")]
     try:
-      self.assertEquals(2, len(message_list))
+      # 3 recipients -> 3 activities
+      self.assertEquals(3, len(message_list))
     finally:
       self.tic()
-    last_message = self.portal.MailHost._last_message
-    self.assertTrue(mail_text_content in last_message[-1])
-    message = message_from_string(last_message[-1])
-    last_message_date = DateTime(message.get("Date"))
-    self.assertTrue(last_message_date.isCurrentDay())
+
+    self.assertEquals(3, len(self.portal.MailHost._message_list))
+    for message_info in self.portal.MailHost._message_list:
+      self.assertTrue(mail_text_content in message_info[-1])
+      message = message_from_string(message_info[-1])
+      self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
 
   def test_MailMessage_send_simple_case(self):
     """

@@ -131,19 +131,12 @@ if download or not use_activity:\n
       context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
 \n
 if use_activity:\n
-  destination_list = context.getDestinationValueList()\n
-  path_list = [x.getPath() for x in destination_list]\n
-  uid_list = [x.getUid() for x in destination_list]\n
   method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
-    from_url=from_url,\n
-    attachment_list=attachment_list)\n
+                   from_url=from_url,\n
+                   attachment_list=attachment_list)\n
   context.activate(\n
-    after_path_and_method_id=(path_list, \n
-      # XXX Event_sendByActivity only applies to Mail Message at the moment.\n
-      # We should either renamted it to MailMessage_ or make this logic available to \n
-      # all kind of events.\n
-                              (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).Event_sendByActivity(\n
-    uid_list=uid_list,\n
+    after_path_and_method_id=((context.getPath(),), \n
+                              (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).MailMessage_sendByActivity(\n
     method_kw=method_kw, **kw)\n
 \n
 if download:\n

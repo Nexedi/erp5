@@ -52,13 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>context.getPortalObject().portal_catalog.searchAndActivate(\n
   method_id="Entity_sendEmail",\n
-  uid=uid_list,\n
+  destination_related_uid=context.getUid(),\n
   method_kw=method_kw, **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uid_list, method_kw, **kw</string> </value>
+            <value> <string>method_kw, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -70,7 +70,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_sendByActivity</string> </value>
+            <value> <string>MailMessage_sendByActivity</string> </value>
         </item>
       </dictionary>
     </pickle>
