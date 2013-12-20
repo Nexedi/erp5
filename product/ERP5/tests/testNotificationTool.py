@@ -125,6 +125,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     if 'MailHost' in portal.objectIds():
       portal.manage_delObjects(['MailHost'])
     portal._setObject('MailHost', DummyMailHost('MailHost'))
+    self.portal.MailHost.reset()
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
     self.tic()
@@ -464,8 +465,7 @@ Yes, I will go."""
     self.portal.portal_notifications.sendMessage(
         recipient='userA', subject='Subject',
         message_text_format='text/html', message=message)
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    last_message, = self.portal.MailHost._message_list
     mfrom, mto, messageText = last_message
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
@@ -514,8 +514,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
                                   subject='Subject',
                                   message='Message')
     self.tic()
-    last_message = self.portal.MailHost._last_message
-    self.assertNotEquals((), last_message)
+    last_message, = self.portal.MailHost._message_list
     mfrom, mto, messageText = last_message
     mail_dict = decode_email(messageText)
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)

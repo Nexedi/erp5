@@ -1030,7 +1030,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
-    last_message = self.portal.MailHost._last_message
+    last_message, = self.portal.MailHost._message_list
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
@@ -1097,6 +1097,7 @@ class TestCRMMailSend(BaseTestCRM):
 
       self.tic()
       # this means no message have been set
+      self.assertEquals([], self.portal.MailHost._message_list)
       self.assertEquals((), self.portal.MailHost._last_message)
 
   def test_MailMessageHTML(self):
@@ -1786,21 +1787,23 @@ class TestCRMMailSend(BaseTestCRM):
     last_message_date = DateTime(message.get("Date"))
     self.assertTrue(last_message_date.isCurrentDay())
 
-  def test_MailMessage_Event_send_simple_case(self):
+  def test_MailMessage_send_simple_case(self):
     """
-      Check that the script Event_send send one email passing all parameters directly
+      Check that the method send send one email passing all parameters directly
       from_url, to_url, reply_url, subject, body, attachment_format, attachment_list
     """
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     self.tic()
-    mail_message.Event_send(from_url='FG ER <eee@eee.com>',
-                            to_url='Expert User <expert@in24.test>',
-                            subject="Simple Case",
-                            body="Body Simple Case",
-                            attachment_list=[])
+    mail_message.send(from_url='FG ER <eee@eee.com>',
+                      to_url='Expert User <expert@in24.test>',
+                      subject="Simple Case",
+                      body="Body Simple Case",
+                      attachment_list=[])
     self.tic()
-    last_message = self.portal.MailHost._last_message[-1]
+    (from_url, to_url, last_message,), = self.portal.MailHost._message_list
     self.assertTrue("Body Simple Case" in last_message)
+    self.assertEquals('FG ER <eee@eee.com>', from_url)
+    self.assertEquals(['Expert User <expert@in24.test>'], to_url)
 
 
 def test_suite():
