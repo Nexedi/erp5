@@ -290,6 +290,9 @@ class NotificationTool(BaseTool):
     if not isinstance(notifier_list, (tuple, list)):
       raise TypeError("Notifier list must be a list of portal types")
 
+    if not subject:
+      raise TypeError("subject is required")
+
     # Find "From" Person
     from_person = None
     if isinstance(sender, basestring):
