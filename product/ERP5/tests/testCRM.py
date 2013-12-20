@@ -1169,8 +1169,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1179,7 +1178,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1226,7 +1225,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1272,7 +1271,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1318,7 +1317,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1365,7 +1364,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1407,7 +1406,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='incoming')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                text_content='This is an advertisement mail.')
@@ -1463,7 +1462,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document_txt.getRelativeUrl(),
@@ -1521,7 +1520,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document_gif.getRelativeUrl(),
