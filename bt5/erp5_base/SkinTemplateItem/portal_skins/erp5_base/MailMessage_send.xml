@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Send a mail message.\n
 \n
-This script is used by notification tool, that\'s why it is in erp5_base.\n
+This script is also used by notification tool, that\'s why it is in erp5_base.\n
 """\n
 \n
 from email.utils import formataddr\n
