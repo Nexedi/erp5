@@ -361,9 +361,10 @@ class NotificationTool(BaseTool):
       event_list.append(event)
 
     for event in event_list:
-      # XXX: this uses too low level API, instead event_workflow should be used in case 
-      # of persistent ERP5 objects
-      event.send(**low_level_kw)
+      if event.isTempObject():
+        event.send(**low_level_kw)
+      else:
+        event.start(**low_level_kw)
 
     return
     # Future implementation could consist in implementing
