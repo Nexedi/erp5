@@ -65,6 +65,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_web', 'erp5_dms', 'erp5_credential',
             'erp5_rss_style', 'erp5_discussion',
             'erp5_l10n_fr', 'erp5_crm',
+            'erp5_accounting_ui_test',
             'erp5_user_tutorial_ui_test',
             'erp5_configurator_standard_ui_test',
             'erp5_run_my_doc',
