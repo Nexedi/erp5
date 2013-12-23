@@ -68,24 +68,6 @@ class MailMessage(Event):
                     , PropertySheet.MailMessage
                     )
 
-  def send(self, from_url=None, to_url=None, msg=None, subject=None):
-    """
-      Sends a reply to this mail message.
-    """
-    # We assume by default that we are replying to the sender
-    if from_url is None:
-      from_url = self.getUrlString()
-    if to_url is None:
-      to_url = self.getSender()
-    if msg is not None and subject is not None:
-      header  = "From: %s\n"    % from_url
-      header += "To: %s\n\n"    % to_url
-      header += "Subject: %s\n" % subject
-      header += "\n"
-      msg = header + msg
-      self.MailHost.send( msg )
-
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
   def getTextContent(self, default=_MARKER):
     """
