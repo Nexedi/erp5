@@ -348,13 +348,17 @@ class NotificationTool(BaseTool):
       event_keyword_argument_dict = {}
     for notifier in notifier_list:
       if notifier in available_notifier_list:
-        event = self.getDefaultModule(notifier).newContent(portal_type=notifier,
+        event = portal.getDefaultModule(notifier).newContent(portal_type=notifier,
                                                            temp_object=not store_as_event,
                                                            **event_keyword_argument_dict)
       else:
-        from Products.ERP5Type.Document import newTempEvent
-        event = newTempEvent(self, '_',
-                             **event_keyword_argument_dict)
+        # portal type does not exist, likely erp5_crm is not installed. Try to
+        # import the class with the same name.
+        from Products.ERP5Type import Document as document_module
+        constructor = getattr(document_module,
+          'newTemp%s' % notifier.replace(' ', ''))
+        event = constructor(self, '_', **event_keyword_argument_dict)
+
       event.setSourceValue(from_person)
       event.setDestinationValueList(to_person_list)
       event.setTitle(subject)
