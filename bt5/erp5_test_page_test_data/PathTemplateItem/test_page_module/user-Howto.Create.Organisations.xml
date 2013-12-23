@@ -227,7 +227,7 @@
           <p>You will find our client Z Company in the Organisation Module. Click on the line to open the organisation.</p>\n
         </details>\n
       </section><section class="screenshot">\n
-        <!-- <h1>Click on “Organisations”</h1>\n
+        <h1>Click on “Organisations”</h1>\n
         <img title="Add organisations: Click on \'Organisations\'" src="http://www.erp5.com/user-Howto.Add.Organisations.ERP5.Express.Menu.Organisations.Screenshot?format=png" alt="Add organisations: Click on \'Organisations\'">\n
         <details open="open">\n
           <p>Once the "new" tab is open, click on “organisation” to create an organisation. This will create and save a new organisation.</p><p>You will now be led to the details page of the organisation you just created. As you can see, there are many fields to fill, which allow you to be really precise about the different organisations stored in ERP5.</p><p>Once the creation tab is open, click on “organisation” to create an organisation. This will create and save a new organisation.</p>\n
@@ -253,7 +253,7 @@
             </tbody>\n
           </table>\n
         </test>\n
-      </section><section class="screenshot"> -->\n
+      </section><section class="screenshot">\n
         <h1>Fill the “view” tab and save</h1>\n
         <img alt="Add organisations: Fill the \'View\' page and save" src="http://www.erp5.com/user-Howto.Add.Organisations.View.Save?format=png" title="Add organisations: Fill the \'View\' page and save">\n
         <details open="open">\n
