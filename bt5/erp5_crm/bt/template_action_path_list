@@ -10,6 +10,7 @@ Campaign | jump_related_event
 Campaign | mass_emailing_report
 Campaign | new_event
 Campaign | view
+Campaign | view_communication_plan
 Campaign | view_details
 Event Module | event_activity
 Event Module | event_detailed_report
@@ -37,10 +38,13 @@ Meeting Module | meeting_detailed_report
 Meeting Module | meeting_status
 Meeting Module | view
 Meeting | clone_ticket_and_event_list
+Meeting | create_event_from_event_path
 Meeting | create_new_file
 Meeting | document_list
+Meeting | mass_emailing_report
 Meeting | new_event
 Meeting | view
+Meeting | view_communication_plan
 Note | assessment
 Note | create_response
 Note | preview

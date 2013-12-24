@@ -79,7 +79,7 @@
                       <list>
                         <tuple>
                           <string>total_event_sent</string>
-                          <string>Number of events sent</string>
+                          <string>Number of Events Sent</string>
                         </tuple>
                         <tuple>
                           <string>total_event_received</string>
@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Campaign_getMassEmailingEventReportLineList</string> </value>
+            <value> <string>Ticket_getMassEmailingEventReportLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

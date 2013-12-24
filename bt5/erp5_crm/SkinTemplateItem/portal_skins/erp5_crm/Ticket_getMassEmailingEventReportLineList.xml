@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
 \n
 count = portal.portal_catalog.countResults\n
 \n
@@ -63,14 +65,18 @@ total_opened = count(follow_up_uid=context.getUid(), \n
 total_read = count(follow_up_uid=context.getUid(), \n
   portal_type="Mail Message", simulation_state="delivered")[0][0]\n
 \n
-line = context.newContent(temp_object=1, total_event_sent=total_events, \n
-  total_event_received=total_opened, \n
-  total_event_received_percent=float(total_opened)/float(total_events)*100, \n
-  total_event_delivered=total_read,\n
-  total_event_delivered_percent=float(total_read)/float(total_events)*100)\n
-\n
-return line,\n
-</string> </value>
+if total_events > 0:\n
+  line = context.newContent(temp_object=1, total_event_sent=total_events, \n
+    total_event_received=total_opened, \n
+    total_event_received_percent=float(total_opened)/float(total_events)*100, \n
+    total_event_delivered=total_read,\n
+    total_event_delivered_percent=float(total_read)/float(total_events)*100)\n
+  return line,\n
+else:\n
+  return []\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -86,7 +92,7 @@ return line,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Campaign_getMassEmailingEventReportLineList</string> </value>
+            <value> <string>Ticket_getMassEmailingEventReportLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -18,6 +18,9 @@
   <item>Visit</item>
   <item>Web Message</item>
  </portal_type>
+ <portal_type id="Meeting">
+  <item>Event Path</item>
+ </portal_type>
  <portal_type id="Meeting Module">
   <item>Meeting</item>
  </portal_type>
