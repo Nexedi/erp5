@@ -200,7 +200,31 @@
         </details>\n
         <test>\n
           <table class="test" style="display: none;">\n
-            <tbody></tbody>\n
+            <tbody>
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/Zuite_setUpCreateEventTest</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Init Ok</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr class="" style="opacity: 1;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user"&gt;Login As Functional Test User&lt;/span&gt;</td>\n
+              </tr>\n
+            </tbody>\n
           </table>\n
         </test>\n
       </section><section class="screenshot">\n
@@ -215,6 +239,13 @@
         <test>\n
           <table class="test" style="display: none;">\n
             <tbody>\n
+              <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td>\n
+                  <br>\n
+                </td>\n
+              </tr>\n
               <tr>\n
                 <td>selectAndWait</td>\n
                 <td>//select[@name="select_module"]</td>\n
@@ -472,7 +503,7 @@
               <tr style="opacity: 1; z-index: 0;">\n
                 <td>verifyText</td>\n
                 <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-                <td>Open</td>\n
+                <td>Opened</td>\n
               </tr>\n
             </tbody>\n
           </table>\n
@@ -554,6 +585,26 @@
               </tr>\n
               <tr style="opacity: 1;">\n
                 <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-CREATE-EVENT-EVENT-001\'],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_source_title"]</td>\n
+                <td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//textarea[@name="field_my_destination_title_list"]</td>\n
+                <td>ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Data updated.</td>\n
+                <td></td>\n
               </tr>\n
               <tr>\n
                 <td>selectAndWait</td>\n

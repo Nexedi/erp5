@@ -280,7 +280,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               <tr>\n
                 <td>type</td>\n
                 <td>//textarea[@name="field_my_specialise_title_list"]</td>\n
-                <td>Default Trade Business Process</td>\n
+                <td>erp5_default_business_process</td>\n
               </tr>\n
               <tr>\n
                 <td>type</td>\n
@@ -337,6 +337,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <td>//input[@name="Base_edit:method"]</td>\n
                 <td></td>\n
               </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Data updated.</td>\n
+                <td></td>\n
+              </tr>\n
             </tbody>\n
           </table>\n
         </test>\n
@@ -383,6 +388,26 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                 <td>link=Payment</td>\n
                 <td></td>\n
               </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_payment_condition_payment_mode"]</td>\n
+                <td>Cash</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_my_payment_condition_trade_date"]</td>\n
+                <td>Invoice</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//input[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Data updated.</td>\n
+                <td></td>\n
+              </tr>\n
             </tbody>\n
           </table>\n
         </test>\n
@@ -425,6 +450,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               <tr>\n
                 <td>clickAndWait</td>\n
                 <td>//input[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Data updated.</td>\n
                 <td></td>\n
               </tr>\n
             </tbody>\n
@@ -474,6 +504,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
           <table class="test" style="display: none;">\n
             <tbody>\n
               <tr>\n
+                <td>clickAndWait</td>\n
+                <td>link=default_payment_condition</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
                 <td>type</td>\n
                 <td>//input[@name="field_my_title"]</td>\n
                 <td>ZUITE-TEST-PAYMENT-CONDITION-001</td>\n
@@ -486,6 +521,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               <tr style="opacity: 1;">\n
                 <td>clickAndWait</td>\n
                 <td>//input[@name="Base_edit:method"]</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td>verifyTextPresent</td>\n
+                <td>Data updated.</td>\n
                 <td></td>\n
               </tr>\n
             </tbody>\n
