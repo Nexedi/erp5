@@ -112,6 +112,16 @@ if isTransitionPossible(pref, \'enable\'):\n
 \n
 pref.setPreferredTextEditor(\'text_area\')\n
 \n
+sys_pref = getattr(context.portal_preferences, howto_dict[\'howto_preference_id\'], None)\n
+if pref is None:\n
+  sys_pref = context.portal_preferences.newContent(portal_type="System Preference",\n
+                       preferred_event_sender_email=("test@nexedi.com",),\n
+                       id=howto_dict[\'howto_sys_preference_id\'])\n
+\n
+sys_pref.setPreferredEventSenderEmail("test@nexedi.com",)\n
+if isTransitionPossible(sys_pref, \'enable\'):\n
+  sys_pref.enable()\n
+\n
 context.portal_caches.clearAllCache()\n
 \n
 return "Init Ok"\n

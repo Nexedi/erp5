@@ -162,6 +162,7 @@ return {\'now\': DateTime(),\n
         \'outgoing_event_howto_ticket_comment\': \'ZUITE-TEST-OUTGOING-EVENT-TICKET-COMMENT This is a comment of a ticket\',\n
         \'outgoing_event_howto_ticket_content\': \'ZUITE-TEST-OUTGOING-EVENT-TICKET-CONTENT This is the content of the ticket\',\n
         \'howto_preference_id\': \'zuite_erp5_ui_test_preference\',\n
+        \'howto_system_preference_id\': \'zuite_erp5_ui_test_system_preference\',\n
         \'full_text_person_title\': \'ZUITE_TEST_FULL_TEXT_PERSON_TITLE_001\',\n
         \'full_text_person_reference\': \'ZUITE_TEST_FULL_TEXT_PERSON_REFERENCE_001\',\n
         \'full_text_person_email\': \'ZUITE_TEST_FULL_TEXT_PERSON_REFERENCE_001@tiolive.com\',\n
