@@ -272,6 +272,11 @@
           <table style="display: none;" class="test">\n
             <tbody>\n
               <tr>\n
+                <td>openAndWait</td>\n
+                <td>${base_url}/view</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
                 <td>clickAndWait</td>\n
                 <td>//div[@id="breadcrumb"]/a[3]</td>\n
                 <td></td>\n
