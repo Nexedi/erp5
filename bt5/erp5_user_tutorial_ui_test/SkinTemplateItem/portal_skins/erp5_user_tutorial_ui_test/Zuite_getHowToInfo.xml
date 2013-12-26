@@ -89,6 +89,8 @@ return {\'now\': DateTime(),\n
         \'product_howto_currency_tag\': \'EUR\',\n
         \'sale_howto_product_title\': \'ZUITE-TEST-SALEORDER-PRODUCT-001\',\n
         \'sale_howto_organisation_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-001\',\n
+        \'sale_howto_bank_account_title\': \'Main account\',\n
+        \'sale_howto_bank_account_reference\': \'0123456789 0123456789\',\n
         \'sale_howto_organisation2_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-002\',\n
         \'sale_howto_organisation3_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-003\',\n
         \'sale_howto_person_title\': \'ZUITE-TEST-SALEORDER USER-001\',\n
