@@ -277,14 +277,22 @@
                 <td></td>\n
               </tr>\n
               <tr>\n
-                <td>clickAndWait</td>\n
-                <td>//div[@id="breadcrumb"]/a[3]</td>\n
-                <td></td>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_module"]</td>\n
+                <td>Organisations</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-SALEORDER-ORGANISATION-001\'],), enter_object=True)"/&gt;</td>\n
               </tr>\n
               <tr>\n
-                <td>verifyTextPresent</td>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Organisations</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[3]</td>\n
                 <td>ZUITE-TEST-SALEORDER-ORGANISATION-001</td>\n
-                <td></td>\n
               </tr>\n
               <tr>\n
                 <td>clickAndWait</td>\n
@@ -324,6 +332,29 @@
                 <td>verifyText</td>\n
                 <td>//div[@id="breadcrumb"]/a[2]</td>\n
                 <td>Sale Packing Lists</td>\n
+              </tr>\n
+              <tr style="opacity: 1;">\n
+                <td colspan="3">&lt;tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', \'ZUITE-TEST-SALEORDER-PRODUCT-001\'],), enter_object=True)"/&gt;</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[2]</td>\n
+                <td>Sale Packing Lists</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyText</td>\n
+                <td>//div[@id="breadcrumb"]/a[3]</td>\n
+                <td>ZUITE-TEST-SALEORDER-PRODUCT-001</td>\n
+              </tr>\n
+              <tr>\n
+                <td>selectAndWait</td>\n
+                <td>//select[@name="select_jump"]</td>\n
+                <td>Related Sale Invoice Transaction</td>\n
+              </tr>\n
+              <tr>\n
+                <td>verifyTextPresent</td>\n
+                <td>Sale Invoice Transaction related to Sale Packing List : ZUITE-TEST-SALEORDER-PRODUCT-001.</td>\n
+                <td></td>\n
               </tr>\n
             </tbody>\n
           </table>\n
