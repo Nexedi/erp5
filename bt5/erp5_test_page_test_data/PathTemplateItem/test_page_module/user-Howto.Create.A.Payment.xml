@@ -391,6 +391,11 @@
               </tr>\n
               <tr>\n
                 <td>select</td>\n
+                <td>//select[@name="field_your_node"]</td>\n
+                <td>Bank</td>\n
+              </tr>\n
+              <tr>\n
+                <td>select</td>\n
                 <td>//select[@name="field_your_payment"]</td>\n
                 <td>0123456789 0123456789 - Main account</td>\n
               </tr>\n
