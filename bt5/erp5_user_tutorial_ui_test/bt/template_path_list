@@ -20,3 +20,4 @@ portal_categories/quantity_unit/unit/**
 portal_categories/region/brazil
 portal_categories/role/**
 portal_categories/use/test_functional_incoming_service
+account_module/**
