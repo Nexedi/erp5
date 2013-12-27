@@ -391,7 +391,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               <tr>\n
                 <td>select</td>\n
                 <td>//select[@name="field_my_payment_condition_payment_mode"]</td>\n
-                <td>Cash</td>\n
+                <td>Credit Card</td>\n
               </tr>\n
               <tr>\n
                 <td>select</td>\n
