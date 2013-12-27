@@ -26,7 +26,10 @@ from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
 from SQLCatalog import CatalogError
 from AccessControl import ClassSecurityInfo
-from AccessControl.DTML import RestrictedDTML
+try:
+  from DocumentTemplate.security import RestrictedDTML
+except ImportError: # BBB Zope-2.12
+  from AccessControl.DTML import RestrictedDTML
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import clearCache
 import string, sys

@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Workflow_statusModify</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,16 +93,18 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_comment</string>
-                        <string>your_workflow_action</string>
-                        <string>your_warning_message</string>
+                        <string>my_default_event_path_event_portal_type</string>
+                        <string>my_default_event_path_source_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_default_event_path_resource_title</string>
+                        <string>my_default_event_path_destination_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -110,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_viewStartWorkflowActionDialog</string> </value>
+            <value> <string>Ticket_viewCommunicationPlan</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -118,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Event_viewStartWorkflowActionDialog</string> </value>
+            <value> <string>Ticket_viewCommunicationPlan</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -134,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start Workflow Action</string> </value>
+            <value> <string>Communication Plan</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

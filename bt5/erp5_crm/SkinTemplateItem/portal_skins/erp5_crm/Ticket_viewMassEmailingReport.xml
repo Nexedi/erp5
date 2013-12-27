@@ -108,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Campaign_viewMassEmailingReport</string> </value>
+            <value> <string>Ticket_viewMassEmailingReport</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,7 +116,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Campaign_viewNewsletterReport</string> </value>
+            <value> <string>Ticket_viewNewsletterReport</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

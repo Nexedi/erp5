@@ -6,7 +6,8 @@ LDAP Entry Objects
 __version__ = "$Revision: 1.13 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
-from Globals import HTMLFile, MessageDialog; import Globals
+from App.special_dtml import HTMLFile
+from App.Dialogs import MessageDialog
 import ldap, urllib, UserList
 
 ConnectionError='ZLDAP Connection Error'

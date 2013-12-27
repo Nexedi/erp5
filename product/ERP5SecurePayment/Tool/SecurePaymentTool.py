@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Permissions import ManagePortal
 
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5SecurePayment import _dtmldir
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from AccessControl.SecurityManagement import newSecurityManager

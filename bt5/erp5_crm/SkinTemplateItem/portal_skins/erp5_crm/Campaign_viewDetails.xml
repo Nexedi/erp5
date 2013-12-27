@@ -94,10 +94,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_default_event_path_event_portal_type</string>
-                        <string>my_default_event_path_source_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -113,10 +110,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_default_event_path_resource_title</string>
-                        <string>my_default_event_path_destination_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

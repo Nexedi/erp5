@@ -52,23 +52,11 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Owner Proxy Role allows anonymous users to create events\n
 through web sites.\n
-\n
-Reference will be probably generated with dedicated tool\n
-in near future\n
 """\n
 portal = context.getPortalObject()\n
-type_definition = context.getTypeInfo()\n
-\n
-short_portal_type = type_definition.getShortTitle()\n
-if not short_portal_type:\n
-  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
-\n
-new_id = portal.portal_ids.generateNewId(id_group=repr((\'reference\', short_portal_type)), default=1)\n
-reference = \'%s-%s\' % (short_portal_type, new_id)\n
-\n
 # Set preferred text format and reference\n
-context.setContentType(context.portal_preferences.getPreferredTextFormat())\n
-context.setReference(reference)\n
+context.setContentType(portal.portal_preferences.getPreferredTextFormat())\n
+context.Event_generateReference()\n
 </string> </value>
         </item>
         <item>

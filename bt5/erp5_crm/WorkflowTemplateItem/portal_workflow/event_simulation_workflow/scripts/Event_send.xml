@@ -51,16 +51,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>event = state_change[\'object\']\n
-portal = event.getPortalObject()\n
-send_mail = portal.portal_workflow.getInfoFor(event, \'send_mail\')\n
-if send_mail and event.getPortalType() in (\'Mail Message\', ):\n
-  if event.getSource():\n
-    event.send()\n
-  else:\n
-    sender_email = portal.portal_preferences.getPreferredEventSenderEmail()\n
-    if not sender_email:\n
-      raise NotImplementedError(\'Preferred Event Sender Email not configured\')\n
-    event.send(from_url=portal.portal_preferences.getPreferredEventSenderEmail())\n
+\n
+send_method = event.getTypeBasedMethod(\'send\')\n
+parameter_list = (\'from_url\', \'to_url\', \'reply_url\', \'subject\',\n
+                  \'body\', \'attachment_format\', \'attachment_list\',)\n
+if getattr(send_method, \'meta_type\', None) == \'Script (Python)\':\n
+  parameter_list = send_method.ZScriptHTML_tryParams()\n
+\n
+# Turn the SafeMapping from keyword arguments into a dict.\n
+kwargs = dict()\n
+for key in parameter_list:\n
+  state_change_arg = state_change[\'kwargs\'].get(key)\n
+  if state_change_arg:\n
+    kwargs[key] = state_change_arg\n
+  \n
+event.send(**kwargs) # will call type based method\n
 </string> </value>
         </item>
         <item>

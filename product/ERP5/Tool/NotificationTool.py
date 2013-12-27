@@ -290,6 +290,9 @@ class NotificationTool(BaseTool):
     if not isinstance(notifier_list, (tuple, list)):
       raise TypeError("Notifier list must be a list of portal types")
 
+    if not subject:
+      raise TypeError("subject is required")
+
     # Find "From" Person
     from_person = None
     if isinstance(sender, basestring):
@@ -345,13 +348,17 @@ class NotificationTool(BaseTool):
       event_keyword_argument_dict = {}
     for notifier in notifier_list:
       if notifier in available_notifier_list:
-        event = self.getDefaultModule(notifier).newContent(portal_type=notifier,
+        event = portal.getDefaultModule(notifier).newContent(portal_type=notifier,
                                                            temp_object=not store_as_event,
                                                            **event_keyword_argument_dict)
       else:
-        from Products.ERP5Type.Document import newTempEvent
-        event = newTempEvent(self, '_',
-                             **event_keyword_argument_dict)
+        # portal type does not exist, likely erp5_crm is not installed. Try to
+        # import the class with the same name.
+        from Products.ERP5Type import Document as document_module
+        constructor = getattr(document_module,
+          'newTemp%s' % notifier.replace(' ', ''))
+        event = constructor(self, '_', **event_keyword_argument_dict)
+
       event.setSourceValue(from_person)
       event.setDestinationValueList(to_person_list)
       event.setTitle(subject)
@@ -361,9 +368,10 @@ class NotificationTool(BaseTool):
       event_list.append(event)
 
     for event in event_list:
-      # XXX: this uses too low level API, instead event_workflow should be used in case 
-      # of persistent ERP5 objects
-      event.send(**low_level_kw)
+      if event.isTempObject():
+        event.send(**low_level_kw)
+      else:
+        event.start(**low_level_kw)
 
     return
     # Future implementation could consist in implementing

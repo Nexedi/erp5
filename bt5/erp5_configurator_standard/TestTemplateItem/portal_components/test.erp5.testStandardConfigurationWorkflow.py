@@ -587,7 +587,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       rule_list = self.portal.portal_rules.searchFolder(
                         reference=rule_template.getReference(),
                         title=rule_template.getTitle(),
-                        validation_stade="validated")
+                        validation_state="validated")
 
       self.assertTrue(len(rule_list) > 0)
       self.assertEquals(int(rule_template.getVersion(0)) + 1,

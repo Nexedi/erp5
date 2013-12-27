@@ -39,7 +39,7 @@ from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
 
-import sha
+from hashlib import sha1
 
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
@@ -153,7 +153,7 @@ def Base_asXML(object, root=None):
             elif workflow_variable == 'actor':
               actor = variable_node.text
 
-        workflow_node.attrib['id'] = sha.new(workflow_id + time +
+        workflow_node.attrib['id'] = sha1(workflow_id + time +
                                              str(actor.encode('utf-8'))).hexdigest()
 
   # We should now describe security settings

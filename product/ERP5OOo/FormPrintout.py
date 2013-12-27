@@ -38,7 +38,7 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent
 from AccessControl import ClassSecurityInfo
-from AccessControl.Role import RoleManager
+from OFS.role import RoleManager
 from OFS.SimpleItem import Item
 from OFS.PropertyManager import PropertyManager
 from urllib import quote, quote_plus

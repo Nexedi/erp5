@@ -98,12 +98,11 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
     of the interface between the ERP and third parties.
 
     Events have a start and stop date.
-
-    Events may contain files and local role definitions.
   """
 
   meta_type = 'ERP5 Event'
   portal_type = 'Event'
+  # XXX this is hack so we can search event by delivery.start_date
   isDelivery = ConstantGetter('isDelivery', value=True)
 
   # Declarative security
@@ -163,10 +162,8 @@ class Event(Movement, EmailDocument, AcknowledgeableMixin):
     """
     send_script = self._getTypeBasedMethod('send')
     if send_script is None:
-      return Event.inheritedAttribute('send')(
-          self, from_url, to_url, reply_url, subject, body, attachment_format,
-          attachment_list, download
-          )
+      raise NotImplementedError("`send` type based method not found. "
+                                "Please update erp5_base and erp5_crm")
     return send_script(
         from_url, to_url, reply_url, subject, body, attachment_format, attachment_list,
         download, **kw

@@ -28,6 +28,7 @@
 
 import unittest
 import os
+import textwrap
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
@@ -725,6 +726,43 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals(new_event.getDestinationList(), ['person_module/me',
                                                        'person_module/he'])
 
+    # cloned event got a new reference
+    self.assertNotEqual(new_event.getReference(), event.getReference())
+
+  def test_getPropertyDictFromContent_and_defined_arrow(self):
+    # If source/destination are set on event, then getPropertyDictFromContent
+    # should not lookup one based on email address.
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        default_email_coordinate_text='destination@example.com',)
+    organisation = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        default_email_coordinate_text='destination@example.com',)
+    source_person = self.portal.person_module.newContent(
+        portal_type='Person',
+        default_email_coordinate_text='source@example.com',)
+    self.tic()
+    event = self.portal.event_module.newContent(
+        portal_type='Mail Message',
+        destination_value=organisation,
+        data='\r\n'.join(textwrap.dedent('''
+        From: Source <source@example.com>
+        To: destination <destination@example.com>
+        Subject: mail subject
+
+        content
+        ''').splitlines()[1:]))
+
+    property_dict = event.getPropertyDictFromContent()
+    # destination is set on the event. In this case it is kept as is.
+    self.assertEquals([organisation.getRelativeUrl()],
+        property_dict['destination_list'])
+    # source is not set. In this case it is searched in catalog based on email
+    # address
+    self.assertEquals([source_person.getRelativeUrl()],
+        property_dict['source_list'])
+
+
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and
     # what you defined in preference regexpr.
@@ -990,10 +1028,9 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setTitle('A Mail')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
-    last_message = self.portal.MailHost._last_message
+    last_message, = self.portal.MailHost._message_list
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
@@ -1017,8 +1054,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestinationList(['person_module/recipient', 'person_module/me'])
     event.setTitle('A Mail')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
     self.assertNotEquals((), last_message_1)
@@ -1032,19 +1068,20 @@ class TestCRMMailSend(BaseTestCRM):
                       sorted([x[1] for x in (last_message_1, last_message_2)]))
 
   def test_MailFromMailMessageEventNoSendMail(self):
-    # passing start_action transition on event workflow will send an email to the
-    # person as destination, unless you don't check "send_mail" box in the
-    # workflow dialog
+    # for Mail Message, passing start_action transition on event workflow will send an email to the
+    # person as destination. To prevent this, one can use initial_stop_action to mark
+    # the event receieved.
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
     event.setTitle('A Mail')
     event.setTextContent('Mail Content')
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'initial_stop_action')
+    self.assertEquals('stopped', event.getSimulationState())
     self.tic()
     # no mail sent
     last_message = self.portal.MailHost._last_message
+    self.assertEquals((), last_message)
 
   def test_MailFromOtherEvents(self):
     # passing start_action transition on event workflow will not send an email
@@ -1056,29 +1093,12 @@ class TestCRMMailSend(BaseTestCRM):
       event.setSource('person_module/me')
       event.setDestination('person_module/recipient')
       event.setTextContent('Hello !')
-      self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                              send_mail=1)
-
-      self.tic()
-      # this means no message have been set
-      self.assertEquals((), self.portal.MailHost._last_message)
-
-  def test_MailMarkPosted(self):
-    # start_action transition without send_mail variable on event
-    # simulation workflow will not send an email even if the portal
-    # type is a Mail Message
-    for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
-        'Acknowledgement']:
-      event = self.portal.event_module.newContent(portal_type=ptype)
-      event.setSource('person_module/me')
-      event.setDestination('person_module/recipient')
-      event.setTextContent('Hello !')
       self.portal.portal_workflow.doActionFor(event, 'start_action')
 
       self.tic()
       # this means no message have been set
+      self.assertEquals([], self.portal.MailHost._message_list)
       self.assertEquals((), self.portal.MailHost._last_message)
-
 
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
@@ -1089,9 +1109,11 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setContentType('text/html')
     event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
+    # content type is kept
+    self.assertEquals(event.getContentType(), 'text/html')
+
     # The getTextContent() gets the content from the file data instead the
     # Attribute text_content.
     self.assertEquals(event.text_content, text_content)
@@ -1111,23 +1133,6 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertNotEqual(part, None)
     self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
 
-  def test_MailMessageHTMLbis(self):
-    # test sending a mail message edited as HTML (the default with FCKEditor),
-    # then the mail should have HTML
-    text_content = 'Hello<br/>World'
-    event = self.portal.event_module.newContent(portal_type='Mail Message')
-    event.setSource('person_module/me')
-    event.setDestination('person_module/recipient')
-    event.setContentType('text/html')
-    event.setTextContent(text_content)
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
-    self.tic()
-    # This test fails because of known issue for outgoing emails.
-    # there is conflict between properties from data
-    # and properties from document.
-    self.assertEquals(event.getContentType(), 'text/html')
-
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters
     event = self.portal.event_module.newContent(portal_type='Mail Message')
@@ -1135,8 +1140,7 @@ class TestCRMMailSend(BaseTestCRM):
     event.setDestination('person_module/recipient')
     event.setTitle('Héhé')
     event.setTextContent('Hàhà')
-    self.portal.portal_workflow.doActionFor(event, 'start_action',
-                                            send_mail=1)
+    self.portal.portal_workflow.doActionFor(event, 'start_action')
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -1166,8 +1170,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
 
     # Add a ticket
-    ticket = self.portal.campaign_module.newContent(id='1',
-                                                    portal_type='Campaign',
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
                                                     title='Advertisement')
     # Create a event
     ticket.Ticket_newEvent(portal_type='Mail Message',
@@ -1176,7 +1179,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1223,7 +1226,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1269,7 +1272,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1315,7 +1318,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1362,7 +1365,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document.getRelativeUrl(),
@@ -1404,7 +1407,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='incoming')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                text_content='This is an advertisement mail.')
@@ -1460,7 +1463,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document_txt.getRelativeUrl(),
@@ -1518,7 +1521,7 @@ class TestCRMMailSend(BaseTestCRM):
                            direction='outgoing')
 
     # Set sender and attach a document to the event.
-    event = self.portal.event_module.objectValues()[0]
+    event, = self.portal.event_module.objectValues()
     event.edit(source='person_module/me',
                destination='person_module/recipient',
                aggregate=document_gif.getRelativeUrl(),
@@ -1575,6 +1578,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(new_event.getData(), '')
     self.assertEquals(new_event.getTitle(), real_title)
     self.assertEquals(new_event.getTextContent(), real_content)
+    self.assertNotEquals(new_event.getReference(), event.getReference())
 
   def test_cloneTicketAndEventList(self):
     """
@@ -1760,44 +1764,52 @@ class TestCRMMailSend(BaseTestCRM):
     self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
+    self.assertEquals(3, len(relative_url_list))
     mail_message.setDestinationList(relative_url_list)
     mail_message.setSource(relative_url_list[0])
     mail_text_content = "Body Text Content"
     mail_message.setTextContent(mail_text_content)
-    self.portal.portal_workflow.doActionFor(mail_message, "start_action")
-    self.tic()
-    mail_message.Event_send(packet_size=2)
+    # directly call MailMessage_send to pass a packet size of 1, so that we
+    # have one activity per recipient
+    mail_message.MailMessage_send(packet_size=1)
     self.commit()
     portal_activities = self.portal.portal_activities
-    portal_activities.manageInvoke(object_path=mail_message.getPath(), method_id='Event_sendByActivity')
+    portal_activities.manageInvoke(object_path=mail_message.getPath(),
+      method_id='immediateReindexObject')
+    portal_activities.manageInvoke(object_path=mail_message.getPath(),
+      method_id='MailMessage_sendByActivity')
     self.commit()
     message_list = [i for i in portal_activities.getMessageList() \
                     if i.kw.has_key("event_relative_url")]
     try:
-      self.assertEquals(2, len(message_list))
+      # 3 recipients -> 3 activities
+      self.assertEquals(3, len(message_list))
     finally:
       self.tic()
-    last_message = self.portal.MailHost._last_message
-    self.assertTrue(mail_text_content in last_message[-1])
-    message = message_from_string(last_message[-1])
-    last_message_date = DateTime(message.get("Date"))
-    self.assertTrue(last_message_date.isCurrentDay())
 
-  def test_MailMessage_Event_send_simple_case(self):
+    self.assertEquals(3, len(self.portal.MailHost._message_list))
+    for message_info in self.portal.MailHost._message_list:
+      self.assertTrue(mail_text_content in message_info[-1])
+      message = message_from_string(message_info[-1])
+      self.assertTrue(DateTime(message.get("Date")).isCurrentDay())
+
+  def test_MailMessage_send_simple_case(self):
     """
-      Check that the script Event_send send one email passing all parameters directly
+      Check that the method send send one email passing all parameters directly
       from_url, to_url, reply_url, subject, body, attachment_format, attachment_list
     """
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     self.tic()
-    mail_message.Event_send(from_url='FG ER <eee@eee.com>',
-                            to_url='Expert User <expert@in24.test>',
-                            subject="Simple Case",
-                            body="Body Simple Case",
-                            attachment_list=[])
+    mail_message.send(from_url='FG ER <eee@eee.com>',
+                      to_url='Expert User <expert@in24.test>',
+                      subject="Simple Case",
+                      body="Body Simple Case",
+                      attachment_list=[])
     self.tic()
-    last_message = self.portal.MailHost._last_message[-1]
+    (from_url, to_url, last_message,), = self.portal.MailHost._message_list
     self.assertTrue("Body Simple Case" in last_message)
+    self.assertEquals('FG ER <eee@eee.com>', from_url)
+    self.assertEquals(['Expert User <expert@in24.test>'], to_url)
 
 
 def test_suite():

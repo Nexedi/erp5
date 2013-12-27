@@ -11,7 +11,9 @@ __version__ = "$Revision: 1.11 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
 from Acquisition import aq_base
-from Globals import HTMLFile, MessageDialog, Persistent
+from App.special_dtml import HTMLFile
+from App.Dialogs import MessageDialog
+from Persistence import Persistent
 import ldap, urllib
 
 import LDCAccessors

@@ -2,7 +2,6 @@
 # core of LDAP Filter Methods.
 
 
-from Globals import HTMLFile, HTML
 __version__ = "$Revision: 1.10 $"[11:-2]
 
 try:
@@ -17,8 +16,10 @@ import string
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Aqueduct import parse, decodestring, default_input_form
 from Shared.DC.ZRDB.Results import Results
-import Acquisition, Globals, AccessControl.Role, OFS.SimpleItem
-from Globals import HTMLFile, MessageDialog, Persistent
+import Acquisition, AccessControl.Role, OFS.SimpleItem
+from App.special_dtml import HTMLFile
+from App.Dialogs import MessageDialog
+from Persistence import Persistent
 import DocumentTemplate
 import ExtensionClass
 import sys
@@ -26,7 +27,10 @@ import sys
 from zLOG import LOG, INFO
 from ldif import LDIFRecordList, is_dn, valid_changetype_dict, CHANGE_TYPES
 import ldifvar
-from AccessControl.DTML import RestrictedDTML
+try:
+  from DocumentTemplate.security import RestrictedDTML
+except ImportError: # BBB Zope-2.12
+  from AccessControl.DTML import RestrictedDTML
 try:
     from AccessControl import getSecurityManager
 except ImportError:
@@ -186,7 +190,7 @@ class LDAPError(Exception):
 
 class LDAPMethod(Aqueduct.BaseQuery,
     Acquisition.Implicit,
-    Globals.Persistent,
+    Persistent,
     AccessControl.Role.RoleManager,
     OFS.SimpleItem.Item,
     ):

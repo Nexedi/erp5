@@ -60,7 +60,6 @@
 
 from DocumentTemplate.DT_Util import ParseError, parse_params, name_param
 from string import find, split, join, atoi, atof
-import sha
 StringType=type('')
 
 str=__builtins__['str']

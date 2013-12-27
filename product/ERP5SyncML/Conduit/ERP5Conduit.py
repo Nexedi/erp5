@@ -52,7 +52,7 @@ from copy import deepcopy
 import logging
 syncml_logger = logging.getLogger('ERP5SyncML')
 
-import sha
+from hashlib import sha1
 
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_ELEMENT,\
      XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE, XUPDATE_INSERT_LIST
@@ -224,7 +224,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       def deleteWorkflowNode():
         for wf_id, wf_history_tuple in object.workflow_history.iteritems():
           for wf_history_index, wf_history in enumerate(wf_history_tuple):
-            if sha.new(wf_id + str(wf_history['time']) +
+            if sha1(wf_id + str(wf_history['time']) +
                        wf_history['actor']).hexdigest() == wf_action_id:
               object.workflow_history[wf_id] = (
                 object.workflow_history[wf_id][:wf_history_index] +

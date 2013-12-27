@@ -50,31 +50,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># We must copy these properties as they are retrieved from data\n
-content_dict = context.getPropertyDictFromContent()\n
-content_dict[\'title\'] = context.getTitle()\n
-content_dict[\'text_content\'] = context.getTextContent()\n
-content_dict[\'content_type\'] = context.getContentType()\n
-content_dict[\'data\'] = None\n
-# we may have specified (i.e. user input) source and destination\n
-content_dict[\'destination_list\'] = content_dict.get(\'destination_list\', []) + \\\n
-                                     [x.getRelativeUrl() for x in context.getDestinationValueList() \\\n
-                                       if x.getRelativeUrl() not in content_dict.get(\'destination_list\', [])]\n
-content_dict[\'source_list\'] = content_dict.get(\'source_list\', []) + \\\n
-                                     [x.getRelativeUrl() for x in context.getSourceValueList() \\\n
-                                       if x.getRelativeUrl() not in content_dict.get(\'source_list\', [])]\n
-context.edit(**content_dict)\n
-# reset reference\n
-context.Event_generateReference()\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+\n
+count = portal.portal_catalog.countResults\n
+\n
+total_events = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", \n
+  simulation_state=("received", "delivered", "started"))[0][0]\n
+total_opened = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", \n
+  simulation_state=("received", "delivered"))[0][0]\n
+total_read = count(follow_up_uid=context.getUid(), \n
+  portal_type="Mail Message", simulation_state="delivered")[0][0]\n
+\n
+if total_events > 0:\n
+  line = context.newContent(temp_object=1, total_event_sent=total_events, \n
+    total_event_received=total_opened, \n
+    total_event_received_percent=float(total_opened)/float(total_events)*100, \n
+    total_event_delivered=total_read,\n
+    total_event_delivered_percent=float(total_read)/float(total_events)*100)\n
+  return line,\n
+else:\n
+  return []\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_afterClone</string> </value>
+            <value> <string>Ticket_getMassEmailingEventReportLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
