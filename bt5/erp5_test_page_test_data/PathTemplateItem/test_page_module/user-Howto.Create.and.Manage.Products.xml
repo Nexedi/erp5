@@ -288,6 +288,11 @@
                 <td>//button[@name="Base_edit:method"]</td>\n
                 <td></td>\n
               </tr>\n
+              <tr>\n
+                <td>verifyValue</td>\n
+                <td>//input[@name="field_my_title"]</td>\n
+                <td>ZUITE-TEST-PRODUCT-PRODUCT-001</td>\n
+              </tr>\n
             </tbody>\n
           </table>\n
         </test>\n
@@ -305,9 +310,39 @@
           <table style="display: none;" class="test">\n
             <tbody>\n
               <tr>\n
-                <td>verifyValue</td>\n
-                <td>//input[@name="field_my_purchase_supply_line_source_title"]</td>\n
-                <td>ZUITE-TEST-PRODUCT-ORGANISATION-001</td>\n
+                <td>clickAndWait</td>\n
+                <td>link=Purchase</td>\n
+                <td></td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_year"]</td>\n
+                <td>2014</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_month"]</td>\n
+                <td>10</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="subfield_field_my_purchase_supply_line_start_date_range_max_day"]</td>\n
+                <td>01</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_purchase_supply_line_base_price"]</td>\n
+                <td>0.50</td>\n
+              </tr>\n
+              <tr>\n
+                <td>type</td>\n
+                <td>//input[@name="field_my_purchase_supply_line_priced_quantity"]</td>\n
+                <td>1.0</td>\n
+              </tr>\n
+              <tr>\n
+                <td>clickAndWait</td>\n
+                <td>//button[@name="Base_edit:method"]</td>\n
+                <td></td>\n
               </tr>\n
               <tr>\n
                 <td>verifyValue</td>\n
