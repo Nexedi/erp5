@@ -32,23 +32,24 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
 
 class TestZeleniumRunMyDocSample(ERP5TypeFunctionalTestCase):
   """
-    Simple Test to assure that ERP5TypeFunctionalTestCase can pull code from a 
+    Simple Test to assure that ERP5TypeFunctionalTestCase can pull code from a
     URL and to test if ERP5 can provide approppriate code.
 
     The url should provide an equivalent Zope Page template used by Zelenium.
 
     TestPage_viewSeleniumTest is a perfect way to extract test from a Test Page,
-    but the usage of Test Page is not mandatory, any valid Selenium Test in HTML 
+    but the usage of Test Page is not mandatory, any valid Selenium Test in HTML
     can be used.
   """
-  foreground = 0
   run_only = "tutorial_zuite"
-  remote_code_url_list = [
-     "https://www.tiolive.com/nexedi/test_page_module/14/TestPage_viewSeleniumTest",
-     # Warning, the URLs bellow use cache and be delayed to
-     # be updated ( and produce inconsistent results).
-     "http://www.erp5.com/test_page_module/14/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/developer-Test.Page.Sample/TestPage_viewSeleniumTest",]
+
+  def afterSetUp(self):
+    url_list = []
+    for x in self.portal.test_page_module.objectValues():
+      if x.getId() == "developer-Test.Page.Sample":
+        url_list.append("test_page_module/"+x.getId())
+    self.remote_code_url_list = url_list
+    ERP5TypeFunctionalTestCase.afterSetUp(self)
 
   def getBusinessTemplateList(self):
     """
