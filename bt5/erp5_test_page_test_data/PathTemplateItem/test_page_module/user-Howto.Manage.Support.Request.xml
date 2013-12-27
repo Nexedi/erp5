@@ -645,7 +645,7 @@
               <tr>\n
                 <td>selectAndWait</td>\n
                 <td>//select[@name="select_action"]</td>\n
-                <td>Create Follow Up Ticket</td>\n
+                <td>Create Follow-up Ticket</td>\n
               </tr>\n
             </tbody>\n
           </table>\n
@@ -823,12 +823,12 @@
               <tr>\n
                 <td>verifyText</td>\n
                 <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-                <td>Delivered</td>\n
+                <td>Submitted</td>\n
               </tr>\n
               <tr>\n
                 <td>verifyValue</td>\n
                 <td>//input[@name="field_my_title"]</td>\n
-                <td>ZUITE-TEST-INCOMING-EVENT-EVENT-001</td>\n
+                <td>ZUITE-TEST-INCOMING-EVENT-TICKET-TITLE-001</td>\n
               </tr>\n
             </tbody>\n
           </table>\n
