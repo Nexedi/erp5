@@ -109,6 +109,8 @@ return {\'now\': DateTime(),\n
         \'campaign_howto_campaign_reference\': \'ZUITE-TEST-CAMPAIGN-CAMPAIGN-001\',\n
         \'create_event_howto_person_title\': \'ZUITE-TEST-CREATE-EVENT-PERSON-SUPERVISOR\',\n
         \'create_event_howto_person2_title\': \'ZUITE-TEST-CREATE-EVENT-PERSON-OPERATION-MANAGER\',\n
+        \'create_event_howto_person_email\': \'me@erp5.org\',\n
+        \'create_event_howto_person2_email\': \'me@erp5.org\',\n
         \'create_event_howto_organisation_title\': \'ZUITE-TEST-CREATE-EVENT-ORGANISATION-001\',\n
         \'create_event_howto_currency_title\': \'Euro\',\n
         \'create_event_howto_currency_tag\': \'EUR\',\n

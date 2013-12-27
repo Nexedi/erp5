@@ -52,7 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string>if clean:\n
   context.Zuite_tearDownCreateEventTest()\n
-\n
 portal = context.getPortalObject()\n
 isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
 howto_dict = context.Zuite_getHowToInfo()\n
@@ -77,11 +76,13 @@ organisation.validate()\n
 \n
 person = portal.person_module.newContent(portal_type=\'Person\',\n
                                          title=howto_dict[\'create_event_howto_person_title\'],\n
+                                         default_email_text=howto_dict[\'create_event_howto_person_email\'],\n
                                          career_subordination_title=howto_dict[\'create_event_howto_organisation_title\'])\n
 person.validate()\n
 \n
 person2 = portal.person_module.newContent(portal_type=\'Person\',\n
                                           title=howto_dict[\'create_event_howto_person2_title\'],\n
+                                          default_email_text=howto_dict[\'create_event_howto_person2_email\'],\n
                                           career_subordination_title=howto_dict[\'create_event_howto_organisation_title\'])\n
 person2.validate()\n
 \n
