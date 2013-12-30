@@ -220,6 +220,9 @@
                 <td></td>\n
               </tr>\n
               <tr style="opacity: 1; z-index: 0;">\n
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms"&gt; Invoke simulation alarms &lt;/span&gt;</td>\n
+              </tr>\n
+              <tr style="opacity: 1; z-index: 0;">\n
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>\n
               </tr>\n
               <tr style="opacity: 1;">\n
