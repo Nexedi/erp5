@@ -50,7 +50,7 @@ class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
     return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
             'erp5_base', 'erp5_workflow', 'erp5_configurator',
             'erp5_configurator_standard', 'erp5_jquery',
-            'erp5_ui_test_core',
+            'erp5_ui_test_core', 'erp5_accounting',
             'erp5_web', 'erp5_ingestion',
             'erp5_jquery', 'erp5_dms', 'erp5_jquery_ui', 'erp5_web',
             'erp5_slideshow_style', 'erp5_knowledge_pad', 'erp5_run_my_doc',
