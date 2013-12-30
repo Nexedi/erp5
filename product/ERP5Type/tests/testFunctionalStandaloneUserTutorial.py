@@ -39,7 +39,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
   def afterSetUp(self):
     url_list = []
     for x in self.portal.test_page_module.objectValues():
-      if "SMB" not in x.getId() and "developer" not in x.getId():
+      if "user" in x.getId():
         url_list.append("test_page_module/"+x.getId())
     self.remote_code_url_list = url_list
     ERP5TypeFunctionalTestCase.afterSetUp(self)
@@ -68,6 +68,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_l10n_fr', 'erp5_crm',
             'erp5_run_my_doc',
             'erp5_user_tutorial_ui_test',
+            'erp5_user_tutorial',
            )
 
 def test_suite():
