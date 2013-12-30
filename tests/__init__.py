@@ -82,6 +82,8 @@ class ERP5(_ERP5):
          or test_case.find('Performance') > 0 \
          or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           # not maintained
+                          'testFunctionnalConfiguratorConsulting',
+                          'testFunctionnalConfigurator',
                           'testERP5eGov',
                           'testAccounting_l10n_fr_m9'):
         continue
