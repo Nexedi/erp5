@@ -85,6 +85,26 @@
                           <string>resource_title</string>
                           <string>Product or Service</string>
                         </tuple>
+                        <tuple>
+                          <string>priced_quantity</string>
+                          <string>Priced Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_price</string>
+                          <string>Base Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>additional_price</string>
+                          <string>Additional Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>discount_ratio</string>
+                          <string>Discount Ratio</string>
+                        </tuple>
+                        <tuple>
+                          <string>surcharge_ratio</string>
+                          <string>Surcharge Ratio</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
