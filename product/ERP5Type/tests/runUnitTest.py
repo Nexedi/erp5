@@ -10,6 +10,7 @@ import signal
 import shutil
 import errno
 import random
+import transaction
 from glob import glob
 
 import backportUnittest
@@ -675,6 +676,14 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
       _print('done (%.3fs)\n' % (time.time() - _start))
       result = TestRunner(verbosity=verbosity).run(suite)
+    transaction.commit()
+  except:
+    import traceback
+    print "runUnitTestList Exception : %r" % (traceback.print_exc(),)
+    # finally does not expect opened transaction, even in the
+    # case of a Ctrl-C.
+    transaction.abort()
+    raise
   finally:
     ProcessingNodeTestCase.unregisterNode()
     Storage.close()
