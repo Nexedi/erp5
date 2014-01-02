@@ -5784,7 +5784,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       missing_dep_list = self.getMissingDependencyList()
       if len(missing_dep_list) != 0:
-        raise BusinessTemplateMissingDependency, 'Impossible to install, please install the following dependencies before: %s'%repr(missing_dep_list)
+        raise BusinessTemplateMissingDependency, \
+          'Impossible to install %s, please install the following dependencies before: %s' \
+          %(self.getTitle(), repr(missing_dep_list))
 
     def getMissingDependencyList(self):
       """
