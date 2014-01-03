@@ -41,6 +41,7 @@
                 <string>destination</string>
                 <string>source_section</string>
                 <string>destination_section</string>
+                <string>journal</string>
                 <string>source_project</string>
                 <string>destination_project</string>
                 <string>source_payment</string>
