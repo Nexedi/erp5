@@ -304,10 +304,16 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
       from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 
+      class ComponentTestCase(ERP5TypeLiveTestCase):
+
+        def setUp(self):
+          super(ComponentTestCase, self).setUp()
+          self._callSetUpOnce()
+
       # Bootstrap has been done in loadTestsFromNames, so the test can now
       # be loaded like any Live Test on a real instance
-      if ERP5TypeLiveTestCase not in ERP5TypeTestCase.__bases__:
-        ERP5TypeTestCase.__bases__ = ERP5TypeLiveTestCase,
+      if ComponentTestCase not in ERP5TypeTestCase.__bases__:
+        ERP5TypeTestCase.__bases__ = ComponentTestCase,
 
       # TestLoader() does not perform any import so import the Module manually
       module = __import__('erp5.component.test',

@@ -731,6 +731,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         return sorted([ str(message.getMessage())
                         for message in obj.checkConsistency() ])
 
+    def _callSetUpOnce(self):
+      setup_once = getattr(self, 'setUpOnce', None)
+      if setup_once is not None and \
+             not getattr(self.portal, 'set_up_once_called', 0):
+        self.portal.set_up_once_called = 1
+        ZopeTestCase._print('Executing setUpOnce ... ')
+        start = time.time()
+        setup_once()
+        ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
     def getPortalName(self):
@@ -1073,16 +1083,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                             'Assignor', 'Author', 'Auditor', 'Associate'], [])
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
-            setup_once = getattr(self, 'setUpOnce', None)
-            if setup_once is not None and \
-                   not getattr(portal, 'set_up_once_called', 0):
-              portal.set_up_once_called = 1
-              if not quiet:
-                ZopeTestCase._print('Executing setUpOnce ... ')
-                start = time.time()
-              setup_once()
-              if not quiet:
-                ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+            self._callSetUpOnce()
 
             # Enable reindexing
             # Do hot reindexing # Does not work
