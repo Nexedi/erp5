@@ -44,7 +44,7 @@ class TestResearchItemSummaryReport(TestTaskReportingMixin):
     for category_id in ("operation", "research"):
       if not journal_base_category.has_key(category_id):
         journal_base_category.newContent(
-             portal_type='Category', title=unit_id.title(),
+             portal_type='Category', title=category_id.title(),
              reference=category_id, id=category_id)
 
     # create items
