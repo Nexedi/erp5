@@ -33,7 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
-
+  foreground = 0
   run_only = "user_tutorial_zuite"
 
   def afterSetUp(self):

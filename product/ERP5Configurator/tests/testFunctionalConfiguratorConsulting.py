@@ -34,6 +34,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumConfiguratorConsulting(TestZeleniumConfiguratorStandard, ERP5TypeFunctionalTestCase):
+   foreground = 0
    run_only = "configurator_consulting_standard_zuite"
 
    def afterSetUp(self):

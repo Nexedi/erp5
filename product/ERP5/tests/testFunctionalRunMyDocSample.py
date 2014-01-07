@@ -41,6 +41,7 @@ class TestZeleniumRunMyDocSample(ERP5TypeFunctionalTestCase):
     but the usage of Test Page is not mandatory, any valid Selenium Test in HTML
     can be used.
   """
+  foregroun = 0
   run_only = "tutorial_zuite"
 
   def afterSetUp(self):

@@ -27,13 +27,13 @@
 #
 ##############################################################################
 
-import os
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumCore(ERP5TypeFunctionalTestCase):
+    foreground = 0
 
     def getBusinessTemplateList(self):
         """
